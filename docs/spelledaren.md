@@ -25,6 +25,8 @@ Byggt (README beskriver hur det fungerar):
   avslöjandets nivå.
 - I översikten: klass, föremål, viskningar och vem som är invigd. Ingrepp:
   ge föremål, och inviga eller ta tillbaka invigningen.
+- Tornet pausar rundan själv när ingen vandrare är ansluten, och
+  spelledaren kan släppa pausen med Fortsätt.
 
 På gång: inget just nu.
 

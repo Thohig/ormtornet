@@ -16,7 +16,8 @@ README beskriver klasserna under "Klasser". Besluten:
 - Var och en får två slumpade klasser att välja mellan i lobbyn. Ingen klass
   finns två gånger i samma torn. Den som inte väljer får en av sina två
   när vandringen börjar.
-- Klassen följer med till nästa torn så länge man är kvar.
+- Klassen gäller en vandring. Nytt torn leder till lobbyn, där alla får
+  två nya klasser att välja mellan (ändrat efter provspelet 2026-11-18).
 - Klassen syns i listan över vandrare, även när man inte ser varandra.
 - AI-spelarna väljer efter personlighet (`klasser` i `data/ai.json`).
 - Klassens liv läggs till svårighetens liv, så att Mardröm förblir hårdare.

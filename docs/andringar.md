@@ -13,6 +13,9 @@ eller leder tornet.
 - Tornet väntar när ingen människa är ansluten. Förut gick rundorna så fort
   AI:n hann välja, så ett nätavbrott kunde kosta halva vandringen.
 - Tab heter "byt mål" i styrningen, så att raden får plats.
+- README, `docs/fler-spelare.md` och `docs/spelledaren.md` beskriver det
+  nya. Introts första 15 sekunder ligger under "Prova med människor" i
+  `docs/att-gora.md`.
 - Tornet kraschade om en vandrare kom tillbaka just när AI:n hade tagit
   över och skulle välja drag. Nu tar människan över utan att något händer.
 - Hjälptexten för `-ai` säger 0–7, eller 8 i spelledarläget, som README.

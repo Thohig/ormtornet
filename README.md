@@ -216,7 +216,7 @@ dess. Den som inte hinner välja blir stående.
 | A          | anfall (i strid)                  |
 | P          | parera (i strid)                  |
 | U          | undanmanöver (i strid)            |
-| Tab        | byt motståndare, eller varelse när du är död |
+| Tab        | byt mål: motståndare, eller varelse när du är död |
 | Enter      | redo / spela igen                 |
 | 1–3        | använd ett föremål i väskan       |
 | V          | viska till tornet (från nivå 2)   |
@@ -309,8 +309,8 @@ I lobbyn får var och en två slumpade klasser att välja mellan, med 1 eller
 2 (eller ett tryck på pekskärmen). Ingen klass finns två gånger i samma
 torn. Den som inte har valt när vandringen börjar får en av sina två.
 Klassen står i listan över vandrare, och i spelledarens översikt.
-AI-spelarna väljer efter sin personlighet. Klassen följer med till nästa
-torn så länge man är kvar.
+AI-spelarna väljer efter sin personlighet. Klassen gäller en vandring:
+efter Nytt torn får alla två nya att välja mellan i lobbyn.
 
 | Klass | Styrka | Svaghet |
 |---|---|---|
