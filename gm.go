@@ -64,6 +64,7 @@ type gmSerpent struct {
 	SleepCards int `json:"sleepCards"`
 	WakeCards  int `json:"wakeCards"`
 	Wakes      int `json:"wakes"`
+	Risk       int `json:"risk"` // chansen i procent att ormen vaknar vid nästa näve
 }
 
 // gmView är spelledarens översikt.
@@ -73,9 +74,11 @@ type gmView struct {
 	Players []gmPlayer `json:"players"`
 	Serpent gmSerpent  `json:"serpent"`
 	Level   int        `json:"level"`
-	Clues   int        `json:"clues"`   // ledtrådar som har delats ut
-	Traps   int        `json:"traps"`   // fällor som väntar i kända rum
-	Unknown int        `json:"unknown"` // rum som ännu inte finns
+	Held    bool       `json:"held"`     // spelledaren håller kvar nivån
+	SunLvl  int        `json:"sunLevel"` // nivån solen ger just nu
+	Clues   int        `json:"clues"`    // ledtrådar som har delats ut
+	Traps   int        `json:"traps"`    // fällor som väntar i kända rum
+	Unknown int        `json:"unknown"`  // rum som ännu inte finns
 	Log     []gmEntry  `json:"log"`
 
 	Paused       bool        `json:"paused"`
@@ -162,7 +165,10 @@ func (g *Game) GMView(visible bool) gmView {
 			v.Serpent.SleepCards++
 		}
 	}
+	v.Serpent.Risk = g.wakeRisk()
 	v.Serpent.Sleep = g.sleepLevel()
+	v.Held = g.levelHeld
+	v.SunLvl = g.levelFor(g.sun)
 	v.Serpent.Wakes = g.wakes
 	v.Log = append([]gmEntry(nil), g.gmLog...)
 	v.Paused = g.paused

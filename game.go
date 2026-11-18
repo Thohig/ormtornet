@@ -180,6 +180,8 @@ type Game struct {
 	pauseLeft time.Duration // tid som var kvar när rundan pausades
 
 	chron []chronEvent // krönikan över vandringen
+
+	levelHeld bool // spelledaren håller kvar avslöjandets nivå
 }
 
 func NewGame(d *Data, cfg Config) *Game {
@@ -708,6 +710,7 @@ func (g *Game) startGame() {
 	g.controller = 0
 	g.pendingMove = nil
 	g.level = 1
+	g.levelHeld = false
 	g.usedClues = map[string]bool{}
 	g.resetChronicle()
 	for _, p := range g.players {

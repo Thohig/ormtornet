@@ -20,11 +20,10 @@ Byggt (README beskriver hur det fungerar):
 - Pekkontroller, så att telefoner och surfplattor kan spela.
 - Krönikan: en sammanfattning efter varje omgång.
 - Förval för svårighet: Lätt, Normal, Svår och Mardröm.
+- Risken att ormen vaknar i översikten, och att flytta fram eller hålla kvar
+  avslöjandets nivå.
 
-På gång:
-
-1. Risken att ormen vaknar i översikten, och att flytta fram eller hålla kvar
-   avslöjandets nivå.
+På gång: inget just nu.
 
 Inte byggt, och inte planerat just nu:
 

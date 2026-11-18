@@ -32,7 +32,7 @@ func (g *Game) updateLevel() {
 		return
 	}
 	next := g.levelFor(g.sun)
-	if next > g.level {
+	if next > g.level && !g.levelHeld {
 		for g.level < next {
 			g.level++
 		}

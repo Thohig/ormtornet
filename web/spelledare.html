@@ -162,6 +162,11 @@
         <button class="btn small" type="button" data-gm="vack">Väck ormen</button>
         <button class="btn small" type="button" data-gm="lugna">Lugna ormen</button>
       </div>
+      <div class="gmrow" id="gmReveal">
+        <span class="gmlabel">Avslöjandet</span>
+        <button class="btn small" type="button" id="gmLevelUp" data-gm="niva_upp">Nästa nivå</button>
+        <button class="btn small" type="button" id="gmHold" data-gm="niva_hall">Håll kvar nivån</button>
+      </div>
       <form class="gmrow" id="gmVoice" autocomplete="off">
         <span class="gmlabel">Tornets röst</span>
         <select id="gmVoiceTo"></select>
@@ -407,8 +412,13 @@ function renderGM(o) {
   const parts = [];
   if (m.phase === "spel") parts.push("Runda " + m.round + ", solen " + m.sun + " av " + m.sunMax);
   parts.push("Ormen " + SLEEP_WORDS[o.serpent.sleep] + " (" + o.serpent.sleepCards + " sovkort, " + o.serpent.wakeCards + " vakna-kort kvar" +
-    (o.serpent.wakes ? ", har vaknat " + o.serpent.wakes + (o.serpent.wakes === 1 ? " gång" : " gånger") : "") + ")");
-  if (m.reveal) parts.push("Avslöjandet nivå " + o.level + " av 4, " + o.clues + " ledtrådar utdelade");
+    (o.serpent.wakes ? ", har vaknat " + o.serpent.wakes + (o.serpent.wakes === 1 ? " gång" : " gånger") : "") +
+    ", " + o.serpent.risk + " % risk att den vaknar vid nästa näve)");
+  if (m.reveal) {
+    let lvl = "Avslöjandet nivå " + o.level + " av 4";
+    if (o.held) lvl += " (hålls kvar" + (o.sunLevel > o.level ? ", solen säger " + o.sunLevel : "") + ")";
+    parts.push(lvl + ", " + o.clues + " ledtrådar utdelade");
+  }
   parts.push(o.traps + (o.traps === 1 ? " fälla väntar" : " fällor väntar"));
   top.textContent = parts.join(" · ");
 
@@ -503,6 +513,11 @@ function renderControls(o) {
   const pause = $("gmPause");
   pause.dataset.gm = o.paused ? "fortsatt" : "paus";
   pause.textContent = o.paused ? "Fortsätt" : "Pausa";
+  $("gmReveal").hidden = !o.map.reveal;
+  $("gmLevelUp").disabled = !playing || o.level >= 4;
+  const hold = $("gmHold");
+  hold.dataset.gm = o.held ? "niva_slapp" : "niva_hall";
+  hold.textContent = o.held ? "Släpp nivån" : "Håll kvar nivån";
   if (playing) {
     const t = o.paused ? "pausad med " + o.timeLeft + " s kvar" : o.timeLeft + " s kvar av rundan";
     $("gmTop").textContent += " · " + t;
@@ -545,6 +560,7 @@ $("gm").addEventListener("click", (ev) => {
   const req = { typ: b.dataset.gm };
   if (b.dataset.antal) req.antal = +b.dataset.antal;
   if (b.dataset.spelare) req.spelare = +b.dataset.spelare;
+  if (req.typ === "niva_upp" && !confirm("Flytta fram avslöjandet en nivå? Alla vandrare märker det direkt.")) return;
   if (req.typ === "vack" && !confirm("Väcka ormen? De som står i skattkammaren blir kastade ut och skadade.")) return;
   intervene(req);
 });

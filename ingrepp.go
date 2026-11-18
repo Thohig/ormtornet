@@ -79,6 +79,12 @@ func (g *Game) Intervene(r gmRequest) error {
 		g.wakeSerpent()
 	case "lugna":
 		err = g.gmCalm()
+	case "niva_upp":
+		err = g.gmLevelUp()
+	case "niva_hall":
+		err = g.gmHoldLevel(true)
+	case "niva_slapp":
+		err = g.gmHoldLevel(false)
 	case "liv", "guld", "dryck":
 		err = g.gmGive(r.Typ, r.Spelare, r.Antal)
 	default:
@@ -246,6 +252,42 @@ func (g *Game) gmCalm() error {
 			g.gmNote("Lugnade ormen: ett sovkort till.")
 			return nil
 		}
+	}
+	return nil
+}
+
+var errNoReveal = errors.New("Avslöjandet är avstängt.")
+
+// gmLevelUp flyttar fram avslöjandet en nivå, med allt som hör till: ljud,
+// nya texter och ledtrådar, och förklaringar på nivå 4.
+func (g *Game) gmLevelUp() error {
+	if !g.cfg.Reveal {
+		return errNoReveal
+	}
+	if g.level >= 4 {
+		return errors.New("Avslöjandet är redan på sista nivån.")
+	}
+	g.level++
+	g.onLevelUp()
+	g.gmNote("Flyttade fram avslöjandet till nivå " + strconv.Itoa(g.level) + ".")
+	return nil
+}
+
+// gmHoldLevel håller kvar avslöjandets nivå, eller släpper den så att den
+// följer solen igen. Släpps den när solen redan har sjunkit förbi en gräns
+// hinner nivån ikapp efter rundan.
+func (g *Game) gmHoldLevel(hold bool) error {
+	if !g.cfg.Reveal {
+		return errNoReveal
+	}
+	if g.levelHeld == hold {
+		return nil
+	}
+	g.levelHeld = hold
+	if hold {
+		g.gmNote("Höll kvar avslöjandet på nivå " + strconv.Itoa(g.level) + ".")
+	} else {
+		g.gmNote("Släppte avslöjandet, så att det följer solen igen.")
 	}
 	return nil
 }

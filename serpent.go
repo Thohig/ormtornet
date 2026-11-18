@@ -73,6 +73,27 @@ func (g *Game) sleepLevel() int {
 	return 2
 }
 
+// wakeRisk är chansen i procent att ormen vaknar vid nästa näve. En tom
+// lek blandas om vid nästa näve, så då gäller en ny lek.
+func (g *Game) wakeRisk() int {
+	deck := g.deck
+	if len(deck) == 0 {
+		saved, savedSleep := append([]string(nil), g.deck...), g.deckSleep
+		g.buildDeck()
+		deck, g.deck, g.deckSleep = g.deck, saved, savedSleep
+	}
+	wake := 0
+	for _, id := range deck {
+		if c := g.data.card(id); c != nil && c.Vaknar {
+			wake++
+		}
+	}
+	if len(deck) == 0 {
+		return 0
+	}
+	return (wake*100 + len(deck)/2) / len(deck)
+}
+
 // take låter spelaren ta en näve skatt och drar ett ormkort.
 func (g *Game) take(p *Player) {
 	if g.rooms[p.Y][p.X].Kind != "kammare" {
