@@ -324,6 +324,7 @@ type AIData struct {
 	Personligheter []Personality `json:"personligheter"`
 	BetanketidMs   []int         `json:"betanketid_ms"`
 	Ansluter       []string      `json:"ansluter"`
+	Lamnar         []string      `json:"lamnar"`
 }
 
 // Personality styr hur modig en datorspelare är.

@@ -66,9 +66,21 @@
   #slots .tag { color: var(--dim); }
   #slots .tag.ok { color: var(--info); }
   #slots .tag.away { color: var(--warn); }
-  #settings { display: grid; grid-template-columns: 18ch 1fr; gap: 4px 12px; margin: 0; }
-  #settings dt { color: var(--dim); }
-  #settings dd { margin: 0; }
+  #settings { display: grid; grid-template-columns: 20ch auto 1fr; gap: 8px 12px; align-items: baseline; }
+  #settings label { color: var(--dim); }
+  #settings .note { color: var(--dim); font-size: 12px; }
+  #settings select {
+    background: var(--bg);
+    color: var(--hi);
+    border: 1px solid var(--dim);
+    font: inherit;
+    padding: 3px 6px;
+  }
+  #settings select:focus-visible { outline: none; border-color: var(--fg); }
+  #settings select:disabled { color: var(--dim); border-color: var(--faint); }
+  #saved { min-height: 1.2em; color: var(--info); }
+  #saved.err { color: var(--warn); }
+  #startHint { color: var(--dim); }
   #help li { margin: 6px 0; line-height: 1.45; }
   #help { padding-left: 1.4em; margin: 0; }
   code { color: var(--hi); font: inherit; }
@@ -94,10 +106,35 @@
     <h2>Vandrare</h2>
     <p id="status">…</p>
     <ul id="slots"></ul>
+    <div class="buttons">
+      <button class="btn" id="startNow" type="button">Starta nu</button>
+    </div>
+    <p id="startHint">Börjar vandringen även om inte alla har tryckt Enter.</p>
 
     <h2>Inställningar</h2>
-    <dl id="settings"></dl>
-    <p class="dimtext">Ändras i dag med flaggor när servern startas, till exempel <code>go run . -ai 2</code>.</p>
+    <form id="settings" autocomplete="off">
+      <label for="sAI">AI-spelare</label>
+      <select id="sAI" name="ai"><option>0</option><option>1</option><option>2</option><option>3</option></select>
+      <span class="note" id="aiNote"></span>
+
+      <label for="sMin">Minst antal vandrare</label>
+      <select id="sMin" name="min"><option>1</option><option>2</option><option>3</option><option>4</option></select>
+      <span class="note">AI-spelare räknas med</span>
+
+      <label for="sSol">Solnedgång</label>
+      <select id="sSol" name="sol"></select>
+      <span class="note">rundor</span>
+
+      <label for="sTur">Turtid</label>
+      <select id="sTur" name="turtid"></select>
+      <span class="note">sekunder per runda</span>
+
+      <label for="sRev">Avslöjandet</label>
+      <select id="sRev" name="avslojande"><option value="1">på</option><option value="0">av</option></select>
+      <span class="note">tornets hemlighet</span>
+    </form>
+    <p id="saved"></p>
+    <p class="dimtext" id="settingsHint">Sparas till nästa gång. AI-spelare kommer och går direkt, resten gäller från nästa omgång.</p>
 
     <h2>När ni är klara</h2>
     <p>Stäng tornet här eller med Ctrl+C i terminalen. Spelarna får ett meddelande om att tornet stänger, och datorn får somna igen.</p>
@@ -144,7 +181,7 @@ $("copyAddr").onclick = () => view && copy(view.addrs.name, "Adressen");
 $("closeTower").onclick = async () => {
   if (!confirm("Stäng tornet? Alla spelare kopplas bort och servern stängs.")) return;
   try {
-    const r = await fetch("/spelledare/stang", { method: "POST", headers: { "X-Ormtornet": "stang" } });
+    const r = await fetch("/spelledare/stang", { method: "POST", headers: { "X-Ormtornet": "spelledare" } });
     if (!r.ok) throw new Error(r.status);
     closed = true;
     $("status").textContent = "Tornet är stängt. Du kan stänga den här fliken.";
@@ -225,23 +262,98 @@ function render(v) {
     ul.append(li);
   }
 
-  const rows = [
-    ["Solnedgång", "efter " + v.sunMax + " rundor"],
-    ["Turtid", v.turnSecs + " sekunder"],
-    ["Minst spelare", v.minPlayers],
-    ["Datorspelare", v.players.filter((p) => p.bot).length],
-    ["Avslöjandet", v.reveal ? "på" : "av"],
-  ];
-  const dl = $("settings");
-  dl.textContent = "";
-  rows.forEach(([k, val]) => {
-    const dt = document.createElement("dt");
-    dt.textContent = k;
-    const dd = document.createElement("dd");
-    dd.textContent = val;
-    dl.append(dt, dd);
+  renderSettings(v);
+
+  const humans = v.players.filter((p) => !p.bot && p.online).length;
+  $("startNow").disabled = v.phase === "spel" || humans === 0;
+  $("startHint").textContent = v.phase === "spel"
+    ? "Vandringen pågår."
+    : humans === 0
+      ? "Minst en människa måste vara i tornet."
+      : "Börjar vandringen även om inte alla har tryckt Enter eller ni är färre än minsta antalet.";
+}
+
+// Inställningarna. Formuläret skrivs inte över medan spelledaren håller på
+// med det, eller medan en ändring är på väg till servern.
+let saving = false;
+
+function fillOptions(sel, values, current) {
+  const all = [...new Set([...values, current])].sort((a, b) => a - b);
+  if (sel.options.length === all.length && [...sel.options].every((o, i) => +o.value === all[i])) return;
+  sel.textContent = "";
+  all.forEach((n) => sel.append(new Option(String(n), String(n))));
+}
+
+function renderSettings(v) {
+  const s = v.settings;
+  const form = $("settings");
+  const playing = v.phase === "spel";
+  form.querySelectorAll("select").forEach((el) => (el.disabled = playing));
+  $("settingsHint").textContent = playing
+    ? "Kan ändras när omgången är slut."
+    : "Sparas till nästa gång. AI-spelare kommer och går direkt, resten gäller från nästa omgång.";
+  $("aiNote").textContent = s.ai > v.bots && !playing
+    ? v.bots + " får plats just nu, resten kliver in om någon går"
+    : "";
+  if (saving || form.contains(document.activeElement)) return;
+  fillOptions($("sSol"), [20, 30, 40, 60], s.sol);
+  fillOptions($("sTur"), [15, 30, 45, 60], s.turtid);
+  $("sAI").value = String(s.ai);
+  $("sMin").value = String(s.min);
+  $("sSol").value = String(s.sol);
+  $("sTur").value = String(s.turtid);
+  $("sRev").value = s.avslojande ? "1" : "0";
+}
+
+function post(path, body) {
+  return fetch(path, {
+    method: "POST",
+    headers: { "X-Ormtornet": "spelledare", "Content-Type": "application/json" },
+    body: body === undefined ? undefined : JSON.stringify(body),
   });
 }
+
+let savedTimer = null;
+function say(text, isErr) {
+  const el = $("saved");
+  el.textContent = text;
+  el.classList.toggle("err", !!isErr);
+  clearTimeout(savedTimer);
+  if (!isErr) savedTimer = setTimeout(() => (el.textContent = ""), 2500);
+}
+
+$("settings").addEventListener("change", async () => {
+  const s = {
+    ai: +$("sAI").value,
+    min: +$("sMin").value,
+    sol: +$("sSol").value,
+    turtid: +$("sTur").value,
+    avslojande: $("sRev").value === "1",
+  };
+  saving = true;
+  try {
+    const r = await post("/spelledare/installningar", s);
+    const data = await r.json().catch(() => ({}));
+    if (!r.ok) say(data.fel || "Kunde inte ändra inställningarna.", true);
+    else if (data.varning) say(data.varning, true);
+    else say("Sparat.");
+  } catch {
+    say("Tornet svarar inte.", true);
+  }
+  saving = false;
+});
+
+$("startNow").onclick = async () => {
+  try {
+    const r = await post("/spelledare/starta");
+    if (!r.ok) {
+      const data = await r.json().catch(() => ({}));
+      alert(data.fel || "Det gick inte att starta.");
+    }
+  } catch {
+    alert("Tornet svarar inte.");
+  }
+};
 
 async function poll() {
   if (closed) return;

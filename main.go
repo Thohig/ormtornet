@@ -26,22 +26,45 @@ var webFS embed.FS
 func main() {
 	addr := flag.String("addr", "0.0.0.0:8080", "adress och port att lyssna på")
 	dataPath := flag.String("data", "data", "mapp med rum, fällor och texter")
-	sun := flag.Int("sol", 40, "antal rundor innan solen går ner")
-	turn := flag.Duration("turtid", 30*time.Second, "längsta tid att välja drag per runda")
-	minPlayers := flag.Int("min", 2, "minsta antal spelare för att börja")
-	bots := flag.Int("ai", 0, "antal datorstyrda vandrare (0-3)")
-	reveal := flag.Bool("avslojande", true, "låt tornet avslöja sin hemlighet (false för den som redan känner till den)")
+	sun := flag.Int("sol", defaultSettings.Sol, "antal rundor innan solen går ner")
+	turn := flag.Duration("turtid", time.Duration(defaultSettings.Turtid)*time.Second, "längsta tid att välja drag per runda")
+	minPlayers := flag.Int("min", defaultSettings.Min, "minsta antal spelare för att börja, datorspelare inräknade")
+	bots := flag.Int("ai", defaultSettings.AI, "antal datorstyrda vandrare (0-3)")
+	reveal := flag.Bool("avslojande", defaultSettings.Avslojande, "låt tornet avslöja sin hemlighet (false för den som redan känner till den)")
+	settingsPath := flag.String("installningar", defaultSettingsPath(), "fil där spelledarens inställningar sparas (tom för att inte spara)")
 	openPage := flag.Bool("oppna", false, "öppna spelledarens sida i webbläsaren när servern har startat")
 	awake := flag.Bool("vaken", false, "håll datorn vaken så länge servern är igång")
 	flag.Parse()
-	cfg := Config{Reveal: *reveal, SunMax: max(4, *sun), TurnTime: max(3*time.Second, *turn), MinPlayers: max(1, min(maxPlayers, *minPlayers))}
+
+	// Spelledarens sparade inställningar gäller, utom det som anges med
+	// flaggor: de gäller bara den här gången.
+	settings, err := loadSettings(*settingsPath)
+	if err != nil {
+		fmt.Printf("Kunde inte läsa sparade inställningar (%v). Använder standard.\n", err)
+	}
+	flag.Visit(func(f *flag.Flag) {
+		switch f.Name {
+		case "sol":
+			settings.Sol = *sun
+		case "turtid":
+			settings.Turtid = int(turn.Round(time.Second) / time.Second)
+		case "min":
+			settings.Min = *minPlayers
+		case "ai":
+			settings.AI = *bots
+		case "avslojande":
+			settings.Avslojande = *reveal
+		}
+	})
+	cfg := settings.config()
 
 	data, src, err := loadData(*dataPath)
 	if err != nil {
 		log.Fatalf("kunde inte läsa texterna: %v", err)
 	}
 	game := NewGame(data, cfg)
-	addedBots := game.AddBots(max(0, min(maxPlayers-1, *bots)))
+	game.syncBots(false)
+	addedBots := game.botCount()
 
 	sub, _ := fs.Sub(webFS, "web")
 	files := http.FileServer(http.FS(sub))
@@ -98,7 +121,10 @@ func main() {
 	for _, ip := range lanIPs() {
 		addrs.IPs = append(addrs.IPs, "http://"+ip+":"+port)
 	}
-	addHostRoutes(mux, sub, game, addrs, closeTower)
+	addHostRoutes(mux, sub, game, addrs, hostHooks{
+		Close: closeTower,
+		Save:  func(s Settings) error { return saveSettings(*settingsPath, s) },
+	})
 
 	fmt.Println("Ormtornet är vaket.")
 	fmt.Println("Texter från:", src)

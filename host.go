@@ -37,6 +37,8 @@ type hostView struct {
 	MaxPlayers int          `json:"maxPlayers"`
 	Reveal     bool         `json:"reveal"`
 	Players    []hostPlayer `json:"players"`
+	Settings   Settings     `json:"settings"`
+	Bots       int          `json:"bots"` // datorspelare som är med just nu
 }
 
 // HostView sammanfattar spelet för spelledaren. Den visar inte skatter,
@@ -48,6 +50,7 @@ func (g *Game) HostView() hostView {
 		Phase: g.phase, Round: g.round, Sun: g.sun, SunMax: g.cfg.SunMax,
 		TurnSecs: int(g.cfg.TurnTime / time.Second), MinPlayers: g.cfg.MinPlayers,
 		MaxPlayers: maxPlayers, Reveal: g.cfg.Reveal, Players: []hostPlayer{},
+		Settings: settingsFrom(g.cfg), Bots: g.botCount(),
 	}
 	for _, p := range g.players {
 		if p == nil {
@@ -114,18 +117,62 @@ func (g *Game) Close() {
 	}
 }
 
-// addHostRoutes lägger till spelledarens sida. closeTower anropas när
-// spelledaren trycker på Stäng tornet.
-func addHostRoutes(mux *http.ServeMux, web fs.FS, game *Game, addrs hostAddrs, closeTower func()) {
-	mux.HandleFunc("POST /spelledare/stang", localOnly(func(w http.ResponseWriter, r *http.Request) {
-		// Kräver ett eget huvud, så att en annan webbsida i samma
-		// webbläsare inte kan stänga tornet (den skulle stoppas av CORS).
-		if r.Header.Get("X-Ormtornet") != "stang" {
+// hostHooks är det spelledarens sida behöver från resten av programmet.
+type hostHooks struct {
+	Close func()               // stänger tornet
+	Save  func(Settings) error // sparar inställningarna till nästa gång
+}
+
+// hostAction kräver förutom att förfrågan kommer från den här datorn ett
+// eget huvud, så att en annan webbsida i samma webbläsare inte kan göra
+// något här (den skulle stoppas av CORS).
+func hostAction(h http.HandlerFunc) http.HandlerFunc {
+	return localOnly(func(w http.ResponseWriter, r *http.Request) {
+		if r.Header.Get("X-Ormtornet") != "spelledare" {
 			http.Error(w, "fel förfrågan", http.StatusBadRequest)
 			return
 		}
+		h(w, r)
+	})
+}
+
+func writeJSON(w http.ResponseWriter, code int, v any) {
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	w.WriteHeader(code)
+	json.NewEncoder(w).Encode(v)
+}
+
+// addHostRoutes lägger till spelledarens sida och det den kan göra.
+func addHostRoutes(mux *http.ServeMux, web fs.FS, game *Game, addrs hostAddrs, hooks hostHooks) {
+	mux.HandleFunc("POST /spelledare/stang", hostAction(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusNoContent)
-		go closeTower()
+		go hooks.Close()
+	}))
+	mux.HandleFunc("POST /spelledare/starta", hostAction(func(w http.ResponseWriter, r *http.Request) {
+		if !game.ForceStart() {
+			writeJSON(w, http.StatusConflict, map[string]string{"fel": "Det går inte att starta nu. Minst en människa måste vara i tornet, och ingen vandring får pågå."})
+			return
+		}
+		w.WriteHeader(http.StatusNoContent)
+	}))
+	mux.HandleFunc("POST /spelledare/installningar", hostAction(func(w http.ResponseWriter, r *http.Request) {
+		var s Settings
+		if err := json.NewDecoder(http.MaxBytesReader(w, r.Body, 4096)).Decode(&s); err != nil {
+			writeJSON(w, http.StatusBadRequest, map[string]string{"fel": "Kunde inte läsa inställningarna."})
+			return
+		}
+		got, err := game.ApplySettings(s)
+		if err != nil {
+			writeJSON(w, http.StatusConflict, map[string]any{"fel": "Inställningarna kan ändras när omgången är slut.", "settings": got})
+			return
+		}
+		if hooks.Save != nil {
+			if err := hooks.Save(got); err != nil {
+				writeJSON(w, http.StatusOK, map[string]any{"settings": got, "varning": "Gäller nu, men kunde inte sparas till nästa gång: " + err.Error()})
+				return
+			}
+		}
+		writeJSON(w, http.StatusOK, map[string]any{"settings": got})
 	}))
 	mux.HandleFunc("GET /spelledare", localOnly(func(w http.ResponseWriter, r *http.Request) {
 		http.ServeFileFS(w, r, web, "spelledare.html")

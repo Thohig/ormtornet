@@ -32,6 +32,9 @@
 
     "ansluter": [
       "{namn} kliver in genom porten i {horn}. Hen ser ut att ha gjort det här förut."
+    ],
+    "lamnar": [
+      "{namn} vänder i porten i {horn} och går sin väg. Det finns andra torn."
     ]
   }
 }

@@ -4,7 +4,7 @@
     {
       "name": "ormtornet",
       "runtimeExecutable": "go",
-      "runtimeArgs": ["run", ".", "-ai", "2"],
+      "runtimeArgs": ["run", "."],
       "port": 8080
     }
   ]

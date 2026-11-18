@@ -44,6 +44,7 @@ const (
 )
 
 type Config struct {
+	AI         int  // önskat antal datorspelare
 	Reveal     bool // false stänger av avslöjandet
 	SunMax     int
 	TurnTime   time.Duration
@@ -536,6 +537,10 @@ func (g *Game) Join(c *Client, rawName string) {
 		}
 	}
 	if slot < 0 {
+		// Utanför spelet kliver en datorspelare åt sidan för en människa.
+		slot = g.removeBot(true)
+	}
+	if slot < 0 {
 		g.send(c, logMsg{T: "error", Text: g.data.Text("fullt")})
 		return
 	}
@@ -569,8 +574,10 @@ func (g *Game) Leave(c *Client) {
 	p.client = nil
 	g.logOthers(p, g.data.Text("lamnar", "namn", p.Name), "dim")
 	if g.phase != phasePlay {
-		// Utanför spelet lämnar man sin plats helt.
+		// Utanför spelet lämnar man sin plats helt, och en datorspelare
+		// kan ta den om spelledaren vill ha fler.
 		g.players[p.Slot] = nil
+		g.syncBots(true)
 		g.checkStart()
 	} else if g.allChosen() {
 		g.resolve()

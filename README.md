@@ -26,25 +26,38 @@ kan öppna den i Safari eller Chrome.
 Stäng tornet med Ctrl+C i terminalen eller knappen "Stäng tornet" på
 spelledarens sida. Spelarna får då ett meddelande om att tornet stänger.
 
+Inställningarna ändras enklast på spelledarens sida (se nedan) och sparas
+till nästa gång. Flaggorna nedan gäller före det sparade, men bara den gången.
+
 Flaggor:
 
 - `-addr 0.0.0.0:8080` adress och port
 - `-data data` mapp med datafilerna
 - `-sol 40` antal rundor innan solen går ner
 - `-turtid 30s` längsta tid att välja drag per runda
-- `-min 2` minsta antal spelare för att börja (sätt `-min 1` för att prova ensam)
+- `-min 2` minsta antal spelare för att börja, datorspelare inräknade (sätt `-min 1` för att prova ensam)
 - `-ai 2` antal datorstyrda vandrare (0–3)
 - `-avslojande=false` stänger av avslöjandet, för spelare som redan känner till tornets hemlighet
 - `-oppna` öppnar spelledarens sida i webbläsaren när servern har startat
 - `-vaken` håller datorn vaken så länge servern är igång
+- `-installningar fil` var spelledarens inställningar sparas (standard `~/Library/Application Support/Ormtornet/installningar.json`, tom för att inte spara)
 
 ### Spelledarens sida
 
 Öppna `http://localhost:8080/spelledare` på datorn som kör servern. Där står
 adressen spelarna ska öppna, med knappar som kopierar en färdig inbjudan att
 skicka i en gruppchatt. Sidan visar också vilka som har anslutit och är redo,
-vilka inställningar tornet har och vad man kan göra om någon inte kommer in.
-Den visar inga skatter, positioner eller drag, så spelledaren kan spela med i
+och vad man kan göra om någon inte kommer in.
+
+Under Inställningar väljer spelledaren antal AI-spelare, minsta antal
+vandrare, solnedgång, turtid och avslöjandet. AI-spelare kommer och går
+direkt i lobbyn, resten gäller från nästa omgång. Under en pågående vandring
+är inställningarna låsta. Om tornet är fullt när en människa ansluter i
+lobbyn kliver en AI-spelare åt sidan, och kommer tillbaka om platsen blir
+ledig igen. Knappen Starta nu börjar vandringen även om inte alla har
+tryckt Enter.
+
+Sidan visar inga skatter, positioner eller drag, så spelledaren kan spela med i
 en annan flik ("Gå in själv"). Andra datorer i nätverket kommer inte åt sidan.
 
 ## Spela
@@ -79,7 +92,7 @@ Andras skatt och val av drag syns inte förrän spelet är slut.
 
 ### Spela mot datorn
 
-Med `-ai` fyller servern upp hörnen med datorstyrda vandrare:
+Välj antal AI-spelare på spelledarens sida, eller med `-ai`:
 
 ```bash
 go run . -ai 3

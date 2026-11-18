@@ -28,7 +28,7 @@ func TestHostViewListsPlayersAndBots(t *testing.T) {
 
 func TestHostPageOnlyLocal(t *testing.T) {
 	mux := http.NewServeMux()
-	addHostRoutes(mux, nil, testGame(t), hostAddrs{Name: "http://test.local:8080"}, func() {})
+	addHostRoutes(mux, nil, testGame(t), hostAddrs{Name: "http://test.local:8080"}, hostHooks{Close: func() {}})
 
 	for _, tc := range []struct {
 		remote string
@@ -51,7 +51,7 @@ func TestHostPageOnlyLocal(t *testing.T) {
 func TestCloseNeedsHeader(t *testing.T) {
 	mux := http.NewServeMux()
 	closed := make(chan bool, 2)
-	addHostRoutes(mux, nil, testGame(t), hostAddrs{}, func() { closed <- true })
+	addHostRoutes(mux, nil, testGame(t), hostAddrs{}, hostHooks{Close: func() { closed <- true }})
 
 	post := func(header string) int {
 		r := httptest.NewRequest("POST", "/spelledare/stang", nil)
@@ -66,7 +66,7 @@ func TestCloseNeedsHeader(t *testing.T) {
 	if code := post(""); code != http.StatusBadRequest {
 		t.Fatalf("utan huvud: %d", code)
 	}
-	if code := post("stang"); code != http.StatusNoContent {
+	if code := post("spelledare"); code != http.StatusNoContent {
 		t.Fatalf("med huvud: %d", code)
 	}
 	if !<-closed {
