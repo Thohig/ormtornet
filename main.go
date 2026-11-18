@@ -79,7 +79,7 @@ func main() {
 		if err != nil {
 			return
 		}
-		game.serve(conn)
+		game.serve(conn, isLocal(r))
 	})
 
 	ln, err := net.Listen("tcp", *addr)

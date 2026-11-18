@@ -80,7 +80,15 @@ Kommer spelaren tillbaka och skriver samma namn får den genast tillbaka sina
 steg. I resultatet märks den som AI har spelat åt med "~". Den som inte kommer
 tillbaka innan vandringen är slut är inte med i nästa.
 
-Sidan visar inga skatter, positioner eller drag, så spelledaren kan spela med i
+Med "Spelledarläge: på" leder spelledaren tornet utan att spela. Ingen kan
+då ansluta som vandrare från spelledarens dator, och spelarna får veta att
+tornet har en spelledare. Spelledaren startar vandringen med Starta nu, även
+när alla vandrare är AI-spelare. Sidan visar då en översikt: hela tornet så
+långt det har vuxit fram, med fällor som väntar och alla varelser, varje
+vandrares plats, liv, skatt, drycker, tillstånd och valda drag, hur djupt
+ormen sover, avslöjandets nivå och allt vandrarna har fått läsa.
+
+Utan spelledarläge visar sidan inga skatter, positioner eller drag, så spelledaren kan spela med i
 en annan flik ("Gå in själv"). Andra datorer i nätverket kommer inte åt sidan.
 
 ## Spela

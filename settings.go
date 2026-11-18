@@ -12,13 +12,14 @@ import (
 )
 
 type Settings struct {
-	AI         int    `json:"ai"`         // datorspelare, 0–3
-	Min        int    `json:"min"`        // minsta antal vandrare, datorspelare inräknade
-	Sol        int    `json:"sol"`        // rundor innan solen går ner
-	Turtid     int    `json:"turtid"`     // sekunder per runda
-	Avslojande bool   `json:"avslojande"` // låt tornet avslöja sin hemlighet
-	Franvaro   int    `json:"franvaro"`   // rundor innan AI tar över en frånvarande vandrare, 0 = aldrig
-	Strid      string `json:"strid"`      // strid mellan vandrare: "av", "pa" eller "halva"
+	AI         int    `json:"ai"`            // datorspelare, 0–3
+	Min        int    `json:"min"`           // minsta antal vandrare, datorspelare inräknade
+	Sol        int    `json:"sol"`           // rundor innan solen går ner
+	Turtid     int    `json:"turtid"`        // sekunder per runda
+	Avslojande bool   `json:"avslojande"`    // låt tornet avslöja sin hemlighet
+	Franvaro   int    `json:"franvaro"`      // rundor innan AI tar över en frånvarande vandrare, 0 = aldrig
+	Strid      string `json:"strid"`         // strid mellan vandrare: "av", "pa" eller "halva"
+	Spelledare bool   `json:"spelledarlage"` // spelledaren spelar inte själv och ser allt
 }
 
 var defaultSettings = Settings{AI: 0, Min: 2, Sol: 40, Turtid: 30, Avslojande: true, Franvaro: 2, Strid: pvpOn}
@@ -40,11 +41,11 @@ func (s Settings) normalize() Settings {
 
 func (s Settings) config() Config {
 	s = s.normalize()
-	return Config{AI: s.AI, AbsentRounds: s.Franvaro, PvP: s.Strid, MinPlayers: s.Min, SunMax: s.Sol, TurnTime: time.Duration(s.Turtid) * time.Second, Reveal: s.Avslojande}
+	return Config{AI: s.AI, AbsentRounds: s.Franvaro, PvP: s.Strid, GMMode: s.Spelledare, MinPlayers: s.Min, SunMax: s.Sol, TurnTime: time.Duration(s.Turtid) * time.Second, Reveal: s.Avslojande}
 }
 
 func settingsFrom(cfg Config) Settings {
-	return Settings{AI: cfg.AI, Franvaro: cfg.AbsentRounds, Strid: cfg.PvP, Min: cfg.MinPlayers, Sol: cfg.SunMax, Turtid: int(cfg.TurnTime / time.Second), Avslojande: cfg.Reveal}
+	return Settings{AI: cfg.AI, Franvaro: cfg.AbsentRounds, Strid: cfg.PvP, Spelledare: cfg.GMMode, Min: cfg.MinPlayers, Sol: cfg.SunMax, Turtid: int(cfg.TurnTime / time.Second), Avslojande: cfg.Reveal}
 }
 
 // defaultSettingsPath ger ~/Library/Application Support/Ormtornet/installningar.json.
@@ -105,7 +106,14 @@ func (g *Game) ApplySettings(s Settings) (Settings, error) {
 	if g.phase == phasePlay {
 		return settingsFrom(g.cfg), errPlaying
 	}
+	wasGM := g.cfg.GMMode
 	g.cfg = s.config()
+	if g.cfg.GMMode != wasGM {
+		if g.cfg.GMMode {
+			g.kickLocal()
+		}
+		g.gmAnnounce(g.cfg.GMMode)
+	}
 	if g.phase == phaseLobby {
 		g.sun = g.cfg.SunMax
 	}
@@ -117,11 +125,15 @@ func (g *Game) ApplySettings(s Settings) (Settings, error) {
 }
 
 // ForceStart låter spelledaren börja utan att vänta på att alla är redo
-// eller att tillräckligt många har kommit. Minst en människa måste vara med.
+// eller att tillräckligt många har kommit. Minst en människa måste vara med,
+// utom i spelledarläget: där räcker det med AI-spelare.
 func (g *Game) ForceStart() bool {
 	g.mu.Lock()
 	defer g.mu.Unlock()
-	if g.phase == phasePlay || g.humansPresent() == 0 {
+	if g.phase == phasePlay {
+		return false
+	}
+	if g.humansPresent() == 0 && !(g.cfg.GMMode && g.botCount() > 0) {
 		return false
 	}
 	if g.phase == phaseEnd {

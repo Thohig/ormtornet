@@ -85,6 +85,23 @@
   #saved { min-height: 1.2em; color: var(--info); }
   #saved.err { color: var(--warn); }
   #startHint { color: var(--dim); }
+  body.gm #host { max-width: 1100px; }
+  #gmTop { color: var(--fg); }
+  #gmTop .warn { color: var(--warn); }
+  #gmMapBox { height: min(70vh, 640px); display: flex; align-items: center; justify-content: center; margin: 8px 0; }
+  .tablewrap { overflow-x: auto; }
+  #gmPlayers { border-collapse: collapse; width: 100%; font-size: 13px; }
+  #gmPlayers th { text-align: left; font-weight: normal; color: var(--dim); padding: 4px 10px 4px 0; }
+  #gmPlayers td { padding: 4px 10px 4px 0; vertical-align: top; }
+  #gmPlayers .cond { color: var(--warn); }
+  #gmPlayers .dead { opacity: 0.55; }
+  #gmLog { max-height: 340px; overflow-y: auto; font-size: 13px; line-height: 1.4; border-top: 1px solid var(--faint); padding-top: 6px; }
+  #gmLog div { margin: 2px 0; }
+  #gmLog .who { color: var(--dim); }
+  #gmLog .varn { color: var(--warn); }
+  #gmLog .info { color: var(--info); }
+  #gmLog .syn { color: var(--hi); }
+  #gmLog .dim { color: var(--dim); }
   #help li { margin: 6px 0; line-height: 1.45; }
   #help { padding-left: 1.4em; margin: 0; }
   code { color: var(--hi); font: inherit; }
@@ -103,7 +120,7 @@
     <div class="buttons">
       <button class="btn main" id="copyInvite" type="button">Kopiera inbjudan</button>
       <button class="btn" id="copyAddr" type="button">Kopiera adressen</button>
-      <a class="btn" href="/" target="_blank" rel="noopener">Gå in själv</a>
+      <a class="btn" id="joinSelf" href="/" target="_blank" rel="noopener">Gå in själv</a>
     </div>
     <p id="copied"></p>
 
@@ -114,6 +131,21 @@
       <button class="btn" id="startNow" type="button">Starta nu</button>
     </div>
     <p id="startHint">Börjar vandringen även om inte alla har tryckt Enter.</p>
+
+    <section id="gm" hidden>
+      <h2>Översikt</h2>
+      <p id="gmTop"></p>
+      <div id="gmMapBox"><canvas id="gmMap"></canvas></div>
+      <p class="dimtext">Fällor som väntar visas med sitt tecken. Tornet växer fram när någon går in i ett nytt rum, så rum som ingen har varit i finns inte än.</p>
+      <div class="tablewrap">
+        <table id="gmPlayers">
+          <thead><tr><th>Vandrare</th><th>Var</th><th>Liv</th><th>Skatt</th><th>Drycker</th><th>Tillstånd</th><th>Drag</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <h2>Allt vandrarna har läst</h2>
+      <div id="gmLog"></div>
+    </section>
 
     <h2>Inställningar</h2>
     <form id="settings" autocomplete="off">
@@ -153,6 +185,13 @@
         <option value="av">av</option>
       </select>
       <span class="note">portrummen är alltid fredade</span>
+
+      <label for="sGM">Spelledarläge</label>
+      <select id="sGM" name="spelledarlage">
+        <option value="0">av, jag spelar själv</option>
+        <option value="1">på, jag leder och ser allt</option>
+      </select>
+      <span class="note">då kan ingen spela från den här datorn</span>
     </form>
     <p id="saved"></p>
     <p class="dimtext" id="settingsHint">Sparas till nästa gång. AI-spelare kommer och går direkt, resten gäller från nästa omgång.</p>
@@ -173,6 +212,7 @@
     </ul>
   </main>
 </div>
+<script src="map.js"></script>
 <script>
 "use strict";
 const $ = (id) => document.getElementById(id);
@@ -222,6 +262,9 @@ function statusText(v) {
     return "Vandringen pågår. Runda " + v.round + ", " + v.sun + " av " + v.sunMax + " rundor kvar till solnedgången.";
   }
   const prefix = v.phase === "slut" ? "Vandringen är slut. " : "";
+  if (v.settings.spelledarlage) {
+    return prefix + here.length + " vandrare vid portarna. Du startar vandringen med Starta nu.";
+  }
   if (humans.length === 0) return prefix + "Väntar på vandrare.";
   if (here.length < v.minPlayers) {
     return prefix + "Väntar på fler vandrare. Minst " + v.minPlayers + " behövs, " + here.length + " är här.";
@@ -295,13 +338,94 @@ function render(v) {
   renderSettings(v);
 
   const humans = v.players.filter((p) => !p.bot && p.online).length;
-  $("startNow").disabled = v.phase === "spel" || humans === 0;
+  const gm = v.settings.spelledarlage;
+  const canStart = humans > 0 || (gm && v.players.length > 0);
+  $("startNow").disabled = v.phase === "spel" || !canStart;
   $("startHint").textContent = v.phase === "spel"
     ? "Vandringen pågår."
-    : humans === 0
-      ? "Minst en människa måste vara i tornet."
+    : !canStart
+      ? (gm ? "Det behövs minst en vandrare, människa eller AI-spelare." : "Minst en människa måste vara i tornet.")
       : "Börjar vandringen även om inte alla har tryckt Enter eller ni är färre än minsta antalet.";
+
+  document.body.classList.toggle("gm", gm);
+  $("joinSelf").hidden = gm;
+  $("gm").hidden = !gm;
 }
+
+// Översikten i spelledarläget: hela tornet, alla vandrare, ormen och loggen.
+let mapReady = false;
+const SLEEP_WORDS = ["sover djupt", "sover oroligt", "är nära att vakna"];
+
+function renderGM(o) {
+  const top = $("gmTop");
+  top.textContent = "";
+  const m = o.map;
+  const parts = [];
+  if (m.phase === "spel") parts.push("Runda " + m.round + ", solen " + m.sun + " av " + m.sunMax);
+  parts.push("Ormen " + SLEEP_WORDS[o.serpent.sleep] + " (" + o.serpent.sleepCards + " sovkort, " + o.serpent.wakeCards + " vakna-kort kvar" +
+    (o.serpent.wakes ? ", har vaknat " + o.serpent.wakes + (o.serpent.wakes === 1 ? " gång" : " gånger") : "") + ")");
+  if (m.reveal) parts.push("Avslöjandet nivå " + o.level + " av 4, " + o.clues + " ledtrådar utdelade");
+  parts.push(o.traps + (o.traps === 1 ? " fälla väntar" : " fällor väntar"));
+  top.textContent = parts.join(" · ");
+
+  if (!mapReady) {
+    MapView.setup($("gmMap"), m.size);
+    mapReady = true;
+  }
+  MapView.draw(m);
+
+  const tb = $("gmPlayers").querySelector("tbody");
+  tb.textContent = "";
+  o.players.forEach((p) => {
+    const tr = document.createElement("tr");
+    if (p.status !== "inne") tr.className = "dead";
+    const cond = [];
+    if (p.cellar) cond.push("källaren " + p.cellar);
+    if (p.stuck) cond.push("fast " + p.stuck);
+    if (p.poison) cond.push("gift " + p.poison);
+    if (p.dark) cond.push("mörker " + p.dark);
+    if (!p.online) cond.push("borta");
+    const who = p.name + (p.ai ? " (AI)" : p.bot ? " (dator)" : "");
+    const where = { ute: "ute", forlorad: "förlorad", dod: "död" }[p.status] || p.room || "";
+    const cells = [who, where, p.hp + "/" + o.maxHp, p.treasure + " guld", p.potions, cond.join(", "), p.action || (m.phase === "spel" && p.status === "inne" ? "väljer" : "")];
+    cells.forEach((c, i) => {
+      const td = document.createElement("td");
+      td.textContent = c;
+      if (i === 0) td.style.color = COLORS[p.slot];
+      if (i === 5 && c) td.className = "cond";
+      tr.append(td);
+    });
+    tb.append(tr);
+  });
+
+  const box = $("gmLog");
+  const atBottom = box.scrollHeight - box.scrollTop - box.clientHeight < 30;
+  box.textContent = "";
+  o.log.slice(-200).forEach((e) => {
+    const d = document.createElement("div");
+    const who = document.createElement("span");
+    who.className = "who";
+    who.textContent = (e.round ? "R" + e.round + " " : "") + e.to.join(", ") + ": ";
+    const t = document.createElement("span");
+    if (e.c) t.className = e.c;
+    t.textContent = e.text;
+    d.append(who, t);
+    box.append(d);
+  });
+  if (atBottom) box.scrollTop = box.scrollHeight;
+}
+
+async function pollGM() {
+  if (closed) return;
+  if (view && view.settings.spelledarlage) {
+    try {
+      const r = await fetch("/spelledare/oversikt", { cache: "no-store" });
+      if (r.ok) renderGM(await r.json());
+    } catch {}
+  }
+  setTimeout(pollGM, 1000);
+}
+pollGM();
 
 // Inställningarna. Formuläret skrivs inte över medan spelledaren håller på
 // med det, eller medan en ändring är på väg till servern.
@@ -339,6 +463,7 @@ function renderSettings(v) {
   }
   fr.value = String(s.franvaro);
   $("sStrid").value = s.strid;
+  $("sGM").value = s.spelledarlage ? "1" : "0";
 }
 
 function post(path, body) {
@@ -367,6 +492,7 @@ $("settings").addEventListener("change", async () => {
     avslojande: $("sRev").value === "1",
     franvaro: +$("sFr").value,
     strid: $("sStrid").value,
+    spelledarlage: $("sGM").value === "1",
   };
   saving = true;
   try {

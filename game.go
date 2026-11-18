@@ -47,6 +47,7 @@ type Config struct {
 	AI           int    // önskat antal datorspelare
 	AbsentRounds int    // rundor innan AI tar över en frånvarande vandrare, 0 = aldrig
 	PvP          string // strid mellan vandrare: "av", "pa" eller "halva"
+	GMMode       bool   // spelledarläge: spelledaren spelar inte och ser allt
 	Reveal       bool   // false stänger av avslöjandet
 	SunMax       int
 	TurnTime     time.Duration
@@ -134,6 +135,7 @@ type Client struct {
 	send   chan []byte
 	player *Player
 	closed bool
+	local  bool // ansluten från datorn som kör tornet
 }
 
 type Game struct {
@@ -163,6 +165,8 @@ type Game struct {
 	usedClues map[string]bool // ledtrådar som redan har delats ut
 
 	lastActive time.Time // senast en människa var ansluten eller spelledarens sida frågade
+
+	gmLog []gmEntry // allt vandrarna har fått läsa, för spelledarläget
 }
 
 func NewGame(d *Data, cfg Config) *Game {
@@ -359,6 +363,7 @@ func (g *Game) send(c *Client, v any) {
 
 func (g *Game) logTo(p *Player, text, class string) {
 	if p != nil && text != "" {
+		g.recordLog(p, text, class)
 		g.send(p.client, logMsg{T: "log", Text: text, C: class})
 	}
 }
@@ -514,6 +519,10 @@ func (g *Game) Join(c *Client, rawName string) {
 	if c.player != nil {
 		return
 	}
+	if c.local && g.cfg.GMMode {
+		g.send(c, logMsg{T: "error", Text: g.data.Text("spelledare_kan_inte")})
+		return
+	}
 	name := cleanName(rawName)
 	if name == "" {
 		g.send(c, logMsg{T: "error", Text: g.data.Text("tomt_namn")})
@@ -581,6 +590,9 @@ func (g *Game) Join(c *Client, rawName string) {
 		if b != nil && b.bot != nil {
 			g.logTo(p, fill(pick(g.data.AI.Ansluter), "namn", b.Name, "horn", g.data.Horn[b.Slot]), "info")
 		}
+	}
+	if g.cfg.GMMode {
+		g.logTo(p, g.data.Text("spelledare_pa"), "info")
 	}
 	g.logTo(p, g.data.Text("lobby", "min", strconv.Itoa(g.cfg.MinPlayers)), "info")
 	g.logOthers(p, g.data.Text("ansluter", "namn", name, "horn", horn), "info")
@@ -1047,8 +1059,8 @@ type clientMsg struct {
 }
 
 // serve sköter en websocket-anslutning tills den stängs.
-func (g *Game) serve(conn *wsConn) {
-	c := &Client{conn: conn, send: make(chan []byte, 64)}
+func (g *Game) serve(conn *wsConn, local bool) {
+	c := &Client{conn: conn, send: make(chan []byte, 64), local: local}
 	go func() {
 		for b := range c.send {
 			if err := conn.WriteText(b); err != nil {
