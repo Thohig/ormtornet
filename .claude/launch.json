@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "ormtornet",
+      "runtimeExecutable": "go",
+      "runtimeArgs": ["run", ".", "-ai", "2"],
+      "port": 8080
+    }
+  ]
+}
