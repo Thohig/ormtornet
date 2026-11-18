@@ -207,7 +207,7 @@ func (g *Game) duel(p *Player, m *Monster, a string) {
 	}
 	if monsterHits {
 		p.hurt("varelse", lowerFirst(t.Namn))
-		g.damage(p, t.Skada, false)
+		g.damage(p, g.shieldDamage(p, t.Skada), false)
 	}
 	if playerHits {
 		m.HP -= g.data.Monster.Spelarskada
@@ -233,7 +233,7 @@ func (g *Game) freeAttack(p *Player, m *Monster, key string) {
 	if mc == actAttack {
 		g.logTo(p, g.data.MonsterText("monster_traffar", g.monsterVars(m, "skada", strconv.Itoa(t.Skada))...), "varn")
 		p.hurt("varelse", lowerFirst(t.Namn))
-		g.damage(p, t.Skada, false)
+		g.damage(p, g.shieldDamage(p, t.Skada), false)
 	}
 }
 

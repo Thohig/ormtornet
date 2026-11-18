@@ -170,7 +170,7 @@ func (g *Game) wakeSerpent() {
 	}
 	for _, p := range inside {
 		share := min(1, o.SkattForlust+g.classVal(p, "extra_forlust", 0))
-		lost := int(float64(p.Treasure)*share + 0.5)
+		lost := g.hiddenShare(p, int(float64(p.Treasure)*share+0.5))
 		p.Treasure -= lost
 		dmg := max(0, o.Skada-int(g.classVal(p, "ormskada", 0)))
 		g.logTo(p, fill(pick(o.KastasUt), "forlust", strconv.Itoa(lost), "skada", strconv.Itoa(dmg)), "varn")

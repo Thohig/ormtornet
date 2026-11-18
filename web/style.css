@@ -474,3 +474,6 @@ body.touch #side { overflow-y: auto; }
 }
 .classpick:hover, .classpick:focus { border-color: var(--dim); outline: none; }
 .classname { color: var(--hi); }
+
+/* Föremålen i väskan. */
+.item { color: var(--fg); }

@@ -39,26 +39,27 @@ func (g *Game) recordLog(p *Player, text, class string) {
 
 // gmPlayer är allt spelledaren ser om en vandrare.
 type gmPlayer struct {
-	ID       int    `json:"id"`
-	Name     string `json:"name"`
-	Slot     int    `json:"slot"`
-	X        int    `json:"x"`
-	Y        int    `json:"y"`
-	Status   string `json:"status"`
-	Online   bool   `json:"online"`
-	Bot      bool   `json:"bot"`
-	AI       bool   `json:"ai"`
-	HP       int    `json:"hp"`
-	Treasure int    `json:"treasure"`
-	Potions  int    `json:"potions"`
-	Stuck    int    `json:"stuck"`
-	Cellar   int    `json:"cellar"`
-	Poison   int    `json:"poison"`
-	Dark     int    `json:"dark"`
-	Action   string `json:"action"` // valt drag, med motståndare eller varelse
-	Room     string `json:"room"`
-	Class    string `json:"klass,omitempty"`
-	MaxHP    int    `json:"maxHp"`
+	ID       int      `json:"id"`
+	Name     string   `json:"name"`
+	Slot     int      `json:"slot"`
+	X        int      `json:"x"`
+	Y        int      `json:"y"`
+	Status   string   `json:"status"`
+	Online   bool     `json:"online"`
+	Bot      bool     `json:"bot"`
+	AI       bool     `json:"ai"`
+	HP       int      `json:"hp"`
+	Treasure int      `json:"treasure"`
+	Potions  int      `json:"potions"`
+	Stuck    int      `json:"stuck"`
+	Cellar   int      `json:"cellar"`
+	Poison   int      `json:"poison"`
+	Dark     int      `json:"dark"`
+	Action   string   `json:"action"` // valt drag, med motståndare eller varelse
+	Room     string   `json:"room"`
+	Class    string   `json:"klass,omitempty"`
+	MaxHP    int      `json:"maxHp"`
+	Items    []string `json:"foremal,omitempty"`
 }
 
 type gmSerpent struct {
@@ -156,7 +157,7 @@ func (g *Game) GMView(visible bool) gmView {
 			ID: p.ID, Name: p.Name, Slot: p.Slot, X: p.X, Y: p.Y, Status: p.Status, Online: p.present(),
 			Bot: p.bot != nil && !p.takenOver, AI: p.takenOver, HP: p.HP, Treasure: p.Treasure, Potions: p.Potions,
 			Stuck: p.Stuck, Cellar: p.Cellar, Poison: p.Poison, Dark: p.Dark, Action: g.actionText(p), Room: room,
-			Class: g.classLabel(p), MaxHP: g.maxHP(p),
+			Class: g.classLabel(p), MaxHP: g.maxHP(p), Items: g.itemNames(p),
 		})
 	}
 	m.Monsters = g.monsterViews(nil, false)

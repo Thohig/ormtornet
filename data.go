@@ -141,6 +141,7 @@ type Data struct {
 	Svarighet    Difficulty          `json:"svarighet"`
 	Intro        IntroData           `json:"intro"`
 	Klasser      []Class             `json:"klasser"`
+	Foremal      ItemData            `json:"foremal"`
 }
 
 // IntroData styr startsidan.
@@ -149,7 +150,7 @@ type IntroData struct {
 }
 
 // Filerna i datamappen. Alla läses in i samma struktur; "texter" slås ihop.
-var dataFiles = []string{"texter.json", "fallor.json", "ormen.json", "monster.json", "avslojande.json", "ai.json", "svarighet.json", "klasser.json"}
+var dataFiles = []string{"texter.json", "fallor.json", "ormen.json", "monster.json", "avslojande.json", "ai.json", "svarighet.json", "klasser.json", "foremal.json"}
 
 // loadData läser filerna i mappen dir. Saknas en fil används den inbyggda kopian.
 func loadData(dir string) (*Data, string, error) {
@@ -227,6 +228,9 @@ func mergeData(d, part *Data) {
 	}
 	if len(part.Klasser) > 0 {
 		d.Klasser = part.Klasser
+	}
+	if len(part.Foremal.Lista) > 0 {
+		d.Foremal = part.Foremal
 	}
 	if len(part.Regioner) > 0 {
 		d.Regioner = part.Regioner

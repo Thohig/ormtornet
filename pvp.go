@@ -201,7 +201,7 @@ func (g *Game) hit(a, b *Player, gold int) {
 	if b.Status != statusIn {
 		return
 	}
-	gold = min(gold, b.Treasure)
+	gold = g.hiddenShare(b, min(gold, b.Treasure))
 	b.Treasure -= gold
 	a.Treasure += gold
 	g.soundTo(a, "hugg")

@@ -50,6 +50,10 @@ func (g *Game) trigger(p *Player, t *Trap, depth int) {
 	region := g.data.region(p.X, p.Y, g.size)
 	roomName := g.roomName(room)
 	room.Mark = t.Tecken
+	// Fjällamuletten tar nästa fälla. Tecknet syns ändå.
+	if g.useItem(p, "amulett", "falla", t.Namn) {
+		return
+	}
 	p.Seen[t.ID] = true
 	p.stats.traps++
 	p.hurt("falla", lowerFirst(t.Namn))
@@ -98,7 +102,7 @@ func (g *Game) trigger(p *Player, t *Trap, depth int) {
 		g.damage(p, t.Skada, true)
 	case "rasande_golv":
 		g.damage(p, t.Skada, true)
-		if p.Status == statusIn {
+		if p.Status == statusIn && !g.useItem(p, "rep") {
 			p.Cellar = max(1, t.Rundor)
 			p.Stuck = 0
 		}
@@ -117,7 +121,7 @@ func (g *Game) trigger(p *Player, t *Trap, depth int) {
 	case "morker":
 		if g.is(p, "lyktbarare") {
 			g.logTo(p, g.data.Text("klass_lyktbarare_morker"), "info")
-		} else {
+		} else if !g.useItem(p, "veke") {
 			p.Dark = max(p.Dark, t.Rundor)
 		}
 	case "eko":
@@ -149,6 +153,7 @@ func (g *Game) leaveCellar(p *Player) {
 	g.logTo(p, g.data.Text("kallare_ut", "rum", g.roomName(room)), "info")
 	g.logTo(p, g.describe(p, room, p.X, p.Y), "")
 	g.noticeTrail(p)
+	g.pickUp(p)
 	g.logOthers(p, g.hiddenText("kallare_ut_andra", "namn", p.Name, "region", g.data.region(p.X, p.Y, g.size)), "info")
 	g.announceMonster(p)
 }
@@ -186,6 +191,8 @@ func (g *Game) search(p *Player) {
 			g.soundTo(p, "inget")
 			g.logTo(p, g.data.SearchText("gang_ingen"), "dim")
 		}
+	case "foremal":
+		g.findItem(p)
 	case "falla":
 		g.logTo(p, g.data.SearchText("falla"), "varn")
 		g.trigger(p, g.data.randomTrap(), 0)

@@ -19,6 +19,7 @@ type chronStats struct {
 	traps    int // fällor som slog till
 	kills    int // varelser som vandraren har fällt
 	searched int // rum som vandraren har sökt igenom
+	items    int // föremål som vandraren har hittat
 }
 
 // chronicle skriver ner en händelse från den här rundan.

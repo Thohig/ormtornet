@@ -176,7 +176,8 @@ type Room struct {
 	Event    string // fälla som väntar på den som först går in
 	Mark     string // tecken som visar att en fälla har slagit till
 	Searched bool
-	trail    trail // den som senast gick ut ur rummet, för spåren
+	trail    trail    // den som senast gick ut ur rummet, för spåren
+	items    []string // föremål som någon har lämnat här
 }
 
 // trail är spåren efter den som senast lämnade ett rum.
@@ -193,6 +194,7 @@ type Player struct {
 	Corner   int      // porten vandraren börjar vid; lottas när vandrarna inte ser varandra
 	classID  string   // vald klass, tom om ingen
 	offer    []string // klasser att välja mellan i lobbyn
+	items    []*Item  // föremål i väskan
 	X, Y     int
 	client   *Client
 	Ready    bool
@@ -447,6 +449,8 @@ type stateMsg struct {
 	SleepText  string        `json:"sleepText,omitempty"`
 	Sight      string        `json:"sight"` // "alla", "moten" eller "egen"
 	Class      *classView    `json:"klass,omitempty"`
+	Items      []itemView    `json:"foremal,omitempty"`
+	Compass    string        `json:"kompass,omitempty"`
 	Offer      []*classView  `json:"erbjudande,omitempty"`
 	Players    []playerView  `json:"players"`
 	Rooms      []roomView    `json:"rooms"`
@@ -558,6 +562,10 @@ func (g *Game) stateFor(me *Player) stateMsg {
 		}
 	}
 	st.Class = viewOfClass(g.classOf(me))
+	st.Items = g.itemViews(me)
+	if g.phase == phasePlay {
+		st.Compass = g.compass(me)
+	}
 	if g.cfg.Classes && me.classID == "" && g.phase != phasePlay {
 		for _, id := range me.offer {
 			if c := g.data.class(id); c != nil {
@@ -673,6 +681,7 @@ func (g *Game) placeAtCorner(p *Player) {
 	p.Seen = map[string]bool{}
 	p.Potions, p.Stuck, p.Cellar, p.Poison, p.Dark = 0, 0, 0, 0, 0
 	p.known = newGrid[bool](g.size)
+	p.items = nil
 	g.revealPorts()
 	g.noteRoom(p)
 }
@@ -1326,6 +1335,7 @@ func (g *Game) move(p *Player, d Dir, depth int) {
 	}
 	// En fälla kan ha flyttat spelaren; varelsen gäller rummet spelaren står i nu.
 	if p.X == nx && p.Y == ny {
+		g.pickUp(p)
 		g.announceMonster(p)
 	}
 }

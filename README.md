@@ -393,8 +393,28 @@ visar sedan för alla att något har hänt där.
 Du har 6 liv. Den som når noll liv dör.
 
 Ett vanligt rum kan sökas igenom en gång (S). Man kan hitta skatt, en dryck,
-en hemlig gång till ett grannrum, eller utlösa en fälla. En dryck (D) ger
-tillbaka 2 liv och tar bort gift.
+ett föremål, en hemlig gång till ett grannrum, eller utlösa en fälla. En
+dryck (D) ger tillbaka 2 liv och tar bort gift.
+
+### Föremål
+
+Ett föremål verkar av sig självt. Man bär högst tre, och de står under DU
+i panelen. Hittar man ett när väskan är full blir det kvar i rummet, och
+den som kommer in där härnäst tar det. Föremålen följer inte med till
+nästa torn. Krönikan berättar vem som hittade vad.
+
+| Föremål | Vad det gör |
+|---|---|
+| Rep med kroken kvar | faller du genom golvet hamnar du inte i källarvalven (en gång) |
+| Fjällamuletten | nästa fälla slår inte till, men tecknet syns (en gång) |
+| Extra veke | lyktan tål ett mörker (en gång) |
+| Bucklig sköld | varelser gör en skada mindre, i tre träffar |
+| Väskan med dubbel botten | hälften av det du förlorar när ormen vaknar eller någon river guld är gömt |
+| Kompass utan nord | visar åt vilket håll närmaste port ligger |
+
+Namn, texter, hur ofta de dyker upp och hur länge de håller står i
+`data/foremal.json`, och hur ofta man hittar ett när man söker under
+`sok` → `vikter` → `foremal` i `fallor.json`.
 
 Om du laddar om sidan och skriver samma namn igen får du tillbaka din vandrare.
 
@@ -438,6 +458,7 @@ de byggs in i programmet.
 - `ai.json` datorspelarnas namn, personligheter och betänketid
 - `svarighet.json` förvalen för svårighet (se nedan)
 - `klasser.json` klasserna: namn, styrka, svaghet, liv, drycker, siffror och texter
+- `foremal.json` föremålen: namn, beskrivning, hur ofta, hur länge och texter
 - `avslojande.json` nivågränser, ledtrådar, texter vid nivåbyte, nya
   förklaringar till fällorna och epilogen. Rumsbeskrivningarna för varje
   nivå (`"1"` till `"4"`) ligger i `texter.json`.
@@ -479,6 +500,7 @@ Beskrivningarna för rummen ligger under nivåerna `"1"` till `"4"`.
 - `sounds.go` spår och ljud från grannrummen
 - `difficulty.go` förvalen för svårighet
 - `classes.go` klasserna och valet av klass
+- `items.go` föremålen
 - `ai.go` datorstyrda vandrare
 - `data.go` läser in datafilerna
 - `ws.go` en liten websocket-implementation utan beroenden

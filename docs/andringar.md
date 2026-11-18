@@ -6,6 +6,19 @@ eller leder tornet.
 
 ## 2026-11-18
 
+### Föremål, steg 1
+
+När man söker igenom ett rum kan man hitta ett föremål. Man bär högst tre,
+och ett som inte får plats blir kvar i rummet åt den som kommer efter.
+De sex första föremålen verkar av sig själva: rep, fjällamulett, extra
+veke, bucklig sköld, väska med dubbel botten och kompass. README beskriver
+dem under "Föremål". De står i panelen och i spelledarens översikt.
+
+AI-spelarna söker sällan och hittar i snitt 0,13 föremål per vandring, så
+balansen för dem är densamma. Människor som söker mer får mer nytta av dem.
+Steg 2 (föremål man använder själv) och steg 3 (förbannade föremål, brev,
+klasserna) är inte byggda.
+
 ### Upp till 8 spelare
 
 Tornet tar emot upp till 8 vandrare, AI-spelarna inräknade, och växer med

@@ -336,6 +336,14 @@ function renderSide() {
   if (me.status === "dod") line("Död", "cond");
   line("Skatt: " + me.treasure + " guld");
   if (state.potions > 0) line("Drycker: " + state.potions);
+  (state.foremal || []).forEach((it) => {
+    const d = document.createElement("div");
+    d.className = "item";
+    d.textContent = "· " + it.namn + (it.kvar > 1 ? " (" + it.kvar + ")" : "");
+    d.title = it.beskrivning;
+    box.appendChild(d);
+  });
+  if (state.kompass) line(state.kompass, "dimline");
   if (me.status === "inne") {
     if (state.cellar > 0) line("I källarvalven", "cond");
     if (state.stuck > 0) line("Fast i " + state.stuck + (state.stuck === 1 ? " runda" : " rundor"), "cond");
