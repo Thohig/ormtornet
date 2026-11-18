@@ -129,7 +129,7 @@ func main() {
 		<-sigs // ett andra Ctrl+C stänger direkt
 		os.Exit(1)
 	}()
-	addrs := hostAddrs{Name: "http://" + localName() + ":" + port}
+	addrs := hostAddrs{Name: "http://" + localName() + ":" + port, IPs: []string{}}
 	for _, ip := range lanIPs() {
 		addrs.IPs = append(addrs.IPs, "http://"+ip+":"+port)
 	}
