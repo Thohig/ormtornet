@@ -28,7 +28,13 @@ var errPlaying = errors.New("inställningarna kan ändras när omgången är slu
 
 // normalize håller värdena inom det spelet klarar av.
 func (s Settings) normalize() Settings {
-	s.AI = max(0, min(maxPlayers-1, s.AI))
+	// Utan spelledarläge måste en plats finnas kvar åt en människa. I
+	// spelledarläget kan alla fyra vandrarna vara AI-spelare.
+	maxAI := maxPlayers - 1
+	if s.Spelledare {
+		maxAI = maxPlayers
+	}
+	s.AI = max(0, min(maxAI, s.AI))
 	s.Min = max(1, min(maxPlayers, s.Min))
 	s.Sol = max(4, min(200, s.Sol))
 	s.Turtid = max(3, min(600, s.Turtid))

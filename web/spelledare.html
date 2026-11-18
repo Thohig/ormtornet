@@ -606,7 +606,12 @@ function renderSettings(v) {
   if (saving || form.contains(document.activeElement)) return;
   fillOptions($("sSol"), [20, 30, 40, 60], s.sol);
   fillOptions($("sTur"), [15, 30, 45, 60], s.turtid);
-  $("sAI").value = String(s.ai);
+  // Fyra AI-spelare går bara i spelledarläget, när ingen människa behöver plats.
+  const aiSel = $("sAI");
+  const four = [...aiSel.options].find((o) => o.value === "4");
+  if (s.spelledarlage && !four) aiSel.append(new Option("4", "4"));
+  if (!s.spelledarlage && four) four.remove();
+  aiSel.value = String(s.ai);
   $("sMin").value = String(s.min);
   $("sSol").value = String(s.sol);
   $("sTur").value = String(s.turtid);

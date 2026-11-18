@@ -29,7 +29,7 @@ func main() {
 	sun := flag.Int("sol", defaultSettings.Sol, "antal rundor innan solen går ner")
 	turn := flag.Duration("turtid", time.Duration(defaultSettings.Turtid)*time.Second, "längsta tid att välja drag per runda")
 	minPlayers := flag.Int("min", defaultSettings.Min, "minsta antal spelare för att börja, datorspelare inräknade")
-	bots := flag.Int("ai", defaultSettings.AI, "antal datorstyrda vandrare (0-3)")
+	bots := flag.Int("ai", defaultSettings.AI, "antal datorstyrda vandrare (0-3, eller 4 i spelledarläget)")
 	reveal := flag.Bool("avslojande", defaultSettings.Avslojande, "låt tornet avslöja sin hemlighet (false för den som redan känner till den)")
 	settingsPath := flag.String("installningar", defaultSettingsPath(), "fil där spelledarens inställningar sparas (tom för att inte spara)")
 	openPage := flag.Bool("oppna", false, "öppna introt i webbläsaren när servern har startat; det leder till spelledarens sida")

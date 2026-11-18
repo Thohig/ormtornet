@@ -52,7 +52,7 @@ Flaggor:
 - `-sol 40` antal rundor innan solen går ner
 - `-turtid 30s` längsta tid att välja drag per runda
 - `-min 2` minsta antal spelare för att börja, datorspelare inräknade (sätt `-min 1` för att prova ensam)
-- `-ai 2` antal datorstyrda vandrare (0–3)
+- `-ai 2` antal datorstyrda vandrare (0–3, eller 4 i spelledarläget)
 - `-avslojande=false` stänger av avslöjandet, för spelare som redan känner till tornets hemlighet
 - `-oppna` öppnar introt i webbläsaren när servern har startat; på den här datorn leder det till spelledarens sida
 - `-vaken` håller datorn vaken så länge servern är igång

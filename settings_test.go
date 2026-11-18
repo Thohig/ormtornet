@@ -31,6 +31,22 @@ func TestSettingsAddAndRemoveBots(t *testing.T) {
 	}
 }
 
+func TestFourBotsOnlyInGMMode(t *testing.T) {
+	g := testGame(t)
+	got, _ := g.ApplySettings(Settings{AI: 4, Min: 2, Sol: 20, Turtid: 30})
+	if got.AI != 3 {
+		t.Fatalf("utan spelledarläge: %d AI-spelare, ville ha högst 3", got.AI)
+	}
+	got, _ = g.ApplySettings(Settings{AI: 4, Min: 2, Sol: 20, Turtid: 30, Spelledare: true})
+	if got.AI != 4 || countBots(g) != 4 {
+		t.Fatalf("i spelledarläget: %d inställt, %d vid portarna, ville ha 4", got.AI, countBots(g))
+	}
+	got, _ = g.ApplySettings(Settings{AI: 4, Min: 2, Sol: 20, Turtid: 30})
+	if got.AI != 3 || countBots(g) != 3 {
+		t.Fatalf("när spelledarläget slogs av: %d inställt, %d vid portarna, ville ha 3", got.AI, countBots(g))
+	}
+}
+
 func TestSettingsClamped(t *testing.T) {
 	g := testGame(t)
 	got, _ := g.ApplySettings(Settings{AI: 9, Min: 0, Sol: 1, Turtid: 0})
