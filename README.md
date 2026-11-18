@@ -20,12 +20,33 @@ Flaggor:
 
 - `-addr 0.0.0.0:8080` adress och port
 - `-data data/texter.json` fil med rum och texter
+- `-sol 40` antal rundor innan solen går ner
+- `-turtid 30s` längsta tid att välja drag per runda
+- `-min 2` minsta antal spelare för att börja (sätt `-min 1` för att prova ensam)
 
 ## Spela
 
 1. Klicka på "Gå in i tornet" (det startar ljudet).
 2. Skriv ditt namn och tryck Enter.
-3. Gå med piltangenterna.
+3. Tryck Enter igen när du är redo. Vandringen börjar när alla är redo.
+
+Spelet går i rundor. Alla väljer sitt drag samtidigt, och när alla har valt
+(eller turtiden tar slut) utförs alla drag på en gång. Du kan ändra dig tills
+dess. Den som inte hinner välja blir stående.
+
+| Tangent    | Drag                              |
+|------------|-----------------------------------|
+| Pilar      | gå åt det hållet                  |
+| Mellanslag | vänta                             |
+| T          | ta skatt (bara i skattkammaren)   |
+| Enter      | redo / spela igen                 |
+
+Solen sjunker en handsbredd per runda och visas som en mätare överst.
+Gå ut genom en port i något av hörnen för att lämna tornet. Den som kommer
+ut med skatt räknas, och den med mest skatt vinner. Den som är kvar inne när
+solen har gått ner är förlorad.
+
+Andras skatt och val av drag syns inte förrän spelet är slut.
 
 Om du laddar om sidan och skriver samma namn igen får du tillbaka din vandrare.
 
@@ -49,4 +70,10 @@ Beskrivningarna för rummen ligger under nivå `"1"`; fler nivåer kommer senare
 ## Testa lokalt
 
 Starta servern och öppna `http://localhost:8080` i två flikar med olika
-namn. Båda spelarna ska synas på kartan och röra sig i realtid.
+namn. För ett snabbt test passar `go run . -sol 8 -turtid 10s`.
+
+Spellogiken har tester:
+
+```bash
+go test ./...
+```

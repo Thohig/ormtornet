@@ -3,6 +3,8 @@ package main
 import (
 	"encoding/json"
 	"math/rand/v2"
+	"sort"
+	"strconv"
 	"strings"
 	"sync"
 	"time"
@@ -11,13 +13,38 @@ import (
 )
 
 const (
-	gridSize     = 9
-	center       = gridSize / 2
-	maxPlayers   = 4
-	maxNameLen   = 16
-	moveCooldown = 120 * time.Millisecond
-	doorChance   = 0.55
+	gridSize   = 9
+	center     = gridSize / 2
+	maxPlayers = 4
+	maxNameLen = 16
+	doorChance = 0.55
 )
+
+// Spelets faser.
+const (
+	phaseLobby = "lobby"
+	phasePlay  = "spel"
+	phaseEnd   = "slut"
+)
+
+// En spelares läge.
+const (
+	statusIn   = "inne"
+	statusOut  = "ute"
+	statusLost = "forlorad"
+)
+
+// Drag en spelare kan välja under en runda.
+const (
+	actWait = "vanta"
+	actTake = "ta"
+)
+
+type Config struct {
+	SunMax     int
+	TurnTime   time.Duration
+	MinPlayers int
+}
 
 type Dir int
 
@@ -66,7 +93,10 @@ type Player struct {
 	Slot     int
 	X, Y     int
 	client   *Client
-	lastMove time.Time
+	Ready    bool
+	Action   string
+	Treasure int
+	Status   string
 }
 
 type Client struct {
@@ -79,14 +109,21 @@ type Client struct {
 type Game struct {
 	mu      sync.Mutex
 	data    *Data
+	cfg     Config
 	rooms   [gridSize][gridSize]Room
 	players [maxPlayers]*Player
 	nextID  int
 	level   int
+
+	phase    string
+	sun      int
+	round    int
+	deadline time.Time
+	timer    *time.Timer
 }
 
-func NewGame(d *Data) *Game {
-	return &Game{data: d, level: 1}
+func NewGame(d *Data, cfg Config) *Game {
+	return &Game{data: d, cfg: cfg, level: 1, phase: phaseLobby, sun: cfg.SunMax}
 }
 
 func inBounds(x, y int) bool { return x >= 0 && y >= 0 && x < gridSize && y < gridSize }
@@ -178,12 +215,16 @@ func (g *Game) describe(r *Room) string {
 // Meddelanden till klienten.
 
 type playerView struct {
-	ID     int    `json:"id"`
-	Name   string `json:"name"`
-	Slot   int    `json:"slot"`
-	X      int    `json:"x"`
-	Y      int    `json:"y"`
-	Online bool   `json:"online"`
+	ID       int    `json:"id"`
+	Name     string `json:"name"`
+	Slot     int    `json:"slot"`
+	X        int    `json:"x"`
+	Y        int    `json:"y"`
+	Online   bool   `json:"online"`
+	Status   string `json:"status"`
+	Ready    bool   `json:"ready"`
+	Chosen   bool   `json:"chosen"`
+	Treasure int    `json:"treasure"` // -1 om spelaren inte får veta
 }
 
 type roomView struct {
@@ -195,13 +236,29 @@ type roomView struct {
 	Name string  `json:"name"`
 }
 
+type resultView struct {
+	Name     string `json:"name"`
+	Slot     int    `json:"slot"`
+	Treasure int    `json:"treasure"`
+	Status   string `json:"status"`
+	Winner   bool   `json:"winner"`
+}
+
 type stateMsg struct {
-	T       string       `json:"t"`
-	You     int          `json:"you"`
-	Size    int          `json:"size"`
-	Level   int          `json:"level"`
-	Players []playerView `json:"players"`
-	Rooms   []roomView   `json:"rooms"`
+	T          string       `json:"t"`
+	You        int          `json:"you"`
+	Size       int          `json:"size"`
+	Level      int          `json:"level"`
+	Phase      string       `json:"phase"`
+	Sun        int          `json:"sun"`
+	SunMax     int          `json:"sunMax"`
+	Round      int          `json:"round"`
+	DeadlineMs int64        `json:"deadlineMs"`
+	MinPlayers int          `json:"minPlayers"`
+	Action     string       `json:"action"`
+	Players    []playerView `json:"players"`
+	Rooms      []roomView   `json:"rooms"`
+	Results    []resultView `json:"results,omitempty"`
 }
 
 type logMsg struct {
@@ -232,9 +289,13 @@ func (g *Game) send(c *Client, v any) {
 }
 
 func (g *Game) logTo(p *Player, text, class string) {
-	if p != nil {
+	if p != nil && text != "" {
 		g.send(p.client, logMsg{T: "log", Text: text, C: class})
 	}
+}
+
+func (g *Game) logAll(text, class string) {
+	g.logOthers(nil, text, class)
 }
 
 func (g *Game) logOthers(except *Player, text, class string) {
@@ -257,16 +318,30 @@ func (g *Game) soundAll(s string) {
 	}
 }
 
-// stateFor bygger det en viss spelare får se.
+// stateFor bygger det en viss spelare får se. Andras skatt och val av drag
+// hålls hemliga tills spelet är slut.
 func (g *Game) stateFor(me *Player) stateMsg {
-	st := stateMsg{T: "state", You: me.ID, Size: gridSize, Level: g.level}
+	st := stateMsg{
+		T: "state", You: me.ID, Size: gridSize, Level: g.level,
+		Phase: g.phase, Sun: g.sun, SunMax: g.cfg.SunMax, Round: g.round,
+		MinPlayers: g.cfg.MinPlayers, Action: me.Action,
+	}
+	if g.phase == phasePlay {
+		st.DeadlineMs = max(0, time.Until(g.deadline).Milliseconds())
+	}
 	for _, p := range g.players {
 		if p == nil {
 			continue
 		}
-		st.Players = append(st.Players, playerView{
-			ID: p.ID, Name: p.Name, Slot: p.Slot, X: p.X, Y: p.Y, Online: p.client != nil,
-		})
+		pv := playerView{
+			ID: p.ID, Name: p.Name, Slot: p.Slot, X: p.X, Y: p.Y,
+			Online: p.client != nil, Status: p.Status, Ready: p.Ready,
+			Chosen: p.Action != "", Treasure: -1,
+		}
+		if p == me || g.phase == phaseEnd {
+			pv.Treasure = p.Treasure
+		}
+		st.Players = append(st.Players, pv)
 	}
 	for y := range gridSize {
 		for x := range gridSize {
@@ -281,6 +356,9 @@ func (g *Game) stateFor(me *Player) stateMsg {
 			st.Rooms = append(st.Rooms, rv)
 		}
 	}
+	if g.phase == phaseEnd {
+		st.Results = g.results()
+	}
 	return st
 }
 
@@ -290,6 +368,31 @@ func (g *Game) broadcastState() {
 			g.send(p.client, g.stateFor(p))
 		}
 	}
+}
+
+// results sorterar spelarna: de som kom ut med skatt först, mest skatt överst.
+func (g *Game) results() []resultView {
+	var res []resultView
+	for _, p := range g.players {
+		if p == nil {
+			continue
+		}
+		res = append(res, resultView{Name: p.Name, Slot: p.Slot, Treasure: p.Treasure, Status: p.Status})
+	}
+	score := func(r resultView) int {
+		if r.Status == statusOut && r.Treasure > 0 {
+			return r.Treasure
+		}
+		return -1
+	}
+	sort.SliceStable(res, func(i, j int) bool { return score(res[i]) > score(res[j]) })
+	if len(res) > 0 && score(res[0]) > 0 {
+		best := score(res[0])
+		for i := range res {
+			res[i].Winner = score(res[i]) == best
+		}
+	}
+	return res
 }
 
 func cleanName(s string) string {
@@ -305,6 +408,16 @@ func cleanName(s string) string {
 		s = s[:len(s)-size]
 	}
 	return strings.TrimSpace(s)
+}
+
+func (g *Game) placeAtCorner(p *Player) {
+	cn := corners[p.Slot]
+	p.X, p.Y = cn.x, cn.y
+	p.Status = statusIn
+	p.Treasure = 0
+	p.Action = ""
+	p.Ready = false
+	g.reveal(cn.x, cn.y)
 }
 
 func (g *Game) Join(c *Client, rawName string) {
@@ -330,6 +443,10 @@ func (g *Game) Join(c *Client, rawName string) {
 			return
 		}
 	}
+	if g.phase == phasePlay {
+		g.send(c, logMsg{T: "error", Text: g.data.Text("spel_pagar")})
+		return
+	}
 	slot := -1
 	for i, p := range g.players {
 		if p == nil {
@@ -351,37 +468,271 @@ func (g *Game) Join(c *Client, rawName string) {
 		return
 	}
 	g.nextID++
-	cn := corners[slot]
-	p := &Player{ID: g.nextID, Name: name, Slot: slot, X: cn.x, Y: cn.y, client: c}
+	p := &Player{ID: g.nextID, Name: name, Slot: slot, client: c}
 	g.players[slot] = p
 	c.player = p
-	room := g.reveal(cn.x, cn.y)
+	g.placeAtCorner(p)
 	horn := g.data.Horn[slot]
 
 	g.broadcastState()
 	g.soundAll("ansluter")
 	g.logTo(p, g.data.Text("valkommen", "namn", name, "horn", horn), "syn")
-	g.logTo(p, g.describe(room), "")
+	g.logTo(p, g.describe(&g.rooms[p.Y][p.X]), "")
+	g.logTo(p, g.data.Text("lobby", "min", strconv.Itoa(g.cfg.MinPlayers)), "info")
 	g.logOthers(p, g.data.Text("ansluter", "namn", name, "horn", horn), "info")
 }
 
-func (g *Game) Move(c *Client, code string) {
+func (g *Game) Leave(c *Client) {
+	c.closed = true
+	close(c.send)
 	p := c.player
-	if p == nil {
+	if p == nil || p.client != c {
 		return
 	}
-	d, ok := dirCodes[code]
-	if !ok {
+	p.client = nil
+	g.logOthers(p, g.data.Text("lamnar", "namn", p.Name), "dim")
+	if g.phase != phasePlay {
+		// Utanför spelet lämnar man sin plats helt.
+		g.players[p.Slot] = nil
+		g.checkStart()
+	} else if g.allChosen() {
+		g.resolve()
 		return
 	}
-	now := time.Now()
-	if now.Sub(p.lastMove) < moveCooldown {
+	g.broadcastState()
+}
+
+// Ready markerar att spelaren vill börja (eller spela igen).
+func (g *Game) Ready(c *Client) {
+	p := c.player
+	if p == nil || g.phase == phasePlay || p.Ready {
 		return
 	}
-	p.lastMove = now
+	p.Ready = true
+	g.logOthers(p, g.data.Text("redo_andra", "namn", p.Name), "dim")
+	g.soundTo(p, "val")
+	if !g.checkStart() {
+		g.logTo(p, g.data.Text("vantar_pa_andra"), "dim")
+		g.broadcastState()
+	}
+}
+
+// checkStart startar spelet när alla anslutna är redo.
+func (g *Game) checkStart() bool {
+	n := 0
+	for _, p := range g.players {
+		if p == nil || p.client == nil {
+			continue
+		}
+		if !p.Ready {
+			return false
+		}
+		n++
+	}
+	if n < g.cfg.MinPlayers {
+		return false
+	}
+	if g.phase == phaseEnd {
+		g.newTower()
+	}
+	g.startGame()
+	return true
+}
+
+// newTower bygger ett nytt torn och ställer alla vid sina portar.
+func (g *Game) newTower() {
+	g.rooms = [gridSize][gridSize]Room{}
+	for _, p := range g.players {
+		if p != nil {
+			g.placeAtCorner(p)
+		}
+	}
+}
+
+func (g *Game) startGame() {
+	g.phase = phasePlay
+	g.sun = g.cfg.SunMax
+	g.round = 1
+	for _, p := range g.players {
+		if p != nil {
+			p.Ready = false
+			p.Action = ""
+		}
+	}
+	g.soundAll("start")
+	g.logAll(g.data.Text("start", "sol", strconv.Itoa(g.sun)), "syn")
+	g.startRound()
+}
+
+func (g *Game) startRound() {
+	g.deadline = time.Now().Add(g.cfg.TurnTime)
+	round := g.round
+	if g.timer != nil {
+		g.timer.Stop()
+	}
+	g.timer = time.AfterFunc(g.cfg.TurnTime, func() {
+		g.mu.Lock()
+		defer g.mu.Unlock()
+		if g.phase == phasePlay && g.round == round {
+			g.resolve()
+		}
+	})
+	g.broadcastState()
+}
+
+// allChosen är sant när alla anslutna spelare i tornet har valt drag.
+func (g *Game) allChosen() bool {
+	any := false
+	for _, p := range g.players {
+		if p == nil || p.Status != statusIn || p.client == nil {
+			continue
+		}
+		if p.Action == "" {
+			return false
+		}
+		any = true
+	}
+	return any
+}
+
+// Act tar emot spelarens val för rundan. Valet kan ändras tills rundan utförs.
+func (g *Game) Act(c *Client, a string) {
+	p := c.player
+	if p == nil || g.phase != phasePlay || p.Status != statusIn {
+		return
+	}
+	switch a {
+	case "N", "E", "S", "W", actWait:
+	case actTake:
+		if g.rooms[p.Y][p.X].Kind != "kammare" {
+			g.logTo(p, g.data.Text("ingen_skatt_har"), "dim")
+			return
+		}
+	default:
+		return
+	}
+	p.Action = a
+	g.soundTo(p, "val")
+	if g.allChosen() {
+		g.resolve()
+		return
+	}
+	g.broadcastState()
+}
+
+// resolve utför alla drag på en gång och låter solen sjunka.
+func (g *Game) resolve() {
+	if g.timer != nil {
+		g.timer.Stop()
+	}
+	var active []*Player
+	for _, p := range g.players {
+		if p != nil && p.Status == statusIn {
+			active = append(active, p)
+		}
+	}
+	rand.Shuffle(len(active), func(i, j int) { active[i], active[j] = active[j], active[i] })
+	for _, p := range active {
+		a := p.Action
+		if a == "" {
+			a = actWait
+			g.logTo(p, g.data.Text("tvekade"), "dim")
+		}
+		switch a {
+		case actWait:
+		case actTake:
+			g.take(p)
+		default:
+			g.move(p, dirCodes[a])
+		}
+		p.Action = ""
+	}
+
+	g.sun--
+	g.soundAll("runda")
+	inside := 0
+	for _, p := range g.players {
+		if p != nil && p.Status == statusIn {
+			inside++
+		}
+	}
+	switch {
+	case inside == 0:
+		g.endGame()
+	case g.sun <= 0:
+		g.logAll(g.data.Text("solnedgang"), "varn")
+		g.soundAll("solnedgang")
+		g.endGame()
+	default:
+		g.sunWarning()
+		g.round++
+		g.startRound()
+	}
+}
+
+func (g *Game) sunWarning() {
+	key := ""
+	switch {
+	case g.sun == g.cfg.SunMax/2:
+		key = "sol_halv"
+	case g.sun == g.cfg.SunMax/4:
+		key = "sol_kvart"
+	case g.sun == 3:
+		key = "sol_snart"
+	}
+	if key != "" {
+		g.logAll(g.data.Text(key, "sol", strconv.Itoa(g.sun)), "varn")
+		g.soundAll("solvarning")
+	}
+}
+
+func (g *Game) endGame() {
+	g.phase = phaseEnd
+	if g.timer != nil {
+		g.timer.Stop()
+	}
+	for _, p := range g.players {
+		if p == nil {
+			continue
+		}
+		p.Ready = false
+		p.Action = ""
+		if p.Status == statusIn {
+			p.Status = statusLost
+			g.logTo(p, g.data.Text("forlorad_du"), "varn")
+			g.logOthers(p, g.data.Text("forlorad", "namn", p.Name), "varn")
+		}
+	}
+	res := g.results()
+	if len(res) > 0 && res[0].Winner {
+		var names []string
+		for _, r := range res {
+			if r.Winner {
+				names = append(names, r.Name)
+			}
+		}
+		g.logAll(g.data.Text("vinnare", "namn", strings.Join(names, " och "),
+			"skatt", strconv.Itoa(res[0].Treasure)), "syn")
+	} else {
+		g.logAll(g.data.Text("ingen_vinnare"), "varn")
+	}
+	g.logAll(g.data.Text("spela_igen"), "dim")
+	g.soundAll("slut")
+	g.broadcastState()
+}
+
+// move flyttar spelaren ett rum, eller ut genom porten.
+func (g *Game) move(p *Player, d Dir) {
 	room := &g.rooms[p.Y][p.X]
 	if room.HasExit && room.Exit == d {
-		g.logTo(p, g.data.Text("utgang"), "info")
+		p.Status = statusOut
+		if p.Treasure > 0 {
+			g.logTo(p, g.data.Text("ut_med_skatt", "skatt", strconv.Itoa(p.Treasure)), "syn")
+		} else {
+			g.logTo(p, g.data.Text("ut_utan_skatt"), "info")
+		}
+		g.soundTo(p, "ut")
+		g.logOthers(p, g.data.Text("andra_ut", "namn", p.Name), "info")
 		return
 	}
 	if !room.Doors[d] {
@@ -394,7 +745,6 @@ func (g *Game) Move(c *Client, code string) {
 	isNew := !target.Revealed
 	g.reveal(nx, ny)
 	p.X, p.Y = nx, ny
-	g.broadcastState()
 
 	name := g.roomName(target)
 	if isNew {
@@ -409,22 +759,21 @@ func (g *Game) Move(c *Client, code string) {
 	}
 }
 
-func (g *Game) Leave(c *Client) {
-	c.closed = true
-	close(c.send)
-	p := c.player
-	if p == nil || p.client != c {
+// take ger en näve skatt i kammaren. (Ormen bryr sig inte ännu.)
+func (g *Game) take(p *Player) {
+	if g.rooms[p.Y][p.X].Kind != "kammare" {
 		return
 	}
-	p.client = nil
-	g.logOthers(p, g.data.Text("lamnar", "namn", p.Name), "dim")
-	g.broadcastState()
+	n := 10 + rand.IntN(41)
+	p.Treasure += n
+	g.soundTo(p, "skatt")
+	g.logTo(p, g.data.Text("ta_skatt", "antal", strconv.Itoa(n), "skatt", strconv.Itoa(p.Treasure)), "syn")
 }
 
 type clientMsg struct {
 	T    string `json:"t"`
 	Name string `json:"name"`
-	Dir  string `json:"dir"`
+	A    string `json:"a"`
 }
 
 // serve sköter en websocket-anslutning tills den stängs.
@@ -453,8 +802,10 @@ func (g *Game) serve(conn *wsConn) {
 		switch m.T {
 		case "join":
 			g.Join(c, m.Name)
-		case "move":
-			g.Move(c, m.Dir)
+		case "act":
+			g.Act(c, m.A)
+		case "ready":
+			g.Ready(c)
 		}
 		g.mu.Unlock()
 	}

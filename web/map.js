@@ -14,10 +14,12 @@ const MapView = (() => {
     exit: "#8a7a55",
     chamber: "#c9a24f",
     gold: "#ffd36b",
+    lost: "#8a3b30",
   };
   const PLAYER_COLORS = ["#ffcc66", "#66e0ff", "#ff7a9a", "#9dff7a"];
 
   const WALL = ["⣿", "⣷", "⣾", "⡿", "⢿", "⣯", "⣟", "⣻", "⣽"];
+  const ARROWS = ["▲", "▶", "▼", "◀"];
   const FLOOR = ["⠂", "⠄", "⠈", "⠐", "⠠"];
 
   // Kammaren: en ring kring en hög av guld, 6 x 3 tecken.
@@ -138,13 +140,32 @@ const MapView = (() => {
     const now = t || performance.now();
     const blink = Math.floor(now / 550) % 2 === 0;
     state.players.forEach((p) => {
+      if (p.status === "ute") return;
       const [sx, sy] = SLOTS[p.slot] || SLOTS[0];
       let color = PLAYER_COLORS[p.slot] || "#fff";
       let ch = "@";
       if (!p.online) color = COLORS.floor;
-      if (p.id === state.you && !blink) ch = "◉";
+      if (p.status === "forlorad") {
+        ch = "x";
+        color = COLORS.lost;
+      } else if (p.id === state.you && !blink) {
+        ch = "◉";
+      }
       put(p.x * RW + sx, p.y * RH + sy, ch, color);
     });
+
+    // Det egna, valda draget visas som en pil i dörröppningen.
+    const me = state.players.find((p) => p.id === state.you);
+    const dir = { N: 0, E: 1, S: 2, W: 3 }[state.action];
+    if (me && me.status === "inne" && dir !== undefined) {
+      const x0 = me.x * RW;
+      const y0 = me.y * RH;
+      const mx = x0 + Math.floor(RW / 2);
+      const my = y0 + Math.floor(RH / 2);
+      const pos = [[mx, y0], [x0 + RW, my], [mx, y0 + RH], [x0, my]][dir];
+      const color = PLAYER_COLORS[me.slot];
+      if (blink) put(pos[0], pos[1], ARROWS[dir], color);
+    }
 
     ctx.clearRect(0, 0, cols * cellW, rows * cellH);
     ctx.font = fontPx + "px Menlo, Monaco, monospace";

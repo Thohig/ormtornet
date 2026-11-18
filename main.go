@@ -11,6 +11,7 @@ import (
 	"os"
 	"os/exec"
 	"strings"
+	"time"
 )
 
 //go:embed web
@@ -19,13 +20,17 @@ var webFS embed.FS
 func main() {
 	addr := flag.String("addr", "0.0.0.0:8080", "adress och port att lyssna på")
 	dataPath := flag.String("data", "data/texter.json", "fil med rum och texter")
+	sun := flag.Int("sol", 40, "antal rundor innan solen går ner")
+	turn := flag.Duration("turtid", 30*time.Second, "längsta tid att välja drag per runda")
+	minPlayers := flag.Int("min", 2, "minsta antal spelare för att börja")
 	flag.Parse()
+	cfg := Config{SunMax: max(4, *sun), TurnTime: max(3*time.Second, *turn), MinPlayers: max(1, min(maxPlayers, *minPlayers))}
 
 	data, src, err := loadData(*dataPath)
 	if err != nil {
 		log.Fatalf("kunde inte läsa texterna: %v", err)
 	}
-	game := NewGame(data)
+	game := NewGame(data, cfg)
 
 	sub, _ := fs.Sub(webFS, "web")
 	files := http.FileServer(http.FS(sub))
@@ -50,6 +55,7 @@ func main() {
 
 	fmt.Println("Ormtornet är vaket.")
 	fmt.Println("Texter från:", src)
+	fmt.Printf("Solen går ner efter %d rundor. Turtid %s. Minst %d spelare.\n", cfg.SunMax, cfg.TurnTime, cfg.MinPlayers)
 	fmt.Println()
 	fmt.Println("Spelarna öppnar:")
 	fmt.Printf("  http://%s:%s\n", localName(), port)

@@ -24,17 +24,29 @@
   <section id="game" class="screen">
     <header id="top">
       <span class="title">ORMTORNET</span>
+      <span id="sun"></span>
+      <span id="turn"></span>
       <span id="conn"></span>
     </header>
     <div id="main">
-      <div id="mapbox"><canvas id="map"></canvas></div>
+      <div id="mapbox">
+        <canvas id="map"></canvas>
+        <pre id="overlay" hidden></pre>
+      </div>
       <aside id="side">
         <h2>Vandrare</h2>
         <ul id="players"></ul>
         <h2>Här</h2>
         <div id="here"></div>
+        <h2>Du</h2>
+        <div id="me"></div>
         <h2>Styrning</h2>
-        <div id="help">Piltangenterna: gå</div>
+        <div id="help">
+          <div><b>Pilar</b>gå</div>
+          <div><b>Mellanslag</b>vänta</div>
+          <div><b>T</b>ta skatt</div>
+          <div><b>Enter</b>redo</div>
+        </div>
       </aside>
     </div>
     <div id="log"></div>

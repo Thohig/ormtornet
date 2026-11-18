@@ -91,7 +91,9 @@ function connect() {
 function handle(msg) {
   switch (msg.t) {
     case "state":
+      if (state && state.phase !== msg.phase && msg.phase === "spel") lastTick = -1;
       state = msg;
+      state.receivedAt = performance.now();
       if (!joined) {
         joined = true;
         try { localStorage.setItem("ormtornet-namn", myName); } catch {}
@@ -103,6 +105,8 @@ function handle(msg) {
       }
       MapView.draw(state);
       renderSide();
+      renderTop();
+      renderOverlay();
       break;
     case "log":
       Log.push(msg.text, msg.c);
@@ -122,6 +126,16 @@ function handle(msg) {
   }
 }
 
+const ACTION_WORDS = { N: "gå norrut", E: "gå österut", S: "gå söderut", W: "gå västerut", vanta: "vänta", ta: "ta skatt" };
+
+function playerTag(p) {
+  if (!p.online) return "borta";
+  if (p.status === "ute") return "ute";
+  if (p.status === "forlorad") return "förlorad";
+  if (state.phase === "spel") return p.chosen ? "klar" : "väljer";
+  return p.ready ? "redo" : "";
+}
+
 function renderSide() {
   const ul = $("players");
   ul.innerHTML = "";
@@ -131,14 +145,139 @@ function renderSide() {
     mark.textContent = "@ ";
     mark.style.color = MapView.PLAYER_COLORS[p.slot];
     li.appendChild(mark);
-    li.appendChild(document.createTextNode(p.name + (p.id === state.you ? " (du)" : "") + (p.online ? "" : " (borta)")));
+    li.appendChild(document.createTextNode(p.name + (p.id === state.you ? " (du)" : "")));
+    const tag = playerTag(p);
+    if (tag) {
+      const t = document.createElement("span");
+      t.className = "tag";
+      t.textContent = " " + tag;
+      li.appendChild(t);
+    }
     if (p.id === state.you) li.classList.add("me");
     if (!p.online) li.classList.add("off");
     ul.appendChild(li);
   });
-  const me = state.players.find((p) => p.id === state.you);
+  const me = myPlayer();
   const room = me && state.rooms.find((r) => r.x === me.x && r.y === me.y);
-  $("here").textContent = room ? room.name : "";
+  $("here").textContent = me && me.status === "inne" && room ? room.name : "";
+
+  const box = $("me");
+  box.innerHTML = "";
+  const line = (text, cls) => {
+    const d = document.createElement("div");
+    d.textContent = text;
+    if (cls) d.className = cls;
+    box.appendChild(d);
+  };
+  if (!me) return;
+  line("Skatt: " + me.treasure + " guld");
+  if (state.phase === "spel" && me.status === "inne") {
+    line(state.action ? "Drag: " + ACTION_WORDS[state.action] : "Välj ditt drag", "plan");
+  } else if (state.phase === "lobby") {
+    line(me.ready ? "Du är redo" : "Tryck Enter när du är redo", "plan");
+  } else if (state.phase === "slut") {
+    line(me.ready ? "Väntar på de andra" : "Enter: nytt torn", "plan");
+  }
+}
+
+function myPlayer() {
+  return state && state.players.find((p) => p.id === state.you);
+}
+
+// Solmätaren byggs med fast bredd i kod.
+const SUN_WIDTH = 24;
+function renderTop() {
+  const el = $("sun");
+  el.innerHTML = "";
+  const filled = Math.max(0, Math.round((state.sun / state.sunMax) * SUN_WIDTH));
+  const label = document.createElement("span");
+  label.textContent = "SOL ";
+  const bar = document.createElement("span");
+  bar.className = "bar";
+  if (state.sun <= 3) bar.classList.add("last");
+  else if (state.sun <= state.sunMax / 4) bar.classList.add("low");
+  bar.textContent = "⣿".repeat(filled);
+  const gone = document.createElement("span");
+  gone.className = "gone";
+  gone.textContent = "⣀".repeat(SUN_WIDTH - filled);
+  const num = document.createElement("span");
+  num.textContent = " " + String(state.sun).padStart(2, " ");
+  el.append(label, bar, gone, num);
+  updateTimer();
+}
+
+function remainingMs() {
+  if (!state || state.phase !== "spel") return 0;
+  return Math.max(0, state.deadlineMs - (performance.now() - state.receivedAt));
+}
+
+let lastTick = -1;
+function updateTimer() {
+  const el = $("turn");
+  if (!state) return;
+  if (state.phase === "lobby") {
+    const n = state.players.filter((p) => p.online).length;
+    el.textContent = n < state.minPlayers ? "väntar på vandrare" : "väntar på att alla är redo";
+    el.classList.remove("urgent");
+    return;
+  }
+  if (state.phase === "slut") {
+    el.textContent = "solen har gått ner";
+    el.classList.remove("urgent");
+    return;
+  }
+  const secs = Math.ceil(remainingMs() / 1000);
+  el.textContent = "runda " + state.round + "  " + String(secs).padStart(2, " ") + " s";
+  const urgent = secs <= 5;
+  el.classList.toggle("urgent", urgent);
+  const me = myPlayer();
+  if (urgent && secs > 0 && secs !== lastTick && me && me.status === "inne" && !state.action) {
+    Sound.play("tick");
+  }
+  lastTick = secs;
+}
+
+// En ram av fast bredd runt raderna, byggd i kod.
+function frame(lines, width) {
+  const pad = (t) => {
+    const chars = [...t];
+    if (chars.length > width) return chars.slice(0, width).join("");
+    const left = Math.floor((width - chars.length) / 2);
+    return " ".repeat(left) + t + " ".repeat(width - chars.length - left);
+  };
+  const out = ["╭" + "─".repeat(width + 2) + "╮"];
+  lines.forEach((l) => {
+    const text = typeof l === "string" ? l : l.text;
+    out.push({ text: "│ " + pad(text) + " │", cls: l.cls });
+  });
+  out.push("╰" + "─".repeat(width + 2) + "╯");
+  return out.map((l) => (typeof l === "string" ? { text: l } : l));
+}
+
+function renderOverlay() {
+  const el = $("overlay");
+  if (state.phase !== "slut" || !state.results) {
+    el.hidden = true;
+    return;
+  }
+  const lines = [{ text: "SOLEN HAR GÅTT NER" }, { text: "" }];
+  state.results.forEach((r, i) => {
+    let what;
+    if (r.status === "ute") what = r.treasure > 0 ? r.treasure + " guld" : "tomhänt";
+    else what = "förlorad";
+    const name = (r.winner ? "* " : "  ") + r.name;
+    const row = name.padEnd(20, " ") + what.padStart(10, " ");
+    lines.push({ text: row, cls: r.winner ? "win" : r.status === "forlorad" ? "lost" : "" });
+  });
+  lines.push({ text: "" }, { text: "Enter: nytt torn" });
+  el.innerHTML = "";
+  frame(lines, 32).forEach((l) => {
+    const d = document.createElement("div");
+    d.textContent = l.text;
+    if (l.cls) d.className = l.cls;
+    el.appendChild(d);
+  });
+  el.hidden = false;
 }
 
 $("enter").addEventListener("click", () => {
@@ -159,16 +298,22 @@ $("nameform").addEventListener("submit", (e) => {
   connect();
 });
 
-const KEYS = { ArrowUp: "N", ArrowRight: "E", ArrowDown: "S", ArrowLeft: "W" };
+const KEYS = { ArrowUp: "N", ArrowRight: "E", ArrowDown: "S", ArrowLeft: "W", " ": "vanta", t: "ta", T: "ta" };
 document.addEventListener("keydown", (e) => {
-  if (!joined) return;
-  const dir = KEYS[e.key];
-  if (!dir) return;
+  if (!joined || e.metaKey || e.ctrlKey || e.altKey) return;
+  if (e.key === "Enter") {
+    e.preventDefault();
+    send({ t: "ready" });
+    return;
+  }
+  const a = KEYS[e.key];
+  if (!a) return;
   e.preventDefault();
-  send({ t: "move", dir });
+  if (state && state.phase === "spel") send({ t: "act", a });
 });
 
 // Rita om då och då så att den egna markören blinkar.
 setInterval(() => {
   if (state && mapReady) MapView.draw(state);
-}, 275);
+  if (state) updateTimer();
+}, 250);

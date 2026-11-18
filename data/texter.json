@@ -154,7 +154,7 @@
 
   "texter": {
     "valkommen": [
-      "{namn}, du står innanför porten i tornets {horn}. Någonstans i mitten sägs en orm sova kring sin skatt. Gå varsamt."
+      "{namn}, du står innanför porten i tornets {horn}. Någonstans i mitten sägs en orm sova kring sin skatt. Ta vad du vågar och kom ut innan solen går ner."
     ],
     "tillbaka": [
       "Du är tillbaka. Tornet har väntat på dig."
@@ -184,6 +184,73 @@
     ],
     "kant_rum": [
       "{rum}."
+    ],
+    "lobby": [
+      "Tryck Enter när du är redo. Vandringen börjar när alla är redo och ni är minst {min}."
+    ],
+    "redo_andra": [
+      "{namn} är redo."
+    ],
+    "vantar_pa_andra": [
+      "Du väntar på de andra vid porten."
+    ],
+    "start": [
+      "Solen står {sol} handsbredder över horisonten. Välj era drag. Alla drag utförs samtidigt.",
+      "Porten står öppen bakom er. Solen har {sol} handsbredder kvar att vandra. Gå."
+    ],
+    "tvekade": [
+      "Du tvekade och blev stående.",
+      "Tiden rann ifrån dig. Du står kvar."
+    ],
+    "ingen_skatt_har": [
+      "Här finns ingen skatt att ta."
+    ],
+    "ta_skatt": [
+      "Du sträcker dig in i högen och tar {antal} guld. Du bär nu på {skatt}. Det ringlade ting bredvid dig rör sig inte.",
+      "Mynten är ljumma och klibbiga. Du tar {antal} guld och har nu {skatt}.",
+      "Försiktigt, mynt för mynt: {antal} guld. Totalt {skatt}. Någonstans hörs ett långsamt andetag."
+    ],
+    "ut_med_skatt": [
+      "Du kliver ut i kvällsljuset med {skatt} guld. Bakom dig suckar porten.",
+      "Du är ute. {skatt} guld tynger i väskan, och luften är kall och ren."
+    ],
+    "ut_utan_skatt": [
+      "Du kliver ut tomhänt. Du lever, men ingen kommer att sjunga om dig.",
+      "Ute igen, utan ett enda mynt. Tornet släppte dig, men det gav dig ingenting."
+    ],
+    "andra_ut": [
+      "{namn} har lämnat tornet.",
+      "Långt borta hörs porten gnissla. {namn} är ute."
+    ],
+    "sol_halv": [
+      "Solen har vandrat halva vägen mot horisonten. {sol} handsbredder kvar."
+    ],
+    "sol_kvart": [
+      "Ljuset genom gluggarna blir rött. Solen har bara {sol} handsbredder kvar."
+    ],
+    "sol_snart": [
+      "Solen nuddar nästan horisonten. {sol} rundor kvar. Skynda er ut!"
+    ],
+    "solnedgang": [
+      "Solen sjunker under horisonten. Någonstans slår porten igen med ett vått ljud."
+    ],
+    "forlorad_du": [
+      "Mörkret sluter sig om dig. Du är kvar i tornet, och tornet släpper dig inte."
+    ],
+    "forlorad": [
+      "{namn} hann inte ut. {namn} är förlorad."
+    ],
+    "vinnare": [
+      "{namn} vinner med {skatt} guld."
+    ],
+    "ingen_vinnare": [
+      "Ingen kom ut med någon skatt. Tornet vann."
+    ],
+    "spela_igen": [
+      "Tryck Enter för att gå in i ett nytt torn."
+    ],
+    "spel_pagar": [
+      "Vandringen har redan börjat. Vänta tills solen har gått ner."
     ],
     "tomt_namn": ["Tornet vill veta vad du heter."],
     "namn_upptaget": ["Någon med det namnet är redan i tornet."],

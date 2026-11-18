@@ -142,6 +142,45 @@ const Sound = (() => {
     vagg() {
       tone(95, 50, "sine", 0.25, 0.005, 0.15, false);
     },
+    // Ett mjukt klick när man väljer drag.
+    val() {
+      tone(880, 660, "triangle", 0.05, 0.003, 0.07, false);
+    },
+    // Ett lågt slag när rundan utförs.
+    runda() {
+      tone(110, 82, "sine", 0.18, 0.01, 0.5, true);
+      noiseHit(white, "lowpass", 400, 0.05, 0.005, 0.12, false);
+    },
+    tick() {
+      tone(1500, null, "square", 0.025, 0.002, 0.03, false);
+    },
+    start() {
+      [147, 220, 294].forEach((f, i) => tone(f, null, "triangle", 0.06, 0.3, 2.2, true, i * 0.35));
+    },
+    // Som en klocka långt borta.
+    solvarning() {
+      [523, 1046, 1569].forEach((f, i) => tone(f, f * 0.995, "sine", 0.06 / (i + 1), 0.005, 2.5, true));
+    },
+    solnedgang() {
+      tone(220, 55, "sawtooth", 0.06, 0.5, 3.5, true);
+      tone(110, 40, "sine", 0.2, 0.3, 3.5, false);
+      const f = noiseHit(brown, "lowpass", 600, 0.3, 1.0, 2.5, false);
+      f.frequency.exponentialRampToValueAtTime(80, ctx.currentTime + 3.5);
+    },
+    ut() {
+      const f = noiseHit(white, "bandpass", 500, 0.08, 0.6, 1.4, false);
+      f.frequency.exponentialRampToValueAtTime(2500, ctx.currentTime + 2);
+      tone(392, null, "triangle", 0.04, 0.4, 1.5, true, 0.3);
+    },
+    skatt() {
+      for (let i = 0; i < 5; i++) {
+        const f = 2200 + Math.random() * 1800;
+        tone(f, f * 0.98, "triangle", 0.04, 0.002, 0.18, true, i * (0.05 + Math.random() * 0.06));
+      }
+    },
+    slut() {
+      [294, 247, 196, 147].forEach((f, i) => tone(f, null, "triangle", 0.05, 0.1, 1.4, true, i * 0.45));
+    },
     ansluter() {
       tone(196, null, "triangle", 0.05, 0.4, 1.6, true);
       tone(294, null, "triangle", 0.035, 0.4, 1.6, true, 0.25);
