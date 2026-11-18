@@ -56,7 +56,11 @@ func (g *Game) trigger(p *Player, t *Trap, depth int) {
 
 	g.logTo(p, t.Namn+"!", "varn")
 	g.logTo(p, pick(t.Texter), "")
-	if other := pick(t.Andra); other != "" {
+	others := t.Andra
+	if g.cfg.Sight == sightMeet && len(t.AndraDolt) > 0 {
+		others = t.AndraDolt
+	}
+	if other := pick(others); other != "" {
 		g.logOthers(p, fill(other, "namn", p.Name, "region", region, "rum", roomName), "info")
 	}
 
@@ -126,7 +130,7 @@ func (g *Game) leaveCellar(p *Player) {
 	g.soundAll("nyttrum")
 	g.logTo(p, g.data.Text("kallare_ut", "rum", g.roomName(room)), "info")
 	g.logTo(p, g.describe(p, room, p.X, p.Y), "")
-	g.logOthers(p, g.data.Text("kallare_ut_andra", "namn", p.Name, "region", g.data.region(p.X, p.Y)), "info")
+	g.logOthers(p, g.hiddenText("kallare_ut_andra", "namn", p.Name, "region", g.data.region(p.X, p.Y)), "info")
 	g.announceMonster(p)
 }
 

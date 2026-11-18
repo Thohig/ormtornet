@@ -30,6 +30,8 @@ type Trap struct {
 	Tecken string   `json:"tecken"`
 	Texter []string `json:"texter"`
 	Andra  []string `json:"andra"`
+	// AndraDolt ersätter Andra när vandrarna bara ser varandra vid möten.
+	AndraDolt []string `json:"andra_dolt"`
 }
 
 type Rules struct {

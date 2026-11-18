@@ -21,9 +21,15 @@ type Settings struct {
 	Strid      string `json:"strid"`         // strid mellan vandrare: "av", "pa" eller "halva"
 	Spelledare bool   `json:"spelledarlage"` // spelledaren spelar inte själv och ser allt
 	Svarighet  string `json:"svarighet"`     // förval i data/svarighet.json, tomt för standard
+	Synlighet  string `json:"synlighet"`     // vilka vandrare man ser: "alla" eller "moten"
 }
 
-var defaultSettings = Settings{AI: 0, Min: 2, Sol: 40, Turtid: 30, Avslojande: true, Franvaro: 2, Strid: pvpOn}
+const (
+	sightAll  = "alla"
+	sightMeet = "moten" // andra vandrare syns bara i samma rum
+)
+
+var defaultSettings = Settings{AI: 0, Min: 2, Sol: 40, Turtid: 30, Avslojande: true, Franvaro: 2, Strid: pvpOn, Synlighet: sightMeet}
 
 var errPlaying = errors.New("inställningarna kan ändras när omgången är slut")
 
@@ -43,16 +49,19 @@ func (s Settings) normalize() Settings {
 	if s.Strid != pvpOff && s.Strid != pvpOn && s.Strid != pvpHalf {
 		s.Strid = pvpOn
 	}
+	if s.Synlighet != sightAll && s.Synlighet != sightMeet {
+		s.Synlighet = sightMeet
+	}
 	return s
 }
 
 func (s Settings) config() Config {
 	s = s.normalize()
-	return Config{Difficulty: s.Svarighet, AI: s.AI, AbsentRounds: s.Franvaro, PvP: s.Strid, GMMode: s.Spelledare, MinPlayers: s.Min, SunMax: s.Sol, TurnTime: time.Duration(s.Turtid) * time.Second, Reveal: s.Avslojande}
+	return Config{Difficulty: s.Svarighet, AI: s.AI, AbsentRounds: s.Franvaro, PvP: s.Strid, Sight: s.Synlighet, GMMode: s.Spelledare, MinPlayers: s.Min, SunMax: s.Sol, TurnTime: time.Duration(s.Turtid) * time.Second, Reveal: s.Avslojande}
 }
 
 func settingsFrom(cfg Config) Settings {
-	return Settings{Svarighet: cfg.Difficulty, AI: cfg.AI, Franvaro: cfg.AbsentRounds, Strid: cfg.PvP, Spelledare: cfg.GMMode, Min: cfg.MinPlayers, Sol: cfg.SunMax, Turtid: int(cfg.TurnTime / time.Second), Avslojande: cfg.Reveal}
+	return Settings{Svarighet: cfg.Difficulty, AI: cfg.AI, Franvaro: cfg.AbsentRounds, Strid: cfg.PvP, Synlighet: cfg.Sight, Spelledare: cfg.GMMode, Min: cfg.MinPlayers, Sol: cfg.SunMax, Turtid: int(cfg.TurnTime / time.Second), Avslojande: cfg.Reveal}
 }
 
 // defaultSettingsPath ger ~/Library/Application Support/Ormtornet/installningar.json.

@@ -101,6 +101,7 @@ function handle(msg) {
       if (state && state.phase !== msg.phase && msg.phase === "spel") lastTick = -1;
       state = msg;
       state.receivedAt = performance.now();
+      trackSeen(state);
       if (!joined) {
         joined = true;
         try { localStorage.setItem("ormtornet-namn", myName); } catch {}
@@ -217,12 +218,38 @@ function meter(cls, label, value, maxValue, full, empty) {
   return d;
 }
 
+// Med synligheten "moten" syns andra vandrare bara i samma rum. Klienten
+// minns var och när den såg var och en senast, så att kartan kan visa det.
+let lastSeen = {};
+function trackSeen(st) {
+  if (st.phase !== "spel" || st.sight !== "moten") {
+    lastSeen = {};
+  } else {
+    st.players.forEach((p) => {
+      if (p.id === st.you) return;
+      if (p.status !== "inne") delete lastSeen[p.id];
+      else if (!p.hidden) lastSeen[p.id] = { x: p.x, y: p.y, slot: p.slot, round: st.round };
+    });
+  }
+  st.lastSeen = lastSeen;
+}
+
+function seenTag(p) {
+  if (state.phase !== "spel" || state.sight !== "moten" || p.id === state.you) return "";
+  if (p.status !== "inne" || !p.hidden) return "";
+  const s = lastSeen[p.id];
+  return s ? "sågs runda " + s.round : "inte sedd";
+}
+
 function playerTag(p) {
   if (!p.online) return "borta";
   if (p.status === "ute") return "ute";
   if (p.status === "forlorad") return "förlorad";
   if (p.status === "dod") return state.phase === "spel" && p.chosen ? "död, klar" : "död";
-  if (state.phase === "spel") return p.chosen ? "klar" : "väljer";
+  if (state.phase === "spel") {
+    const seen = seenTag(p);
+    return (p.chosen ? "klar" : "väljer") + (seen ? ", " + seen : "");
+  }
   return p.ready ? "redo" : "";
 }
 

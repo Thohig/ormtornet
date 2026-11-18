@@ -61,6 +61,7 @@ Flaggor:
 - `-min 2` minsta antal spelare för att börja, datorspelare inräknade (sätt `-min 1` för att prova ensam)
 - `-ai 2` antal datorstyrda vandrare (0–3, eller 4 i spelledarläget)
 - `-svarighet normal` svårighet: `latt`, `normal`, `svar` eller `mardrom`
+- `-synlighet moten` vilka vandrare man ser: `moten` (bara i samma rum) eller `alla`
 - `-avslojande=false` stänger av avslöjandet, för spelare som redan känner till tornets hemlighet
 - `-oppna` öppnar introt i webbläsaren när servern har startat; på den här datorn leder det till värdsidan
 - `-vaken` håller datorn vaken så länge servern är igång
@@ -77,7 +78,8 @@ skicka i en gruppchatt. Sidan visar också vilka som har anslutit och är redo,
 och vad man kan göra om någon inte kommer in.
 
 Under Inför nästa vandring väljer spelledaren antal AI-spelare, minsta antal
-vandrare, svårighet, solnedgång, turtid och avslöjandet. AI-spelare kommer och går
+vandrare, svårighet, solnedgång, turtid, avslöjandet och om vandrarna syns
+för varandra. AI-spelare kommer och går
 direkt i lobbyn, resten gäller från nästa omgång. Under en pågående vandring
 är inställningarna låsta. Om tornet är fullt när en människa ansluter i
 lobbyn kliver en AI-spelare åt sidan, och kommer tillbaka om platsen blir
@@ -188,6 +190,26 @@ ut med skatt räknas, och den med mest skatt vinner. Den som är kvar inne när
 solen har gått ner är förlorad.
 
 Andras skatt och val av drag syns inte förrän spelet är slut.
+
+### Vem ser vem
+
+Som standard ser du bara dig själv på kartan. De andra vandrarna syns bara
+när ni står i samma rum. Där du senast såg någon står ett svagt `@` i dess
+färg, och i listan över vandrare står "sågs runda 12" eller "inte sedd".
+Tecknet försvinner när du ser vandraren igen, eller när den har gått ut
+eller dött.
+
+Tornet berättar fortfarande när någon hittar ett nytt rum, faller ner i
+källaren eller kommer upp, men bara i vilken del av tornet och inte vem.
+De vaga texterna har nycklar som slutar på `_dolt` i datafilerna, och
+fällorna har `andra_dolt`. Ekofällan visar som förut var den drabbade är.
+Att någon går ut eller dör får alla veta.
+
+Den döda spelaren som styr varelserna ser alla vandrare. Spelledaren ser
+allt i översikten, och när vandringen är slut syns alla igen.
+
+Med "Vandrarna syns: alltid, för alla" på värdsidan, eller `-synlighet alla`,
+syns alla på kartan som förut.
 
 När vandringen är slut berättar tornet krönikan i loggen. Först kommer det
 som hände, runda för runda: vem som gick ut och med hur mycket, vem som dog

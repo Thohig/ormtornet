@@ -47,6 +47,7 @@ type Config struct {
 	AI           int    // önskat antal datorspelare
 	AbsentRounds int    // rundor innan AI tar över en frånvarande vandrare, 0 = aldrig
 	PvP          string // strid mellan vandrare: "av", "pa" eller "halva"
+	Sight        string // vilka vandrare man ser: "alla" eller "moten"
 	GMMode       bool   // spelledarläge: spelledaren spelar inte och ser allt
 	Reveal       bool   // false stänger av avslöjandet
 	SunMax       int
@@ -346,6 +347,7 @@ type stateMsg struct {
 	PvP        string        `json:"pvp"` // om det går att strida mot andra vandrare här
 	Paused     bool          `json:"paused,omitempty"`
 	SleepText  string        `json:"sleepText,omitempty"`
+	Sight      string        `json:"sight"` // "alla" eller "moten"
 	Players    []playerView  `json:"players"`
 	Rooms      []roomView    `json:"rooms"`
 	Results    []resultView  `json:"results,omitempty"`
@@ -409,13 +411,33 @@ func (g *Game) soundAll(s string) {
 	}
 }
 
+// sees är sant om me får veta var o är. Med synligheten "moten" syns andra
+// vandrare bara i samma rum. Den döda spelaren som styr varelserna ser alla,
+// annars kan den inte jaga, och när vandringen är slut syns alla igen.
+func (g *Game) sees(me, o *Player) bool {
+	if g.cfg.Sight != sightMeet || g.phase != phasePlay || g.isController(me) {
+		return true
+	}
+	return me.Status == statusIn && o.Status == statusIn && me.Cellar == 0 &&
+		o.X == me.X && o.Y == me.Y
+}
+
+// hiddenText väljer den vaga varianten av en text (nyckeln med "_dolt")
+// när vandrarna inte ser varandra, om den finns i datafilerna.
+func (g *Game) hiddenText(key string, vars ...string) string {
+	if g.cfg.Sight == sightMeet && len(g.data.Texter[key+"_dolt"]) > 0 {
+		key += "_dolt"
+	}
+	return g.data.Text(key, vars...)
+}
+
 // stateFor bygger det en viss spelare får se. Andras skatt och val av drag
 // hålls hemliga tills spelet är slut.
 func (g *Game) stateFor(me *Player) stateMsg {
 	st := stateMsg{
 		T: "state", You: me.ID, Size: gridSize, Level: g.level, Reveal: g.cfg.Reveal,
 		Phase: g.phase, Sun: g.sun, SunMax: g.cfg.SunMax, Round: g.round,
-		MinPlayers: g.cfg.MinPlayers, Action: me.Action,
+		MinPlayers: g.cfg.MinPlayers, Action: me.Action, Sight: g.cfg.Sight,
 		HP: me.HP, MaxHP: g.data.Regler.Liv, Potions: me.Potions,
 		Stuck: me.Stuck, Cellar: me.Cellar, Poison: me.Poison, Dark: me.Dark,
 	}
@@ -445,7 +467,7 @@ func (g *Game) stateFor(me *Player) stateMsg {
 		if p == me || g.phase == phaseEnd {
 			pv.Treasure = p.Treasure
 		}
-		if p.Cellar > 0 || (blind && p != me) {
+		if p.Cellar > 0 || (blind && p != me) || (p != me && !g.sees(me, p)) {
 			pv.Hidden = true
 			pv.X, pv.Y = -1, -1
 		}
@@ -726,6 +748,9 @@ func (g *Game) startGame() {
 	g.logAll(g.data.Text("start", "sol", strconv.Itoa(g.sun)), "syn")
 	if s := g.data.difficulty(g.cfg.Difficulty); s != nil {
 		g.logAll(g.data.Text("svarighet", "namn", s.Namn, "liv", strconv.Itoa(g.data.Regler.Liv)), "dim")
+	}
+	if g.cfg.Sight == sightMeet {
+		g.logAll(g.data.Text("synlighet_moten"), "dim")
 	}
 	g.startRound()
 }
@@ -1076,7 +1101,7 @@ func (g *Game) move(p *Player, d Dir, depth int) {
 			g.logTo(p, name+".", "rubrik")
 			g.logTo(p, g.describe(p, target, nx, ny), "")
 		}
-		g.logOthers(p, g.data.Text("nytt_rum_andra",
+		g.logOthers(p, g.hiddenText("nytt_rum_andra",
 			"namn", p.Name, "region", g.data.region(nx, ny)), "info")
 		if target.Event != "" {
 			ev := target.Event

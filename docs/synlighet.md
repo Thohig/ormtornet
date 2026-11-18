@@ -1,7 +1,8 @@
 # Förslag: Synlighet
 
-Status: förslaget skrevs 2026-11-18. Inget är byggt. Användaren bestämmer
-vilka steg som ska byggas.
+Status: förslaget skrevs 2026-11-18. Steg 1 är byggt och är förval (README,
+"Vem ser vem"). Steg 2 och 3 är inte byggda. Användaren bestämmer om de ska
+byggas.
 
 Varje vandrare ser bara sig själv. De andra syns bara när man möter dem i
 samma rum. Ingen vet säkert var de andra är, hur långt de har kommit eller
@@ -105,9 +106,18 @@ Texterna ligger i `texter.json`.
   inte ser vem som kommer.
 - Andras skatt och val av drag är fortfarande hemliga.
 
+## Beslut för steg 1
+
+- Förval: "bara vid möten", även för den som har sparade inställningar.
+  Flaggan heter `-synlighet` med värdena `moten` och `alla`.
+- Tecknet för senast sedd finns. Det står kvar tills man ser vandraren igen,
+  eller tills den har gått ut eller dött. Klienten minns det, så det
+  försvinner om sidan laddas om.
+- Ekofällan visar platsen för alla som förut.
+- Den döda spelaren som styr varelserna ser alla vandrare.
+- De vaga texterna ligger i datafilerna med `_dolt` och `andra_dolt`.
+
 ## Att bestämma
 
-- Vilka steg som ska byggas, och vilket val som ska vara förval.
-- Om tecknet för senast sedd ska finnas, och hur länge det står kvar.
-- Om ekofällan ska visa platsen för alla eller bara riktningen.
+- Om steg 2 och 3 ska byggas.
 - I steg 2: om den som dör ska se hela tornet medan den styr varelserna.

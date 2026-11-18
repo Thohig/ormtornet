@@ -35,6 +35,9 @@
       ],
       "andra": [
         "Ett dovt brak hörs i tornets {region} del. Sedan är det tyst. {namn} syns inte längre."
+      ],
+      "andra_dolt": [
+        "Ett dovt brak hörs i tornets {region} del. Sedan är det tyst."
       ]
     },
     {
@@ -205,6 +208,9 @@
     ],
     "kallare_ut_andra": [
       "{namn} kliver upp ur ett hål i golvet i tornets {region} del."
+    ],
+    "kallare_ut_andra_dolt": [
+      "Något skrapar under golvet i tornets {region} del, och en lucka slår igen."
     ],
     "morker_nytt": [
       "Du trevar dig in i ett rum du inte kan se."

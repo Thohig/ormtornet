@@ -243,6 +243,13 @@ const MapView = (() => {
       }
       put(x0 + Math.floor(RW / 2), y0 + Math.floor(RH / 2), "◎", PLAYER_COLORS[p.slot]);
     });
+    // Där en dold vandrare sågs senast står ett svagt tecken i dess färg.
+    state.players.forEach((p) => {
+      const seen = state.lastSeen && state.lastSeen[p.id];
+      if (!seen || !p.hidden) return;
+      const [sx, sy] = SLOTS[seen.slot] || SLOTS[0];
+      put(seen.x * RW + sx, seen.y * RH + sy, "@", (PLAYER_COLORS[seen.slot] || "#ffffff") + "55");
+    });
     state.players.forEach((p) => {
       if (p.status === "ute" || p.hidden) return;
       const [sx, sy] = SLOTS[p.slot] || SLOTS[0];

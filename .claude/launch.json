@@ -4,8 +4,30 @@
     {
       "name": "ormtornet",
       "runtimeExecutable": "go",
-      "runtimeArgs": ["run", "."],
+      "runtimeArgs": [
+        "run",
+        "."
+      ],
       "port": 8080
+    },
+    {
+      "name": "ormtornet-prov",
+      "runtimeExecutable": "go",
+      "runtimeArgs": [
+        "run",
+        ".",
+        "-addr",
+        "127.0.0.1:8091",
+        "-installningar",
+        "",
+        "-min",
+        "1",
+        "-ai",
+        "2",
+        "-turtid",
+        "8s"
+      ],
+      "port": 8091
     }
   ]
 }

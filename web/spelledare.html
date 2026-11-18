@@ -235,6 +235,13 @@
       </select>
       <span class="note">portrummen är alltid fredade</span>
 
+      <label for="sSyn">Vandrarna syns</label>
+      <select id="sSyn" name="synlighet">
+        <option value="moten">bara när de möts</option>
+        <option value="alla">alltid, för alla</option>
+      </select>
+      <span class="note">var de andra är på kartan</span>
+
       <label for="sGM">Spelledarläge</label>
       <select id="sGM" name="spelledarlage">
         <option value="0">av, jag spelar själv</option>
@@ -651,6 +658,7 @@ function renderSettings(v) {
   }
   fr.value = String(s.franvaro);
   $("sStrid").value = s.strid;
+  $("sSyn").value = s.synlighet;
   $("sGM").value = s.spelledarlage ? "1" : "0";
 }
 
@@ -680,6 +688,7 @@ $("settings").addEventListener("change", async () => {
     avslojande: $("sRev").value === "1",
     franvaro: +$("sFr").value,
     strid: $("sStrid").value,
+    synlighet: $("sSyn").value,
     spelledarlage: $("sGM").value === "1",
     svarighet: $("sSv").value,
   };

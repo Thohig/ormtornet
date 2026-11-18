@@ -368,6 +368,10 @@
       "Sten skrapar mot sten i tornets {region} del. {namn} har hittat ett nytt rum.",
       "Ett dovt mullrande från tornets {region} del. {namn} har öppnat en ny väg."
     ],
+    "nytt_rum_andra_dolt": [
+      "Sten skrapar mot sten i tornets {region} del. Någon har hittat ett nytt rum.",
+      "Ett dovt mullrande från tornets {region} del. Någon har öppnat en ny väg."
+    ],
     "kant_rum": [
       "{rum}."
     ],
@@ -429,6 +433,9 @@
     ],
     "svarighet": [
       "Svårighet: {namn}. Du har {liv} liv."
+    ],
+    "synlighet_moten": [
+      "Tornet är stort och mörkt. Du ser de andra vandrarna bara när ni står i samma rum."
     ],
     "ingen_vinnare": [
       "Ingen kom ut med någon skatt. Tornet vann."
