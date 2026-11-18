@@ -505,7 +505,7 @@ const Intro = (() => {
     }, el.textContent ? 900 : 0);
   }
 
-  fetch("/intro", { cache: "no-store" })
+  fetch("/intro" + (document.visibilityState === "visible" ? "?synlig" : ""), { cache: "no-store" })
     .then((r) => r.json())
     .then((info) => {
       if (!info.avslojande) $("intro").classList.add("invigd");
@@ -643,6 +643,14 @@ document.addEventListener("keydown", (e) => {
     send({ t: "act", a });
   }
 });
+
+// Säg till tornet då och då att sidan syns, så att det inte stänger av sig
+// självt medan någon sitter och tittar. En gömd flik säger ingenting.
+setInterval(() => {
+  if (document.visibilityState !== "visible") return;
+  if (joined) send({ t: "puls" });
+  else fetch("/intro?synlig", { cache: "no-store" }).catch(() => {});
+}, 60000);
 
 // Rita om då och då så att den egna markören blinkar.
 setInterval(() => {

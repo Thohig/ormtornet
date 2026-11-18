@@ -14,7 +14,7 @@ func TestHostViewListsPlayersAndBots(t *testing.T) {
 	a := testClient()
 	g.Join(a, "Alva")
 
-	v := g.HostView()
+	v := g.HostView(false)
 	if v.Phase != phaseLobby || len(v.Players) != 2 {
 		t.Fatalf("fas %s, %d spelare", v.Phase, len(v.Players))
 	}
@@ -95,22 +95,65 @@ func TestCloseTellsPlayers(t *testing.T) {
 	}
 }
 
-func TestIdleFor(t *testing.T) {
+func TestAutostop(t *testing.T) {
+	const empty, abandoned = 10 * time.Minute, 12 * time.Hour
 	g := testGame(t)
-	g.lastActive = time.Now().Add(-time.Hour)
-	if g.IdleFor() < 59*time.Minute {
-		t.Fatal("ett tomt torn räknades inte som tomt")
+	hourAgo := time.Now().Add(-time.Hour)
+
+	g.lastActive, g.lastReal = hourAgo, hourAgo
+	if !g.ShouldClose(empty, abandoned) {
+		t.Fatal("ett tomt torn stängde inte")
 	}
+
+	// En gömd flik med spelledarens sida håller inte tornet öppet.
+	g.lastActive, g.lastReal = hourAgo, hourAgo
+	g.HostView(false)
+	if !g.ShouldClose(empty, abandoned) {
+		t.Fatal("en gömd flik höll tornet öppet")
+	}
+	// En synlig gör det.
+	g.HostView(true)
+	if g.ShouldClose(empty, abandoned) {
+		t.Fatal("en synlig spelledarsida räknades inte")
+	}
+
+	// En ansluten spelare håller tornet öppet, men inte i all evighet om
+	// ingen gör något.
 	a := testClient()
 	g.Join(a, "Alva")
-	if g.IdleFor() > time.Second {
-		t.Fatal("en ansluten spelare räknades inte")
+	g.lastActive = hourAgo
+	if g.ShouldClose(empty, abandoned) {
+		t.Fatal("tornet stängde fast en spelare är ansluten")
 	}
-	g.Leave(a)
-	g.lastActive = time.Now().Add(-time.Hour)
-	g.HostView() // spelledarens sida frågar
-	if g.IdleFor() > time.Second {
-		t.Fatal("spelledarens sida räknades inte")
+	g.lastReal = time.Now().Add(-13 * time.Hour)
+	if !g.ShouldClose(empty, abandoned) {
+		t.Fatal("tornet stängde inte fast ingen har gjort något på 13 timmar")
+	}
+}
+
+func TestAutostopWarnsAMinuteBefore(t *testing.T) {
+	g := testGame(t)
+	a := testClient()
+	g.Join(a, "Alva")
+	for len(a.send) > 0 {
+		<-a.send
+	}
+	g.lastReal = time.Now().Add(-12*time.Hour + 30*time.Second)
+	if g.ShouldClose(10*time.Minute, 12*time.Hour) {
+		t.Fatal("stängde för tidigt")
+	}
+	warned := false
+	for len(a.send) > 0 {
+		if strings.Contains(string(<-a.send), "en minut") {
+			warned = true
+		}
+	}
+	if !warned || g.closeAt.IsZero() {
+		t.Fatal("ingen varning en minut innan")
+	}
+	g.Touch()
+	if !g.closeAt.IsZero() {
+		t.Fatal("varningen släpptes inte när någon kom tillbaka")
 	}
 }
 

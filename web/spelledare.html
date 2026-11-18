@@ -569,7 +569,7 @@ async function pollGM() {
   if (closed) return;
   if (view && view.settings.spelledarlage) {
     try {
-      const r = await fetch("/spelledare/oversikt", { cache: "no-store" });
+      const r = await fetch("/spelledare/oversikt" + seenParam(), { cache: "no-store" });
       if (r.ok) {
         const o = await r.json();
         renderGM(o);
@@ -693,10 +693,16 @@ $("startNow").onclick = async () => {
   }
 };
 
+// Bara en sida som syns på skärmen håller tornet öppet, inte en flik som
+// glömts kvar i bakgrunden.
+function seenParam() {
+  return document.visibilityState === "visible" ? "?synlig" : "";
+}
+
 async function poll() {
   if (closed) return;
   try {
-    const r = await fetch("/spelledare/status", { cache: "no-store" });
+    const r = await fetch("/spelledare/status" + seenParam(), { cache: "no-store" });
     if (!r.ok) throw new Error(r.status);
     view = await r.json();
     if (closed) return;

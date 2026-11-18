@@ -95,10 +95,12 @@ type gmRoomRef struct {
 
 // GMView bygger översikten. Tornet växer fram när någon går in i ett nytt
 // rum, så rum som ingen har varit i finns inte än och kan inte visas.
-func (g *Game) GMView() gmView {
+func (g *Game) GMView(visible bool) gmView {
 	g.mu.Lock()
 	defer g.mu.Unlock()
-	g.lastActive = time.Now()
+	if visible {
+		g.seen()
+	}
 	m := stateMsg{
 		T: "state", You: 0, Size: gridSize, Level: g.level, Reveal: g.cfg.Reveal,
 		Phase: g.phase, Sun: g.sun, SunMax: g.cfg.SunMax, Round: g.round,

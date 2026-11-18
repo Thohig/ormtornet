@@ -45,10 +45,14 @@ type hostView struct {
 
 // HostView sammanfattar spelet för spelledaren. Den visar inte skatter,
 // positioner eller drag, så spelledaren som också spelar får inget övertag.
-func (g *Game) HostView() hostView {
+// visible är sant när sidan syns på skärmen; en gömd flik håller inte
+// tornet öppet.
+func (g *Game) HostView(visible bool) hostView {
 	g.mu.Lock()
 	defer g.mu.Unlock()
-	g.lastActive = time.Now()
+	if visible {
+		g.seen()
+	}
 	v := hostView{
 		Phase: g.phase, Round: g.round, Sun: g.sun, SunMax: g.cfg.SunMax,
 		TurnSecs: int(g.cfg.TurnTime / time.Second), MinPlayers: g.cfg.MinPlayers,
@@ -85,17 +89,6 @@ func (g *Game) Intro() introInfo {
 		key = "rykten_invigda"
 	}
 	return introInfo{Avslojande: g.cfg.Reveal, Rykten: g.data.Texter[key]}
-}
-
-// IdleFor säger hur länge tornet har stått tomt: ingen människa ansluten och
-// ingen spelledarsida öppen. Används för att stänga ett bortglömt torn.
-func (g *Game) IdleFor() time.Duration {
-	g.mu.Lock()
-	defer g.mu.Unlock()
-	if g.humansPresent() > 0 {
-		g.lastActive = time.Now()
-	}
-	return time.Since(g.lastActive)
 }
 
 // isLocal är sant när förfrågan kommer från den här datorn, oavsett om den
@@ -222,6 +215,9 @@ func addHostRoutes(mux *http.ServeMux, web fs.FS, game *Game, addrs hostAddrs, h
 		w.Header().Set("Cache-Control", "no-store")
 		info := game.Intro()
 		info.Vard = isLocal(r)
+		if info.Vard && r.URL.Query().Has("synlig") {
+			game.Touch() // introt syns på tornets dator
+		}
 		writeJSON(w, http.StatusOK, info)
 	})
 	mux.HandleFunc("GET /spelledare", localOnly(func(w http.ResponseWriter, r *http.Request) {
@@ -244,10 +240,10 @@ func addHostRoutes(mux *http.ServeMux, web fs.FS, game *Game, addrs hostAddrs, h
 			writeJSON(w, http.StatusForbidden, map[string]string{"fel": "Översikten visas bara i spelledarläget."})
 			return
 		}
-		writeJSON(w, http.StatusOK, game.GMView())
+		writeJSON(w, http.StatusOK, game.GMView(r.URL.Query().Has("synlig")))
 	}))
 	mux.HandleFunc("GET /spelledare/status", localOnly(func(w http.ResponseWriter, r *http.Request) {
-		v := game.HostView()
+		v := game.HostView(r.URL.Query().Has("synlig"))
 		v.Addrs = addrs
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		json.NewEncoder(w).Encode(v)

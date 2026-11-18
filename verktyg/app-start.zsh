@@ -1,8 +1,9 @@
 #!/bin/zsh
 # Ormtornet.app: bygger spelet, startar tornet i bakgrunden och öppnar
-# introt, som sedan leder till spelledarens sida. Tornet stängs med knappen Stäng tornet, eller av sig
-# självt när ingen spelare är ansluten och spelledarens sida har varit stängd
-# i 10 minuter. Macen hålls vaken så länge tornet är öppet.
+# introt, som sedan leder till spelledarens sida. Tornet stängs med knappen
+# Stäng tornet, eller av sig självt (se autostopp i README): efter 10 minuter
+# utan spelare och utan synliga sidor, och senast när ingen har gjort något
+# på 12 timmar. Macen hålls vaken så länge tornet är öppet.
 #
 # Skapad av skapa-app.sh. Ändra inte här, utan skapa om appen därifrån.
 GAME="__GAME__"
@@ -24,7 +25,7 @@ if ! "$GO" build -o ormtornet . > $LOG 2>&1; then
   alert "Spelet gick inte att bygga. Se $LOG."
   exit 1
 fi
-nohup ./ormtornet -vaken -autostopp 10m >> $LOG 2>&1 &
+nohup ./ormtornet -vaken >> $LOG 2>&1 &
 
 for i in {1..50}; do up && break; sleep 0.1; done
 if ! up; then

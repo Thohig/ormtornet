@@ -34,7 +34,8 @@ func main() {
 	settingsPath := flag.String("installningar", defaultSettingsPath(), "fil där spelledarens inställningar sparas (tom för att inte spara)")
 	openPage := flag.Bool("oppna", false, "öppna introt i webbläsaren när servern har startat; det leder till spelledarens sida")
 	awake := flag.Bool("vaken", false, "håll datorn vaken så länge servern är igång")
-	autostop := flag.Duration("autostopp", 0, "stäng tornet när ingen spelare är ansluten och spelledarens sida har varit stängd så här länge, t.ex. 10m (0 = aldrig)")
+	autostop := flag.Duration("autostopp", 10*time.Minute, "stäng tornet när ingen spelare är ansluten och ingen sida har synts på den här datorn så här länge (0 = aldrig)")
+	abandoned := flag.Duration("autostopp-max", 12*time.Hour, "stäng tornet när ingen har gjort något så här länge, även om flikar står öppna (0 = aldrig)")
 	flag.Parse()
 
 	// Spelledarens sparade inställningar gäller, utom det som anges med
@@ -157,13 +158,23 @@ func main() {
 		}
 	}
 	fmt.Println("Stäng tornet med Ctrl+C eller knappen på spelledarens sida.")
-	if *autostop > 0 {
-		fmt.Printf("Tornet stänger av sig självt när det har stått tomt i %s.\n", *autostop)
+	if *autostop > 0 || *abandoned > 0 {
+		if *autostop > 0 {
+			fmt.Printf("Tornet stänger av sig självt när det har stått tomt i %s.\n", short(*autostop))
+		}
+		if *abandoned > 0 {
+			fmt.Printf("Senast när ingen har gjort något på %s.\n", short(*abandoned))
+		}
+		every := 15 * time.Second
+		for _, d := range []time.Duration{*autostop, *abandoned} {
+			if d > 0 {
+				every = min(every, d/4)
+			}
+		}
 		go func() {
-			tick := time.NewTicker(min(30*time.Second, *autostop/4))
-			for range tick.C {
-				if game.IdleFor() >= *autostop {
-					fmt.Printf("\nIngen har varit här på %s.", *autostop)
+			for range time.Tick(every) {
+				if game.ShouldClose(*autostop, *abandoned) {
+					fmt.Print("\nIngen är kvar vid tornet.")
 					closeTower()
 				}
 			}
@@ -174,6 +185,17 @@ func main() {
 		openBrowser("http://localhost:" + port + "/")
 	}
 	log.Fatal(http.Serve(ln, mux))
+}
+
+// short skriver en tid kort, som 10m eller 12h, utan nollor på slutet.
+func short(d time.Duration) string {
+	s := d.String()
+	for _, z := range []string{"0s", "0m"} {
+		if len(s) > 2 && s[len(s)-2:] == z && (s[len(s)-3] < '0' || s[len(s)-3] > '9') {
+			s = s[:len(s)-2]
+		}
+	}
+	return s
 }
 
 // towerRunning är sant om det redan är ett Ormtornet som svarar på porten.

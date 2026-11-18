@@ -29,11 +29,8 @@ Det går också att starta direkt med `go run .`.
 skapar `~/Projekt/Ormtornet.app` med tornets ikon (ange en annan mapp som
 argument om du vill). Dubbelklick på appen bygger spelet från den här mappen,
 startar tornet i bakgrunden och öppnar introt, som leder till spelledarens
-sida. Inget
-terminalfönster behövs. Tornet stängs med knappen "Stäng tornet", eller av sig
-självt när ingen spelare är ansluten och spelledarens sida har varit stängd i
-10 minuter. Loggen hamnar i `/tmp/ormtornet.log`. Appen behöver bara skapas om
-när den här mappen flyttas.
+sida. Inget terminalfönster behövs. Loggen hamnar i `/tmp/ormtornet.log`.
+Appen behöver bara skapas om när den här mappen flyttas.
 
 Servern lyssnar på `0.0.0.0:8080` och skriver ut adressen spelarna ska
 öppna, till exempel `http://Din-Mac.local:8080`. Alla Macar i samma nätverk
@@ -41,6 +38,16 @@ kan öppna den i Safari eller Chrome.
 
 Stäng tornet med Ctrl+C i terminalen eller knappen "Stäng tornet" på
 spelledarens sida. Spelarna får då ett meddelande om att tornet stänger.
+
+Ett bortglömt torn stänger av sig självt, hur det än har startats:
+
+- efter 10 minuter utan någon ansluten spelare och utan att introt eller
+  spelledarens sida har synts på skärmen på tornets dator (en flik som ligger
+  gömd bakom andra räknas inte), och
+- senast när ingen har gjort något på 12 timmar, även om flikar står öppna.
+
+En minut innan får alla som är anslutna en varning. Tiderna ändras med
+`-autostopp` och `-autostopp-max`, och `0` stänger av regeln.
 
 Inställningarna ändras enklast på spelledarens sida (se nedan) och sparas
 till nästa gång. Flaggorna nedan gäller före det sparade, men bara den gången.
@@ -56,7 +63,8 @@ Flaggor:
 - `-avslojande=false` stänger av avslöjandet, för spelare som redan känner till tornets hemlighet
 - `-oppna` öppnar introt i webbläsaren när servern har startat; på den här datorn leder det till spelledarens sida
 - `-vaken` håller datorn vaken så länge servern är igång
-- `-autostopp 10m` stänger tornet när ingen spelare är ansluten och spelledarens sida har varit stängd så länge
+- `-autostopp 10m` stänger tornet när ingen spelare är ansluten och ingen sida har synts på tornets dator så länge (`0` = aldrig)
+- `-autostopp-max 12h` stänger tornet när ingen har gjort något så länge, även om flikar står öppna (`0` = aldrig)
 - `-installningar fil` var spelledarens inställningar sparas (standard `~/Library/Application Support/Ormtornet/installningar.json`, tom för att inte spara)
 
 ### Spelledarens sida

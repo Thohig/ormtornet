@@ -164,7 +164,9 @@ type Game struct {
 
 	usedClues map[string]bool // ledtrådar som redan har delats ut
 
-	lastActive time.Time // senast en människa var ansluten eller spelledarens sida frågade
+	lastActive time.Time // senast en människa var ansluten eller en sida syntes på tornets dator
+	lastReal   time.Time // senast någon gjorde något eller en sida syntes
+	closeAt    time.Time // när tornet stänger om ingen kommer, satt under sista minuten
 
 	gmLog []gmEntry // allt vandrarna har fått läsa, för spelledarläget
 
@@ -173,7 +175,7 @@ type Game struct {
 }
 
 func NewGame(d *Data, cfg Config) *Game {
-	return &Game{data: d, cfg: cfg, level: 1, phase: phaseLobby, sun: cfg.SunMax, usedClues: map[string]bool{}, lastActive: time.Now()}
+	return &Game{data: d, cfg: cfg, level: 1, phase: phaseLobby, sun: cfg.SunMax, usedClues: map[string]bool{}, lastActive: time.Now(), lastReal: time.Now()}
 }
 
 func inBounds(x, y int) bool { return x >= 0 && y >= 0 && x < gridSize && y < gridSize }
@@ -1096,6 +1098,7 @@ func (g *Game) serve(conn *wsConn, local bool) {
 			continue
 		}
 		g.mu.Lock()
+		g.seen() // en spelare gör något, eller säger att sidan syns (puls)
 		switch m.T {
 		case "join":
 			g.Join(c, m.Name)

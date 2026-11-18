@@ -75,7 +75,7 @@ func TestGMViewShowsEverything(t *testing.T) {
 	r.Event = "pilar"
 	g.Act(a, actWait, 0)
 	g.logAll("Ett test hörs i hela tornet.", "info")
-	v := g.GMView()
+	v := g.GMView(false)
 	found := false
 	for _, p := range v.Players {
 		if p.Name == "Alva" && p.Treasure == 42 {
