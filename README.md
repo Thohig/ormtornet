@@ -204,10 +204,18 @@ Andras skatt och val av drag syns inte förrän spelet är slut.
 ### Vem ser vem
 
 Som standard ser du bara dig själv och rum du själv har gått igenom på
-kartan. De andra vandrarna syns bara när ni står i samma rum. Där du senast såg någon står ett svagt `@` i dess
-färg, och i listan över vandrare står "sågs runda 12" eller "inte sedd".
-Tecknet försvinner när du ser vandraren igen, eller när den har gått ut
-eller dött.
+kartan. De andra vandrarna syns bara när ni står i samma rum, redan i
+lobbyn. Där du senast såg någon står ett svagt `@` i dess färg, och i
+listan över vandrare står "sågs runda 12" eller "inte sedd". Tecknet
+försvinner när du ser vandraren igen, eller när den har gått ut eller dött.
+
+Alla fyra portrummen syns på kartan för alla från början, så alla vet var
+utgångarna är. Vem som börjar vid vilken port lottas när vandringen börjar,
+och var och en får bara veta sin egen. Ordningen i listan och färgen säger
+inget om porten, och när någon kommer till tornet står det inte vid vilken
+port. Står du i ett grannrum till en port när någon går ut hör du porten
+gnissla. Med "alltid, för alla" börjar var och en vid porten som hör till
+dess plats i listan, som förut.
 
 Tornet berättar fortfarande när någon faller ner i källaren eller kommer
 upp, eller när en fälla slår till, men bara i vilken del av tornet och
@@ -238,7 +246,9 @@ och när vandringen är slut syns hela tornet för alla.
   om det finns en dörr. Längre bort hörs strid och fällor som förut, bara
   med delen av tornet. Ekofällan och klockan hörs lika i hela tornet.
 
-Texterna står i `data/texter.json` under `spar`, `spar_ut` och `ljud_*`.
+Texterna står i `data/texter.json` under `spar`, `spar_ut` och `ljud_*`,
+och texterna utan port under `ansluter_dolt`, `valkommen_dolt` och
+`start_port` (i `ai.json` under `ansluter_dolt` och `lamnar_dolt`).
 Med "alltid, för alla" finns inga spår och inga ljud från grannrummen.
 
 Med "Vandrarna syns: bara när de möts" på värdsidan, eller

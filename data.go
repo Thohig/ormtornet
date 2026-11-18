@@ -341,6 +341,8 @@ type AIData struct {
 	BetanketidMs   []int         `json:"betanketid_ms"`
 	Ansluter       []string      `json:"ansluter"`
 	Lamnar         []string      `json:"lamnar"`
+	AnsluterDolt   []string      `json:"ansluter_dolt"` // utan port, när vandrarna inte ser varandra
+	LamnarDolt     []string      `json:"lamnar_dolt"`
 	TarOver        []string      `json:"tar_over"`
 	Tillbaka       []string      `json:"tillbaka"`
 }

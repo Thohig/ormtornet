@@ -38,6 +38,12 @@
     "lamnar": [
       "{namn} vänder i porten i {horn} och går sin väg. Det finns andra torn."
     ],
+    "ansluter_dolt": [
+      "{namn} har kommit till tornet. Hen ser ut att ha gjort det här förut."
+    ],
+    "lamnar_dolt": [
+      "{namn} vänder vid tornets fot och går sin väg. Det finns andra torn."
+    ],
     "tar_over": [
       "{namn} verkar ha somnat vid sin lykta. Någon annan styr nu stegen åt {namn}."
     ],

@@ -212,7 +212,7 @@ func (g *Game) syncBots(announce bool) {
 		}
 		for i, p := range g.players {
 			if p != nil && before[i] == nil {
-				g.logAll(fill(pick(g.data.AI.Ansluter), "namn", p.Name, "horn", g.data.Horn[p.Slot]), "info")
+				g.logAll(fill(pick(g.aiTexts(g.data.AI.Ansluter, g.data.AI.AnsluterDolt)), "namn", p.Name, "horn", g.data.Horn[p.Corner]), "info")
 				g.soundAll("ansluter")
 			}
 		}
@@ -229,7 +229,7 @@ func (g *Game) removeBot(announce bool) int {
 		if p != nil && p.bot != nil {
 			g.players[i] = nil
 			if announce && len(g.data.AI.Lamnar) > 0 {
-				g.logAll(fill(pick(g.data.AI.Lamnar), "namn", p.Name, "horn", g.data.Horn[p.Slot]), "dim")
+				g.logAll(fill(pick(g.aiTexts(g.data.AI.Lamnar, g.data.AI.LamnarDolt)), "namn", p.Name, "horn", g.data.Horn[p.Corner]), "dim")
 			}
 			return i
 		}

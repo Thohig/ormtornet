@@ -352,6 +352,16 @@
       "{namn} kliver in genom porten i {horn}.",
       "En ny lykta tänds vid porten i {horn}. Det är {namn}."
     ],
+    "ansluter_dolt": [
+      "{namn} har kommit till tornet. Någonstans knarrar en port.",
+      "En ny lykta tänds vid en av portarna. Det är {namn}."
+    ],
+    "valkommen_dolt": [
+      "{namn}, du står i skymningen vid tornets fot. Någonstans i mitten sägs en orm sova kring sin skatt. Ta vad du vågar och kom ut innan solen går ner. Vilken port du går in genom får du veta när vandringen börjar."
+    ],
+    "start_port": [
+      "Du kliver in genom porten i tornets {horn}. Ingen av de andra vet var du är."
+    ],
     "atervander": [
       "{namn} har hittat tillbaka in i tornet."
     ],
@@ -451,6 +461,10 @@
     "ljud_falla": [
       "Något brakar till i rummet åt {riktning}.",
       "Ett skrik hörs genom väggen åt {riktning}, och sedan är det tyst."
+    ],
+    "ljud_port": [
+      "Åt {riktning} gnisslar en port, och ett drag av kall luft går genom rummet.",
+      "Genom väggen åt {riktning} slår en port igen. Någon har gått ut."
     ],
     "ljud_drick": [
       "I rummet åt {riktning} dras en kork ur en flaska. Någon dricker.",

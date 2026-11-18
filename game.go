@@ -112,6 +112,7 @@ type Player struct {
 	ID       int
 	Name     string
 	Slot     int
+	Corner   int // porten vandraren börjar vid; lottas när vandrarna inte ser varandra
 	X, Y     int
 	client   *Client
 	Ready    bool
@@ -424,7 +425,7 @@ func (g *Game) soundAll(s string) {
 // vandrare bara i samma rum. Den döda spelaren som styr varelserna ser alla,
 // annars kan den inte jaga, och när vandringen är slut syns alla igen.
 func (g *Game) sees(me, o *Player) bool {
-	if g.cfg.Sight == sightAll || g.cfg.Sight == "" || g.phase != phasePlay || g.isController(me) {
+	if g.cfg.Sight == sightAll || g.cfg.Sight == "" || g.phase == phaseEnd || g.isController(me) {
 		return true
 	}
 	return me.Status == statusIn && o.Status == statusIn && me.Cellar == 0 &&
@@ -561,7 +562,7 @@ func cleanName(s string) string {
 }
 
 func (g *Game) placeAtCorner(p *Player) {
-	cn := corners[p.Slot]
+	cn := corners[p.Corner]
 	p.X, p.Y = cn.x, cn.y
 	p.Status = statusIn
 	p.Treasure = 0
@@ -571,7 +572,7 @@ func (g *Game) placeAtCorner(p *Player) {
 	p.Seen = map[string]bool{}
 	p.Potions, p.Stuck, p.Cellar, p.Poison, p.Dark = 0, 0, 0, 0, 0
 	p.known = [gridSize][gridSize]bool{}
-	g.reveal(cn.x, cn.y)
+	g.revealPorts()
 	g.noteRoom(p)
 }
 
@@ -589,10 +590,10 @@ func (g *Game) knowsRoom(me *Player, x, y int) bool {
 	if !g.rooms[y][x].Revealed {
 		return false
 	}
-	if g.cfg.Sight != sightOwn || g.phase != phasePlay || g.isController(me) {
+	if g.cfg.Sight != sightOwn || g.phase == phaseEnd || g.isController(me) {
 		return true
 	}
-	return me.known[y][x]
+	return me.known[y][x] || g.rooms[y][x].Kind == "ingang"
 }
 
 func (g *Game) Join(c *Client, rawName string) {
@@ -656,7 +657,7 @@ func (g *Game) Join(c *Client, rawName string) {
 		return
 	}
 	g.nextID++
-	p := &Player{ID: g.nextID, Name: name, Slot: slot, client: c}
+	p := &Player{ID: g.nextID, Name: name, Slot: slot, Corner: slot, client: c}
 	g.players[slot] = p
 	c.player = p
 	g.placeAtCorner(p)
@@ -664,18 +665,18 @@ func (g *Game) Join(c *Client, rawName string) {
 
 	g.broadcastState()
 	g.soundAll("ansluter")
-	g.logTo(p, g.data.Text("valkommen", "namn", name, "horn", horn), "syn")
+	g.logTo(p, g.hiddenText("valkommen", "namn", name, "horn", horn), "syn")
 	g.logTo(p, g.describe(p, &g.rooms[p.Y][p.X], p.X, p.Y), "")
 	for _, b := range g.players {
 		if b != nil && b.bot != nil {
-			g.logTo(p, fill(pick(g.data.AI.Ansluter), "namn", b.Name, "horn", g.data.Horn[b.Slot]), "info")
+			g.logTo(p, fill(pick(g.aiTexts(g.data.AI.Ansluter, g.data.AI.AnsluterDolt)), "namn", b.Name, "horn", g.data.Horn[b.Corner]), "info")
 		}
 	}
 	if g.cfg.GMMode {
 		g.logTo(p, g.data.Text("spelledare_pa"), "info")
 	}
 	g.logTo(p, g.data.Text("lobby", "min", strconv.Itoa(g.cfg.MinPlayers)), "info")
-	g.logOthers(p, g.data.Text("ansluter", "namn", name, "horn", horn), "info")
+	g.logOthers(p, g.hiddenText("ansluter", "namn", name, "horn", horn), "info")
 }
 
 func (g *Game) Leave(c *Client) {
@@ -750,8 +751,40 @@ func (g *Game) newTower() {
 	g.monsters = nil
 	for _, p := range g.players {
 		if p != nil {
+			p.Corner = p.Slot
 			g.placeAtCorner(p)
 		}
+	}
+	g.revealPorts()
+}
+
+// revealPorts låter alla fyra portrummen finnas från början. Alla vet var
+// utgångarna är, men inte vem som kom in var.
+func (g *Game) revealPorts() {
+	for _, cn := range corners {
+		g.reveal(cn.x, cn.y)
+	}
+}
+
+// drawCorners lottar vid vilken port var och en börjar när vandrarna inte
+// ser varandra, så att ordningen i listan och färgen inte avslöjar något.
+// Var och en får veta sin egen port.
+func (g *Game) drawCorners() {
+	if !g.hidesOthers() {
+		return
+	}
+	order := rand.Perm(maxPlayers)
+	for _, p := range g.players {
+		if p == nil {
+			continue
+		}
+		p.Corner = order[p.Slot]
+		cn := corners[p.Corner]
+		p.X, p.Y = cn.x, cn.y
+		p.known = [gridSize][gridSize]bool{}
+		g.reveal(cn.x, cn.y)
+		g.noteRoom(p)
+		g.logTo(p, g.data.Text("start_port", "horn", g.data.Horn[p.Corner]), "syn")
 	}
 }
 
@@ -792,6 +825,8 @@ func (g *Game) startGame() {
 	case sightOwn:
 		g.logAll(g.data.Text("synlighet_egen"), "dim")
 	}
+	g.revealPorts()
+	g.drawCorners()
 	g.startRound()
 }
 
@@ -1122,6 +1157,7 @@ func (g *Game) move(p *Player, d Dir, depth int) {
 		}
 		g.soundTo(p, "ut")
 		g.logOthers(p, g.data.Text("andra_ut", "namn", p.Name), "info")
+		g.hear(p.X, p.Y, "ljud_port", "", "dim", p)
 		return
 	}
 	if !room.Doors[d] {
@@ -1210,6 +1246,15 @@ func (g *Game) serve(conn *wsConn, local bool) {
 	g.Leave(c)
 	g.mu.Unlock()
 	conn.Close()
+}
+
+// aiTexts väljer de vaga texterna om datorspelare när vandrarna inte ser
+// varandra, om de finns.
+func (g *Game) aiTexts(list, hidden []string) []string {
+	if g.hidesOthers() && len(hidden) > 0 {
+		return hidden
+	}
+	return list
 }
 
 // newRoomSound spelar ljudet för ett nytt rum. Med synligheten "egen" hör

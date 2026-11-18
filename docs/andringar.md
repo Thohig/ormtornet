@@ -6,6 +6,28 @@ eller leder tornet.
 
 ## 2026-11-18
 
+### Ingen vet var de andra börjar
+
+Gäller när vandrarna inte ser varandra (`egen` och `moten`).
+
+- Lobbyn döljer de andra vandrarna på samma sätt som vandringen. Förut såg
+  alla i lobbyn var de andra stod, och visste därför var de skulle börja.
+- Portarna lottas när vandringen börjar. Var och en får veta sin egen port
+  ("Du kliver in genom porten i tornets sydöst"), men inte de andras.
+  Ordningen i listan och färgen säger inte längre vilken port någon har.
+- Texterna när någon kommer till tornet nämner inte porten.
+- Alla fyra portrummen syns på kartan från början, för alla och med alla
+  val av synlighet. Man vet var utgångarna är, men inte vem som kom in var.
+- Den som står i ett grannrum till en port hör den gnissla när någon går ut.
+
+Med "alltid, för alla" börjar var och en vid porten som hör till dess plats
+i listan, som förut.
+
+Koden finns i `game.go` (`drawCorners`, `revealPorts`, `Corner` på
+vandraren). Texterna står under `ansluter_dolt`, `valkommen_dolt`,
+`start_port` och `ljud_port` i `texter.json`, och under `ansluter_dolt` och
+`lamnar_dolt` i `ai.json`.
+
 ### Introt är en storm
 
 Startsidan visar tornet i en storm vid solnedgången.

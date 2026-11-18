@@ -251,3 +251,97 @@ func containsPart(list []string, part string) bool {
 	}
 	return false
 }
+
+// hiddenGame startar en vandring med Alva och Bo där vandrarna inte ser varandra.
+func hiddenGame(t *testing.T) (*Game, *Client, *Client, []string) {
+	t.Helper()
+	g := testGame(t)
+	g.cfg.Sight = sightOwn
+	a, b := testClient(), testClient()
+	g.Join(a, "Alva")
+	g.Join(b, "Bo")
+	joinLog := logs(a)
+	g.Ready(a)
+	g.Ready(b)
+	if g.phase != phasePlay {
+		t.Fatal("spelet startade inte")
+	}
+	return g, a, b, joinLog
+}
+
+func TestLobbyHidesOthers(t *testing.T) {
+	g := testGame(t)
+	g.cfg.Sight = sightOwn
+	a, b := testClient(), testClient()
+	g.Join(a, "Alva")
+	g.Join(b, "Bo")
+	if v := viewOf(g.stateFor(a.player), b.player); !v.Hidden {
+		t.Fatal("Bo syns i lobbyn")
+	}
+	// Alla fyra portar finns på kartan redan i lobbyn.
+	st := g.stateFor(a.player)
+	for _, cn := range corners {
+		if !hasRoom(st, cn.x, cn.y) {
+			t.Fatalf("porten i %d,%d syns inte", cn.x, cn.y)
+		}
+	}
+	// Med synligheten alla syns Bo som förut.
+	g.cfg.Sight = sightAll
+	if v := viewOf(g.stateFor(a.player), b.player); v.Hidden {
+		t.Fatal("Bo syns inte med synligheten alla")
+	}
+}
+
+func TestJoinTextWithoutCorner(t *testing.T) {
+	_, _, _, joinLog := hiddenGame(t)
+	for _, line := range joinLog {
+		if strings.Contains(line, "Bo") {
+			for _, h := range []string{"nordväst", "nordöst", "sydväst", "sydöst"} {
+				if strings.Contains(line, h) {
+					t.Fatalf("Alva fick veta Bos port: %q", line)
+				}
+			}
+		}
+	}
+}
+
+func TestDrawnCorners(t *testing.T) {
+	seen := map[int]bool{}
+	for range 40 {
+		g, a, b, _ := hiddenGame(t)
+		pa, pb := a.player, b.player
+		if pa.Corner == pb.Corner {
+			t.Fatal("två vandrare vid samma port")
+		}
+		for _, p := range []*Player{pa, pb} {
+			cn := corners[p.Corner]
+			if p.X != cn.x || p.Y != cn.y || !p.known[cn.y][cn.x] {
+				t.Fatalf("%s står inte vid sin port: %d,%d", p.Name, p.X, p.Y)
+			}
+		}
+		if !containsPart(logs(a), g.data.Horn[pa.Corner]) {
+			t.Fatal("Alva fick inte veta sin port")
+		}
+		seen[pa.Corner] = true
+	}
+	if len(seen) < 3 {
+		t.Fatalf("Alva började bara vid portarna %v", seen)
+	}
+}
+
+func TestPortSound(t *testing.T) {
+	g, a, b, _ := hiddenGame(t)
+	pa, pb := a.player, b.player
+	cn := corners[0]
+	pa.X, pa.Y = cn.x, cn.y
+	putInRoom(g, pb, cn.x+1, cn.y) // öster om porten
+	logs(b)
+	g.move(pa, corners[0].exit, 0)
+	if pa.Status != statusOut {
+		t.Fatal("Alva kom inte ut")
+	}
+	// Porten ligger väster om Bo. Raden om att Alva har gått ut säger inte riktningen.
+	if !containsPart(logs(b), "väster") {
+		t.Fatal("Bo hörde inte porten")
+	}
+}
