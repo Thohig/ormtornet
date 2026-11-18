@@ -11,8 +11,8 @@ func TestChronicle(t *testing.T) {
 	pa, pb := a.player, b.player
 
 	// Runda 1: Alva tar skatt i kammaren, Bo väntar.
-	g.reveal(center, center)
-	pa.X, pa.Y = center, center
+	g.reveal(g.center(), g.center())
+	pa.X, pa.Y = g.center(), g.center()
 	g.deck = []string{"sover"}
 	step(g, a, b, actTake, actWait)
 

@@ -8,6 +8,7 @@ let state = null;
 let myName = "";
 let joined = false;
 let mapReady = false;
+let mapSize = 0; // tornets storlek när kartan ritades upp
 let towerClosed = false; // spelledaren har stängt tornet, eller den här datorn leder det
 let closedText = "tornet är stängt";
 let hostingHere = false; // spelledarläget slogs på och den här datorn leder tornet
@@ -107,9 +108,10 @@ function handle(msg) {
         try { localStorage.setItem("ormtornet-namn", myName); } catch {}
         show("game");
       }
-      if (!mapReady) {
+      if (!mapReady || mapSize !== msg.size) {
         MapView.setup($("map"), msg.size);
         mapReady = true;
+        mapSize = msg.size;
       }
       MapView.draw(state);
       Sound.breath(state.phase === "spel" ? state.sleep : -1);

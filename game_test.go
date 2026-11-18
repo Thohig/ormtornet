@@ -38,8 +38,8 @@ func TestRoundTreasureAndWinner(t *testing.T) {
 
 	// Alva står i kammaren och tar skatt, Bo väntar.
 	pa, pb := a.player, b.player
-	g.reveal(center, center)
-	pa.X, pa.Y = center, center
+	g.reveal(g.center(), g.center())
+	pa.X, pa.Y = g.center(), g.center()
 	g.deck = []string{"sover"} // ormen ska inte vakna i det här testet
 	g.Act(a, actTake, 0)
 	if g.round != 1 {
@@ -87,17 +87,17 @@ func TestRoundTreasureAndWinner(t *testing.T) {
 
 func TestRoomsStayConsistent(t *testing.T) {
 	g := testGame(t)
-	for y := range gridSize {
-		for x := range gridSize {
+	for y := range g.size {
+		for x := range g.size {
 			g.reveal(x, y)
 		}
 	}
-	for y := range gridSize {
-		for x := range gridSize {
+	for y := range g.size {
+		for x := range g.size {
 			r := &g.rooms[y][x]
 			for d := North; d <= West; d++ {
 				nx, ny := x+dirDX[d], y+dirDY[d]
-				if !inBounds(nx, ny) {
+				if !g.inBounds(nx, ny) {
 					if r.Doors[d] {
 						t.Fatalf("dörr ut ur tornet vid %d,%d", x, y)
 					}
@@ -298,9 +298,9 @@ func TestSearch(t *testing.T) {
 func TestSerpentDeck(t *testing.T) {
 	g, a, b := startTwo(t)
 	pa, pb := a.player, b.player
-	g.reveal(center, center)
+	g.reveal(g.center(), g.center())
 	for d := North; d <= West; d++ {
-		g.reveal(center+dirDX[d], center+dirDY[d]).Event = ""
+		g.reveal(g.center()+dirDX[d], g.center()+dirDY[d]).Event = ""
 	}
 	full := len(g.deck)
 	sleepFull := g.deckSleep
@@ -311,7 +311,7 @@ func TestSerpentDeck(t *testing.T) {
 	// Båda står i kammaren och tar skatt tills ormen vaknar.
 	taken := 0
 	for g.wakes == 0 {
-		pa.X, pa.Y, pb.X, pb.Y = center, center, center, center
+		pa.X, pa.Y, pb.X, pb.Y = g.center(), g.center(), g.center(), g.center()
 		pa.HP, pb.HP = 99, 99
 		g.take(pa)
 		taken++
@@ -340,8 +340,8 @@ func TestSerpentDeck(t *testing.T) {
 func TestSerpentLosesHalfTreasure(t *testing.T) {
 	g, a, _ := startTwo(t)
 	p := a.player
-	g.reveal(center, center)
-	p.X, p.Y, p.Treasure = center, center, 100
+	g.reveal(g.center(), g.center())
+	p.X, p.Y, p.Treasure = g.center(), g.center(), 100
 	g.deck = []string{"vaknar"}
 	g.take(p)
 	if p.Treasure != 50 {
@@ -569,8 +569,8 @@ func TestRevealDifferentCluesAndExplanations(t *testing.T) {
 		t.Fatal("bara den som mött fallgallret ska få dess förklaring")
 	}
 	// Beskrivningarna följer nivån.
-	room := g.reveal(center, center)
-	if d := g.describe(a.player, room, center, center); !contains(g.data.Skattkammare.Beskrivningar["4"], d) {
+	room := g.reveal(g.center(), g.center())
+	if d := g.describe(a.player, room, g.center(), g.center()); !contains(g.data.Skattkammare.Beskrivningar["4"], d) {
 		t.Fatalf("fel beskrivning på nivå 4: %q", d)
 	}
 }

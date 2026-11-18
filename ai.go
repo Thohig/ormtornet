@@ -194,7 +194,7 @@ func explore(st *stateMsg, start pos) *botMap {
 				continue
 			}
 			n := pos{cur.x + dirDX[d], cur.y + dirDY[d]}
-			if !inBounds(n.x, n.y) {
+			if n.x < 0 || n.y < 0 || n.x >= st.Size || n.y >= st.Size {
 				continue
 			}
 			if _, done := bm.dist[n]; done {
@@ -342,14 +342,14 @@ func (g *Game) botDecide(p *Player) (string, int) {
 	}
 
 	// Mot kammaren om vägen är känd, annars utforska närmaste okända rum.
-	isCenter := func(q pos) bool { return q.x == center && q.y == center }
+	isCenter := func(q pos) bool { return q.x == g.center() && q.y == g.center() }
 	none := func(pos) int { return 0 }
 	if d, ok := bm.toward(isCenter, none); ok {
 		return dirLetter[d], 0
 	}
 	// Utforska helst åt mitten till, där kammaren är.
 	unknown := func(q pos) bool { _, k := bm.rooms[q]; return !k }
-	toCenter := func(q pos) int { return abs(q.x-center) + abs(q.y-center) }
+	toCenter := func(q pos) int { return abs(q.x-g.center()) + abs(q.y-g.center()) }
 	if d, ok := bm.toward(unknown, toCenter); ok {
 		return dirLetter[d], 0
 	}

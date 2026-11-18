@@ -13,11 +13,10 @@ import (
 )
 
 const (
-	gridSize   = 9
-	center     = gridSize / 2
-	maxPlayers = 4
-	maxNameLen = 16
-	doorChance = 0.55
+	defaultSize = 9 // tornets storlek i rum, när inget annat är valt
+	maxPlayers  = 4
+	maxNameLen  = 16
+	doorChance  = 0.55
 )
 
 // Spelets faser.
@@ -49,6 +48,7 @@ type Config struct {
 	PvP          string // strid mellan vandrare: "av", "pa" eller "halva"
 	Sight        string // vilka vandrare och rum man ser: "alla", "moten" eller "egen"
 	Classes      bool   // vandrarna väljer klass
+	Size         int    // tornets storlek i rum, 0 för automatisk
 	GMMode       bool   // spelledarläge: spelledaren spelar inte och ser allt
 	Reveal       bool   // false stänger av avslöjandet
 	SunMax       int
@@ -82,11 +82,35 @@ type corner struct {
 	exit   Dir
 }
 
-var corners = [maxPlayers]corner{
-	{0, 0, [2]Dir{East, South}, West},
-	{gridSize - 1, 0, [2]Dir{West, South}, East},
-	{0, gridSize - 1, [2]Dir{East, North}, West},
-	{gridSize - 1, gridSize - 1, [2]Dir{West, North}, East},
+// corners är portarna i tornets fyra hörn, räknade från tornets storlek.
+func (g *Game) corners() []corner {
+	s := g.size - 1
+	return []corner{
+		{0, 0, [2]Dir{East, South}, West},
+		{s, 0, [2]Dir{West, South}, East},
+		{0, s, [2]Dir{East, North}, West},
+		{s, s, [2]Dir{West, North}, East},
+	}
+}
+
+// g.center() är kammarens plats, mitt i tornet.
+func (g *Game) center() int { return g.size / 2 }
+
+func newGrid[T any](size int) [][]T {
+	grid := make([][]T, size)
+	for y := range grid {
+		grid[y] = make([]T, size)
+	}
+	return grid
+}
+
+// towerSize är storleken på nästa torn: spelledarens val, annars förvalet.
+// Udda, så att kammaren står mitt i.
+func (g *Game) towerSize() int {
+	if s := g.cfg.Size; s >= 5 && s%2 == 1 {
+		return s
+	}
+	return defaultSize
 }
 
 type Room struct {
@@ -122,9 +146,9 @@ type Player struct {
 	Action   string
 	Treasure int
 	Status   string
-	Seen     map[string]bool          // fällor och varelser spelaren har mött
-	known    [gridSize][gridSize]bool // rum vandraren själv har varit i, för synligheten "egen"
-	bot      *botBrain                // satt för datorstyrda vandrare
+	Seen     map[string]bool // fällor och varelser spelaren har mött
+	known    [][]bool        // rum vandraren själv har varit i, för synligheten "egen"
+	bot      *botBrain       // satt för datorstyrda vandrare
 
 	awayRound int  // rundan då människan lämnade mitt i vandringen, 0 om den är här
 	takenOver bool // en AI-spelare styr vandraren medan människan är borta
@@ -162,7 +186,8 @@ type Game struct {
 	base    *Data // datafilerna som de är
 	data    *Data // datafilerna med svårighetens förval
 	cfg     Config
-	rooms   [gridSize][gridSize]Room
+	size    int // tornets bredd och höjd i rum
+	rooms   [][]Room
 	players [maxPlayers]*Player
 	nextID  int
 	level   int
@@ -200,13 +225,16 @@ type Game struct {
 
 func NewGame(d *Data, cfg Config) *Game {
 	cfg.Difficulty = d.difficultyID(cfg.Difficulty)
-	return &Game{base: d, data: d.withDifficulty(cfg.Difficulty), cfg: cfg, level: 1, phase: phaseLobby, sun: cfg.SunMax, usedClues: map[string]bool{}, lastActive: time.Now(), lastReal: time.Now()}
+	g := &Game{base: d, data: d.withDifficulty(cfg.Difficulty), cfg: cfg, level: 1, phase: phaseLobby, sun: cfg.SunMax, usedClues: map[string]bool{}, lastActive: time.Now(), lastReal: time.Now()}
+	g.size = g.towerSize()
+	g.rooms = newGrid[Room](g.size)
+	return g
 }
 
-func inBounds(x, y int) bool { return x >= 0 && y >= 0 && x < gridSize && y < gridSize }
+func (g *Game) inBounds(x, y int) bool { return x >= 0 && y >= 0 && x < g.size && y < g.size }
 
-func cornerIndex(x, y int) int {
-	for i, c := range corners {
+func (g *Game) cornerIndex(x, y int) int {
+	for i, c := range g.corners() {
 		if c.x == x && c.y == y {
 			return i
 		}
@@ -215,13 +243,13 @@ func cornerIndex(x, y int) int {
 }
 
 // fixedDoors ger dörrarna för rum vars form är bestämd från början.
-func fixedDoors(x, y int) ([4]bool, bool) {
+func (g *Game) fixedDoors(x, y int) ([4]bool, bool) {
 	var d [4]bool
-	if x == center && y == center {
+	if x == g.center() && y == g.center() {
 		return [4]bool{true, true, true, true}, true
 	}
-	if ci := cornerIndex(x, y); ci >= 0 {
-		for _, dir := range corners[ci].inward {
+	if ci := g.cornerIndex(x, y); ci >= 0 {
+		for _, dir := range g.corners()[ci].inward {
 			d[dir] = true
 		}
 		return d, true
@@ -237,11 +265,11 @@ func (g *Game) reveal(x, y int) *Room {
 		return r
 	}
 	r.Revealed = true
-	if fd, ok := fixedDoors(x, y); ok {
+	if fd, ok := g.fixedDoors(x, y); ok {
 		r.Doors = fd
-		if ci := cornerIndex(x, y); ci >= 0 {
+		if ci := g.cornerIndex(x, y); ci >= 0 {
 			r.Kind, r.TypeID = "ingang", "ingang"
-			r.HasExit, r.Exit = true, corners[ci].exit
+			r.HasExit, r.Exit = true, g.corners()[ci].exit
 		} else {
 			r.Kind, r.TypeID = "kammare", "skattkammare"
 		}
@@ -253,13 +281,13 @@ func (g *Game) reveal(x, y int) *Room {
 	open := 0
 	for d := North; d <= West; d++ {
 		nx, ny := x+dirDX[d], y+dirDY[d]
-		if !inBounds(nx, ny) {
+		if !g.inBounds(nx, ny) {
 			continue
 		}
 		n := &g.rooms[ny][nx]
 		if n.Revealed {
 			r.Doors[d] = n.Doors[d.Opp()]
-		} else if fd, ok := fixedDoors(nx, ny); ok {
+		} else if fd, ok := g.fixedDoors(nx, ny); ok {
 			r.Doors[d] = fd[d.Opp()]
 		} else {
 			undecided = append(undecided, d)
@@ -457,7 +485,7 @@ func (g *Game) hiddenText(key string, vars ...string) string {
 func (g *Game) stateFor(me *Player) stateMsg {
 	g.noteRoom(me)
 	st := stateMsg{
-		T: "state", You: me.ID, Size: gridSize, Level: g.level, Reveal: g.cfg.Reveal,
+		T: "state", You: me.ID, Size: g.size, Level: g.level, Reveal: g.cfg.Reveal,
 		Phase: g.phase, Sun: g.sun, SunMax: g.cfg.SunMax, Round: g.round,
 		MinPlayers: g.cfg.MinPlayers, Action: me.Action, Sight: g.cfg.Sight,
 		HP: me.HP, MaxHP: g.maxHP(me), Potions: me.Potions,
@@ -506,8 +534,8 @@ func (g *Game) stateFor(me *Player) stateMsg {
 		}
 		st.Players = append(st.Players, pv)
 	}
-	for y := range gridSize {
-		for x := range gridSize {
+	for y := range g.size {
+		for x := range g.size {
 			r := &g.rooms[y][x]
 			if !g.knowsRoom(me, x, y) || (blind && (x != me.X || y != me.Y)) {
 				continue
@@ -579,7 +607,7 @@ func cleanName(s string) string {
 }
 
 func (g *Game) placeAtCorner(p *Player) {
-	cn := corners[p.Corner]
+	cn := g.corners()[p.Corner]
 	p.X, p.Y = cn.x, cn.y
 	p.Status = statusIn
 	p.Treasure = 0
@@ -588,14 +616,14 @@ func (g *Game) placeAtCorner(p *Player) {
 	p.HP = g.maxHP(p)
 	p.Seen = map[string]bool{}
 	p.Potions, p.Stuck, p.Cellar, p.Poison, p.Dark = 0, 0, 0, 0, 0
-	p.known = [gridSize][gridSize]bool{}
+	p.known = newGrid[bool](g.size)
 	g.revealPorts()
 	g.noteRoom(p)
 }
 
 // noteRoom kommer ihåg att vandraren har varit i rummet den står i.
 func (g *Game) noteRoom(p *Player) {
-	if p.Status == statusIn && p.Cellar == 0 && inBounds(p.X, p.Y) {
+	if p.Status == statusIn && p.Cellar == 0 && g.inBounds(p.X, p.Y) {
 		p.known[p.Y][p.X] = true
 	}
 }
@@ -770,7 +798,8 @@ func (g *Game) checkStart() bool {
 
 // newTower bygger ett nytt torn och ställer alla vid sina portar.
 func (g *Game) newTower() {
-	g.rooms = [gridSize][gridSize]Room{}
+	g.size = g.towerSize()
+	g.rooms = newGrid[Room](g.size)
 	g.monsters = nil
 	for _, p := range g.players {
 		if p != nil {
@@ -784,7 +813,7 @@ func (g *Game) newTower() {
 // revealPorts låter alla fyra portrummen finnas från början. Alla vet var
 // utgångarna är, men inte vem som kom in var.
 func (g *Game) revealPorts() {
-	for _, cn := range corners {
+	for _, cn := range g.corners() {
 		g.reveal(cn.x, cn.y)
 	}
 }
@@ -802,9 +831,9 @@ func (g *Game) drawCorners() {
 			continue
 		}
 		p.Corner = order[p.Slot]
-		cn := corners[p.Corner]
+		cn := g.corners()[p.Corner]
 		p.X, p.Y = cn.x, cn.y
-		p.known = [gridSize][gridSize]bool{}
+		p.known = newGrid[bool](g.size)
 		g.reveal(cn.x, cn.y)
 		g.noteRoom(p)
 		g.logTo(p, g.data.Text("start_port", "horn", g.data.Horn[p.Corner]), "syn")
@@ -1208,7 +1237,7 @@ func (g *Game) move(p *Player, d Dir, depth int) {
 		}
 		if g.cfg.Sight != sightOwn {
 			g.logOthers(p, g.hiddenText("nytt_rum_andra",
-				"namn", p.Name, "region", g.data.region(nx, ny)), "info")
+				"namn", p.Name, "region", g.data.region(nx, ny, g.size)), "info")
 		}
 		if target.Event != "" {
 			ev := target.Event

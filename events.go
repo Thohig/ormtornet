@@ -47,7 +47,7 @@ func (g *Game) trigger(p *Player, t *Trap, depth int) {
 		return
 	}
 	room := &g.rooms[p.Y][p.X]
-	region := g.data.region(p.X, p.Y)
+	region := g.data.region(p.X, p.Y, g.size)
 	roomName := g.roomName(room)
 	room.Mark = t.Tecken
 	p.Seen[t.ID] = true
@@ -133,9 +133,9 @@ func (g *Game) trigger(p *Player, t *Trap, depth int) {
 // leaveCellar låter spelaren klättra upp i ett slumpat rum.
 func (g *Game) leaveCellar(p *Player) {
 	var spots [][2]int
-	for y := range gridSize {
-		for x := range gridSize {
-			if cornerIndex(x, y) < 0 && !(x == center && y == center) && (x != p.X || y != p.Y) {
+	for y := range g.size {
+		for x := range g.size {
+			if g.cornerIndex(x, y) < 0 && !(x == g.center() && y == g.center()) && (x != p.X || y != p.Y) {
 				spots = append(spots, [2]int{x, y})
 			}
 		}
@@ -149,7 +149,7 @@ func (g *Game) leaveCellar(p *Player) {
 	g.logTo(p, g.data.Text("kallare_ut", "rum", g.roomName(room)), "info")
 	g.logTo(p, g.describe(p, room, p.X, p.Y), "")
 	g.noticeTrail(p)
-	g.logOthers(p, g.hiddenText("kallare_ut_andra", "namn", p.Name, "region", g.data.region(p.X, p.Y)), "info")
+	g.logOthers(p, g.hiddenText("kallare_ut_andra", "namn", p.Name, "region", g.data.region(p.X, p.Y, g.size)), "info")
 	g.announceMonster(p)
 }
 
@@ -210,10 +210,10 @@ func (g *Game) secretPassage(x, y int) (Dir, bool) {
 	var cand []Dir
 	for d := North; d <= West; d++ {
 		nx, ny := x+dirDX[d], y+dirDY[d]
-		if room.Doors[d] || !inBounds(nx, ny) {
+		if room.Doors[d] || !g.inBounds(nx, ny) {
 			continue
 		}
-		if _, fixed := fixedDoors(nx, ny); fixed {
+		if _, fixed := g.fixedDoors(nx, ny); fixed {
 			continue
 		}
 		cand = append(cand, d)

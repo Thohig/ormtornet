@@ -34,6 +34,7 @@ func main() {
 	reveal := flag.Bool("avslojande", defaultSettings.Avslojande, "låt tornet avslöja sin hemlighet (false för den som redan känner till den)")
 	sight := flag.String("synlighet", defaultSettings.Synlighet, "vilka vandrare och rum man ser: egen (bara dem man möter och egna rum), moten (bara dem man möter) eller alla")
 	classes := flag.Bool("klasser", defaultSettings.Klasser, "vandrarna väljer klass i lobbyn (false för att spela utan klasser)")
+	size := flag.Int("storlek", defaultSettings.Storlek, "tornets storlek i rum: 9, 11 eller 13 (0 = automatisk)")
 	settingsPath := flag.String("installningar", defaultSettingsPath(), "fil där spelledarens inställningar sparas (tom för att inte spara)")
 	openPage := flag.Bool("oppna", false, "öppna introt i webbläsaren när servern har startat; det leder till värdsidan")
 	awake := flag.Bool("vaken", false, "håll datorn vaken så länge servern är igång")
@@ -65,6 +66,8 @@ func main() {
 			settings.Synlighet = *sight
 		case "klasser":
 			settings.Klasser = *classes
+		case "storlek":
+			settings.Storlek = *size
 		}
 	})
 	cfg := settings.config()

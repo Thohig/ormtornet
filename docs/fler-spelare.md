@@ -6,8 +6,8 @@ ordning. Varje steg byggs, committas och provas innan nästa.
 | Steg | Vad | Läge |
 |---|---|---|
 | 1 | Klasser | byggt |
-| 2 | Tornets storlek blir rörlig i koden, fortfarande högst 4 vandrare | på gång |
-| 3 | Upp till 8 vandrare och automatisk skalning | väntar på steg 2 |
+| 2 | Tornets storlek blir rörlig i koden, fortfarande högst 4 vandrare | byggt |
+| 3 | Upp till 8 vandrare och automatisk skalning | på gång |
 
 ## Steg 1: klasser (byggt)
 
@@ -22,7 +22,14 @@ README beskriver klasserna under "Klasser". Besluten:
 - Klassens liv läggs till svårighetens liv, så att Mardröm förblir hårdare.
 - "Klasser: på / av" på värdsidan, med `-klasser`. Förval: på.
 
-## Steg 2: tornets storlek i koden
+## Steg 2: tornets storlek i koden (byggt)
+
+Byggt som planerat. Storleken är `g.size`, portarna `g.corners()` och
+kammaren `g.center()`. "Automatisk" ger 9 × 9 tills steg 3. Provat med hela
+vandringar av AI-spelare på 9, 11 och 13. Kartan fungerar på 13 × 13 på en
+dator, men på en telefon blir rummen mycket små: det löses i steg 3.
+
+Det ursprungliga förslaget:
 
 `gridSize` och `maxPlayers` är konstanter, och rummen och de kända rummen
 ligger i tabeller med fast storlek. De blir värden som sätts när tornet
@@ -50,4 +57,6 @@ på värdsidan ("Tornets storlek: 9 / 11 / 13") för att prova.
   "Solnedgång: automatisk / rundor". AI-spelare 0–7.
 - Åtta färger som går att skilja åt, åtta platser per rum och `@×5` när
   fler än fyra står i samma rum.
+- På en telefon följer kartan den egna vandraren och visar ett utsnitt av
+  ett stort torn, med möjlighet att se hela.
 - Minst åtta namn för AI-spelarna i `data/ai.json`.

@@ -181,8 +181,8 @@ func TestLanternSeenFromNextRoom(t *testing.T) {
 
 func TestOrmtjusareLessDamage(t *testing.T) {
 	g, pa, _ := withClass(t, "ormtjusare")
-	pa.X, pa.Y = center, center
-	g.reveal(center, center)
+	pa.X, pa.Y = g.center(), g.center()
+	g.reveal(g.center(), g.center())
 	hp := pa.HP
 	g.wakeSerpent()
 	if want := hp - max(0, g.data.Ormen.Skada-1); pa.HP != want {

@@ -107,13 +107,13 @@ func (g *Game) GMView(visible bool) gmView {
 		g.seen()
 	}
 	m := stateMsg{
-		T: "state", You: 0, Size: gridSize, Level: g.level, Reveal: g.cfg.Reveal,
+		T: "state", You: 0, Size: g.size, Level: g.level, Reveal: g.cfg.Reveal,
 		Phase: g.phase, Sun: g.sun, SunMax: g.cfg.SunMax, Round: g.round,
 		Sleep: -1,
 	}
 	v := gmView{MaxHP: g.data.Regler.Liv, Level: g.level, Clues: len(g.usedClues), Players: []gmPlayer{}}
-	for y := range gridSize {
-		for x := range gridSize {
+	for y := range g.size {
+		for x := range g.size {
 			r := &g.rooms[y][x]
 			if !r.Revealed {
 				v.Unknown++
@@ -149,7 +149,7 @@ func (g *Game) GMView(visible bool) gmView {
 		room := ""
 		if p.Cellar > 0 {
 			room = "Källarvalven"
-		} else if inBounds(p.X, p.Y) && g.rooms[p.Y][p.X].Revealed {
+		} else if g.inBounds(p.X, p.Y) && g.rooms[p.Y][p.X].Revealed {
 			room = g.roomName(&g.rooms[p.Y][p.X])
 		}
 		v.Players = append(v.Players, gmPlayer{

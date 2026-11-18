@@ -110,12 +110,18 @@ const MapView = (() => {
     colr[y][x] = color;
   }
 
+  // setup ritar upp kartan för ett torn av storleken size. Den anropas igen
+  // när ett nytt torn har en annan storlek.
+  let listening = false;
   function setup(el, size) {
     canvas = el;
     ctx = canvas.getContext("2d");
     cols = size * RW + 1;
     rows = size * RH + 1;
-    window.addEventListener("resize", resize);
+    if (!listening) {
+      window.addEventListener("resize", resize);
+      listening = true;
+    }
     resize();
   }
 

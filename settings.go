@@ -23,6 +23,7 @@ type Settings struct {
 	Svarighet  string `json:"svarighet"`     // förval i data/svarighet.json, tomt för standard
 	Synlighet  string `json:"synlighet"`     // vilka vandrare och rum man ser: "alla", "moten" eller "egen"
 	Klasser    bool   `json:"klasser"`       // vandrarna väljer klass
+	Storlek    int    `json:"storlek"`       // tornets storlek i rum: 9, 11 eller 13, 0 för automatisk
 }
 
 const (
@@ -51,6 +52,9 @@ func (s Settings) normalize() Settings {
 	if s.Strid != pvpOff && s.Strid != pvpOn && s.Strid != pvpHalf {
 		s.Strid = pvpOn
 	}
+	if s.Storlek != 9 && s.Storlek != 11 && s.Storlek != 13 {
+		s.Storlek = 0
+	}
 	if s.Synlighet != sightAll && s.Synlighet != sightMeet && s.Synlighet != sightOwn {
 		s.Synlighet = sightOwn
 	}
@@ -59,11 +63,11 @@ func (s Settings) normalize() Settings {
 
 func (s Settings) config() Config {
 	s = s.normalize()
-	return Config{Difficulty: s.Svarighet, AI: s.AI, AbsentRounds: s.Franvaro, PvP: s.Strid, Sight: s.Synlighet, Classes: s.Klasser, GMMode: s.Spelledare, MinPlayers: s.Min, SunMax: s.Sol, TurnTime: time.Duration(s.Turtid) * time.Second, Reveal: s.Avslojande}
+	return Config{Difficulty: s.Svarighet, AI: s.AI, AbsentRounds: s.Franvaro, PvP: s.Strid, Sight: s.Synlighet, Classes: s.Klasser, Size: s.Storlek, GMMode: s.Spelledare, MinPlayers: s.Min, SunMax: s.Sol, TurnTime: time.Duration(s.Turtid) * time.Second, Reveal: s.Avslojande}
 }
 
 func settingsFrom(cfg Config) Settings {
-	return Settings{Svarighet: cfg.Difficulty, AI: cfg.AI, Franvaro: cfg.AbsentRounds, Strid: cfg.PvP, Synlighet: cfg.Sight, Klasser: cfg.Classes, Spelledare: cfg.GMMode, Min: cfg.MinPlayers, Sol: cfg.SunMax, Turtid: int(cfg.TurnTime / time.Second), Avslojande: cfg.Reveal}
+	return Settings{Svarighet: cfg.Difficulty, AI: cfg.AI, Franvaro: cfg.AbsentRounds, Strid: cfg.PvP, Synlighet: cfg.Sight, Klasser: cfg.Classes, Storlek: cfg.Size, Spelledare: cfg.GMMode, Min: cfg.MinPlayers, Sol: cfg.SunMax, Turtid: int(cfg.TurnTime / time.Second), Avslojande: cfg.Reveal}
 }
 
 // defaultSettingsPath ger ~/Library/Application Support/Ormtornet/installningar.json.
@@ -146,6 +150,9 @@ func (g *Game) ApplySettings(s Settings) (Settings, error) {
 	}
 	if g.cfg.Classes && g.phase != phasePlay {
 		g.offerAll()
+	}
+	if g.phase == phaseLobby && g.towerSize() != g.size {
+		g.newTower() // ett torn av den nya storleken
 	}
 	g.syncBots(true)
 	if !g.checkStart() {

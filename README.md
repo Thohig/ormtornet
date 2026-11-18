@@ -1,7 +1,8 @@
 # Ormtornet
 
 En dungeon crawler för 2–4 spelare i webbläsaren, på ett lokalt nätverk.
-Mitt i ett torn på 9x9 rum sägs en jättelik orm sova kring en skatt.
+Mitt i ett torn på 9x9 rum (11x11 eller 13x13 om spelledaren vill) sägs en
+jättelik orm sova kring en skatt.
 Ta så mycket du vågar och kom ut innan solen går ner.
 
 Vad som är nytt står i [docs/andringar.md](docs/andringar.md).
@@ -64,6 +65,7 @@ Flaggor:
 - `-ai 2` antal datorstyrda vandrare (0–3, eller 4 i spelledarläget)
 - `-svarighet normal` svårighet: `latt`, `normal`, `svar` eller `mardrom`
 - `-klasser=false` vandrarna väljer ingen klass
+- `-storlek 0` tornets storlek i rum: `9`, `11` eller `13`, eller `0` för automatisk (9 × 9 tills vidare)
 - `-synlighet egen` vilka vandrare och rum man ser: `egen` (andra vandrare bara i samma rum, och bara egna rum på kartan), `moten` (andra vandrare bara i samma rum) eller `alla`
 - `-avslojande=false` stänger av avslöjandet, för spelare som redan känner till tornets hemlighet
 - `-oppna` öppnar introt i webbläsaren när servern har startat; på den här datorn leder det till värdsidan
@@ -81,7 +83,7 @@ skicka i en gruppchatt. Sidan visar också vilka som har anslutit och är redo,
 och vad man kan göra om någon inte kommer in.
 
 Under Inför nästa vandring väljer spelledaren antal AI-spelare, minsta antal
-vandrare, svårighet, solnedgång, turtid, avslöjandet, klasser och om vandrarna syns
+vandrare, svårighet, solnedgång, turtid, avslöjandet, tornets storlek, klasser och om vandrarna syns
 för varandra. AI-spelare kommer och går
 direkt i lobbyn, resten gäller från nästa omgång. Under en pågående vandring
 är inställningarna låsta. Om tornet är fullt när en människa ansluter i

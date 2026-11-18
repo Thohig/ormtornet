@@ -395,12 +395,14 @@ func (d *Data) roomType(id string) *RoomType {
 	return &d.Rumstyper[0]
 }
 
-func (d *Data) region(x, y int) string {
+// region ger delen av tornet (till exempel "nordvästra") för rummet (x, y)
+// i ett torn med storleken size.
+func (d *Data) region(x, y, size int) string {
 	part := func(v int) int {
 		switch {
-		case v < gridSize/3:
+		case v < size/3:
 			return 0
-		case v >= gridSize-gridSize/3:
+		case v >= size-size/3:
 			return 2
 		}
 		return 1

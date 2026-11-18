@@ -184,7 +184,7 @@ func (g *Game) gmVoice(to int, text string) error {
 
 // gmRoom ger ett vanligt rum som redan finns i tornet.
 func (g *Game) gmRoom(x, y int) (*Room, error) {
-	if !inBounds(x, y) {
+	if !g.inBounds(x, y) {
 		return nil, errNoRoom
 	}
 	r := &g.rooms[y][x]

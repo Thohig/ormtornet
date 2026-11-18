@@ -180,7 +180,7 @@ func (g *Game) duel(p *Player, m *Monster, a string) {
 	}
 	g.logTo(p, g.data.MonsterText("duell", g.monsterVars(m,
 		"ditt_val", g.choiceWord(a), "dess_val", g.choiceWord(mc))...), "")
-	g.hear(p.X, p.Y, "ljud_strid", g.data.MonsterText("strid_andra", "region", g.data.region(p.X, p.Y)), "dim", p)
+	g.hear(p.X, p.Y, "ljud_strid", g.data.MonsterText("strid_andra", "region", g.data.region(p.X, p.Y, g.size)), "dim", p)
 
 	playerHits := beats(a, mc) || (a == actAttack && mc == actAttack)
 	monsterHits := beats(mc, a) || (a == actAttack && mc == actAttack)
@@ -273,7 +273,7 @@ func (g *Game) canMonsterGo(m *Monster, d Dir) bool {
 		return false
 	}
 	nx, ny := m.X+dirDX[d], m.Y+dirDY[d]
-	if !inBounds(nx, ny) {
+	if !g.inBounds(nx, ny) {
 		return false
 	}
 	n := &g.rooms[ny][nx]

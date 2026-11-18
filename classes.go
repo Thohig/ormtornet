@@ -253,8 +253,8 @@ func (g *Game) shareMap(p *Player, foes []*Player) {
 		if !g.is(o, "kartritare") || g.is(p, "kartritare") {
 			continue
 		}
-		for y := range gridSize {
-			for x := range gridSize {
+		for y := range g.size {
+			for x := range g.size {
 				if g.rooms[y][x].Revealed {
 					p.known[y][x] = true
 				}

@@ -6,6 +6,17 @@ eller leder tornet.
 
 ## 2026-11-18
 
+### Tornets storlek
+
+Spelledaren kan välja "Tornets storlek: 9 × 9, 11 × 11 eller 13 × 13" på
+värdsidan, eller `-storlek`. Förvalet "automatisk" ger 9 × 9 tills vidare;
+när upp till 8 spelare kommer räknas storleken ut efter antalet vandrare.
+Ett större torn har längre väg till kammaren (10 och 12 steg i stället för
+8), så solen kan behöva fler rundor. Byts storleken i lobbyn byggs ett nytt
+torn direkt.
+
+På en telefon blir rummen små i ett torn på 13 × 13.
+
 ### Klasser
 
 Vandrarna väljer klass i lobbyn, en av två slumpade, i Talismans anda.

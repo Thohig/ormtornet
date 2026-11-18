@@ -243,6 +243,15 @@
       </select>
       <span class="note">egen karta: bara rum man själv har gått igenom</span>
 
+      <label for="sStorlek">Tornets storlek</label>
+      <select id="sStorlek" name="storlek">
+        <option value="0">automatisk</option>
+        <option value="9">9 × 9 rum</option>
+        <option value="11">11 × 11 rum</option>
+        <option value="13">13 × 13 rum</option>
+      </select>
+      <span class="note">automatisk är 9 × 9 för upp till fyra</span>
+
       <label for="sKlass">Klasser</label>
       <select id="sKlass" name="klasser">
         <option value="1">på, vandrarna väljer en av två</option>
@@ -418,6 +427,7 @@ function render(v) {
 
 // Översikten i spelledarläget: hela tornet, alla vandrare, ormen och loggen.
 let mapReady = false;
+let mapSize = 0;
 const SLEEP_WORDS = ["sover djupt", "sover oroligt", "är nära att vakna"];
 
 function renderGM(o) {
@@ -437,9 +447,10 @@ function renderGM(o) {
   parts.push(o.traps + (o.traps === 1 ? " fälla väntar" : " fällor väntar"));
   top.textContent = parts.join(" · ");
 
-  if (!mapReady) {
+  if (!mapReady || mapSize !== m.size) {
     MapView.setup($("gmMap"), m.size);
     mapReady = true;
+    mapSize = m.size;
   }
   MapView.draw(m);
 
@@ -669,6 +680,7 @@ function renderSettings(v) {
   $("sSyn").value = s.synlighet;
   $("sGM").value = s.spelledarlage ? "1" : "0";
   $("sKlass").value = s.klasser ? "1" : "0";
+  $("sStorlek").value = String(s.storlek || 0);
 }
 
 function post(path, body) {
@@ -700,6 +712,7 @@ $("settings").addEventListener("change", async () => {
     synlighet: $("sSyn").value,
     spelledarlage: $("sGM").value === "1",
     klasser: $("sKlass").value === "1",
+    storlek: +$("sStorlek").value,
     svarighet: $("sSv").value,
   };
   saving = true;

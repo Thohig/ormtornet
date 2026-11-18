@@ -127,7 +127,7 @@ func TestSightOwnMap(t *testing.T) {
 		}
 	}
 	// Bo ser sin egen startport.
-	cn := corners[pb.Slot]
+	cn := g.corners()[pb.Slot]
 	if !hasRoom(g.stateFor(pb), cn.x, cn.y) {
 		t.Fatal("Bo ser inte sin egen port")
 	}
@@ -280,7 +280,7 @@ func TestLobbyHidesOthers(t *testing.T) {
 	}
 	// Alla fyra portar finns på kartan redan i lobbyn.
 	st := g.stateFor(a.player)
-	for _, cn := range corners {
+	for _, cn := range g.corners() {
 		if !hasRoom(st, cn.x, cn.y) {
 			t.Fatalf("porten i %d,%d syns inte", cn.x, cn.y)
 		}
@@ -314,7 +314,7 @@ func TestDrawnCorners(t *testing.T) {
 			t.Fatal("två vandrare vid samma port")
 		}
 		for _, p := range []*Player{pa, pb} {
-			cn := corners[p.Corner]
+			cn := g.corners()[p.Corner]
 			if p.X != cn.x || p.Y != cn.y || !p.known[cn.y][cn.x] {
 				t.Fatalf("%s står inte vid sin port: %d,%d", p.Name, p.X, p.Y)
 			}
@@ -332,11 +332,11 @@ func TestDrawnCorners(t *testing.T) {
 func TestPortSound(t *testing.T) {
 	g, a, b, _ := hiddenGame(t)
 	pa, pb := a.player, b.player
-	cn := corners[0]
+	cn := g.corners()[0]
 	pa.X, pa.Y = cn.x, cn.y
 	putInRoom(g, pb, cn.x+1, cn.y) // öster om porten
 	logs(b)
-	g.move(pa, corners[0].exit, 0)
+	g.move(pa, g.corners()[0].exit, 0)
 	if pa.Status != statusOut {
 		t.Fatal("Alva kom inte ut")
 	}
