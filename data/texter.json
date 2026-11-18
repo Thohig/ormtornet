@@ -1,0 +1,192 @@
+{
+  "horn": ["nordväst", "nordöst", "sydväst", "sydöst"],
+  "riktningar": ["norr", "öster", "söder", "väster"],
+  "regioner": [
+    ["nordvästra", "norra", "nordöstra"],
+    ["västra", "mittersta", "östra"],
+    ["sydvästra", "södra", "sydöstra"]
+  ],
+
+  "ingang": {
+    "id": "ingang",
+    "namn": "Tornets port",
+    "beskrivningar": {
+      "1": [
+        "Porten är ett högt, välvt hål i muren. Tröskeln är sliten blank av alla som gått in före dig. Luften därinne är varmare än kvällen utanför.",
+        "Du står innanför porten. Dagsljuset når bara några steg in, sedan ger det upp. Stenen under fötterna är märkligt mjuk i kanterna."
+      ]
+    }
+  },
+
+  "skattkammare": {
+    "id": "skattkammare",
+    "namn": "Skattkammaren",
+    "beskrivningar": {
+      "1": [
+        "Salen är rund och sänker sig mot mitten. Där glimmar guld i en hög, och runt högen ligger något väldigt i tunga, långsamma slingor. Det är för mörkt för att se var det börjar eller slutar.",
+        "Luften står still och är tjock av sötma. Mynt, kronor och bucklade bägare ligger i en hög. Något stort vilar kring den. Du hör det andas."
+      ]
+    }
+  },
+
+  "rumstyper": [
+    {
+      "id": "valvgang",
+      "namn": "Valvgången",
+      "beskrivningar": {
+        "1": [
+          "En smal gång under låga valv. Stenen är fuktig och svagt ljum mot handflatan.",
+          "Valven står tätt, båge efter båge, som om de byggts för att hålla emot ett tryck utifrån."
+        ]
+      }
+    },
+    {
+      "id": "pelarsal",
+      "namn": "Pelarsalen",
+      "beskrivningar": {
+        "1": [
+          "Tjocka pelare står i två rader. Mellan dem hänger en söt, tung doft som du inte kan placera.",
+          "Pelarna är grova och lutar lite inåt, alla åt samma håll."
+        ]
+      }
+    },
+    {
+      "id": "brunnsrum",
+      "namn": "Brunnsrummet",
+      "beskrivningar": {
+        "1": [
+          "En brunn utan synlig botten mitt i golvet. Långt därnere droppar vatten, med långa mellanrum.",
+          "Brunnskanten är blankpolerad. Ur djupet stiger en ljum, fuktig luft."
+        ]
+      }
+    },
+    {
+      "id": "vaktrum",
+      "namn": "Vaktrummet",
+      "beskrivningar": {
+        "1": [
+          "En vältad bänk och ett rostigt spjut. Den som vaktade här gick i all hast.",
+          "Någon har ristat en enda mening i dörrkarmen: VI VAR FEL OM VÄGEN IN. Resten är bortskrapat."
+        ]
+      }
+    },
+    {
+      "id": "kapell",
+      "namn": "Det tysta kapellet",
+      "beskrivningar": {
+        "1": [
+          "Ett litet kapell utan bilder. Golvplattorna är slitna i ett mönster av små, överlappande sköldar.",
+          "Bänkarna står vända bort från altaret, mot väggen. Ingen vet varför."
+        ]
+      }
+    },
+    {
+      "id": "trapphall",
+      "namn": "Trapphallen",
+      "beskrivningar": {
+        "1": [
+          "En trappa slingrar sig uppåt och tar slut rakt mot taket. Stegen är ojämnt höga.",
+          "Trappan vrider sig runt en tjock mittpelare. Den leder ingenstans."
+        ]
+      }
+    },
+    {
+      "id": "forrad",
+      "namn": "Förrådet",
+      "beskrivningar": {
+        "1": [
+          "Hyllor med krus och tunnor. Allt är täckt av en tunn, glansig hinna, som av fukt som aldrig torkar.",
+          "Säckar som en gång innehöll säd. Nu är de tomma och kladdiga på insidan."
+        ]
+      }
+    },
+    {
+      "id": "lyktrum",
+      "namn": "Lykthallen",
+      "beskrivningar": {
+        "1": [
+          "Järnkrokar i taket där lyktor en gång hängde. Din egen låga fladdrar i ett drag som kommer och går, kommer och går.",
+          "Sot på väggarna i långa strimmor. Någon försökte en gång röka ut något härifrån."
+        ]
+      }
+    },
+    {
+      "id": "grotta",
+      "namn": "Salpetergrottan",
+      "beskrivningar": {
+        "1": [
+          "Väggarna här är inte murade utan släta, nästan polerade. Vita ränder löper längs dem i jämna bågar.",
+          "Rummet är mer grotta än sal. Stenen har ett svagt mönster, som av fina rutor."
+        ]
+      }
+    },
+    {
+      "id": "smedja",
+      "namn": "Den kalla smedjan",
+      "beskrivningar": {
+        "1": [
+          "Ett städ och en släckt ässja. Ändå är det varmare här än det borde vara.",
+          "Verktygen hänger prydligt på väggen. Alla är böjda, som om de har klämts."
+        ]
+      }
+    },
+    {
+      "id": "bibliotek",
+      "namn": "Det multnade biblioteket",
+      "beskrivningar": {
+        "1": [
+          "Böckerna har svällt ihop till en grå massa. Någon har ristat streck i väggen. Många streck.",
+          "En bok ligger uppslagen. Sidorna är fastklistrade vid varandra av något sött."
+        ]
+      }
+    },
+    {
+      "id": "korsvag",
+      "namn": "Korsvägen",
+      "beskrivningar": {
+        "1": [
+          "Murarna möts i en spetsig båge. Ett avlägset ljud, som av något tungt som flyttar sig, dör bort innan du hinner lyssna.",
+          "Här korsas gångarna. Golvet sluttar svagt mot mitten av tornet."
+        ]
+      }
+    }
+  ],
+
+  "texter": {
+    "valkommen": [
+      "{namn}, du står innanför porten i tornets {horn}. Någonstans i mitten sägs en orm sova kring sin skatt. Gå varsamt."
+    ],
+    "tillbaka": [
+      "Du är tillbaka. Tornet har väntat på dig."
+    ],
+    "ansluter": [
+      "{namn} kliver in genom porten i {horn}.",
+      "En ny lykta tänds vid porten i {horn}. Det är {namn}."
+    ],
+    "atervander": [
+      "{namn} har hittat tillbaka in i tornet."
+    ],
+    "lamnar": [
+      "{namn} försvinner ur sikte. Kanske bara för en stund."
+    ],
+    "vagg": [
+      "Massiv mur åt {riktning}. Stenen ger inte efter.",
+      "Ingen öppning åt {riktning}.",
+      "Du stöter mot muren åt {riktning}. Den är ljum."
+    ],
+    "utgang": [
+      "Kvällsljuset skär i ögonen. Inte än. Tornet har mer att ge.",
+      "Du ser ut över backen nedanför. Sedan vänder du tillbaka in."
+    ],
+    "nytt_rum_andra": [
+      "Sten skrapar mot sten i tornets {region} del. {namn} har hittat ett nytt rum.",
+      "Ett dovt mullrande från tornets {region} del. {namn} har öppnat en ny väg."
+    ],
+    "kant_rum": [
+      "{rum}."
+    ],
+    "tomt_namn": ["Tornet vill veta vad du heter."],
+    "namn_upptaget": ["Någon med det namnet är redan i tornet."],
+    "fullt": ["Tornet tar inte emot fler. Fyra är redan inne."]
+  }
+}

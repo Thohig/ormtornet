@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ormtornet</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="crt">
+  <section id="start" class="screen active">
+    <button id="enter" type="button">Gå in i tornet</button>
+  </section>
+
+  <section id="namescreen" class="screen">
+    <form id="nameform" autocomplete="off">
+      <label for="name">Vad heter du, vandrare?</label>
+      <input id="name" maxlength="16" spellcheck="false">
+      <div class="hint">tryck enter</div>
+      <div id="nameerr"></div>
+    </form>
+  </section>
+
+  <section id="game" class="screen">
+    <header id="top">
+      <span class="title">ORMTORNET</span>
+      <span id="conn"></span>
+    </header>
+    <div id="main">
+      <div id="mapbox"><canvas id="map"></canvas></div>
+      <aside id="side">
+        <h2>Vandrare</h2>
+        <ul id="players"></ul>
+        <h2>Här</h2>
+        <div id="here"></div>
+        <h2>Styrning</h2>
+        <div id="help">Piltangenterna: gå</div>
+      </aside>
+    </div>
+    <div id="log"></div>
+  </section>
+</div>
+<script src="audio.js"></script>
+<script src="map.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
