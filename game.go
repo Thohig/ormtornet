@@ -98,6 +98,14 @@ type Room struct {
 	Event    string // fälla som väntar på den som först går in
 	Mark     string // tecken som visar att en fälla har slagit till
 	Searched bool
+	trail    trail // den som senast gick ut ur rummet, för spåren
+}
+
+// trail är spåren efter den som senast lämnade ett rum.
+type trail struct {
+	by    int // vandrarens id, 0 om ingen har gått här
+	round int
+	dir   Dir
 }
 
 type Player struct {
@@ -1097,6 +1105,9 @@ func (g *Game) playTurn(p *Player) {
 // roterande rum kastar runt spelaren i all oändlighet.
 func (g *Game) move(p *Player, d Dir, depth int) {
 	room := &g.rooms[p.Y][p.X]
+	if room.HasExit && room.Exit == d || room.Doors[d] {
+		room.trail = trail{by: p.ID, round: g.round, dir: d}
+	}
 	if room.HasExit && room.Exit == d {
 		p.Status = statusOut
 		if p.Treasure > 0 {
@@ -1146,6 +1157,7 @@ func (g *Game) move(p *Player, d Dir, depth int) {
 	} else {
 		g.soundTo(p, "steg")
 		g.logTo(p, g.data.Text("kant_rum", "rum", name), "dim")
+		g.noticeTrail(p) // i ett nytt rum har ingen gått förut
 	}
 	// En fälla kan ha flyttat spelaren; varelsen gäller rummet spelaren står i nu.
 	if p.X == nx && p.Y == ny {

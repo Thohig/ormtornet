@@ -40,6 +40,7 @@ type Rules struct {
 	DryckHelar    int     `json:"dryck_helar"`
 	SokSkattMin   int     `json:"sok_skatt_min"`
 	SokSkattMax   int     `json:"sok_skatt_max"`
+	SparRundor    int     `json:"spar_rundor"` // hur många rundor spåren efter en vandrare syns
 }
 
 type Search struct {

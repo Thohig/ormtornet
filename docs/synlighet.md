@@ -1,8 +1,7 @@
 # Förslag: Synlighet
 
-Status: förslaget skrevs 2026-11-18. Steg 1 och 2 är byggda (README, "Vem
-ser vem"). Steg 2, "egen karta", är förval. Steg 3 är inte
-byggt. Användaren bestämmer om det ska byggas.
+Status: förslaget skrevs 2026-11-18. Alla tre stegen är byggda (README,
+"Vem ser vem"). Steg 2, "egen karta", är förval.
 
 Varje vandrare ser bara sig själv. De andra syns bara när man möter dem i
 samma rum. Ingen vet säkert var de andra är, hur långt de har kommit eller
@@ -129,6 +128,14 @@ Texterna ligger i `texter.json`.
   fällor, finns kvar som ljud från en del av tornet. Bara raden om nya rum
   tas bort.
 
-## Att bestämma
+## Beslut för steg 3
 
-- Om steg 3 ska byggas.
+- Spår och ljud från grannrummen finns med både `moten` och `egen`, inte
+  med `alla`.
+- Spåren visar bara den som senast gick ut ur rummet, och bara de senaste
+  3 rundorna (`spar_rundor` i `fallor.json`). Står den som lämnade spåren
+  kvar i rummet ser man vandraren i stället. I mörker syns inga spår.
+- Ljud hörs genom alla väggar till grannrummen, även utan dörr. Grannarna
+  får texten med riktning i stället för den med delen av tornet.
+- Ekofällan och klockan hörs i hela tornet som förut.
+- Steg hörs inte genom väggarna. Det skulle avslöja för mycket.

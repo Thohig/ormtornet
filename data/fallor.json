@@ -4,7 +4,8 @@
     "handelsechans": 0.45,
     "dryck_helar": 2,
     "sok_skatt_min": 5,
-    "sok_skatt_max": 30
+    "sok_skatt_max": 30,
+    "spar_rundor": 3
   },
 
   "fallor": [

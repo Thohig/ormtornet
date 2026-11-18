@@ -434,6 +434,25 @@
     "svarighet": [
       "Svårighet: {namn}. Du har {liv} liv."
     ],
+    "spar": [
+      "Färska fotspår i dammet leder åt {riktning}.",
+      "Någon har gått här nyss. Spåren leder åt {riktning}."
+    ],
+    "spar_ut": [
+      "Färska fotspår leder ut genom porten."
+    ],
+    "ljud_strid": [
+      "Från rummet åt {riktning} hörs stridsljud.",
+      "Genom väggen åt {riktning} hörs slag och ett skrik."
+    ],
+    "ljud_falla": [
+      "Något brakar till i rummet åt {riktning}.",
+      "Ett skrik hörs genom väggen åt {riktning}, och sedan är det tyst."
+    ],
+    "ljud_drick": [
+      "I rummet åt {riktning} dras en kork ur en flaska. Någon dricker.",
+      "Genom väggen åt {riktning} hörs några snabba klunkar."
+    ],
     "synlighet_moten": [
       "Tornet är stort och mörkt. Du ser de andra vandrarna bara när ni står i samma rum."
     ],

@@ -217,6 +217,20 @@ rum. Vill ni veta hur tornet ser ut får ni berätta för varandra. Den döda
 spelaren som styr varelserna ser hela tornet så långt det har vuxit fram,
 och när vandringen är slut syns hela tornet för alla.
 
+Även när du inte ser de andra kan du ana var de är:
+
+- **Spår:** går du in i ett rum där någon annan har gått ut de senaste
+  3 rundorna ser du färska fotspår och åt vilket håll de leder, men inte
+  vems de är. Antalet rundor står som `spar_rundor` i `data/fallor.json`.
+  I mörker ser du inga spår.
+- **Ljud genom väggarna:** står du i ett grannrum hör du strid, fällor och
+  någon som dricker, med riktningen dit men utan namn. Det gäller oavsett
+  om det finns en dörr. Längre bort hörs strid och fällor som förut, bara
+  med delen av tornet. Ekofällan och klockan hörs lika i hela tornet.
+
+Texterna står i `data/texter.json` under `spar`, `spar_ut` och `ljud_*`.
+Med "alltid, för alla" finns inga spår och inga ljud från grannrummen.
+
 Med "Vandrarna syns: bara när de möts" på värdsidan, eller
 `-synlighet moten`, är kartan gemensam igen: rum som någon upptäcker syns
 för alla, och tornet berättar i vilken del någon har hittat ett nytt rum.
@@ -410,6 +424,7 @@ Beskrivningarna för rummen ligger under nivåerna `"1"` till `"4"`.
 - `monster.go` varelser, strider och den döda spelarens styrning
 - `reveal.go` avslöjandet: nivåer, ledtrådar och epilog
 - `chronicle.go` krönikan över vandringen
+- `sounds.go` spår och ljud från grannrummen
 - `difficulty.go` förvalen för svårighet
 - `ai.go` datorstyrda vandrare
 - `data.go` läser in datafilerna

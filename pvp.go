@@ -207,11 +207,7 @@ func (g *Game) hit(a, b *Player, gold int) {
 
 // fightNoise låter resten av tornet höra striden.
 func (g *Game) fightNoise(a, b *Player) {
-	for _, o := range g.players {
-		if o != nil && o != a && o != b {
-			g.logTo(o, g.data.MonsterText("strid_andra", "region", g.data.region(a.X, a.Y)), "dim")
-		}
-	}
+	g.hear(a.X, a.Y, "ljud_strid", g.data.MonsterText("strid_andra", "region", g.data.region(a.X, a.Y)), "dim", a, b)
 }
 
 // fightStirsSerpent: tornet känner när det blöder inuti det. Högst ett nytt

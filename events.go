@@ -60,8 +60,17 @@ func (g *Game) trigger(p *Player, t *Trap, depth int) {
 	if g.hidesOthers() && len(t.AndraDolt) > 0 {
 		others = t.AndraDolt
 	}
+	general := ""
 	if other := pick(others); other != "" {
-		g.logOthers(p, fill(other, "namn", p.Name, "region", region, "rum", roomName), "info")
+		general = fill(other, "namn", p.Name, "region", region, "rum", roomName)
+	}
+	if t.ID == "eko" || t.ID == "klocka" {
+		// Ekot och klockan hörs lika i hela tornet.
+		if general != "" {
+			g.logOthers(p, general, "info")
+		}
+	} else {
+		g.hear(p.X, p.Y, "ljud_falla", general, "info", p)
 	}
 
 	// Ljud som hörs i hela tornet, eller bara för den som drabbas.
@@ -131,6 +140,7 @@ func (g *Game) leaveCellar(p *Player) {
 	g.newRoomSound(p)
 	g.logTo(p, g.data.Text("kallare_ut", "rum", g.roomName(room)), "info")
 	g.logTo(p, g.describe(p, room, p.X, p.Y), "")
+	g.noticeTrail(p)
 	g.logOthers(p, g.hiddenText("kallare_ut_andra", "namn", p.Name, "region", g.data.region(p.X, p.Y)), "info")
 	g.announceMonster(p)
 }
@@ -205,6 +215,7 @@ func (g *Game) drink(p *Player) {
 	p.HP = min(g.data.Regler.Liv, p.HP+g.data.Regler.DryckHelar)
 	g.soundTo(p, "drick")
 	g.logTo(p, g.data.Text("drick", "liv", strconv.Itoa(p.HP)), "info")
+	g.hear(p.X, p.Y, "ljud_drick", "", "dim", p)
 	if p.Poison > 0 {
 		p.Poison = 0
 		g.logTo(p, g.data.Text("drick_gift"), "info")

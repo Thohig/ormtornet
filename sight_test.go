@@ -163,3 +163,90 @@ func TestSightOwnController(t *testing.T) {
 		t.Fatal("den som styr varelserna ser inte hela tornet")
 	}
 }
+
+func TestTrail(t *testing.T) {
+	g, a, b := startTwo(t)
+	g.cfg.Sight = sightOwn
+	g.data.Regler.SparRundor = 3
+	pa, pb := a.player, b.player
+	putInRoom(g, pa, 4, 4)
+	putInRoom(g, pb, 2, 2)
+	putInRoom(g, pa, 3, 4) // rummet åt väster finns
+	putInRoom(g, pa, 4, 4)
+	g.rooms[4][4].Doors[West] = true
+	g.rooms[4][3].Doors[East] = true
+
+	// Alva går västerut. Bo kommer in efter henne och ser spåren.
+	g.move(pa, West, 0)
+	pb.X, pb.Y = 5, 4
+	g.rooms[4][5] = g.rooms[4][4]
+	g.rooms[4][5].Doors[West] = true
+	g.rooms[4][4].Doors[East] = true
+	logs(b)
+	g.move(pb, West, 0)
+	got := logs(b)
+	if !containsPart(got, "väster") {
+		t.Fatalf("Bo såg inga spår: %q", got)
+	}
+
+	// Gamla spår syns inte.
+	g.round += 10
+	pb.X, pb.Y = 5, 4
+	logs(b)
+	g.move(pb, West, 0)
+	if containsPart(logs(b), "spår") {
+		t.Fatal("Bo såg gamla spår")
+	}
+
+	// Med synligheten alla finns inga spår.
+	g.cfg.Sight = sightAll
+	g.round -= 10
+	pb.X, pb.Y = 5, 4
+	logs(b)
+	g.move(pb, West, 0)
+	if containsPart(logs(b), "spår") {
+		t.Fatal("spår fast alla syns")
+	}
+}
+
+func TestNoiseThroughWall(t *testing.T) {
+	g, a, b := startTwo(t)
+	g.cfg.Sight = sightOwn
+	pa, pb := a.player, b.player
+	putInRoom(g, pa, 4, 4)
+	putInRoom(g, pb, 4, 3) // norr om Alva
+	pa.Potions = 1
+	logs(b)
+	g.drink(pa)
+	got := logs(b)
+	if !containsPart(got, "söder") {
+		t.Fatalf("Bo hörde inte att Alva drack: %q", got)
+	}
+
+	// Längre bort hörs det inte.
+	putInRoom(g, pb, 1, 1)
+	pa.Potions = 1
+	logs(b)
+	g.drink(pa)
+	if got := logs(b); len(got) > 0 {
+		t.Fatalf("Bo hörde något långt bort: %q", got)
+	}
+
+	// Strid i grannrummet hörs med riktning i stället för del av tornet.
+	putInRoom(g, pb, 5, 4) // öster om Alva
+	logs(b)
+	g.hear(pa.X, pa.Y, "ljud_strid", "allmän text", "dim", pa)
+	got = logs(b)
+	if containsPart(got, "allmän text") || !containsPart(got, "väster") {
+		t.Fatalf("fel stridsljud: %q", got)
+	}
+}
+
+func containsPart(list []string, part string) bool {
+	for _, s := range list {
+		if strings.Contains(s, part) {
+			return true
+		}
+	}
+	return false
+}

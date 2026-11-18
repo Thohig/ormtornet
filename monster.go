@@ -152,7 +152,7 @@ func (g *Game) duel(p *Player, m *Monster, a string) {
 	}
 	g.logTo(p, g.data.MonsterText("duell", g.monsterVars(m,
 		"ditt_val", g.choiceWord(a), "dess_val", g.choiceWord(mc))...), "")
-	g.logOthers(p, g.data.MonsterText("strid_andra", "region", g.data.region(p.X, p.Y)), "dim")
+	g.hear(p.X, p.Y, "ljud_strid", g.data.MonsterText("strid_andra", "region", g.data.region(p.X, p.Y)), "dim", p)
 
 	playerHits := beats(a, mc) || (a == actAttack && mc == actAttack)
 	monsterHits := beats(mc, a) || (a == actAttack && mc == actAttack)
