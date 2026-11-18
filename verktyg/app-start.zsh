@@ -1,6 +1,6 @@
 #!/bin/zsh
 # Ormtornet.app: bygger spelet, startar tornet i bakgrunden och öppnar
-# spelledarens sida. Tornet stängs med knappen Stäng tornet, eller av sig
+# introt, som sedan leder till spelledarens sida. Tornet stängs med knappen Stäng tornet, eller av sig
 # självt när ingen spelare är ansluten och spelledarens sida har varit stängd
 # i 10 minuter. Macen hålls vaken så länge tornet är öppet.
 #
@@ -13,9 +13,9 @@ LOG=/tmp/ormtornet.log
 alert() { osascript -e "display alert \"Ormtornet\" message \"$1\"" >/dev/null }
 up() { curl -sf -o /dev/null -m 1 $URL/spelledare/status }
 
-# Redan igång: visa bara spelledarens sida.
+# Redan igång: öppna bara introt.
 if up; then
-  open $URL/spelledare
+  open $URL/
   exit 0
 fi
 
@@ -31,4 +31,4 @@ if ! up; then
   alert "Tornet startade inte. Kanske används port 8080 av ett annat program. Se $LOG."
   exit 1
 fi
-open $URL/spelledare
+open $URL/

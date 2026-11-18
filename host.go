@@ -72,6 +72,7 @@ func (g *Game) HostView() hostView {
 type introInfo struct {
 	Avslojande bool     `json:"avslojande"`
 	Rykten     []string `json:"rykten"`
+	Vard       bool     `json:"vard"` // sidan visas på datorn som kör tornet
 }
 
 // Intro väljer rykten till startsidan. Med avslöjandet avstängt, för spelare
@@ -219,7 +220,9 @@ func addHostRoutes(mux *http.ServeMux, web fs.FS, game *Game, addrs hostAddrs, h
 	}))
 	mux.HandleFunc("GET /intro", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Cache-Control", "no-store")
-		writeJSON(w, http.StatusOK, game.Intro())
+		info := game.Intro()
+		info.Vard = isLocal(r)
+		writeJSON(w, http.StatusOK, info)
 	})
 	mux.HandleFunc("GET /spelledare", localOnly(func(w http.ResponseWriter, r *http.Request) {
 		http.ServeFileFS(w, r, web, "spelledare.html")

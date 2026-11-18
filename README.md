@@ -13,9 +13,10 @@ spelet. De andra öppnar en adress i webbläsaren.
 ./starta.sh
 ```
 
-Skriptet bygger spelet, öppnar spelledarens sida i webbläsaren och håller
-datorn vaken så länge tornet är öppet. Flaggor skickas vidare, till exempel
-`./starta.sh -ai 2`. Är tornet redan igång öppnas bara spelledarens sida.
+Skriptet bygger spelet, öppnar introt i webbläsaren och håller datorn vaken
+så länge tornet är öppet. På datorn som kör tornet leder introt till
+spelledarens sida. Flaggor skickas vidare, till exempel `./starta.sh -ai 2`.
+Är tornet redan igång öppnas bara introt.
 
 Det går också att starta direkt med `go run .`.
 
@@ -27,7 +28,8 @@ Det går också att starta direkt med `go run .`.
 
 skapar `~/Projekt/Ormtornet.app` med tornets ikon (ange en annan mapp som
 argument om du vill). Dubbelklick på appen bygger spelet från den här mappen,
-startar tornet i bakgrunden och öppnar spelledarens sida. Inget
+startar tornet i bakgrunden och öppnar introt, som leder till spelledarens
+sida. Inget
 terminalfönster behövs. Tornet stängs med knappen "Stäng tornet", eller av sig
 självt när ingen spelare är ansluten och spelledarens sida har varit stängd i
 10 minuter. Loggen hamnar i `/tmp/ormtornet.log`. Appen behöver bara skapas om
@@ -52,14 +54,15 @@ Flaggor:
 - `-min 2` minsta antal spelare för att börja, datorspelare inräknade (sätt `-min 1` för att prova ensam)
 - `-ai 2` antal datorstyrda vandrare (0–3)
 - `-avslojande=false` stänger av avslöjandet, för spelare som redan känner till tornets hemlighet
-- `-oppna` öppnar spelledarens sida i webbläsaren när servern har startat
+- `-oppna` öppnar introt i webbläsaren när servern har startat; på den här datorn leder det till spelledarens sida
 - `-vaken` håller datorn vaken så länge servern är igång
 - `-autostopp 10m` stänger tornet när ingen spelare är ansluten och spelledarens sida har varit stängd så länge
 - `-installningar fil` var spelledarens inställningar sparas (standard `~/Library/Application Support/Ormtornet/installningar.json`, tom för att inte spara)
 
 ### Spelledarens sida
 
-Öppna `http://localhost:8080/spelledare` på datorn som kör servern. Där står
+Öppna `http://localhost:8080/spelledare` på datorn som kör servern. Dit
+kommer man också efter introt på den datorn. Där står
 adressen spelarna ska öppna, med knappar som kopierar en färdig inbjudan att
 skicka i en gruppchatt. Sidan visar också vilka som har anslutit och är redo,
 och vad man kan göra om någon inte kommer in.
@@ -103,7 +106,7 @@ varje ingrepp skrivs i loggen:
   något händer, men inte varifrån.
 
 Utan spelledarläge visar sidan inga skatter, positioner eller drag, så spelledaren kan spela med i
-en annan flik ("Gå in själv"). Andra datorer i nätverket kommer inte åt sidan.
+en annan flik ("Gå in själv", som leder till introt och sedan namnrutan). Andra datorer i nätverket kommer inte åt sidan.
 
 ## Spela
 

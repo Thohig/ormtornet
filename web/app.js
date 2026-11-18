@@ -486,6 +486,10 @@ const Intro = (() => {
   let seen = false; // har sett hela övergången förut i den här fliken
   try { seen = sessionStorage.getItem("ormtornet-intro") === "1"; } catch {}
   let rumors = [];
+  // På tornets egen dator leder introt till spelledarens sida, utom när man
+  // har valt att spela själv (adressen slutar med ?spela).
+  let toHostPage = false;
+  const wantsToPlay = new URLSearchParams(location.search).has("spela");
   let next = 0;
   let entering = false;
   let done = false;
@@ -505,6 +509,7 @@ const Intro = (() => {
     .then((r) => r.json())
     .then((info) => {
       if (!info.avslojande) $("intro").classList.add("invigd");
+      toHostPage = info.vard && !wantsToPlay;
       rumors = (info.rykten || []).slice().sort(() => Math.random() - 0.5);
       showRumor();
       setInterval(showRumor, 7500);
@@ -524,6 +529,10 @@ const Intro = (() => {
     if (done) return;
     done = true;
     clearTimeout(timer);
+    if (toHostPage) {
+      location.href = "/spelledare";
+      return;
+    }
     show("namescreen");
     try { $("name").value = localStorage.getItem("ormtornet-namn") || ""; } catch {}
     $("name").focus();

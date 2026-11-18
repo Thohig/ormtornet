@@ -1,6 +1,6 @@
 #!/bin/sh
-# Startar Ormtornet: bygger spelet, öppnar spelledarens sida och håller
-# datorn vaken så länge tornet är öppet.
+# Startar Ormtornet: bygger spelet, öppnar introt (som leder till spelledarens
+# sida) och håller datorn vaken så länge tornet är öppet.
 #
 #   ./starta.sh            vanliga inställningar
 #   ./starta.sh -ai 2      med två datorstyrda vandrare

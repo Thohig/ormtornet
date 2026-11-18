@@ -32,7 +32,7 @@ func main() {
 	bots := flag.Int("ai", defaultSettings.AI, "antal datorstyrda vandrare (0-3)")
 	reveal := flag.Bool("avslojande", defaultSettings.Avslojande, "låt tornet avslöja sin hemlighet (false för den som redan känner till den)")
 	settingsPath := flag.String("installningar", defaultSettingsPath(), "fil där spelledarens inställningar sparas (tom för att inte spara)")
-	openPage := flag.Bool("oppna", false, "öppna spelledarens sida i webbläsaren när servern har startat")
+	openPage := flag.Bool("oppna", false, "öppna introt i webbläsaren när servern har startat; det leder till spelledarens sida")
 	awake := flag.Bool("vaken", false, "håll datorn vaken så länge servern är igång")
 	autostop := flag.Duration("autostopp", 0, "stäng tornet när ingen spelare är ansluten och spelledarens sida har varit stängd så här länge, t.ex. 10m (0 = aldrig)")
 	flag.Parse()
@@ -89,7 +89,7 @@ func main() {
 			fmt.Println("Ormtornet är redan igång på den här datorn.")
 			fmt.Printf("Spelledaren: http://localhost:%s/spelledare\n", port)
 			if *openPage {
-				openBrowser("http://localhost:" + port + "/spelledare")
+				openBrowser("http://localhost:" + port + "/")
 			}
 			return
 		}
@@ -171,7 +171,7 @@ func main() {
 	}
 	fmt.Println()
 	if *openPage {
-		openBrowser("http://localhost:" + port + "/spelledare")
+		openBrowser("http://localhost:" + port + "/")
 	}
 	log.Fatal(http.Serve(ln, mux))
 }
