@@ -88,6 +88,7 @@ func (g *Game) take(p *Player) {
 		return
 	}
 	if c.Vaknar {
+		g.chronicle("kronika_vaknade", "namn", p.Name)
 		g.logTo(p, pick(c.Texter), "varn")
 		p.Seen["ormen"] = true
 		g.wakeSerpent()
@@ -99,6 +100,8 @@ func (g *Game) take(p *Player) {
 	o := &g.data.Ormen
 	n := o.SkattMin + rand.IntN(max(1, o.SkattMax-o.SkattMin+1))
 	p.Treasure += n
+	p.stats.takes++
+	p.stats.takeGold += n
 	g.soundTo(p, "skatt")
 	g.logTo(p, fill(pick(c.Texter), "antal", strconv.Itoa(n)), "syn")
 	g.logTo(p, g.data.Text("skatt_totalt", "skatt", strconv.Itoa(p.Treasure)), "dim")
@@ -133,6 +136,7 @@ func (g *Game) wakeSerpent() {
 		lost := int(float64(p.Treasure)*o.SkattForlust + 0.5)
 		p.Treasure -= lost
 		g.logTo(p, fill(pick(o.KastasUt), "forlust", strconv.Itoa(lost), "skada", strconv.Itoa(o.Skada)), "varn")
+		p.hurt("ormen", "")
 		g.damage(p, o.Skada, true)
 		if p.Status != statusIn {
 			continue

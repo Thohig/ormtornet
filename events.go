@@ -32,6 +32,7 @@ func (g *Game) damage(p *Player, n int, announce bool) {
 
 func (g *Game) kill(p *Player) {
 	p.Status = statusDead
+	g.chronicleDeath(p)
 	p.Stuck, p.Cellar, p.Poison, p.Dark = 0, 0, 0, 0
 	p.Action = ""
 	g.logTo(p, g.data.Text("dod"), "varn")
@@ -50,6 +51,8 @@ func (g *Game) trigger(p *Player, t *Trap, depth int) {
 	roomName := g.roomName(room)
 	room.Mark = t.Tecken
 	p.Seen[t.ID] = true
+	p.stats.traps++
+	p.hurt("falla", lowerFirst(t.Namn))
 
 	g.logTo(p, t.Namn+"!", "varn")
 	g.logTo(p, pick(t.Texter), "")
@@ -134,6 +137,7 @@ func (g *Game) search(p *Player) {
 		return
 	}
 	room.Searched = true
+	p.stats.searched++
 	switch weighted(g.data.Sok.Vikter) {
 	case "skatt":
 		lo, hi := g.data.Regler.SokSkattMin, g.data.Regler.SokSkattMax

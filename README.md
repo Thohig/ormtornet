@@ -158,6 +158,13 @@ solen har gått ner är förlorad.
 
 Andras skatt och val av drag syns inte förrän spelet är slut.
 
+När vandringen är slut berättar tornet krönikan i loggen. Först kommer det
+som hände, runda för runda: vem som gick ut och med hur mycket, vem som dog
+och av vad, vem som fällde vilken varelse och när ormen vaknade. Sedan kommer
+en rad för varje vandrare med hur många nävar den tog ur kammaren och hur
+mycket guld de gav, och hur många fällor, fällda varelser och sökta rum den
+fick. Texterna står i `data/texter.json` under `kronika_*`.
+
 ### Strid mellan vandrare
 
 Står två vandrare i samma rum utan någon varelse kan de slåss med samma
@@ -316,6 +323,7 @@ Beskrivningarna för rummen ligger under nivåerna `"1"` till `"4"`.
 - `serpent.go` skattkammaren och ormkorten
 - `monster.go` varelser, strider och den döda spelarens styrning
 - `reveal.go` avslöjandet: nivåer, ledtrådar och epilog
+- `chronicle.go` krönikan över vandringen
 - `ai.go` datorstyrda vandrare
 - `data.go` läser in datafilerna
 - `ws.go` en liten websocket-implementation utan beroenden

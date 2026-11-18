@@ -201,6 +201,7 @@ func (g *Game) hit(a, b *Player, gold int) {
 	} else if !killing {
 		g.logTo(b, g.data.Text("pvp_traffad", "namn", a.Name, "skada", strconv.Itoa(pvpSkada)), "varn")
 	}
+	b.hurt("vandrare", a.Name)
 	g.damage(b, pvpSkada, false)
 }
 

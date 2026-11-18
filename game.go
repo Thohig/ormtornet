@@ -124,6 +124,10 @@ type Player struct {
 	Cellar  int // rundor kvar i källarvalven
 	Poison  int // rundor kvar med gift i kroppen
 	Dark    int // rundor kvar utan ljus
+
+	stats    chronStats // det krönikan räknar
+	hurtKind string     // vad som skadade vandraren senast, för krönikan
+	hurtWhat string     // namnet på fällan, varelsen eller vandraren
 }
 
 // present är sant för en spelare som deltar just nu: en människa med öppen
@@ -172,6 +176,8 @@ type Game struct {
 
 	paused    bool          // spelledaren har pausat rundan
 	pauseLeft time.Duration // tid som var kvar när rundan pausades
+
+	chron []chronEvent // krönikan över vandringen
 }
 
 func NewGame(d *Data, cfg Config) *Game {
@@ -700,6 +706,7 @@ func (g *Game) startGame() {
 	g.pendingMove = nil
 	g.level = 1
 	g.usedClues = map[string]bool{}
+	g.resetChronicle()
 	for _, p := range g.players {
 		if p != nil {
 			p.Ready = p.bot != nil
@@ -932,6 +939,7 @@ func (g *Game) endGame() {
 		p.Action = ""
 		if p.Status == statusIn {
 			p.Status = statusLost
+			g.chronicle("kronika_forlorad", "namn", p.Name)
 			g.logTo(p, g.data.Text("forlorad_du"), "varn")
 			g.logOthers(p, g.data.Text("forlorad", "namn", p.Name), "varn")
 		}
@@ -949,6 +957,7 @@ func (g *Game) endGame() {
 	} else {
 		g.logAll(g.data.Text("ingen_vinnare"), "varn")
 	}
+	g.tellChronicle()
 	g.epilogue()
 	g.logAll(g.data.Text("spela_igen"), "dim")
 	g.soundAll("slut")
@@ -1003,6 +1012,7 @@ func (g *Game) playTurn(p *Player) {
 	if wasPoisoned && p.Poison > 0 {
 		p.Poison--
 		g.logTo(p, g.data.Text("gift", "liv", strconv.Itoa(max(0, p.HP-1))), "varn")
+		p.hurt("gift", "")
 		g.damage(p, 1, false)
 		if p.Poison == 0 && p.Status == statusIn {
 			g.logTo(p, g.data.Text("gift_slut"), "dim")
@@ -1022,6 +1032,11 @@ func (g *Game) move(p *Player, d Dir, depth int) {
 	room := &g.rooms[p.Y][p.X]
 	if room.HasExit && room.Exit == d {
 		p.Status = statusOut
+		if p.Treasure > 0 {
+			g.chronicle("kronika_ut", "namn", p.Name, "guld", strconv.Itoa(p.Treasure))
+		} else {
+			g.chronicle("kronika_ut_tom", "namn", p.Name)
+		}
 		if p.Treasure > 0 {
 			g.logTo(p, g.data.Text("ut_med_skatt", "skatt", strconv.Itoa(p.Treasure)), "syn")
 		} else {

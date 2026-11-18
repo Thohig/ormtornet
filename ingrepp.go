@@ -75,6 +75,7 @@ func (g *Game) Intervene(r gmRequest) error {
 		err = g.gmMonster(r.X, r.Y, r.ID)
 	case "vack":
 		g.gmNote("Väckte ormen.")
+		g.chronicle("kronika_vaknade_sjalv")
 		g.wakeSerpent()
 	case "lugna":
 		err = g.gmCalm()
@@ -273,6 +274,7 @@ func (g *Game) gmGive(what string, id, n int) error {
 		}
 		g.logTo(p, g.data.Text("gm_liv_"+sign, "liv", strconv.Itoa(max(0, p.HP+min(0, n)))), "rost")
 		if n < 0 {
+			p.hurt("tornet", "")
 			g.damage(p, -n, false)
 		}
 		g.gmNote(verb(n, "Gav", "Tog") + " " + strconv.Itoa(abs(n)) + " liv " + verb(n, "till", "från") + " " + p.Name + ".")

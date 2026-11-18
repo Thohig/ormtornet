@@ -430,6 +430,54 @@
     "ingen_vinnare": [
       "Ingen kom ut med någon skatt. Tornet vann."
     ],
+    "kronika_rubrik": [
+      "Krönikan över vandringen"
+    ],
+    "kronika_rad": [
+      "Runda {runda}. {text}"
+    ],
+    "kronika_vandrare": [
+      "{namn}: kammaren {naver} ggr, {kammarguld} guld · fällor {fallor} · fällda varelser {varelser} · sökta rum {sokt}"
+    ],
+    "kronika_ut": [
+      "{namn} gick ut med {guld} guld."
+    ],
+    "kronika_ut_tom": [
+      "{namn} gick ut tomhänt."
+    ],
+    "kronika_forlorad": [
+      "{namn} var kvar i tornet när solen gick ner."
+    ],
+    "kronika_vaknade": [
+      "Ormen vaknade när {namn} tog skatt."
+    ],
+    "kronika_vaknade_sjalv": [
+      "Ormen vaknade, fast ingen rörde skatten."
+    ],
+    "kronika_varelse": [
+      "{namn} fällde {varelse}."
+    ],
+    "kronika_dod": [
+      "{namn} dog."
+    ],
+    "kronika_dod_falla": [
+      "{namn} dog av {vad}."
+    ],
+    "kronika_dod_varelse": [
+      "{namn} föll för {vad}."
+    ],
+    "kronika_dod_vandrare": [
+      "{namn} dödades av {vad}."
+    ],
+    "kronika_dod_ormen": [
+      "{namn} dog när ormen vaknade."
+    ],
+    "kronika_dod_gift": [
+      "{namn} dog av giftet i kroppen."
+    ],
+    "kronika_dod_tornet": [
+      "{namn} dog. Ingen vet riktigt av vad."
+    ],
     "spela_igen": [
       "Tryck Enter för att gå in i ett nytt torn (på en pekskärm: Nytt torn)."
     ],

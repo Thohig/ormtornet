@@ -170,6 +170,7 @@ func (g *Game) duel(p *Player, m *Monster, a string) {
 		g.logTo(p, g.data.MonsterText("inget", g.monsterVars(m)...), "dim")
 	}
 	if monsterHits {
+		p.hurt("varelse", lowerFirst(t.Namn))
 		g.damage(p, t.Skada, false)
 	}
 	if playerHits {
@@ -195,6 +196,7 @@ func (g *Game) freeAttack(p *Player, m *Monster, key string) {
 	g.logTo(p, g.data.MonsterText(key, g.monsterVars(m, "dess_val", g.choiceWord(mc))...), "varn")
 	if mc == actAttack {
 		g.logTo(p, g.data.MonsterText("monster_traffar", g.monsterVars(m, "skada", strconv.Itoa(t.Skada))...), "varn")
+		p.hurt("varelse", lowerFirst(t.Namn))
 		g.damage(p, t.Skada, false)
 	}
 }
@@ -203,6 +205,8 @@ func (g *Game) defeat(p *Player, m *Monster) {
 	t := g.data.monsterType(m.Type)
 	g.removeMonster(m)
 	p.Treasure += t.Guld
+	p.stats.kills++
+	g.chronicle("kronika_varelse", "namn", p.Name, "varelse", lowerFirst(t.Namn))
 	g.soundTo(p, "monster_dor")
 	g.logTo(p, pick(t.Dor), "")
 	g.logTo(p, g.data.MonsterText("seger", g.monsterVars(m,
