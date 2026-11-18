@@ -1,0 +1,63 @@
+{
+  "ormen": {
+    "skatt_min": 15,
+    "skatt_max": 45,
+    "skada": 2,
+    "skatt_forlust": 0.5,
+    "farre_efter_vakning": 2,
+    "minst_sovkort": 3,
+
+    "kort": [
+      {
+        "id": "sover",
+        "antal": 9,
+        "vaknar": false,
+        "texter": [
+          "Du sträcker dig in i högen och tar {antal} guld. Ormen sover vidare.",
+          "Mynten är ljumma och klibbiga. Du tar {antal} guld. Ingenting rör sig.",
+          "Försiktigt, mynt för mynt: {antal} guld. Andetagen fortsätter i samma långsamma takt."
+        ]
+      },
+      {
+        "id": "ror_sig",
+        "antal": 4,
+        "vaknar": false,
+        "texter": [
+          "Du tar {antal} guld. En slinga glider åt sidan och golvet under dig gungar. Sedan blir det stilla igen.",
+          "{antal} guld. Ett väldigt andetag drar genom salen, och hela rummet tycks följa med. Ormen sover. Än."
+        ],
+        "andra": [
+          "Golvet gungar till under er. Något väldigt har rört sig i sömnen.",
+          "Hela tornet tycks dra ett djupt andetag."
+        ]
+      },
+      {
+        "id": "vaknar",
+        "antal": 2,
+        "vaknar": true,
+        "texter": [
+          "Ett mynt glider ur handen och klirrar mot de andra. Andningen tystnar. Två gula ögon öppnas i mörkret.",
+          "Du drar i en kedja som sitter fast. Hela högen rör sig, och det som ligger runt den vaknar."
+        ]
+      }
+    ],
+
+    "vaknar_andra": [
+      "Ett väsande fyller tornet, så starkt att stenarna skälver. Ormen är vaken!",
+      "Ett ljud som av en storm genom ett rör. Ormen har vaknat."
+    ],
+    "kastas_ut": [
+      "Slingorna slår ut och du slungas genom salen och ut genom en öppning. Du tappar {forlust} guld och får {skada} sår.",
+      "Något slår dig i bröstet och du flyger ut ur kammaren. {forlust} guld rinner ur väskan. Du får {skada} sår."
+    ],
+    "somnar_om": [
+      "Väsandet ebbar ut. Andningen blir långsam igen, men den låter lättare väckt nu."
+    ],
+
+    "somn": [
+      "Ormen sover djupt. Andetagen är långa och tunga.",
+      "Ormen sover oroligt. Andetagen kommer tätare.",
+      "Ormen är nära att vakna. Du ser hur slingorna spänns."
+    ]
+  }
+}

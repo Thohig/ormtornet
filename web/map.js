@@ -29,6 +29,14 @@ const MapView = (() => {
     "⢸ ¤¤ ⡇",
     " ⠙⠶⠶⠋ ",
   ];
+  // Samma ring när ormen har vaknat: slingorna spänns och två ögon lyser.
+  const CHAMBER_AWAKE = [
+    "⣴⠟⠛⠛⠻⣦",
+    "⣿ ◉◉ ⣿",
+    "⠻⣦⣤⣤⣴⠟",
+  ];
+  const WAKE_MS = 3500;
+  let wokeAt = -Infinity;
 
   // Spelarnas platser inne i ett rum, en per hörnplats.
   const SLOTS = [[2, 1], [5, 1], [2, 3], [5, 3]];
@@ -112,9 +120,13 @@ const MapView = (() => {
     if (r.mark) put(x0 + Math.floor(RW / 2), y0 + Math.floor(RH / 2), r.mark, COLORS.mark);
 
     if (r.k === "kammare") {
-      CHAMBER.forEach((line, j) => {
+      const now = performance.now();
+      const awake = now - wokeAt < WAKE_MS;
+      const flash = awake && Math.floor((now - wokeAt) / 180) % 2 === 0;
+      (awake ? CHAMBER_AWAKE : CHAMBER).forEach((line, j) => {
         [...line].forEach((ch, i) => {
-          const color = ch === "¤" ? COLORS.gold : COLORS.chamber;
+          let color = ch === "¤" ? COLORS.gold : COLORS.chamber;
+          if (awake) color = ch === "◉" ? "#ffe14a" : flash ? "#ff5a3a" : "#a8402c";
           put(x0 + 1 + i, y0 + 1 + j, ch, color);
         });
       });
@@ -205,5 +217,9 @@ const MapView = (() => {
     }
   }
 
-  return { setup, draw, resize, ping, PLAYER_COLORS };
+  function wake() {
+    wokeAt = performance.now();
+  }
+
+  return { setup, draw, resize, ping, wake, PLAYER_COLORS };
 })();

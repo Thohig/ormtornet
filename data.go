@@ -45,6 +45,38 @@ type Search struct {
 	Texter map[string][]string `json:"texter"`
 }
 
+// Serpent styr ormen i skattkammaren och leken med ormkort.
+type Serpent struct {
+	SkattMin          int      `json:"skatt_min"`
+	SkattMax          int      `json:"skatt_max"`
+	Skada             int      `json:"skada"`
+	SkattForlust      float64  `json:"skatt_forlust"`
+	FarreEfterVakning int      `json:"farre_efter_vakning"`
+	MinstSovkort      int      `json:"minst_sovkort"`
+	Kort              []Card   `json:"kort"`
+	VaknarAndra       []string `json:"vaknar_andra"`
+	KastasUt          []string `json:"kastas_ut"`
+	SomnarOm          []string `json:"somnar_om"`
+	Somn              []string `json:"somn"`
+}
+
+type Card struct {
+	ID     string   `json:"id"`
+	Antal  int      `json:"antal"`
+	Vaknar bool     `json:"vaknar"`
+	Texter []string `json:"texter"`
+	Andra  []string `json:"andra"`
+}
+
+func (d *Data) card(id string) *Card {
+	for i := range d.Ormen.Kort {
+		if d.Ormen.Kort[i].ID == id {
+			return &d.Ormen.Kort[i]
+		}
+	}
+	return nil
+}
+
 type RoomType struct {
 	ID            string              `json:"id"`
 	Namn          string              `json:"namn"`
@@ -62,10 +94,11 @@ type Data struct {
 	Regler       Rules               `json:"regler"`
 	Fallor       []Trap              `json:"fallor"`
 	Sok          Search              `json:"sok"`
+	Ormen        Serpent             `json:"ormen"`
 }
 
 // Filerna i datamappen. Alla läses in i samma struktur; "texter" slås ihop.
-var dataFiles = []string{"texter.json", "fallor.json"}
+var dataFiles = []string{"texter.json", "fallor.json", "ormen.json"}
 
 // loadData läser filerna i mappen dir. Saknas en fil används den inbyggda kopian.
 func loadData(dir string) (*Data, string, error) {
@@ -103,6 +136,9 @@ func loadData(dir string) (*Data, string, error) {
 	if d.Regler.Liv <= 0 {
 		d.Regler.Liv = 6
 	}
+	if len(d.Ormen.Kort) == 0 || len(d.Ormen.Somn) == 0 {
+		return nil, "", fmt.Errorf("ormen.json: kort och sömntexter saknas")
+	}
 	return d, strings.Join(sources, ", "), nil
 }
 
@@ -134,6 +170,9 @@ func mergeData(d, part *Data) {
 	}
 	if len(part.Sok.Vikter) > 0 {
 		d.Sok = part.Sok
+	}
+	if len(part.Ormen.Kort) > 0 {
+		d.Ormen = part.Ormen
 	}
 }
 

@@ -36,6 +36,7 @@ func TestRoundTreasureAndWinner(t *testing.T) {
 	pa, pb := a.player, b.player
 	g.reveal(center, center)
 	pa.X, pa.Y = center, center
+	g.deck = []string{"sover"} // ormen ska inte vakna i det här testet
 	g.Act(a, actTake)
 	if g.round != 1 {
 		t.Fatal("rundan utfördes innan alla valt")
@@ -201,6 +202,9 @@ func TestTraps(t *testing.T) {
 			p := a.player
 			r := putInRoom(g, p, 4, 2)
 			r.Doors = [4]bool{true, true, true, true}
+			for d := North; d <= West; d++ {
+				g.reveal(4+dirDX[d], 2+dirDY[d]).Event = ""
+			}
 			before := g.sun
 			g.trigger(p, g.data.trap(c.id), 0)
 			c.check(t, g, p, before)
@@ -285,4 +289,87 @@ func TestSearch(t *testing.T) {
 			t.Errorf("hittade aldrig %s", k)
 		}
 	}
+}
+
+func TestSerpentDeck(t *testing.T) {
+	g, a, b := startTwo(t)
+	pa, pb := a.player, b.player
+	g.reveal(center, center)
+	for d := North; d <= West; d++ {
+		g.reveal(center+dirDX[d], center+dirDY[d]).Event = ""
+	}
+	full := len(g.deck)
+	sleepFull := g.deckSleep
+	if g.sleepLevel() != 0 {
+		t.Fatal("ormen ska sova djupt från början")
+	}
+
+	// Båda står i kammaren och tar skatt tills ormen vaknar.
+	taken := 0
+	for g.wakes == 0 {
+		pa.X, pa.Y, pb.X, pb.Y = center, center, center, center
+		pa.HP, pb.HP = 99, 99
+		g.take(pa)
+		taken++
+		if taken > full {
+			t.Fatal("ormen vaknade aldrig")
+		}
+		if g.wakes == 0 && len(g.deck) != full-taken {
+			t.Fatalf("sovkortet togs inte bort: %d kort kvar", len(g.deck))
+		}
+	}
+	// Båda kastades ut ur kammaren, förlorade liv och hälften av skatten.
+	for _, p := range []*Player{pa, pb} {
+		if g.rooms[p.Y][p.X].Kind == "kammare" {
+			t.Fatalf("%s är kvar i kammaren", p.Name)
+		}
+		if p.HP != 99-g.data.Ormen.Skada {
+			t.Fatalf("%s har %d liv", p.Name, p.HP)
+		}
+	}
+	// Ny lek med färre sovkort.
+	if g.deckSleep != sleepFull-g.data.Ormen.FarreEfterVakning {
+		t.Fatalf("sovkort %d, före %d", g.deckSleep, sleepFull)
+	}
+}
+
+func TestSerpentLosesHalfTreasure(t *testing.T) {
+	g, a, _ := startTwo(t)
+	p := a.player
+	g.reveal(center, center)
+	p.X, p.Y, p.Treasure = center, center, 100
+	g.deck = []string{"vaknar"}
+	g.take(p)
+	if p.Treasure != 50 {
+		t.Fatalf("skatt %d, väntade 50", p.Treasure)
+	}
+}
+
+func TestSleepLevelRises(t *testing.T) {
+	g, _, _ := startTwo(t)
+	levels := []int{g.sleepLevel()}
+	for len(g.deck) > 0 {
+		if c := g.data.card(g.deck[0]); c.Vaknar {
+			g.deck = g.deck[1:]
+			g.deck = append(g.deck, c.ID)
+			if allWake(g) {
+				break
+			}
+			continue
+		}
+		g.deck = g.deck[1:]
+		levels = append(levels, g.sleepLevel())
+	}
+	if levels[0] != 0 || levels[len(levels)-1] != 2 {
+		t.Fatalf("nivåer %v", levels)
+	}
+}
+
+func allWake(g *Game) bool {
+	for _, id := range g.deck {
+		if !g.data.card(id).Vaknar {
+			return false
+		}
+	}
+	return true
 }

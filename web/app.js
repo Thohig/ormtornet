@@ -104,6 +104,7 @@ function handle(msg) {
         mapReady = true;
       }
       MapView.draw(state);
+      Sound.breath(state.phase === "spel" ? state.sleep : -1);
       renderSide();
       renderTop();
       renderOverlay();
@@ -113,6 +114,9 @@ function handle(msg) {
       break;
     case "sound":
       Sound.play(msg.s);
+      break;
+    case "vaknar":
+      MapView.wake();
       break;
     case "ping":
       MapView.ping(msg.x, msg.y, msg.slot);
@@ -188,6 +192,7 @@ function renderSide() {
     if (state.stuck > 0) line("Fast i " + state.stuck + (state.stuck === 1 ? " runda" : " rundor"), "cond");
     if (state.poison > 0) line("Förgiftad", "cond");
     if (state.dark > 0) line("Lyktan är släckt", "cond");
+    if (state.sleep >= 0 && state.sleepText) line(state.sleepText, state.sleep >= 2 ? "cond" : "sleep");
   }
   if (state.phase === "spel" && me.status === "inne") {
     line(state.action ? "Drag: " + ACTION_WORDS[state.action] : "Välj ditt drag", "plan");

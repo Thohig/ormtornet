@@ -133,6 +133,10 @@ type Game struct {
 	round    int
 	deadline time.Time
 	timer    *time.Timer
+
+	deck      []string // ormkorten som är kvar
+	deckSleep int      // antal sovkort när leken byggdes
+	wakes     int      // hur många gånger ormen har vaknat
 }
 
 func NewGame(d *Data, cfg Config) *Game {
@@ -283,6 +287,8 @@ type stateMsg struct {
 	Cellar     int          `json:"cellar"`
 	Poison     int          `json:"poison"`
 	Dark       int          `json:"dark"`
+	Sleep      int          `json:"sleep"` // -1 utanför kammaren
+	SleepText  string       `json:"sleepText,omitempty"`
 	Players    []playerView `json:"players"`
 	Rooms      []roomView   `json:"rooms"`
 	Results    []resultView `json:"results,omitempty"`
@@ -357,6 +363,11 @@ func (g *Game) stateFor(me *Player) stateMsg {
 	}
 	// I mörker ser man bara sig själv och rummet man står i.
 	blind := g.phase == phasePlay && me.Status == statusIn && me.Dark > 0
+	st.Sleep = -1
+	if g.phase == phasePlay && me.Status == statusIn && me.Cellar == 0 && g.rooms[me.Y][me.X].Kind == "kammare" {
+		st.Sleep = g.sleepLevel()
+		st.SleepText = g.data.Ormen.Somn[min(st.Sleep, len(g.data.Ormen.Somn)-1)]
+	}
 	if g.phase == phasePlay {
 		st.DeadlineMs = max(0, time.Until(g.deadline).Milliseconds())
 	}
@@ -590,6 +601,8 @@ func (g *Game) startGame() {
 	g.phase = phasePlay
 	g.sun = g.cfg.SunMax
 	g.round = 1
+	g.wakes = 0
+	g.buildDeck()
 	for _, p := range g.players {
 		if p != nil {
 			p.Ready = false
@@ -894,17 +907,6 @@ func (g *Game) move(p *Player, d Dir, depth int) {
 		g.soundTo(p, "steg")
 		g.logTo(p, g.data.Text("kant_rum", "rum", name), "dim")
 	}
-}
-
-// take ger en näve skatt i kammaren. (Ormen bryr sig inte ännu.)
-func (g *Game) take(p *Player) {
-	if g.rooms[p.Y][p.X].Kind != "kammare" {
-		return
-	}
-	n := 10 + rand.IntN(41)
-	p.Treasure += n
-	g.soundTo(p, "skatt")
-	g.logTo(p, g.data.Text("ta_skatt", "antal", strconv.Itoa(n), "skatt", strconv.Itoa(p.Treasure)), "syn")
 }
 
 type clientMsg struct {

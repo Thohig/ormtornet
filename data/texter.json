@@ -205,10 +205,8 @@
     "ingen_skatt_har": [
       "Här finns ingen skatt att ta."
     ],
-    "ta_skatt": [
-      "Du sträcker dig in i högen och tar {antal} guld. Du bär nu på {skatt}. Det ringlade ting bredvid dig rör sig inte.",
-      "Mynten är ljumma och klibbiga. Du tar {antal} guld och har nu {skatt}.",
-      "Försiktigt, mynt för mynt: {antal} guld. Totalt {skatt}. Någonstans hörs ett långsamt andetag."
+    "skatt_totalt": [
+      "Du bär nu på {skatt} guld."
     ],
     "ut_med_skatt": [
       "Du kliver ut i kvällsljuset med {skatt} guld. Bakom dig suckar porten.",

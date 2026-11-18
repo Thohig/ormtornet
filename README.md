@@ -50,6 +50,22 @@ solen har gått ner är förlorad.
 
 Andras skatt och val av drag syns inte förrän spelet är slut.
 
+### Skattkammaren och ormen
+
+I kammaren mitt i tornet kan du ta skatt (T) en gång per runda. Varje gång
+dras ett ormkort ur en lek:
+
+- **Sover** eller **rör sig**: du får 15–45 guld och kortet tas bort ur leken.
+  Rör sig ormen märker alla i tornet det.
+- **Vaknar**: kortet blir kvar i leken. Alla i kammaren förlorar hälften av
+  sin skatt och 2 liv och kastas ut genom en slumpad öppning. Väsandet hörs
+  i hela tornet.
+
+Eftersom bara sovkorten tas bort ökar risken för varje näve. Leken börjar med
+13 sovkort och 2 vakna-kort. När ormen har vaknat blandas en ny lek med 2
+färre sovkort än förra gången. Står du i kammaren ser du hur djupt ormen
+sover och hör andetagen bli tätare.
+
 ### Rum och fällor
 
 När någon går in i ett nytt rum kan en fälla slå till. Ett tecken i rummet
@@ -83,6 +99,7 @@ så starta om servern efter en ändring.
 
 - `texter.json` rum, beskrivningar och allmänna texter
 - `fallor.json` regler (liv, chans för händelse, drycker), fällor och sökresultat
+- `ormen.json` ormkorten, skatten i kammaren och vad som händer när ormen vaknar
 
 För varje fälla kan du ändra namn, vikt (hur ofta den dyker upp), skada,
 antal rundor, tecknet på kartan och texterna. Vad fällan gör styrs av dess
@@ -95,6 +112,7 @@ Beskrivningarna för rummen ligger under nivå `"1"`; fler nivåer kommer senare
 - `main.go` startar webbservern och skriver ut adressen
 - `game.go` all spellogik (tornet, rummen, spelarna)
 - `events.go` fällor, sökande och drycker
+- `serpent.go` skattkammaren och ormkorten
 - `data.go` läser in datafilerna
 - `ws.go` en liten websocket-implementation utan beroenden
 - `web/` klienten: HTML, CSS och JavaScript utan ramverk

@@ -129,7 +129,68 @@ const Sound = (() => {
     o.stop(t + attack + release + 0.05);
   }
 
+  // Ormens andning i kammaren. Ju närmare att vakna, desto tätare och tyngre.
+  let breathNode = null;
+  let breathLevel = -1;
+  function setBreath(level) {
+    if (!ctx || level === breathLevel) return;
+    breathLevel = level;
+    const t = ctx.currentTime;
+    if (breathNode) {
+      const old = breathNode;
+      old.out.gain.setTargetAtTime(0, t, 0.4);
+      setTimeout(() => { old.src.stop(); old.lfo.stop(); }, 2500);
+      breathNode = null;
+    }
+    if (level < 0) return;
+    const rate = [0.12, 0.2, 0.33][Math.min(level, 2)];
+    const depth = [0.10, 0.16, 0.24][Math.min(level, 2)];
+    const src = ctx.createBufferSource();
+    src.buffer = brown;
+    src.loop = true;
+    const lp = ctx.createBiquadFilter();
+    lp.type = "lowpass";
+    lp.frequency.value = 260 + level * 80;
+    const amp = ctx.createGain();
+    amp.gain.value = depth;
+    const lfo = ctx.createOscillator();
+    lfo.frequency.value = rate;
+    const lfoGain = ctx.createGain();
+    lfoGain.gain.value = depth;
+    lfo.connect(lfoGain);
+    lfoGain.connect(amp.gain);
+    lfoGain.connect(lp.frequency);
+    const out = ctx.createGain();
+    out.gain.value = 0;
+    out.gain.setTargetAtTime(1, t, 0.8);
+    src.connect(lp);
+    lp.connect(amp);
+    amp.connect(out);
+    out.connect(master);
+    src.start();
+    lfo.start();
+    breathNode = { src, lfo, out };
+  }
+
   const effects = {
+    // Ormen vaknar: ett väsande som fyller hela tornet, och ett lågt muller.
+    vasning() {
+      const t = ctx.currentTime;
+      const f = noiseHit(white, "highpass", 1800, 0.45, 0.25, 3.2, true);
+      f.frequency.setValueAtTime(1800, t);
+      f.frequency.linearRampToValueAtTime(5200, t + 1.2);
+      f.frequency.linearRampToValueAtTime(2400, t + 3.4);
+      const b = noiseHit(white, "bandpass", 3500, 0.25, 0.3, 2.8, false);
+      b.Q.value = 2;
+      tone(46, 32, "sawtooth", 0.12, 0.3, 3.0, false);
+      tone(36, 28, "sine", 0.35, 0.2, 3.2, false);
+    },
+    // Ormen rör sig i sömnen: golvet gungar.
+    ormen_ror() {
+      const f = noiseHit(brown, "lowpass", 160, 0.35, 0.6, 1.8, false);
+      f.frequency.linearRampToValueAtTime(90, ctx.currentTime + 2.4);
+      tone(41, 36, "sine", 0.25, 0.6, 1.8, false);
+    },
     // Sten som skrapar mot sten, och en dov duns.
     nyttrum() {
       const f = noiseHit(white, "lowpass", 900, 0.22, 0.12, 0.9, true);
@@ -291,6 +352,9 @@ const Sound = (() => {
       white = noiseBuffer(2, "white");
       wind();
       setTimeout(drip, 800);
+    },
+    breath(level) {
+      setBreath(level);
     },
     play(name) {
       if (!ctx || !effects[name]) return;

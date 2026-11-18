@@ -188,6 +188,7 @@ html, body {
 #me .hp { color: #e06a5a; }
 #me .hp .empty { color: var(--faint); }
 #me .cond { color: var(--warn); }
+#me .sleep { color: var(--info); }
 #players .tag { color: var(--dim); }
 #help { color: var(--dim); }
 #help b { display: inline-block; width: 11ch; font-weight: normal; color: var(--fg); }
