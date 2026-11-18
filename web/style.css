@@ -304,6 +304,7 @@ body[data-niva="4"] #crt::after { animation: throb 0.95s infinite; }
 #log .syn { color: var(--hi); }
 #log .rubrik { color: var(--hi); letter-spacing: 0.08em; }
 #log .varn { color: var(--warn); }
+#log .rost { color: #e3b8f0; letter-spacing: 0.04em; text-shadow: 0 0 6px rgba(227, 184, 240, 0.35); }
 #log .cursor::after {
   content: "▌";
   animation: blink 0.8s steps(1) infinite;

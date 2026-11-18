@@ -167,6 +167,9 @@ type Game struct {
 	lastActive time.Time // senast en människa var ansluten eller spelledarens sida frågade
 
 	gmLog []gmEntry // allt vandrarna har fått läsa, för spelledarläget
+
+	paused    bool          // spelledaren har pausat rundan
+	pauseLeft time.Duration // tid som var kvar när rundan pausades
 }
 
 func NewGame(d *Data, cfg Config) *Game {
@@ -328,6 +331,7 @@ type stateMsg struct {
 	Controller bool          `json:"controller"`
 	Monsters   []monsterView `json:"monsters"`
 	PvP        string        `json:"pvp"` // om det går att strida mot andra vandrare här
+	Paused     bool          `json:"paused,omitempty"`
 	SleepText  string        `json:"sleepText,omitempty"`
 	Players    []playerView  `json:"players"`
 	Rooms      []roomView    `json:"rooms"`
@@ -411,6 +415,10 @@ func (g *Game) stateFor(me *Player) stateMsg {
 	}
 	if g.phase == phasePlay {
 		st.DeadlineMs = max(0, time.Until(g.deadline).Milliseconds())
+		if g.paused {
+			st.DeadlineMs = g.pauseLeft.Milliseconds()
+			st.Paused = true
+		}
 	}
 	for _, p := range g.players {
 		if p == nil {
@@ -616,7 +624,7 @@ func (g *Game) Leave(c *Client) {
 		g.players[p.Slot] = nil
 		g.syncBots(true)
 		g.checkStart()
-	} else if g.allChosen() {
+	} else if g.allChosen() && !g.paused {
 		g.resolve()
 		return
 	}
@@ -676,6 +684,7 @@ func (g *Game) newTower() {
 }
 
 func (g *Game) startGame() {
+	g.paused = false
 	// De som lämnade förra vandringen och inte kom tillbaka är inte med längre.
 	if g.dropAbsent() > 0 {
 		g.syncBots(true) // AI-spelare kan ta de lediga platserna
@@ -708,21 +717,27 @@ func (g *Game) startRound() {
 		// De anslutna ligger alla i källaren och kan inte välja: gå vidare snabbt.
 		wait = min(wait, 2*time.Second)
 	}
+	g.armTimer(wait)
+	g.autoTakeOver()
+	g.scheduleBots()
+	g.broadcastState()
+}
+
+// armTimer sätter rundans tidsgräns. När tiden är slut avgörs rundan, om
+// inte spelledaren har pausat.
+func (g *Game) armTimer(wait time.Duration) {
 	g.deadline = time.Now().Add(wait)
 	round := g.round
 	if g.timer != nil {
 		g.timer.Stop()
 	}
-	g.autoTakeOver()
-	g.scheduleBots()
 	g.timer = time.AfterFunc(wait, func() {
 		g.mu.Lock()
 		defer g.mu.Unlock()
-		if g.phase == phasePlay && g.round == round {
+		if g.phase == phasePlay && g.round == round && !g.paused {
 			g.resolve()
 		}
 	})
-	g.broadcastState()
 }
 
 // onlyCellar är sant om alla anslutna spelare i tornet ligger i källaren.
@@ -817,7 +832,7 @@ func (g *Game) actPlayer(p *Player, a string, monsterID int) {
 	}
 	p.Action = a
 	g.soundTo(p, "val")
-	if g.allChosen() {
+	if g.allChosen() && !g.paused {
 		g.resolve()
 		return
 	}

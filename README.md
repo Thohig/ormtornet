@@ -88,6 +88,20 @@ långt det har vuxit fram, med fällor som väntar och alla varelser, varje
 vandrares plats, liv, skatt, drycker, tillstånd och valda drag, hur djupt
 ormen sover, avslöjandets nivå och allt vandrarna har fått läsa.
 
+I spelledarläget kan spelledaren också göra ingrepp under en vandring, och
+varje ingrepp skrivs i loggen:
+
+- **Tid:** pausa och fortsätta, ge rundan 30 sekunder till, avgöra rundan
+  direkt, och flytta solen fram eller tillbaka (den går aldrig ner av ett
+  ingrepp, det gör bara rundorna).
+- **Tornets röst:** ett meddelande till en vandrare eller alla, i en egen
+  färg och med en viskning.
+- **I ett rum:** lägga en fälla eller släppa in en varelse i ett rum som
+  redan finns.
+- **Ormen:** väcka den, eller lugna den genom att ta ett vakna-kort ur leken.
+- **Vandrarna:** ge eller ta liv, guld och drycker. Vandraren märker att
+  något händer, men inte varifrån.
+
 Utan spelledarläge visar sidan inga skatter, positioner eller drag, så spelledaren kan spela med i
 en annan flik ("Gå in själv"). Andra datorer i nätverket kommer inte åt sidan.
 

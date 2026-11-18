@@ -95,6 +95,19 @@
   #gmPlayers td { padding: 4px 10px 4px 0; vertical-align: top; }
   #gmPlayers .cond { color: var(--warn); }
   #gmPlayers .dead { opacity: 0.55; }
+  .gmrow { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px; margin: 8px 0; }
+  .gmlabel { color: var(--dim); min-width: 13ch; }
+  .gmrow select, .gmrow input {
+    background: var(--bg); color: var(--hi); border: 1px solid var(--dim); font: inherit; font-size: 13px; padding: 2px 6px;
+  }
+  .gmrow input { flex: 1 1 24ch; min-width: 16ch; }
+  .gmrow select:focus-visible, .gmrow input:focus-visible { outline: none; border-color: var(--fg); }
+  #gmMsg { min-height: 1.2em; color: var(--info); }
+  #gmMsg.err { color: var(--warn); }
+  #gmPlayers .give { white-space: nowrap; }
+  #gmPlayers .give button { margin: 0 2px 2px 0; }
+  #gmLog .gm { color: #e3b8f0; }
+  #gmLog .rost { color: #e3b8f0; }
   #gmLog { max-height: 340px; overflow-y: auto; font-size: 13px; line-height: 1.4; border-top: 1px solid var(--faint); padding-top: 6px; }
   #gmLog div { margin: 2px 0; }
   #gmLog .who { color: var(--dim); }
@@ -135,11 +148,38 @@
     <section id="gm" hidden>
       <h2>Översikt</h2>
       <p id="gmTop"></p>
+      <div class="gmrow">
+        <span class="gmlabel">Tid</span>
+        <button class="btn small" type="button" id="gmPause" data-gm="paus">Pausa</button>
+        <button class="btn small" type="button" data-gm="mer_tid">+30 s</button>
+        <button class="btn small" type="button" data-gm="avgor">Avgör rundan nu</button>
+        <button class="btn small" type="button" data-gm="sol" data-antal="-1">Solen −1</button>
+        <button class="btn small" type="button" data-gm="sol" data-antal="-5">Solen −5</button>
+        <button class="btn small" type="button" data-gm="sol" data-antal="1">Solen +1</button>
+      </div>
+      <div class="gmrow">
+        <span class="gmlabel">Ormen</span>
+        <button class="btn small" type="button" data-gm="vack">Väck ormen</button>
+        <button class="btn small" type="button" data-gm="lugna">Lugna ormen</button>
+      </div>
+      <form class="gmrow" id="gmVoice" autocomplete="off">
+        <span class="gmlabel">Tornets röst</span>
+        <select id="gmVoiceTo"></select>
+        <input id="gmVoiceText" maxlength="200" placeholder="Någon viskar ditt namn i mörkret.">
+        <button class="btn small" type="submit">Säg</button>
+      </form>
+      <form class="gmrow" id="gmPlace" autocomplete="off">
+        <span class="gmlabel">I ett rum</span>
+        <select id="gmRoom"></select>
+        <select id="gmWhat"></select>
+        <button class="btn small" type="submit">Lägg dit</button>
+      </form>
+      <p id="gmMsg"></p>
       <div id="gmMapBox"><canvas id="gmMap"></canvas></div>
       <p class="dimtext">Fällor som väntar visas med sitt tecken. Tornet växer fram när någon går in i ett nytt rum, så rum som ingen har varit i finns inte än.</p>
       <div class="tablewrap">
         <table id="gmPlayers">
-          <thead><tr><th>Vandrare</th><th>Var</th><th>Liv</th><th>Skatt</th><th>Drycker</th><th>Tillstånd</th><th>Drag</th></tr></thead>
+          <thead><tr><th>Vandrare</th><th>Var</th><th>Liv</th><th>Skatt</th><th>Drycker</th><th>Tillstånd</th><th>Drag</th><th>Ge eller ta</th></tr></thead>
           <tbody></tbody>
         </table>
       </div>
@@ -395,6 +435,22 @@ function renderGM(o) {
       if (i === 5 && c) td.className = "cond";
       tr.append(td);
     });
+    const give = document.createElement("td");
+    give.className = "give";
+    if (m.phase === "spel" && p.status === "inne") {
+      [["liv", -1, "liv −"], ["liv", 1, "liv +"], ["guld", -10, "guld −10"], ["guld", 10, "guld +10"], ["dryck", -1, "dryck −"], ["dryck", 1, "dryck +"]]
+        .forEach(([typ, n, label]) => {
+          const b = document.createElement("button");
+          b.type = "button";
+          b.className = "btn small";
+          b.dataset.gm = typ;
+          b.dataset.antal = String(n);
+          b.dataset.spelare = String(p.id);
+          b.textContent = label;
+          give.append(b);
+        });
+    }
+    tr.append(give);
     tb.append(tr);
   });
 
@@ -415,12 +471,110 @@ function renderGM(o) {
   if (atBottom) box.scrollTop = box.scrollHeight;
 }
 
+// Ingreppen. Listorna byggs bara om när innehållet ändras, så att ett val
+// inte hoppar medan spelledaren håller på.
+function fillSelect(sel, options) {
+  const key = JSON.stringify(options);
+  if (sel.dataset.key === key) return;
+  const keep = sel.value;
+  sel.textContent = "";
+  options.forEach((o) => {
+    if (o.group) {
+      const g = document.createElement("optgroup");
+      g.label = o.group;
+      o.items.forEach((it) => g.append(new Option(it.label, it.value)));
+      sel.append(g);
+    } else {
+      sel.append(new Option(o.label, o.value));
+    }
+  });
+  sel.dataset.key = key;
+  if ([...sel.options].some((x) => x.value === keep)) sel.value = keep;
+}
+
+function renderControls(o) {
+  const playing = o.map.phase === "spel";
+  document.querySelectorAll("#gm .gmrow button[data-gm]").forEach((b) => (b.disabled = !playing));
+  $("gmPlace").querySelector("button").disabled = !playing || !o.rooms.length;
+  const pause = $("gmPause");
+  pause.dataset.gm = o.paused ? "fortsatt" : "paus";
+  pause.textContent = o.paused ? "Fortsätt" : "Pausa";
+  if (playing) {
+    const t = o.paused ? "pausad med " + o.timeLeft + " s kvar" : o.timeLeft + " s kvar av rundan";
+    $("gmTop").textContent += " · " + t;
+  }
+  fillSelect($("gmVoiceTo"), [{ label: "till alla", value: "0" }].concat(o.players.map((p) => ({ label: "till " + p.name, value: String(p.id) }))));
+  fillSelect($("gmRoom"), o.rooms.length
+    ? o.rooms.map((r) => ({ label: r.name + " (" + r.x + "," + r.y + ")" + (r.trap ? " · fälla" : "") + (r.monster ? " · varelse" : ""), value: r.x + "," + r.y }))
+    : [{ label: "inga rum ännu", value: "" }]);
+  fillSelect($("gmWhat"), [
+    { group: "Fälla", items: o.trapTypes.map((t) => ({ label: t.namn, value: "falla:" + t.id })) },
+    { group: "Varelse", items: o.monsterTypes.map((t) => ({ label: t.namn, value: "varelse:" + t.id })) },
+  ]);
+}
+
+function gmSay(text, isErr) {
+  const el = $("gmMsg");
+  el.textContent = text;
+  el.classList.toggle("err", !!isErr);
+}
+
+async function intervene(req) {
+  try {
+    const r = await post("/spelledare/ingrepp", req);
+    if (!r.ok) {
+      const data = await r.json().catch(() => ({}));
+      gmSay(data.fel || "Ingreppet gick inte.", true);
+      return false;
+    }
+    gmSay("");
+    return true;
+  } catch {
+    gmSay("Tornet svarar inte.", true);
+    return false;
+  }
+}
+
+$("gm").addEventListener("click", (ev) => {
+  const b = ev.target.closest("button[data-gm]");
+  if (!b) return;
+  const req = { typ: b.dataset.gm };
+  if (b.dataset.antal) req.antal = +b.dataset.antal;
+  if (b.dataset.spelare) req.spelare = +b.dataset.spelare;
+  if (req.typ === "vack" && !confirm("Väcka ormen? De som står i skattkammaren blir kastade ut och skadade.")) return;
+  intervene(req);
+});
+
+$("gmVoice").addEventListener("submit", async (ev) => {
+  ev.preventDefault();
+  const text = $("gmVoiceText").value.trim();
+  if (!text) {
+    gmSay("Skriv något för tornet att säga.", true);
+    return;
+  }
+  if (await intervene({ typ: "rost", spelare: +$("gmVoiceTo").value, text })) {
+    $("gmVoiceText").value = "";
+    gmSay("Tornet har talat.");
+  }
+});
+
+$("gmPlace").addEventListener("submit", async (ev) => {
+  ev.preventDefault();
+  const [x, y] = $("gmRoom").value.split(",").map(Number);
+  const [typ, id] = $("gmWhat").value.split(":");
+  if (await intervene({ typ, x, y, id })) gmSay("Klart.");
+});
+
 async function pollGM() {
   if (closed) return;
   if (view && view.settings.spelledarlage) {
     try {
       const r = await fetch("/spelledare/oversikt", { cache: "no-store" });
-      if (r.ok) renderGM(await r.json());
+      if (r.ok) {
+        const o = await r.json();
+        renderGM(o);
+        renderControls(o);
+      }
     } catch {}
   }
   setTimeout(pollGM, 1000);

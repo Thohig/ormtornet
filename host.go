@@ -224,6 +224,18 @@ func addHostRoutes(mux *http.ServeMux, web fs.FS, game *Game, addrs hostAddrs, h
 	mux.HandleFunc("GET /spelledare", localOnly(func(w http.ResponseWriter, r *http.Request) {
 		http.ServeFileFS(w, r, web, "spelledare.html")
 	}))
+	mux.HandleFunc("POST /spelledare/ingrepp", hostAction(func(w http.ResponseWriter, r *http.Request) {
+		var req gmRequest
+		if err := json.NewDecoder(http.MaxBytesReader(w, r.Body, 4096)).Decode(&req); err != nil {
+			writeJSON(w, http.StatusBadRequest, map[string]string{"fel": "Kunde inte läsa ingreppet."})
+			return
+		}
+		if err := game.Intervene(req); err != nil {
+			writeJSON(w, http.StatusConflict, map[string]string{"fel": err.Error()})
+			return
+		}
+		w.WriteHeader(http.StatusNoContent)
+	}))
 	mux.HandleFunc("GET /spelledare/oversikt", localOnly(func(w http.ResponseWriter, r *http.Request) {
 		if !game.Settings().Spelledare {
 			writeJSON(w, http.StatusForbidden, map[string]string{"fel": "Översikten visas bara i spelledarläget."})

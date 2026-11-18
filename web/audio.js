@@ -272,6 +272,11 @@ const Sound = (() => {
 
   const effects = {
     intro,
+    // Tornets röst: en viskning med en låg ton under.
+    rost() {
+      noiseHit(white, "bandpass", 1900, 0.05, 0.25, 1.1, true);
+      tone(196, 147, "sine", 0.04, 0.4, 1.6, true);
+    },
     // Tornet går över till en ny nivå: en djup, svällande ton.
     niva() {
       tone(41, 55, "sine", 0.3, 1.5, 2.5, false);

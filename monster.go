@@ -259,7 +259,7 @@ func (g *Game) actController(p *Player, a string, id int) {
 		g.pendingMove = &monsterMove{id: id, dir: d}
 	}
 	g.soundTo(p, "val")
-	if g.allChosen() {
+	if g.allChosen() && !g.paused {
 		g.resolve()
 		return
 	}

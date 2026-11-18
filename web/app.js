@@ -363,6 +363,11 @@ function updateTimer() {
     el.classList.remove("urgent");
     return;
   }
+  if (state.paused) {
+    el.textContent = "runda " + state.round + "  pausad";
+    el.classList.remove("urgent");
+    return;
+  }
   const secs = Math.ceil(remainingMs() / 1000);
   el.textContent = "runda " + state.round + "  " + String(secs).padStart(2, " ") + " s";
   const urgent = secs <= 5;

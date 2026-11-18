@@ -77,6 +77,20 @@ type gmView struct {
 	Traps   int        `json:"traps"`   // fällor som väntar i kända rum
 	Unknown int        `json:"unknown"` // rum som ännu inte finns
 	Log     []gmEntry  `json:"log"`
+
+	Paused       bool        `json:"paused"`
+	TimeLeft     int         `json:"timeLeft"` // sekunder kvar av rundan
+	Rooms        []gmRoomRef `json:"rooms"`    // rum där spelledaren kan lägga fällor och varelser
+	TrapTypes    []gmCatalog `json:"trapTypes"`
+	MonsterTypes []gmCatalog `json:"monsterTypes"`
+}
+
+type gmRoomRef struct {
+	X       int    `json:"x"`
+	Y       int    `json:"y"`
+	Name    string `json:"name"`
+	Trap    bool   `json:"trap"`
+	Monster bool   `json:"monster"`
 }
 
 // GMView bygger översikten. Tornet växer fram när någon går in i ett nytt
@@ -110,6 +124,9 @@ func (g *Game) GMView() gmView {
 				}
 			}
 			m.Rooms = append(m.Rooms, rv)
+			if r.Kind == "rum" {
+				v.Rooms = append(v.Rooms, gmRoomRef{X: x, Y: y, Name: g.roomName(r), Trap: r.Event != "", Monster: g.monsterAt(x, y) != nil})
+			}
 		}
 	}
 	for _, p := range g.players {
@@ -146,6 +163,15 @@ func (g *Game) GMView() gmView {
 	v.Serpent.Sleep = g.sleepLevel()
 	v.Serpent.Wakes = g.wakes
 	v.Log = append([]gmEntry(nil), g.gmLog...)
+	v.Paused = g.paused
+	if g.phase == phasePlay {
+		left := time.Until(g.deadline)
+		if g.paused {
+			left = g.pauseLeft
+		}
+		v.TimeLeft = int(max(0, left.Round(time.Second)/time.Second))
+	}
+	v.TrapTypes, v.MonsterTypes = g.gmCatalogs()
 	return v
 }
 
