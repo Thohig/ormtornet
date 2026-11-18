@@ -108,6 +108,7 @@ func TestSightOwnMap(t *testing.T) {
 	putInRoom(g, pa, 4, 3)
 	putInRoom(g, pb, 1, 1)
 	g.rooms[3][5] = Room{}
+	g.rooms[3][4].Doors[East] = true // det nya rummet får en dörr tillbaka
 	g.noteRoom(pa)
 	g.noteRoom(pb)
 	logs(b)
