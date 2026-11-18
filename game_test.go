@@ -11,6 +11,9 @@ func testGame(t *testing.T) *Game {
 	if err != nil {
 		t.Fatal(err)
 	}
+	// Inga slumpade varelser eller fällor; testerna placerar dem själva.
+	d.Monster.Chans = 0
+	d.Regler.Handelsechans = 0
 	return NewGame(d, Config{SunMax: 10, TurnTime: time.Hour, MinPlayers: 2})
 }
 
@@ -37,11 +40,11 @@ func TestRoundTreasureAndWinner(t *testing.T) {
 	g.reveal(center, center)
 	pa.X, pa.Y = center, center
 	g.deck = []string{"sover"} // ormen ska inte vakna i det här testet
-	g.Act(a, actTake)
+	g.Act(a, actTake, 0)
 	if g.round != 1 {
 		t.Fatal("rundan utfördes innan alla valt")
 	}
-	g.Act(b, actWait)
+	g.Act(b, actWait, 0)
 	if g.round != 2 || g.sun != 9 {
 		t.Fatalf("runda %d sol %d", g.round, g.sun)
 	}
@@ -50,20 +53,20 @@ func TestRoundTreasureAndWinner(t *testing.T) {
 	}
 
 	// Ta skatt utanför kammaren går inte.
-	g.Act(b, actTake)
+	g.Act(b, actTake, 0)
 	if pb.Action != "" {
 		t.Fatal("skatt kunde väljas utanför kammaren")
 	}
 
 	// Alva går ut genom sin port, Bo blir kvar tills solen går ner.
 	pa.X, pa.Y = 0, 0
-	g.Act(a, "W")
-	g.Act(b, actWait)
+	g.Act(a, "W", 0)
+	g.Act(b, actWait, 0)
 	if pa.Status != statusOut {
 		t.Fatalf("Alva är %s", pa.Status)
 	}
 	for g.phase == phasePlay {
-		g.Act(b, actWait)
+		g.Act(b, actWait, 0)
 	}
 	if pb.Status != statusLost {
 		t.Fatalf("Bo är %s", pb.Status)
@@ -125,10 +128,10 @@ func startTwo(t *testing.T) (*Game, *Client, *Client) {
 // step låter båda välja drag så att rundan utförs.
 func step(g *Game, a, b *Client, actA, actB string) {
 	if a.player.Status == statusIn && a.player.Cellar == 0 {
-		g.Act(a, actA)
+		g.Act(a, actA, 0)
 	}
 	if b.player.Status == statusIn && b.player.Cellar == 0 {
-		g.Act(b, actB)
+		g.Act(b, actB, 0)
 	}
 }
 
@@ -372,4 +375,125 @@ func allWake(g *Game) bool {
 		}
 	}
 	return true
+}
+
+func TestBeats(t *testing.T) {
+	if !beats(actParry, actAttack) || !beats(actAttack, actDodge) || !beats(actDodge, actParry) {
+		t.Fatal("fel ordning i sten-sax-påse")
+	}
+	for _, a := range []string{actAttack, actParry, actDodge} {
+		if beats(a, a) {
+			t.Fatalf("%s slår sig själv", a)
+		}
+	}
+}
+
+// fightSetup ställer Alva i ett rum med en varelse som alltid väljer mc.
+func fightSetup(t *testing.T, mc string) (*Game, *Client, *Client, *Monster) {
+	g, a, b := startTwo(t)
+	putInRoom(g, a.player, 4, 2)
+	typ := g.data.monsterType("fjallvakt")
+	typ.Vanor = map[string]int{mc: 1}
+	m := &Monster{ID: 99, Type: "fjallvakt", X: 4, Y: 2, HP: typ.Liv}
+	g.monsters = append(g.monsters, m)
+	return g, a, b, m
+}
+
+func TestDuel(t *testing.T) {
+	cases := []struct {
+		player, monster string
+		playerLoses     bool
+		monsterLoses    bool
+	}{
+		{actParry, actAttack, false, true},
+		{actAttack, actParry, true, false},
+		{actAttack, actDodge, false, true},
+		{actDodge, actParry, false, true},
+		{actAttack, actAttack, true, true},
+		{actParry, actParry, false, false},
+		{actDodge, actDodge, false, false},
+	}
+	for _, c := range cases {
+		t.Run(c.player+"_mot_"+c.monster, func(t *testing.T) {
+			g, a, b, m := fightSetup(t, c.monster)
+			p := a.player
+			hp, mhp := p.HP, m.HP
+			step(g, a, b, c.player, actWait)
+			if (p.HP < hp) != c.playerLoses {
+				t.Fatalf("spelarens liv %d -> %d", hp, p.HP)
+			}
+			if (m.HP < mhp) != c.monsterLoses {
+				t.Fatalf("varelsens liv %d -> %d", mhp, m.HP)
+			}
+		})
+	}
+}
+
+func TestDefeatMonsterGivesGold(t *testing.T) {
+	g, a, b, m := fightSetup(t, actDodge)
+	p := a.player
+	for i := 0; i < 10 && g.monsterByID(m.ID) != nil; i++ {
+		step(g, a, b, actAttack, actWait)
+	}
+	if g.monsterByID(m.ID) != nil {
+		t.Fatal("varelsen dog aldrig")
+	}
+	if p.Treasure != g.data.monsterType("fjallvakt").Guld {
+		t.Fatalf("skatt %d", p.Treasure)
+	}
+}
+
+func TestFleeAndUnprepared(t *testing.T) {
+	g, a, b, _ := fightSetup(t, actAttack)
+	p := a.player
+	g.rooms[2][4].Doors[North] = true
+	g.reveal(4, 1)
+	hp := p.HP
+	// Den som söker igenom rummet medan varelsen står där blir träffad.
+	step(g, a, b, actSearch, actWait)
+	if p.HP >= hp || g.rooms[2][4].Searched {
+		t.Fatal("varelsen fick inget fritt anfall")
+	}
+	// Flykt: ett fritt anfall till, sedan är spelaren ute ur rummet.
+	hp = p.HP
+	step(g, a, b, "N", actWait)
+	if p.HP >= hp || p.Y != 1 {
+		t.Fatalf("flykten gick fel: liv %d -> %d, y %d", hp, p.HP, p.Y)
+	}
+}
+
+func TestDeadPlayerControlsMonsters(t *testing.T) {
+	g, a, b := startTwo(t)
+	pa, pb := a.player, b.player
+	putInRoom(g, pb, 4, 2)
+	r := putInRoom(g, pa, 4, 1)
+	r.Doors[South] = true
+	g.rooms[2][4].Doors[North] = true
+	m := &Monster{ID: 7, Type: "krypare", X: 4, Y: 2, HP: 2}
+	g.monsters = append(g.monsters, m)
+	pb.X, pb.Y = 4, 3
+	g.reveal(4, 3)
+
+	g.damage(pa, 100, false)
+	if !g.isController(pa) {
+		t.Fatal("den döda spelaren styr inte varelserna")
+	}
+	// Rundan väntar på den döda spelaren också.
+	g.Act(b, actWait, 0)
+	if g.round != 1 {
+		t.Fatal("rundan utfördes utan den döda spelarens val")
+	}
+	// Varelsen kan inte gå till ett okänt rum eller in i en vägg.
+	if g.canMonsterGo(m, East) && !g.rooms[2][5].Revealed {
+		t.Fatal("varelsen kan gå till ett okänt rum")
+	}
+	g.Act(a, "N", m.ID)
+	if g.round != 2 || m.Y != 1 {
+		t.Fatalf("varelsen flyttades inte: runda %d, y %d", g.round, m.Y)
+	}
+	// Bara den första som dör blir styrande.
+	g.damage(pb, 100, false)
+	if g.isController(pb) {
+		t.Fatal("två spelare styr varelserna")
+	}
 }

@@ -329,6 +329,55 @@ const Sound = (() => {
       // Klunkar.
       for (let i = 0; i < 3; i++) tone(260, 120, "sine", 0.12, 0.01, 0.12, false, i * 0.28);
     },
+    // Strider.
+    monster() {
+      // Ett lågt, rossligt morrande.
+      const t = ctx.currentTime;
+      const o = ctx.createOscillator();
+      o.type = "sawtooth";
+      o.frequency.setValueAtTime(70, t);
+      o.frequency.linearRampToValueAtTime(95, t + 0.4);
+      o.frequency.linearRampToValueAtTime(60, t + 1.1);
+      const trem = ctx.createOscillator();
+      trem.frequency.value = 23;
+      const tremGain = ctx.createGain();
+      tremGain.gain.value = 0.05;
+      const g = ctx.createGain();
+      env(g, t, 0.08, 0.15, 1.0);
+      trem.connect(tremGain);
+      tremGain.connect(g.gain);
+      const lp = ctx.createBiquadFilter();
+      lp.type = "lowpass";
+      lp.frequency.value = 600;
+      o.connect(lp);
+      lp.connect(g);
+      g.connect(master);
+      g.connect(echo);
+      o.start(t);
+      trem.start(t);
+      o.stop(t + 1.3);
+      trem.stop(t + 1.3);
+    },
+    hugg() {
+      const f = noiseHit(white, "bandpass", 1800, 0.25, 0.002, 0.12, false);
+      f.frequency.exponentialRampToValueAtTime(400, ctx.currentTime + 0.12);
+      tone(90, 50, "sine", 0.25, 0.002, 0.15, false);
+    },
+    parera() {
+      [1320, 1980, 2710].forEach((f) => tone(f, f * 0.99, "triangle", 0.04, 0.001, 0.5, true));
+    },
+    undan() {
+      const f = noiseHit(white, "bandpass", 600, 0.1, 0.05, 0.25, false);
+      f.frequency.exponentialRampToValueAtTime(2200, ctx.currentTime + 0.3);
+    },
+    monster_dor() {
+      tone(180, 40, "sawtooth", 0.07, 0.01, 1.2, true);
+      noiseHit(brown, "lowpass", 400, 0.3, 0.01, 0.8, false);
+    },
+    // Den döda spelaren tar över varelserna.
+    tjanare() {
+      [220, 233, 311].forEach((f, i) => tone(f, f * 0.5, "sine", 0.06, 1.0, 3.0, true, i * 0.2));
+    },
     ansluter() {
       tone(196, null, "triangle", 0.05, 0.4, 1.6, true);
       tone(294, null, "triangle", 0.035, 0.4, 1.6, true, 0.25);

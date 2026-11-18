@@ -136,13 +136,48 @@ function handle(msg) {
 const ACTION_WORDS = {
   N: "gå norrut", E: "gå österut", S: "gå söderut", W: "gå västerut",
   vanta: "vänta", ta: "ta skatt", sok: "sök i rummet", drick: "drick",
+  anfall: "anfall", parera: "parera", undan: "undanmanöver",
 };
+const DIR_WORDS = { N: "norrut", E: "österut", S: "söderut", W: "västerut" };
+
+// Den döda spelaren som styr varelserna väljer en av dem med Tab.
+let selectedMonster = 0;
+function controlledMonster() {
+  if (!state || !state.monsters || state.monsters.length === 0) return null;
+  let m = state.monsters.find((x) => x.id === selectedMonster);
+  if (!m) {
+    m = state.monsters[0];
+    selectedMonster = m.id;
+  }
+  return m;
+}
+function cycleMonster() {
+  const list = (state && state.monsters) || [];
+  if (list.length === 0) return;
+  const i = list.findIndex((x) => x.id === selectedMonster);
+  selectedMonster = list[(i + 1) % list.length].id;
+  MapView.draw(state);
+  renderSide();
+}
+
+// Mätare med fast bredd i kod, ett tecken per liv.
+function meter(cls, label, value, maxValue, full, empty) {
+  const d = document.createElement("div");
+  d.className = cls;
+  const a = document.createElement("span");
+  a.textContent = full.repeat(Math.max(0, value));
+  const b = document.createElement("span");
+  b.className = "empty";
+  b.textContent = empty.repeat(Math.max(0, maxValue - value));
+  d.append(label, a, b);
+  return d;
+}
 
 function playerTag(p) {
   if (!p.online) return "borta";
   if (p.status === "ute") return "ute";
   if (p.status === "forlorad") return "förlorad";
-  if (p.status === "dod") return "död";
+  if (p.status === "dod") return state.phase === "spel" && p.chosen ? "död, klar" : "död";
   if (state.phase === "spel") return p.chosen ? "klar" : "väljer";
   return p.ready ? "redo" : "";
 }
@@ -185,6 +220,7 @@ function renderSide() {
   };
   if (!me) return;
   box.appendChild(hpMeter(state.hp, state.maxHp));
+  if (me.status === "dod") line("Död", "cond");
   line("Skatt: " + me.treasure + " guld");
   if (state.potions > 0) line("Drycker: " + state.potions);
   if (me.status === "inne") {
@@ -193,6 +229,26 @@ function renderSide() {
     if (state.poison > 0) line("Förgiftad", "cond");
     if (state.dark > 0) line("Lyktan är släckt", "cond");
     if (state.sleep >= 0 && state.sleepText) line(state.sleepText, state.sleep >= 2 ? "cond" : "sleep");
+    const foe = (state.monsters || []).find((m) => m.x === me.x && m.y === me.y);
+    if (foe && state.cellar === 0) {
+      line("Strid: " + foe.name, "foe");
+      box.appendChild(meter("foehp", "", foe.hp, foe.maxHp, "■", "□"));
+      line("A anfall · P parera · U undan", "dimline");
+    }
+  }
+  if (state.controller) {
+    line("Du styr tornets varelser", "cond");
+    const m = controlledMonster();
+    if (m) {
+      line("Vald: " + m.name + " (Tab byter)", "foe");
+      const a = state.action;
+      if (a && a[0] === "m") line("Drag: " + a.replace(/^m\d+/, "").split("").map((d) => DIR_WORDS[d]).join(""), "plan");
+      else if (a === "vanta") line("Drag: vila", "plan");
+      else line("Välj ett drag", "plan");
+    } else {
+      line("Inga varelser att styra", "dimline");
+    }
+    return;
   }
   if (state.phase === "spel" && me.status === "inne") {
     line(state.action ? "Drag: " + ACTION_WORDS[state.action] : "Välj ditt drag", "plan");
@@ -203,17 +259,8 @@ function renderSide() {
   }
 }
 
-// Livmätaren byggs med fast bredd i kod: ett hjärta per liv.
 function hpMeter(hp, maxHp) {
-  const d = document.createElement("div");
-  d.className = "hp";
-  const full = document.createElement("span");
-  full.textContent = "♥".repeat(Math.max(0, hp));
-  const empty = document.createElement("span");
-  empty.className = "empty";
-  empty.textContent = "♡".repeat(Math.max(0, maxHp - hp));
-  d.append("Liv ", full, empty);
-  return d;
+  return meter("hp", "Liv ", hp, maxHp, "♥", "♡");
 }
 
 function myPlayer() {
@@ -258,7 +305,7 @@ function updateTimer() {
     return;
   }
   if (state.phase === "slut") {
-    el.textContent = "solen har gått ner";
+    el.textContent = state.sun > 0 ? "vandringen är slut" : "solen har gått ner";
     el.classList.remove("urgent");
     return;
   }
@@ -290,13 +337,17 @@ function frame(lines, width) {
   return out.map((l) => (typeof l === "string" ? { text: l } : l));
 }
 
+function endTitle() {
+  return state.sun > 0 ? "VANDRINGEN ÄR SLUT" : "SOLEN HAR GÅTT NER";
+}
+
 function renderOverlay() {
   const el = $("overlay");
   if (state.phase !== "slut" || !state.results) {
     el.hidden = true;
     return;
   }
-  const lines = [{ text: "SOLEN HAR GÅTT NER" }, { text: "" }];
+  const lines = [{ text: endTitle() }, { text: "" }];
   state.results.forEach((r, i) => {
     let what;
     if (r.status === "ute") what = r.treasure > 0 ? r.treasure + " guld" : "tomhänt";
@@ -338,12 +389,28 @@ $("nameform").addEventListener("submit", (e) => {
 const KEYS = {
   ArrowUp: "N", ArrowRight: "E", ArrowDown: "S", ArrowLeft: "W",
   " ": "vanta", t: "ta", T: "ta", s: "sok", S: "sok", d: "drick", D: "drick",
+  a: "anfall", A: "anfall", p: "parera", P: "parera", u: "undan", U: "undan",
 };
 document.addEventListener("keydown", (e) => {
   if (!joined || e.metaKey || e.ctrlKey || e.altKey) return;
   if (e.key === "Enter") {
     e.preventDefault();
     send({ t: "ready" });
+    return;
+  }
+  if (state && state.controller) {
+    // Den döda spelaren: Tab väljer varelse, pilarna flyttar den.
+    if (e.key === "Tab") {
+      e.preventDefault();
+      cycleMonster();
+      return;
+    }
+    const a = KEYS[e.key];
+    if (a !== "vanta" && !DIR_WORDS[a]) return;
+    e.preventDefault();
+    const m = controlledMonster();
+    if (a === "vanta") send({ t: "act", a });
+    else if (m) send({ t: "act", a, m: m.id });
     return;
   }
   const a = KEYS[e.key];

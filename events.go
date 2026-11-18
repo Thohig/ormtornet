@@ -37,6 +37,7 @@ func (g *Game) kill(p *Player) {
 	g.logTo(p, g.data.Text("dod"), "varn")
 	g.logOthers(p, g.data.Text("dod_andra", "namn", p.Name), "varn")
 	g.soundAll("dod")
+	g.makeController(p)
 }
 
 // trigger låter en fälla slå till mot spelaren.
@@ -121,6 +122,7 @@ func (g *Game) leaveCellar(p *Player) {
 	g.logTo(p, g.data.Text("kallare_ut", "rum", g.roomName(room)), "info")
 	g.logTo(p, g.describe(room), "")
 	g.logOthers(p, g.data.Text("kallare_ut_andra", "namn", p.Name, "region", g.data.region(p.X, p.Y)), "info")
+	g.announceMonster(p)
 }
 
 // search letar igenom rummet. Varje rum kan bara genomsökas en gång.

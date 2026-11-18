@@ -41,6 +41,10 @@ dess. Den som inte hinner välja blir stående.
 | T          | ta skatt (bara i skattkammaren)   |
 | S          | sök igenom rummet                 |
 | D          | drick en dryck                    |
+| A          | anfall (i strid)                  |
+| P          | parera (i strid)                  |
+| U          | undanmanöver (i strid)            |
+| Tab        | byt varelse (när du är död)       |
 | Enter      | redo / spela igen                 |
 
 Solen sjunker en handsbredd per runda och visas som en mätare överst.
@@ -65,6 +69,28 @@ Eftersom bara sovkorten tas bort ökar risken för varje näve. Leken börjar me
 13 sovkort och 2 vakna-kort. När ormen har vaknat blandas en ny lek med 2
 färre sovkort än förra gången. Står du i kammaren ser du hur djupt ormen
 sover och hör andetagen bli tätare.
+
+### Strider
+
+Ett nytt rum kan i stället för en fälla ha en varelse. Den syns på kartan för
+alla. Står du i samma rum som en varelse är du i strid. Båda väljer i hemlighet:
+
+- **parera** slår **anfall**
+- **anfall** slår **undanmanöver**
+- **undanmanöver** slår **parera**
+
+Vinnaren träffar. Väljer båda anfall träffar båda; annars händer inget vid
+lika val. Varje sorts varelse har egna vanor, så det lönar sig att lära sig
+dem. Besegrar du en varelse får du dess guld.
+
+Gör du något annat än att slåss (söker, dricker, väntar) får varelsen ett
+fritt drag mot dig. Du kan fly genom att gå ut ur rummet, men varelsen får
+ett fritt drag mot din rygg först.
+
+Den första spelaren som dör tar över tornets varelser. Med Tab väljer den spelaren en
+varelse och med pilarna flyttar den ett rum per runda (bara till kända,
+vanliga rum utan annan varelse). Mellanslag låter varelserna vila. Rundan
+väntar på det valet som på alla andras.
 
 ### Rum och fällor
 
@@ -100,6 +126,7 @@ så starta om servern efter en ändring.
 - `texter.json` rum, beskrivningar och allmänna texter
 - `fallor.json` regler (liv, chans för händelse, drycker), fällor och sökresultat
 - `ormen.json` ormkorten, skatten i kammaren och vad som händer när ormen vaknar
+- `monster.json` varelserna (liv, skada, guld, vanor, texter) och striderna
 
 För varje fälla kan du ändra namn, vikt (hur ofta den dyker upp), skada,
 antal rundor, tecknet på kartan och texterna. Vad fällan gör styrs av dess
@@ -113,6 +140,7 @@ Beskrivningarna för rummen ligger under nivå `"1"`; fler nivåer kommer senare
 - `game.go` all spellogik (tornet, rummen, spelarna)
 - `events.go` fällor, sökande och drycker
 - `serpent.go` skattkammaren och ormkorten
+- `monster.go` varelser, strider och den döda spelarens styrning
 - `data.go` läser in datafilerna
 - `ws.go` en liten websocket-implementation utan beroenden
 - `web/` klienten: HTML, CSS och JavaScript utan ramverk

@@ -1,0 +1,147 @@
+{
+  "monster": {
+    "chans": 0.2,
+    "spelarskada": 1,
+
+    "val": {
+      "anfall": "anfaller",
+      "parera": "parerar",
+      "undan": "gör en undanmanöver"
+    },
+
+    "typer": [
+      {
+        "id": "krypare",
+        "namn": "Blekkryparen",
+        "vikt": 3,
+        "liv": 2,
+        "skada": 1,
+        "guld": 10,
+        "tecken": "k",
+        "vanor": { "anfall": 1, "parera": 1, "undan": 3 },
+        "dyker_upp": [
+          "Något blekt och mångbent kryper fram ur en springa. Det har inga ögon, men det vänder sig mot dig.",
+          "En blek krypare lösgör sig från väggen, där den legat så tätt att du trodde den var en del av stenen."
+        ],
+        "dor": [
+          "Blekkryparen krullar ihop sig och blir stilla. Under den ligger några mynt."
+        ]
+      },
+      {
+        "id": "yngel",
+        "namn": "Ormynglet",
+        "vikt": 3,
+        "liv": 3,
+        "skada": 1,
+        "guld": 15,
+        "tecken": "s",
+        "vanor": { "anfall": 3, "parera": 1, "undan": 1 },
+        "dyker_upp": [
+          "Ett ormyngel, långt som en man, reser sig ur en hög av damm. Det väser och slår genast.",
+          "Ett ungt, glänsande ormyngel ligger hoprullat i hörnet. Det har redan sett dig."
+        ],
+        "dor": [
+          "Ormynglet slingrar sig en sista gång och ligger sedan stilla. I magen på det glimmar guld."
+        ]
+      },
+      {
+        "id": "fjallvakt",
+        "namn": "Fjällvakten",
+        "vikt": 2,
+        "liv": 4,
+        "skada": 2,
+        "guld": 30,
+        "tecken": "V",
+        "vanor": { "anfall": 1, "parera": 3, "undan": 1 },
+        "dyker_upp": [
+          "En gestalt i rustning av överlappande fjäll kliver fram. Den håller en sköld framför sig och väntar.",
+          "Fjällvakten står orörlig mitt i rummet. Dess rustning ser vuxen ut snarare än smidd."
+        ],
+        "dor": [
+          "Fjällvakten faller ihop. Rustningen är tom, som ett ömsat skinn. Mynt rasslar ur den."
+        ]
+      },
+      {
+        "id": "gallgast",
+        "namn": "Gallgasten",
+        "vikt": 2,
+        "liv": 3,
+        "skada": 2,
+        "guld": 20,
+        "tecken": "g",
+        "vanor": { "anfall": 2, "parera": 1, "undan": 2 },
+        "dyker_upp": [
+          "En grönaktig skepnad glider fram. Den bär en äventyrares kläder, men de hänger i trasor och är blekta, som om de legat i syra.",
+          "En gast stiger upp ur golvet. Den tittar på din väska, som om den minns hur det var att bära en."
+        ],
+        "dor": [
+          "Gallgasten löses upp i en bitter dimma. Kvar ligger det guld den aldrig fick med sig ut."
+        ]
+      },
+      {
+        "id": "benvaktare",
+        "namn": "Benväktaren",
+        "vikt": 1,
+        "liv": 5,
+        "skada": 2,
+        "guld": 40,
+        "tecken": "B",
+        "vanor": { "anfall": 2, "parera": 2, "undan": 1 },
+        "dyker_upp": [
+          "Ett väsen byggt av böjda, vita ben reser sig. Benen är alla lika, som revben från ett och samma djur."
+        ],
+        "dor": [
+          "Benväktaren rasar ihop till en hög med revben. Mellan dem ligger guld."
+        ]
+      }
+    ],
+
+    "texter": {
+      "duell": [
+        "Du {ditt_val}. {Monster} {dess_val}."
+      ],
+      "du_traffar": [
+        "Du träffar {monster}.",
+        "Ditt slag tar."
+      ],
+      "monster_traffar": [
+        "{Monster} träffar dig. Du förlorar {skada} liv.",
+        "Du hinner inte undan. {skada} liv."
+      ],
+      "bada_traffar": [
+        "Ni träffar varandra samtidigt. Du förlorar {skada} liv."
+      ],
+      "inget": [
+        "Ingen av er kommer åt den andra.",
+        "Ni cirklar runt varandra."
+      ],
+      "inte_beredd": [
+        "Du är inte beredd. {Monster} {dess_val}."
+      ],
+      "fly": [
+        "Du vänder och flyr. {Monster} {dess_val}."
+      ],
+      "seger": [
+        "Du har besegrat {monster} och tar {guld} guld. Du har nu {skatt}."
+      ],
+      "strid_andra": [
+        "Stridsljud hörs i tornets {region} del."
+      ],
+      "monster_kommer": [
+        "{Monster} glider in i rummet."
+      ],
+      "tjanare": [
+        "Du är död, men tornet släpper dig inte. Du känner dess varelser som om de vore dina egna fingrar. Tab väljer en varelse, pilarna flyttar den ett rum per runda, mellanslag låter den vila."
+      ],
+      "tjanare_andra": [
+        "{namn} är död, men något av {namn} finns kvar i tornet. Varelserna rör sig nu med avsikt."
+      ],
+      "inget_monster_har": [
+        "Det finns inget här att slåss mot."
+      ],
+      "kan_inte_flytta": [
+        "Varelsen kan inte ta sig dit."
+      ]
+    }
+  }
+}

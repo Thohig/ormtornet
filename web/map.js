@@ -16,6 +16,7 @@ const MapView = (() => {
     gold: "#ffd36b",
     lost: "#8a3b30",
     mark: "#c0503e",
+    monster: "#e0806a",
   };
   const PLAYER_COLORS = ["#ffcc66", "#66e0ff", "#ff7a9a", "#9dff7a"];
 
@@ -189,6 +190,28 @@ const MapView = (() => {
       }
       put(p.x * RW + sx, p.y * RH + sy, ch, color);
     });
+
+    // Varelserna. Den som styrs av en död spelare blinkar när den är vald.
+    (state.monsters || []).forEach((m) => {
+      const selected = state.controller && m.id === selectedMonster;
+      const color = selected && !blink ? "#ffe14a" : COLORS.monster;
+      put(m.x * RW + Math.floor(RW / 2) + 1, m.y * RH + Math.floor(RH / 2), m.glyph, color);
+    });
+
+    // Den döda spelarens drag för en varelse visas som en pil.
+    if (state.controller && state.action && state.action[0] === "m") {
+      const id = parseInt(state.action.slice(1), 10);
+      const d = { N: 0, E: 1, S: 2, W: 3 }[state.action.slice(-1)];
+      const m = (state.monsters || []).find((x) => x.id === id);
+      if (m && d !== undefined && blink) {
+        const x0 = m.x * RW;
+        const y0 = m.y * RH;
+        const mx = x0 + Math.floor(RW / 2);
+        const my = y0 + Math.floor(RH / 2);
+        const pos = [[mx, y0], [x0 + RW, my], [mx, y0 + RH], [x0, my]][d];
+        put(pos[0], pos[1], ARROWS[d], COLORS.monster);
+      }
+    }
 
     // Det egna, valda draget visas som en pil i dörröppningen.
     const me = state.players.find((p) => p.id === state.you);

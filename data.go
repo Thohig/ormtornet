@@ -60,6 +60,42 @@ type Serpent struct {
 	Somn              []string `json:"somn"`
 }
 
+// Monsters styr varelserna i tornet och striderna mot dem.
+type Monsters struct {
+	Chans       float64             `json:"chans"`
+	Spelarskada int                 `json:"spelarskada"`
+	Val         map[string]string   `json:"val"`
+	Typer       []MonsterType       `json:"typer"`
+	Texter      map[string][]string `json:"texter"`
+}
+
+type MonsterType struct {
+	ID       string         `json:"id"`
+	Namn     string         `json:"namn"`
+	Vikt     int            `json:"vikt"`
+	Liv      int            `json:"liv"`
+	Skada    int            `json:"skada"`
+	Guld     int            `json:"guld"`
+	Tecken   string         `json:"tecken"`
+	Vanor    map[string]int `json:"vanor"`
+	DykerUpp []string       `json:"dyker_upp"`
+	Dor      []string       `json:"dor"`
+}
+
+func (d *Data) monsterType(id string) *MonsterType {
+	for i := range d.Monster.Typer {
+		if d.Monster.Typer[i].ID == id {
+			return &d.Monster.Typer[i]
+		}
+	}
+	return nil
+}
+
+// MonsterText väljer en text för striderna.
+func (d *Data) MonsterText(key string, vars ...string) string {
+	return fill(pick(d.Monster.Texter[key]), vars...)
+}
+
 type Card struct {
 	ID     string   `json:"id"`
 	Antal  int      `json:"antal"`
@@ -95,10 +131,11 @@ type Data struct {
 	Fallor       []Trap              `json:"fallor"`
 	Sok          Search              `json:"sok"`
 	Ormen        Serpent             `json:"ormen"`
+	Monster      Monsters            `json:"monster"`
 }
 
 // Filerna i datamappen. Alla läses in i samma struktur; "texter" slås ihop.
-var dataFiles = []string{"texter.json", "fallor.json", "ormen.json"}
+var dataFiles = []string{"texter.json", "fallor.json", "ormen.json", "monster.json"}
 
 // loadData läser filerna i mappen dir. Saknas en fil används den inbyggda kopian.
 func loadData(dir string) (*Data, string, error) {
@@ -135,6 +172,12 @@ func loadData(dir string) (*Data, string, error) {
 	}
 	if d.Regler.Liv <= 0 {
 		d.Regler.Liv = 6
+	}
+	if len(d.Monster.Typer) == 0 {
+		return nil, "", fmt.Errorf("monster.json: inga monster")
+	}
+	if d.Monster.Spelarskada <= 0 {
+		d.Monster.Spelarskada = 1
 	}
 	if len(d.Ormen.Kort) == 0 || len(d.Ormen.Somn) == 0 {
 		return nil, "", fmt.Errorf("ormen.json: kort och sömntexter saknas")
@@ -173,6 +216,9 @@ func mergeData(d, part *Data) {
 	}
 	if len(part.Ormen.Kort) > 0 {
 		d.Ormen = part.Ormen
+	}
+	if len(part.Monster.Typer) > 0 {
+		d.Monster = part.Monster
 	}
 }
 

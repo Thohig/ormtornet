@@ -137,6 +137,11 @@ type Game struct {
 	deck      []string // ormkorten som är kvar
 	deckSleep int      // antal sovkort när leken byggdes
 	wakes     int      // hur många gånger ormen har vaknat
+
+	monsters      []*Monster
+	nextMonsterID int
+	controller    int          // id för den döda spelare som styr varelserna
+	pendingMove   *monsterMove // varelsens drag för rundan
 }
 
 func NewGame(d *Data, cfg Config) *Game {
@@ -189,11 +194,6 @@ func (g *Game) reveal(x, y int) *Room {
 	}
 	r.Kind = "rum"
 	r.TypeID = g.data.Rumstyper[rand.IntN(len(g.data.Rumstyper))].ID
-	if rand.Float64() < g.data.Regler.Handelsechans {
-		if t := g.data.randomTrap(); t != nil {
-			r.Event = t.ID
-		}
-	}
 	var undecided []Dir
 	open := 0
 	for d := North; d <= West; d++ {
@@ -222,6 +222,12 @@ func (g *Game) reveal(x, y int) *Room {
 			open++
 		}
 		undecided = append(undecided[:i], undecided[i+1:]...)
+	}
+	// Händelse: en varelse, en fälla eller ingenting.
+	if !g.spawnMonster(x, y) && rand.Float64() < g.data.Regler.Handelsechans {
+		if t := g.data.randomTrap(); t != nil {
+			r.Event = t.ID
+		}
 	}
 	return r
 }
@@ -269,29 +275,31 @@ type resultView struct {
 }
 
 type stateMsg struct {
-	T          string       `json:"t"`
-	You        int          `json:"you"`
-	Size       int          `json:"size"`
-	Level      int          `json:"level"`
-	Phase      string       `json:"phase"`
-	Sun        int          `json:"sun"`
-	SunMax     int          `json:"sunMax"`
-	Round      int          `json:"round"`
-	DeadlineMs int64        `json:"deadlineMs"`
-	MinPlayers int          `json:"minPlayers"`
-	Action     string       `json:"action"`
-	HP         int          `json:"hp"`
-	MaxHP      int          `json:"maxHp"`
-	Potions    int          `json:"potions"`
-	Stuck      int          `json:"stuck"`
-	Cellar     int          `json:"cellar"`
-	Poison     int          `json:"poison"`
-	Dark       int          `json:"dark"`
-	Sleep      int          `json:"sleep"` // -1 utanför kammaren
-	SleepText  string       `json:"sleepText,omitempty"`
-	Players    []playerView `json:"players"`
-	Rooms      []roomView   `json:"rooms"`
-	Results    []resultView `json:"results,omitempty"`
+	T          string        `json:"t"`
+	You        int           `json:"you"`
+	Size       int           `json:"size"`
+	Level      int           `json:"level"`
+	Phase      string        `json:"phase"`
+	Sun        int           `json:"sun"`
+	SunMax     int           `json:"sunMax"`
+	Round      int           `json:"round"`
+	DeadlineMs int64         `json:"deadlineMs"`
+	MinPlayers int           `json:"minPlayers"`
+	Action     string        `json:"action"`
+	HP         int           `json:"hp"`
+	MaxHP      int           `json:"maxHp"`
+	Potions    int           `json:"potions"`
+	Stuck      int           `json:"stuck"`
+	Cellar     int           `json:"cellar"`
+	Poison     int           `json:"poison"`
+	Dark       int           `json:"dark"`
+	Sleep      int           `json:"sleep"` // -1 utanför kammaren
+	Controller bool          `json:"controller"`
+	Monsters   []monsterView `json:"monsters"`
+	SleepText  string        `json:"sleepText,omitempty"`
+	Players    []playerView  `json:"players"`
+	Rooms      []roomView    `json:"rooms"`
+	Results    []resultView  `json:"results,omitempty"`
 }
 
 type logMsg struct {
@@ -402,6 +410,8 @@ func (g *Game) stateFor(me *Player) stateMsg {
 			st.Rooms = append(st.Rooms, rv)
 		}
 	}
+	st.Monsters = g.monsterViews(me, blind)
+	st.Controller = g.isController(me) && g.phase == phasePlay
 	if g.phase == phaseEnd {
 		st.Results = g.results()
 	}
@@ -590,6 +600,7 @@ func (g *Game) checkStart() bool {
 // newTower bygger ett nytt torn och ställer alla vid sina portar.
 func (g *Game) newTower() {
 	g.rooms = [gridSize][gridSize]Room{}
+	g.monsters = nil
 	for _, p := range g.players {
 		if p != nil {
 			g.placeAtCorner(p)
@@ -603,6 +614,8 @@ func (g *Game) startGame() {
 	g.round = 1
 	g.wakes = 0
 	g.buildDeck()
+	g.controller = 0
+	g.pendingMove = nil
 	for _, p := range g.players {
 		if p != nil {
 			p.Ready = false
@@ -654,7 +667,10 @@ func (g *Game) onlyCellar() bool {
 func (g *Game) allChosen() bool {
 	any := false
 	for _, p := range g.players {
-		if p == nil || p.Status != statusIn || p.client == nil || p.Cellar > 0 {
+		if p == nil || p.client == nil {
+			continue
+		}
+		if !g.isController(p) && (p.Status != statusIn || p.Cellar > 0) {
 			continue
 		}
 		if p.Action == "" {
@@ -666,13 +682,22 @@ func (g *Game) allChosen() bool {
 }
 
 // Act tar emot spelarens val för rundan. Valet kan ändras tills rundan utförs.
-func (g *Game) Act(c *Client, a string) {
+func (g *Game) Act(c *Client, a string, monsterID int) {
 	p := c.player
+	if p != nil && g.phase == phasePlay && g.isController(p) {
+		g.actController(p, a, monsterID)
+		return
+	}
 	if p == nil || g.phase != phasePlay || p.Status != statusIn || p.Cellar > 0 {
 		return
 	}
 	room := &g.rooms[p.Y][p.X]
 	switch a {
+	case actAttack, actParry, actDodge:
+		if g.monsterAt(p.X, p.Y) == nil {
+			g.logTo(p, g.data.MonsterText("inget_monster_har"), "dim")
+			return
+		}
 	case "N", "E", "S", "W", actWait:
 	case actTake:
 		if room.Kind != "kammare" {
@@ -711,6 +736,12 @@ func (g *Game) resolve() {
 		g.timer.Stop()
 	}
 	sunBefore := g.sun
+	g.moveMonsters()
+	for _, p := range g.players {
+		if g.isController(p) {
+			p.Action = ""
+		}
+	}
 	var active []*Player
 	for _, p := range g.players {
 		if p != nil && p.Status == statusIn {
@@ -824,14 +855,16 @@ func (g *Game) playTurn(p *Player) {
 			g.logTo(p, g.data.Text("tvekade"), "dim")
 		}
 	}
-	switch a {
-	case actWait:
-	case actTake:
+	switch {
+	case g.combatTurn(p, a):
+	case a == actWait:
+	case a == actTake:
 		g.take(p)
-	case actSearch:
+	case a == actSearch:
 		g.search(p)
-	case actDrink:
+	case a == actDrink:
 		g.drink(p)
+	case p.Status != statusIn:
 	default:
 		if p.Stuck > 0 {
 			g.logTo(p, g.data.Text("fast"), "dim")
@@ -907,12 +940,17 @@ func (g *Game) move(p *Player, d Dir, depth int) {
 		g.soundTo(p, "steg")
 		g.logTo(p, g.data.Text("kant_rum", "rum", name), "dim")
 	}
+	// En fälla kan ha flyttat spelaren; varelsen gäller rummet spelaren står i nu.
+	if p.X == nx && p.Y == ny {
+		g.announceMonster(p)
+	}
 }
 
 type clientMsg struct {
 	T    string `json:"t"`
 	Name string `json:"name"`
 	A    string `json:"a"`
+	M    int    `json:"m"`
 }
 
 // serve sköter en websocket-anslutning tills den stängs.
@@ -942,7 +980,7 @@ func (g *Game) serve(conn *wsConn) {
 		case "join":
 			g.Join(c, m.Name)
 		case "act":
-			g.Act(c, m.A)
+			g.Act(c, m.A, m.M)
 		case "ready":
 			g.Ready(c)
 		}
