@@ -16,8 +16,12 @@ En riktig kväll behövs för att se:
 - Klasserna: är någon för stark eller för svag? Tjuven var svagast med
   AI-spelare.
 - Viskningen: gissar någon rätt, och känns fördelen lagom?
-- Åtta spelare med telefoner och datorer: utsnittet på kartan och knappen
-  för hela tornet.
+- Åtta spelare med telefoner och datorer: zoomen på kartan, utsnittet och
+  knappen för allt man känner till.
+- Klassvalet: räcker 30 sekunder för att läsa korten, och går de att läsa
+  på en telefon?
+- Kartritaren som ser in i grannrummen: för stark nu när alla andra bara
+  börjar med sitt eget rum?
 - Stormen i introt: hur musiken och åskan låter. Den är inte avlyssnad.
 - Introts första 15 sekunder, när Enter inte gör något: fastnar någon
   där och tror att sidan har hängt sig?

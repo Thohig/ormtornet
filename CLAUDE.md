@@ -30,8 +30,8 @@ Så här skiljer vi på sakerna när användaren ger instruktioner:
 - **ingrepp**: det spelledaren gör under en vandring: tid, ormen,
   avslöjandet, tornets röst och rum.
 - **spelarsidan**: sidan på `/` som spelarna öppnar, med vyerna introt,
-  namnrutan och spelet. Spelet har faserna lobbyn, vandringen och slutet
-  (`lobby`, `spel`, `slut`). README beskriver under "Vad en spelare ser"
+  namnrutan, klassvalet och spelet. Spelet har faserna lobbyn,
+  klassvalet, vandringen och slutet (`lobby`, `klassval`, `spel`, `slut`). README beskriver under "Vad en spelare ser"
   vad en spelare möter.
 - **tornets dator**: datorn som kör servern.
 - **synligheten**: inställningen "Vandrarna syns" (`-synlighet`), med
@@ -39,7 +39,9 @@ Så här skiljer vi på sakerna när användaren ger instruktioner:
   från grannrummen hör till den (`sounds.go`). Se
   [docs/synlighet.md](docs/synlighet.md).
 - **stormen**: introts moln, regn, blixtar, åska och musik.
-- **klasser**: det vandrarna väljer i lobbyn (`classes.go`,
+- **klassvalet**: skärmen efter lobbyn med ett spelkort för varje klass
+  och en tidsgräns (`klassval_sekunder` i `data/klasser.json`).
+- **klasser**: det vandrarna väljer i klassvalet (`classes.go`,
   `data/klasser.json`), till exempel Kartritaren.
 - **föremål**: det vandrarna hittar och bär, högst tre (`items.go`,
   `data/foremal.json`). Vissa verkar av sig själva, andra används med 1–3,

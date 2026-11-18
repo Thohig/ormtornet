@@ -122,6 +122,9 @@ Texterna ligger i `texter.json`.
   sparade inställningar utan synlighet.
 - Ett rum blir känt när man står i det, även i mörker. En hemlig gång gör
   inte grannrummet känt, bara dörren dit.
+- Från början känner var och en bara sitt eget startrum, med alla tre
+  valen. De andras portar blir kända när någon går in i dem, och ett rum
+  räknas som hittat först när någon har gått in i det (2026-11-19).
 - Den döda spelaren som styr varelserna ser hela tornet så långt det har
   vuxit fram, och när vandringen är slut ser alla hela tornet.
 - Texterna om att någon faller ner i källaren eller kommer upp, och om

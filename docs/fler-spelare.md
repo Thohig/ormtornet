@@ -13,11 +13,12 @@ ordning. Varje steg byggs, committas och provas innan nästa.
 
 README beskriver klasserna under "Klasser". Besluten:
 
-- Var och en får två slumpade klasser att välja mellan i lobbyn. Ingen klass
-  finns två gånger i samma torn. Den som inte väljer får en av sina två
-  när vandringen börjar.
-- Klassen gäller en vandring. Nytt torn leder till lobbyn, där alla får
-  två nya klasser att välja mellan (ändrat efter provspelet 2026-11-18).
+- Klassen väljs på en egen skärm efter lobbyn, med ett spelkort för varje
+  klass och en tidsgräns på 30 sekunder. Ingen klass finns två gånger i
+  samma torn. Den som inte väljer får ett slumpat ledigt kort (ändrat
+  2026-11-19; förut två klasser att välja mellan i lobbyn).
+- Klassen gäller en vandring. Nytt torn leder till lobbyn och sedan till
+  ett nytt klassval.
 - Klassen syns i listan över vandrare, även när man inte ser varandra.
 - AI-spelarna väljer efter personlighet (`klasser` i `data/ai.json`).
 - Klassens liv läggs till svårighetens liv, så att Mardröm förblir hårdare.
@@ -53,8 +54,9 @@ Byggt som planerat, med de här besluten:
   i platsordning, och lottas när vandringen börjar om vandrarna inte ser
   varandra.
 - Ett för litet val av storlek höjs till det antalet vandrare kräver.
-- Utsnittet på telefonen visar 9 × 9 rum och slås på när tecknen annars
-  skulle bli mindre än 8 bildpunkter. Ett tryck på kartan växlar.
+- Kartan visar bara det vandraren känner till och zoomar ut efter hand.
+  Blir det kända större än 9 × 9 rum och tecknen mindre än 8 bildpunkter
+  följer kartan den egna vandraren. Ett tryck på kartan växlar.
 
 Det ursprungliga förslaget:
 

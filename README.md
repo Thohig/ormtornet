@@ -611,11 +611,13 @@ Beskrivningarna för rummen ligger under nivåerna `"1"` till `"4"`.
 - `data.go` läser in datafilerna
 - `ws.go` en liten websocket-implementation utan beroenden
 - `web/` klienten: HTML, CSS och JavaScript utan ramverk
-  - `index.html` och `app.js` spelarsidan: introt, namnrutan och spelet
+  - `index.html` och `app.js` spelarsidan: introt, namnrutan, klassvalet
+    och spelet
   - `spelledare.html` värdsidan
   - `map.js` ritar kartan som krita på en skiffertavla: väggarna är
     handritade streck, vandrarna prickar i sin färg (den egna med en ring)
-    och varelser och märken tecken. Även utsnittet på en liten skärm
+    och varelser och märken tecken. Kartan visar bara det kända och
+    zoomar ut efter hand; även utsnittet på en liten skärm
   - `audio.js` allt ljud, skapat med Web Audio API, även stormen i introt
   - `style.css` utseendet
 
