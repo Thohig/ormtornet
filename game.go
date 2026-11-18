@@ -48,6 +48,7 @@ type Config struct {
 	AbsentRounds int    // rundor innan AI tar över en frånvarande vandrare, 0 = aldrig
 	PvP          string // strid mellan vandrare: "av", "pa" eller "halva"
 	Sight        string // vilka vandrare och rum man ser: "alla", "moten" eller "egen"
+	Classes      bool   // vandrarna väljer klass
 	GMMode       bool   // spelledarläge: spelledaren spelar inte och ser allt
 	Reveal       bool   // false stänger av avslöjandet
 	SunMax       int
@@ -112,7 +113,9 @@ type Player struct {
 	ID       int
 	Name     string
 	Slot     int
-	Corner   int // porten vandraren börjar vid; lottas när vandrarna inte ser varandra
+	Corner   int      // porten vandraren börjar vid; lottas när vandrarna inte ser varandra
+	classID  string   // vald klass, tom om ingen
+	offer    []string // klasser att välja mellan i lobbyn
 	X, Y     int
 	client   *Client
 	Ready    bool
@@ -307,8 +310,9 @@ type playerView struct {
 	Chosen   bool   `json:"chosen"`
 	Treasure int    `json:"treasure"` // -1 om spelaren inte får veta
 	Bot      bool   `json:"bot"`
-	Hidden   bool   `json:"hidden"` // positionen är okänd för den som tittar
-	AI       bool   `json:"ai"`     // en AI-spelare styr medan människan är borta
+	Hidden   bool   `json:"hidden"`          // positionen är okänd för den som tittar
+	AI       bool   `json:"ai"`              // en AI-spelare styr medan människan är borta
+	Class    string `json:"klass,omitempty"` // klassen med liten bokstav
 }
 
 type roomView struct {
@@ -358,6 +362,8 @@ type stateMsg struct {
 	Paused     bool          `json:"paused,omitempty"`
 	SleepText  string        `json:"sleepText,omitempty"`
 	Sight      string        `json:"sight"` // "alla", "moten" eller "egen"
+	Class      *classView    `json:"klass,omitempty"`
+	Offer      []*classView  `json:"erbjudande,omitempty"`
 	Players    []playerView  `json:"players"`
 	Rooms      []roomView    `json:"rooms"`
 	Results    []resultView  `json:"results,omitempty"`
@@ -425,7 +431,7 @@ func (g *Game) soundAll(s string) {
 // vandrare bara i samma rum. Den döda spelaren som styr varelserna ser alla,
 // annars kan den inte jaga, och när vandringen är slut syns alla igen.
 func (g *Game) sees(me, o *Player) bool {
-	if g.cfg.Sight == sightAll || g.cfg.Sight == "" || g.phase == phaseEnd || g.isController(me) {
+	if g.cfg.Sight == sightAll || g.cfg.Sight == "" || g.phase == phaseEnd || g.isController(me) || g.nearLantern(me, o) {
 		return true
 	}
 	return me.Status == statusIn && o.Status == statusIn && me.Cellar == 0 &&
@@ -454,7 +460,7 @@ func (g *Game) stateFor(me *Player) stateMsg {
 		T: "state", You: me.ID, Size: gridSize, Level: g.level, Reveal: g.cfg.Reveal,
 		Phase: g.phase, Sun: g.sun, SunMax: g.cfg.SunMax, Round: g.round,
 		MinPlayers: g.cfg.MinPlayers, Action: me.Action, Sight: g.cfg.Sight,
-		HP: me.HP, MaxHP: g.data.Regler.Liv, Potions: me.Potions,
+		HP: me.HP, MaxHP: g.maxHP(me), Potions: me.Potions,
 		Stuck: me.Stuck, Cellar: me.Cellar, Poison: me.Poison, Dark: me.Dark,
 	}
 	// I mörker ser man bara sig själv och rummet man står i.
@@ -463,6 +469,17 @@ func (g *Game) stateFor(me *Player) stateMsg {
 	if g.phase == phasePlay && me.Status == statusIn && me.Cellar == 0 && g.rooms[me.Y][me.X].Kind == "kammare" {
 		st.Sleep = g.sleepLevel()
 		st.SleepText = g.data.Ormen.Somn[min(st.Sleep, len(g.data.Ormen.Somn)-1)]
+		if g.is(me, "ormtjusare") {
+			st.SleepText += " " + g.data.Text("klass_ormtjusare_kort", "antal", itoa(g.wakeCardsLeft()))
+		}
+	}
+	st.Class = viewOfClass(g.classOf(me))
+	if g.cfg.Classes && me.classID == "" && g.phase != phasePlay {
+		for _, id := range me.offer {
+			if c := g.data.class(id); c != nil {
+				st.Offer = append(st.Offer, viewOfClass(c))
+			}
+		}
 	}
 	if g.phase == phasePlay {
 		st.DeadlineMs = max(0, time.Until(g.deadline).Milliseconds())
@@ -478,7 +495,7 @@ func (g *Game) stateFor(me *Player) stateMsg {
 		pv := playerView{
 			ID: p.ID, Name: p.Name, Slot: p.Slot, X: p.X, Y: p.Y,
 			Online: p.present(), Bot: p.bot != nil, Status: p.Status, Ready: p.Ready,
-			Chosen: p.Action != "", Treasure: -1, AI: p.takenOver,
+			Chosen: p.Action != "", Treasure: -1, AI: p.takenOver, Class: g.classLabel(p),
 		}
 		if p == me || g.phase == phaseEnd {
 			pv.Treasure = p.Treasure
@@ -568,7 +585,7 @@ func (g *Game) placeAtCorner(p *Player) {
 	p.Treasure = 0
 	p.Action = ""
 	p.Ready = p.bot != nil // datorspelare är alltid redo
-	p.HP = g.data.Regler.Liv
+	p.HP = g.maxHP(p)
 	p.Seen = map[string]bool{}
 	p.Potions, p.Stuck, p.Cellar, p.Poison, p.Dark = 0, 0, 0, 0, 0
 	p.known = [gridSize][gridSize]bool{}
@@ -590,7 +607,10 @@ func (g *Game) knowsRoom(me *Player, x, y int) bool {
 	if !g.rooms[y][x].Revealed {
 		return false
 	}
-	if g.cfg.Sight != sightOwn || g.phase == phaseEnd || g.isController(me) {
+	if me == nil {
+		return true // spelledarens översikt ser hela tornet
+	}
+	if g.cfg.Sight != sightOwn || g.phase == phaseEnd || g.isController(me) || g.is(me, "kartritare") {
 		return true
 	}
 	return me.known[y][x] || g.rooms[y][x].Kind == "ingang"
@@ -662,6 +682,9 @@ func (g *Game) Join(c *Client, rawName string) {
 	c.player = p
 	g.placeAtCorner(p)
 	horn := g.data.Horn[slot]
+	if g.phase != phasePlay {
+		g.offerClasses(p)
+	}
 
 	g.broadcastState()
 	g.soundAll("ansluter")
@@ -794,6 +817,7 @@ func (g *Game) startGame() {
 	if g.dropAbsent() > 0 {
 		g.syncBots(true) // AI-spelare kan ta de lediga platserna
 	}
+	g.ensureClasses()
 	g.phase = phasePlay
 	g.sun = g.cfg.SunMax
 	g.round = 1
@@ -809,7 +833,8 @@ func (g *Game) startGame() {
 		if p != nil {
 			p.Ready = p.bot != nil
 			p.Action = ""
-			p.HP = g.data.Regler.Liv // svårigheten kan ha ändrats sedan tornet byggdes
+			p.HP = g.maxHP(p) // svårigheten kan ha ändrats sedan tornet byggdes
+			p.Potions = g.startPotions(p)
 			p.awayRound = 0
 			p.aiPlayed = false
 		}
@@ -1188,7 +1213,13 @@ func (g *Game) move(p *Player, d Dir, depth int) {
 		if target.Event != "" {
 			ev := target.Event
 			target.Event = ""
-			g.trigger(p, g.data.trap(ev), depth)
+			if t := g.data.trap(ev); t != nil && g.is(p, "sparfinnare") && rand.Float64() < g.classVal(p, "se_falla", 0) {
+				// Spårfinnaren ser fällan i tid. Tecknet visar att den finns.
+				target.Mark = t.Tecken
+				g.logTo(p, g.data.Text("klass_sparfinnare_falla", "falla", lowerFirst(t.Namn)), "info")
+			} else {
+				g.trigger(p, g.data.trap(ev), depth)
+			}
 		}
 	} else {
 		g.soundTo(p, "steg")
@@ -1239,6 +1270,8 @@ func (g *Game) serve(conn *wsConn, local bool) {
 			g.Act(c, m.A, m.M)
 		case "ready":
 			g.Ready(c)
+		case "klass":
+			g.ChooseClass(c, m.Name)
 		}
 		g.mu.Unlock()
 	}

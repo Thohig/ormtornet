@@ -322,6 +322,8 @@ body[data-niva="4"] #crt::after { animation: throb 0.95s infinite; }
 #side {
   flex: 0 0 200px;
   font-size: 13px;
+  min-height: 0;
+  overflow-y: auto; /* valet av klass kan göra panelen längre än skärmen */
 }
 #side h2 {
   font-size: 11px;
@@ -462,3 +464,13 @@ body.touch #side { overflow-y: auto; }
   }
   #pad .acts { flex: 1 1 auto; }
 }
+
+/* Valet av klass i lobbyn. */
+.classpick {
+  margin: 6px 0;
+  padding: 4px 6px;
+  border: 1px solid var(--faint);
+  cursor: pointer;
+}
+.classpick:hover, .classpick:focus { border-color: var(--dim); outline: none; }
+.classname { color: var(--hi); }

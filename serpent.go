@@ -120,6 +120,7 @@ func (g *Game) take(p *Player) {
 
 	o := &g.data.Ormen
 	n := o.SkattMin + rand.IntN(max(1, o.SkattMax-o.SkattMin+1))
+	n = int(float64(n) * g.classVal(p, "kammar_guld", 1))
 	p.Treasure += n
 	p.stats.takes++
 	p.stats.takeGold += n
@@ -127,8 +128,12 @@ func (g *Game) take(p *Player) {
 	g.logTo(p, fill(pick(c.Texter), "antal", strconv.Itoa(n)), "syn")
 	g.logTo(p, g.data.Text("skatt_totalt", "skatt", strconv.Itoa(p.Treasure)), "dim")
 	if other := pick(c.Andra); other != "" {
-		g.logOthers(p, other, "info")
-		g.soundAll("ormen_ror")
+		if g.is(p, "tjuv") {
+			g.logTo(p, g.data.Text("klass_tjuv_tyst"), "dim")
+		} else {
+			g.logOthers(p, other, "info")
+			g.soundAll("ormen_ror")
+		}
 	}
 }
 
@@ -154,11 +159,13 @@ func (g *Game) wakeSerpent() {
 		}
 	}
 	for _, p := range inside {
-		lost := int(float64(p.Treasure)*o.SkattForlust + 0.5)
+		share := min(1, o.SkattForlust+g.classVal(p, "extra_forlust", 0))
+		lost := int(float64(p.Treasure)*share + 0.5)
 		p.Treasure -= lost
-		g.logTo(p, fill(pick(o.KastasUt), "forlust", strconv.Itoa(lost), "skada", strconv.Itoa(o.Skada)), "varn")
+		dmg := max(0, o.Skada-int(g.classVal(p, "ormskada", 0)))
+		g.logTo(p, fill(pick(o.KastasUt), "forlust", strconv.Itoa(lost), "skada", strconv.Itoa(dmg)), "varn")
 		p.hurt("ormen", "")
-		g.damage(p, o.Skada, true)
+		g.damage(p, dmg, true)
 		if p.Status != statusIn {
 			continue
 		}

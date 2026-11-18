@@ -243,6 +243,13 @@
       </select>
       <span class="note">egen karta: bara rum man själv har gått igenom</span>
 
+      <label for="sKlass">Klasser</label>
+      <select id="sKlass" name="klasser">
+        <option value="1">på, vandrarna väljer en av två</option>
+        <option value="0">av, alla är vanliga vandrare</option>
+      </select>
+      <span class="note">styrkor och svagheter, se klasser.json</span>
+
       <label for="sGM">Spelledarläge</label>
       <select id="sGM" name="spelledarlage">
         <option value="0">av, jag spelar själv</option>
@@ -447,9 +454,9 @@ function renderGM(o) {
     if (p.poison) cond.push("gift " + p.poison);
     if (p.dark) cond.push("mörker " + p.dark);
     if (!p.online) cond.push("borta");
-    const who = p.name + (p.ai ? " (AI)" : p.bot ? " (dator)" : "");
+    const who = p.name + (p.ai ? " (AI)" : p.bot ? " (dator)" : "") + (p.klass ? ", " + p.klass : "");
     const where = { ute: "ute", forlorad: "förlorad", dod: "död" }[p.status] || p.room || "";
-    const cells = [who, where, p.hp + "/" + o.maxHp, p.treasure + " guld", p.potions, cond.join(", "), p.action || (m.phase === "spel" && p.status === "inne" ? "väljer" : "")];
+    const cells = [who, where, p.hp + "/" + (p.maxHp || o.maxHp), p.treasure + " guld", p.potions, cond.join(", "), p.action || (m.phase === "spel" && p.status === "inne" ? "väljer" : "")];
     cells.forEach((c, i) => {
       const td = document.createElement("td");
       td.textContent = c;
@@ -661,6 +668,7 @@ function renderSettings(v) {
   $("sStrid").value = s.strid;
   $("sSyn").value = s.synlighet;
   $("sGM").value = s.spelledarlage ? "1" : "0";
+  $("sKlass").value = s.klasser ? "1" : "0";
 }
 
 function post(path, body) {
@@ -691,6 +699,7 @@ $("settings").addEventListener("change", async () => {
     strid: $("sStrid").value,
     synlighet: $("sSyn").value,
     spelledarlage: $("sGM").value === "1",
+    klasser: $("sKlass").value === "1",
     svarighet: $("sSv").value,
   };
   saving = true;

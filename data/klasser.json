@@ -1,0 +1,147 @@
+{
+  "klasser": [
+    {
+      "id": "legoknekt",
+      "namn": "Legoknekten",
+      "kort": "legoknekten",
+      "beskrivning": "Har slagits för den som betalar i tjugo år. Bär en bucklig sköld och litar inte på någon.",
+      "styrka": "Ett liv extra, och tar ingen skada när båda anfaller.",
+      "svaghet": "Hittar bara hälften så mycket guld när hen söker.",
+      "liv": 1,
+      "drycker": 0,
+      "varden": { "sok_guld": 0.5 }
+    },
+    {
+      "id": "tjuv",
+      "namn": "Tjuven",
+      "kort": "tjuven",
+      "beskrivning": "Lätta fingrar och lätta steg. Har tagit sig in i fler hus än hen har gått ut ur.",
+      "styrka": "Får en fjärdedel mer guld ur kammaren, och ingen annan märker när ormen rör sig vid tjuvens näve. River hälften av guldet i strid mot vandrare.",
+      "svaghet": "Litar inte på andras drycker: hittar aldrig någon när hen söker.",
+      "liv": 0,
+      "drycker": 0,
+      "varden": { "byte": 0.5, "kammar_guld": 1.25, "inga_drycker": 1 }
+    },
+    {
+      "id": "ortkvinna",
+      "namn": "Örtkvinnan",
+      "kort": "örtkvinnan",
+      "beskrivning": "Kokar drycker av det som växer i diken. Vet vad som läker och vad som dödar.",
+      "styrka": "Börjar med två drycker, en dryck ger tre liv, och gift biter inte på henne.",
+      "svaghet": "Ett liv mindre, och hon tappar mer skatt när ormen vaknar.",
+      "liv": -1,
+      "drycker": 2,
+      "varden": { "dryck_helar": 3, "extra_forlust": 0.25 }
+    },
+    {
+      "id": "kartritare",
+      "namn": "Kartritaren",
+      "kort": "kartritaren",
+      "beskrivning": "Har ritat kartor över grottor, gruvor och kloster. Ingen har ritat tornet. Än.",
+      "styrka": "Ser alla rum som någon har hittat, och ger sin karta till den hen möter. Hittar alltid något när hen söker, om en hemlig gång går att göra.",
+      "svaghet": "Kan inte slåss: väljer hen undanmanöver träffar motståndaren alltid.",
+      "liv": 0,
+      "drycker": 0,
+      "varden": {}
+    },
+    {
+      "id": "ormtjusare",
+      "namn": "Ormtjusaren",
+      "kort": "ormtjusaren",
+      "beskrivning": "Har spelat för huggormar på marknader och aldrig blivit biten. Nästan aldrig.",
+      "styrka": "Ser i kammaren hur många vakna-kort som finns kvar i leken. Ormen gör en skada mindre.",
+      "svaghet": "Varelserna känner lukten av henom och anfaller oftare.",
+      "liv": 0,
+      "drycker": 0,
+      "varden": { "ormskada": 1, "extra_anfall": 1 }
+    },
+    {
+      "id": "sparfinnare",
+      "namn": "Spårfinnaren",
+      "kort": "spårfinnaren",
+      "beskrivning": "Läser marken som andra läser böcker. Ser var någon har gått, och när.",
+      "styrka": "Ser spår längre bakåt och vems de är, och märker hälften av fällorna i tid.",
+      "svaghet": "Hör ingenting genom väggarna.",
+      "liv": 0,
+      "drycker": 0,
+      "varden": { "spar_rundor": 6, "se_falla": 0.5 }
+    },
+    {
+      "id": "lyktbarare",
+      "namn": "Lyktbäraren",
+      "kort": "lyktbäraren",
+      "beskrivning": "Bär en lykta som aldrig har slocknat. Ingen vet vad den brinner på.",
+      "styrka": "Mörkret biter inte, och hen ser varelser i grannrummen.",
+      "svaghet": "Ljuset syns: de andra ser henom redan från grannrummet.",
+      "liv": 0,
+      "drycker": 0,
+      "varden": {}
+    },
+    {
+      "id": "pilgrim",
+      "namn": "Pilgrimen",
+      "kort": "pilgrimen",
+      "beskrivning": "Har gått hela vägen för att se tornet med egna ögon. Tror att det har något att berätta.",
+      "styrka": "Får ledtrådar om tornet dubbelt så ofta, och en dryck varje gång tornet förändras.",
+      "svaghet": "Lyfter aldrig vapen mot andra vandrare: kan bara värja sig.",
+      "liv": 0,
+      "drycker": 0,
+      "varden": {}
+    }
+  ],
+
+  "texter": {
+    "klass_val": [
+      "Tornet frågar vem du är. Välj en av två."
+    ],
+    "klass_vald": [
+      "Du är {klass}. {styrka}"
+    ],
+    "klass_vald_andra": [
+      "{namn} är {klass}."
+    ],
+    "klass_upptagen": [
+      "Någon annan hann välja {klass}. Välj igen."
+    ],
+    "klass_legoknekt_skold": [
+      "Ni slår samtidigt, men du fångar slaget med skölden."
+    ],
+    "klass_tjuv_tyst": [
+      "Ormen rör sig, men du håller andan och ingen annan märker något."
+    ],
+    "klass_ortkvinna_gift": [
+      "Dimman sticker i halsen, men du känner igen örterna i den. Giftet biter inte på dig."
+    ],
+    "klass_kartritare_karta": [
+      "{namn} breder ut sin karta och du ritar av den. Nu vet du mer om tornet."
+    ],
+    "klass_kartritare_ger": [
+      "Du låter {namn} rita av din karta."
+    ],
+    "klass_kartritare_undan": [
+      "Du försöker vika undan men snubblar på dina egna fötter."
+    ],
+    "klass_ormtjusare_kort": [
+      "Du räknar andetagen. {antal} av korten i leken skulle väcka ormen."
+    ],
+    "klass_sparfinnare_falla": [
+      "Du ser tecknen i tid: {falla}. Du tar dig försiktigt förbi."
+    ],
+    "klass_lyktbarare_morker": [
+      "En vindpust far genom rummet, men din lykta brinner vidare."
+    ],
+    "klass_pilgrim_fred": [
+      "Du lyfter inte vapen mot {namn}."
+    ],
+    "klass_pilgrim_dryck": [
+      "Tornet förändras omkring dig. I fickan hittar du en dryck som inte fanns där förut."
+    ],
+    "spar_namn": [
+      "Färska fotspår i dammet leder åt {riktning}. Det är {namn}s.",
+      "{namn} har gått här nyss. Spåren leder åt {riktning}."
+    ],
+    "spar_ut_namn": [
+      "{namn}s fotspår leder ut genom porten."
+    ]
+  }
+}

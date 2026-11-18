@@ -14,7 +14,7 @@ func (g *Game) hear(x, y int, key, general, class string, skip ...*Player) {
 		if o == nil || slices.Contains(skip, o) {
 			continue
 		}
-		if d, ok := g.nextTo(o, x, y); ok && g.hidesOthers() {
+		if d, ok := g.nextTo(o, x, y); ok && g.hidesOthers() && !g.is(o, "sparfinnare") {
 			g.logTo(o, g.data.Text(key, "riktning", g.data.Riktningar[d]), class)
 		} else if general != "" {
 			g.logTo(o, general, class)
@@ -42,7 +42,7 @@ func (g *Game) noticeTrail(p *Player) {
 	}
 	room := &g.rooms[p.Y][p.X]
 	t := room.trail
-	rounds := g.data.Regler.SparRundor
+	rounds := int(g.classVal(p, "spar_rundor", float64(g.data.Regler.SparRundor)))
 	if t.by == 0 || t.by == p.ID || rounds <= 0 || g.round-t.round > rounds {
 		return
 	}
@@ -51,9 +51,22 @@ func (g *Game) noticeTrail(p *Player) {
 			return // den som lämnade spåren står här, och då ser man den
 		}
 	}
-	if room.HasExit && room.Exit == t.dir {
-		g.logTo(p, g.data.Text("spar_ut"), "dim")
-		return
+	// Spårfinnaren ser vems spåren är.
+	name := ""
+	if g.is(p, "sparfinnare") {
+		if o := g.playerByID(t.by); o != nil {
+			name = o.Name
+		}
 	}
-	g.logTo(p, g.data.Text("spar", "riktning", g.data.Riktningar[t.dir]), "dim")
+	out := room.HasExit && room.Exit == t.dir
+	switch {
+	case out && name != "":
+		g.logTo(p, g.data.Text("spar_ut_namn", "namn", name), "dim")
+	case out:
+		g.logTo(p, g.data.Text("spar_ut"), "dim")
+	case name != "":
+		g.logTo(p, g.data.Text("spar_namn", "riktning", g.data.Riktningar[t.dir], "namn", name), "dim")
+	default:
+		g.logTo(p, g.data.Text("spar", "riktning", g.data.Riktningar[t.dir]), "dim")
+	}
 }

@@ -39,6 +39,8 @@ Så här skiljer vi på sakerna när användaren ger instruktioner:
   från grannrummen hör till den (`sounds.go`). Se
   [docs/synlighet.md](docs/synlighet.md).
 - **stormen**: introts moln, regn, blixtar, åska och musik.
+- **klasser**: det vandrarna väljer i lobbyn (`classes.go`,
+  `data/klasser.json`), till exempel Kartritaren.
 
 Spelarna ser ordet "spelledare" i spelets texter, aldrig "värdsidan".
 
@@ -53,6 +55,8 @@ Skriv dit när ett steg är klart.
   av del 1–3 är byggt. Avsnittet Läget säger vad som är byggt, vad som är på
   gång och vad som inte är planerat. Fråga vilka delar som ska byggas innan
   du börjar på något som inte står under På gång.
+- [docs/fler-spelare.md](docs/fler-spelare.md): klasser (byggt), tornets
+  storlek och upp till 8 spelare (på gång, i den ordningen).
 - [docs/synlighet.md](docs/synlighet.md): att vandrarna bara ser varandra
   när de möts, och på sikt bara sin egen karta. Alla tre stegen är
   byggda.

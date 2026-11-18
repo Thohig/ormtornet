@@ -90,7 +90,11 @@ func (g *Game) trigger(p *Player, t *Trap, depth int) {
 	case "pilar":
 		g.damage(p, t.Skada, true)
 	case "dimma":
-		p.Poison = max(p.Poison, t.Rundor)
+		if g.is(p, "ortkvinna") {
+			g.logTo(p, g.data.Text("klass_ortkvinna_gift"), "info")
+		} else {
+			p.Poison = max(p.Poison, t.Rundor)
+		}
 		g.damage(p, t.Skada, true)
 	case "rasande_golv":
 		g.damage(p, t.Skada, true)
@@ -111,7 +115,11 @@ func (g *Game) trigger(p *Player, t *Trap, depth int) {
 	case "klocka":
 		g.sun -= max(1, t.Sol)
 	case "morker":
-		p.Dark = max(p.Dark, t.Rundor)
+		if g.is(p, "lyktbarare") {
+			g.logTo(p, g.data.Text("klass_lyktbarare_morker"), "info")
+		} else {
+			p.Dark = max(p.Dark, t.Rundor)
+		}
 	case "eko":
 		for _, o := range g.players {
 			if o != nil {
@@ -157,10 +165,16 @@ func (g *Game) search(p *Player) {
 	case "skatt":
 		lo, hi := g.data.Regler.SokSkattMin, g.data.Regler.SokSkattMax
 		n := lo + rand.IntN(max(1, hi-lo+1))
+		n = max(1, int(float64(n)*g.classVal(p, "sok_guld", 1)))
 		p.Treasure += n
 		g.soundTo(p, "skatt")
 		g.logTo(p, g.data.SearchText("skatt", "antal", strconv.Itoa(n), "skatt", strconv.Itoa(p.Treasure)), "syn")
 	case "dryck":
+		if g.classVal(p, "inga_drycker", 0) > 0 {
+			g.soundTo(p, "inget")
+			g.logTo(p, g.data.SearchText("inget"), "dim")
+			return
+		}
 		p.Potions++
 		g.soundTo(p, "hitta")
 		g.logTo(p, g.data.SearchText("dryck"), "syn")
@@ -176,6 +190,14 @@ func (g *Game) search(p *Player) {
 		g.logTo(p, g.data.SearchText("falla"), "varn")
 		g.trigger(p, g.data.randomTrap(), 0)
 	default:
+		// Kartritaren hittar alltid en hemlig gång om det går att göra en.
+		if g.is(p, "kartritare") {
+			if d, ok := g.secretPassage(p.X, p.Y); ok {
+				g.soundAll("gang")
+				g.logTo(p, g.data.SearchText("gang", "riktning", g.data.Riktningar[d]), "syn")
+				return
+			}
+		}
 		g.soundTo(p, "inget")
 		g.logTo(p, g.data.SearchText("inget"), "dim")
 	}
@@ -212,7 +234,7 @@ func (g *Game) drink(p *Player) {
 		return
 	}
 	p.Potions--
-	p.HP = min(g.data.Regler.Liv, p.HP+g.data.Regler.DryckHelar)
+	p.HP = min(g.maxHP(p), p.HP+int(g.classVal(p, "dryck_helar", float64(g.data.Regler.DryckHelar))))
 	g.soundTo(p, "drick")
 	g.logTo(p, g.data.Text("drick", "liv", strconv.Itoa(p.HP)), "info")
 	g.hear(p.X, p.Y, "ljud_drick", "", "dim", p)

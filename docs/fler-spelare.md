@@ -1,0 +1,53 @@
+# Plan: klasser, större torn och upp till 8 spelare
+
+Status: planen skrevs 2026-11-18. Användaren bad om allt, i lämplig
+ordning. Varje steg byggs, committas och provas innan nästa.
+
+| Steg | Vad | Läge |
+|---|---|---|
+| 1 | Klasser | byggt |
+| 2 | Tornets storlek blir rörlig i koden, fortfarande högst 4 vandrare | på gång |
+| 3 | Upp till 8 vandrare och automatisk skalning | väntar på steg 2 |
+
+## Steg 1: klasser (byggt)
+
+README beskriver klasserna under "Klasser". Besluten:
+
+- Var och en får två slumpade klasser att välja mellan i lobbyn. Ingen klass
+  finns två gånger i samma torn. Den som inte väljer får en av sina två
+  när vandringen börjar.
+- Klassen följer med till nästa torn så länge man är kvar.
+- Klassen syns i listan över vandrare, även när man inte ser varandra.
+- AI-spelarna väljer efter personlighet (`klasser` i `data/ai.json`).
+- Klassens liv läggs till svårighetens liv, så att Mardröm förblir hårdare.
+- "Klasser: på / av" på värdsidan, med `-klasser`. Förval: på.
+
+## Steg 2: tornets storlek i koden
+
+`gridSize` och `maxPlayers` är konstanter, och rummen och de kända rummen
+ligger i tabeller med fast storlek. De blir värden som sätts när tornet
+byggs. Inget ändras för spelarna ännu, men en storlek kan väljas för hand
+på värdsidan ("Tornets storlek: 9 / 11 / 13") för att prova.
+
+- Udda storlekar, så att kammaren står i mitten.
+- Portarna räknas från storleken.
+- Klienten ritar redan efter den storlek servern skickar. Kartan på en
+  telefon behöver provas på 13×13.
+
+## Steg 3: upp till 8 vandrare och automatisk skalning
+
+| Vandrare | Torn | Väg port–kammare | Portar | Sol |
+|---|---|---|---|---|
+| 2–4 | 9×9 | 8 steg | 4 i hörnen | 40 |
+| 5–6 | 11×11 | 10 steg | 8 | 50 |
+| 7–8 | 13×13 | 12 steg | 8 | 60 |
+
+- Storleken bestäms när vandringen börjar, efter antalet vandrare med
+  AI-spelarna. Lobbyn visar hur stort tornet blir.
+- Fyra nya portar mitt på varje sida när det är fler än 4 vandrare.
+- Solen och ormleken skalar: två extra sovkort per vandrare över fyra.
+- Värdsidan: "Tornets storlek: automatisk / 9 / 11 / 13" och
+  "Solnedgång: automatisk / rundor". AI-spelare 0–7.
+- Åtta färger som går att skilja åt, åtta platser per rum och `@×5` när
+  fler än fyra står i samma rum.
+- Minst åtta namn för AI-spelarna i `data/ai.json`.

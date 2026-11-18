@@ -87,6 +87,7 @@ func (g *Game) AddBots(n int) int {
 		}
 		g.players[slot] = p
 		g.placeAtCorner(p)
+		g.offerClasses(p)
 		added++
 	}
 	return added
@@ -288,7 +289,11 @@ func (g *Game) botDecide(p *Player) (string, int) {
 				}
 			}
 		}
-		return p.bot.counter(typ), 0
+		c := p.bot.counter(typ)
+		if c == actDodge && g.is(p, "kartritare") {
+			c = actParry // kartritaren vet att undanmanövern aldrig lyckas
+		}
+		return c, 0
 	}
 
 	// Strid mot en annan vandrare: ibland, beroende på hur stridslysten den är.

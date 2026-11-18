@@ -14,7 +14,8 @@
         "fly_marginal": 0,
         "ga_hem_vid_liv": 2,
         "drick_vid_liv": 2,
-        "stridslust": 0.6
+        "stridslust": 0.6,
+        "klasser": ["legoknekt", "tjuv", "ormtjusare", "lyktbarare"]
       },
       {
         "id": "forsiktig",
@@ -26,7 +27,8 @@
         "fly_marginal": 1,
         "ga_hem_vid_liv": 3,
         "drick_vid_liv": 3,
-        "stridslust": 0.25
+        "stridslust": 0.25,
+        "klasser": ["ortkvinna", "kartritare", "sparfinnare", "lyktbarare"]
       }
     ],
 

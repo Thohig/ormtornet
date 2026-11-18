@@ -139,6 +139,7 @@ type Data struct {
 	AI           AIData              `json:"ai"`
 	Svarighet    Difficulty          `json:"svarighet"`
 	Intro        IntroData           `json:"intro"`
+	Klasser      []Class             `json:"klasser"`
 }
 
 // IntroData styr startsidan.
@@ -147,7 +148,7 @@ type IntroData struct {
 }
 
 // Filerna i datamappen. Alla läses in i samma struktur; "texter" slås ihop.
-var dataFiles = []string{"texter.json", "fallor.json", "ormen.json", "monster.json", "avslojande.json", "ai.json", "svarighet.json"}
+var dataFiles = []string{"texter.json", "fallor.json", "ormen.json", "monster.json", "avslojande.json", "ai.json", "svarighet.json", "klasser.json"}
 
 // loadData läser filerna i mappen dir. Saknas en fil används den inbyggda kopian.
 func loadData(dir string) (*Data, string, error) {
@@ -222,6 +223,9 @@ func mergeData(d, part *Data) {
 	}
 	if part.Intro.Vanta > 0 {
 		d.Intro = part.Intro
+	}
+	if len(part.Klasser) > 0 {
+		d.Klasser = part.Klasser
 	}
 	if len(part.Regioner) > 0 {
 		d.Regioner = part.Regioner
@@ -357,6 +361,7 @@ type Personality struct {
 	SokChans    float64   `json:"sok_chans"`      // chans att söka igenom ett rum
 	FlyMarginal int       `json:"fly_marginal"`   // flyr när ett slag till (plus så här mycket) kan döda
 	GaHemVidLiv int       `json:"ga_hem_vid_liv"` // går mot porten vid så här lite liv
+	Klasser     []string  `json:"klasser"`        // klasserna personligheten helst väljer, i tur och ordning
 	DrickVidLiv int       `json:"drick_vid_liv"`  // dricker vid så här lite liv
 	Stridslust  float64   `json:"stridslust"`     // chans att slåss med en vandrare i samma rum
 }

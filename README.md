@@ -63,6 +63,7 @@ Flaggor:
 - `-min 2` minsta antal spelare för att börja, datorspelare inräknade (sätt `-min 1` för att prova ensam)
 - `-ai 2` antal datorstyrda vandrare (0–3, eller 4 i spelledarläget)
 - `-svarighet normal` svårighet: `latt`, `normal`, `svar` eller `mardrom`
+- `-klasser=false` vandrarna väljer ingen klass
 - `-synlighet egen` vilka vandrare och rum man ser: `egen` (andra vandrare bara i samma rum, och bara egna rum på kartan), `moten` (andra vandrare bara i samma rum) eller `alla`
 - `-avslojande=false` stänger av avslöjandet, för spelare som redan känner till tornets hemlighet
 - `-oppna` öppnar introt i webbläsaren när servern har startat; på den här datorn leder det till värdsidan
@@ -80,7 +81,7 @@ skicka i en gruppchatt. Sidan visar också vilka som har anslutit och är redo,
 och vad man kan göra om någon inte kommer in.
 
 Under Inför nästa vandring väljer spelledaren antal AI-spelare, minsta antal
-vandrare, svårighet, solnedgång, turtid, avslöjandet och om vandrarna syns
+vandrare, svårighet, solnedgång, turtid, avslöjandet, klasser och om vandrarna syns
 för varandra. AI-spelare kommer och går
 direkt i lobbyn, resten gäller från nästa omgång. Under en pågående vandring
 är inställningarna låsta. Om tornet är fullt när en människa ansluter i
@@ -265,6 +266,31 @@ en rad för varje vandrare med hur många nävar den tog ur kammaren och hur
 mycket guld de gav, och hur många fällor, fällda varelser och sökta rum den
 fick. Texterna står i `data/texter.json` under `kronika_*`.
 
+### Klasser
+
+I lobbyn får var och en två slumpade klasser att välja mellan, med 1 eller
+2 (eller ett tryck på pekskärmen). Ingen klass finns två gånger i samma
+torn. Den som inte har valt när vandringen börjar får en av sina två.
+Klassen står i listan över vandrare, och i spelledarens översikt.
+AI-spelarna väljer efter sin personlighet. Klassen följer med till nästa
+torn så länge man är kvar.
+
+| Klass | Styrka | Svaghet |
+|---|---|---|
+| Legoknekten | ett liv extra, tar ingen skada när båda anfaller | hittar hälften så mycket guld när hen söker |
+| Tjuven | en fjärdedel mer guld ur kammaren, ingen märker när ormen rör sig vid hens näve, river hälften i strid mot vandrare | hittar aldrig drycker när hen söker |
+| Örtkvinnan | börjar med två drycker, en dryck ger tre liv, tål gift | ett liv mindre, tappar mer skatt när ormen vaknar |
+| Kartritaren | ser alla rum som någon har hittat och ger sin karta till den hen möter, hittar alltid en hemlig gång om det går | undanmanöver lyckas aldrig |
+| Ormtjusaren | ser i kammaren hur många vakna-kort som är kvar, ormen gör en skada mindre | varelserna anfaller oftare |
+| Spårfinnaren | ser spår 6 rundor bakåt och vems de är, märker hälften av fällorna i tid | hör inget genom väggarna |
+| Lyktbäraren | tål mörker, ser varelser i grannrummen | syns för andra redan från grannrummet |
+| Pilgrimen | ledtrådar dubbelt så ofta, en dryck när tornet förändras | slår aldrig andra vandrare, kan bara värja sig |
+
+Namn, beskrivningar, texter och siffror står i `data/klasser.json`. Vad
+styrkan och svagheten gör styrs av klassens `id` i `classes.go` och där
+spelet händer. Spelledaren stänger av klasserna med "Klasser: av" på
+värdsidan, eller med `-klasser=false`.
+
 ### Strid mellan vandrare
 
 Står två vandrare i samma rum utan någon varelse kan de slåss med samma
@@ -407,6 +433,7 @@ de byggs in i programmet.
 - `monster.json` varelserna (liv, skada, guld, vanor, texter) och striderna
 - `ai.json` datorspelarnas namn, personligheter och betänketid
 - `svarighet.json` förvalen för svårighet (se nedan)
+- `klasser.json` klasserna: namn, styrka, svaghet, liv, drycker, siffror och texter
 - `avslojande.json` nivågränser, ledtrådar, texter vid nivåbyte, nya
   förklaringar till fällorna och epilogen. Rumsbeskrivningarna för varje
   nivå (`"1"` till `"4"`) ligger i `texter.json`.
@@ -447,6 +474,7 @@ Beskrivningarna för rummen ligger under nivåerna `"1"` till `"4"`.
 - `chronicle.go` krönikan över vandringen
 - `sounds.go` spår och ljud från grannrummen
 - `difficulty.go` förvalen för svårighet
+- `classes.go` klasserna och valet av klass
 - `ai.go` datorstyrda vandrare
 - `data.go` läser in datafilerna
 - `ws.go` en liten websocket-implementation utan beroenden

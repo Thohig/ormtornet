@@ -345,3 +345,16 @@ func TestPortSound(t *testing.T) {
 		t.Fatal("Bo hörde inte porten")
 	}
 }
+
+// Spelledarens översikt får inte krascha med egen karta.
+func TestGMViewWithOwnMap(t *testing.T) {
+	g, _, _ := startTwo(t)
+	g.cfg.Sight = sightOwn
+	g.cfg.GMMode = true
+	g.monsters = append(g.monsters, &Monster{ID: 7, Type: g.data.Monster.Typer[0].ID, X: 4, Y: 4, HP: 1})
+	g.reveal(4, 4)
+	v := g.GMView(false)
+	if len(v.Map.Monsters) != 1 {
+		t.Fatalf("översikten ser %d varelser", len(v.Map.Monsters))
+	}
+}

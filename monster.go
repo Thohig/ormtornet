@@ -116,6 +116,34 @@ func (g *Game) monsterChoice(m *Monster) string {
 	return weighted(t.Vanor)
 }
 
+// monsterChoiceVs är varelsens val mot en viss vandrare. Ormtjusaren lockar
+// fram fler anfall.
+func (g *Game) monsterChoiceVs(m *Monster, p *Player) string {
+	extra := int(g.classVal(p, "extra_anfall", 0))
+	t := g.data.monsterType(m.Type)
+	if extra <= 0 || t == nil || len(t.Vanor) == 0 {
+		return g.monsterChoice(m)
+	}
+	w := map[string]int{}
+	for k, v := range t.Vanor {
+		w[k] = v
+	}
+	w[actAttack] += extra
+	return weighted(w)
+}
+
+// monsterViews: lyktbäraren ser också varelser i grannrummen.
+func (g *Game) seesMonsterAt(me *Player, x, y int) bool {
+	if g.knowsRoom(me, x, y) {
+		return true
+	}
+	if g.is(me, "lyktbarare") && g.rooms[y][x].Revealed {
+		_, ok := g.nextTo(me, x, y)
+		return ok
+	}
+	return false
+}
+
 // monsterVars ger namn och val som texterna kan använda.
 func (g *Game) monsterVars(m *Monster, extra ...string) []string {
 	name := g.data.monsterType(m.Type).Namn
@@ -146,7 +174,7 @@ func (g *Game) announceMonster(p *Player) {
 // duel utför en stridsrunda mellan spelaren och varelsen.
 func (g *Game) duel(p *Player, m *Monster, a string) {
 	t := g.data.monsterType(m.Type)
-	mc := g.monsterChoice(m)
+	mc := g.monsterChoiceVs(m, p)
 	if p.bot != nil {
 		p.bot.saw(m.Type, mc)
 	}
@@ -156,6 +184,14 @@ func (g *Game) duel(p *Player, m *Monster, a string) {
 
 	playerHits := beats(a, mc) || (a == actAttack && mc == actAttack)
 	monsterHits := beats(mc, a) || (a == actAttack && mc == actAttack)
+	if a == actAttack && mc == actAttack && g.is(p, "legoknekt") {
+		monsterHits = false
+		g.logTo(p, g.data.Text("klass_legoknekt_skold"), "info")
+	}
+	if a == actDodge && g.is(p, "kartritare") {
+		playerHits, monsterHits = false, true
+		g.logTo(p, g.data.Text("klass_kartritare_undan"), "varn")
+	}
 	switch {
 	case playerHits && monsterHits:
 		g.soundTo(p, "hugg")
@@ -192,7 +228,7 @@ func choiceSound(a string) string {
 // fritt drag. Bara ett anfall träffar.
 func (g *Game) freeAttack(p *Player, m *Monster, key string) {
 	t := g.data.monsterType(m.Type)
-	mc := g.monsterChoice(m)
+	mc := g.monsterChoiceVs(m, p)
 	g.logTo(p, g.data.MonsterText(key, g.monsterVars(m, "dess_val", g.choiceWord(mc))...), "varn")
 	if mc == actAttack {
 		g.logTo(p, g.data.MonsterText("monster_traffar", g.monsterVars(m, "skada", strconv.Itoa(t.Skada))...), "varn")
@@ -294,7 +330,7 @@ func (g *Game) moveMonsters() {
 func (g *Game) monsterViews(me *Player, blind bool) []monsterView {
 	var out []monsterView
 	for _, m := range g.monsters {
-		if !g.knowsRoom(me, m.X, m.Y) || (blind && (m.X != me.X || m.Y != me.Y)) {
+		if !g.seesMonsterAt(me, m.X, m.Y) || (blind && (m.X != me.X || m.Y != me.Y)) {
 			continue
 		}
 		t := g.data.monsterType(m.Type)

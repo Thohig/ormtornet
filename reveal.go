@@ -39,8 +39,13 @@ func (g *Game) updateLevel() {
 		g.onLevelUp()
 		return
 	}
-	if g.round%g.data.Avslojande.LedtradVarNRunda == 0 {
+	n := g.data.Avslojande.LedtradVarNRunda
+	switch {
+	case g.round%n == 0:
 		g.dealClues(g.data.Avslojande.Ledtradar, "ledtrad", "info")
+	case g.round%n == n/2:
+		// Pilgrimen får ledtrådar dubbelt så ofta.
+		g.dealCluesTo(g.data.Avslojande.Ledtradar, "ledtrad", "info", func(p *Player) bool { return g.is(p, "pilgrim") })
 	}
 }
 
@@ -48,6 +53,12 @@ func (g *Game) onLevelUp() {
 	g.soundAll("niva")
 	g.dealClues(g.data.Avslojande.Nivabyte, "nivabyte", "syn")
 	g.dealClues(g.data.Avslojande.Ledtradar, "ledtrad", "info")
+	for _, p := range g.players {
+		if p != nil && p.Status == statusIn && g.is(p, "pilgrim") {
+			p.Potions++
+			g.logTo(p, g.data.Text("klass_pilgrim_dryck"), "syn")
+		}
+	}
 	if g.level == 4 {
 		for _, p := range g.players {
 			if p != nil && p.Status != statusOut {
@@ -61,6 +72,11 @@ func (g *Game) onLevelUp() {
 // får samma som någon annan. Texterna delas ut som kort ur en lek; när leken
 // är slut blandas den om.
 func (g *Game) dealClues(pool map[string][]string, kind, class string) {
+	g.dealCluesTo(pool, kind, class, func(*Player) bool { return true })
+}
+
+// dealCluesTo delar ut ledtrådar bara till dem som want godkänner.
+func (g *Game) dealCluesTo(pool map[string][]string, kind, class string, want func(*Player) bool) {
 	list := pool[strconv.Itoa(g.level)]
 	if len(list) == 0 {
 		return
@@ -68,7 +84,7 @@ func (g *Game) dealClues(pool map[string][]string, kind, class string) {
 	var receivers []*Player
 	for _, p := range g.players {
 		// Ledtrådarna går bara till människor; datorspelare behöver dem inte.
-		if p != nil && p.Status == statusIn && p.bot == nil {
+		if p != nil && p.Status == statusIn && p.bot == nil && want(p) {
 			receivers = append(receivers, p)
 		}
 	}

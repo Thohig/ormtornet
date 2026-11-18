@@ -312,7 +312,7 @@ func (g *Game) gmGive(what string, id, n int) error {
 	switch what {
 	case "liv":
 		if n > 0 {
-			p.HP = min(g.data.Regler.Liv, p.HP+n)
+			p.HP = min(g.maxHP(p), p.HP+n)
 		}
 		g.logTo(p, g.data.Text("gm_liv_"+sign, "liv", strconv.Itoa(max(0, p.HP+min(0, n)))), "rost")
 		if n < 0 {

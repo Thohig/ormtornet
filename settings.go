@@ -22,6 +22,7 @@ type Settings struct {
 	Spelledare bool   `json:"spelledarlage"` // spelledaren spelar inte själv och ser allt
 	Svarighet  string `json:"svarighet"`     // förval i data/svarighet.json, tomt för standard
 	Synlighet  string `json:"synlighet"`     // vilka vandrare och rum man ser: "alla", "moten" eller "egen"
+	Klasser    bool   `json:"klasser"`       // vandrarna väljer klass
 }
 
 const (
@@ -30,7 +31,7 @@ const (
 	sightOwn  = "egen"  // som "moten", och var och en ser bara rum den själv har varit i
 )
 
-var defaultSettings = Settings{AI: 0, Min: 2, Sol: 40, Turtid: 30, Avslojande: true, Franvaro: 2, Strid: pvpOn, Synlighet: sightOwn}
+var defaultSettings = Settings{AI: 0, Min: 2, Sol: 40, Turtid: 30, Avslojande: true, Franvaro: 2, Strid: pvpOn, Synlighet: sightOwn, Klasser: true}
 
 var errPlaying = errors.New("inställningarna kan ändras när omgången är slut")
 
@@ -58,11 +59,11 @@ func (s Settings) normalize() Settings {
 
 func (s Settings) config() Config {
 	s = s.normalize()
-	return Config{Difficulty: s.Svarighet, AI: s.AI, AbsentRounds: s.Franvaro, PvP: s.Strid, Sight: s.Synlighet, GMMode: s.Spelledare, MinPlayers: s.Min, SunMax: s.Sol, TurnTime: time.Duration(s.Turtid) * time.Second, Reveal: s.Avslojande}
+	return Config{Difficulty: s.Svarighet, AI: s.AI, AbsentRounds: s.Franvaro, PvP: s.Strid, Sight: s.Synlighet, Classes: s.Klasser, GMMode: s.Spelledare, MinPlayers: s.Min, SunMax: s.Sol, TurnTime: time.Duration(s.Turtid) * time.Second, Reveal: s.Avslojande}
 }
 
 func settingsFrom(cfg Config) Settings {
-	return Settings{Svarighet: cfg.Difficulty, AI: cfg.AI, Franvaro: cfg.AbsentRounds, Strid: cfg.PvP, Synlighet: cfg.Sight, Spelledare: cfg.GMMode, Min: cfg.MinPlayers, Sol: cfg.SunMax, Turtid: int(cfg.TurnTime / time.Second), Avslojande: cfg.Reveal}
+	return Settings{Svarighet: cfg.Difficulty, AI: cfg.AI, Franvaro: cfg.AbsentRounds, Strid: cfg.PvP, Synlighet: cfg.Sight, Klasser: cfg.Classes, Spelledare: cfg.GMMode, Min: cfg.MinPlayers, Sol: cfg.SunMax, Turtid: int(cfg.TurnTime / time.Second), Avslojande: cfg.Reveal}
 }
 
 // defaultSettingsPath ger ~/Library/Application Support/Ormtornet/installningar.json.
@@ -130,7 +131,7 @@ func (g *Game) ApplySettings(s Settings) (Settings, error) {
 	if g.phase == phaseLobby {
 		for _, p := range g.players {
 			if p != nil {
-				p.HP = g.data.Regler.Liv
+				p.HP = g.maxHP(p)
 			}
 		}
 	}
@@ -142,6 +143,9 @@ func (g *Game) ApplySettings(s Settings) (Settings, error) {
 	}
 	if g.phase == phaseLobby {
 		g.sun = g.cfg.SunMax
+	}
+	if g.cfg.Classes && g.phase != phasePlay {
+		g.offerAll()
 	}
 	g.syncBots(true)
 	if !g.checkStart() {

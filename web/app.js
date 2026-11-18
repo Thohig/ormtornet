@@ -256,6 +256,41 @@ function playerTag(p) {
   return p.ready ? "redo" : "";
 }
 
+// Klassen: i lobbyn väljer man en av två, sedan står klassen överst.
+function renderClass(box, line) {
+  const offer = state.erbjudande || [];
+  if (offer.length) {
+    line("Välj klass" + (touch ? "" : " (1 eller 2)"), "plan");
+    offer.forEach((c, i) => {
+      const d = document.createElement("div");
+      d.className = "classpick";
+      d.tabIndex = 0;
+      const title = document.createElement("div");
+      title.className = "classname";
+      title.textContent = (i + 1) + " " + c.namn;
+      const st = document.createElement("div");
+      st.className = "dimline";
+      st.textContent = "+ " + c.styrka;
+      const sv = document.createElement("div");
+      sv.className = "dimline";
+      sv.textContent = "− " + c.svaghet;
+      d.append(title, st, sv);
+      d.title = c.beskrivning;
+      d.addEventListener("click", () => send({ t: "klass", name: c.id }));
+      box.appendChild(d);
+    });
+    return;
+  }
+  const c = state.klass;
+  if (!c) return;
+  line(c.namn, "classname");
+  if (state.phase !== "spel") {
+    line(c.beskrivning, "dimline");
+    line("+ " + c.styrka, "dimline");
+    line("− " + c.svaghet, "dimline");
+  }
+}
+
 function renderSide() {
   setEnterLabel(state.phase === "slut" ? "Nytt torn" : "Redo");
   const ul = $("players");
@@ -266,7 +301,7 @@ function renderSide() {
     mark.textContent = "@ ";
     mark.style.color = MapView.PLAYER_COLORS[p.slot];
     li.appendChild(mark);
-    li.appendChild(document.createTextNode(p.name + (p.id === state.you ? " (du)" : p.ai ? " (AI)" : p.bot ? " (dator)" : "")));
+    li.appendChild(document.createTextNode(p.name + (p.id === state.you ? " (du)" : p.ai ? " (AI)" : p.bot ? " (dator)" : "") + (p.klass ? ", " + p.klass : "")));
     const tag = playerTag(p);
     if (tag) {
       const t = document.createElement("span");
@@ -294,6 +329,7 @@ function renderSide() {
     box.appendChild(d);
   };
   if (!me) return;
+  renderClass(box, line);
   box.appendChild(hpMeter(state.hp, state.maxHp));
   if (me.status === "dod") line("Död", "cond");
   line("Skatt: " + me.treasure + " guld");
@@ -826,6 +862,11 @@ function pressKey(key) {
     return true;
   }
   if (!joined) return false;
+  const offer = (state && state.erbjudande) || [];
+  if ((key === "1" || key === "2") && offer[+key - 1]) {
+    send({ t: "klass", name: offer[+key - 1].id });
+    return true;
+  }
   if (key === "Enter") {
     send({ t: "ready" });
     return true;

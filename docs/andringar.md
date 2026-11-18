@@ -6,6 +6,21 @@ eller leder tornet.
 
 ## 2026-11-18
 
+### Klasser
+
+Vandrarna väljer klass i lobbyn, en av två slumpade, i Talismans anda.
+Åtta klasser med var sin styrka och svaghet: Legoknekten, Tjuven,
+Örtkvinnan, Kartritaren, Ormtjusaren, Spårfinnaren, Lyktbäraren och
+Pilgrimen. README beskriver dem under "Klasser". Spelledaren kan stänga av
+klasserna på värdsidan.
+
+Balansen är provad med AI-spelare: med samma klass för alla fyra når
+13–35 % kammaren, mot 23 % utan klass. AI-spelarna använder inte alla
+styrkor (till exempel tjuvens tysta näve och kartritarens karta), så
+människor kan få andra siffror. Siffrorna justeras i `data/klasser.json`.
+
+Rättat: spelledarens översikt kraschade under en vandring med egen karta.
+
 ### Ingen vet var de andra börjar
 
 Gäller när vandrarna inte ser varandra (`egen` och `moten`).

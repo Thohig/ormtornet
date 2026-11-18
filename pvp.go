@@ -126,6 +126,21 @@ func (g *Game) resolveFights(active []*Player) {
 func (g *Game) exchange(a, b *Player) {
 	aHits := beats(a.Action, b.Action) || (a.Action == actAttack && b.Action == actAttack)
 	bHits := beats(b.Action, a.Action) || (a.Action == actAttack && b.Action == actAttack)
+	// Klasserna: skölden, den som inte kan slåss och den som inte vill.
+	for _, f := range [2]struct {
+		me, foe        *Player
+		meHits, foeHit *bool
+	}{{a, b, &aHits, &bHits}, {b, a, &bHits, &aHits}} {
+		if f.me.Action == actAttack && f.foe.Action == actAttack && g.is(f.me, "legoknekt") {
+			*f.foeHit = false
+		}
+		if f.me.Action == actDodge && g.is(f.me, "kartritare") {
+			*f.meHits, *f.foeHit = false, true
+		}
+		if g.is(f.me, "pilgrim") {
+			*f.meHits = false
+		}
+	}
 	g.logTo(a, g.data.Text("pvp_duell", "namn", b.Name, "ditt_val", g.choiceWord(a.Action), "dess_val", g.choiceWord(b.Action)), "")
 	g.logTo(b, g.data.Text("pvp_duell", "namn", a.Name, "ditt_val", g.choiceWord(b.Action), "dess_val", g.choiceWord(a.Action)), "")
 	g.fightNoise(a, b)
@@ -139,10 +154,10 @@ func (g *Game) exchange(a, b *Player) {
 	// Slagen faller samtidigt: räkna bytet innan någon av dem tar något.
 	aLoot, bLoot := 0, 0
 	if aHits {
-		aLoot = loot(b)
+		aLoot = g.loot(a, b)
 	}
 	if bHits {
-		bLoot = loot(a)
+		bLoot = g.loot(b, a)
 	}
 	if aHits {
 		g.hit(a, b, aLoot)
@@ -158,22 +173,27 @@ func (g *Game) ambush(a, b *Player) {
 		g.logTo(a, g.data.Text("pvp_vantar", "namn", b.Name, "ditt_val", g.choiceWord(a.Action)), "dim")
 		return
 	}
+	if g.is(a, "pilgrim") {
+		g.logTo(a, g.data.Text("klass_pilgrim_fred", "namn", b.Name), "dim")
+		return
+	}
 	g.fightNoise(a, b)
 	g.logTo(a, g.data.Text("pvp_oberedd", "namn", b.Name), "")
 	g.logTo(b, g.data.Text("pvp_bakhall", "namn", a.Name), "varn")
-	g.hit(a, b, loot(b))
+	g.hit(a, b, g.loot(a, b))
 }
 
-// loot är hur mycket guld en träff river åt sig: en tredjedel, minst 1, och
-// allt om slaget dödar.
-func loot(victim *Player) int {
+// loot är hur mycket guld en träff river åt sig: en tredjedel (hälften för
+// tjuven), minst 1, och allt om slaget dödar.
+func (g *Game) loot(attacker, victim *Player) int {
 	if victim.Treasure <= 0 {
 		return 0
 	}
 	if victim.HP <= pvpSkada {
 		return victim.Treasure
 	}
-	return max(1, victim.Treasure/3)
+	share := g.classVal(attacker, "byte", 1.0/3)
+	return max(1, int(float64(victim.Treasure)*share))
 }
 
 // hit låter a träffa b, ta bytet och kanske döda b.
@@ -258,6 +278,7 @@ func (g *Game) meetIfNew(p *Player) {
 	if len(foes) == 0 {
 		return
 	}
+	g.shareMap(p, foes)
 	for _, o := range foes {
 		g.logTo(p, g.packHint(o), "info")
 	}
