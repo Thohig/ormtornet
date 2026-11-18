@@ -179,9 +179,13 @@ spelarsidan (`/`), med tre vyer i tur och ordning:
    fliken.
 2. **Namnrutan**: "Vad heter du, vandrare?" Är tornet fullt eller namnet
    upptaget står felet här.
-3. **Spelet**, där spelaren stannar resten av kvällen. Det går igenom tre faser:
-   - **lobbyn**: vandrarna, valet av klass (1 eller 2) och "Tryck Enter när
-     du är redo" (Redo på en pekskärm),
+3. **Spelet**, där spelaren stannar resten av kvällen. Det går igenom fyra faser:
+   - **lobbyn**: vandrarna och "Tryck Enter när du är redo" (Redo på en
+     pekskärm),
+   - **klassvalet**: en egen skärm med ett spelkort för varje klass, med
+     styrka och svaghet. Välj med 1–8 eller ett klick. Kort som andra har
+     tagit är gråa. Den som inte har valt när tiden är slut får ett av de
+     lediga korten,
    - **vandringen**: kartan, solmätaren, sidopanelen och loggen. Panelen
      är små skiffertavlor: Vandrare, Här, Du och Styrning. Under Du står
      klassen, liv som en mätare, skatt, drycker, föremålen, kompassen och
@@ -192,9 +196,10 @@ spelarsidan (`/`), med tre vyer i tur och ordning:
      `✎` krita), ett streck skiljer rundorna åt och äldre rundor bleknar,
    - **slutet**: resultatrutan över kartan, och i loggen vinnaren, krönikan
      och epilogen. Enter (Nytt torn) leder tillbaka till lobbyn när alla
-     har tryckt, med ett nytt torn och två nya klasser att välja mellan.
-     Utan klasser börjar nästa vandring direkt. Starta nu på värdsidan
-     hoppar över lobbyn och lottar nya klasser.
+     har tryckt, med ett nytt torn. Därefter kommer ett nytt klassval.
+     Utan klasser börjar nästa vandring direkt efter lobbyn. Starta nu på
+     värdsidan går från lobbyn till klassvalet, och under klassvalet
+     börjar vandringen direkt.
 
 Under spelet kan spelaren också se att tornet har en spelledare, tornets röst
 i loggen, "tornet är stängt" när tornet stänger och "förbindelsen bröts,
@@ -251,9 +256,10 @@ lobbyn. Där du senast såg någon står en svag ring i dess färg, och i
 listan över vandrare står "sågs runda 12" eller "inte sedd". Tecknet
 försvinner när du ser vandraren igen, eller när den har gått ut eller dött.
 
-Med egen karta ser du bara porten du själv kom in genom, och kartan växer
-därifrån. De andra portarna hittar du när du går dit. Med "bara när de
-möts" syns alla portrummen på kartan från början. Vem som börjar vid vilken port lottas när vandringen börjar,
+Från början känner du bara rummet du börjar i, och kartan växer därifrån
+och zoomar ut efter hand. De andras portar är okända tills någon går in i
+dem. Med egen karta ser du bara rum du själv har gått igenom; med de andra
+valen syns alla rum som någon har gått in i. Vem som börjar vid vilken port lottas när vandringen börjar,
 och var och en får bara veta sin egen. Ordningen i listan och färgen säger
 inget om porten, och när någon kommer till tornet står det inte vid vilken
 port. Står du i ett grannrum till en port när någon går ut hör du porten
@@ -310,12 +316,15 @@ fick. Texterna står i `data/texter.json` under `kronika_*`.
 
 ### Klasser
 
-I lobbyn får var och en två slumpade klasser att välja mellan, med 1 eller
-2 (eller ett tryck på pekskärmen). Ingen klass finns två gånger i samma
-torn. Den som inte har valt när vandringen börjar får en av sina två.
-Klassen står i listan över vandrare, och i spelledarens översikt.
-AI-spelarna väljer efter sin personlighet. Klassen gäller en vandring:
-efter Nytt torn får alla två nya att välja mellan i lobbyn.
+När alla är redo i lobbyn kommer klassvalet: en skärm med ett spelkort
+för varje klass. Var och en väljer ett kort med 1–8, ett klick eller ett
+tryck. Ingen klass finns två gånger i samma torn, så kort som andra har
+tagit går inte att välja. Vandringen börjar när alla har valt, eller när
+tiden är slut (`klassval_sekunder` i `data/klasser.json`, förval 30). Den
+som inte har valt får då ett slumpat ledigt kort. Klassen står i listan
+över vandrare, och i spelledarens översikt. AI-spelarna väljer efter sin
+personlighet. Klassen gäller en vandring: efter Nytt torn väljer alla
+igen.
 
 | Klass | Styrka | Svaghet |
 |---|---|---|

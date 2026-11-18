@@ -309,6 +309,9 @@ body[data-niva="4"] #crt::after { animation: throb 0.95s infinite; }
 }
 /* Kartan är krita på en skiffertavla. */
 #map {
+  position: absolute;
+  left: 0;
+  top: 0;
   display: block;
   border-radius: 6px;
   filter: drop-shadow(0 0 1px rgba(230, 228, 220, 0.25));
@@ -528,3 +531,70 @@ body.touch #side { overflow-y: auto; }
 #me .rost { color: #e3b8f0; }
 .item.active { cursor: pointer; }
 .item.active:hover { color: var(--hi); }
+
+/* Klassvalet: ett spelkort för varje klass. */
+#classscreen { align-items: center; justify-content: center; overflow-y: auto; }
+#choose {
+  width: min(1040px, 100%);
+  padding: 24px 16px;
+  margin: auto;
+  text-align: center;
+}
+#choose h1 {
+  margin: 0 0 6px;
+  color: var(--hi);
+  font-size: 22px;
+  font-weight: normal;
+  letter-spacing: 0.3em;
+}
+#chooseLead, #chooseStatus { color: var(--dim); margin: 0 0 18px; }
+#chooseStatus { margin: 18px 0 0; min-height: 1.4em; }
+#chooseStatus .secs { color: var(--hi); }
+#chooseStatus .secs.urgent { color: var(--warn); }
+#cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 14px;
+  text-align: left;
+}
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 300px;
+  padding: 14px 14px 30px;
+  border: 1px solid var(--dim);
+  border-radius: 10px;
+  outline: 1px solid var(--faint);
+  outline-offset: -6px;
+  background: linear-gradient(170deg, #1a150c, #0b0905 70%);
+  color: var(--fg);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: transform 0.15s, border-color 0.15s, box-shadow 0.15s;
+}
+.card:hover:not(:disabled), .card:focus-visible {
+  transform: translateY(-3px);
+  border-color: var(--hi);
+  box-shadow: 0 0 14px var(--glow);
+  outline-color: var(--dim);
+}
+.card .num { position: absolute; top: 10px; right: 14px; color: var(--dim); }
+.card .num.low { top: auto; bottom: 10px; transform: rotate(180deg); }
+.card .cname { color: var(--hi); font-size: 16px; padding-right: 20px; }
+.card .desc { color: var(--dim); font-style: italic; font-size: 13px; }
+.card .stats { color: var(--info); font-size: 13px; }
+.card .good, .card .bad { font-size: 13px; line-height: 1.4; }
+.card .bad { color: #c99a7a; }
+.card .owner { margin-top: auto; color: var(--dim); }
+.card:disabled { cursor: default; opacity: 0.4; }
+.card.mine { opacity: 1; border-color: var(--hi); box-shadow: 0 0 18px var(--glow); }
+.card.mine .owner { color: var(--hi); }
+body.touch .card .num { display: none; }
+@media (max-width: 700px) {
+  #classscreen.active { display: block; height: auto; }
+  #cards { grid-template-columns: 1fr; }
+  .card { min-height: 0; }
+}

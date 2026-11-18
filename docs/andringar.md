@@ -6,6 +6,23 @@ eller leder tornet.
 
 ## 2026-11-19
 
+### Klassvalet på en egen skärm, och kartan växer fram
+
+- Klassvalet är inte längre i lobbyn. När alla är redo kommer en egen
+  skärm med ett spelkort för varje klass: namn, beskrivning, liv och
+  drycker, styrka och svaghet. Välj med 1–8 eller ett klick. Kort som
+  andra har tagit är gråa med namnet på den som tog dem.
+- Klassvalet har en tidsgräns, 30 sekunder (`klassval_sekunder` i
+  `data/klasser.json`). Den som inte har valt får ett slumpat ledigt kort,
+  och vandringen börjar när alla har en klass.
+- Spelledarens Starta nu går från lobbyn till klassvalet, och under
+  klassvalet börjar vandringen direkt. Värdsidan visar vem som har valt.
+- Kartan visar bara det vandraren känner till. I början är det rummet man
+  börjar i, och kartan zoomar ut mjukt efter hand som tornet växer fram.
+  Okända rum syns som prickar bara bredvid de kända.
+- De andras portar är okända från början, även för Kartritaren och med
+  de andra synlighetsvalen, tills någon går in i dem.
+
 ### Tydligare paneler
 
 - Sidopanelen är delad i små skiffertavlor med ram, som kartan: Vandrare,

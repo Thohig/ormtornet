@@ -1,4 +1,6 @@
 {
+  "klassval_sekunder": 30,
+
   "klasser": [
     {
       "id": "legoknekt",
@@ -92,7 +94,10 @@
 
   "texter": {
     "klass_val": [
-      "Tornet frågar vem du är. Välj en av två."
+      "Tornet frågar vem du är. Välj ett kort innan tiden är slut."
+    ],
+    "klass_slump": [
+      "Du hann inte välja. Tornet bestämmer vem du är."
     ],
     "klass_vald": [
       "Du är {klass}. {styrka}"
@@ -101,7 +106,7 @@
       "{namn} är {klass}."
     ],
     "klass_upptagen": [
-      "Någon annan hann välja {klass}. Välj igen."
+      "Någon annan hann välja {klass}. Välj ett annat kort."
     ],
     "klass_legoknekt_skold": [
       "Ni slår samtidigt, men du fångar slaget med skölden."

@@ -2,12 +2,13 @@ package main
 
 // Klasser: varje vandrare kan vara något, med en egen styrka och en svaghet.
 // Namn, texter och siffror står i data/klasser.json. Här står vad varje
-// klass gör, styrt av dess id, och hur man väljer klass i lobbyn.
+// klass gör, styrt av dess id, och hur man väljer klass efter lobbyn.
 
 import (
 	"math/rand/v2"
 	"slices"
 	"strconv"
+	"time"
 )
 
 type Class struct {
@@ -29,13 +30,17 @@ type classView struct {
 	Beskrivning string `json:"beskrivning"`
 	Styrka      string `json:"styrka"`
 	Svaghet     string `json:"svaghet"`
+	Liv         int    `json:"liv,omitempty"`
+	Drycker     int    `json:"drycker,omitempty"`
+	Tagen       string `json:"tagen,omitempty"` // vem som har valt klassen, under klassvalet
+	Din         bool   `json:"din,omitempty"`   // klassen är den egna
 }
 
 func viewOfClass(c *Class) *classView {
 	if c == nil {
 		return nil
 	}
-	return &classView{ID: c.ID, Namn: c.Namn, Beskrivning: c.Beskrivning, Styrka: c.Styrka, Svaghet: c.Svaghet}
+	return &classView{ID: c.ID, Namn: c.Namn, Beskrivning: c.Beskrivning, Styrka: c.Styrka, Svaghet: c.Svaghet, Liv: c.Liv, Drycker: c.Drycker}
 }
 
 func (d *Data) class(id string) *Class {
@@ -87,107 +92,131 @@ func (g *Game) startPotions(p *Player) int {
 	return 0
 }
 
-// takenClasses är klasserna som andra redan har valt.
-func (g *Game) takenClasses(except *Player) map[string]bool {
-	taken := map[string]bool{}
+// takenClasses är klasserna som andra redan har valt, med vem som valde.
+func (g *Game) takenClasses(p *Player) map[string]*Player {
+	taken := map[string]*Player{}
 	for _, o := range g.players {
-		if o != nil && o != except && o.classID != "" {
-			taken[o.classID] = true
+		if o != nil && o != p && o.classID != "" {
+			taken[o.classID] = o
 		}
 	}
 	return taken
 }
 
-// offerClasses drar två klasser som ingen annan har valt eller fått att
-// välja mellan, om det går.
-func (g *Game) offerClasses(p *Player) {
-	if !g.cfg.Classes || p.classID != "" || len(g.data.Klasser) == 0 {
-		return
-	}
+// freeClasses är klasserna som ingen annan än p har valt.
+func (g *Game) freeClasses(p *Player) []string {
 	taken := g.takenClasses(p)
-	offered := map[string]bool{}
-	for _, o := range g.players {
-		if o != nil && o != p {
-			for _, id := range o.offer {
-				offered[id] = true
-			}
+	var free []string
+	for _, c := range g.data.Klasser {
+		if taken[c.ID] == nil {
+			free = append(free, c.ID)
 		}
 	}
-	var fresh, free []string
-	for _, c := range g.data.Klasser {
-		if taken[c.ID] {
+	return free
+}
+
+// Klassvalet: när alla är redo i lobbyn lägger tornet fram ett kort för
+// varje klass. Var och en väljer ett kort som ingen annan har tagit. Den som
+// inte har valt när tiden är slut får ett av de lediga korten, och vandringen
+// börjar när alla har en klass.
+func (g *Game) startChoosing() {
+	g.phase = phaseChoose
+	g.resetClasses()
+	g.chooseGen++
+	gen := g.chooseGen
+	wait := time.Duration(g.data.KlassvalSekunder) * time.Second
+	if wait <= 0 {
+		wait = 30 * time.Second
+	}
+	g.deadline = time.Now().Add(wait)
+	if g.timer != nil {
+		g.timer.Stop()
+	}
+	g.timer = time.AfterFunc(wait, func() {
+		g.mu.Lock()
+		defer g.mu.Unlock()
+		if g.phase == phaseChoose && g.chooseGen == gen {
+			g.startGame()
+		}
+	})
+	for _, p := range g.players {
+		if p == nil {
 			continue
 		}
-		free = append(free, c.ID)
-		if !offered[c.ID] {
-			fresh = append(fresh, c.ID)
+		if p.bot != nil {
+			g.botChooseClass(p)
+		} else if p.client != nil {
+			g.logTo(p, g.data.Text("klass_val"), "info")
 		}
 	}
-	rand.Shuffle(len(fresh), func(i, j int) { fresh[i], fresh[j] = fresh[j], fresh[i] })
-	rand.Shuffle(len(free), func(i, j int) { free[i], free[j] = free[j], free[i] })
-	p.offer = nil
-	for _, id := range append(fresh, free...) {
-		if len(p.offer) == 2 {
-			break
-		}
-		if !slices.Contains(p.offer, id) {
-			p.offer = append(p.offer, id)
-		}
-	}
-	if p.bot != nil {
-		g.botChooseClass(p)
-		return
-	}
-	if len(p.offer) > 0 {
-		g.logTo(p, g.data.Text("klass_val"), "info")
+	g.soundAll("val")
+	if !g.checkChosen() {
+		g.broadcastState()
 	}
 }
 
-// ChooseClass tar emot spelarens val av klass i lobbyn.
+// checkChosen startar vandringen när alla som är med har valt klass.
+// Svarar true om den startade.
+func (g *Game) checkChosen() bool {
+	if g.phase != phaseChoose {
+		return false
+	}
+	for _, p := range g.players {
+		if p != nil && p.present() && p.classID == "" && g.cfg.Classes {
+			return false
+		}
+	}
+	g.startGame()
+	return true
+}
+
+// ChooseClass tar emot spelarens val av klass under klassvalet.
 func (g *Game) ChooseClass(c *Client, id string) {
-	if c.player == nil || g.phase == phasePlay {
+	p := c.player
+	if p == nil || g.phase != phaseChoose || p.classID != "" {
 		return
 	}
-	g.chooseClass(c.player, id)
-	g.broadcastState()
+	if g.chooseClass(p, id) {
+		g.soundTo(p, "val")
+	}
+	if !g.checkChosen() {
+		g.broadcastState()
+	}
 }
 
 func (g *Game) chooseClass(p *Player, id string) bool {
-	if !g.cfg.Classes || !slices.Contains(p.offer, id) {
+	if !g.cfg.Classes {
 		return false
 	}
 	cl := g.data.class(id)
 	if cl == nil {
 		return false
 	}
-	if g.takenClasses(p)[id] {
+	if g.takenClasses(p)[id] != nil {
 		g.logTo(p, g.data.Text("klass_upptagen", "klass", cl.Kort), "varn")
-		g.offerClasses(p)
 		return false
 	}
 	p.classID = id
-	p.offer = nil
 	p.HP = g.maxHP(p)
 	g.logTo(p, g.data.Text("klass_vald", "klass", cl.Kort, "styrka", cl.Styrka), "syn")
 	g.logOthers(p, g.data.Text("klass_vald_andra", "namn", p.Name, "klass", cl.Kort), "dim")
-	// Den som fick samma klass att välja på får dra nya.
-	for _, o := range g.players {
-		if o != nil && o != p && o.classID == "" && slices.Contains(o.offer, id) {
-			g.offerClasses(o)
-		}
-	}
 	return true
 }
 
-// botChooseClass: AI-spelaren väljer den klass dess personlighet helst vill ha.
+// botChooseClass: AI-spelaren väljer den lediga klass dess personlighet
+// helst vill ha, annars någon av de lediga.
 func (g *Game) botChooseClass(p *Player) {
-	if len(p.offer) == 0 {
+	if !g.cfg.Classes || p.classID != "" {
 		return
 	}
-	pick := p.offer[0]
+	free := g.freeClasses(p)
+	if len(free) == 0 {
+		return
+	}
+	pick := free[rand.IntN(len(free))]
 	if p.bot != nil && p.bot.pers != nil {
 		for _, want := range p.bot.pers.Klasser {
-			if slices.Contains(p.offer, want) {
+			if slices.Contains(free, want) {
 				pick = want
 				break
 			}
@@ -196,7 +225,8 @@ func (g *Game) botChooseClass(p *Player) {
 	g.chooseClass(p, pick)
 }
 
-// ensureClasses ger alla som inte har valt en klass när vandringen börjar.
+// ensureClasses ger alla som inte har valt en klass när vandringen börjar
+// ett av de lediga korten.
 func (g *Game) ensureClasses() {
 	if !g.cfg.Classes {
 		return
@@ -205,32 +235,42 @@ func (g *Game) ensureClasses() {
 		if p == nil || p.classID != "" {
 			continue
 		}
-		if len(p.offer) == 0 {
-			g.offerClasses(p)
+		free := g.freeClasses(p)
+		if len(free) == 0 {
+			continue
 		}
-		if p.classID == "" && len(p.offer) > 0 {
-			g.chooseClass(p, p.offer[rand.IntN(len(p.offer))])
+		if p.bot == nil {
+			g.logTo(p, g.data.Text("klass_slump"), "info")
 		}
+		g.chooseClass(p, free[rand.IntN(len(free))])
 	}
 }
 
-// resetClasses tar bort allas klasser inför ett nytt torn.
+// resetClasses tar bort allas klasser inför ett nytt klassval.
 func (g *Game) resetClasses() {
 	for _, p := range g.players {
 		if p != nil {
-			p.classID, p.offer = "", nil
+			p.classID = ""
 		}
 	}
 }
 
-// offerAll låter alla som saknar klass välja, till exempel när spelledaren
-// slår på klasserna i lobbyn.
-func (g *Game) offerAll() {
-	for _, p := range g.players {
-		if p != nil && p.classID == "" && len(p.offer) == 0 {
-			g.offerClasses(p)
+// classCards är korten under klassvalet: alla klasser, och vem som har tagit
+// vilken.
+func (g *Game) classCards(me *Player) []*classView {
+	var cards []*classView
+	for i := range g.data.Klasser {
+		c := &g.data.Klasser[i]
+		v := viewOfClass(c)
+		for _, o := range g.players {
+			if o != nil && o.classID == c.ID {
+				v.Tagen = o.Name
+				v.Din = o == me
+			}
 		}
+		cards = append(cards, v)
 	}
+	return cards
 }
 
 // classLabel är klassen i listan över vandrare, till exempel "kartritaren".

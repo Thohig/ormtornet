@@ -1,7 +1,6 @@
 package main
 
 import (
-	"slices"
 	"testing"
 )
 
@@ -20,48 +19,74 @@ func classGame(t *testing.T) (*Game, *Client, *Client) {
 func withClass(t *testing.T, id string) (*Game, *Player, *Player) {
 	t.Helper()
 	g, a, b := classGame(t)
-	a.player.offer = []string{id}
-	if !g.chooseClass(a.player, id) {
-		t.Fatalf("kunde inte välja %s", id)
-	}
 	g.Ready(a)
 	g.Ready(b)
+	if g.phase != phaseChoose {
+		t.Fatalf("klassvalet började inte, fasen är %q", g.phase)
+	}
+	g.ChooseClass(a, id)
+	if a.player.classID != id {
+		t.Fatalf("kunde inte välja %s", id)
+	}
+	g.startGame()
 	if g.phase != phasePlay {
 		t.Fatal("spelet startade inte")
 	}
 	return g, a.player, b.player
 }
 
-func TestClassOfferAndChoose(t *testing.T) {
+func TestClassChoosing(t *testing.T) {
 	g, a, b := classGame(t)
 	pa, pb := a.player, b.player
-	if len(pa.offer) != 2 || pa.offer[0] == pa.offer[1] {
-		t.Fatalf("Alva fick inte två olika klasser: %v", pa.offer)
+	if st := g.stateFor(pa); len(st.Offer) != 0 {
+		t.Fatal("korten syns redan i lobbyn")
 	}
-	if st := g.stateFor(pa); len(st.Offer) != 2 {
-		t.Fatal("klienten ser inte valet")
+	g.ChooseClass(a, "tjuv")
+	if pa.classID != "" {
+		t.Fatal("klass vald i lobbyn")
 	}
-	id := pa.offer[0]
+	g.Ready(a)
+	g.Ready(b)
+	if g.phase != phaseChoose {
+		t.Fatalf("fasen är %q, inte klassval", g.phase)
+	}
+	st := g.stateFor(pa)
+	if len(st.Offer) != len(g.data.Klasser) || st.DeadlineMs <= 0 {
+		t.Fatalf("%d kort, %d ms kvar", len(st.Offer), st.DeadlineMs)
+	}
+	id := g.data.Klasser[0].ID
 	g.ChooseClass(a, id)
 	if pa.classID != id || pa.HP != g.maxHP(pa) {
 		t.Fatalf("valet gick inte igenom: %q, %d liv", pa.classID, pa.HP)
 	}
-	// Bo kan inte välja samma klass.
-	pb.offer = []string{id}
-	if g.chooseClass(pb, id) || pb.classID == id {
-		t.Fatal("två vandrare med samma klass")
+	// Alva kan inte byta, och Bo kan inte ta samma kort.
+	g.ChooseClass(a, g.data.Klasser[1].ID)
+	g.ChooseClass(b, id)
+	if pa.classID != id || pb.classID != "" || g.phase != phaseChoose {
+		t.Fatalf("Alva %q, Bo %q, fasen %q", pa.classID, pb.classID, g.phase)
 	}
-	if slices.Contains(pb.offer, id) {
-		t.Fatal("Bo fick samma klass att välja på igen")
+	if v := g.stateFor(pb).Offer[0]; v.Tagen != "Alva" || v.Din {
+		t.Fatalf("kortet visar inte vem som tog det: %+v", v)
 	}
-	// Den som inte väljer får en klass när vandringen börjar.
-	g.Ready(a)
-	g.Ready(b)
-	if pb.classID == "" {
-		t.Fatal("Bo fick ingen klass")
+	// När alla har valt börjar vandringen.
+	g.ChooseClass(b, g.data.Klasser[2].ID)
+	if g.phase != phasePlay || pb.classID != g.data.Klasser[2].ID {
+		t.Fatalf("fasen %q, Bo %q", g.phase, pb.classID)
 	}
 	if v := viewOf(g.stateFor(pa), pb); v.Class == "" {
 		t.Fatal("klassen syns inte i listan")
+	}
+}
+
+func TestClassChoosingTimesOut(t *testing.T) {
+	g, a, b := classGame(t)
+	g.Ready(a)
+	g.Ready(b)
+	g.ChooseClass(a, "tjuv")
+	// Tiden är slut: Bo får ett av de lediga korten.
+	g.startGame()
+	if b.player.classID == "" || b.player.classID == "tjuv" {
+		t.Fatalf("Bo fick %q", b.player.classID)
 	}
 }
 
@@ -69,8 +94,9 @@ func TestClassesOff(t *testing.T) {
 	g := testGame(t)
 	a := testClient()
 	g.Join(a, "Alva")
-	if len(a.player.offer) != 0 || g.classOf(a.player) != nil {
-		t.Fatal("klass fast klasserna är av")
+	g.begin()
+	if g.phase != phasePlay || g.classOf(a.player) != nil {
+		t.Fatalf("fasen %q, klass %v fast klasserna är av", g.phase, g.classOf(a.player))
 	}
 }
 
@@ -78,14 +104,20 @@ func TestBotPicksPreferredClass(t *testing.T) {
 	g := testGame(t)
 	g.cfg.Classes = true
 	g.AddBots(1)
+	a := testClient()
+	g.Join(a, "Alva")
+	g.Ready(a)
 	var bot *Player
 	for _, p := range g.players {
-		if p != nil {
+		if p != nil && p.bot != nil {
 			bot = p
 		}
 	}
 	if bot == nil || bot.classID == "" {
 		t.Fatal("AI-spelaren valde ingen klass")
+	}
+	if want := bot.bot.pers.Klasser; len(want) > 0 && bot.classID != want[0] {
+		t.Fatalf("AI-spelaren valde %q, inte %q", bot.classID, want[0])
 	}
 }
 
@@ -203,11 +235,12 @@ func TestSparfinnareNamesTrail(t *testing.T) {
 	}
 }
 
-// Nytt torn leder tillbaka till lobbyn, där alla får välja klass igen.
+// Nytt torn leder tillbaka till lobbyn och sedan till ett nytt klassval.
 func TestNewTowerOffersNewClasses(t *testing.T) {
 	g, a, b := classGame(t)
 	g.Ready(a)
 	g.Ready(b)
+	g.startGame()
 	if g.phase != phasePlay || a.player.classID == "" {
 		t.Fatal("vandringen startade inte med klasser")
 	}
@@ -223,17 +256,18 @@ func TestNewTowerOffersNewClasses(t *testing.T) {
 	}
 	for _, c := range []*Client{a, b} {
 		p := c.player
-		if p.classID != "" || len(p.offer) != 2 || p.Ready {
-			t.Fatalf("%s: klass %q, %d att välja på, redo %v", p.Name, p.classID, len(p.offer), p.Ready)
-		}
-		if p.Status != statusIn || p.Treasure != 0 {
-			t.Fatalf("%s står inte vid porten i det nya tornet", p.Name)
+		if p.Ready || p.Status != statusIn || p.Treasure != 0 {
+			t.Fatalf("%s står inte redo att börja om vid porten", p.Name)
 		}
 	}
-	g.ChooseClass(a, a.player.offer[1])
 	g.Ready(a)
 	g.Ready(b)
-	if g.phase != phasePlay || b.player.classID == "" {
-		t.Fatal("nästa vandring startade inte från lobbyn")
+	if g.phase != phaseChoose || a.player.classID != "" || b.player.classID != "" {
+		t.Fatalf("fasen %q, klasser %q %q", g.phase, a.player.classID, b.player.classID)
+	}
+	g.ChooseClass(a, "tjuv")
+	g.ChooseClass(b, "kartritare")
+	if g.phase != phasePlay {
+		t.Fatal("nästa vandring startade inte efter klassvalet")
 	}
 }

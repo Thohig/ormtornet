@@ -149,9 +149,6 @@ func (g *Game) ApplySettings(s Settings) (Settings, error) {
 		g.sunMax = g.scaledSun()
 		g.sun = g.sunMax
 	}
-	if g.cfg.Classes && g.phase != phasePlay {
-		g.offerAll()
-	}
 	if g.phase == phaseLobby && g.towerSize() != g.size {
 		g.newTower() // ett torn av den nya storleken
 	}
@@ -174,11 +171,14 @@ func (g *Game) ForceStart() bool {
 	if g.humansPresent() == 0 && !(g.cfg.GMMode && g.botCount() > 0) {
 		return false
 	}
+	if g.phase == phaseChoose {
+		g.startGame() // klassvalet slutar direkt: den som inte har valt får ett kort
+		return true
+	}
 	if g.phase == phaseEnd {
-		g.resetClasses() // spelledaren hoppar över lobbyn: nya klasser lottas
 		g.newTower()
 	}
-	g.startGame()
+	g.begin()
 	return true
 }
 

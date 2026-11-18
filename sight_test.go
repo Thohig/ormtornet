@@ -363,3 +363,29 @@ func TestGMViewWithOwnMap(t *testing.T) {
 		t.Fatalf("översikten ser %d varelser", len(v.Map.Monsters))
 	}
 }
+
+// Från början känner var och en bara sitt eget startrum, oavsett
+// synligheten. En annans port blir känd när någon går in i den.
+func TestOnlyOwnPortAtStart(t *testing.T) {
+	for _, sight := range []string{sightAll, sightMeet, sightOwn} {
+		g, a, b := startTwo(t)
+		g.cfg.Sight = sight
+		pa, pb := a.player, b.player
+		ports := 0
+		for _, cn := range g.corners() {
+			if hasRoom(g.stateFor(pa), cn.x, cn.y) {
+				ports++
+			}
+		}
+		if ports != 1 || !hasRoom(g.stateFor(pa), pa.X, pa.Y) {
+			t.Fatalf("%s: Alva ser %d portar från början", sight, ports)
+		}
+		if hasRoom(g.stateFor(pa), pb.X, pb.Y) {
+			t.Fatalf("%s: Alva ser Bos port", sight)
+		}
+		g.rooms[pb.Y][pb.X].Walked = true
+		if want := sight != sightOwn; hasRoom(g.stateFor(pa), pb.X, pb.Y) != want {
+			t.Fatalf("%s: Bos port efter att någon gått in där", sight)
+		}
+	}
+}

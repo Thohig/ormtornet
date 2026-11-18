@@ -65,14 +65,21 @@ const MapView = (() => {
   const SLOTS = [[2, 1], [5, 1], [2, 3], [5, 3], [1, 2], [6, 2], [3, 1], [4, 3]];
 
   let canvas, ctx, cols, rows, cellW, cellH, fontPx;
-  // Utsnittet: i ett stort torn på en liten skärm visas bara rummen runt den
-  // egna vandraren, så att tecknen går att läsa. Ett tryck på kartan växlar.
+  // Utsnittet: kartan visar bara det vandraren känner till. I början är det
+  // rummet vid porten, och kartan zoomar ut efter hand som tornet växer
+  // fram. Blir det för smått att läsa följer utsnittet den egna vandraren,
+  // och ett tryck på kartan visar allt man känner till. Spelledaren, som
+  // inte är någon vandrare, ser alltid hela tornet.
   const VIEW_ROOMS = 9;
+  const MIN_SPAN = 3; // så nära går kartan som mest, i rum
   const MIN_FONT = 8;
+  const ZOOM_MS = 1100;
   let towerSize = 0;
-  let viewing = false; // utsnittet används just nu
-  let wantWhole = false; // den som spelar vill se hela tornet
-  let vcols = 0, vrows = 0, ox = 0, oy = 0;
+  let wantWhole = false; // den som spelar vill se allt den känner till
+  let boxW = 0, boxH = 0, ox = 0, oy = 0;
+  // view är rutan som syns, i rum: x, y, bredd och höjd. Den glider mot
+  // target när kartan växer.
+  let view = null, from = null, target = null, zoomAt = 0, zooming = false;
   // grid och colr: tecknen. wall: väggceller (true), wallc: en färg som
   // tar över kritans, för ekot. Golv, kammare och vandrare samlas i listor.
   let grid, colr, wall, wallc, floors, rings, figures;
@@ -114,37 +121,113 @@ const MapView = (() => {
     resize();
   }
 
-  // fit räknar ut teckenstorleken för c x r celler i rutan box.
-  function fit(box, c, r) {
-    let px = Math.max(6, Math.floor(Math.min(box.width / (c * 0.62), box.height / (r * 1.12))));
-    // Avrundningen kan göra kartan lite för bred på en smal skärm.
-    while (px > 6 && (c * Math.round(px * 0.62) > box.width || r * Math.round(px * 1.12) > box.height)) px--;
-    return px;
-  }
-
   function resize() {
     if (!canvas) return;
     const box = canvas.parentElement.getBoundingClientRect();
-    fontPx = fit(box, cols, rows);
-    viewing = false;
-    vcols = cols;
-    vrows = rows;
-    const mine = lastState && lastState.you;
-    if (fontPx < MIN_FONT && towerSize > VIEW_ROOMS && mine && !wantWhole) {
-      viewing = true;
-      vcols = VIEW_ROOMS * RW + 1;
-      vrows = VIEW_ROOMS * RH + 1;
-      fontPx = fit(box, vcols, vrows);
-    }
-    cellW = Math.round(fontPx * 0.62);
-    cellH = Math.round(fontPx * 1.12);
+    boxW = Math.floor(box.width);
+    boxH = Math.floor(box.height);
+    if (boxW <= 0 || boxH <= 0) return; // dold just nu
     const dpr = window.devicePixelRatio || 1;
-    canvas.width = vcols * cellW * dpr;
-    canvas.height = vrows * cellH * dpr;
-    canvas.style.width = vcols * cellW + "px";
-    canvas.style.height = vrows * cellH + "px";
+    canvas.width = boxW * dpr;
+    canvas.height = boxH * dpr;
+    canvas.style.width = boxW + "px";
+    canvas.style.height = boxH + "px";
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    view = null; // hoppa direkt till rätt utsnitt
     if (lastState) draw(lastState);
+  }
+
+  // scaleFor ger teckenstorleken när rutan v (i rum) ska få plats.
+  function scaleFor(v) {
+    return Math.min(boxW / (v.w * RW * 0.62), boxH / (v.h * RH * 1.12));
+  }
+
+  // wanted räknar ut rutan kartan ska visa: allt man känner till, med lite
+  // luft omkring, och aldrig närmare än MIN_SPAN rum.
+  function wanted(state) {
+    if (!state.you) return { x: 0, y: 0, w: towerSize, h: towerSize };
+    let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+    const take = (x, y) => {
+      if (x < 0 || y < 0) return;
+      x0 = Math.min(x0, x);
+      y0 = Math.min(y0, y);
+      x1 = Math.max(x1, x + 1);
+      y1 = Math.max(y1, y + 1);
+    };
+    state.rooms.forEach((r) => take(r.x, r.y));
+    // De andra vandrarna räknas bara med när alla syns hela tiden.
+    state.players.forEach((p) => {
+      if (p.id === state.you || (state.sight === "alla" && !p.hidden && p.status !== "ute")) take(p.x, p.y);
+    });
+    if (x0 === Infinity) return { x: 0, y: 0, w: towerSize, h: towerSize };
+    const me = state.players.find((p) => p.id === state.you);
+    let v = grow({ x: x0, y: y0, w: x1 - x0, h: y1 - y0 }, MIN_SPAN);
+    if (!wantWhole && me && me.x >= 0 && scaleFor(v) < MIN_FONT && Math.max(v.w, v.h) > VIEW_ROOMS) {
+      // För smått att läsa: följ den egna vandraren inom det kända.
+      const n = Math.min(VIEW_ROOMS, Math.max(v.w, v.h));
+      const cx = Math.max(v.x, Math.min(v.x + v.w - n, me.x + 0.5 - n / 2));
+      const cy = Math.max(v.y, Math.min(v.y + v.h - n, me.y + 0.5 - n / 2));
+      v = { x: cx, y: cy, w: Math.min(n, v.w), h: Math.min(n, v.h) };
+    }
+    return v;
+  }
+
+  function grow(v, span) {
+    const w = Math.max(span, v.w);
+    const h = Math.max(span, v.h);
+    return { x: v.x - (w - v.w) / 2, y: v.y - (h - v.h) / 2, w, h };
+  }
+
+  function same(a, b) {
+    return a && b && ["x", "y", "w", "h"].every((k) => Math.abs(a[k] - b[k]) < 0.01);
+  }
+
+  // aim sätter rutan kartan ska visa. En ny ruta nås med en mjuk zoom från
+  // den som syns just nu; första gången hoppar kartan direkt dit.
+  function aim(t, now) {
+    if (!view) {
+      view = target = t;
+      zoomAt = -Infinity;
+      return;
+    }
+    if (same(t, target)) return;
+    from = current(now);
+    target = t;
+    zoomAt = now;
+    if (!zooming) {
+      zooming = true;
+      requestAnimationFrame(step);
+    }
+  }
+
+  function step(now) {
+    if (lastState) draw(lastState, now);
+    if (zoomAt > -Infinity) requestAnimationFrame(step);
+    else zooming = false;
+  }
+
+  function current(now) {
+    if (zoomAt === -Infinity) return target;
+    const f = Math.min(1, (now - zoomAt) / ZOOM_MS);
+    if (f >= 1) {
+      zoomAt = -Infinity;
+      return target;
+    }
+    const e = f < 0.5 ? 2 * f * f : 1 - (-2 * f + 2) ** 2 / 2;
+    const v = {};
+    ["x", "y", "w", "h"].forEach((k) => (v[k] = from[k] + (target[k] - from[k]) * e));
+    return v;
+  }
+
+  // place räknar ut teckenstorlek och förskjutning för utsnittet just nu.
+  function place(now) {
+    view = current(now);
+    fontPx = scaleFor(view);
+    cellW = fontPx * 0.62;
+    cellH = fontPx * 1.12;
+    // Rutan läggs mitt på tavlan.
+    ox = view.x * RW - (boxW / cellW - view.w * RW) / 2;
+    oy = view.y * RH - (boxH / cellH - view.h * RH) / 2;
   }
 
   function drawRoom(r) {
@@ -203,7 +286,6 @@ const MapView = (() => {
   }
 
   let lastState = null;
-  let centerX = 0, centerY = 0; // rummet utsnittet senast följde
   const PING_MS = 4500;
   let pings = [];
 
@@ -218,7 +300,7 @@ const MapView = (() => {
       resize(); // nu vet kartan vem som tittar, och om utsnittet behövs
       return;
     }
-    if (!ctx) return;
+    if (!ctx || !boxW) return;
     reveal = !!state.reveal;
     lvl = reveal ? Math.min(4, Math.max(1, state.level || 1)) : 1;
     nowMs = t || performance.now();
@@ -230,11 +312,15 @@ const MapView = (() => {
     rings = [];
     figures = [];
 
-    // Okända rum syns bara som en svag prick.
+    // Okända rum syns bara som en svag prick. För en vandrare bara rummen
+    // bredvid dem den känner till, så att kartan inte avslöjar mer.
     const size = state.size;
     const mid = Math.floor(size / 2);
+    const known = new Set(state.rooms.map((r) => r.x + "," + r.y));
+    const near = (x, y) => [[0, 0], [1, 0], [-1, 0], [0, 1], [0, -1]].some(([dx, dy]) => known.has(x + dx + "," + (y + dy)));
     for (let y = 0; y < size; y++) {
       for (let x = 0; x < size; x++) {
+        if (state.you && !near(x, y)) continue;
         const ch = x === mid && y === mid ? "◌" : "·";
         put(x * RW + Math.floor(RW / 2), y * RH + Math.floor(RH / 2), ch, COLORS.unknown);
       }
@@ -314,20 +400,8 @@ const MapView = (() => {
       if (blink) put(pos[0], pos[1], ARROWS[dir], color);
     }
 
-    // Utsnittet följer den egna vandraren, utom när den inte syns.
-    ox = 0;
-    oy = 0;
-    if (viewing) {
-      const half = Math.floor(VIEW_ROOMS / 2);
-      const meNow = state.players.find((p) => p.id === state.you);
-      if (meNow && meNow.x >= 0) {
-        centerX = meNow.x;
-        centerY = meNow.y;
-      }
-      const limit = towerSize - VIEW_ROOMS;
-      ox = Math.max(0, Math.min(limit, centerX - half)) * RW;
-      oy = Math.max(0, Math.min(limit, centerY - half)) * RH;
-    }
+    aim(wanted(state), nowMs);
+    place(nowMs);
     paint();
   }
 
@@ -341,8 +415,8 @@ const MapView = (() => {
   }
 
   function paint() {
-    const W = vcols * cellW;
-    const H = vrows * cellH;
+    const W = boxW;
+    const H = boxH;
     ctx.fillStyle = SLATE;
     ctx.fillRect(0, 0, W, H);
     const look = LOOK[lvl];
@@ -470,20 +544,24 @@ const MapView = (() => {
     ctx.font = "bold " + fontPx + "px Menlo, Monaco, monospace";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    for (let y = 0; y < vrows; y++) {
-      for (let x = 0; x < vcols; x++) {
-        const ch = grid[y + oy] && grid[y + oy][x + ox];
+    const xa = Math.max(0, Math.floor(ox)), xb = Math.min(cols, Math.ceil(ox + W / cellW));
+    const ya = Math.max(0, Math.floor(oy)), yb = Math.min(rows, Math.ceil(oy + H / cellH));
+    for (let y = ya; y < yb; y++) {
+      for (let x = xa; x < xb; x++) {
+        const ch = grid[y][x];
         if (!ch || ch === " ") continue;
-        ctx.fillStyle = colr[y + oy][x + ox];
-        ctx.fillText(ch, x * cellW + cellW / 2, y * cellH + cellH / 2);
+        ctx.fillStyle = colr[y][x];
+        const [cx, cy] = px(x, y, false);
+        ctx.fillText(ch, cx, cy);
       }
     }
   }
 
-  // toggleWhole växlar mellan utsnittet och hela tornet.
+  // toggleWhole växlar mellan utsnittet runt vandraren och allt den
+  // känner till, när det är för mycket för att läsa på en gång.
   function toggleWhole() {
     wantWhole = !wantWhole;
-    resize();
+    if (lastState) draw(lastState);
   }
 
   function wake() {

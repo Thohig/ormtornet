@@ -88,7 +88,8 @@
   body.gm #host { max-width: 1100px; }
   #gmTop { color: var(--fg); }
   #gmTop .warn { color: var(--warn); }
-  #gmMapBox { height: min(70vh, 640px); display: flex; align-items: center; justify-content: center; margin: 8px 0; }
+  #gmMapBox { position: relative; height: min(70vh, 640px); margin: 8px 0; }
+  #gmMap { position: absolute; left: 0; top: 0; }
   .tablewrap { overflow-x: auto; }
   #gmPlayers { border-collapse: collapse; width: 100%; font-size: 13px; }
   #gmPlayers th { text-align: left; font-weight: normal; color: var(--dim); padding: 4px 10px 4px 0; }
@@ -335,6 +336,9 @@ function statusText(v) {
   if (v.phase === "spel") {
     return "Vandringen pågår. Runda " + v.round + ", " + v.sun + " av " + v.sunMax + " rundor kvar till solnedgången.";
   }
+  if (v.phase === "klassval") {
+    return "Vandrarna väljer klass. Vandringen börjar när alla har valt eller tiden är slut. Starta nu börjar den direkt.";
+  }
   const prefix = v.phase === "slut" ? "Vandringen är slut. " : "";
   if (v.settings.spelledarlage) {
     return prefix + here.length + " vandrare vid portarna. Du startar vandringen med Starta nu.";
@@ -353,6 +357,7 @@ function tag(p, phase) {
   if (!p.online) return ["borta", "away"];
   if (p.ai) return ["AI spelar tills " + p.name + " är tillbaka", "ai"];
   if (p.bot) return ["datorstyrd", ""];
+  if (phase === "klassval") return p.chosen ? ["har valt klass", "ok"] : ["väljer klass", ""];
   if (phase === "spel") {
     return { ute: ["ute", "ok"], forlorad: ["förlorad", "away"], dod: ["död", "away"] }[p.status] || ["i tornet", ""];
   }

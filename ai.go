@@ -88,7 +88,9 @@ func (g *Game) AddBots(n int) int {
 		}
 		g.players[slot] = p
 		g.fitTower(p)
-		g.offerClasses(p)
+		if g.phase == phaseChoose {
+			g.botChooseClass(p)
+		}
 		added++
 	}
 	return added

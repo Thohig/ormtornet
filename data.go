@@ -124,24 +124,25 @@ type RoomType struct {
 }
 
 type Data struct {
-	Rumstyper    []RoomType          `json:"rumstyper"`
-	Ingang       RoomType            `json:"ingang"`
-	Skattkammare RoomType            `json:"skattkammare"`
-	Horn         []string            `json:"horn"`
-	Riktningar   []string            `json:"riktningar"`
-	Regioner     [][]string          `json:"regioner"`
-	Texter       map[string][]string `json:"texter"`
-	Regler       Rules               `json:"regler"`
-	Fallor       []Trap              `json:"fallor"`
-	Sok          Search              `json:"sok"`
-	Ormen        Serpent             `json:"ormen"`
-	Monster      Monsters            `json:"monster"`
-	Avslojande   Reveal              `json:"avslojande"`
-	AI           AIData              `json:"ai"`
-	Svarighet    Difficulty          `json:"svarighet"`
-	Intro        IntroData           `json:"intro"`
-	Klasser      []Class             `json:"klasser"`
-	Foremal      ItemData            `json:"foremal"`
+	Rumstyper        []RoomType          `json:"rumstyper"`
+	Ingang           RoomType            `json:"ingang"`
+	Skattkammare     RoomType            `json:"skattkammare"`
+	Horn             []string            `json:"horn"`
+	Riktningar       []string            `json:"riktningar"`
+	Regioner         [][]string          `json:"regioner"`
+	Texter           map[string][]string `json:"texter"`
+	Regler           Rules               `json:"regler"`
+	Fallor           []Trap              `json:"fallor"`
+	Sok              Search              `json:"sok"`
+	Ormen            Serpent             `json:"ormen"`
+	Monster          Monsters            `json:"monster"`
+	Avslojande       Reveal              `json:"avslojande"`
+	AI               AIData              `json:"ai"`
+	Svarighet        Difficulty          `json:"svarighet"`
+	Intro            IntroData           `json:"intro"`
+	Klasser          []Class             `json:"klasser"`
+	KlassvalSekunder int                 `json:"klassval_sekunder"` // hur länge klassvalet får ta
+	Foremal          ItemData            `json:"foremal"`
 }
 
 // IntroData styr startsidan.
@@ -228,6 +229,9 @@ func mergeData(d, part *Data) {
 	}
 	if len(part.Klasser) > 0 {
 		d.Klasser = part.Klasser
+	}
+	if part.KlassvalSekunder > 0 {
+		d.KlassvalSekunder = part.KlassvalSekunder
 	}
 	if len(part.Foremal.Lista) > 0 {
 		d.Foremal = part.Foremal

@@ -119,8 +119,8 @@ function handle(msg) {
       if (!joined) {
         joined = true;
         try { localStorage.setItem("ormtornet-namn", myName); } catch {}
-        show("game");
       }
+      showPhase();
       if (!mapReady || mapSize !== msg.size) {
         MapView.setup($("map"), msg.size);
         mapReady = true;
@@ -133,6 +133,7 @@ function handle(msg) {
       renderSide();
       renderTop();
       renderOverlay();
+      renderChoose();
       if (state.phase === "spel") Log.age(state.round);
       break;
     case "log":
@@ -289,31 +290,77 @@ function playerTag(p) {
   return p.ready ? "redo" : "";
 }
 
-// Klassen: i lobbyn väljer man en av två, sedan står klassen överst.
-function renderClass(box, line) {
-  const offer = state.erbjudande || [];
-  if (offer.length) {
-    line("Välj klass" + (touch ? "" : " (1 eller 2)"), "plan");
-    offer.forEach((c, i) => {
+// Klassvalet har en egen skärm mellan lobbyn och vandringen. Kartan ritas
+// om när spelskärmen syns igen, eftersom den inte har någon storlek medan
+// den är dold.
+function showPhase() {
+  const want = state.phase === "klassval" ? "classscreen" : "game";
+  if ($(want).classList.contains("active")) return;
+  show(want);
+  if (want === "game") MapView.resize();
+}
+
+// Korten: ett för varje klass. Ett kort som någon annan har tagit går inte
+// att välja, och när man själv har valt ligger de andra kvar som de är.
+function renderChoose() {
+  if (state.phase !== "klassval") return;
+  const cards = state.erbjudande || [];
+  const box = $("cards");
+  const mine = cards.find((c) => c.din);
+  box.innerHTML = "";
+  cards.forEach((c, i) => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "card" + (c.din ? " mine" : "");
+    b.setAttribute("role", "listitem");
+    b.disabled = !!c.tagen || !!mine;
+    const add = (cls, text) => {
       const d = document.createElement("div");
-      d.className = "classpick";
-      d.tabIndex = 0;
-      const title = document.createElement("div");
-      title.className = "classname";
-      title.textContent = (i + 1) + " " + c.namn;
-      const st = document.createElement("div");
-      st.className = "dimline";
-      st.textContent = "+ " + c.styrka;
-      const sv = document.createElement("div");
-      sv.className = "dimline";
-      sv.textContent = "− " + c.svaghet;
-      d.append(title, st, sv);
-      d.title = c.beskrivning;
-      d.addEventListener("click", () => send({ t: "klass", name: c.id }));
-      box.appendChild(d);
-    });
-    return;
-  }
+      d.className = cls;
+      d.textContent = text;
+      b.appendChild(d);
+      return d;
+    };
+    add("num", String(i + 1));
+    add("num low", String(i + 1));
+    add("cname", c.namn);
+    add("desc", c.beskrivning);
+    const stats = [];
+    if (c.liv) stats.push((c.liv > 0 ? "+" : "−") + Math.abs(c.liv) + " liv");
+    if (c.drycker) stats.push(c.drycker + (c.drycker === 1 ? " dryck" : " drycker") + " från början");
+    if (stats.length) add("stats", stats.join(" · "));
+    add("good", "+ " + c.styrka);
+    add("bad", "− " + c.svaghet);
+    add("owner", c.din ? "ditt kort" : c.tagen ? "tagen av " + c.tagen : "");
+    b.addEventListener("click", () => chooseCard(i));
+    box.appendChild(b);
+  });
+  updateChooseStatus();
+}
+
+function chooseCard(i) {
+  const c = state && state.phase === "klassval" && (state.erbjudande || [])[i];
+  if (!c || c.tagen || state.erbjudande.some((x) => x.din)) return false;
+  send({ t: "klass", name: c.id });
+  return true;
+}
+
+function updateChooseStatus() {
+  if (!state || state.phase !== "klassval") return;
+  const el = $("chooseStatus");
+  const secs = Math.ceil(remainingMs() / 1000);
+  const mine = (state.erbjudande || []).find((c) => c.din);
+  const waiting = state.players.filter((p) => p.online && !p.klass && p.id !== state.you).map((p) => p.name);
+  let text = mine ? "Du är " + mine.namn.toLowerCase() + ". " : touch ? "Tryck på ett kort. " : "Tryck 1–" + state.erbjudande.length + " eller klicka på ett kort. ";
+  if (mine && waiting.length) text += "Väntar på " + waiting.join(", ") + ". ";
+  el.textContent = text;
+  const s = document.createElement("span");
+  s.className = "secs" + (secs <= 5 ? " urgent" : "");
+  s.textContent = secs + " s";
+  el.appendChild(s);
+}
+
+function renderClass(box, line) {
   const c = state.klass;
   if (!c) return;
   line(c.namn, "classname");
@@ -468,7 +515,7 @@ function renderTop() {
 }
 
 function remainingMs() {
-  if (!state || state.phase !== "spel") return 0;
+  if (!state || (state.phase !== "spel" && state.phase !== "klassval")) return 0;
   return Math.max(0, state.deadlineMs - (performance.now() - state.receivedAt));
 }
 
@@ -480,6 +527,11 @@ function updateTimer() {
     const n = state.players.filter((p) => p.online).length;
     el.textContent = (n < state.minPlayers ? "väntar på vandrare" : "väntar på att alla är redo") + " · tornet " + state.size + " × " + state.size;
     el.classList.remove("urgent");
+    return;
+  }
+  if (state.phase === "klassval") {
+    el.textContent = "klassval";
+    updateChooseStatus();
     return;
   }
   if (state.phase === "slut") {
@@ -965,10 +1017,13 @@ function pressKey(key) {
     useItemSlot(+key - 1);
     return true;
   }
-  const offer = (state && state.erbjudande) || [];
-  if ((key === "1" || key === "2") && offer[+key - 1]) {
-    send({ t: "klass", name: offer[+key - 1].id });
-    return true;
+  if (state && state.phase === "klassval") {
+    // Siffrorna väljer kort. Tab och Enter får göra som vanligt bland knapparna.
+    if (/^[1-9]$/.test(key)) {
+      chooseCard(+key - 1);
+      return true;
+    }
+    return false;
   }
   if ((key === "v" || key === "V") && state && state.kanViska) {
     openWhisper();

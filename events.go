@@ -149,6 +149,7 @@ func (g *Game) leaveCellar(p *Player) {
 	p.X, p.Y = s[0], s[1]
 	room := g.reveal(p.X, p.Y)
 	room.Event = "" // ingen ny fälla direkt efter källaren
+	room.Walked = true
 	g.noteRoom(p)
 	g.newRoomSound(p)
 	g.logTo(p, g.data.Text("kallare_ut", "rum", g.roomName(room)), "info")

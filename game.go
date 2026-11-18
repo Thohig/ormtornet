@@ -21,9 +21,10 @@ const (
 
 // Spelets faser.
 const (
-	phaseLobby = "lobby"
-	phasePlay  = "spel"
-	phaseEnd   = "slut"
+	phaseLobby  = "lobby"
+	phaseChoose = "klassval" // efter lobbyn: vandrarna väljer klass
+	phasePlay   = "spel"
+	phaseEnd    = "slut"
 )
 
 // En spelares läge.
@@ -176,6 +177,7 @@ type Room struct {
 	Event    string // fälla som väntar på den som först går in
 	Mark     string // tecken som visar att en fälla har slagit till
 	Searched bool
+	Walked   bool     // någon har gått in i rummet; en port är annars bara känd för den som började där
 	trail    trail    // den som senast gick ut ur rummet, för spåren
 	items    []string // föremål som någon har lämnat här
 	chalk    Dir      // pilen någon har ritat med krita
@@ -193,10 +195,9 @@ type Player struct {
 	ID      int
 	Name    string
 	Slot    int
-	Corner  int      // porten vandraren börjar vid; lottas när vandrarna inte ser varandra
-	classID string   // vald klass, tom om ingen
-	offer   []string // klasser att välja mellan i lobbyn
-	items   []*Item  // föremål i väskan
+	Corner  int     // porten vandraren börjar vid; lottas när vandrarna inte ser varandra
+	classID string  // vald klass, tom om ingen
+	items   []*Item // föremål i väskan
 
 	initiated  bool   // vandraren har viskat tornets hemlighet
 	guessLevel int    // nivån då vandraren senast viskade
@@ -255,11 +256,12 @@ type Game struct {
 	nextID  int
 	level   int
 
-	phase    string
-	sun      int
-	round    int
-	deadline time.Time
-	timer    *time.Timer
+	phase     string
+	sun       int
+	round     int
+	deadline  time.Time
+	timer     *time.Timer
+	chooseGen int // räknas upp vid varje klassval, så att en gammal tidsgräns inte startar något
 
 	deck      []string // ormkorten som är kvar
 	deckSleep int      // antal sovkort när leken byggdes
@@ -587,12 +589,9 @@ func (g *Game) stateFor(me *Player) stateMsg {
 		st.Initiated = me.initiated
 		st.CanWhisper = g.canWhisper(me)
 	}
-	if g.cfg.Classes && me.classID == "" && g.phase != phasePlay {
-		for _, id := range me.offer {
-			if c := g.data.class(id); c != nil {
-				st.Offer = append(st.Offer, viewOfClass(c))
-			}
-		}
+	if g.phase == phaseChoose {
+		st.Offer = g.classCards(me)
+		st.DeadlineMs = max(0, time.Until(g.deadline).Milliseconds())
 	}
 	if g.phase == phasePlay {
 		st.DeadlineMs = max(0, time.Until(g.deadline).Milliseconds())
@@ -721,19 +720,26 @@ func (g *Game) noteRoom(p *Player) {
 
 // knowsRoom är sant om me ser rummet på sin karta. Med synligheten "egen"
 // ser man bara rum man själv har varit i, och av portarna bara den man kom
-// in genom; kartan växer därifrån. Den döda spelaren som styr
-// varelserna ser hela tornet, och när vandringen är slut syns allt.
+// in genom; kartan växer därifrån. Med de andra synligheterna, och för
+// kartritaren, syns alla rum som någon har gått in i, men de andras portar
+// är okända tills någon går in i dem: från början känner var och en bara
+// sitt eget startrum. Den döda spelaren som styr varelserna ser hela
+// tornet, och när vandringen är slut syns allt.
 func (g *Game) knowsRoom(me *Player, x, y int) bool {
-	if !g.rooms[y][x].Revealed {
+	r := &g.rooms[y][x]
+	if !r.Revealed {
 		return false
 	}
-	if me == nil {
+	if me == nil || g.phase == phaseEnd || g.isController(me) {
 		return true // spelledarens översikt ser hela tornet
 	}
-	if g.cfg.Sight != sightOwn || g.phase == phaseEnd || g.isController(me) || g.is(me, "kartritare") {
+	if me.known != nil && me.known[y][x] {
 		return true
 	}
-	return me.known[y][x]
+	if r.Kind == "ingang" && !r.Walked {
+		return false
+	}
+	return g.cfg.Sight != sightOwn || g.is(me, "kartritare")
 }
 
 func (g *Game) Join(c *Client, rawName string) {
@@ -803,8 +809,8 @@ func (g *Game) Join(c *Client, rawName string) {
 	c.player = p
 	g.fitTower(p)
 	horn := g.data.Horn[slot]
-	if g.phase != phasePlay {
-		g.offerClasses(p)
+	if g.phase == phaseChoose {
+		g.logTo(p, g.data.Text("klass_val"), "info")
 	}
 
 	g.broadcastState()
@@ -868,6 +874,9 @@ func (g *Game) Ready(c *Client) {
 // checkStart startar spelet när alla anslutna människor är redo.
 // Datorspelare är alltid redo, men minst en människa måste vara med.
 func (g *Game) checkStart() bool {
+	if g.phase == phaseChoose {
+		return g.checkChosen()
+	}
 	n, humans := 0, 0
 	for _, p := range g.players {
 		if p == nil || !p.present() {
@@ -892,13 +901,22 @@ func (g *Game) checkStart() bool {
 	if g.phase == phaseEnd {
 		g.newTower()
 	}
-	g.startGame()
+	g.begin()
 	return true
 }
 
+// begin går från lobbyn till klassvalet, eller direkt in i vandringen när
+// klasserna är avstängda.
+func (g *Game) begin() {
+	if g.cfg.Classes && len(g.data.Klasser) > 0 {
+		g.startChoosing()
+		return
+	}
+	g.startGame()
+}
+
 // toLobby bygger ett nytt torn efter en vandring och låter alla vänta i
-// lobbyn med två nya klasser att välja mellan. Vandringen börjar när alla
-// har valt och är redo igen.
+// lobbyn. När alla är redo igen väljer de nya klasser.
 func (g *Game) toLobby() {
 	g.phase = phaseLobby
 	g.level, g.levelHeld = 1, false // tornet i lobbyn har inte börjat avslöja något
@@ -918,7 +936,6 @@ func (g *Game) toLobby() {
 			g.logTo(p, g.data.Text("nytt_torn", "min", strconv.Itoa(g.cfg.MinPlayers)), "syn")
 		}
 	}
-	g.offerAll()
 	g.broadcastState()
 }
 
@@ -942,8 +959,8 @@ func (g *Game) newTower() {
 	g.revealPorts()
 }
 
-// revealPorts låter alla fyra portrummen finnas från början. Alla vet var
-// utgångarna är, men inte vem som kom in var.
+// revealPorts låter portrummen finnas från början. Var och en känner bara
+// sin egen tills någon går in i en annans (se knowsRoom).
 func (g *Game) revealPorts() {
 	for _, cn := range g.corners() {
 		g.reveal(cn.x, cn.y)
@@ -1385,6 +1402,7 @@ func (g *Game) move(p *Player, d Dir, depth int) {
 	target := &g.rooms[ny][nx]
 	isNew := !target.Revealed
 	g.reveal(nx, ny)
+	target.Walked = true
 	p.X, p.Y = nx, ny
 	g.noteRoom(p)
 
