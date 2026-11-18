@@ -49,6 +49,7 @@ func (g *Game) trigger(p *Player, t *Trap, depth int) {
 	region := g.data.region(p.X, p.Y)
 	roomName := g.roomName(room)
 	room.Mark = t.Tecken
+	p.Seen[t.ID] = true
 
 	g.logTo(p, t.Namn+"!", "varn")
 	g.logTo(p, pick(t.Texter), "")
@@ -102,6 +103,7 @@ func (g *Game) trigger(p *Player, t *Trap, depth int) {
 			}
 		}
 	}
+	g.explainNow(p, t.ID)
 }
 
 // leaveCellar låter spelaren klättra upp i ett slumpat rum.
@@ -120,7 +122,7 @@ func (g *Game) leaveCellar(p *Player) {
 	room.Event = "" // ingen ny fälla direkt efter källaren
 	g.soundAll("nyttrum")
 	g.logTo(p, g.data.Text("kallare_ut", "rum", g.roomName(room)), "info")
-	g.logTo(p, g.describe(room), "")
+	g.logTo(p, g.describe(p, room, p.X, p.Y), "")
 	g.logOthers(p, g.data.Text("kallare_ut_andra", "namn", p.Name, "region", g.data.region(p.X, p.Y)), "info")
 	g.announceMonster(p)
 }

@@ -44,6 +44,7 @@ const (
 )
 
 type Config struct {
+	Reveal     bool // false stänger av avslöjandet
 	SunMax     int
 	TurnTime   time.Duration
 	MinPlayers int
@@ -103,6 +104,7 @@ type Player struct {
 	Action   string
 	Treasure int
 	Status   string
+	Seen     map[string]bool // fällor och varelser spelaren har mött
 
 	HP      int
 	Potions int
@@ -142,10 +144,12 @@ type Game struct {
 	nextMonsterID int
 	controller    int          // id för den döda spelare som styr varelserna
 	pendingMove   *monsterMove // varelsens drag för rundan
+
+	usedClues map[string]bool // ledtrådar som redan har delats ut
 }
 
 func NewGame(d *Data, cfg Config) *Game {
-	return &Game{data: d, cfg: cfg, level: 1, phase: phaseLobby, sun: cfg.SunMax}
+	return &Game{data: d, cfg: cfg, level: 1, phase: phaseLobby, sun: cfg.SunMax, usedClues: map[string]bool{}}
 }
 
 func inBounds(x, y int) bool { return x >= 0 && y >= 0 && x < gridSize && y < gridSize }
@@ -236,8 +240,9 @@ func (g *Game) roomName(r *Room) string {
 	return g.data.roomType(r.TypeID).Namn
 }
 
-func (g *Game) describe(r *Room) string {
-	return g.data.roomType(r.TypeID).Describe(g.level)
+// describe ger spelaren en beskrivning av rummet för tornets nuvarande nivå.
+func (g *Game) describe(p *Player, r *Room, x, y int) string {
+	return g.data.roomType(r.TypeID).Describe(g.level, p.Slot+x+y)
 }
 
 // Meddelanden till klienten.
@@ -279,6 +284,7 @@ type stateMsg struct {
 	You        int           `json:"you"`
 	Size       int           `json:"size"`
 	Level      int           `json:"level"`
+	Reveal     bool          `json:"reveal"`
 	Phase      string        `json:"phase"`
 	Sun        int           `json:"sun"`
 	SunMax     int           `json:"sunMax"`
@@ -363,7 +369,7 @@ func (g *Game) soundAll(s string) {
 // hålls hemliga tills spelet är slut.
 func (g *Game) stateFor(me *Player) stateMsg {
 	st := stateMsg{
-		T: "state", You: me.ID, Size: gridSize, Level: g.level,
+		T: "state", You: me.ID, Size: gridSize, Level: g.level, Reveal: g.cfg.Reveal,
 		Phase: g.phase, Sun: g.sun, SunMax: g.cfg.SunMax, Round: g.round,
 		MinPlayers: g.cfg.MinPlayers, Action: me.Action,
 		HP: me.HP, MaxHP: g.data.Regler.Liv, Potions: me.Potions,
@@ -474,6 +480,7 @@ func (g *Game) placeAtCorner(p *Player) {
 	p.Action = ""
 	p.Ready = false
 	p.HP = g.data.Regler.Liv
+	p.Seen = map[string]bool{}
 	p.Potions, p.Stuck, p.Cellar, p.Poison, p.Dark = 0, 0, 0, 0, 0
 	g.reveal(cn.x, cn.y)
 }
@@ -535,7 +542,7 @@ func (g *Game) Join(c *Client, rawName string) {
 	g.broadcastState()
 	g.soundAll("ansluter")
 	g.logTo(p, g.data.Text("valkommen", "namn", name, "horn", horn), "syn")
-	g.logTo(p, g.describe(&g.rooms[p.Y][p.X]), "")
+	g.logTo(p, g.describe(p, &g.rooms[p.Y][p.X], p.X, p.Y), "")
 	g.logTo(p, g.data.Text("lobby", "min", strconv.Itoa(g.cfg.MinPlayers)), "info")
 	g.logOthers(p, g.data.Text("ansluter", "namn", name, "horn", horn), "info")
 }
@@ -616,6 +623,8 @@ func (g *Game) startGame() {
 	g.buildDeck()
 	g.controller = 0
 	g.pendingMove = nil
+	g.level = 1
+	g.usedClues = map[string]bool{}
 	for _, p := range g.players {
 		if p != nil {
 			p.Ready = false
@@ -776,6 +785,7 @@ func (g *Game) resolve() {
 		g.endGame()
 	default:
 		g.sunWarning(sunBefore)
+		g.updateLevel()
 		g.round++
 		g.startRound()
 	}
@@ -830,6 +840,7 @@ func (g *Game) endGame() {
 	} else {
 		g.logAll(g.data.Text("ingen_vinnare"), "varn")
 	}
+	g.epilogue()
 	g.logAll(g.data.Text("spela_igen"), "dim")
 	g.soundAll("slut")
 	g.broadcastState()
@@ -927,7 +938,7 @@ func (g *Game) move(p *Player, d Dir, depth int) {
 			g.logTo(p, g.data.Text("morker_nytt"), "dim")
 		} else {
 			g.logTo(p, name+".", "rubrik")
-			g.logTo(p, g.describe(target), "")
+			g.logTo(p, g.describe(p, target, nx, ny), "")
 		}
 		g.logOthers(p, g.data.Text("nytt_rum_andra",
 			"namn", p.Name, "region", g.data.region(nx, ny)), "info")

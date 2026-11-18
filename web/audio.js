@@ -172,7 +172,83 @@ const Sound = (() => {
     breathNode = { src, lfo, out };
   }
 
+  // Dunket. Nivå 1: ett svagt, långsamt dunk. Nivå 2: ett hjärta.
+  // Nivå 3 och 4: snabbare och starkare, med kluckande ljud emellan.
+  // Nivå 0 betyder att avslöjandet är avstängt: inget dunk alls.
+  let heartLevel = 0;
+  let heartTimer = null;
+  const HEART = {
+    1: { gap: 3600, gain: 0.05, double: false, gurgle: 0 },
+    2: { gap: 1700, gain: 0.10, double: true, gurgle: 0 },
+    3: { gap: 1250, gain: 0.15, double: true, gurgle: 0.25 },
+    4: { gap: 950, gain: 0.22, double: true, gurgle: 0.45 },
+  };
+
+  function thump(t, gain) {
+    const o = ctx.createOscillator();
+    o.type = "sine";
+    o.frequency.setValueAtTime(58, t);
+    o.frequency.exponentialRampToValueAtTime(34, t + 0.18);
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(gain, t + 0.015);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + 0.3);
+    const lp = ctx.createBiquadFilter();
+    lp.type = "lowpass";
+    lp.frequency.value = 160;
+    o.connect(lp);
+    lp.connect(g);
+    g.connect(master);
+    o.start(t);
+    o.stop(t + 0.35);
+  }
+
+  function gurgle() {
+    const t = ctx.currentTime;
+    const src = ctx.createBufferSource();
+    src.buffer = white;
+    const bp = ctx.createBiquadFilter();
+    bp.type = "bandpass";
+    bp.Q.value = 9;
+    for (let i = 0; i < 6; i++) {
+      bp.frequency.setValueAtTime(200 + Math.random() * 500, t + i * 0.07);
+    }
+    const g = ctx.createGain();
+    env(g, t, 0.07, 0.05, 0.45);
+    src.connect(bp);
+    bp.connect(g);
+    g.connect(master);
+    src.start(t);
+    src.stop(t + 0.55);
+  }
+
+  function heartbeat() {
+    heartTimer = null;
+    const h = HEART[heartLevel];
+    if (!ctx || !h) return;
+    const t = ctx.currentTime + 0.02;
+    thump(t, h.gain);
+    if (h.double) thump(t + 0.22, h.gain * 0.7);
+    if (Math.random() < h.gurgle) setTimeout(gurgle, 400 + Math.random() * 300);
+    heartTimer = setTimeout(heartbeat, h.gap * (0.95 + Math.random() * 0.1));
+  }
+
+  function setHeart(level) {
+    if (level === heartLevel) return;
+    heartLevel = level;
+    if (heartTimer) clearTimeout(heartTimer);
+    heartTimer = null;
+    if (ctx && HEART[level]) heartTimer = setTimeout(heartbeat, 500);
+  }
+
   const effects = {
+    // Tornet går över till en ny nivå: en djup, svällande ton.
+    niva() {
+      tone(41, 55, "sine", 0.3, 1.5, 2.5, false);
+      tone(82, 110, "triangle", 0.05, 1.5, 2.5, true);
+      const f = noiseHit(brown, "lowpass", 200, 0.3, 1.5, 2.0, false);
+      f.frequency.linearRampToValueAtTime(500, ctx.currentTime + 1.5);
+    },
     // Ormen vaknar: ett väsande som fyller hela tornet, och ett lågt muller.
     vasning() {
       const t = ctx.currentTime;
@@ -404,6 +480,9 @@ const Sound = (() => {
     },
     breath(level) {
       setBreath(level);
+    },
+    level(level) {
+      setHeart(level);
     },
     play(name) {
       if (!ctx || !effects[name]) return;

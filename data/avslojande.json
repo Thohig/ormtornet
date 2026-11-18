@@ -1,0 +1,104 @@
+{
+  "avslojande": {
+    "_om": "Nivå 1 gäller tills solen har sjunkit under första gränsen, nivå 2 under andra och så vidare. Gränserna är andelar av solens startvärde.",
+    "granser": [0.7, 0.4, 0.15],
+    "ledtrad_var_n_runda": 4,
+
+    "nivabyte": {
+      "2": [
+        "Något förändras. Tornet har börjat andas.",
+        "Väggarna rör sig. Långsamt, men de rör sig.",
+        "Dunket du har hört hela tiden har fått en rytm. Två slag, paus. Två slag, paus.",
+        "Golvet höjs och sänks under dig, som ett bröst i sömn."
+      ],
+      "3": [
+        "Ljuset har blivit rött, och i det röda ljuset ser du vad väggarna är gjorda av.",
+        "Lukten är inte längre söt. Den är sur.",
+        "Du ser nu att valven har samma form allihop. De är inte byggda. De har vuxit.",
+        "Hjärtslagen har blivit snabbare."
+      ],
+      "4": [
+        "Solen går ner. Tornet sväljer.",
+        "Hela tornet drar ihop sig. Äntligen förstår du var du är.",
+        "Porten börjar stängas. Det är ingen port.",
+        "Allt rör sig nu. Väggar, golv och tak, i vågor mot mitten."
+      ]
+    },
+
+    "ledtradar": {
+      "1": [
+        "Stenarna i muren är formade som fjäll, inte som kvadrar.",
+        "En svag, söt lukt följer dig. Den är starkast när du går mot tornets mitt.",
+        "Väggarna är varma, och varmare ju längre in du går.",
+        "Långt borta hörs ett dunk. Det kommer med flera sekunders mellanrum.",
+        "Golvet är lite mjukt, som läder som har legat i fukt.",
+        "Du har inte sett några spindelväv, råttor eller fåglar. Inget annat levande har flyttat in här.",
+        "Dammet på golvet ligger i långa, svängda strimmor, som om något har släpats fram.",
+        "Du har gått uppåt och nedåt, men ingen trappa har lett till en annan våning."
+      ],
+      "2": [
+        "Väggen bredvid dig rör sig. Ut, in. Ut, in.",
+        "Dunket har blivit tydligare: två slag tätt efter varandra, sedan tystnad. Som ett hjärta.",
+        "Luften blir varmare när du andas in och svalare när du andas ut. Men det är inte din andning.",
+        "Ett mynt du tappade har rullat iväg mot tornets mitt. Golvet lutar dit.",
+        "Den söta lukten har blivit tyngre. Den påminner om frukt som har börjat jäsa.",
+        "Du hör ett kluckande i väggarna, som av vätska i rör.",
+        "Taket sänker sig när du står still. När du rör dig höjer det sig igen.",
+        "Någon har ristat en pil på väggen som pekar mot porten. Under den står det: SNABBT."
+      ],
+      "3": [
+        "Valven i taket sitter med jämna mellanrum, krökta och vita, och de fortsätter åt alla håll. De liknar revben.",
+        "Trappstegen du har sett är likadana allihop, ihåliga i mitten och staplade på varandra. Som kotor.",
+        "Du hittar en sko. Lädret är upplöst, och kvar i den finns ben som har blivit mjuka och genomskinliga.",
+        "Fjällen i väggarna överlappar varandra åt samma håll: inåt, mot mitten.",
+        "Mellan två stenar sitter en hårtofs fast. Stenen har vuxit runt den.",
+        "Golvet är fuktigt av en klar, sur vätska. Där den har legat länge är stenen glatt och gropig.",
+        "Hjärtslagen kommer nu från en bestämd plats: någonstans under skattkammaren.",
+        "Du hittar en dagbok. Den sista raden lyder: Tornet äter oss en i taget."
+      ],
+      "4": [
+        "Gallret som föll var inget galler. Det var tänder.",
+        "Det ni kallade valv är revben. Ni står i bröstkorgen.",
+        "Skattkammaren är magen. Guldet ligger kvar där eftersom det inte går att smälta.",
+        "Porten är en mun, och munnen håller på att stängas.",
+        "Dunket är ett hjärta, och nu slår det fortare. Den är vaken. Den har alltid varit vaken.",
+        "Gångarna som vred sig var tarmar. De skulle föra er dit där ni smälts.",
+        "Fjällen i väggarna är dess hud, sedd inifrån.",
+        "Trappan som inte ledde någonstans är ryggraden."
+      ]
+    },
+
+    "forklaringar": {
+      "fallgaller": "Fallgallret var tänder som slog igen.",
+      "rasande_golv": "Golvet som rasade var ett svalg som öppnade sig, och källarvalven var dess strupe.",
+      "roterande": "Rummen som roterade var tarmarna, som vred sig för att föra er vidare.",
+      "pilar": "Pilarna var taggar, vassa fjäll som den sköt ut när något kittlade den.",
+      "dimma": "Den giftiga dimman var dess andedräkt.",
+      "ormgrop": "Ormgropen var dess ungar, som den bär inom sig.",
+      "skinn": "Det ömsade skinnet var dess eget. Den bytte hud medan ni var inne i den.",
+      "klocka": "Klockan var ett hjärtslag, så kraftigt att det fick dagen att rusa.",
+      "morker": "Mörkret kom när den blinkade, och era lyktor slocknade i dess utandning.",
+      "eko": "Ekot var dess öron. Den hörde var ni var. Den har alltid hört.",
+      "krypare": "Blekkryparna var parasiter i dess tarmar.",
+      "yngel": "Ormynglen var dess avkomma, kläckt inuti den.",
+      "fjallvakt": "Fjällvakterna var dess försvar: levande fjäll som jagar det som inte hör hemma.",
+      "gallgast": "Gallgasterna var äventyrare som den redan hade smält.",
+      "benvaktare": "Benväktarna var byggda av dess egna revben.",
+      "ormen": "Ormen som sov i kammaren var magens veck. När den vaknade var det magen som drog ihop sig."
+    },
+    "forklaring_rubrik": "Du minns det du har varit med om, och nu förstår du det:",
+
+    "epilog": [
+      "Tornet var ormen. Väggarna var dess kropp, valven dess revben, trappan dess ryggrad, skattkammaren dess mage och porten dess mun."
+    ],
+    "epilog_ute": [
+      "Du kom ut ur dess mun innan den stängdes. Bakom dig sjunker tornet ihop, rullar sig runt sig självt och somnar."
+    ],
+    "epilog_forlorad": [
+      "Munnen stängdes. Du är kvar i magen, bland guldet och de andra."
+    ],
+    "epilog_dod": [
+      "Den har redan börjat smälta dig."
+    ]
+  }
+}

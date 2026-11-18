@@ -136,9 +136,11 @@ func (g *Game) announceMonster(p *Player) {
 		return
 	}
 	t := g.data.monsterType(m.Type)
+	p.Seen[m.Type] = true
 	g.soundTo(p, "monster")
 	g.logTo(p, t.Namn+"!", "varn")
 	g.logTo(p, pick(t.DykerUpp), "")
+	g.explainNow(p, m.Type)
 }
 
 // duel utför en stridsrunda mellan spelaren och varelsen.

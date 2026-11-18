@@ -1,12 +1,33 @@
 {
-  "horn": ["nordväst", "nordöst", "sydväst", "sydöst"],
-  "riktningar": ["norr", "öster", "söder", "väster"],
-  "regioner": [
-    ["nordvästra", "norra", "nordöstra"],
-    ["västra", "mittersta", "östra"],
-    ["sydvästra", "södra", "sydöstra"]
+  "horn": [
+    "nordväst",
+    "nordöst",
+    "sydväst",
+    "sydöst"
   ],
-
+  "riktningar": [
+    "norr",
+    "öster",
+    "söder",
+    "väster"
+  ],
+  "regioner": [
+    [
+      "nordvästra",
+      "norra",
+      "nordöstra"
+    ],
+    [
+      "västra",
+      "mittersta",
+      "östra"
+    ],
+    [
+      "sydvästra",
+      "södra",
+      "sydöstra"
+    ]
+  ],
   "ingang": {
     "id": "ingang",
     "namn": "Tornets port",
@@ -14,10 +35,21 @@
       "1": [
         "Porten är ett högt, välvt hål i muren. Tröskeln är sliten blank av alla som gått in före dig. Luften därinne är varmare än kvällen utanför.",
         "Du står innanför porten. Dagsljuset når bara några steg in, sedan ger det upp. Stenen under fötterna är märkligt mjuk i kanterna."
+      ],
+      "2": [
+        "Portens kanter är mjukare än förut, och tröskeln är fuktig.",
+        "Ute faller ljuset snett. Porten tycks lite mindre än när du kom."
+      ],
+      "3": [
+        "Portens båge har tänder: små, bakåtböjda tänder i en rad längs kanten, så att det är lätt att gå in och svårt att gå ut.",
+        "På tröskeln ligger en känga. Foten sitter kvar i den."
+      ],
+      "4": [
+        "Porten är en mun. Den har stått öppen hela dagen, och nu börjar den stängas.",
+        "Läpparna drar ihop sig. Ljuset utanför har blivit en smal strimma. Spring."
       ]
     }
   },
-
   "skattkammare": {
     "id": "skattkammare",
     "namn": "Skattkammaren",
@@ -25,10 +57,21 @@
       "1": [
         "Salen är rund och sänker sig mot mitten. Där glimmar guld i en hög, och runt högen ligger något väldigt i tunga, långsamma slingor. Det är för mörkt för att se var det börjar eller slutar.",
         "Luften står still och är tjock av sötma. Mynt, kronor och bucklade bägare ligger i en hög. Något stort vilar kring den. Du hör det andas."
+      ],
+      "2": [
+        "Högen av guld höjer och sänker sig, som ett bröst. Slingorna runt den är inte helt stilla.",
+        "Det andas här inne, men andetagen kommer inte från slingorna. De kommer från väggarna."
+      ],
+      "3": [
+        "Väggarna är veckade och glänsande. Mellan mynten ligger svärd, sköldar, hjälmar och ben, alla blanka och halvt upplösta.",
+        "Slingorna runt högen är inte en orm som sover. De är veck i väggen, och de rör sig när väggen rör sig."
+      ],
+      "4": [
+        "Det här är magen. Skatten är det ormen har svalt: guld, rustningar och alla som kom för att ta det.",
+        "Det finns ingen orm i kammaren. Kammaren är i ormen. Guldet är betet, och ni har tagit det."
       ]
     }
   },
-
   "rumstyper": [
     {
       "id": "valvgang",
@@ -37,6 +80,18 @@
         "1": [
           "En smal gång under låga valv. Stenen är fuktig och svagt ljum mot handflatan.",
           "Valven står tätt, båge efter båge, som om de byggts för att hålla emot ett tryck utifrån."
+        ],
+        "2": [
+          "Valven höjer och sänker sig nästan omärkligt, i samma långsamma takt som ditt eget andetag. Fast inte riktigt samma.",
+          "Du lägger handen mot väggen. Den är varm, och under ytan går en svag, jämn rörelse, som vågor."
+        ],
+        "3": [
+          "Valven är inte murade. De är böjda, vita bågar som möts uppe i taket, tätt efter varandra. Som revben.",
+          "Mellan två valvbågar sitter en hjälm fastkilad, och i den resterna av ett ansikte, blankt och halvt upplöst."
+        ],
+        "4": [
+          "Det här är inga valv. Det är revben, och du går genom bröstkorgen på något som lever. Det andas runt dig.",
+          "Bågarna spänns när den andas in. Du är inuti den. Du har varit det hela tiden."
         ]
       }
     },
@@ -47,6 +102,18 @@
         "1": [
           "Tjocka pelare står i två rader. Mellan dem hänger en söt, tung doft som du inte kan placera.",
           "Pelarna är grova och lutar lite inåt, alla åt samma håll."
+        ],
+        "2": [
+          "Pelarna sväller lite och drar ihop sig igen. Den söta doften kommer i stötar, som andedräkt.",
+          "Golvet mellan pelarna är fuktigt och ljummet. Det gungar knappt märkbart under fötterna."
+        ],
+        "3": [
+          "Pelarna är inte sten. De är sega, ljusa strängar som sträcker sig mellan golv och tak och spänns när du går förbi.",
+          "Vid en pelare ligger en ryggsäck. Remmarna är upplösta, och det som var inuti har blivit en gul gegga."
+        ],
+        "4": [
+          "Pelarna är senor. Hela salen är en muskel, och den har börjat dra ihop sig.",
+          "Doften är matsmältning. Du förstår nu vad det är som är sött här, och varför."
         ]
       }
     },
@@ -57,6 +124,18 @@
         "1": [
           "En brunn utan synlig botten mitt i golvet. Långt därnere droppar vatten, med långa mellanrum.",
           "Brunnskanten är blankpolerad. Ur djupet stiger en ljum, fuktig luft."
+        ],
+        "2": [
+          "Vattnet i brunnen stiger och sjunker i långsam takt, som om något andas därnere.",
+          "Droppandet ur djupet har fått en rytm. Dunk, dunk. Det låter inte längre som vatten."
+        ],
+        "3": [
+          "Brunnens kant är rund och mjuk, med veck som en strupe. Ur djupet stiger en sur lukt.",
+          "Långt nere i brunnen flyter en hand. Den har ingen hud kvar, men ringen sitter fortfarande på fingret."
+        ],
+        "4": [
+          "Brunnen är en strupe, och den leder nedåt, mot magen. Det som faller ner kommer aldrig upp.",
+          "Det du hörde droppa var saliv. Ljudet ur djupet är sväljande."
         ]
       }
     },
@@ -67,6 +146,18 @@
         "1": [
           "En vältad bänk och ett rostigt spjut. Den som vaktade här gick i all hast.",
           "Någon har ristat en enda mening i dörrkarmen: VI VAR FEL OM VÄGEN IN. Resten är bortskrapat."
+        ],
+        "2": [
+          "Spjutet som låg på golvet har flyttat sig. Golvet lutar nu åt andra hållet.",
+          "Meningen i dörrkarmen syns tydligare nu. Någon har skrivit mer under den: DET RÖR SIG."
+        ],
+        "3": [
+          "Vakternas sängar är fastvuxna i väggen. Väggen har växt runt dem, långsamt, som bark runt en spik.",
+          "Under bänken ligger en vakt, eller det som är kvar av en. Benen är blanka och mjuka i kanterna, som om någon har sugit på dem."
+        ],
+        "4": [
+          "Vakterna var inte här för att hålla folk ute. De försökte hålla sig själva vid liv, inuti den.",
+          "VI VAR FEL OM VÄGEN IN, stod det. Nu förstår du: vägen in var en mun."
         ]
       }
     },
@@ -77,6 +168,18 @@
         "1": [
           "Ett litet kapell utan bilder. Golvplattorna är slitna i ett mönster av små, överlappande sköldar.",
           "Bänkarna står vända bort från altaret, mot väggen. Ingen vet varför."
+        ],
+        "2": [
+          "Sköldmönstret i golvet glänser, som om det vore vått. Plattorna ligger tätare än förut.",
+          "Det är tyst i kapellet, men tystnaden slår. Ett dovt, jämnt slag, någonstans under golvet."
+        ],
+        "3": [
+          "Golvplattorna är fjäll. Riktiga fjäll, stora som sköldar, och under dem pulserar något varmt.",
+          "Någon har ristat en bön i väggen. Den slutar mitt i ett ord, och ristningen är halvt igenväxt."
+        ],
+        "4": [
+          "Ingen har bett här. Kapellet är ett hudveck, och bänkarna står vända mot väggen eftersom köttet en gång var tunnast där.",
+          "Under fjällen slår hjärtat. Du står närmare det än någon människa borde stå."
         ]
       }
     },
@@ -87,6 +190,18 @@
         "1": [
           "En trappa slingrar sig uppåt och tar slut rakt mot taket. Stegen är ojämnt höga.",
           "Trappan vrider sig runt en tjock mittpelare. Den leder ingenstans."
+        ],
+        "2": [
+          "Trappan vrider sig långsamt, kanske bara ett halvt steg, och vrider sig sedan tillbaka.",
+          "Stegen är varma. De sitter ihop med något segt, som brosk."
+        ],
+        "3": [
+          "Varje trappsteg är en kota. Du ser hålet mitt i varje steg, där något tjockt löper uppåt.",
+          "Halvvägs upp sitter en äventyrare fast i mittpelaren, inbäddad till midjan. Hen rör sig inte."
+        ],
+        "4": [
+          "Trappan är en ryggrad. Den löper genom hela tornet, och den leder ingenstans eftersom den aldrig har varit en väg.",
+          "Ryggraden böjer sig. Hela tornet böjer sig, som en orm som gör sig redo."
         ]
       }
     },
@@ -97,6 +212,18 @@
         "1": [
           "Hyllor med krus och tunnor. Allt är täckt av en tunn, glansig hinna, som av fukt som aldrig torkar.",
           "Säckar som en gång innehöll säd. Nu är de tomma och kladdiga på insidan."
+        ],
+        "2": [
+          "Hinnan på tunnorna rör sig när du andas, som om den andas med dig.",
+          "Kladdet i säckarna är varmt. Det har blivit mer sedan nyss."
+        ],
+        "3": [
+          "Krusen är inte gjorda av lera. De är blanka, ihåliga ben, och i dem ligger rester av något som en gång var mat.",
+          "Bland säckarna ligger en kappa. Av den som bar den finns inte mycket kvar: spännen, knappar, en tand."
+        ],
+        "4": [
+          "Det här är inget förråd. Det är där den sparar det den inte har hunnit smälta. Du är också en sådan sak.",
+          "Hinnan är magsaft. Den har legat på allt här inne, och nu ligger den på dig."
         ]
       }
     },
@@ -107,6 +234,18 @@
         "1": [
           "Järnkrokar i taket där lyktor en gång hängde. Din egen låga fladdrar i ett drag som kommer och går, kommer och går.",
           "Sot på väggarna i långa strimmor. Någon försökte en gång röka ut något härifrån."
+        ],
+        "2": [
+          "Draget kommer och går, kommer och går. Det är inget drag. Det är andetag.",
+          "Lågan böjer sig inåt och sedan utåt, i jämn takt, som om rummet andas genom en enda näsborre."
+        ],
+        "3": [
+          "Krokarna i taket är inte av järn. De är krökta, gulvita taggar som pekar inåt.",
+          "Sotstrimmorna på väggen är fingermärken. Någon har klöst i väggen här, länge."
+        ],
+        "4": [
+          "Krokarna är tänder, och lykthallen är gommen. Den som försökte röka ut något härifrån förstod för sent var hen befann sig.",
+          "Andetagen kommer från lungorna strax bakom väggen. Varje gång lågan böjer sig andas den."
         ]
       }
     },
@@ -117,6 +256,18 @@
         "1": [
           "Väggarna här är inte murade utan släta, nästan polerade. Vita ränder löper längs dem i jämna bågar.",
           "Rummet är mer grotta än sal. Stenen har ett svagt mönster, som av fina rutor."
+        ],
+        "2": [
+          "De vita ränderna löper i bågar som spänns och slappnar av.",
+          "Det fina rutmönstret i stenen glimmar svagt i ditt ljus, som fjäll i vatten."
+        ],
+        "3": [
+          "Rutmönstret är fjäll, sett inifrån. Du står i ett skinn, mellan två lager av samma kropp.",
+          "På golvet ligger ett avlagt skinn, och inuti det ett skelett i rustning, ihopkrupet som ett foster."
+        ],
+        "4": [
+          "Grottan är huden sedd från insidan. Allt som är slätt här har slipats av det som har rört sig förbi i hundra år.",
+          "Det vita är ärr: gamla sår efter dem som försökte skära sig ut."
         ]
       }
     },
@@ -127,6 +278,18 @@
         "1": [
           "Ett städ och en släckt ässja. Ändå är det varmare här än det borde vara.",
           "Verktygen hänger prydligt på väggen. Alla är böjda, som om de har klämts."
+        ],
+        "2": [
+          "Värmen kommer inte från ässjan. Den kommer från väggarna, i stötar.",
+          "De böjda verktygen har böjt sig lite till."
+        ],
+        "3": [
+          "Väggen bakom ässjan har en kant av upplöst järn, som om den har ätit på en spade.",
+          "I ässjan ligger aska och tänder. Människotänder."
+        ],
+        "4": [
+          "Det som klämde ihop verktygen var muskler. Smedjan är en del av tarmen, och tarmen trycker.",
+          "Värmen är kroppsvärme. Du har gått omkring i ett varmblodigt djur."
         ]
       }
     },
@@ -137,6 +300,18 @@
         "1": [
           "Böckerna har svällt ihop till en grå massa. Någon har ristat streck i väggen. Många streck.",
           "En bok ligger uppslagen. Sidorna är fastklistrade vid varandra av något sött."
+        ],
+        "2": [
+          "Den grå massan av böcker sväller och sjunker långsamt. Sidorna prasslar, som om någon andas på dem.",
+          "Strecken i väggen har blivit fler. Du börjar räkna dem. Det tar för lång tid."
+        ],
+        "3": [
+          "Strecken är dagar. Den som ristade dem levde här, inne i den, i flera månader.",
+          "I massan av böcker sitter en hand fast, hopsmält med sidorna. Den håller i en penna."
+        ],
+        "4": [
+          "På den sista läsbara sidan står det: tornet är ingen byggnad. Det är en kropp, och vi är det den äter.",
+          "Den som ristade strecken slutade inte för att hen kom ut."
         ]
       }
     },
@@ -147,11 +322,22 @@
         "1": [
           "Murarna möts i en spetsig båge. Ett avlägset ljud, som av något tungt som flyttar sig, dör bort innan du hinner lyssna.",
           "Här korsas gångarna. Golvet sluttar svagt mot mitten av tornet."
+        ],
+        "2": [
+          "Golvet sluttar mot mitten, och sluttningen har blivit brantare.",
+          "Ljudet av något tungt som flyttar sig kommer tillbaka, och nu hör du att det kommer från alla håll."
+        ],
+        "3": [
+          "Gångarna möts här som blodkärl, och väggarna är fulla av tunna rör som pulserar.",
+          "I korsningen ligger tre benknotor i en hög, ordnade som en varning. Ingen har förstått den."
+        ],
+        "4": [
+          "Alla gångar leder mot magen. Det var därför golvet sluttade. Ni har letts dit, steg för steg.",
+          "Ljudet av något tungt som flyttar sig var du. Du är det som flyttar sig inuti den."
         ]
       }
     }
   ],
-
   "texter": {
     "valkommen": [
       "{namn}, du står innanför porten i tornets {horn}. Någonstans i mitten sägs en orm sova kring sin skatt. Ta vad du vågar och kom ut innan solen går ner."
@@ -250,8 +436,14 @@
     "spel_pagar": [
       "Vandringen har redan börjat. Vänta tills solen har gått ner."
     ],
-    "tomt_namn": ["Tornet vill veta vad du heter."],
-    "namn_upptaget": ["Någon med det namnet är redan i tornet."],
-    "fullt": ["Tornet tar inte emot fler. Fyra är redan inne."]
+    "tomt_namn": [
+      "Tornet vill veta vad du heter."
+    ],
+    "namn_upptaget": [
+      "Någon med det namnet är redan i tornet."
+    ],
+    "fullt": [
+      "Tornet tar inte emot fler. Fyra är redan inne."
+    ]
   }
 }

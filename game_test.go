@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"testing"
 	"time"
 )
@@ -14,7 +15,7 @@ func testGame(t *testing.T) *Game {
 	// Inga slumpade varelser eller fällor; testerna placerar dem själva.
 	d.Monster.Chans = 0
 	d.Regler.Handelsechans = 0
-	return NewGame(d, Config{SunMax: 10, TurnTime: time.Hour, MinPlayers: 2})
+	return NewGame(d, Config{Reveal: true, SunMax: 10, TurnTime: time.Hour, MinPlayers: 2})
 }
 
 func testClient() *Client {
@@ -495,5 +496,110 @@ func TestDeadPlayerControlsMonsters(t *testing.T) {
 	g.damage(pb, 100, false)
 	if g.isController(pb) {
 		t.Fatal("två spelare styr varelserna")
+	}
+}
+
+// logs plockar ut loggtexterna en klient har fått.
+func logs(c *Client) []string {
+	var out []string
+	for {
+		select {
+		case b := <-c.send:
+			var m logMsg
+			if json.Unmarshal(b, &m) == nil && m.T == "log" {
+				out = append(out, m.Text)
+			}
+		default:
+			return out
+		}
+	}
+}
+
+func contains(list []string, s string) bool {
+	for _, x := range list {
+		if x == s {
+			return true
+		}
+	}
+	return false
+}
+
+func TestRevealLevels(t *testing.T) {
+	g := testGame(t)
+	g.cfg.SunMax = 100
+	want := map[int]int{100: 1, 71: 1, 70: 2, 41: 2, 40: 3, 16: 3, 15: 4, 0: 4}
+	for sun, lvl := range want {
+		if got := g.levelFor(sun); got != lvl {
+			t.Errorf("sol %d: nivå %d, väntade %d", sun, got, lvl)
+		}
+	}
+	g.cfg.Reveal = false
+	if g.levelFor(0) != 1 {
+		t.Error("avstängt avslöjande ska stanna på nivå 1")
+	}
+}
+
+func TestRevealDifferentCluesAndExplanations(t *testing.T) {
+	g, a, b := startTwo(t)
+	a.player.Seen["fallgaller"] = true
+	logs(a)
+	logs(b)
+	// Solen sjunker under alla gränser: nivå 4 på en gång.
+	g.sun = 1
+	g.updateLevel()
+	if g.level != 4 {
+		t.Fatalf("nivå %d", g.level)
+	}
+	la, lb := logs(a), logs(b)
+	lvl4 := g.data.Avslojande.Ledtradar["4"]
+	var ca, cb string
+	for _, c := range lvl4 {
+		if contains(la, c) {
+			ca = c
+		}
+		if contains(lb, c) {
+			cb = c
+		}
+	}
+	if ca == "" || cb == "" || ca == cb {
+		t.Fatalf("ledtrådarna ska finnas och skilja sig: %q och %q", ca, cb)
+	}
+	expl := g.data.Avslojande.Forklaringar["fallgaller"]
+	if !contains(la, expl) || contains(lb, expl) {
+		t.Fatal("bara den som mött fallgallret ska få dess förklaring")
+	}
+	// Beskrivningarna följer nivån.
+	room := g.reveal(center, center)
+	if d := g.describe(a.player, room, center, center); !contains(g.data.Skattkammare.Beskrivningar["4"], d) {
+		t.Fatalf("fel beskrivning på nivå 4: %q", d)
+	}
+}
+
+func TestRevealDisabled(t *testing.T) {
+	g, a, _ := startTwo(t)
+	g.cfg.Reveal = false
+	g.sun = 1
+	g.updateLevel()
+	g.endGame()
+	for _, l := range logs(a) {
+		if contains(g.data.Avslojande.Epilog, l) {
+			t.Fatal("epilogen visades fast avslöjandet är avstängt")
+		}
+	}
+	if g.level != 1 {
+		t.Fatalf("nivå %d", g.level)
+	}
+}
+
+func TestEpilogue(t *testing.T) {
+	g, a, _ := startTwo(t)
+	logs(a)
+	g.endGame()
+	l := logs(a)
+	if !contains(l, g.data.Avslojande.Epilog[0]) {
+		t.Fatal("epilogen saknas")
+	}
+	if !contains(l, g.data.Avslojande.EpilogForlorad[0]) {
+		t.Fatal("den som är kvar inne ska få veta var den är")
 	}
 }

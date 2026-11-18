@@ -132,10 +132,11 @@ type Data struct {
 	Sok          Search              `json:"sok"`
 	Ormen        Serpent             `json:"ormen"`
 	Monster      Monsters            `json:"monster"`
+	Avslojande   Reveal              `json:"avslojande"`
 }
 
 // Filerna i datamappen. Alla läses in i samma struktur; "texter" slås ihop.
-var dataFiles = []string{"texter.json", "fallor.json", "ormen.json", "monster.json"}
+var dataFiles = []string{"texter.json", "fallor.json", "ormen.json", "monster.json", "avslojande.json"}
 
 // loadData läser filerna i mappen dir. Saknas en fil används den inbyggda kopian.
 func loadData(dir string) (*Data, string, error) {
@@ -172,6 +173,12 @@ func loadData(dir string) (*Data, string, error) {
 	}
 	if d.Regler.Liv <= 0 {
 		d.Regler.Liv = 6
+	}
+	if len(d.Avslojande.Granser) != 3 {
+		return nil, "", fmt.Errorf("avslojande.json: granser ska ha tre värden")
+	}
+	if d.Avslojande.LedtradVarNRunda <= 0 {
+		d.Avslojande.LedtradVarNRunda = 4
 	}
 	if len(d.Monster.Typer) == 0 {
 		return nil, "", fmt.Errorf("monster.json: inga monster")
@@ -219,6 +226,9 @@ func mergeData(d, part *Data) {
 	}
 	if len(part.Monster.Typer) > 0 {
 		d.Monster = part.Monster
+	}
+	if len(part.Avslojande.Granser) > 0 {
+		d.Avslojande = part.Avslojande
 	}
 }
 
@@ -293,14 +303,29 @@ func (d *Data) Text(key string, vars ...string) string {
 }
 
 // Describe väljer en beskrivning för den nivå tornet befinner sig på.
-// Finns ingen text för nivån används närmaste lägre nivå.
-func (rt *RoomType) Describe(level int) string {
+// variant väljer bland texterna, så att olika spelare kan få olika texter
+// om samma rum. Finns ingen text för nivån används närmaste lägre nivå.
+func (rt *RoomType) Describe(level, variant int) string {
 	for l := level; l >= 1; l-- {
 		if list := rt.Beskrivningar[fmt.Sprint(l)]; len(list) > 0 {
-			return pick(list)
+			return list[((variant%len(list))+len(list))%len(list)]
 		}
 	}
 	return ""
+}
+
+// Reveal styr hur tornet avslöjas i fyra nivåer.
+type Reveal struct {
+	Granser          []float64           `json:"granser"`
+	LedtradVarNRunda int                 `json:"ledtrad_var_n_runda"`
+	Nivabyte         map[string][]string `json:"nivabyte"`
+	Ledtradar        map[string][]string `json:"ledtradar"`
+	Forklaringar     map[string]string   `json:"forklaringar"`
+	ForklaringRubrik string              `json:"forklaring_rubrik"`
+	Epilog           []string            `json:"epilog"`
+	EpilogUte        []string            `json:"epilog_ute"`
+	EpilogForlorad   []string            `json:"epilog_forlorad"`
+	EpilogDod        []string            `json:"epilog_dod"`
 }
 
 func (d *Data) roomType(id string) *RoomType {

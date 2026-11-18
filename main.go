@@ -23,8 +23,9 @@ func main() {
 	sun := flag.Int("sol", 40, "antal rundor innan solen går ner")
 	turn := flag.Duration("turtid", 30*time.Second, "längsta tid att välja drag per runda")
 	minPlayers := flag.Int("min", 2, "minsta antal spelare för att börja")
+	reveal := flag.Bool("avslojande", true, "låt tornet avslöja sin hemlighet (false för den som redan känner till den)")
 	flag.Parse()
-	cfg := Config{SunMax: max(4, *sun), TurnTime: max(3*time.Second, *turn), MinPlayers: max(1, min(maxPlayers, *minPlayers))}
+	cfg := Config{Reveal: *reveal, SunMax: max(4, *sun), TurnTime: max(3*time.Second, *turn), MinPlayers: max(1, min(maxPlayers, *minPlayers))}
 
 	data, src, err := loadData(*dataPath)
 	if err != nil {
@@ -56,6 +57,9 @@ func main() {
 	fmt.Println("Ormtornet är vaket.")
 	fmt.Println("Texter från:", src)
 	fmt.Printf("Solen går ner efter %d rundor. Turtid %s. Minst %d spelare.\n", cfg.SunMax, cfg.TurnTime, cfg.MinPlayers)
+	if !cfg.Reveal {
+		fmt.Println("Avslöjandet är avstängt.")
+	}
 	fmt.Println()
 	fmt.Println("Spelarna öppnar:")
 	fmt.Printf("  http://%s:%s\n", localName(), port)

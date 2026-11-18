@@ -105,6 +105,8 @@ function handle(msg) {
       }
       MapView.draw(state);
       Sound.breath(state.phase === "spel" ? state.sleep : -1);
+      Sound.level(state.reveal ? state.level : 0);
+      document.body.dataset.niva = state.reveal ? String(state.level) : "1";
       renderSide();
       renderTop();
       renderOverlay();
@@ -423,4 +425,4 @@ document.addEventListener("keydown", (e) => {
 setInterval(() => {
   if (state && mapReady) MapView.draw(state);
   if (state) updateTimer();
-}, 250);
+}, 100);

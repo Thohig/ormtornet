@@ -23,6 +23,7 @@ Flaggor:
 - `-sol 40` antal rundor innan solen går ner
 - `-turtid 30s` längsta tid att välja drag per runda
 - `-min 2` minsta antal spelare för att börja (sätt `-min 1` för att prova ensam)
+- `-avslojande=false` stänger av avslöjandet, för spelare som redan känner till tornets hemlighet
 
 ## Spela
 
@@ -118,6 +119,33 @@ tillbaka 2 liv och tar bort gift.
 
 Om du laddar om sidan och skriver samma namn igen får du tillbaka din vandrare.
 
+## Avslöjandet (spoilervarning)
+
+Läs inte det här om du ska spela utan att veta.
+
+Tornet är ormen. Väggarna är dess kropp, valven dess revben, trappan dess
+ryggrad, skattkammaren dess mage och porten dess mun. Spelarna upptäcker det
+gradvis, i fyra nivåer som följer solen:
+
+| Nivå | När (andel sol kvar) | Text | Bild | Ljud |
+|------|----------------------|------|------|------|
+| 1 | över 70 % | små konstigheter: varma väggar, söt lukt, fjällformade stenar | vanliga väggar | ett svagt, långsamt dunk |
+| 2 | 70–40 % | tornet andas | väggarna sväller och krymper i braille | dunket blir ett hjärta |
+| 3 | 40–15 % | bevis: revben, kotor, halvt upplösta kvarlevor | väggar som revben, köttfärg, hjärtslag i vågor | snabbare hjärta, kluckande |
+| 4 | under 15 % | det sägs nästan rakt ut; porten stänger sig | rött, porten blir en mun med tänder | starkt och snabbt hjärta |
+
+- Varje rum har beskrivningar för alla fyra nivåerna, och spelare som står i
+  samma rum kan få olika texter.
+- Var fjärde runda, och vid varje nytt steg, får varje spelare en egen
+  ledtråd. Ingen får samma som någon annan, så spelarna måste prata med
+  varandra för att få hela bilden.
+- På nivå 4 får varje spelare nya förklaringar till de fällor och varelser
+  hen har mött (fallgallret var tänderna, de roterande rummen tarmarna ...).
+- När spelet är slut säger tornet hemligheten rakt ut, och porten stängs.
+
+Med `-avslojande=false` stannar tornet på nivå 1: inget dunk, inga
+pulserande väggar och ingen epilog.
+
 ## Ändra innehåll
 
 Allt innehåll ligger i mappen `data/`. Filerna läses när servern startar,
@@ -127,12 +155,15 @@ så starta om servern efter en ändring.
 - `fallor.json` regler (liv, chans för händelse, drycker), fällor och sökresultat
 - `ormen.json` ormkorten, skatten i kammaren och vad som händer när ormen vaknar
 - `monster.json` varelserna (liv, skada, guld, vanor, texter) och striderna
+- `avslojande.json` nivågränser, ledtrådar, texter vid nivåbyte, nya
+  förklaringar till fällorna och epilogen. Rumsbeskrivningarna för varje
+  nivå (`"1"` till `"4"`) ligger i `texter.json`.
 
 För varje fälla kan du ändra namn, vikt (hur ofta den dyker upp), skada,
 antal rundor, tecknet på kartan och texterna. Vad fällan gör styrs av dess
 `id` i `events.go`. I texterna kan du använda
 `{namn}`, `{horn}`, `{riktning}`, `{region}` och `{rum}` där de passar.
-Beskrivningarna för rummen ligger under nivå `"1"`; fler nivåer kommer senare.
+Beskrivningarna för rummen ligger under nivåerna `"1"` till `"4"`.
 
 ## Struktur
 
@@ -141,6 +172,7 @@ Beskrivningarna för rummen ligger under nivå `"1"`; fler nivåer kommer senare
 - `events.go` fällor, sökande och drycker
 - `serpent.go` skattkammaren och ormkorten
 - `monster.go` varelser, strider och den döda spelarens styrning
+- `reveal.go` avslöjandet: nivåer, ledtrådar och epilog
 - `data.go` läser in datafilerna
 - `ws.go` en liten websocket-implementation utan beroenden
 - `web/` klienten: HTML, CSS och JavaScript utan ramverk

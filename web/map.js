@@ -39,6 +39,59 @@ const MapView = (() => {
   const WAKE_MS = 3500;
   let wokeAt = -Infinity;
 
+  // Avslöjandet: tornets utseende följer nivån. På nivå 2 andas väggarna,
+  // på nivå 3 syns revbenen och hjärtslagen, på nivå 4 är det kött och tänder.
+  const LOOK = {
+    1: { wall: [179, 150, 99], hi: [179, 150, 99], floor: "#4a3f2c", period: 0 },
+    2: { wall: [178, 146, 100], hi: [228, 190, 136], floor: "#4d3f2e", period: 4200 },
+    3: { wall: [176, 118, 92], hi: [240, 166, 132], floor: "#55382c", period: 1250 },
+    4: { wall: [160, 70, 52], hi: [255, 118, 88], floor: "#5e2a22", period: 950 },
+  };
+  // Braille i tre tätheter: väggen sväller och krymper när den andas.
+  const THIN = ["⡪", "⢕", "⠪", "⡕", "⢪", "⠕"];
+  const DENSE = ["⣿"];
+  // Revben: tvärstrimmor längs väggarna.
+  const RIB_H = ["⣿", "⡇"];
+  const RIB_V = ["⣿", "⠶"];
+
+  let lvl = 1;
+  let reveal = false;
+  let nowMs = 0;
+
+  function pulse(x, y) {
+    const look = LOOK[lvl];
+    if (!look.period) return 0;
+    const dist = Math.hypot(x - cols / 2, (y - rows / 2) * 1.6);
+    const t = nowMs - dist * 14;
+    if (lvl === 2) return 0.5 + 0.5 * Math.sin((2 * Math.PI * t) / look.period);
+    // Hjärtslag: två slag tätt efter varandra, sedan vila.
+    const ph = (((t % look.period) + look.period) % look.period) / look.period;
+    const g = (c) => Math.exp(-(((ph - c) / 0.07) ** 2));
+    return Math.max(g(0), 0.7 * g(0.22), g(1));
+  }
+
+  function mix(a, b, f) {
+    const c = a.map((v, i) => Math.round(v + (b[i] - v) * f));
+    return "rgb(" + c.join(",") + ")";
+  }
+
+  function wallAt(x, y, horizontal) {
+    const look = LOOK[lvl];
+    const p = pulse(x, y);
+    const color = mix(look.wall, look.hi, p);
+    let ch;
+    if (lvl >= 3 && p < 0.75) {
+      ch = horizontal ? RIB_H[x % 2] : RIB_V[y % RIB_V.length];
+    } else if (lvl >= 2 && p > 0.7) {
+      ch = DENSE[0];
+    } else if (lvl >= 2 && p < 0.25) {
+      ch = THIN[hash(x, y) % THIN.length];
+    } else {
+      ch = WALL[hash(x, y) % WALL.length];
+    }
+    put(x, y, ch, color);
+  }
+
   // Spelarnas platser inne i ett rum, en per hörnplats.
   const SLOTS = [[2, 1], [5, 1], [2, 3], [5, 3]];
 
@@ -86,23 +139,23 @@ const MapView = (() => {
   function drawRoom(r) {
     const x0 = r.x * RW;
     const y0 = r.y * RH;
-    const wall = (x, y) => put(x, y, WALL[hash(x, y) % WALL.length], COLORS.wall);
+    const floor = LOOK[lvl].floor;
 
     // Väggar runt om.
     for (let i = 0; i <= RW; i++) {
-      wall(x0 + i, y0);
-      wall(x0 + i, y0 + RH);
+      wallAt(x0 + i, y0, true);
+      wallAt(x0 + i, y0 + RH, true);
     }
     for (let j = 1; j < RH; j++) {
-      wall(x0, y0 + j);
-      wall(x0 + RW, y0 + j);
+      wallAt(x0, y0 + j, false);
+      wallAt(x0 + RW, y0 + j, false);
     }
     // Golv.
     for (let j = 1; j < RH; j++) {
       for (let i = 1; i < RW; i++) {
         const h = hash(x0 + i, y0 + j);
         const ch = h % 7 === 0 ? FLOOR[h % FLOOR.length] : " ";
-        put(x0 + i, y0 + j, ch, COLORS.floor);
+        put(x0 + i, y0 + j, ch, floor);
       }
     }
     // Dörrar: en lucka mitt på varje öppen sida.
@@ -114,9 +167,14 @@ const MapView = (() => {
     if (r.d[1]) put(x0 + RW, midY, " ", COLORS.floor);
     if (r.d[3]) put(x0, midY, " ", COLORS.floor);
 
-    // Utgång genom ytterväggen.
-    if (r.exit === 1) put(x0 + RW, midY, "›", COLORS.exit);
-    if (r.exit === 3) put(x0, midY, "‹", COLORS.exit);
+    // Utgång genom ytterväggen. På sista nivån är porten en mun med tänder,
+    // och när spelet är slut har den stängts.
+    const ex = r.exit === 1 ? x0 + RW : r.exit === 3 ? x0 : -1;
+    if (ex >= 0) {
+      if (lvl === 4 && lastState && lastState.phase === "slut") put(ex, midY, "⣿", "#d0503a");
+      else if (lvl === 4) put(ex, midY, Math.floor(nowMs / 400) % 2 ? "⩚" : "⩛", "#ff7a5a");
+      else put(ex, midY, r.exit === 1 ? "›" : "‹", COLORS.exit);
+    }
 
     if (r.mark) put(x0 + Math.floor(RW / 2), y0 + Math.floor(RH / 2), r.mark, COLORS.mark);
 
@@ -126,7 +184,7 @@ const MapView = (() => {
       const flash = awake && Math.floor((now - wokeAt) / 180) % 2 === 0;
       (awake ? CHAMBER_AWAKE : CHAMBER).forEach((line, j) => {
         [...line].forEach((ch, i) => {
-          let color = ch === "¤" ? COLORS.gold : COLORS.chamber;
+          let color = ch === "¤" ? COLORS.gold : lvl === 4 ? "#c4483a" : lvl === 3 ? "#c98a5a" : COLORS.chamber;
           if (awake) color = ch === "◉" ? "#ffe14a" : flash ? "#ff5a3a" : "#a8402c";
           put(x0 + 1 + i, y0 + 1 + j, ch, color);
         });
@@ -145,6 +203,9 @@ const MapView = (() => {
   function draw(state, t) {
     lastState = state;
     if (!ctx) return;
+    reveal = !!state.reveal;
+    lvl = reveal ? Math.min(4, Math.max(1, state.level || 1)) : 1;
+    nowMs = t || performance.now();
     grid = Array.from({ length: rows }, () => new Array(cols).fill(" "));
     colr = Array.from({ length: rows }, () => new Array(cols).fill(COLORS.unknown));
 

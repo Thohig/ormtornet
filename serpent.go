@@ -89,7 +89,9 @@ func (g *Game) take(p *Player) {
 	}
 	if c.Vaknar {
 		g.logTo(p, pick(c.Texter), "varn")
+		p.Seen["ormen"] = true
 		g.wakeSerpent()
+		g.explainNow(p, "ormen")
 		return
 	}
 	g.deck = append(g.deck[:i], g.deck[i+1:]...)
