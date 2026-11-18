@@ -10,6 +10,7 @@ let joined = false;
 let mapReady = false;
 let towerClosed = false; // spelledaren har stängt tornet, eller den här datorn leder det
 let closedText = "tornet är stängt";
+let hostingHere = false; // spelledarläget slogs på och den här datorn leder tornet
 
 function show(id) {
   document.querySelectorAll(".screen").forEach((s) => s.classList.toggle("active", s.id === id));
@@ -126,10 +127,12 @@ function handle(msg) {
     case "spelledare":
       // Spelledarläget slogs på, och den här datorn leder tornet.
       towerClosed = true;
+      hostingHere = true;
       closedText = "du leder tornet";
       $("conn").textContent = closedText;
       Log.push(msg.text, "varn");
       if (ws) ws.close();
+      showHosting(msg.text);
       break;
     case "stangt":
       towerClosed = true;
@@ -396,6 +399,54 @@ function frame(lines, width) {
   return out.map((l) => (typeof l === "string" ? { text: l } : l));
 }
 
+// Rutan som visas när den här datorn har blivit spelledare: härifrån går
+// det bara tillbaka till startsidan.
+function showHosting(text) {
+  const el = $("overlay");
+  const words = text.split(" ");
+  const lines = [{ text: "DU LEDER TORNET" }, { text: "" }];
+  let row = "";
+  words.forEach((w) => {
+    if ((row + " " + w).trim().length > 30) {
+      lines.push({ text: row });
+      row = w;
+    } else {
+      row = (row + " " + w).trim();
+    }
+  });
+  if (row) lines.push({ text: row });
+  lines.push({ text: "" }, { text: "Enter: tillbaka till början" });
+  el.innerHTML = "";
+  frame(lines, 32).forEach((l) => {
+    const d = document.createElement("div");
+    d.textContent = l.text;
+    el.appendChild(d);
+  });
+  el.hidden = false;
+}
+
+// backToStart går tillbaka till startsidan med tornet i solnedgången, som
+// när sidan just har öppnats.
+function backToStart() {
+  if (ws) {
+    ws.onclose = null;
+    ws.close();
+    ws = null;
+  }
+  joined = false;
+  state = null;
+  towerClosed = false;
+  hostingHere = false;
+  closedText = "tornet är stängt";
+  $("conn").textContent = "";
+  $("overlay").hidden = true;
+  $("log").textContent = "";
+  $("nameerr").textContent = "";
+  Intro.reset();
+  show("start");
+  $("enter").focus();
+}
+
 function endTitle() {
   return state.sun > 0 ? "VANDRINGEN ÄR SLUT" : "SOLEN HAR GÅTT NER";
 }
@@ -492,6 +543,12 @@ const Intro = (() => {
   return {
     enter,
     skip() { if (entering) finish(); },
+    reset() {
+      clearTimeout(timer);
+      entering = false;
+      done = false;
+      $("intro").classList.remove("entering", "quick");
+    },
     active() { return $("start").classList.contains("active"); },
     entering() { return entering; },
   };
@@ -530,7 +587,15 @@ const KEYS = {
   a: "anfall", A: "anfall", p: "parera", P: "parera", u: "undan", U: "undan",
 };
 document.addEventListener("keydown", (e) => {
-  if (!joined || e.metaKey || e.ctrlKey || e.altKey) return;
+  if (e.metaKey || e.ctrlKey || e.altKey) return;
+  // Esc i namnrutan, eller Enter när den här datorn har blivit spelledare,
+  // går tillbaka till startsidan.
+  if ((e.key === "Escape" && $("namescreen").classList.contains("active")) || (e.key === "Enter" && hostingHere)) {
+    e.preventDefault();
+    backToStart();
+    return;
+  }
+  if (!joined) return;
   if (e.key === "Enter") {
     e.preventDefault();
     send({ t: "ready" });
