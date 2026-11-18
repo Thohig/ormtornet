@@ -275,11 +275,20 @@ body[data-niva="4"] #crt::after { animation: throb 0.95s infinite; }
 }
 .title { letter-spacing: 0.4em; color: var(--dim); }
 #conn { color: var(--warn); font-size: 12px; }
-#solmatare { white-space: pre; }
-#solmatare .bar { color: var(--hi); }
-#solmatare .bar.low { color: #ff9a5a; }
-#solmatare .bar.last { color: var(--warn); animation: blink 1s steps(1) infinite; }
-#solmatare .gone { color: var(--faint); }
+/* Mätarna: en etikett, en rad rutor och ett tal. Rutorna byggs i app.js. */
+:root { --slate: #15171a; --chalkline: #34373d; --chalk: #a9a69d; }
+.meter { display: flex; align-items: center; gap: 6px; }
+.meter .mlabel { white-space: nowrap; color: var(--chalk); font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; min-width: 3.2em; }
+.meter .segs { display: inline-flex; gap: 2px; min-width: 0; }
+/* Rutorna krymper när det är många, så att mätaren ryms i panelen. */
+.meter .seg { width: 9px; flex-shrink: 1; min-width: 2px; height: 9px; border-radius: 2px; background: var(--faint); }
+.meter .num { color: var(--fg); min-width: 3ch; }
+.meter.hp .seg.on { background: #e06a5a; }
+.meter.foehp .seg.on { background: #f0a080; }
+.meter.sun .seg { width: 7px; height: 11px; }
+.meter.sun .seg.on { background: var(--hi); }
+.meter.sun.low .seg.on { background: #ff9a5a; }
+.meter.sun.last .seg.on { background: var(--warn); animation: blink 1s steps(1) infinite; }
 #turn { color: var(--dim); min-width: 18ch; text-align: right; }
 #turn.urgent { color: var(--warn); }
 
@@ -322,17 +331,25 @@ body[data-niva="4"] #crt::after { animation: throb 0.95s infinite; }
 #overlay .lost { color: var(--warn); }
 
 #side {
-  flex: 0 0 200px;
+  flex: 0 0 220px;
   font-size: 13px;
   min-height: 0;
   overflow-y: auto; /* valet av klass kan göra panelen längre än skärmen */
+}
+/* Panelerna är små skiffertavlor, som kartan. */
+.panel {
+  background: var(--slate);
+  border: 1px solid var(--chalkline);
+  border-radius: 6px;
+  padding: 6px 9px 8px;
+  margin-bottom: 8px;
 }
 #side h2 {
   font-size: 11px;
   font-weight: normal;
   letter-spacing: 0.3em;
-  color: var(--dim);
-  margin: 14px 0 6px;
+  color: var(--chalk);
+  margin: 0 0 5px;
   text-transform: uppercase;
 }
 #players { list-style: none; margin: 0; padding: 0; }
@@ -342,13 +359,13 @@ body[data-niva="4"] #crt::after { animation: throb 0.95s infinite; }
 #here { color: var(--fg); }
 #me div { margin: 2px 0; }
 #me .plan { color: var(--hi); }
-#me .hp { color: #e06a5a; }
-#me .hp .empty { color: var(--faint); }
 #me .cond { color: var(--warn); }
 #me .sleep { color: var(--info); }
 #me .foe { color: #f0a080; }
-#me .foehp { color: #e0806a; letter-spacing: 0.1em; }
-#me .foehp .empty, #me .hp .empty { color: var(--faint); }
+#me .gold { color: #ffd36b; }
+#me .meter { margin: 4px 0; }
+/* Det egna draget står sist, avskilt med ett streck. */
+#me .plan { margin-top: 6px; padding-top: 5px; border-top: 1px dashed var(--chalkline); }
 #me .dimline { color: var(--dim); }
 #players .tag { color: var(--dim); }
 #help { color: var(--dim); }
@@ -364,7 +381,24 @@ body[data-niva="4"] #crt::after { animation: throb 0.95s infinite; }
   mask-image: linear-gradient(to bottom, transparent 0, #000 2.2em);
 }
 #log::-webkit-scrollbar { display: none; }
-#log div { margin: 2px 0; white-space: pre-wrap; }
+/* Loggen: ett tecken i marginalen säger vad slags rad det är, ett streck
+   skiljer rundorna åt och rader från äldre rundor bleknar. */
+#log div {
+  margin: 2px 0;
+  white-space: pre-wrap;
+  padding-left: 2.2ch;
+  text-indent: -2.2ch;
+  transition: opacity 1.2s;
+}
+#log div::before { display: inline-block; width: 2.2ch; text-indent: 0; content: ""; }
+#log .varn::before { content: "!"; }
+#log .syn::before { content: "›"; }
+#log .rubrik::before { content: "▸"; }
+#log .info::before { content: "·"; }
+#log .rost::before { content: "❝"; }
+#log .krita::before { content: "✎"; color: #f2f0e8; }
+#log .ny-runda { margin-top: 7px; padding-top: 5px; border-top: 1px solid var(--chalkline); }
+#log .old { opacity: 0.45; }
 #log .dim { color: var(--dim); }
 #log .info { color: var(--info); }
 #log .syn { color: var(--hi); }
@@ -448,7 +482,7 @@ body.touch #side { overflow-y: auto; }
     overflow: visible;
   }
   #side > :not(.block) { grid-column: 1 / -1; }
-  #side h2 { margin: 8px 0 4px; }
+  #side h2 { margin: 0 0 4px; }
   #log { height: 10em; margin-top: 8px; }
   body.touch #game.active { padding-bottom: calc(170px + env(safe-area-inset-bottom)); }
   body.touch #pad {

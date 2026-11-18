@@ -4,6 +4,21 @@ Det som har ändrats i spelet, nyast först. README beskriver hur allt
 fungerar. Här står vad som är nytt och vad det betyder för den som spelar
 eller leder tornet.
 
+## 2026-11-19
+
+### Tydligare paneler
+
+- Sidopanelen är delad i små skiffertavlor med ram, som kartan: Vandrare,
+  Här, Du och Styrning.
+- Liv, solen och fiendens liv är mätare med rutor och ett tal, till
+  exempel 4/6. Rutorna byggs i kod och krymper när de är många.
+- Skatten står i guld, och det valda draget står sist under Du, avskilt
+  med ett streck.
+- Loggen har ett tecken i marginalen för vad slags rad det är: `!` fara,
+  `›` det du ser, `▸` rummets namn, `·` besked, `❝` tornets röst och `✎`
+  krita. Ett streck skiljer rundorna åt, och rader från äldre rundor än
+  den förra bleknar.
+
 ## 2026-11-18
 
 ### Kartan i krita

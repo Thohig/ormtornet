@@ -182,10 +182,14 @@ spelarsidan (`/`), med tre vyer i tur och ordning:
 3. **Spelet**, där spelaren stannar resten av kvällen. Det går igenom tre faser:
    - **lobbyn**: vandrarna, valet av klass (1 eller 2) och "Tryck Enter när
      du är redo" (Redo på en pekskärm),
-   - **vandringen**: kartan, solmätaren, sidopanelen och loggen. Under DU i
-     panelen står klassen, liv, skatt, drycker, föremålen, kompassen och
-     för den invigde dunket. När det går att viska står det där,
-     och viskningen skrivs i en egen ruta under panelen,
+   - **vandringen**: kartan, solmätaren, sidopanelen och loggen. Panelen
+     är små skiffertavlor: Vandrare, Här, Du och Styrning. Under Du står
+     klassen, liv som en mätare, skatt, drycker, föremålen, kompassen och
+     för den invigde dunket, och sist det valda draget. När det går att
+     viska står det där, och viskningen skrivs i en egen ruta i panelen.
+     I loggen säger ett tecken i marginalen vad slags rad det är (`!` fara,
+     `›` det du ser, `▸` rummets namn, `·` besked, `❝` tornets röst,
+     `✎` krita), ett streck skiljer rundorna åt och äldre rundor bleknar,
    - **slutet**: resultatrutan över kartan, och i loggen vinnaren, krönikan
      och epilogen. Enter (Nytt torn) leder tillbaka till lobbyn när alla
      har tryckt, med ett nytt torn och två nya klasser att välja mellan.

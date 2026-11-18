@@ -23,10 +23,20 @@ const Log = (() => {
   let busy = false;
   const MAX_LINES = 80;
 
+  // Varje rad minns under vilken runda den kom, så att rader från samma
+  // runda hålls ihop och äldre rundor bleknar.
   function push(text, cls) {
     if (!text) return;
-    queue.push({ text, cls });
+    const round = state && state.phase === "spel" ? state.round : 0;
+    queue.push({ text, cls, round });
     if (!busy) next();
+  }
+
+  // age bleknar raderna från rundor före den förra.
+  function age(round) {
+    for (const line of $("log").children) {
+      if (Number(line.dataset.round) < round - 1) line.classList.add("old");
+    }
   }
 
   function next() {
@@ -40,6 +50,9 @@ const Log = (() => {
     const line = document.createElement("div");
     if (item.cls) line.className = item.cls;
     line.classList.add("cursor");
+    line.dataset.round = item.round;
+    const prev = box.lastElementChild;
+    if (prev && item.round > 0 && Number(prev.dataset.round) !== item.round) line.classList.add("ny-runda");
     box.appendChild(line);
     while (box.children.length > MAX_LINES) box.removeChild(box.firstChild);
     const chars = [...item.text];
@@ -62,7 +75,7 @@ const Log = (() => {
     tick();
   }
 
-  return { push };
+  return { push, age };
 })();
 
 function send(obj) {
@@ -120,6 +133,7 @@ function handle(msg) {
       renderSide();
       renderTop();
       renderOverlay();
+      if (state.phase === "spel") Log.age(state.round);
       break;
     case "log":
       Log.push(msg.text, msg.c);
@@ -215,15 +229,25 @@ function cycleMonster() {
 }
 
 // Mätare med fast bredd i kod, ett tecken per liv.
-function meter(cls, label, value, maxValue, full, empty) {
+// En mätare: en etikett, en rad rutor (en per enhet) och ett tal. Rutorna
+// byggs i kod, så att mätaren alltid har samma bredd.
+function meter(cls, label, value, maxValue, num) {
   const d = document.createElement("div");
-  d.className = cls;
-  const a = document.createElement("span");
-  a.textContent = full.repeat(Math.max(0, value));
-  const b = document.createElement("span");
-  b.className = "empty";
-  b.textContent = empty.repeat(Math.max(0, maxValue - value));
-  d.append(label, a, b);
+  d.className = "meter " + cls;
+  const l = document.createElement("span");
+  l.className = "mlabel";
+  l.textContent = label;
+  const segs = document.createElement("span");
+  segs.className = "segs";
+  for (let i = 0; i < maxValue; i++) {
+    const seg = document.createElement("span");
+    seg.className = i < value ? "seg on" : "seg";
+    segs.appendChild(seg);
+  }
+  const n = document.createElement("span");
+  n.className = "num";
+  n.textContent = num !== undefined ? num : Math.max(0, value) + "/" + maxValue;
+  d.append(l, segs, n);
   return d;
 }
 
@@ -341,7 +365,7 @@ function renderSide() {
   renderClass(box, line);
   box.appendChild(hpMeter(state.hp, state.maxHp));
   if (me.status === "dod") line("Död", "cond");
-  line("Skatt: " + me.treasure + " guld");
+  line("Skatt: " + me.treasure + " guld", "gold");
   if (state.potions > 0) line("Drycker: " + state.potions);
   (state.foremal || []).forEach((it, i) => {
     const d = document.createElement("div");
@@ -369,7 +393,7 @@ function renderSide() {
     const foe = (state.monsters || []).find((m) => m.x === me.x && m.y === me.y);
     if (foe && state.cellar === 0) {
       line("Strid: " + foe.name, "foe");
-      box.appendChild(meter("foehp", "", foe.hp, foe.maxHp, "■", "□"));
+      box.appendChild(meter("foehp", "Dess liv", foe.hp, foe.maxHp));
       if (!touch) line("A anfall · P parera · U undan", "dimline");
     }
     const others = foe || state.cellar > 0 ? [] : foesHere();
@@ -423,7 +447,7 @@ function setEnterLabel(text) {
 }
 
 function hpMeter(hp, maxHp) {
-  return meter("hp", "Liv ", hp, maxHp, "♥", "♡");
+  return meter("hp", "Liv", hp, maxHp);
 }
 
 function myPlayer() {
@@ -436,19 +460,10 @@ function renderTop() {
   const el = $("solmatare");
   el.innerHTML = "";
   const filled = Math.max(0, Math.round((state.sun / state.sunMax) * SUN_WIDTH));
-  const label = document.createElement("span");
-  label.textContent = "SOL ";
-  const bar = document.createElement("span");
-  bar.className = "bar";
-  if (state.sun <= 3) bar.classList.add("last");
-  else if (state.sun <= state.sunMax / 4) bar.classList.add("low");
-  bar.textContent = "⣿".repeat(filled);
-  const gone = document.createElement("span");
-  gone.className = "gone";
-  gone.textContent = "⣀".repeat(SUN_WIDTH - filled);
-  const num = document.createElement("span");
-  num.textContent = " " + String(state.sun).padStart(2, " ");
-  el.append(label, bar, gone, num);
+  const m = meter("sun", "Sol", filled, SUN_WIDTH, String(state.sun));
+  if (state.sun <= 3) m.classList.add("last");
+  else if (state.sun <= state.sunMax / 4) m.classList.add("low");
+  el.appendChild(m);
   updateTimer();
 }
 

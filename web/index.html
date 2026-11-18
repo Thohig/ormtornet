@@ -97,31 +97,39 @@
       </div>
       <aside id="side">
         <div class="block">
-          <h2>Vandrare</h2>
-          <ul id="players"></ul>
+          <div class="panel">
+            <h2>Vandrare</h2>
+            <ul id="players"></ul>
+          </div>
         </div>
         <div class="block">
-          <h2>Här</h2>
-          <div id="here"></div>
-          <h2>Du</h2>
-          <div id="me"></div>
-          <form id="whisper" autocomplete="off" hidden>
-            <input id="whisperText" maxlength="80" spellcheck="false" placeholder="viska till tornet" aria-label="Viska till tornet">
-            <div class="hint">enter viskar · esc ångrar</div>
-          </form>
+          <div class="panel">
+            <h2>Här</h2>
+            <div id="here"></div>
+          </div>
+          <div class="panel">
+            <h2>Du</h2>
+            <div id="me"></div>
+            <form id="whisper" autocomplete="off" hidden>
+              <input id="whisperText" maxlength="80" spellcheck="false" placeholder="viska till tornet" aria-label="Viska till tornet">
+              <div class="hint">enter viskar · esc ångrar</div>
+            </form>
+          </div>
         </div>
-        <h2 class="keys">Styrning</h2>
-        <div id="help" class="keys">
-          <div><b>Pilar</b>gå</div>
-          <div><b>Mellanslag</b>vänta</div>
-          <div><b>T</b>ta skatt</div>
-          <div><b>S</b>sök i rummet</div>
-          <div><b>D</b>drick en dryck</div>
-          <div><b>A</b>anfall</div>
-          <div><b>P</b>parera</div>
-          <div><b>U</b>undanmanöver</div>
-          <div><b>Tab</b>byt mål</div>
-          <div><b>Enter</b>redo</div>
+        <div class="panel keys">
+          <h2>Styrning</h2>
+          <div id="help">
+            <div><b>Pilar</b>gå</div>
+            <div><b>Mellanslag</b>vänta</div>
+            <div><b>T</b>ta skatt</div>
+            <div><b>S</b>sök i rummet</div>
+            <div><b>D</b>drick en dryck</div>
+            <div><b>A</b>anfall</div>
+            <div><b>P</b>parera</div>
+            <div><b>U</b>undanmanöver</div>
+            <div><b>Tab</b>byt mål</div>
+            <div><b>Enter</b>redo</div>
+          </div>
         </div>
         <div id="pad" class="touchonly" aria-label="Styrning">
           <div class="dirs">
