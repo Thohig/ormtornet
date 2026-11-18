@@ -6,6 +6,32 @@ eller leder tornet.
 
 ## 2026-11-18
 
+### Viska hemligheten
+
+Den som vet tornets hemlighet kan viska den till tornet med V, från nivå 2
+och en gång per nivå. Rätt viskning gör vandraren invigd: hen hör åt
+vilket håll kammaren ligger, kliver förbi hälften av fällorna, kan lugna
+ormen en gång, får mer guld ute och porten väntar en runda för hen. Men
+varelserna anfaller oftare och ormen vaknar lättare. Tornet säger aldrig
+vad hemligheten är. Spelledaren ser viskningarna och kan inviga. Med
+avslöjandet avstängt går det inte att viska. README beskriver det under
+"Att viska hemligheten", i avsnittet med spoilervarning.
+
+### Föremål, steg 2 och 3
+
+- Fem föremål används med 1–3: rökpulver, spegelskärva, kastkniv, krita
+  och timglas. Den sövande flöjten verkar av sig själv. AI-spelarna
+  använder rökpulver, kastkniv och timglas.
+- Tre förbannade föremål: den svarta pärlan, myntet med hål och kronan av
+  rost. "Kartan som ljuger" från förslaget blev kronan i stället, eftersom
+  en karta med falska rum skulle kräva rum som inte finns.
+- Brev från tidigare vandrare, efter avslöjandets nivå.
+- Den som dör tappar sina föremål i rummet.
+- Klasserna: tjuven hittar oftare föremål, kartritaren får fler streck med
+  kritan, spårfinnaren ser var föremål ligger och pilgrimen låter
+  förbannade föremål ligga.
+- Spelledaren kan ge föremål.
+
 ### Föremål, steg 1
 
 När man söker igenom ett rum kan man hitta ett föremål. Man bär högst tre,

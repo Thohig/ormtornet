@@ -187,6 +187,8 @@ dess. Den som inte hinner välja blir stående.
 | U          | undanmanöver (i strid)            |
 | Tab        | byt motståndare, eller varelse när du är död |
 | Enter      | redo / spela igen                 |
+| 1–3        | använd ett föremål i väskan       |
+| V          | viska till tornet (från nivå 2)   |
 
 ### På en telefon eller surfplatta
 
@@ -282,13 +284,13 @@ torn så länge man är kvar.
 | Klass | Styrka | Svaghet |
 |---|---|---|
 | Legoknekten | ett liv extra, tar ingen skada när båda anfaller | hittar hälften så mycket guld när hen söker |
-| Tjuven | en fjärdedel mer guld ur kammaren, ingen märker när ormen rör sig vid hens näve, river hälften i strid mot vandrare | hittar aldrig drycker när hen söker |
+| Tjuven | en fjärdedel mer guld ur kammaren, hittar oftare föremål, ingen märker när ormen rör sig vid hens näve, river hälften i strid mot vandrare | hittar aldrig drycker när hen söker |
 | Örtkvinnan | börjar med två drycker, en dryck ger tre liv, tål gift | ett liv mindre, tappar mer skatt när ormen vaknar |
-| Kartritaren | ser alla rum som någon har hittat och ger sin karta till den hen möter, hittar alltid en hemlig gång om det går | undanmanöver lyckas aldrig |
+| Kartritaren | ser alla rum som någon har hittat och ger sin karta till den hen möter, hittar alltid en hemlig gång om det går, tre streck extra med kritan | undanmanöver lyckas aldrig |
 | Ormtjusaren | ser i kammaren hur många vakna-kort som är kvar, ormen gör en skada mindre | varelserna anfaller oftare |
-| Spårfinnaren | ser spår 6 rundor bakåt och vems de är, märker hälften av fällorna i tid | hör inget genom väggarna |
+| Spårfinnaren | ser spår 6 rundor bakåt och vems de är, märker hälften av fällorna i tid, ser var föremål ligger | hör inget genom väggarna |
 | Lyktbäraren | tål mörker, ser varelser i grannrummen | syns för andra redan från grannrummet |
-| Pilgrimen | ledtrådar dubbelt så ofta, en dryck när tornet förändras | slår aldrig andra vandrare, kan bara värja sig |
+| Pilgrimen | ledtrådar dubbelt så ofta, en dryck när tornet förändras, känner igen förbannade föremål | slår aldrig andra vandrare, kan bara värja sig |
 
 Namn, beskrivningar, texter och siffror står i `data/klasser.json`. Vad
 styrkan och svagheten gör styrs av klassens `id` i `classes.go` och där
@@ -398,10 +400,12 @@ dryck (D) ger tillbaka 2 liv och tar bort gift.
 
 ### Föremål
 
-Ett föremål verkar av sig självt. Man bär högst tre, och de står under DU
-i panelen. Hittar man ett när väskan är full blir det kvar i rummet, och
-den som kommer in där härnäst tar det. Föremålen följer inte med till
-nästa torn. Krönikan berättar vem som hittade vad.
+Man bär högst tre föremål, och de står under DU i panelen. Hittar man ett
+när väskan är full blir det kvar i rummet, och den som kommer in där
+härnäst tar det. Den som dör tappar sina föremål i rummet. Föremålen följer
+inte med till nästa torn. Krönikan berättar vem som hittade vad.
+
+De här verkar av sig själva:
 
 | Föremål | Vad det gör |
 |---|---|
@@ -411,6 +415,33 @@ nästa torn. Krönikan berättar vem som hittade vad.
 | Bucklig sköld | varelser gör en skada mindre, i tre träffar |
 | Väskan med dubbel botten | hälften av det du förlorar när ormen vaknar eller någon river guld är gömt |
 | Kompass utan nord | visar åt vilket håll närmaste port ligger |
+| Sövande flöjt | drar du ett kort som väcker ormen får du dra om (en gång) |
+
+De här används med 1, 2 eller 3 (platsen i väskan), eller ett tryck på
+föremålet i panelen. Föremål som pekar åt ett håll väntar på en pil. Att
+använda ett föremål är rundans drag, och mitt i en strid får varelsen ett
+fritt drag, utom mot rökpulvret.
+
+| Föremål | Vad det gör |
+|---|---|
+| Rökpulver | fly genom en dörr utan att varelsen hinner slå (en gång) |
+| Spegelskärva | se in i rummet bakom en dörr: fällan, varelsen och vandrarna där (tre gånger) |
+| Kastkniv | träffa en varelse i rummet bakom en dörr; missar den blir kniven liggande där |
+| Krita | rita en pil på golvet som alla som kommer in ser (fem gånger) |
+| Timglas av ben | solen står still en runda för alla (en gång) |
+
+Förbannade föremål ser värdefulla ut och är värda guld när man kommer ut,
+men man märker baksidan först när man bär dem:
+
+| Föremål | Värt | Baksidan |
+|---|---|---|
+| Den svarta pärlan | 40 | varje näve ur kammaren lägger ett vakna-kort i leken |
+| Myntet med hål | 25 | varelserna anfaller oftare |
+| Kronan av rost | 30 | den som står i grannrummet ser dig |
+
+Ibland hittar man ett brev från någon som var i tornet förut. Det läses
+direkt och följer avslöjandets nivå. Breven står under `brev` i
+`foremal.json`.
 
 Namn, texter, hur ofta de dyker upp och hur länge de håller står i
 `data/foremal.json`, och hur ofta man hittar ett när man söker under
@@ -442,8 +473,30 @@ gradvis, i fyra nivåer som följer solen:
   hen har mött (fallgallret var tänderna, de roterande rummen tarmarna ...).
 - När spelet är slut säger tornet hemligheten rakt ut, och porten stängs.
 
+### Att viska hemligheten
+
+Från nivå 2 kan en människa viska till tornet med V (eller knappen Viska),
+en gång per nivå. Viskningen skrivs i en egen ruta och syns bara för
+servern och spelledaren. Stämmer den med något av svaren under `svar` i
+`avslojande.json`, som hela ord, blir vandraren **invigd**. Tornet svarar
+bara "Det vet att du vet", och de andra hör att det blev tyst någonstans.
+
+Den invigde:
+
+- hör dunket och vet åt vilket håll kammaren ligger,
+- känner igen hälften av fällorna och kliver förbi,
+- kan en gång viska i kammaren och lugna ormen (ett vakna-kort mindre),
+- får en fjärdedel mer guld när hen kommer ut,
+- och när solen går ner väntar porten en runda till för de invigda.
+
+Men varelserna anfaller den invigde oftare, och en näve ur kammaren väcker
+ormen lättare. Siffrorna står under `invigd` i `avslojande.json`.
+Spelledaren ser vad var och en har viskat, och kan inviga eller ta
+tillbaka det. Krönikan och epilogen nämner den som förstod.
+
 Med `-avslojande=false` stannar tornet på nivå 1: inget dunk, inga
-pulserande väggar och ingen epilog.
+pulserande väggar och ingen epilog. Då går det inte heller att viska, och
+ingen blir invigd.
 
 ## Ändra innehåll
 
@@ -501,6 +554,7 @@ Beskrivningarna för rummen ligger under nivåerna `"1"` till `"4"`.
 - `difficulty.go` förvalen för svårighet
 - `classes.go` klasserna och valet av klass
 - `items.go` föremålen
+- `secret.go` viskningen och den invigde
 - `ai.go` datorstyrda vandrare
 - `data.go` läser in datafilerna
 - `ws.go` en liten websocket-implementation utan beroenden

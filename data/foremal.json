@@ -276,6 +276,9 @@
     "foremal_guld": [
       "Det du bär i väskan är värt {antal} guld här ute."
     ],
+    "foremal_fran_tornet": [
+      "Något tungt glider ner i din väska, fast ingen är här: {foremal}. {beskrivning}"
+    ],
     "kronika_foremal": [
       "{namn} hittade {foremal}."
     ]

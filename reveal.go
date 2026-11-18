@@ -155,6 +155,9 @@ func (g *Game) epilogue() {
 		if p == nil {
 			continue
 		}
+		if p.initiated {
+			g.logTo(p, pick(a.EpilogInvigd), "rost")
+		}
 		switch p.Status {
 		case statusOut:
 			g.logTo(p, pick(a.EpilogUte), "info")

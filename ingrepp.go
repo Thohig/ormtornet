@@ -87,6 +87,10 @@ func (g *Game) Intervene(r gmRequest) error {
 		err = g.gmHoldLevel(false)
 	case "liv", "guld", "dryck":
 		err = g.gmGive(r.Typ, r.Spelare, r.Antal)
+	case "invig":
+		err = g.gmInitiate(r.Spelare)
+	case "foremal":
+		err = g.gmGiveItem(r.Spelare, r.ID)
 	default:
 		return errUnknown
 	}
@@ -350,4 +354,45 @@ func (g *Game) gmCatalogs() (traps, monsters []gmCatalog) {
 		monsters = append(monsters, gmCatalog{t.ID, t.Namn})
 	}
 	return traps, monsters
+}
+
+// gmInitiate invigar en vandrare, som om den hade viskat hemligheten, eller
+// tar tillbaka det.
+func (g *Game) gmInitiate(id int) error {
+	p := g.playerByID(id)
+	if p == nil {
+		return errNoPlayer
+	}
+	if !g.cfg.Reveal {
+		return errNoReveal
+	}
+	p.initiated = !p.initiated
+	if p.initiated {
+		g.logTo(p, g.data.Text("invigd"), "rost")
+		g.gmNote("Invigde " + p.Name + ".")
+	} else {
+		g.gmNote("Tog tillbaka invigningen från " + p.Name + ".")
+	}
+	return nil
+}
+
+// gmGiveItem lägger ett föremål i en vandrares väska.
+func (g *Game) gmGiveItem(id int, item string) error {
+	p := g.playerByID(id)
+	if p == nil {
+		return errNoPlayer
+	}
+	if p.Status != statusIn {
+		return errors.New(p.Name + " är inte kvar i tornet.")
+	}
+	t := g.data.itemType(item)
+	if t == nil || t.Brev {
+		return errors.New("Det föremålet finns inte.")
+	}
+	if !g.give(p, item) {
+		return errors.New(p.Name + " kan inte bära mer.")
+	}
+	g.logTo(p, g.data.Text("foremal_fran_tornet", "foremal", lowerFirst(t.Namn), "beskrivning", t.Beskrivning), "rost")
+	g.gmNote("Gav " + lowerFirst(t.Namn) + " till " + p.Name + ".")
+	return nil
 }

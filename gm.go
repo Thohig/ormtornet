@@ -64,6 +64,11 @@ type gmPlayer struct {
 	Viskning string   `json:"viskning,omitempty"`
 }
 
+type gmItem struct {
+	ID   string `json:"id"`
+	Namn string `json:"namn"`
+}
+
 type gmSerpent struct {
 	Sleep      int `json:"sleep"` // 0 djupt, 1 oroligt, 2 nära att vakna
 	SleepCards int `json:"sleepCards"`
@@ -85,6 +90,7 @@ type gmView struct {
 	Traps   int        `json:"traps"`    // fällor som väntar i kända rum
 	Unknown int        `json:"unknown"`  // rum som ännu inte finns
 	Log     []gmEntry  `json:"log"`
+	Items   []gmItem   `json:"foremal"` // föremålen spelledaren kan ge
 
 	Paused       bool        `json:"paused"`
 	TimeLeft     int         `json:"timeLeft"` // sekunder kvar av rundan
@@ -161,6 +167,11 @@ func (g *Game) GMView(visible bool) gmView {
 			Stuck: p.Stuck, Cellar: p.Cellar, Poison: p.Poison, Dark: p.Dark, Action: g.actionText(p), Room: room,
 			Class: g.classLabel(p), MaxHP: g.maxHP(p), Items: g.itemNames(p), Invigd: p.initiated, Viskning: p.whispered,
 		})
+	}
+	for _, t := range g.data.Foremal.Lista {
+		if !t.Brev {
+			v.Items = append(v.Items, gmItem{ID: t.ID, Namn: t.Namn})
+		}
 	}
 	m.Monsters = g.monsterViews(nil, false)
 	v.Map = m

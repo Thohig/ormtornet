@@ -430,6 +430,7 @@ function render(v) {
 // Översikten i spelledarläget: hela tornet, alla vandrare, ormen och loggen.
 let mapReady = false;
 let mapSize = 0;
+const chosenItem = {}; // föremålet spelledaren har valt att ge, per vandrare
 const SLEEP_WORDS = ["sover djupt", "sover oroligt", "är nära att vakna"];
 
 function renderGM(o) {
@@ -494,6 +495,29 @@ function renderGM(o) {
           b.textContent = label;
           give.append(b);
         });
+      // Inviga, eller ta tillbaka, och ge ett föremål.
+      if (m.reveal) {
+        const inv = document.createElement("button");
+        inv.type = "button";
+        inv.className = "btn small";
+        inv.dataset.gm = "invig";
+        inv.dataset.spelare = String(p.id);
+        inv.textContent = p.invigd ? "glöm invigd" : "inviga";
+        give.append(inv);
+      }
+      // Översikten ritas om hela tiden: kom ihåg vilket föremål som är valt.
+      const sel = document.createElement("select");
+      (o.foremal || []).forEach((it) => sel.append(new Option(it.namn, it.id)));
+      if (chosenItem[p.id]) sel.value = chosenItem[p.id];
+      sel.addEventListener("change", () => (chosenItem[p.id] = sel.value));
+      const gb = document.createElement("button");
+      gb.type = "button";
+      gb.className = "btn small";
+      gb.dataset.gm = "foremal";
+      gb.dataset.spelare = String(p.id);
+      gb.dataset.fromSelect = "1";
+      gb.textContent = "ge";
+      give.append(sel, gb);
     }
     tr.append(give);
     tb.append(tr);
@@ -591,6 +615,7 @@ $("gm").addEventListener("click", (ev) => {
   const req = { typ: b.dataset.gm };
   if (b.dataset.antal) req.antal = +b.dataset.antal;
   if (b.dataset.spelare) req.spelare = +b.dataset.spelare;
+  if (b.dataset.fromSelect) req.id = b.parentElement.querySelector("select").value;
   if (req.typ === "niva_upp" && !confirm("Flytta fram avslöjandet en nivå? Alla vandrare märker det direkt.")) return;
   if (req.typ === "vack" && !confirm("Väcka ormen? De som står i skattkammaren blir kastade ut och skadade.")) return;
   intervene(req);
