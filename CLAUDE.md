@@ -16,6 +16,7 @@ README beskriver spelet, flaggorna och filerna.
 
 ## Planerat
 
-- [docs/spelledaren.md](docs/spelledaren.md): förslag på en sida för den som
-  leder spelet, hur en omgång startas och hur servern startas. Inget är byggt;
-  användaren bestämmer senare. Fråga vilka delar som ska byggas innan du börjar.
+- [docs/spelledaren.md](docs/spelledaren.md): spelledarens sida. Det mesta
+  av del 1–3 är byggt. Avsnittet Läget säger vad som är byggt, vad som är på
+  gång och vad som inte är planerat. Fråga vilka delar som ska byggas innan
+  du börjar på något som inte står under På gång.

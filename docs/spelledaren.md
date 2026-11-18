@@ -1,6 +1,41 @@
 # Förslag: Spelledaren
 
-Status: förslag från 2026-11-18. Inget är byggt. Beslut tas senare.
+Status: förslaget skrevs 2026-11-18. Det mesta av del 1–3 är byggt, se
+läget nedan. Resten av dokumentet är det ursprungliga förslaget.
+
+## Läget
+
+Byggt (README beskriver hur det fungerar):
+
+- Spelledarens sida på `/spelledare`, bara från tornets egen dator.
+- Inställningar som ändras utan omstart: AI-spelare, minsta antal, sol,
+  turtid, avslöjandet, strid mellan vandrare, frånvarande vandrare och
+  spelledarläget. De sparas till nästa gång.
+- Starta nu, Stäng tornet, och inbjudan att kopiera till en gruppchatt.
+- Översikten i spelledarläget: hela tornet, vandrarna, varelserna, hur djupt
+  ormen sover, avslöjandets nivå och allt vandrarna har läst.
+- Ingrepp: tid, tornets röst, fällor och varelser, väcka och lugna ormen,
+  liv, guld och drycker, och AI tar över en frånvarande vandrare.
+- `Ormtornet.app` via `./skapa-app.sh`. Den bygger från repot och kräver Go.
+- Pekkontroller, så att telefoner och surfplattor kan spela.
+
+På gång, i den här ordningen:
+
+1. Krönikan: en sammanfattning efter varje omgång.
+2. Förval för svårighet: Lätt, Normal, Svår och Mardröm.
+3. Risken att ormen vaknar i översikten, och att flytta fram eller hålla kvar
+   avslöjandets nivå.
+
+Inte byggt, och inte planerat just nu:
+
+- Fler enskilda inställningar (chans för fällor, varelser och dörrar, frö,
+  liv, ormkort, nivågränser, personlighet för varje AI-spelare), namngivna
+  förval och paus mellan rundor.
+- Ingrepp: flytta en vandrare, slå klockan, låta ormen röra sig, spela upp
+  ett ljud.
+- Statistik över flera kvällar och redigering av datafilerna i webbläsaren.
+- Kod för att nå sidan från andra datorer.
+- En färdigbyggd app som går att dela utan Go.
 
 Spelledaren är en egen sida för den som leder spelet. Den ligger i samma
 Go-server på `/spelledare`, inte i ett separat program. Då behövs ingen extra
