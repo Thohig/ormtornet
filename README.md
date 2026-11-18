@@ -82,10 +82,26 @@ adressen spelarna ska öppna, med knappar som kopierar en färdig inbjudan att
 skicka i en gruppchatt. Sidan visar också vilka som har anslutit och är redo,
 och vad man kan göra om någon inte kommer in.
 
-Under Inför nästa vandring väljer spelledaren antal AI-spelare, minsta antal
-vandrare, svårighet, solnedgång, turtid, avslöjandet, tornets storlek, klasser och om vandrarna syns
-för varandra. AI-spelare kommer och går
-direkt i lobbyn, resten gäller från nästa omgång. Under en pågående vandring
+Under Inför nästa vandring väljer spelledaren:
+
+| Inställning | Val | Förval |
+|---|---|---|
+| AI-spelare | 0–7, eller 8 i spelledarläget | 0 |
+| Minst antal vandrare | 1–8, AI-spelare inräknade | 2 |
+| Svårighet | Lätt, Normal, Svår, Mardröm | Normal |
+| Solnedgång | rundor i ett torn på 9 × 9; större torn får fler | 40 |
+| Turtid | sekunder per runda | 30 |
+| Avslöjandet | på eller av | på |
+| Frånvarande vandrare | AI tar över efter 1–3 rundor, eller står still | 2 rundor |
+| Strid mellan vandrare | på, efter halva tiden, av | på |
+| Vandrarna syns | bara när de möts med egen karta, bara när de möts, alltid | egen karta |
+| Tornets storlek | automatisk, 9, 11 eller 13 rum | automatisk |
+| Klasser | på eller av | på |
+| Spelledarläge | på eller av | av |
+
+Under Vid porten står hur stort tornet blir och hur många rundor solen
+har. AI-spelare kommer och går direkt i lobbyn, och tornet byggs om i
+lobbyn när antalet vandrare ändras. Resten gäller från nästa omgång. Under en pågående vandring
 är inställningarna låsta. Om tornet är fullt när en människa ansluter i
 lobbyn kliver en AI-spelare åt sidan, och kommer tillbaka om platsen blir
 ledig igen. Knappen Starta nu börjar vandringen även om inte alla har
@@ -104,7 +120,8 @@ då ansluta som vandrare från spelledarens dator, och spelarna får veta att
 tornet har en spelledare. Spelledaren startar vandringen med Starta nu, även
 när alla vandrare är AI-spelare. Sidan visar då en översikt: hela tornet så
 långt det har vuxit fram, med fällor som väntar och alla varelser, varje
-vandrares plats, liv, skatt, drycker, tillstånd och valda drag, hur djupt
+vandrares plats, klass, liv, skatt, drycker, föremål, tillstånd och valda
+drag, vad var och en har viskat till tornet och vem som är invigd, hur djupt
 ormen sover och risken att den vaknar vid nästa näve, avslöjandets nivå och
 allt vandrarna har fått läsa.
 
@@ -122,8 +139,10 @@ varje ingrepp skrivs i loggen:
 - **Avslöjandet:** flytta fram det en nivå direkt, med ljud, texter och
   ledtrådar som när solen gör det, eller hålla kvar nivån så att den inte
   följer solen. Släpps nivån hinner den ikapp solen efter rundan.
-- **Vandrarna:** ge eller ta liv, guld och drycker. Vandraren märker att
-  något händer, men inte varifrån.
+- **Vandrarna:** ge eller ta liv, guld och drycker, och ge ett föremål.
+  Vandraren märker att något händer, men inte varifrån.
+- **Den invigde:** inviga en vandrare, som om den hade viskat hemligheten,
+  eller ta tillbaka det (bara med avslöjandet på).
 
 Utan spelledarläge visar sidan inga skatter, positioner eller drag, så spelledaren kan spela med i
 en annan flik ("Gå in själv", som leder till introt och sedan namnrutan). Andra datorer i nätverket kommer inte åt sidan.
@@ -155,9 +174,12 @@ spelarsidan (`/`), med tre vyer i tur och ordning:
 2. **Namnrutan**: "Vad heter du, vandrare?" Är tornet fullt eller namnet
    upptaget står felet här.
 3. **Spelet**, där spelaren stannar resten av kvällen. Det går igenom tre faser:
-   - **lobbyn**: vandrarna och "Tryck Enter när du är redo" (Redo på en
-     pekskärm),
-   - **vandringen**: kartan, solmätaren, sidopanelen och loggen,
+   - **lobbyn**: vandrarna, valet av klass (1 eller 2) och "Tryck Enter när
+     du är redo" (Redo på en pekskärm),
+   - **vandringen**: kartan, solmätaren, sidopanelen och loggen. Under DU i
+     panelen står klassen, liv, skatt, drycker, föremålen, kompassen och
+     för den invigde dunket. När det går att viska står det där,
+     och viskningen skrivs i en egen ruta under panelen,
    - **slutet**: resultatrutan över kartan, och i loggen vinnaren, krönikan
      och epilogen. Enter (Nytt torn) leder tillbaka till lobbyn.
 
@@ -543,8 +565,15 @@ Beskrivningarna för rummen ligger under nivåerna `"1"` till `"4"`.
 
 ## Struktur
 
-- `main.go` startar webbservern och skriver ut adressen
-- `game.go` all spellogik (tornet, rummen, spelarna)
+- `main.go` startar webbservern, läser flaggorna och skriver ut adressen
+- `game.go` tornet, rummen, vandrarna, rundorna och vad var och en ser
+- `settings.go` spelledarens inställningar och hur de sparas
+- `host.go` värdsidan och dess adresser
+- `gm.go` spelledarens översikt
+- `ingrepp.go` spelledarens ingrepp
+- `activity.go` autostopp för ett bortglömt torn
+- `takeover.go` AI tar över en frånvarande vandrare
+- `pvp.go` strid mellan vandrare
 - `events.go` fällor, sökande och drycker
 - `serpent.go` skattkammaren och ormkorten
 - `monster.go` varelser, strider och den döda spelarens styrning
@@ -559,8 +588,12 @@ Beskrivningarna för rummen ligger under nivåerna `"1"` till `"4"`.
 - `data.go` läser in datafilerna
 - `ws.go` en liten websocket-implementation utan beroenden
 - `web/` klienten: HTML, CSS och JavaScript utan ramverk
-  - `map.js` ritar kartan med ASCII- och braille-tecken
-  - `audio.js` allt ljud, skapat med Web Audio API
+  - `index.html` och `app.js` spelarsidan: introt, namnrutan och spelet
+  - `spelledare.html` värdsidan
+  - `map.js` ritar kartan med ASCII- och braille-tecken, och utsnittet på
+    en liten skärm
+  - `audio.js` allt ljud, skapat med Web Audio API, även stormen i introt
+  - `style.css` utseendet
 
 ## Testa lokalt
 

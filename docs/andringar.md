@@ -30,7 +30,8 @@ avslöjandet avstängt går det inte att viska. README beskriver det under
 - Klasserna: tjuven hittar oftare föremål, kartritaren får fler streck med
   kritan, spårfinnaren ser var föremål ligger och pilgrimen låter
   förbannade föremål ligga.
-- Spelledaren kan ge föremål.
+- Spelledaren kan ge föremål. Valet av föremål på värdsidan står kvar när
+  översikten ritas om.
 
 ### Föremål, steg 1
 

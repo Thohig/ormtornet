@@ -41,6 +41,12 @@ Så här skiljer vi på sakerna när användaren ger instruktioner:
 - **stormen**: introts moln, regn, blixtar, åska och musik.
 - **klasser**: det vandrarna väljer i lobbyn (`classes.go`,
   `data/klasser.json`), till exempel Kartritaren.
+- **föremål**: det vandrarna hittar och bär, högst tre (`items.go`,
+  `data/foremal.json`). Vissa verkar av sig själva, andra används med 1–3,
+  och några är förbannade.
+- **viska** och **invigd**: den som vet tornets hemlighet kan viska den
+  med V och blir då invigd (`secret.go`, `svar` och `invigd` i
+  `data/avslojande.json`). Bara med avslöjandet på.
 
 Spelarna ser ordet "spelledare" i spelets texter, aldrig "värdsidan".
 
@@ -55,8 +61,11 @@ Skriv dit när ett steg är klart.
   av del 1–3 är byggt. Avsnittet Läget säger vad som är byggt, vad som är på
   gång och vad som inte är planerat. Fråga vilka delar som ska byggas innan
   du börjar på något som inte står under På gång.
-- [docs/fler-spelare.md](docs/fler-spelare.md): klasser (byggt), tornets
-  storlek och upp till 8 spelare (på gång, i den ordningen).
+- [docs/fler-spelare.md](docs/fler-spelare.md): klasser, tornets storlek
+  och upp till 8 spelare. Allt är byggt.
+- [docs/foremal-och-hemligheten.md](docs/foremal-och-hemligheten.md):
+  föremålen och viskningen till tornet. Allt är byggt; avsnittet Inte
+  byggt säger vad som återstår.
 - [docs/synlighet.md](docs/synlighet.md): att vandrarna bara ser varandra
   när de möts, och på sikt bara sin egen karta. Alla tre stegen är
   byggda.
