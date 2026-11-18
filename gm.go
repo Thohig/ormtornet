@@ -128,7 +128,7 @@ func (g *Game) GMView(visible bool) gmView {
 				v.Unknown++
 				continue
 			}
-			rv := roomView{X: x, Y: y, D: r.Doors, K: r.Kind, Exit: -1, Name: g.roomName(r), Mark: r.Mark, S: r.Searched}
+			rv := roomView{X: x, Y: y, D: r.Doors, K: r.Kind, Exit: -1, Name: g.roomName(r), Mark: r.Mark, MarkN: g.data.trapName(r.Mark), S: r.Searched}
 			if r.HasExit {
 				rv.Exit = int(r.Exit)
 			}
@@ -137,6 +137,7 @@ func (g *Game) GMView(visible bool) gmView {
 				v.Traps++
 				if t := g.data.trap(r.Event); t != nil {
 					rv.Mark = t.Tecken
+					rv.MarkN = t.Namn
 				}
 			}
 			m.Rooms = append(m.Rooms, rv)

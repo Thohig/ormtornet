@@ -356,11 +356,48 @@ body[data-niva="4"] #crt::after { animation: throb 0.95s infinite; }
 }
 #side > .block { flex: 0 0 auto; }
 
-/* Rummets namn uppe till vänster och statusen uppe till höger på kartan. */
-#roomname {
+/* Rummets namn och teckenförklaringen uppe till vänster, statusen uppe till
+   höger på kartan. */
+#mapleft {
   position: absolute;
   top: 8px;
   left: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  max-width: 40%;
+  pointer-events: none;
+}
+#legend {
+  padding: 4px 8px;
+  border-radius: 4px;
+  background: rgba(21, 23, 26, 0.7);
+  font-size: 12px;
+  opacity: 0.7;
+  pointer-events: auto;
+  transition: opacity 0.2s;
+}
+#legend:hover, #legend:focus-within { opacity: 1; }
+#legend[hidden] { display: none; }
+#legendBtn {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--dim);
+  font: inherit;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+}
+#legendBtn:hover, #legendBtn:focus-visible { color: var(--chalk); outline: none; }
+#legendBtn::after { content: " ▾"; }
+#legendBtn[aria-expanded="false"]::after { content: " ▸"; }
+#legendList { margin-top: 3px; }
+#legendList[hidden] { display: none; }
+.sign { display: flex; gap: 6px; line-height: 1.35; }
+.sign .glyph { flex: 0 0 1.2em; text-align: center; font-weight: bold; }
+.sign .what { color: var(--chalk); }
+#roomname {
   color: var(--chalk);
   letter-spacing: 0.08em;
   opacity: 0.75;

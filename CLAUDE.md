@@ -36,6 +36,9 @@ Så här skiljer vi på sakerna när användaren ger instruktioner:
 - **spelskärmen**: vyn spelet på spelarsidan. Delarna heter:
   - **översta raden**: solmätaren, **prickarna** (vandrarna i sin färg,
     fyllda när de har valt drag) och tiden,
+  - **teckenförklaringen**: listan uppe till vänster på kartan, under
+    rummets namn, med de tecken som står i rummen just nu (`tecken_` i
+    `data/texter.json`),
   - **tecknen**: statusen uppe till höger på kartan (klass, liv, skatt,
     drycker, tillstånd) och föremålen under dem, med förklaringar,
   - **frågetecknet**: styrningen, som ligger bakom ? på kartan,

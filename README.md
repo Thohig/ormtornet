@@ -192,7 +192,12 @@ spelarsidan (`/`), med tre vyer i tur och ordning:
      (i lobbyn när den är redo), ✕ är död och ◌ ute; håll musen över den,
      eller tryck, för namn, klass och läge. Panelen Vandrare syns i lobbyn
      och i slutet. I loggen står vandrarnas namn i deras färg. Uppe till
-     vänster på kartan står rummets namn. Uppe till höger står statusen
+     vänster på kartan står rummets namn, och under det
+     teckenförklaringen: de tecken som står i rummen just nu, som
+     vandrarna, varelserna och fällorna med sina namn, kammaren, portarna,
+     krita och okända rum. Den fälls ihop med ett klick på rubriken (på en
+     liten skärm är den hopfälld från början), och texterna står under
+     `tecken_*` i `data/texter.json`. Uppe till höger står statusen
      som halvt genomskinliga tecken: klassens tecken, liv, skatt, drycker,
      tillstånd som fast, gift och mörker, kompassen, dunket och viskningen,
      och under dem föremålen. Håll musen över ett tecken, eller tryck på

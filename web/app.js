@@ -726,6 +726,47 @@ function checkRoundCard() {
 }
 $("roundcard").addEventListener("click", hideRoundCard);
 
+// Teckenförklaringen uppe till vänster på kartan: de tecken som står i
+// rummen just nu. Texterna kommer från tecken_* i data/texter.json, och
+// fällor och varelser förklaras med sina namn. Den går att fälla ihop.
+let signTexts = {};
+let legendOpen = !(window.matchMedia && matchMedia("(max-width: 700px)").matches);
+try {
+  const saved = localStorage.getItem("ormtornet-tecken");
+  if (saved) legendOpen = saved === "1";
+} catch {}
+function renderLegend(list) {
+  const box = $("legendList");
+  box.innerHTML = "";
+  list.forEach((e) => {
+    const text = e.name || signTexts[e.key.split(":")[0]];
+    if (!text) return;
+    const row = document.createElement("div");
+    row.className = "sign";
+    const g = document.createElement("span");
+    g.className = "glyph";
+    g.textContent = e.glyph;
+    g.style.color = e.color;
+    const w = document.createElement("span");
+    w.className = "what";
+    w.textContent = text;
+    row.append(g, w);
+    box.appendChild(row);
+  });
+  $("legend").hidden = box.childElementCount === 0;
+  showLegendOpen();
+}
+function showLegendOpen() {
+  $("legendList").hidden = !legendOpen;
+  $("legendBtn").setAttribute("aria-expanded", String(legendOpen));
+}
+$("legendBtn").addEventListener("click", () => {
+  legendOpen = !legendOpen;
+  try { localStorage.setItem("ormtornet-tecken", legendOpen ? "1" : "0"); } catch {}
+  showLegendOpen();
+});
+MapView.setLegend(renderLegend);
+
 // Förklaringen till ett tecken på kartan. Den läggs under tecknet, inom
 // kartans ruta.
 function showTip(el) {
@@ -1193,6 +1234,10 @@ const Intro = (() => {
       if (!reveal) $("intro").classList.add("invigd");
       toHostPage = info.vard && !wantsToPlay;
       $("listen").textContent = info.ljud || "";
+      signTexts = info.tecken || {};
+      $("legendBtn").textContent = signTexts.rubrik || "";
+      MapView.setLegend(renderLegend); // texterna kom efter kartan
+      if (state && mapReady) MapView.draw(state);
       rumors = (info.rykten || []).slice().sort(() => Math.random() - 0.5);
       showRumor();
       setInterval(showRumor, 7500);

@@ -96,6 +96,15 @@ const MapView = (() => {
     colr[y][x] = color;
   }
 
+  // Teckenförklaringen: de tecken som står på kartan just nu. Nyckeln säger
+  // vilken förklaring som gäller, name är fällans eller varelsens namn.
+  let legend = new Map();
+  let legendSig = "";
+  let onLegend = null;
+  function note(key, glyph, color, name) {
+    if (!legend.has(key)) legend.set(key, { key, glyph, color, name: name || "" });
+  }
+
   function setWall(x, y, on) {
     if (x < 0 || y < 0 || x >= cols || y >= rows) return;
     wall[y][x] = on;
@@ -260,16 +269,32 @@ const MapView = (() => {
     const ey = r.exit === 0 ? y0 : r.exit === 2 ? y0 + RH : midY;
     if (ex >= 0) {
       setWall(ex, ey, false);
-      if (lvl === 4 && lastState && lastState.phase === "slut") put(ex, ey, "█", "#d0503a");
-      else if (lvl === 4) put(ex, ey, Math.floor(nowMs / 400) % 2 ? "⩚" : "⩛", "#ff7a5a");
-      else put(ex, ey, ["˄", "›", "˅", "‹"][r.exit], COLORS.exit);
+      if (lvl === 4 && lastState && lastState.phase === "slut") {
+        put(ex, ey, "█", "#d0503a");
+        note("port", "█", "#d0503a");
+      } else if (lvl === 4) {
+        put(ex, ey, Math.floor(nowMs / 400) % 2 ? "⩚" : "⩛", "#ff7a5a");
+        note("port", "⩛", "#ff7a5a");
+      } else {
+        put(ex, ey, ["˄", "›", "˅", "‹"][r.exit], COLORS.exit);
+        note("port", "˄", COLORS.exit);
+      }
     }
 
-    if (r.mark) put(x0 + Math.floor(RW / 2), y0 + Math.floor(RH / 2), r.mark, COLORS.mark);
+    if (r.mark) {
+      put(x0 + Math.floor(RW / 2), y0 + Math.floor(RH / 2), r.mark, COLORS.mark);
+      note("falla:" + r.mark, r.mark, COLORS.mark, r.markn);
+    }
     // Ett föremål som någon har lämnat, för spårfinnaren.
-    if (r.f) put(x0 + RW - 1, y0 + 1, "+", COLORS.gold);
+    if (r.f) {
+      put(x0 + RW - 1, y0 + 1, "+", COLORS.gold);
+      note("foremal", "+", COLORS.gold);
+    }
     // En pil i krita, ritad av någon vandrare.
-    if (r.c >= 0 && r.c !== undefined) put(x0 + 1, y0 + 1, ARROWS[r.c], COLORS.chalk);
+    if (r.c >= 0 && r.c !== undefined) {
+      put(x0 + 1, y0 + 1, ARROWS[r.c], COLORS.chalk);
+      note("krita", ARROWS[r.c], COLORS.chalk);
+    }
 
     // Kammaren: en kritring kring en hög av guld. När ormen har vaknat
     // spänns ringen och två ögon lyser.
@@ -282,6 +307,8 @@ const MapView = (() => {
       const color = awake ? "#ffe14a" : COLORS.gold;
       put(x0 + 3, y0 + 2, ch, color);
       put(x0 + 4, y0 + 2, ch, color);
+      note("kammare", "¤", COLORS.gold);
+      if (awake) note("vaken", "◉", "#ffe14a");
     }
   }
 
@@ -311,6 +338,7 @@ const MapView = (() => {
     floors = [];
     rings = [];
     figures = [];
+    legend = new Map();
 
     // Okända rum syns bara som en svag prick. För en vandrare bara rummen
     // bredvid dem den känner till, så att kartan inte avslöjar mer.
@@ -323,6 +351,7 @@ const MapView = (() => {
         if (state.you && !near(x, y)) continue;
         const ch = x === mid && y === mid ? "◌" : "·";
         put(x * RW + Math.floor(RW / 2), y * RH + Math.floor(RH / 2), ch, COLORS.unknown);
+        if (!known.has(x + "," + y)) note(ch === "◌" ? "mitten" : "okand", ch, COLORS.unknown);
       }
     }
     state.rooms.forEach(drawRoom);
@@ -343,6 +372,7 @@ const MapView = (() => {
         }
       }
       put(x0 + Math.floor(RW / 2), y0 + Math.floor(RH / 2), "◎", PLAYER_COLORS[p.slot]);
+      note("eko", "◎", PLAYER_COLORS[p.slot]);
     });
     // Där en dold vandrare sågs senast står en svag ring i dess färg.
     state.players.forEach((p) => {
@@ -350,6 +380,7 @@ const MapView = (() => {
       if (!seen || !p.hidden) return;
       const [sx, sy] = SLOTS[seen.slot] || SLOTS[0];
       figures.push({ x: seen.x * RW + sx, y: seen.y * RH + sy, kind: "ghost", color: PLAYER_COLORS[seen.slot] || "#ffffff" });
+      note("skymd", "○", PLAYER_COLORS[seen.slot] || "#ffffff");
     });
     // Vandrarna är kritprickar i sin färg. Den egna har en ring som blinkar.
     state.players.forEach((p) => {
@@ -359,10 +390,14 @@ const MapView = (() => {
       const y = p.y * RH + sy;
       if (p.status === "forlorad" || p.status === "dod") {
         put(x, y, "x", COLORS.lost);
+        note("forlorad", "x", COLORS.lost);
         return;
       }
       const color = p.online ? PLAYER_COLORS[p.slot] || "#fff" : COLORS.offline;
       figures.push({ x, y, kind: p.id === state.you ? (blink ? "me" : "dot") : "dot", color });
+      if (p.id === state.you) note("du", "◉", color);
+      else if (!p.online) note("borta", "●", color);
+      else note("vandrare", "●", color);
     });
 
     // Varelserna. Den som styrs av en död spelare blinkar när den är vald.
@@ -370,6 +405,7 @@ const MapView = (() => {
       const selected = state.controller && m.id === selectedMonster;
       const color = selected && !blink ? "#ffe14a" : COLORS.monster;
       put(m.x * RW + Math.floor(RW / 2) + 1, m.y * RH + Math.floor(RH / 2), m.glyph, color);
+      note("varelse:" + m.glyph, m.glyph, COLORS.monster, m.name);
     });
 
     // Den döda spelarens drag för en varelse visas som en pil.
@@ -398,11 +434,30 @@ const MapView = (() => {
       const pos = [[mx, y0], [x0 + RW, my], [mx, y0 + RH], [x0, my]][dir];
       const color = PLAYER_COLORS[me.slot];
       if (blink) put(pos[0], pos[1], ARROWS[dir], color);
+      note("drag", ARROWS[dir], color);
     }
 
     aim(wanted(state), nowMs);
     place(nowMs);
     paint();
+    tellLegend();
+  }
+
+  // Förklaringen byggs bara om när tecknen på kartan har ändrats.
+  const LEGEND_ORDER = ["du", "vandrare", "borta", "skymd", "forlorad", "drag", "varelse", "falla",
+    "kammare", "vaken", "port", "foremal", "krita", "eko", "okand", "mitten"];
+  function tellLegend() {
+    if (!onLegend) return;
+    const rank = (e) => LEGEND_ORDER.indexOf(e.key.split(":")[0]);
+    const list = [...legend.values()].sort((a, b) => rank(a) - rank(b));
+    const sig = list.map((e) => e.key + e.glyph + e.color + e.name).join("|");
+    if (sig === legendSig) return;
+    legendSig = sig;
+    onLegend(list);
+  }
+  function setLegend(fn) {
+    onLegend = fn;
+    legendSig = "";
   }
 
   // Cellens mitt på tavlan, med ett litet darr så att strecket ser handritat
@@ -568,5 +623,5 @@ const MapView = (() => {
     wokeAt = performance.now();
   }
 
-  return { setup, draw, resize, ping, wake, toggleWhole, PLAYER_COLORS };
+  return { setup, draw, resize, ping, wake, toggleWhole, setLegend, PLAYER_COLORS };
 })();

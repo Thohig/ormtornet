@@ -414,16 +414,17 @@ type playerView struct {
 }
 
 type roomView struct {
-	X    int     `json:"x"`
-	Y    int     `json:"y"`
-	D    [4]bool `json:"d"`
-	K    string  `json:"k"`
-	Exit int     `json:"exit"`
-	Name string  `json:"name"`
-	Mark string  `json:"mark,omitempty"`
-	S    bool    `json:"s,omitempty"` // genomsökt
-	C    int     `json:"c"`           // pilen i krita, -1 om ingen
-	F    bool    `json:"f,omitempty"` // här ligger ett föremål (bara för spårfinnaren)
+	X     int     `json:"x"`
+	Y     int     `json:"y"`
+	D     [4]bool `json:"d"`
+	K     string  `json:"k"`
+	Exit  int     `json:"exit"`
+	Name  string  `json:"name"`
+	Mark  string  `json:"mark,omitempty"`
+	MarkN string  `json:"markn,omitempty"` // fällans namn, för teckenförklaringen
+	S     bool    `json:"s,omitempty"`     // genomsökt
+	C     int     `json:"c"`               // pilen i krita, -1 om ingen
+	F     bool    `json:"f,omitempty"`     // här ligger ett föremål (bara för spårfinnaren)
 }
 
 type resultView struct {
@@ -624,7 +625,7 @@ func (g *Game) stateFor(me *Player) stateMsg {
 			if !g.knowsRoom(me, x, y) || (blind && (x != me.X || y != me.Y)) {
 				continue
 			}
-			rv := roomView{X: x, Y: y, D: r.Doors, K: r.Kind, Exit: -1, Name: g.roomName(r), Mark: r.Mark, S: r.Searched, C: -1}
+			rv := roomView{X: x, Y: y, D: r.Doors, K: r.Kind, Exit: -1, Name: g.roomName(r), Mark: r.Mark, MarkN: g.data.trapName(r.Mark), S: r.Searched, C: -1}
 			if r.hasChalk {
 				rv.C = int(r.chalk)
 			}

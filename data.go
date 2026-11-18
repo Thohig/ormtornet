@@ -306,6 +306,29 @@ func (d *Data) trap(id string) *Trap {
 	return nil
 }
 
+// trapName ger namnet på fällan som har tecknet mark, för teckenförklaringen
+// på kartan.
+func (d *Data) trapName(mark string) string {
+	for i := range d.Fallor {
+		if mark != "" && d.Fallor[i].Tecken == mark {
+			return d.Fallor[i].Namn
+		}
+	}
+	return ""
+}
+
+// signs ger förklaringarna till kartans tecken, från texterna tecken_*.
+// Nyckeln är det som står efter tecken_.
+func (d *Data) signs() map[string]string {
+	m := map[string]string{}
+	for k, v := range d.Texter {
+		if name, ok := strings.CutPrefix(k, "tecken_"); ok && len(v) > 0 {
+			m[name] = v[0]
+		}
+	}
+	return m
+}
+
 // SearchText väljer en text för ett sökresultat.
 func (d *Data) SearchText(key string, vars ...string) string {
 	return fill(pick(d.Sok.Texter[key]), vars...)

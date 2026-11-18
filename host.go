@@ -84,6 +84,8 @@ type introInfo struct {
 	Vard       bool     `json:"vard"`  // sidan visas på datorn som kör tornet
 	Vanta      int      `json:"vanta"` // sekunder innan knappen visas
 	Ljud       string   `json:"ljud"`  // uppmaningen att klicka för att höra stormen
+	// Tecken förklarar kartans tecken, från texterna tecken_* i texter.json.
+	Tecken map[string]string `json:"tecken"`
 }
 
 // Intro väljer rykten till startsidan. Med avslöjandet avstängt, för spelare
@@ -96,7 +98,7 @@ func (g *Game) Intro() introInfo {
 		key = "rykten_invigda"
 	}
 	return introInfo{Avslojande: g.cfg.Reveal, Rykten: g.data.Texter[key],
-		Vanta: g.data.Intro.Vanta, Ljud: g.data.Text("intro_ljud")}
+		Vanta: g.data.Intro.Vanta, Ljud: g.data.Text("intro_ljud"), Tecken: g.data.signs()}
 }
 
 // isLocal är sant när förfrågan kommer från den här datorn, oavsett om den

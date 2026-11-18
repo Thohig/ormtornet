@@ -6,6 +6,17 @@ eller leder tornet.
 
 ## 2026-11-19
 
+### Teckenförklaring på kartan
+
+- Uppe till vänster på kartan, under rummets namn, står nu vad tecknen i
+  rummen betyder: vandrarna, varelserna och fällorna med sina namn,
+  kammaren, portarna, kritpilar, ekon, föremål och okända rum. Bara de
+  tecken som står på kartan just nu finns med, så listan växer under
+  vandringen.
+- Ett klick på "Tecken" fäller ihop och upp den, och valet sparas. På en
+  liten skärm är den hopfälld från början.
+- Texterna står under `tecken_*` i `data/texter.json`.
+
 ### Vandrarna i översta raden och i loggen
 
 - Under vandringen står vandrarna som prickar i sin färg i översta raden,

@@ -103,7 +103,13 @@
     <div id="main">
       <div id="mapbox">
         <canvas id="map"></canvas>
-        <div id="roomname" aria-live="polite"></div>
+        <div id="mapleft">
+          <div id="roomname" aria-live="polite"></div>
+          <div id="legend" hidden>
+            <button type="button" id="legendBtn" aria-expanded="true"></button>
+            <div id="legendList"></div>
+          </div>
+        </div>
         <div id="hud">
           <div class="hudrow">
             <div id="status" aria-label="Du"></div>
