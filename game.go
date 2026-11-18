@@ -188,22 +188,26 @@ type trail struct {
 }
 
 type Player struct {
-	ID       int
-	Name     string
-	Slot     int
-	Corner   int      // porten vandraren börjar vid; lottas när vandrarna inte ser varandra
-	classID  string   // vald klass, tom om ingen
-	offer    []string // klasser att välja mellan i lobbyn
-	items    []*Item  // föremål i väskan
-	X, Y     int
-	client   *Client
-	Ready    bool
-	Action   string
-	Treasure int
-	Status   string
-	Seen     map[string]bool // fällor och varelser spelaren har mött
-	known    [][]bool        // rum vandraren själv har varit i, för synligheten "egen"
-	bot      *botBrain       // satt för datorstyrda vandrare
+	ID      int
+	Name    string
+	Slot    int
+	Corner  int      // porten vandraren börjar vid; lottas när vandrarna inte ser varandra
+	classID string   // vald klass, tom om ingen
+	offer   []string // klasser att välja mellan i lobbyn
+	items   []*Item  // föremål i väskan
+
+	initiated  bool   // vandraren har viskat tornets hemlighet
+	guessLevel int    // nivån då vandraren senast viskade
+	whispered  string // det vandraren senast viskade, för spelledaren
+	X, Y       int
+	client     *Client
+	Ready      bool
+	Action     string
+	Treasure   int
+	Status     string
+	Seen       map[string]bool // fällor och varelser spelaren har mött
+	known      [][]bool        // rum vandraren själv har varit i, för synligheten "egen"
+	bot        *botBrain       // satt för datorstyrda vandrare
 
 	awayRound int  // rundan då människan lämnade mitt i vandringen, 0 om den är här
 	takenOver bool // en AI-spelare styr vandraren medan människan är borta
@@ -275,6 +279,8 @@ type Game struct {
 	pauseLeft time.Duration // tid som var kvar när rundan pausades
 
 	chron []chronEvent // krönikan över vandringen
+
+	graceUsed bool // porten har redan väntat på de invigda
 
 	levelHeld bool // spelledaren håller kvar avslöjandets nivå
 }
@@ -451,6 +457,9 @@ type stateMsg struct {
 	Class      *classView    `json:"klass,omitempty"`
 	Items      []itemView    `json:"foremal,omitempty"`
 	Compass    string        `json:"kompass,omitempty"`
+	Heart      string        `json:"hjartslag,omitempty"`
+	Initiated  bool          `json:"invigd,omitempty"`
+	CanWhisper bool          `json:"kanViska,omitempty"`
 	Offer      []*classView  `json:"erbjudande,omitempty"`
 	Players    []playerView  `json:"players"`
 	Rooms      []roomView    `json:"rooms"`
@@ -565,6 +574,10 @@ func (g *Game) stateFor(me *Player) stateMsg {
 	st.Items = g.itemViews(me)
 	if g.phase == phasePlay {
 		st.Compass = g.compass(me)
+		st.Heart = g.heartbeat(me)
+		st.Initiated = me.initiated
+		st.CanWhisper = g.cfg.Reveal && me.bot == nil && !me.initiated && me.Status == statusIn &&
+			g.level >= max(1, g.data.Avslojande.ViskaFranNiva) && me.guessLevel < g.level
 	}
 	if g.cfg.Classes && me.classID == "" && g.phase != phasePlay {
 		for _, id := range me.offer {
@@ -682,6 +695,7 @@ func (g *Game) placeAtCorner(p *Player) {
 	p.Potions, p.Stuck, p.Cellar, p.Poison, p.Dark = 0, 0, 0, 0, 0
 	p.known = newGrid[bool](g.size)
 	p.items = nil
+	p.initiated, p.guessLevel, p.whispered = false, 0, ""
 	g.revealPorts()
 	g.noteRoom(p)
 }
@@ -934,6 +948,7 @@ func (g *Game) startGame() {
 	g.pendingMove = nil
 	g.level = 1
 	g.levelHeld = false
+	g.graceUsed = false
 	g.usedClues = map[string]bool{}
 	g.resetChronicle()
 	for _, p := range g.players {
@@ -1136,9 +1151,17 @@ func (g *Game) resolve() {
 	switch {
 	case inside == 0:
 		g.endGame()
-	case g.sun <= 0:
+	case g.sun <= 0 && !g.graceUsed && g.anyInitiatedInside():
 		g.logAll(g.data.Text("solnedgang"), "varn")
 		g.soundAll("solnedgang")
+		g.portGrace()
+		g.round++
+		g.startRound()
+	case g.sun <= 0:
+		if !g.graceUsed {
+			g.logAll(g.data.Text("solnedgang"), "varn")
+			g.soundAll("solnedgang")
+		}
 		g.endGame()
 	default:
 		g.sunWarning(sunBefore)
@@ -1380,6 +1403,8 @@ func (g *Game) serve(conn *wsConn, local bool) {
 			g.Ready(c)
 		case "klass":
 			g.ChooseClass(c, m.Name)
+		case "viska":
+			g.Whisper(c, m.Name)
 		}
 		g.mu.Unlock()
 	}

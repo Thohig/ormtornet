@@ -4,6 +4,21 @@
     "granser": [0.7, 0.4, 0.15],
     "ledtrad_var_n_runda": 4,
 
+    "_om_svar": "Viskningar som visar att vandraren vet hemligheten. Stämmer en viskning med något av svaren, som hela ord, blir vandraren invigd. Man kan viska en gång per nivå, från viska_fran_niva.",
+    "viska_fran_niva": 2,
+    "svar": [
+      "tornet är ormen",
+      "ormen är tornet",
+      "tornet är en orm",
+      "tornet är ormens kropp",
+      "vi är inne i ormen",
+      "vi är i ormen",
+      "inne i ormen",
+      "inuti ormen",
+      "i ormens mage",
+      "i ormens buk"
+    ],
+
     "nivabyte": {
       "2": [
         "Något förändras. Tornet har börjat andas.",
@@ -99,6 +114,39 @@
     ],
     "epilog_dod": [
       "Den har redan börjat smälta dig."
+    ]
+  },
+
+  "texter": {
+    "invigd": [
+      "Tornet blir tyst. Dunket i väggarna stannar ett ögonblick, som om något lyssnar. Det vet att du vet."
+    ],
+    "invigd_andra": [
+      "Någonstans i tornet blir det alldeles tyst ett ögonblick."
+    ],
+    "viskning_fel": [
+      "Du viskar mot väggen. Ingenting svarar. Kanske förstår du mer när solen har sjunkit."
+    ],
+    "viskning_tidigt": [
+      "Tornet är tyst än. Det finns inget att viska till."
+    ],
+    "viskning_vanta": [
+      "Du har redan viskat. Vänta tills tornet förändras igen."
+    ],
+    "viskning_redan": [
+      "Tornet har redan hört dig."
+    ],
+    "hjartslag": [
+      "Dunket kommer från {horn}."
+    ],
+    "hjartslag_har": [
+      "Dunket kommer rakt underifrån."
+    ],
+    "porten_vantar": [
+      "Solen har gått ner, men porten väntar. Den väntar på dig. Du har en runda till."
+    ],
+    "kronika_invigd": [
+      "{namn} viskade något till tornet, och tornet hörde."
     ]
   }
 }

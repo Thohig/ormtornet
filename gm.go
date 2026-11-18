@@ -60,6 +60,8 @@ type gmPlayer struct {
 	Class    string   `json:"klass,omitempty"`
 	MaxHP    int      `json:"maxHp"`
 	Items    []string `json:"foremal,omitempty"`
+	Invigd   bool     `json:"invigd,omitempty"`
+	Viskning string   `json:"viskning,omitempty"`
 }
 
 type gmSerpent struct {
@@ -157,7 +159,7 @@ func (g *Game) GMView(visible bool) gmView {
 			ID: p.ID, Name: p.Name, Slot: p.Slot, X: p.X, Y: p.Y, Status: p.Status, Online: p.present(),
 			Bot: p.bot != nil && !p.takenOver, AI: p.takenOver, HP: p.HP, Treasure: p.Treasure, Potions: p.Potions,
 			Stuck: p.Stuck, Cellar: p.Cellar, Poison: p.Poison, Dark: p.Dark, Action: g.actionText(p), Room: room,
-			Class: g.classLabel(p), MaxHP: g.maxHP(p), Items: g.itemNames(p),
+			Class: g.classLabel(p), MaxHP: g.maxHP(p), Items: g.itemNames(p), Invigd: p.initiated, Viskning: p.whispered,
 		})
 	}
 	m.Monsters = g.monsterViews(nil, false)

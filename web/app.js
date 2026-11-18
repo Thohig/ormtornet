@@ -344,6 +344,11 @@ function renderSide() {
     box.appendChild(d);
   });
   if (state.kompass) line(state.kompass, "dimline");
+  if (state.invigd) line("Tornet har hört dig", "rost");
+  if (state.hjartslag) line(state.hjartslag, "dimline");
+  if (state.kanViska && !touch) line("V viskar till tornet", "dimline");
+  const pw = $("padWhisper");
+  if (pw) pw.hidden = !state.kanViska;
   if (me.status === "inne") {
     if (state.cellar > 0) line("I källarvalven", "cond");
     if (state.stuck > 0) line("Fast i " + state.stuck + (state.stuck === 1 ? " runda" : " rundor"), "cond");
@@ -862,7 +867,32 @@ const KEYS = {
 };
 document.addEventListener("keydown", (e) => {
   if (e.metaKey || e.ctrlKey || e.altKey) return;
+  if (e.target && e.target.id === "whisperText") return; // viskningen skrivs i sin egen ruta
   if (pressKey(e.key)) e.preventDefault();
+});
+
+// Viskningen: en egen ruta under panelen, så att bokstäverna inte blir drag.
+function openWhisper() {
+  const f = $("whisper");
+  f.hidden = false;
+  $("whisperText").value = "";
+  $("whisperText").focus();
+}
+function closeWhisper() {
+  $("whisper").hidden = true;
+  $("whisperText").blur();
+}
+$("whisper").addEventListener("submit", (e) => {
+  e.preventDefault();
+  const text = $("whisperText").value.trim();
+  if (text) send({ t: "viska", name: text });
+  closeWhisper();
+});
+$("whisperText").addEventListener("keydown", (e) => {
+  if (e.key === "Escape") {
+    e.preventDefault();
+    closeWhisper();
+  }
 });
 
 // pressKey gör det en tangent gör. Pekknapparna använder samma väg och
@@ -879,6 +909,10 @@ function pressKey(key) {
   const offer = (state && state.erbjudande) || [];
   if ((key === "1" || key === "2") && offer[+key - 1]) {
     send({ t: "klass", name: offer[+key - 1].id });
+    return true;
+  }
+  if ((key === "v" || key === "V") && state && state.kanViska) {
+    openWhisper();
     return true;
   }
   if (key === "Enter") {

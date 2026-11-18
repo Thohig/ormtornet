@@ -383,6 +383,8 @@ type Reveal struct {
 	EpilogUte        []string            `json:"epilog_ute"`
 	EpilogForlorad   []string            `json:"epilog_forlorad"`
 	EpilogDod        []string            `json:"epilog_dod"`
+	Svar             []string            `json:"svar"`            // viskningar som visar att man vet hemligheten
+	ViskaFranNiva    int                 `json:"viska_fran_niva"` // första nivån då man kan viska
 }
 
 func (d *Data) roomType(id string) *RoomType {

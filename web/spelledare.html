@@ -468,6 +468,8 @@ function renderGM(o) {
     if (p.dark) cond.push("mörker " + p.dark);
     if (!p.online) cond.push("borta");
     if (p.foremal && p.foremal.length) cond.push(p.foremal.join(", "));
+    if (p.invigd) cond.push("invigd");
+    else if (p.viskning) cond.push("viskade: " + p.viskning);
     const who = p.name + (p.ai ? " (AI)" : p.bot ? " (dator)" : "") + (p.klass ? ", " + p.klass : "");
     const where = { ute: "ute", forlorad: "förlorad", dod: "död" }[p.status] || p.room || "";
     const cells = [who, where, p.hp + "/" + (p.maxHp || o.maxHp), p.treasure + " guld", p.potions, cond.join(", "), p.action || (m.phase === "spel" && p.status === "inne" ? "väljer" : "")];

@@ -105,6 +105,10 @@
           <div id="here"></div>
           <h2>Du</h2>
           <div id="me"></div>
+          <form id="whisper" autocomplete="off" hidden>
+            <input id="whisperText" maxlength="80" spellcheck="false" placeholder="viska till tornet" aria-label="Viska till tornet">
+            <div class="hint">enter viskar · esc ångrar</div>
+          </form>
         </div>
         <h2 class="keys">Styrning</h2>
         <div id="help" class="keys">
@@ -135,6 +139,7 @@
             <button type="button" data-key="p">Parera</button>
             <button type="button" data-key="u">Undan</button>
             <button type="button" data-key="Tab">Byt</button>
+            <button type="button" data-key="v" id="padWhisper" hidden>Viska</button>
             <button type="button" data-key="Enter" id="padEnter" class="wide">Redo</button>
           </div>
         </div>

@@ -477,3 +477,16 @@ body.touch #side { overflow-y: auto; }
 
 /* Föremålen i väskan. */
 .item { color: var(--fg); }
+
+/* Viskningen till tornet. */
+#whisper { margin: 8px 0; }
+#whisperText {
+  width: 100%;
+  background: none;
+  border: none;
+  border-bottom: 1px solid var(--dim);
+  color: var(--hi);
+  font: inherit;
+  outline: none;
+}
+#me .rost { color: #e3b8f0; }
