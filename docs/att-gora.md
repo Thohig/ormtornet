@@ -31,7 +31,14 @@ En riktig kväll behövs för att se:
 - Bara den egna porten: hittar spelarna ut, eller går de vilse när de
   inte ser de andra portarna?
 - Tecknen på kartan (2026-11-19): går de att förstå, och skymmer de
-  kartan när den har vuxit? Hjälper tecknen i loggens marginal, eller
+  kartan när den har vuxit?
+- Loggen (2026-11-19): är takten lagom, ungefär tre rader i sekunden?
+  Hittar man knappen "↓ nya rader", och är det bra att äldre rundor
+  fälls ihop?
+- Kortet efter rundan (2026-11-19): säger det det viktiga, är sju sekunder
+  lagom, och skymmer det något på kartan?
+- Prickarna och namnen i färg (2026-11-19): syns vem som väljer? Den vita
+  färgen (plats 8) syns knappt bland den vanliga texten i loggen. Hjälper tecknen i loggens marginal, eller
   blir de brus?
 
 ### Justera efter provet

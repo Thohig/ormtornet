@@ -33,6 +33,17 @@ Så här skiljer vi på sakerna när användaren ger instruktioner:
   namnrutan, klassvalet och spelet. Spelet har faserna lobbyn,
   klassvalet, vandringen och slutet (`lobby`, `klassval`, `spel`, `slut`). README beskriver under "Vad en spelare ser"
   vad en spelare möter.
+- **spelskärmen**: vyn spelet på spelarsidan. Delarna heter:
+  - **översta raden**: solmätaren, **prickarna** (vandrarna i sin färg,
+    fyllda när de har valt drag) och tiden,
+  - **tecknen**: statusen uppe till höger på kartan (klass, liv, skatt,
+    drycker, tillstånd) och föremålen under dem, med förklaringar,
+  - **frågetecknet**: styrningen, som ligger bakom ? på kartan,
+  - **kortet**: rundans sammanfattning nere på kartan (`summary.go`,
+    `sam_` i `data/texter.json`),
+  - **panelen Nu**: draget, striden och vad som väntar,
+  - **panelen Vandrare**: listan över vandrarna, bara i lobbyn och slutet,
+  - **loggen**: raderna i högerkolumnen, grupperade per runda.
 - **tornets dator**: datorn som kör servern.
 - **synligheten**: inställningen "Vandrarna syns" (`-synlighet`), med
   valen `egen` (egen karta, förval), `moten` och `alla`. Spåren och ljuden
