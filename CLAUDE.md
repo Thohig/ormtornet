@@ -43,3 +43,6 @@ Spelarna ser ordet "spelledare" i spelets texter, aldrig "värdsidan".
   av del 1–3 är byggt. Avsnittet Läget säger vad som är byggt, vad som är på
   gång och vad som inte är planerat. Fråga vilka delar som ska byggas innan
   du börjar på något som inte står under På gång.
+- [docs/synlighet.md](docs/synlighet.md): att vandrarna bara ser varandra
+  när de möts, och på sikt bara sin egen karta. Inget är byggt. Fråga vilka
+  steg som ska byggas innan du börjar.
