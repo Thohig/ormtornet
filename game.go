@@ -720,7 +720,8 @@ func (g *Game) noteRoom(p *Player) {
 }
 
 // knowsRoom är sant om me ser rummet på sin karta. Med synligheten "egen"
-// ser man bara rum man själv har varit i. Den döda spelaren som styr
+// ser man bara rum man själv har varit i, och av portarna bara den man kom
+// in genom; kartan växer därifrån. Den döda spelaren som styr
 // varelserna ser hela tornet, och när vandringen är slut syns allt.
 func (g *Game) knowsRoom(me *Player, x, y int) bool {
 	if !g.rooms[y][x].Revealed {
@@ -732,7 +733,7 @@ func (g *Game) knowsRoom(me *Player, x, y int) bool {
 	if g.cfg.Sight != sightOwn || g.phase == phaseEnd || g.isController(me) || g.is(me, "kartritare") {
 		return true
 	}
-	return me.known[y][x] || g.rooms[y][x].Kind == "ingang"
+	return me.known[y][x]
 }
 
 func (g *Game) Join(c *Client, rawName string) {

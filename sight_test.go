@@ -131,6 +131,10 @@ func TestSightOwnMap(t *testing.T) {
 	if !hasRoom(g.stateFor(pb), cn.x, cn.y) {
 		t.Fatal("Bo ser inte sin egen port")
 	}
+	// Men inte Alvas port, där han aldrig har varit.
+	if ca := g.corners()[pa.Slot]; hasRoom(g.stateFor(pb), ca.x, ca.y) {
+		t.Fatal("Bo ser en annans port")
+	}
 
 	// En varelse i ett rum Bo inte känner till syns inte för honom.
 	g.monsters = append(g.monsters, &Monster{ID: 99, Type: g.data.Monster.Typer[0].ID, X: 5, Y: 3, HP: 1})
@@ -278,11 +282,12 @@ func TestLobbyHidesOthers(t *testing.T) {
 	if v := viewOf(g.stateFor(a.player), b.player); !v.Hidden {
 		t.Fatal("Bo syns i lobbyn")
 	}
-	// Alla fyra portar finns på kartan redan i lobbyn.
+	// Alva ser bara porten hon står vid, inte de andra.
 	st := g.stateFor(a.player)
 	for _, cn := range g.corners() {
-		if !hasRoom(st, cn.x, cn.y) {
-			t.Fatalf("porten i %d,%d syns inte", cn.x, cn.y)
+		mine := cn.x == a.player.X && cn.y == a.player.Y
+		if hasRoom(st, cn.x, cn.y) != mine {
+			t.Fatalf("porten i %d,%d: syns %v, borde %v", cn.x, cn.y, !mine, mine)
 		}
 	}
 	// Med synligheten alla syns Bo som förut.

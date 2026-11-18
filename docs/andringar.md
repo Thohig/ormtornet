@@ -6,6 +6,20 @@ eller leder tornet.
 
 ## 2026-11-18
 
+### Kartan i krita
+
+- Kartan är krita på en skiffertavla. Väggarna är handritade streck med
+  luckor för dörrarna, och kända rum har en svag kritdimma som golv.
+- Vandrarna är prickar i sin färg, och den egna har en ring som blinkar.
+  Varelser, fällor och märken är tecken som förut, men i fet stil.
+- Kammaren är en kritring kring guldet. När ormen vaknar spänns ringen
+  och ögonen lyser.
+- Avslöjandet syns i kritan: på nivå 2 sväller strecken, på nivå 3 får de
+  revben och blir köttfärgade, på nivå 4 är de röda och porten en mun.
+- Med egen karta (förvalet) syns bara den egna porten, redan i lobbyn.
+  De andra portarna hittar man när man går dit. Förut syntes alla fyra
+  från början.
+
 ### Efter provspelet
 
 - Nytt torn leder tillbaka till lobbyn, och alla väljer klass på nytt

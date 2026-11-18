@@ -298,9 +298,11 @@ body[data-niva="4"] #crt::after { animation: throb 0.95s infinite; }
   min-width: 0;
   min-height: 0;
 }
+/* Kartan är krita på en skiffertavla. */
 #map {
   display: block;
-  filter: drop-shadow(0 0 2px rgba(255, 200, 120, 0.45));
+  border-radius: 6px;
+  filter: drop-shadow(0 0 1px rgba(230, 228, 220, 0.25));
 }
 
 #overlay {

@@ -1,60 +1,43 @@
-// Ritar tornet som ett rutnät av tecken på en canvas. Varje tecken placeras
-// i en egen cell, så att braille och andra symboler alltid hamnar rätt även
-// om typsnittet hämtar dem från ett annat teckensnitt.
+// Ritar tornet som krita på en skiffertavla. Tornet läggs ut som ett rutnät
+// av celler: väggarna ritas som kritstreck mellan cellernas mitt, och tecken
+// (varelser, märken, pilar) placeras i en egen cell, så att de alltid hamnar
+// rätt även om typsnittet hämtar dem från ett annat teckensnitt.
 "use strict";
 
 const MapView = (() => {
-  const RW = 7; // tecken per rum på bredden (inklusive en vägg)
-  const RH = 4; // rader per rum (inklusive en vägg)
+  const RW = 7; // celler per rum på bredden (inklusive en vägg)
+  const RH = 4; // celler per rum på höjden (inklusive en vägg)
 
+  const SLATE = "#15171a";
   const COLORS = {
-    wall: "#b39663",
-    floor: "#4a3f2c",
-    unknown: "#2c261b",
-    exit: "#8a7a55",
-    chamber: "#c9a24f",
+    unknown: "#3a3d43",
+    exit: "#8d8a82",
     gold: "#ffd36b",
-    lost: "#8a3b30",
-    mark: "#c0503e",
-    monster: "#e0806a",
+    lost: "#a04a3c",
+    mark: "#ff8a6a",
+    monster: "#ff7a5a",
+    chalk: "#f2f0e8",
+    offline: "#5a5d63",
   };
   // Åtta färger som skiljer sig i ljushet och ton, så att de går att skilja
   // åt även för den som har svårt att se skillnad på rött och grönt.
   const PLAYER_COLORS = ["#ffcc66", "#66e0ff", "#ff7a9a", "#9dff7a", "#c9a0ff", "#ff9a3c", "#3fd0b0", "#f2f2f2"];
 
-  const WALL = ["⣿", "⣷", "⣾", "⡿", "⢿", "⣯", "⣟", "⣻", "⣽"];
   const ARROWS = ["▲", "▶", "▼", "◀"];
-  const FLOOR = ["⠂", "⠄", "⠈", "⠐", "⠠"];
 
-  // Kammaren: en ring kring en hög av guld, 6 x 3 tecken.
-  const CHAMBER = [
-    " ⣠⠶⠶⣄ ",
-    "⢸ ¤¤ ⡇",
-    " ⠙⠶⠶⠋ ",
-  ];
-  // Samma ring när ormen har vaknat: slingorna spänns och två ögon lyser.
-  const CHAMBER_AWAKE = [
-    "⣴⠟⠛⠛⠻⣦",
-    "⣿ ◉◉ ⣿",
-    "⠻⣦⣤⣤⣴⠟",
-  ];
   const WAKE_MS = 3500;
   let wokeAt = -Infinity;
 
-  // Avslöjandet: tornets utseende följer nivån. På nivå 2 andas väggarna,
-  // på nivå 3 syns revbenen och hjärtslagen, på nivå 4 är det kött och tänder.
+  // Avslöjandet: tornets utseende följer nivån. På nivå 2 andas kritan, på
+  // nivå 3 syns revbenen och hjärtslagen, på nivå 4 är det kött och tänder.
+  // ring är kammarens färg, floor golvets svaga ton.
   const LOOK = {
-    1: { wall: [179, 150, 99], hi: [179, 150, 99], floor: "#4a3f2c", period: 0 },
-    2: { wall: [178, 146, 100], hi: [228, 190, 136], floor: "#4d3f2e", period: 4200 },
-    3: { wall: [176, 118, 92], hi: [240, 166, 132], floor: "#55382c", period: 1250 },
-    4: { wall: [160, 70, 52], hi: [255, 118, 88], floor: "#5e2a22", period: 950 },
+    1: { wall: [201, 198, 188], hi: [201, 198, 188], floor: "rgba(255,255,255,0.035)", ring: "#c9a24f", period: 0 },
+    2: { wall: [196, 192, 182], hi: [240, 234, 220], floor: "rgba(255,250,240,0.045)", ring: "#c9a24f", period: 4200 },
+    3: { wall: [196, 160, 140], hi: [240, 170, 140], floor: "rgba(140,50,36,0.12)", ring: "#c98a5a", period: 1250 },
+    4: { wall: [176, 92, 74], hi: [255, 118, 88], floor: "rgba(150,34,24,0.2)", ring: "#c4483a", period: 950 },
   };
-  // Braille i tre tätheter: väggen sväller och krymper när den andas.
-  const THIN = ["⡪", "⢕", "⠪", "⡕", "⢪", "⠕"];
-  const DENSE = ["⣿"];
-  // Revben: tvärstrimmor längs väggarna.
-  const RIB_H = ["⣿", "⡇"];
-  const RIB_V = ["⣿", "⠶"];
+  const STEPS = 6; // så många nyanser kritan andas i
 
   let lvl = 1;
   let reveal = false;
@@ -77,23 +60,6 @@ const MapView = (() => {
     return "rgb(" + c.join(",") + ")";
   }
 
-  function wallAt(x, y, horizontal) {
-    const look = LOOK[lvl];
-    const p = pulse(x, y);
-    const color = mix(look.wall, look.hi, p);
-    let ch;
-    if (lvl >= 3 && p < 0.75) {
-      ch = horizontal ? RIB_H[x % 2] : RIB_V[y % RIB_V.length];
-    } else if (lvl >= 2 && p > 0.7) {
-      ch = DENSE[0];
-    } else if (lvl >= 2 && p < 0.25) {
-      ch = THIN[hash(x, y) % THIN.length];
-    } else {
-      ch = WALL[hash(x, y) % WALL.length];
-    }
-    put(x, y, ch, color);
-  }
-
   // Spelarnas platser inne i ett rum, en per plats i listan. Mitten hålls
   // fri åt tecken för fällor och varelser.
   const SLOTS = [[2, 1], [5, 1], [2, 3], [5, 3], [1, 2], [6, 2], [3, 1], [4, 3]];
@@ -107,7 +73,9 @@ const MapView = (() => {
   let viewing = false; // utsnittet används just nu
   let wantWhole = false; // den som spelar vill se hela tornet
   let vcols = 0, vrows = 0, ox = 0, oy = 0;
-  let grid, colr;
+  // grid och colr: tecknen. wall: väggceller (true), wallc: en färg som
+  // tar över kritans, för ekot. Golv, kammare och vandrare samlas i listor.
+  let grid, colr, wall, wallc, floors, rings, figures;
 
   function hash(x, y) {
     let h = (x * 374761393 + y * 668265263) | 0;
@@ -119,6 +87,15 @@ const MapView = (() => {
     if (x < 0 || y < 0 || x >= cols || y >= rows) return;
     grid[y][x] = ch;
     colr[y][x] = color;
+  }
+
+  function setWall(x, y, on) {
+    if (x < 0 || y < 0 || x >= cols || y >= rows) return;
+    wall[y][x] = on;
+  }
+
+  function isWall(x, y) {
+    return x >= 0 && y >= 0 && x < cols && y < rows && wall[y][x];
   }
 
   // setup ritar upp kartan för ett torn av storleken size. Den anropas igen
@@ -137,7 +114,7 @@ const MapView = (() => {
     resize();
   }
 
-  // fit räknar ut teckenstorleken för c x r tecken i rutan box.
+  // fit räknar ut teckenstorleken för c x r celler i rutan box.
   function fit(box, c, r) {
     let px = Math.max(6, Math.floor(Math.min(box.width / (c * 0.62), box.height / (r * 1.12))));
     // Avrundningen kan göra kartan lite för bred på en smal skärm.
@@ -173,33 +150,25 @@ const MapView = (() => {
   function drawRoom(r) {
     const x0 = r.x * RW;
     const y0 = r.y * RH;
-    const floor = LOOK[lvl].floor;
+    floors.push([x0, y0]);
 
     // Väggar runt om.
     for (let i = 0; i <= RW; i++) {
-      wallAt(x0 + i, y0, true);
-      wallAt(x0 + i, y0 + RH, true);
+      setWall(x0 + i, y0, true);
+      setWall(x0 + i, y0 + RH, true);
     }
     for (let j = 1; j < RH; j++) {
-      wallAt(x0, y0 + j, false);
-      wallAt(x0 + RW, y0 + j, false);
-    }
-    // Golv.
-    for (let j = 1; j < RH; j++) {
-      for (let i = 1; i < RW; i++) {
-        const h = hash(x0 + i, y0 + j);
-        const ch = h % 7 === 0 ? FLOOR[h % FLOOR.length] : " ";
-        put(x0 + i, y0 + j, ch, floor);
-      }
+      setWall(x0, y0 + j, true);
+      setWall(x0 + RW, y0 + j, true);
     }
     // Dörrar: en lucka mitt på varje öppen sida.
     const mid = Math.floor(RW / 2);
     const gapN = [x0 + mid, x0 + mid + 1].filter((x) => x < x0 + RW);
-    if (r.d[0]) gapN.forEach((x) => put(x, y0, " ", COLORS.floor));
-    if (r.d[2]) gapN.forEach((x) => put(x, y0 + RH, " ", COLORS.floor));
+    if (r.d[0]) gapN.forEach((x) => setWall(x, y0, false));
+    if (r.d[2]) gapN.forEach((x) => setWall(x, y0 + RH, false));
     const midY = y0 + Math.floor(RH / 2);
-    if (r.d[1]) put(x0 + RW, midY, " ", COLORS.floor);
-    if (r.d[3]) put(x0, midY, " ", COLORS.floor);
+    if (r.d[1]) setWall(x0 + RW, midY, false);
+    if (r.d[3]) setWall(x0, midY, false);
 
     // Utgång genom ytterväggen. På sista nivån är porten en mun med tänder,
     // och när spelet är slut har den stängts.
@@ -207,7 +176,8 @@ const MapView = (() => {
     const ex = r.exit === 1 ? x0 + RW : r.exit === 3 ? x0 : r.exit >= 0 ? x0 + mid : -1;
     const ey = r.exit === 0 ? y0 : r.exit === 2 ? y0 + RH : midY;
     if (ex >= 0) {
-      if (lvl === 4 && lastState && lastState.phase === "slut") put(ex, ey, "⣿", "#d0503a");
+      setWall(ex, ey, false);
+      if (lvl === 4 && lastState && lastState.phase === "slut") put(ex, ey, "█", "#d0503a");
       else if (lvl === 4) put(ex, ey, Math.floor(nowMs / 400) % 2 ? "⩚" : "⩛", "#ff7a5a");
       else put(ex, ey, ["˄", "›", "˅", "‹"][r.exit], COLORS.exit);
     }
@@ -216,19 +186,19 @@ const MapView = (() => {
     // Ett föremål som någon har lämnat, för spårfinnaren.
     if (r.f) put(x0 + RW - 1, y0 + 1, "+", COLORS.gold);
     // En pil i krita, ritad av någon vandrare.
-    if (r.c >= 0 && r.c !== undefined) put(x0 + 1, y0 + 1, ARROWS[r.c], "#d8d8d0");
+    if (r.c >= 0 && r.c !== undefined) put(x0 + 1, y0 + 1, ARROWS[r.c], COLORS.chalk);
 
+    // Kammaren: en kritring kring en hög av guld. När ormen har vaknat
+    // spänns ringen och två ögon lyser.
     if (r.k === "kammare") {
       const now = performance.now();
       const awake = now - wokeAt < WAKE_MS;
       const flash = awake && Math.floor((now - wokeAt) / 180) % 2 === 0;
-      (awake ? CHAMBER_AWAKE : CHAMBER).forEach((line, j) => {
-        [...line].forEach((ch, i) => {
-          let color = ch === "¤" ? COLORS.gold : lvl === 4 ? "#c4483a" : lvl === 3 ? "#c98a5a" : COLORS.chamber;
-          if (awake) color = ch === "◉" ? "#ffe14a" : flash ? "#ff5a3a" : "#a8402c";
-          put(x0 + 1 + i, y0 + 1 + j, ch, color);
-        });
-      });
+      rings.push({ x0, y0, awake, flash });
+      const ch = awake ? "◉" : "¤";
+      const color = awake ? "#ffe14a" : COLORS.gold;
+      put(x0 + 3, y0 + 2, ch, color);
+      put(x0 + 4, y0 + 2, ch, color);
     }
   }
 
@@ -254,6 +224,11 @@ const MapView = (() => {
     nowMs = t || performance.now();
     grid = Array.from({ length: rows }, () => new Array(cols).fill(" "));
     colr = Array.from({ length: rows }, () => new Array(cols).fill(COLORS.unknown));
+    wall = Array.from({ length: rows }, () => new Array(cols).fill(false));
+    wallc = Array.from({ length: rows }, () => new Array(cols).fill(null));
+    floors = [];
+    rings = [];
+    figures = [];
 
     // Okända rum syns bara som en svag prick.
     const size = state.size;
@@ -274,35 +249,34 @@ const MapView = (() => {
     pings.forEach((p) => {
       const x0 = p.x * RW;
       const y0 = p.y * RH;
-      const color = Math.floor((now - p.at) / 250) % 2 ? PLAYER_COLORS[p.slot] : COLORS.wall;
+      const on = Math.floor((now - p.at) / 250) % 2;
       for (let j = 0; j <= RH; j++) {
         for (let i = 0; i <= RW; i++) {
           const edge = i === 0 || j === 0 || i === RW || j === RH;
-          if (edge && grid[y0 + j] && grid[y0 + j][x0 + i] !== " ") colr[y0 + j][x0 + i] = color;
+          if (edge && on && wallc[y0 + j]) wallc[y0 + j][x0 + i] = PLAYER_COLORS[p.slot];
         }
       }
       put(x0 + Math.floor(RW / 2), y0 + Math.floor(RH / 2), "◎", PLAYER_COLORS[p.slot]);
     });
-    // Där en dold vandrare sågs senast står ett svagt tecken i dess färg.
+    // Där en dold vandrare sågs senast står en svag ring i dess färg.
     state.players.forEach((p) => {
       const seen = state.lastSeen && state.lastSeen[p.id];
       if (!seen || !p.hidden) return;
       const [sx, sy] = SLOTS[seen.slot] || SLOTS[0];
-      put(seen.x * RW + sx, seen.y * RH + sy, "@", (PLAYER_COLORS[seen.slot] || "#ffffff") + "55");
+      figures.push({ x: seen.x * RW + sx, y: seen.y * RH + sy, kind: "ghost", color: PLAYER_COLORS[seen.slot] || "#ffffff" });
     });
+    // Vandrarna är kritprickar i sin färg. Den egna har en ring som blinkar.
     state.players.forEach((p) => {
       if (p.status === "ute" || p.hidden) return;
       const [sx, sy] = SLOTS[p.slot] || SLOTS[0];
-      let color = PLAYER_COLORS[p.slot] || "#fff";
-      let ch = "@";
-      if (!p.online) color = COLORS.floor;
+      const x = p.x * RW + sx;
+      const y = p.y * RH + sy;
       if (p.status === "forlorad" || p.status === "dod") {
-        ch = "x";
-        color = COLORS.lost;
-      } else if (p.id === state.you && !blink) {
-        ch = "◉";
+        put(x, y, "x", COLORS.lost);
+        return;
       }
-      put(p.x * RW + sx, p.y * RH + sy, ch, color);
+      const color = p.online ? PLAYER_COLORS[p.slot] || "#fff" : COLORS.offline;
+      figures.push({ x, y, kind: p.id === state.you ? (blink ? "me" : "dot") : "dot", color });
     });
 
     // Varelserna. Den som styrs av en död spelare blinkar när den är vald.
@@ -354,8 +328,146 @@ const MapView = (() => {
       ox = Math.max(0, Math.min(limit, centerX - half)) * RW;
       oy = Math.max(0, Math.min(limit, centerY - half)) * RH;
     }
-    ctx.clearRect(0, 0, vcols * cellW, vrows * cellH);
-    ctx.font = fontPx + "px Menlo, Monaco, monospace";
+    paint();
+  }
+
+  // Cellens mitt på tavlan, med ett litet darr så att strecket ser handritat
+  // ut. Darret beror bara på cellen, så att strecken möts i hörnen.
+  function px(x, y, shake) {
+    const h = hash(x, y);
+    const jx = shake ? ((h % 997) / 997 - 0.5) * cellW * 0.2 : 0;
+    const jy = shake ? (((h >>> 10) % 997) / 997 - 0.5) * cellH * 0.12 : 0;
+    return [(x - ox + 0.5) * cellW + jx, (y - oy + 0.5) * cellH + jy];
+  }
+
+  function paint() {
+    const W = vcols * cellW;
+    const H = vrows * cellH;
+    ctx.fillStyle = SLATE;
+    ctx.fillRect(0, 0, W, H);
+    const look = LOOK[lvl];
+
+    // Golvet i kända rum är en svag kritdimma.
+    ctx.fillStyle = look.floor;
+    floors.forEach(([x0, y0]) => {
+      const [ax, ay] = px(x0, y0, false);
+      const [bx, by] = px(x0 + RW, y0 + RH, false);
+      ctx.fillRect(ax, ay, bx - ax, by - ay);
+    });
+
+    // Väggarna samlas i en bana per nyans, så att det går fort att rita.
+    const base = Math.max(1.4, cellW * 0.3);
+    const groups = new Map();
+    function group(x, y) {
+      const own = wallc[y][x];
+      if (own) {
+        if (!groups.has(own)) groups.set(own, { color: own, lw: base * 1.3, main: new Path2D(), dust: new Path2D() });
+        return groups.get(own);
+      }
+      const q = Math.round(pulse(x, y) * STEPS);
+      if (!groups.has(q)) {
+        const lw = lvl >= 2 ? base * (1 + (0.5 * q) / STEPS) : base;
+        groups.set(q, { color: mix(look.wall, look.hi, q / STEPS), lw, q, main: new Path2D(), dust: new Path2D() });
+      }
+      return groups.get(q);
+    }
+    function stroke(g, x1, y1, x2, y2) {
+      const [ax, ay] = px(x1, y1, true);
+      const [bx, by] = px(x2, y2, true);
+      // Ibland tar kritan inte, och strecket får ett litet glapp.
+      if (hash(x1 * 3 + x2, y1 * 7 + y2) % 9 === 0) {
+        g.main.moveTo(ax, ay);
+        g.main.lineTo(ax + (bx - ax) * 0.4, ay + (by - ay) * 0.4);
+        g.main.moveTo(ax + (bx - ax) * 0.62, ay + (by - ay) * 0.62);
+        g.main.lineTo(bx, by);
+      } else {
+        g.main.moveTo(ax, ay);
+        g.main.lineTo(bx, by);
+      }
+      // Kritdamm: ett tunnare streck lite vid sidan om.
+      const h = hash(x1 + 11, y1 + 5);
+      const d = ((h % 5) - 2) * 0.35;
+      g.dust.moveTo(ax + d, ay - d);
+      g.dust.lineTo(bx - d, by + d);
+    }
+    for (let y = 0; y < rows; y++) {
+      for (let x = 0; x < cols; x++) {
+        if (!wall[y][x]) continue;
+        const g = group(x, y);
+        const right = isWall(x + 1, y);
+        const down = isWall(x, y + 1);
+        if (right) stroke(g, x, y, x + 1, y);
+        if (down) stroke(g, x, y, x, y + 1);
+        if (!right && !down && !isWall(x - 1, y) && !isWall(x, y - 1)) stroke(g, x, y, x, y);
+        // Revben: tvärstreck längs väggarna mellan hjärtslagen.
+        if (lvl >= 3 && g.q !== undefined && g.q < STEPS * 0.75) {
+          const along = right || isWall(x - 1, y);
+          if ((along ? x : y) % 2 === 0) {
+            const [cx, cy] = px(x, y, true);
+            const len = cellH * 0.32;
+            if (along) {
+              g.main.moveTo(cx, cy - len);
+              g.main.lineTo(cx, cy + len);
+            } else {
+              g.main.moveTo(cx - len, cy);
+              g.main.lineTo(cx + len, cy);
+            }
+          }
+        }
+      }
+    }
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+    groups.forEach((g) => {
+      ctx.strokeStyle = g.color;
+      ctx.globalAlpha = 0.9;
+      ctx.lineWidth = g.lw;
+      ctx.stroke(g.main);
+      ctx.globalAlpha = 0.35;
+      ctx.lineWidth = Math.max(0.8, g.lw * 0.4);
+      ctx.stroke(g.dust);
+    });
+    ctx.globalAlpha = 1;
+
+    // Kammarens ring.
+    rings.forEach((r) => {
+      const [cx, cy] = px(r.x0 + RW / 2, r.y0 + RH / 2, false);
+      ctx.beginPath();
+      ctx.ellipse(cx, cy, cellW * 2.6, cellH * 1.15, 0, 0, Math.PI * 2);
+      ctx.strokeStyle = r.awake ? (r.flash ? "#ff5a3a" : "#a8402c") : look.ring;
+      ctx.lineWidth = r.awake ? base * 1.5 : base * 0.8;
+      ctx.setLineDash(r.awake ? [] : [cellW * 0.9, cellW * 0.35]);
+      ctx.stroke();
+      ctx.setLineDash([]);
+    });
+
+    // Vandrarna.
+    const rad = Math.max(2.5, Math.min(cellW, cellH) * 0.55);
+    figures.forEach((f) => {
+      const [cx, cy] = px(f.x, f.y, false);
+      ctx.beginPath();
+      ctx.arc(cx, cy, rad, 0, Math.PI * 2);
+      if (f.kind === "ghost") {
+        ctx.strokeStyle = f.color;
+        ctx.globalAlpha = 0.4;
+        ctx.lineWidth = 1.2;
+        ctx.stroke();
+        ctx.globalAlpha = 1;
+        return;
+      }
+      ctx.fillStyle = f.color;
+      ctx.fill();
+      if (f.kind === "me") {
+        ctx.beginPath();
+        ctx.arc(cx, cy, rad + Math.max(2, rad * 0.6), 0, Math.PI * 2);
+        ctx.strokeStyle = COLORS.chalk;
+        ctx.lineWidth = Math.max(1.2, rad * 0.35);
+        ctx.stroke();
+      }
+    });
+
+    // Tecknen ovanpå.
+    ctx.font = "bold " + fontPx + "px Menlo, Monaco, monospace";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
     for (let y = 0; y < vrows; y++) {

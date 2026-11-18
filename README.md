@@ -243,12 +243,13 @@ Andras skatt och val av drag syns inte förrän spelet är slut.
 
 Som standard ser du bara dig själv och rum du själv har gått igenom på
 kartan. De andra vandrarna syns bara när ni står i samma rum, redan i
-lobbyn. Där du senast såg någon står ett svagt `@` i dess färg, och i
+lobbyn. Där du senast såg någon står en svag ring i dess färg, och i
 listan över vandrare står "sågs runda 12" eller "inte sedd". Tecknet
 försvinner när du ser vandraren igen, eller när den har gått ut eller dött.
 
-Alla portrummen syns på kartan för alla från början, så alla vet var
-utgångarna är. Vem som börjar vid vilken port lottas när vandringen börjar,
+Med egen karta ser du bara porten du själv kom in genom, och kartan växer
+därifrån. De andra portarna hittar du när du går dit. Med "bara när de
+möts" syns alla portrummen på kartan från början. Vem som börjar vid vilken port lottas när vandringen börjar,
 och var och en får bara veta sin egen. Ordningen i listan och färgen säger
 inget om porten, och när någon kommer till tornet står det inte vid vilken
 port. Står du i ett grannrum till en port när någon går ut hör du porten
@@ -491,7 +492,7 @@ gradvis, i fyra nivåer som följer solen:
 | Nivå | När (andel sol kvar) | Text | Bild | Ljud |
 |------|----------------------|------|------|------|
 | 1 | över 70 % | små konstigheter: varma väggar, söt lukt, fjällformade stenar | vanliga väggar | ett svagt, långsamt dunk |
-| 2 | 70–40 % | tornet andas | väggarna sväller och krymper i braille | dunket blir ett hjärta |
+| 2 | 70–40 % | tornet andas | kritstrecken sväller och krymper | dunket blir ett hjärta |
 | 3 | 40–15 % | bevis: revben, kotor, halvt upplösta kvarlevor | väggar som revben, köttfärg, hjärtslag i vågor | snabbare hjärta, kluckande |
 | 4 | under 15 % | det sägs nästan rakt ut; porten stänger sig | rött, porten blir en mun med tänder | starkt och snabbt hjärta |
 
@@ -599,8 +600,9 @@ Beskrivningarna för rummen ligger under nivåerna `"1"` till `"4"`.
 - `web/` klienten: HTML, CSS och JavaScript utan ramverk
   - `index.html` och `app.js` spelarsidan: introt, namnrutan och spelet
   - `spelledare.html` värdsidan
-  - `map.js` ritar kartan med ASCII- och braille-tecken, och utsnittet på
-    en liten skärm
+  - `map.js` ritar kartan som krita på en skiffertavla: väggarna är
+    handritade streck, vandrarna prickar i sin färg (den egna med en ring)
+    och varelser och märken tecken. Även utsnittet på en liten skärm
   - `audio.js` allt ljud, skapat med Web Audio API, även stormen i introt
   - `style.css` utseendet
 
