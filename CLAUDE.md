@@ -57,6 +57,10 @@ Skriv dit när ett steg är klart.
 
 ## Planerat
 
+- [docs/att-gora.md](docs/att-gora.md): det som ska provas och justeras,
+  det som återstår av förslagen och nya idéer. Inget där är bestämt; ta
+  fram ett förslag och fråga innan du bygger något därifrån.
+
 - [docs/spelledaren.md](docs/spelledaren.md): värdsidan. Det mesta
   av del 1–3 är byggt. Avsnittet Läget säger vad som är byggt, vad som är på
   gång och vad som inte är planerat. Fråga vilka delar som ska byggas innan
