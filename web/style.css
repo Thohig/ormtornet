@@ -213,11 +213,11 @@ body[data-niva="4"] #crt::after { animation: throb 0.95s infinite; }
 }
 .title { letter-spacing: 0.4em; color: var(--dim); }
 #conn { color: var(--warn); font-size: 12px; }
-#sun { white-space: pre; }
-#sun .bar { color: var(--hi); }
-#sun .bar.low { color: #ff9a5a; }
-#sun .bar.last { color: var(--warn); animation: blink 1s steps(1) infinite; }
-#sun .gone { color: var(--faint); }
+#solmatare { white-space: pre; }
+#solmatare .bar { color: var(--hi); }
+#solmatare .bar.low { color: #ff9a5a; }
+#solmatare .bar.last { color: var(--warn); animation: blink 1s steps(1) infinite; }
+#solmatare .gone { color: var(--faint); }
 #turn { color: var(--dim); min-width: 18ch; text-align: right; }
 #turn.urgent { color: var(--warn); }
 

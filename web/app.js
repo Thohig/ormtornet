@@ -341,7 +341,7 @@ function myPlayer() {
 // Solmätaren byggs med fast bredd i kod.
 const SUN_WIDTH = 24;
 function renderTop() {
-  const el = $("sun");
+  const el = $("solmatare");
   el.innerHTML = "";
   const filled = Math.max(0, Math.round((state.sun / state.sunMax) * SUN_WIDTH));
   const label = document.createElement("span");
