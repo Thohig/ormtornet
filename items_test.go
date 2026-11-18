@@ -215,3 +215,78 @@ func TestFluteRedraws(t *testing.T) {
 		t.Fatal("flöjten användes inte")
 	}
 }
+
+func TestCursedItems(t *testing.T) {
+	g, a, b := startTwo(t)
+	p, o := a.player, b.player
+	g.cfg.Sight = sightOwn
+
+	// Pärlan: varje näve lägger ett vakna-kort i leken. Värd 40 guld ute.
+	g.give(p, "svart_parla")
+	p.X, p.Y = g.center(), g.center()
+	g.reveal(p.X, p.Y)
+	for i, id := range g.deck { // dra ett sovkort
+		if c := g.data.card(id); c != nil && !c.Vaknar {
+			g.deck[0], g.deck[i] = g.deck[i], g.deck[0]
+			break
+		}
+	}
+	g.deck = g.deck[:1]
+	g.take(p)
+	if g.wakeCardsLeft() != 1 {
+		t.Fatalf("%d vakna-kort efter en näve med pärlan", g.wakeCardsLeft())
+	}
+	if g.itemGold(p) != 40 {
+		t.Fatalf("pärlan är värd %d", g.itemGold(p))
+	}
+
+	// Kronan: syns från grannrummet.
+	p.items = nil
+	g.give(p, "rostkrona")
+	putInRoom(g, p, 4, 3)
+	putInRoom(g, o, 5, 3)
+	if v := viewOf(g.stateFor(o), p); v.Hidden {
+		t.Fatal("kronan syns inte från grannrummet")
+	}
+}
+
+func TestPilgrimLeavesCursed(t *testing.T) {
+	g, p, _ := withClass(t, "pilgrim")
+	putInRoom(g, p, 4, 3)
+	g.rooms[3][4].items = []string{"mynt_hal"}
+	g.pickUp(p)
+	if p.has("mynt_hal") != nil || len(g.rooms[3][4].items) != 1 {
+		t.Fatal("pilgrimen tog det förbannade myntet")
+	}
+}
+
+func TestLetterAndDeathDrop(t *testing.T) {
+	g, a, b := startTwo(t)
+	p, o := a.player, b.player
+	putInRoom(g, p, 4, 3)
+	logs(a)
+	g.give(p, "brev")
+	if len(p.items) != 0 || len(logs(a)) < 2 {
+		t.Fatal("brevet lästes inte, eller lades i väskan")
+	}
+	// Den som dör tappar sina föremål i rummet, och nästa tar dem.
+	g.give(p, "rep")
+	g.give(p, "veke")
+	g.damage(p, 99, false)
+	if len(g.rooms[3][4].items) != 2 {
+		t.Fatalf("rummet har %v", g.rooms[3][4].items)
+	}
+	putInRoom(g, o, 4, 3)
+	g.pickUp(o)
+	if o.has("rep") == nil || o.has("veke") == nil {
+		t.Fatal("Bo tog inte det Alva tappade")
+	}
+}
+
+func TestMapMakerChalk(t *testing.T) {
+	g, p, _ := withClass(t, "kartritare")
+	g.give(p, "krita")
+	if p.has("krita").uses != 8 {
+		t.Fatalf("kritan har %d streck", p.has("krita").uses)
+	}
+}

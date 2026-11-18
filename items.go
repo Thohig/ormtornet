@@ -18,21 +18,26 @@ type ItemType struct {
 	Anvandningar int      `json:"anvandningar"` // 0 = verkar hela vandringen
 	Verkar       []string `json:"verkar"`
 	Slut         []string `json:"slut"`
-	Aktiv        bool     `json:"aktiv"`    // används med 1–3 i stället för att verka av sig självt
-	Riktning     bool     `json:"riktning"` // pekar åt ett håll, som väljs med pilarna
-	Forbannad    bool     `json:"forbannad"`
+	Aktiv        bool     `json:"aktiv"`     // används med 1–3 i stället för att verka av sig självt
+	Riktning     bool     `json:"riktning"`  // pekar åt ett håll, som väljs med pilarna
+	Forbannad    bool     `json:"forbannad"` // ser värdefullt ut, men har en baksida
+	Varde        int      `json:"varde"`     // guld det är värt när man kommer ut
+	Forbannelse  []string `json:"forbannelse"`
+	Brev         bool     `json:"brev"` // läses direkt och bärs inte
 }
 
 type ItemData struct {
-	MaxBara int        `json:"max_bara"`
-	Lista   []ItemType `json:"lista"`
+	MaxBara int                 `json:"max_bara"`
+	Lista   []ItemType          `json:"lista"`
+	Brev    map[string][]string `json:"brev"` // brev från tidigare vandrare, efter avslöjandets nivå
 }
 
 // Item är ett föremål i en väska. uses är hur många gånger det verkar till,
 // 0 för föremål som verkar hela vandringen.
 type Item struct {
-	ID   string
-	uses int
+	ID     string
+	uses   int
+	cursed bool // förbannelsen har visat sig
 }
 
 type itemView struct {
@@ -85,14 +90,22 @@ func (p *Player) has(id string) *Item {
 
 // give lägger föremålet i väskan. Den är falsk när väskan redan är full.
 func (g *Game) give(p *Player, id string) bool {
-	if len(p.items) >= g.data.maxItems() {
-		return false
-	}
 	t := g.data.itemType(id)
 	if t == nil {
 		return false
 	}
-	p.items = append(p.items, &Item{ID: id, uses: t.Anvandningar})
+	if t.Brev {
+		g.readLetter(p)
+		return true
+	}
+	if len(p.items) >= g.data.maxItems() {
+		return false
+	}
+	uses := t.Anvandningar
+	if id == "krita" && g.is(p, "kartritare") {
+		uses += int(g.classVal(p, "extra_krita", 3))
+	}
+	p.items = append(p.items, &Item{ID: id, uses: uses})
 	p.stats.items++
 	g.chronicle("kronika_foremal", "namn", p.Name, "foremal", lowerFirst(t.Namn))
 	return true
@@ -109,11 +122,21 @@ func (g *Game) findItem(p *Player) {
 		return
 	}
 	g.soundTo(p, "hitta")
+	room := &g.rooms[p.Y][p.X]
+	if t.Forbannad && g.is(p, "pilgrim") {
+		// Pilgrimen känner att något är fel och låter det ligga.
+		room.items = append(room.items, id)
+		g.logTo(p, g.data.Text("pilgrim_forbannad", "foremal", lowerFirst(t.Namn)), "info")
+		return
+	}
+	if t.Brev {
+		g.give(p, id)
+		return
+	}
 	if g.give(p, id) {
 		g.logTo(p, g.data.Text("foremal_hittar", "foremal", lowerFirst(t.Namn), "beskrivning", t.Beskrivning), "syn")
 		return
 	}
-	room := &g.rooms[p.Y][p.X]
 	room.items = append(room.items, id)
 	g.logTo(p, g.data.Text("foremal_full", "foremal", lowerFirst(t.Namn), "max", strconv.Itoa(g.data.maxItems())), "info")
 }
@@ -129,6 +152,11 @@ func (g *Game) pickUp(p *Player) {
 	for _, id := range room.items {
 		t := g.data.itemType(id)
 		if t == nil {
+			continue
+		}
+		if t.Forbannad && g.is(p, "pilgrim") {
+			left = append(left, id)
+			g.logTo(p, g.data.Text("pilgrim_forbannad", "foremal", lowerFirst(t.Namn)), "dim")
 			continue
 		}
 		if g.give(p, id) {
@@ -381,4 +409,61 @@ func (g *Game) flute(p *Player, i int) int {
 		return i
 	}
 	return rand.IntN(len(g.deck))
+}
+
+// readLetter: ett brev från en tidigare vandrare läses direkt. Texten följer
+// avslöjandets nivå och säger aldrig hemligheten rakt ut.
+func (g *Game) readLetter(p *Player) {
+	level := g.level
+	if !g.cfg.Reveal {
+		level = 1
+	}
+	for l := level; l >= 1; l-- {
+		if list := g.data.Foremal.Brev[strconv.Itoa(l)]; len(list) > 0 {
+			g.logTo(p, g.data.Text("brev_hittar"), "syn")
+			g.logTo(p, pick(list), "rost")
+			p.stats.items++
+			return
+		}
+	}
+}
+
+// curse: ett förbannat föremål visar sin baksida första gången den verkar.
+func (g *Game) curse(p *Player, id string) bool {
+	it := p.has(id)
+	if it == nil {
+		return false
+	}
+	if !it.cursed {
+		it.cursed = true
+		if t := g.data.itemType(id); t != nil {
+			if text := pick(t.Forbannelse); text != "" {
+				g.logTo(p, text, "varn")
+			}
+		}
+	}
+	return true
+}
+
+// itemGold är guldet föremålen i väskan är värda när vandraren kommer ut.
+func (g *Game) itemGold(p *Player) int {
+	n := 0
+	for _, it := range p.items {
+		if t := g.data.itemType(it.ID); t != nil {
+			n += t.Varde
+		}
+	}
+	return n
+}
+
+// dropAll: den som dör tappar sina föremål i rummet, åt den som kommer efter.
+func (g *Game) dropAll(p *Player) {
+	if len(p.items) == 0 || !g.inBounds(p.X, p.Y) {
+		return
+	}
+	r := &g.rooms[p.Y][p.X]
+	for _, it := range p.items {
+		r.items = append(r.items, it.ID)
+	}
+	p.items = nil
 }

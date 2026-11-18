@@ -420,6 +420,7 @@ type roomView struct {
 	Mark string  `json:"mark,omitempty"`
 	S    bool    `json:"s,omitempty"` // genomsökt
 	C    int     `json:"c"`           // pilen i krita, -1 om ingen
+	F    bool    `json:"f,omitempty"` // här ligger ett föremål (bara för spårfinnaren)
 }
 
 type resultView struct {
@@ -576,6 +577,9 @@ func (g *Game) stateFor(me *Player) stateMsg {
 	}
 	st.Class = viewOfClass(g.classOf(me))
 	st.Items = g.itemViews(me)
+	if g.phase == phasePlay && me.Status == statusIn {
+		g.curse(me, "rostkrona") // kronan syns redan första rundan
+	}
 	if g.phase == phasePlay {
 		st.Compass = g.compass(me)
 		st.Heart = g.heartbeat(me)
@@ -624,6 +628,7 @@ func (g *Game) stateFor(me *Player) stateMsg {
 			if r.hasChalk {
 				rv.C = int(r.chalk)
 			}
+			rv.F = len(r.items) > 0 && g.is(me, "sparfinnare")
 			if r.HasExit {
 				rv.Exit = int(r.Exit)
 			}
@@ -1310,6 +1315,10 @@ func (g *Game) move(p *Player, d Dir, depth int) {
 	}
 	if room.HasExit && room.Exit == d {
 		p.Status = statusOut
+		if gold := g.itemGold(p); gold > 0 {
+			p.Treasure += gold
+			g.logTo(p, g.data.Text("foremal_guld", "antal", strconv.Itoa(gold)), "syn")
+		}
 		if p.initiated && p.Treasure > 0 {
 			if bonus := int(float64(p.Treasure) * g.data.Avslojande.Invigd.Guld); bonus > 0 {
 				p.Treasure += bonus

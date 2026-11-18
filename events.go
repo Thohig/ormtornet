@@ -31,6 +31,7 @@ func (g *Game) damage(p *Player, n int, announce bool) {
 }
 
 func (g *Game) kill(p *Player) {
+	g.dropAll(p)
 	p.Status = statusDead
 	g.chronicleDeath(p)
 	p.Stuck, p.Cellar, p.Poison, p.Dark = 0, 0, 0, 0
@@ -166,7 +167,11 @@ func (g *Game) search(p *Player) {
 	}
 	room.Searched = true
 	p.stats.searched++
-	switch weighted(g.data.Sok.Vikter) {
+	outcome := weighted(g.data.Sok.Vikter)
+	if outcome == "inget" && rand.Float64() < g.classVal(p, "foremal_i_stallet", 0) {
+		outcome = "foremal" // tjuven hittar oftare något
+	}
+	switch outcome {
 	case "skatt":
 		lo, hi := g.data.Regler.SokSkattMin, g.data.Regler.SokSkattMax
 		n := lo + rand.IntN(max(1, hi-lo+1))

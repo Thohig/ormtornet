@@ -150,8 +150,71 @@
         "verkar": [
           "Du vänder timglaset. Sanden står still. Ljuset genom gluggarna slutar röra sig."
         ]
+      },
+      {
+        "id": "svart_parla",
+        "namn": "Den svarta pärlan",
+        "kort": "pärlan",
+        "beskrivning": "Stor som ett duvägg och värd 40 guld när du kommer ut.",
+        "vikt": 1,
+        "forbannad": true,
+        "varde": 40,
+        "forbannelse": [
+          "Pärlan blir kall i väskan när du sträcker dig efter guldet. Andetagen runt dig blir tätare. Varje näve väcker ormen lite mer så länge du bär den."
+        ]
+      },
+      {
+        "id": "mynt_hal",
+        "namn": "Myntet med hål",
+        "kort": "myntet",
+        "beskrivning": "Ett tungt guldmynt med ett hål i mitten. Värt 25 guld när du kommer ut.",
+        "vikt": 1,
+        "forbannad": true,
+        "varde": 25,
+        "forbannelse": [
+          "Varelsen vädrar mot din väska. Myntet luktar, och allt i tornet som har tänder vet var du är."
+        ]
+      },
+      {
+        "id": "rostkrona",
+        "namn": "Kronan av rost",
+        "kort": "kronan",
+        "beskrivning": "En liten krona som någon har tappat. Värd 30 guld när du kommer ut.",
+        "vikt": 1,
+        "forbannad": true,
+        "varde": 30,
+        "forbannelse": [
+          "Kronan börjar glöda svagt genom väskan. Den som står i rummet bredvid ser ljuset."
+        ]
+      },
+      {
+        "id": "brev",
+        "namn": "Ett brev",
+        "kort": "brevet",
+        "beskrivning": "Från någon som var här förut.",
+        "vikt": 2,
+        "brev": true
       }
-    ]
+    ],
+    "_om_brev": "Brev från tidigare vandrare. Texten följer avslöjandets nivå. De får aldrig säga hemligheten rakt ut.",
+    "brev": {
+      "1": [
+        "\"Dag två. Väggarna är varma, fast det regnar ute. Bertil säger att det är solen som har legat på dem. Jag tror honom inte.\"",
+        "\"Om du hittar det här: gå inte till mitten första dagen. Lyssna först. Det finns ett ljud under allt annat.\""
+      ],
+      "2": [
+        "\"Golvet rör sig när jag ligger still. Upp och ner, sakta, som när man sover bredvid någon.\"",
+        "\"Jag har räknat. Ljudet kommer var åttonde andetag, mina andetag. Det är inte vinden.\""
+      ],
+      "3": [
+        "\"Valven är för många och för lika. Jag har sett sådana förut, i en val som drev i land när jag var liten.\"",
+        "\"Trappan har kotor. Jag har känt på dem. Gå inte nerför den i mörker.\""
+      ],
+      "4": [
+        "\"Porten är inte en port. Kom ut innan den stänger. Jag hinner inte skriva mer.\"",
+        "\"Jag vet nu var vi är. Jag vet varför det är varmt. Om du läser det här är det redan för sent att vara rädd. Spring.\""
+      ]
+    }
   },
 
   "texter": {
@@ -203,6 +266,15 @@
     ],
     "foremal_av_sig_sjalv": [
       "{foremal} verkar av sig självt."
+    ],
+    "brev_hittar": [
+      "Under en sten ligger ett hopvikt papper, fuktigt och skört. Någon har skrivit med kol:"
+    ],
+    "pilgrim_forbannad": [
+      "Här ligger {foremal}. Något i dig säger nej. Du låter det ligga."
+    ],
+    "foremal_guld": [
+      "Det du bär i väskan är värt {antal} guld här ute."
     ],
     "kronika_foremal": [
       "{namn} hittade {foremal}."

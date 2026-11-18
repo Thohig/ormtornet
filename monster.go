@@ -123,6 +123,10 @@ func (g *Game) monsterChoiceVs(m *Monster, p *Player) string {
 	if p.initiated {
 		extra += g.data.Avslojande.Invigd.ExtraAnfall
 	}
+	if p.has("mynt_hal") != nil {
+		g.curse(p, "mynt_hal")
+		extra += 2
+	}
 	t := g.data.monsterType(m.Type)
 	if extra <= 0 || t == nil || len(t.Vanor) == 0 {
 		return g.monsterChoice(m)

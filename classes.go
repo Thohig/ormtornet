@@ -267,7 +267,7 @@ func (g *Game) shareMap(p *Player, foes []*Player) {
 
 // nearLantern är sant när o är lyktbäraren och står i ett grannrum till me.
 func (g *Game) nearLantern(me, o *Player) bool {
-	if !g.is(o, "lyktbarare") || o.Status != statusIn || o.Cellar > 0 {
+	if !(g.is(o, "lyktbarare") || o.has("rostkrona") != nil) || o.Status != statusIn || o.Cellar > 0 {
 		return false
 	}
 	_, ok := g.nextTo(me, o.X, o.Y)

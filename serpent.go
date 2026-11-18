@@ -137,6 +137,15 @@ func (g *Game) take(p *Player) {
 		return
 	}
 	g.deck = append(g.deck[:i], g.deck[i+1:]...)
+	// Den svarta pärlan: varje näve lägger ett vakna-kort i leken.
+	if g.curse(p, "svart_parla") {
+		for _, c := range g.data.Ormen.Kort {
+			if c.Vaknar {
+				g.deck = append(g.deck, c.ID)
+				break
+			}
+		}
+	}
 
 	o := &g.data.Ormen
 	n := o.SkattMin + rand.IntN(max(1, o.SkattMax-o.SkattMin+1))
