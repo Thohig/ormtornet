@@ -41,6 +41,8 @@ type hostView struct {
 	Players    []hostPlayer `json:"players"`
 	Settings   Settings     `json:"settings"`
 	Bots       int          `json:"bots"` // datorspelare som är med just nu
+
+	Svarigheter []difficultyView `json:"svarigheter"` // förvalen att välja bland
 }
 
 // HostView sammanfattar spelet för spelledaren. Den visar inte skatter,
@@ -58,6 +60,7 @@ func (g *Game) HostView(visible bool) hostView {
 		TurnSecs: int(g.cfg.TurnTime / time.Second), MinPlayers: g.cfg.MinPlayers,
 		MaxPlayers: maxPlayers, Reveal: g.cfg.Reveal, Players: []hostPlayer{},
 		Settings: settingsFrom(g.cfg), Bots: g.botCount(),
+		Svarigheter: g.base.difficulties(),
 	}
 	for _, p := range g.players {
 		if p == nil {

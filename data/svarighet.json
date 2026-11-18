@@ -1,0 +1,48 @@
+{
+  "svarighet": {
+    "standard": "normal",
+    "nivaer": [
+      {
+        "id": "latt",
+        "namn": "Lätt",
+        "beskrivning": "8 liv, färre fällor och varelser, ormen sover djupare och biter mildare",
+        "liv": 8,
+        "fallchans": 0.35,
+        "varelsechans": 0.12,
+        "sovkort": 17,
+        "vaknakort": 2,
+        "ormskada": 1,
+        "skatt_forlust": 0.35
+      },
+      {
+        "id": "normal",
+        "namn": "Normal",
+        "beskrivning": "som i datafilerna"
+      },
+      {
+        "id": "svar",
+        "namn": "Svår",
+        "beskrivning": "5 liv, fler fällor och varelser, ormen vaknar lättare",
+        "liv": 5,
+        "fallchans": 0.55,
+        "varelsechans": 0.28,
+        "sovkort": 11,
+        "vaknakort": 2,
+        "ormskada": 2,
+        "skatt_forlust": 0.6
+      },
+      {
+        "id": "mardrom",
+        "namn": "Mardröm",
+        "beskrivning": "4 liv, fällor och varelser överallt, ormen sover lätt och biter hårt",
+        "liv": 4,
+        "fallchans": 0.65,
+        "varelsechans": 0.35,
+        "sovkort": 9,
+        "vaknakort": 3,
+        "ormskada": 3,
+        "skatt_forlust": 0.75
+      }
+    ]
+  }
+}

@@ -52,6 +52,7 @@ type Config struct {
 	SunMax       int
 	TurnTime     time.Duration
 	MinPlayers   int
+	Difficulty   string // id för ett förval i data/svarighet.json, tomt för standard
 }
 
 type Dir int
@@ -144,7 +145,8 @@ type Client struct {
 
 type Game struct {
 	mu      sync.Mutex
-	data    *Data
+	base    *Data // datafilerna som de är
+	data    *Data // datafilerna med svårighetens förval
 	cfg     Config
 	rooms   [gridSize][gridSize]Room
 	players [maxPlayers]*Player
@@ -181,7 +183,8 @@ type Game struct {
 }
 
 func NewGame(d *Data, cfg Config) *Game {
-	return &Game{data: d, cfg: cfg, level: 1, phase: phaseLobby, sun: cfg.SunMax, usedClues: map[string]bool{}, lastActive: time.Now(), lastReal: time.Now()}
+	cfg.Difficulty = d.difficultyID(cfg.Difficulty)
+	return &Game{base: d, data: d.withDifficulty(cfg.Difficulty), cfg: cfg, level: 1, phase: phaseLobby, sun: cfg.SunMax, usedClues: map[string]bool{}, lastActive: time.Now(), lastReal: time.Now()}
 }
 
 func inBounds(x, y int) bool { return x >= 0 && y >= 0 && x < gridSize && y < gridSize }
@@ -711,12 +714,16 @@ func (g *Game) startGame() {
 		if p != nil {
 			p.Ready = p.bot != nil
 			p.Action = ""
+			p.HP = g.data.Regler.Liv // svårigheten kan ha ändrats sedan tornet byggdes
 			p.awayRound = 0
 			p.aiPlayed = false
 		}
 	}
 	g.soundAll("start")
 	g.logAll(g.data.Text("start", "sol", strconv.Itoa(g.sun)), "syn")
+	if s := g.data.difficulty(g.cfg.Difficulty); s != nil {
+		g.logAll(g.data.Text("svarighet", "namn", s.Namn, "liv", strconv.Itoa(g.data.Regler.Liv)), "dim")
+	}
 	g.startRound()
 }
 

@@ -20,6 +20,7 @@ type Settings struct {
 	Franvaro   int    `json:"franvaro"`      // rundor innan AI tar över en frånvarande vandrare, 0 = aldrig
 	Strid      string `json:"strid"`         // strid mellan vandrare: "av", "pa" eller "halva"
 	Spelledare bool   `json:"spelledarlage"` // spelledaren spelar inte själv och ser allt
+	Svarighet  string `json:"svarighet"`     // förval i data/svarighet.json, tomt för standard
 }
 
 var defaultSettings = Settings{AI: 0, Min: 2, Sol: 40, Turtid: 30, Avslojande: true, Franvaro: 2, Strid: pvpOn}
@@ -47,11 +48,11 @@ func (s Settings) normalize() Settings {
 
 func (s Settings) config() Config {
 	s = s.normalize()
-	return Config{AI: s.AI, AbsentRounds: s.Franvaro, PvP: s.Strid, GMMode: s.Spelledare, MinPlayers: s.Min, SunMax: s.Sol, TurnTime: time.Duration(s.Turtid) * time.Second, Reveal: s.Avslojande}
+	return Config{Difficulty: s.Svarighet, AI: s.AI, AbsentRounds: s.Franvaro, PvP: s.Strid, GMMode: s.Spelledare, MinPlayers: s.Min, SunMax: s.Sol, TurnTime: time.Duration(s.Turtid) * time.Second, Reveal: s.Avslojande}
 }
 
 func settingsFrom(cfg Config) Settings {
-	return Settings{AI: cfg.AI, Franvaro: cfg.AbsentRounds, Strid: cfg.PvP, Spelledare: cfg.GMMode, Min: cfg.MinPlayers, Sol: cfg.SunMax, Turtid: int(cfg.TurnTime / time.Second), Avslojande: cfg.Reveal}
+	return Settings{Svarighet: cfg.Difficulty, AI: cfg.AI, Franvaro: cfg.AbsentRounds, Strid: cfg.PvP, Spelledare: cfg.GMMode, Min: cfg.MinPlayers, Sol: cfg.SunMax, Turtid: int(cfg.TurnTime / time.Second), Avslojande: cfg.Reveal}
 }
 
 // defaultSettingsPath ger ~/Library/Application Support/Ormtornet/installningar.json.
@@ -114,6 +115,15 @@ func (g *Game) ApplySettings(s Settings) (Settings, error) {
 	}
 	wasGM := g.cfg.GMMode
 	g.cfg = s.config()
+	g.cfg.Difficulty = g.base.difficultyID(g.cfg.Difficulty)
+	g.data = g.base.withDifficulty(g.cfg.Difficulty)
+	if g.phase == phaseLobby {
+		for _, p := range g.players {
+			if p != nil {
+				p.HP = g.data.Regler.Liv
+			}
+		}
+	}
 	if g.cfg.GMMode != wasGM {
 		if g.cfg.GMMode {
 			g.kickLocal()

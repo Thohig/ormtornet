@@ -134,10 +134,11 @@ type Data struct {
 	Monster      Monsters            `json:"monster"`
 	Avslojande   Reveal              `json:"avslojande"`
 	AI           AIData              `json:"ai"`
+	Svarighet    Difficulty          `json:"svarighet"`
 }
 
 // Filerna i datamappen. Alla läses in i samma struktur; "texter" slås ihop.
-var dataFiles = []string{"texter.json", "fallor.json", "ormen.json", "monster.json", "avslojande.json", "ai.json"}
+var dataFiles = []string{"texter.json", "fallor.json", "ormen.json", "monster.json", "avslojande.json", "ai.json", "svarighet.json"}
 
 // loadData läser filerna i mappen dir. Saknas en fil används den inbyggda kopian.
 func loadData(dir string) (*Data, string, error) {
@@ -233,6 +234,9 @@ func mergeData(d, part *Data) {
 	}
 	if len(part.AI.Personligheter) > 0 {
 		d.AI = part.AI
+	}
+	if len(part.Svarighet.Nivaer) > 0 {
+		d.Svarighet = part.Svarighet
 	}
 }
 

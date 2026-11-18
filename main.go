@@ -30,6 +30,7 @@ func main() {
 	turn := flag.Duration("turtid", time.Duration(defaultSettings.Turtid)*time.Second, "längsta tid att välja drag per runda")
 	minPlayers := flag.Int("min", defaultSettings.Min, "minsta antal spelare för att börja, datorspelare inräknade")
 	bots := flag.Int("ai", defaultSettings.AI, "antal datorstyrda vandrare (0-3, eller 4 i spelledarläget)")
+	difficulty := flag.String("svarighet", "", "svårighet: latt, normal, svar eller mardrom (förvalen står i data/svarighet.json)")
 	reveal := flag.Bool("avslojande", defaultSettings.Avslojande, "låt tornet avslöja sin hemlighet (false för den som redan känner till den)")
 	settingsPath := flag.String("installningar", defaultSettingsPath(), "fil där spelledarens inställningar sparas (tom för att inte spara)")
 	openPage := flag.Bool("oppna", false, "öppna introt i webbläsaren när servern har startat; det leder till spelledarens sida")
@@ -56,6 +57,8 @@ func main() {
 			settings.AI = *bots
 		case "avslojande":
 			settings.Avslojande = *reveal
+		case "svarighet":
+			settings.Svarighet = *difficulty
 		}
 	})
 	cfg := settings.config()
@@ -63,6 +66,9 @@ func main() {
 	data, src, err := loadData(*dataPath)
 	if err != nil {
 		log.Fatalf("kunde inte läsa texterna: %v", err)
+	}
+	if cfg.Difficulty != "" && data.difficultyID(cfg.Difficulty) != cfg.Difficulty {
+		fmt.Printf("Svårigheten %q finns inte i svarighet.json. Använder standard.\n", cfg.Difficulty)
 	}
 	game := NewGame(data, cfg)
 	game.syncBots(false)
@@ -135,6 +141,9 @@ func main() {
 	fmt.Println("Ormtornet är vaket.")
 	fmt.Println("Texter från:", src)
 	fmt.Printf("Solen går ner efter %d rundor. Turtid %s. Minst %d spelare.\n", cfg.SunMax, cfg.TurnTime, cfg.MinPlayers)
+	if s := data.difficulty(cfg.Difficulty); s != nil {
+		fmt.Printf("Svårighet: %s.\n", s.Namn)
+	}
 	if !cfg.Reveal {
 		fmt.Println("Avslöjandet är avstängt.")
 	}

@@ -427,6 +427,9 @@
     "vinnare": [
       "{namn} vinner med {skatt} guld."
     ],
+    "svarighet": [
+      "Svårighet: {namn}. Du har {liv} liv."
+    ],
     "ingen_vinnare": [
       "Ingen kom ut med någon skatt. Tornet vann."
     ],

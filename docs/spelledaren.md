@@ -18,12 +18,12 @@ Byggt (README beskriver hur det fungerar):
   liv, guld och drycker, och AI tar över en frånvarande vandrare.
 - `Ormtornet.app` via `./skapa-app.sh`. Den bygger från repot och kräver Go.
 - Pekkontroller, så att telefoner och surfplattor kan spela.
+- Krönikan: en sammanfattning efter varje omgång.
+- Förval för svårighet: Lätt, Normal, Svår och Mardröm.
 
-På gång, i den här ordningen:
+På gång:
 
-1. Krönikan: en sammanfattning efter varje omgång.
-2. Förval för svårighet: Lätt, Normal, Svår och Mardröm.
-3. Risken att ormen vaknar i översikten, och att flytta fram eller hålla kvar
+1. Risken att ormen vaknar i översikten, och att flytta fram eller hålla kvar
    avslöjandets nivå.
 
 Inte byggt, och inte planerat just nu:

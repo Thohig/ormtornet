@@ -60,6 +60,7 @@ Flaggor:
 - `-turtid 30s` längsta tid att välja drag per runda
 - `-min 2` minsta antal spelare för att börja, datorspelare inräknade (sätt `-min 1` för att prova ensam)
 - `-ai 2` antal datorstyrda vandrare (0–3, eller 4 i spelledarläget)
+- `-svarighet normal` svårighet: `latt`, `normal`, `svar` eller `mardrom`
 - `-avslojande=false` stänger av avslöjandet, för spelare som redan känner till tornets hemlighet
 - `-oppna` öppnar introt i webbläsaren när servern har startat; på den här datorn leder det till spelledarens sida
 - `-vaken` håller datorn vaken så länge servern är igång
@@ -76,7 +77,7 @@ skicka i en gruppchatt. Sidan visar också vilka som har anslutit och är redo,
 och vad man kan göra om någon inte kommer in.
 
 Under Inställningar väljer spelledaren antal AI-spelare, minsta antal
-vandrare, solnedgång, turtid och avslöjandet. AI-spelare kommer och går
+vandrare, svårighet, solnedgång, turtid och avslöjandet. AI-spelare kommer och går
 direkt i lobbyn, resten gäller från nästa omgång. Under en pågående vandring
 är inställningarna låsta. Om tornet är fullt när en människa ansluter i
 lobbyn kliver en AI-spelare åt sidan, och kommer tillbaka om platsen blir
@@ -216,7 +217,7 @@ dras ett ormkort ur en lek:
   i hela tornet.
 
 Eftersom bara sovkorten tas bort ökar risken för varje näve. Leken börjar med
-13 sovkort och 2 vakna-kort. När ormen har vaknat blandas en ny lek med 2
+13 sovkort och 2 vakna-kort på Normal. När ormen har vaknat blandas en ny lek med 2
 färre sovkort än förra gången. Står du i kammaren ser du hur djupt ormen
 sover och hör andetagen bli tätare.
 
@@ -305,9 +306,29 @@ så starta om servern efter en ändring.
 - `ormen.json` ormkorten, skatten i kammaren och vad som händer när ormen vaknar
 - `monster.json` varelserna (liv, skada, guld, vanor, texter) och striderna
 - `ai.json` datorspelarnas namn, personligheter och betänketid
+- `svarighet.json` förvalen för svårighet (se nedan)
 - `avslojande.json` nivågränser, ledtrådar, texter vid nivåbyte, nya
   förklaringar till fällorna och epilogen. Rumsbeskrivningarna för varje
   nivå (`"1"` till `"4"`) ligger i `texter.json`.
+
+### Svårighet
+
+`svarighet.json` har fyra förval: Lätt, Normal, Svår och Mardröm. Ett förval
+kan ändra antal liv (`liv`), chansen för en fälla (`fallchans`) och för en
+varelse (`varelsechans`) i ett nytt rum, antalet sovkort (`sovkort`) och
+vakna-kort (`vaknakort`) i ormleken, skadan när ormen vaknar (`ormskada`)
+och hur stor andel av skatten som går förlorad (`skatt_forlust`). Det som inte
+står med i ett förval tas från de andra datafilerna. Normal står därför tom,
+och då gäller filerna som de är. `standard` är förvalet som gäller när inget
+annat är valt. När vandringen börjar får alla veta svårigheten och hur många
+liv de har.
+
+| Förval  | Liv | Fälla | Varelse | Sovkort | Vakna-kort | Ormskada | Förlust |
+|---------|-----|-------|---------|---------|------------|----------|---------|
+| Lätt    | 8   | 35 %  | 12 %    | 17      | 2          | 1        | 35 %    |
+| Normal  | 6   | 45 %  | 20 %    | 13      | 2          | 2        | 50 %    |
+| Svår    | 5   | 55 %  | 28 %    | 11      | 2          | 2        | 60 %    |
+| Mardröm | 4   | 65 %  | 35 %    | 9       | 3          | 3        | 75 %    |
 
 För varje fälla kan du ändra namn, vikt (hur ofta den dyker upp), skada,
 antal rundor, tecknet på kartan och texterna. Vad fällan gör styrs av dess
@@ -324,6 +345,7 @@ Beskrivningarna för rummen ligger under nivåerna `"1"` till `"4"`.
 - `monster.go` varelser, strider och den döda spelarens styrning
 - `reveal.go` avslöjandet: nivåer, ledtrådar och epilog
 - `chronicle.go` krönikan över vandringen
+- `difficulty.go` förvalen för svårighet
 - `ai.go` datorstyrda vandrare
 - `data.go` läser in datafilerna
 - `ws.go` en liten websocket-implementation utan beroenden
