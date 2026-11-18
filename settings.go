@@ -30,7 +30,7 @@ const (
 	sightOwn  = "egen"  // som "moten", och var och en ser bara rum den själv har varit i
 )
 
-var defaultSettings = Settings{AI: 0, Min: 2, Sol: 40, Turtid: 30, Avslojande: true, Franvaro: 2, Strid: pvpOn, Synlighet: sightMeet}
+var defaultSettings = Settings{AI: 0, Min: 2, Sol: 40, Turtid: 30, Avslojande: true, Franvaro: 2, Strid: pvpOn, Synlighet: sightOwn}
 
 var errPlaying = errors.New("inställningarna kan ändras när omgången är slut")
 
@@ -51,7 +51,7 @@ func (s Settings) normalize() Settings {
 		s.Strid = pvpOn
 	}
 	if s.Synlighet != sightAll && s.Synlighet != sightMeet && s.Synlighet != sightOwn {
-		s.Synlighet = sightMeet
+		s.Synlighet = sightOwn
 	}
 	return s
 }

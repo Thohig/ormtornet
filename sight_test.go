@@ -81,7 +81,7 @@ func TestSightMeetVagueTexts(t *testing.T) {
 }
 
 func TestSightSetting(t *testing.T) {
-	if s := (Settings{}).normalize(); s.Synlighet != sightMeet {
+	if s := (Settings{}).normalize(); s.Synlighet != sightOwn {
 		t.Fatalf("standard %q", s.Synlighet)
 	}
 	if c := (Settings{Synlighet: sightAll}).config(); c.Sight != sightAll {

@@ -1,7 +1,7 @@
 # Förslag: Synlighet
 
 Status: förslaget skrevs 2026-11-18. Steg 1 och 2 är byggda (README, "Vem
-ser vem"). Steg 1 är förval, steg 2 väljs med "egen karta". Steg 3 är inte
+ser vem"). Steg 2, "egen karta", är förval. Steg 3 är inte
 byggt. Användaren bestämmer om det ska byggas.
 
 Varje vandrare ser bara sig själv. De andra syns bara när man möter dem i
@@ -37,8 +37,8 @@ En ny inställning under Inför nästa vandring på värdsidan, med flaggan
 | Bara vid möten | `moten` | steg 1 |
 | Egen karta | `egen` | steg 1 och 2 |
 
-Förvalet kan vara `moten`. Det står i `svarighet.json` eller i spelledarens
-sparade inställningar, inte i koden. När vandringen börjar får alla veta vad
+Förvalet är `egen`. Det står i koden (`defaultSettings`), och spelledarens
+sparade inställningar gäller före det. När vandringen börjar får alla veta vad
 som gäller, på samma sätt som svårigheten.
 
 ## Steg 1: bara vid möten
@@ -108,8 +108,8 @@ Texterna ligger i `texter.json`.
 
 ## Beslut för steg 1
 
-- Förval: "bara vid möten", även för den som har sparade inställningar.
-  Flaggan heter `-synlighet` med värdena `moten` och `alla`.
+- Förval i steg 1: "bara vid möten". Flaggan heter `-synlighet` med
+  värdena `moten` och `alla`.
 - Tecknet för senast sedd finns. Det står kvar tills man ser vandraren igen,
   eller tills den har gått ut eller dött. Klienten minns det, så det
   försvinner om sidan laddas om.
@@ -119,8 +119,8 @@ Texterna ligger i `texter.json`.
 
 ## Beslut för steg 2
 
-- Steg 2 är ett eget val, `egen`, och inte förval. Förvalet är fortfarande
-  `moten`.
+- Steg 2, `egen`, är förval sedan 2026-11-18. Det gäller också den som har
+  sparade inställningar utan synlighet.
 - Ett rum blir känt när man står i det, även i mörker. En hemlig gång gör
   inte grannrummet känt, bara dörren dit.
 - Den döda spelaren som styr varelserna ser hela tornet så långt det har
@@ -132,4 +132,3 @@ Texterna ligger i `texter.json`.
 ## Att bestämma
 
 - Om steg 3 ska byggas.
-- Om "egen karta" ska bli förval.
