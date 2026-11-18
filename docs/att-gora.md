@@ -21,6 +21,14 @@ En riktig kväll behövs för att se:
 - Stormen i introt: hur musiken och åskan låter. Den är inte avlyssnad.
 - Introts första 15 sekunder, när Enter inte gör något: fastnar någon
   där och tror att sidan har hängt sig?
+- Kritkartan (2026-11-18): syns vandrarnas prickar och varelserna bra på
+  en telefon, och märks avslöjandet lika tydligt i kritan som i braillen?
+  Nivå 3 och 4 är bara sedda genom att tvinga fram dem.
+- Bara den egna porten: hittar spelarna ut, eller går de vilse när de
+  inte ser de andra portarna?
+- Panelerna (2026-11-19): ryms Du-panelen med tre föremål, strid och
+  förbannelser utan att Styrning hamnar långt ner? Hjälper tecknen i
+  loggens marginal, eller blir de brus?
 
 ### Justera efter provet
 
@@ -71,6 +79,13 @@ Från [foremal-och-hemligheten.md](foremal-och-hemligheten.md):
 - **Ljud:** ett reglage för volymen, och en knapp som stänger av musiken
   men behåller ljuden, på spelarsidan.
 - **Färgblindhet:** ett läge där vandrarna skiljs åt med symboler, inte
-  bara färger.
+  bara färger. Med kritkartan kan prickarna få en initial eller en form.
+- **Loggens tecken efter innehåll:** i dag följer tecknet radens klass
+  från servern. Med en egen klass för strid, ljud och fynd kunde loggen
+  visa till exempel ⚔, ♪ och ✦, som i förslaget till panelerna.
+- **Andra kartstilar:** av stilförslagen 2026-11-18 valdes krita på
+  skiffer. Kvar som idéer: skarp terminal med hela väggar, ritade rum med
+  runda märken, kartritarens karta på sotat pergament eller guld på
+  läder.
 - **Tester för klienten:** i dag testas bara servern, så kartan och
   panelen provas för hand.
