@@ -715,14 +715,15 @@ func (g *Game) placeAtCorner(p *Player) {
 func (g *Game) noteRoom(p *Player) {
 	if p.Status == statusIn && p.Cellar == 0 && g.inBounds(p.X, p.Y) {
 		p.known[p.Y][p.X] = true
+		g.peekNeighbors(p)
 	}
 }
 
 // knowsRoom är sant om me ser rummet på sin karta. Med synligheten "egen"
 // ser man bara rum man själv har varit i, och av portarna bara den man kom
 // in genom; kartan växer därifrån. Med de andra synligheterna, och för
-// kartritaren, syns alla rum som någon har gått in i, men de andras portar
-// är okända tills någon går in i dem: från början känner var och en bara
+// kartritaren, syns alla rum som någon har gått in i. Rum som någon bara
+// har sett in i, och de andras portar, är okända tills någon går in i dem: från början känner var och en bara
 // sitt eget startrum. Den döda spelaren som styr varelserna ser hela
 // tornet, och när vandringen är slut syns allt.
 func (g *Game) knowsRoom(me *Player, x, y int) bool {
@@ -736,8 +737,8 @@ func (g *Game) knowsRoom(me *Player, x, y int) bool {
 	if me.known != nil && me.known[y][x] {
 		return true
 	}
-	if r.Kind == "ingang" && !r.Walked {
-		return false
+	if !r.Walked {
+		return false // en annans port, eller ett rum som någon bara har sett in i
 	}
 	return g.cfg.Sight != sightOwn || g.is(me, "kartritare")
 }
@@ -986,7 +987,6 @@ func (g *Game) drawCorners() {
 		p.X, p.Y = cn.x, cn.y
 		p.known = newGrid[bool](g.size)
 		g.reveal(cn.x, cn.y)
-		g.noteRoom(p)
 		g.logTo(p, g.data.Text("start_port", "horn", g.data.Horn[p.Corner]), "syn")
 	}
 }
@@ -1037,6 +1037,11 @@ func (g *Game) startGame() {
 	}
 	g.revealPorts()
 	g.drawCorners()
+	for _, p := range g.players {
+		if p != nil {
+			g.noteRoom(p) // efter klassvalet: kartritaren ser in i grannrummen
+		}
+	}
 	g.startRound()
 }
 
@@ -1400,7 +1405,7 @@ func (g *Game) move(p *Player, d Dir, depth int) {
 	}
 	nx, ny := p.X+dirDX[d], p.Y+dirDY[d]
 	target := &g.rooms[ny][nx]
-	isNew := !target.Revealed
+	isNew := !target.Walked // ett rum som någon bara har sett in i är fortfarande nytt
 	g.reveal(nx, ny)
 	target.Walked = true
 	p.X, p.Y = nx, ny

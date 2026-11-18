@@ -130,7 +130,7 @@ func openRoom(g *Game, p *Player, x, y int) {
 	r.Doors = [4]bool{true, true, true, true}
 	for d := North; d <= West; d++ {
 		n := g.reveal(x+dirDX[d], y+dirDY[d])
-		n.Kind, n.Event = "rum", ""
+		n.Kind, n.Event, n.Walked = "rum", "", true
 		n.Doors[d.Opp()] = true
 	}
 }

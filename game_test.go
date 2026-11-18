@@ -139,7 +139,7 @@ func step(g *Game, a, b *Client, actA, actB string) {
 // putInRoom ställer spelaren i ett vanligt rum mitt i tornet med dörrar åt alla håll.
 func putInRoom(g *Game, p *Player, x, y int) *Room {
 	r := g.reveal(x, y)
-	r.Kind, r.Event, r.Searched = "rum", "", false
+	r.Kind, r.Event, r.Searched, r.Walked = "rum", "", false, true
 	p.X, p.Y = x, y
 	return r
 }

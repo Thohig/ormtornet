@@ -304,13 +304,30 @@ func (g *Game) shareMap(p *Player, foes []*Player) {
 		}
 		for y := range g.size {
 			for x := range g.size {
-				if g.rooms[y][x].Revealed {
+				if g.knowsRoom(o, x, y) {
 					p.known[y][x] = true
 				}
 			}
 		}
 		g.logTo(p, g.data.Text("klass_kartritare_karta", "namn", o.Name), "info")
 		g.logTo(o, g.data.Text("klass_kartritare_ger", "namn", p.Name), "dim")
+	}
+}
+
+// peekNeighbors: kartritaren ser genom dörrarna in i rummen bredvid det
+// hen står i, och de kommer med på hens karta. Rummen räknas inte som
+// hittade, så ingen annan ser dem, och en fälla där väntar fortfarande.
+func (g *Game) peekNeighbors(p *Player) {
+	if g.phase != phasePlay || !g.is(p, "kartritare") || p.Dark > 0 {
+		return
+	}
+	r := &g.rooms[p.Y][p.X]
+	for d := North; d <= West; d++ {
+		nx, ny := p.X+dirDX[d], p.Y+dirDY[d]
+		if r.Doors[d] && g.inBounds(nx, ny) {
+			g.reveal(nx, ny)
+			p.known[ny][nx] = true
+		}
 	}
 }
 

@@ -187,10 +187,43 @@ func TestKartritareSeesAll(t *testing.T) {
 	// Bo får kartan när de möts.
 	putInRoom(g, pa, 6, 6)
 	pb.met = ""
-	g.reveal(2, 2)
+	g.reveal(2, 2).Walked = true
 	g.meetIfNew(pb)
 	if !pb.known[2][2] {
 		t.Fatal("Bo fick inte kartan")
+	}
+}
+
+// Kartritaren ser genom dörrarna in i grannrummen, men de räknas inte som
+// hittade: ingen annan ser dem, och fällan där väntar på den som går in.
+func TestKartritarePeeks(t *testing.T) {
+	for _, sight := range []string{sightOwn, sightAll} {
+		g, pa, pb := withClass(t, "kartritare")
+		g.cfg.Sight = sight
+		r := putInRoom(g, pa, 4, 4)
+		r.Doors = [4]bool{false, true, false, false}
+		g.noteRoom(pa)
+		if !hasRoom(g.stateFor(pa), 5, 4) {
+			t.Fatalf("%s: kartritaren ser inte in i rummet åt öster", sight)
+		}
+		if hasRoom(g.stateFor(pa), 3, 4) {
+			t.Fatalf("%s: kartritaren ser genom väggen", sight)
+		}
+		if hasRoom(g.stateFor(pb), 5, 4) {
+			t.Fatalf("%s: Bo ser rummet kartritaren bara tittade in i", sight)
+		}
+		n := &g.rooms[4][5]
+		n.Kind, n.Event = "rum", g.data.Fallor[0].ID
+		n.Doors[West] = true
+		putInRoom(g, pb, 4, 4)
+		pb.HP = 50
+		g.move(pb, East, 0)
+		if n.Event != "" {
+			t.Fatalf("%s: fällan gick inte av för Bo", sight)
+		}
+		if !hasRoom(g.stateFor(pa), 5, 4) {
+			t.Fatalf("%s: rummet försvann från kartritarens karta", sight)
+		}
 	}
 }
 

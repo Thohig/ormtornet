@@ -22,6 +22,13 @@ eller leder tornet.
   Okända rum syns som prickar bara bredvid de kända.
 - De andras portar är okända från början, även för Kartritaren och med
   de andra synlighetsvalen, tills någon går in i dem.
+- Kartritaren ser genom dörrarna in i rummen bredvid det hen står i. De
+  kommer bara med på hens egen karta. En fälla där väntar fortfarande på
+  den som går in.
+- Ett rum räknas som hittat först när någon går in i det. Ett rum man bara
+  har sett in i, med Kartritaren eller spegeln, är nytt för den som går in
+  och har kvar sin fälla. Förut gick en fälla inte av i ett rum som någon
+  hade sett i spegeln.
 
 ### Tydligare paneler
 

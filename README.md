@@ -331,7 +331,7 @@ igen.
 | Legoknekten | ett liv extra, tar ingen skada när båda anfaller | hittar hälften så mycket guld när hen söker |
 | Tjuven | en fjärdedel mer guld ur kammaren, hittar oftare föremål, ingen märker när ormen rör sig vid hens näve, river hälften i strid mot vandrare | hittar aldrig drycker när hen söker |
 | Örtkvinnan | börjar med två drycker, en dryck ger tre liv, tål gift | ett liv mindre, tappar mer skatt när ormen vaknar |
-| Kartritaren | ser alla rum som någon har hittat och ger sin karta till den hen möter, hittar alltid en hemlig gång om det går, tre streck extra med kritan | undanmanöver lyckas aldrig |
+| Kartritaren | ser genom dörrarna in i rummen bredvid, ser alla rum som någon har hittat och ger sin karta till den hen möter, hittar alltid en hemlig gång om det går, tre streck extra med kritan | undanmanöver lyckas aldrig |
 | Ormtjusaren | ser i kammaren hur många vakna-kort som är kvar, ormen gör en skada mindre | varelserna anfaller oftare |
 | Spårfinnaren | ser spår 6 rundor bakåt och vems de är, märker hälften av fällorna i tid, ser var föremål ligger | hör inget genom väggarna |
 | Lyktbäraren | tål mörker, ser varelser i grannrummen | syns för andra redan från grannrummet |
