@@ -243,7 +243,35 @@ const Sound = (() => {
     if (ctx && HEART[level]) heartTimer = setTimeout(heartbeat, 500);
   }
 
+  // Introt: en vindstöt, ett dubbelt slag långt bort och sedan ett långt
+  // andetag in, som om något drar in luft genom porten.
+  function intro() {
+    const t = ctx.currentTime;
+    const gust = noiseHit(brown, "bandpass", 260, 0.3, 0.9, 1.8, false);
+    gust.frequency.linearRampToValueAtTime(650, t + 1.1);
+    thump(t + 0.75, 0.32);
+    thump(t + 0.97, 0.22);
+    const src = ctx.createBufferSource();
+    src.buffer = brown;
+    src.loop = true;
+    const lp = ctx.createBiquadFilter();
+    lp.type = "lowpass";
+    lp.frequency.setValueAtTime(120, t + 1.3);
+    lp.frequency.exponentialRampToValueAtTime(900, t + 2.9);
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(0.0001, t + 1.3);
+    g.gain.exponentialRampToValueAtTime(0.32, t + 2.7);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + 3.2);
+    src.connect(lp);
+    lp.connect(g);
+    g.connect(master);
+    g.connect(echo);
+    src.start(t + 1.3);
+    src.stop(t + 3.3);
+  }
+
   const effects = {
+    intro,
     // Tornet går över till en ny nivå: en djup, svällande ton.
     niva() {
       tone(41, 55, "sine", 0.3, 1.5, 2.5, false);

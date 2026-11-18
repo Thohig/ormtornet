@@ -68,6 +68,24 @@ func (g *Game) HostView() hostView {
 	return v
 }
 
+// introInfo är det startsidan behöver innan spelaren har anslutit.
+type introInfo struct {
+	Avslojande bool     `json:"avslojande"`
+	Rykten     []string `json:"rykten"`
+}
+
+// Intro väljer rykten till startsidan. Med avslöjandet avstängt, för spelare
+// som redan känner till tornets hemlighet, blir ryktena ofarliga.
+func (g *Game) Intro() introInfo {
+	g.mu.Lock()
+	defer g.mu.Unlock()
+	key := "rykten"
+	if !g.cfg.Reveal {
+		key = "rykten_invigda"
+	}
+	return introInfo{Avslojande: g.cfg.Reveal, Rykten: g.data.Texter[key]}
+}
+
 // IdleFor säger hur länge tornet har stått tomt: ingen människa ansluten och
 // ingen spelledarsida öppen. Används för att stänga ett bortglömt torn.
 func (g *Game) IdleFor() time.Duration {
@@ -199,6 +217,10 @@ func addHostRoutes(mux *http.ServeMux, web fs.FS, game *Game, addrs hostAddrs, h
 		}
 		writeJSON(w, http.StatusOK, map[string]any{"settings": got})
 	}))
+	mux.HandleFunc("GET /intro", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Cache-Control", "no-store")
+		writeJSON(w, http.StatusOK, game.Intro())
+	})
 	mux.HandleFunc("GET /spelledare", localOnly(func(w http.ResponseWriter, r *http.Request) {
 		http.ServeFileFS(w, r, web, "spelledare.html")
 	}))

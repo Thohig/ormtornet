@@ -85,7 +85,10 @@ en annan flik ("Gå in själv"). Andra datorer i nätverket kommer inte åt sida
 
 ## Spela
 
-1. Klicka på "Gå in i tornet" (det startar ljudet).
+1. Startsidan visar tornet i solnedgången medan rykten om det tonar fram.
+   Klicka på "Gå in i tornet" (det startar ljudet). Ryktena står i
+   `data/texter.json` under `rykten`, och under `rykten_invigda` för den som
+   spelar med `-avslojande=false`.
 2. Skriv ditt namn och tryck Enter.
 3. Tryck Enter igen när du är redo. Vandringen börjar när alla är redo.
 

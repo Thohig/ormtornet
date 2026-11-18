@@ -447,6 +447,21 @@
     ],
     "stanger": [
       "Portarna slår igen. Tornet stänger för i kväll. Tack för vandringen."
+    ],
+    "rykten": [
+      "De som har gått in säger att väggarna är varma, även på natten.",
+      "Ingen har sett tornet byggas. Ingen minns att det inte fanns.",
+      "Om man lägger örat mot muren hör man något slå.",
+      "Det sägs att tornet låg på ett annat ställe förra sommaren.",
+      "Muren är lagd av stenar som ingen stenhuggare känner igen.",
+      "Fåglarna landar aldrig på tornet. De flyger en omväg runt det.",
+      "Den som kommer ut luktar sött i flera dagar efteråt."
+    ],
+    "rykten_invigda": [
+      "Mitt i tornet sägs en orm sova kring en skatt större än ett kungarike.",
+      "Ta vad du vågar, och kom ut innan solen går ner.",
+      "Många har gått in. Färre har kommit ut.",
+      "Portarna står öppna så länge solen är uppe."
     ]
   }
 }

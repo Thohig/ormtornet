@@ -77,6 +77,87 @@ body[data-niva="4"] #crt::after { animation: throb 0.95s infinite; }
   justify-content: center;
 }
 
+/* Introt: tornet i solnedgången. Det lever, men det ska man bara ana. */
+#intro {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  width: 100%;
+  padding: 0 16px;
+}
+#introTitle {
+  margin: 0;
+  font-weight: normal;
+  font-size: clamp(26px, 5vw, 46px);
+  letter-spacing: 0.45em;
+  margin-right: -0.45em; /* så att texten står i mitten trots bokstavsavståndet */
+  color: var(--hi);
+  text-shadow: 0 0 10px var(--glow), 0 0 2px var(--glow);
+}
+#scene {
+  display: block;
+  width: min(92vw, calc((100vh - 240px) * 2.27), 900px);
+  height: auto;
+  overflow: visible;
+  transform-origin: 50% 77%;
+}
+#scene .stars { fill: var(--hi); }
+#scene #sun rect, #scene #eye, #scene #window, #scene #gate { fill: var(--bg); }
+#scene #scales { fill: none; stroke: #a8925f; stroke-width: 1.2; }
+#scene #shadow { fill: none; stroke: var(--faint); stroke-width: 6; stroke-linecap: round; }
+#scene #window { display: none; }
+#sun { animation: sjunk 300s linear forwards; }
+@keyframes sjunk { to { transform: translateY(80px); } }
+#tower {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: andas 6.5s ease-in-out infinite;
+}
+@keyframes andas {
+  0%, 100% { transform: scale(1, 1); }
+  45% { transform: scale(1.012, 1.008); }
+}
+#eye { transform-box: fill-box; transform-origin: center; transition: transform 90ms; }
+#eye.blink { transform: scaleY(0.1); }
+#gate { transform-box: fill-box; transform-origin: 50% 100%; }
+#rumor {
+  margin: 0;
+  min-height: 2.8em;
+  max-width: 60ch;
+  text-align: center;
+  color: var(--dim);
+  line-height: 1.4;
+  transition: opacity 0.9s;
+}
+#rumor.fade { opacity: 0; }
+
+/* Den som redan känner till hemligheten får tornet utan antydningar. */
+#intro.invigd #tower { animation: none; }
+#intro.invigd #scales, #intro.invigd #eye, #intro.invigd #shadow { display: none; }
+#intro.invigd #window { display: inline; }
+
+/* Övergången: bilden sugs in mot porten, porten drar ihop sig, allt blir svart. */
+#intro.entering #introTitle, #intro.entering #rumor, #intro.entering #enter,
+#intro.quick #introTitle, #intro.quick #rumor, #intro.quick #enter {
+  opacity: 0;
+  transition: opacity 0.6s;
+  animation: none;
+}
+#intro.entering #scene {
+  transform: scale(6);
+  opacity: 0;
+  transition: transform 2.9s cubic-bezier(0.55, 0, 0.9, 0.55), opacity 0.6s ease-in 2.3s;
+}
+#intro.entering:not(.invigd) #gate { transform: scaleX(0.4); transition: transform 0.8s ease-in 1.5s; }
+#intro.quick #scene { opacity: 0; transition: opacity 0.5s; }
+
+@media (prefers-reduced-motion: reduce) {
+  #sun, #tower { animation: none; }
+  #intro.entering #scene { transform: none; transition: opacity 1.2s ease-in 1.4s; }
+  #intro.entering:not(.invigd) #gate { transform: none; }
+}
+
 #enter {
   background: none;
   border: none;

@@ -3,6 +3,7 @@ package main
 import (
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
 	"time"
 )
@@ -110,5 +111,24 @@ func TestIdleFor(t *testing.T) {
 	g.HostView() // spelledarens sida frågar
 	if g.IdleFor() > time.Second {
 		t.Fatal("spelledarens sida räknades inte")
+	}
+}
+
+func TestIntroRumors(t *testing.T) {
+	g := testGame(t)
+	if v := g.Intro(); !v.Avslojande || len(v.Rykten) == 0 {
+		t.Fatalf("med avslöjandet: %+v", v)
+	}
+	g.cfg.Reveal = false
+	v := g.Intro()
+	if v.Avslojande || len(v.Rykten) == 0 {
+		t.Fatalf("utan avslöjandet: %+v", v)
+	}
+	for _, r := range v.Rykten {
+		for _, word := range []string{"varm", "slå", "luktar"} {
+			if strings.Contains(r, word) {
+				t.Errorf("ryktet %q antyder hemligheten för den som redan känner den", r)
+			}
+		}
 	}
 }

@@ -381,11 +381,89 @@ function renderOverlay() {
   el.hidden = false;
 }
 
-$("enter").addEventListener("click", () => {
-  Sound.start();
-  show("namescreen");
-  try { $("name").value = localStorage.getItem("ormtornet-namn") || ""; } catch {}
-  $("name").focus();
+// Introt: tornet i solnedgången med rykten som tonar fram. Ljudet får bara
+// starta efter ett klick, så övergången in genom porten är där ljudet börjar.
+const Intro = (() => {
+  const reduced = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let seen = false; // har sett hela övergången förut i den här fliken
+  try { seen = sessionStorage.getItem("ormtornet-intro") === "1"; } catch {}
+  let rumors = [];
+  let next = 0;
+  let entering = false;
+  let done = false;
+  let timer = null;
+
+  function showRumor() {
+    if (!rumors.length || entering) return;
+    const el = $("rumor");
+    el.classList.add("fade");
+    setTimeout(() => {
+      el.textContent = rumors[next++ % rumors.length];
+      el.classList.remove("fade");
+    }, el.textContent ? 900 : 0);
+  }
+
+  fetch("/intro", { cache: "no-store" })
+    .then((r) => r.json())
+    .then((info) => {
+      if (!info.avslojande) $("intro").classList.add("invigd");
+      rumors = (info.rykten || []).slice().sort(() => Math.random() - 0.5);
+      showRumor();
+      setInterval(showRumor, 7500);
+    })
+    .catch(() => {});
+
+  // Fönstret blinkar, en enda gång, en stund efter att sidan har öppnats.
+  if (!reduced) {
+    setTimeout(() => {
+      const eye = $("eye");
+      eye.classList.add("blink");
+      setTimeout(() => eye.classList.remove("blink"), 170);
+    }, 7000 + Math.random() * 9000);
+  }
+
+  function finish() {
+    if (done) return;
+    done = true;
+    clearTimeout(timer);
+    show("namescreen");
+    try { $("name").value = localStorage.getItem("ormtornet-namn") || ""; } catch {}
+    $("name").focus();
+  }
+
+  function enter() {
+    if (entering) return;
+    entering = true;
+    Sound.start();
+    Sound.play("intro");
+    try { sessionStorage.setItem("ormtornet-intro", "1"); } catch {}
+    const quick = seen;
+    $("intro").classList.add(quick ? "quick" : "entering");
+    timer = setTimeout(finish, quick ? 600 : 3000);
+  }
+
+  return {
+    enter,
+    skip() { if (entering) finish(); },
+    active() { return $("start").classList.contains("active"); },
+    entering() { return entering; },
+  };
+})();
+
+$("enter").addEventListener("click", (e) => {
+  e.stopPropagation();
+  Intro.enter();
+});
+$("start").addEventListener("click", () => Intro.skip());
+document.addEventListener("keydown", (e) => {
+  if (!Intro.active() || e.metaKey || e.ctrlKey || e.altKey) return;
+  if (Intro.entering()) {
+    e.preventDefault();
+    Intro.skip();
+  } else if (e.key === "Enter" || e.key === " ") {
+    e.preventDefault();
+    Intro.enter();
+  }
 });
 
 $("nameform").addEventListener("submit", (e) => {
