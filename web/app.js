@@ -125,6 +125,7 @@ function handle(msg) {
     case "stangt":
       towerClosed = true;
       $("conn").textContent = "tornet är stängt";
+      Sound.stop();
       break;
     case "vaknar":
       MapView.wake();

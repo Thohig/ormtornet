@@ -71,6 +71,7 @@ const Sound = (() => {
   }
 
   function drip() {
+    if (!ctx) return;
     const t = ctx.currentTime;
     const f0 = 1300 + Math.random() * 1000;
     const o = ctx.createOscillator();
@@ -204,6 +205,7 @@ const Sound = (() => {
   }
 
   function gurgle() {
+    if (!ctx) return;
     const t = ctx.currentTime;
     const src = ctx.createBufferSource();
     src.buffer = white;
@@ -477,6 +479,20 @@ const Sound = (() => {
       white = noiseBuffer(2, "white");
       wind();
       setTimeout(drip, 800);
+    },
+    // stop tonar ut allt ljud och stänger av ljudet för gott, till exempel
+    // när tornet har stängts.
+    stop() {
+      if (!ctx) return;
+      const t = ctx.currentTime;
+      master.gain.cancelScheduledValues(t);
+      master.gain.setValueAtTime(master.gain.value, t);
+      master.gain.linearRampToValueAtTime(0, t + 2.5);
+      const closing = ctx;
+      ctx = null; // så att inga nya ljud startas
+      if (heartTimer) clearTimeout(heartTimer);
+      heartTimer = null;
+      setTimeout(() => closing.close(), 2800);
     },
     breath(level) {
       setBreath(level);
