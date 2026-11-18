@@ -6,6 +6,19 @@ eller leder tornet.
 
 ## 2026-11-19
 
+### Lugnare logg
+
+- Bara den första raden i en runda skrivs fram tecken för tecken. Resten
+  kommer en hel rad i taget, ungefär tre rader i sekunden, och loggen
+  skyndar sig aldrig även om många rader väntar.
+- Varje runda har en rubrik, "Runda 12", i stället för ett streck. Före
+  vandringen och slutet har egna rubriker.
+- Har man rullat upp för att läsa stannar loggen där, och knappen "↓ nya
+  rader" tar en tillbaka ner. Loggen har en smal rullningslist.
+- När en ny runda börjar fälls rundorna före den förra ihop till en rad,
+  till exempel "▸ Runda 4 · Salpetergrottan · 8 rader". Ett klick fäller
+  upp den igen. Loggen sparar upp till 300 rader.
+
 ### Statusen på kartan och loggen till höger
 
 - Sidopanelen Du är borta. Klassen, liv, skatt, drycker och tillstånd står

@@ -17,25 +17,119 @@ function show(id) {
   document.querySelectorAll(".screen").forEach((s) => s.classList.toggle("active", s.id === id));
 }
 
-// Loggen skriver fram texten tecken för tecken.
+// Loggen. Raderna samlas i grupper, en per runda (och en för tiden före
+// och efter vandringen). Den första raden i en grupp skrivs fram tecken för
+// tecken, resten kommer en hel rad i taget i lugn takt. Har man rullat upp
+// för att läsa stannar loggen där, och "↓ nya rader" tar en tillbaka. När
+// en ny runda börjar fälls rundorna före den förra ihop till en rad som går
+// att klicka upp.
 const Log = (() => {
   const queue = [];
   let busy = false;
-  const MAX_LINES = 80;
+  const MAX_LINES = 300;
+  const LINE_GAP = 320; // ms mellan hela rader
+  const CHAR_MS = 24;
+  let stick = true; // loggen följer med nedåt
+  let current = null; // gruppen som raderna hamnar i
 
-  // Varje rad minns under vilken runda den kom, så att rader från samma
-  // runda hålls ihop och äldre rundor bleknar.
+  function box() {
+    return $("log");
+  }
+
+  function keyNow() {
+    if (!state || state.phase === "lobby" || state.phase === "klassval") return "lobby";
+    if (state.phase === "slut") return "slut";
+    return "r" + state.round;
+  }
+
+  function label(key) {
+    if (key === "lobby") return "Före vandringen";
+    if (key === "slut") return "Slutet";
+    return "Runda " + key.slice(1);
+  }
+
   function push(text, cls) {
     if (!text) return;
-    const round = state && state.phase === "spel" ? state.round : 0;
-    queue.push({ text, cls, round });
+    queue.push({ text, cls, key: keyNow() });
     if (!busy) next();
   }
 
-  // age bleknar raderna från rundor före den förra.
-  function age(round) {
-    for (const line of $("log").children) {
-      if (Number(line.dataset.round) < round - 1) line.classList.add("old");
+  // group ger gruppen för key, och gör en ny när rundan har bytts.
+  function group(key) {
+    if (current && current.dataset.key === key) return current;
+    const g = document.createElement("section");
+    g.className = "round";
+    g.dataset.key = key;
+    const head = document.createElement("button");
+    head.type = "button";
+    head.className = "roundhead";
+    head.addEventListener("click", () => {
+      g.classList.toggle("folded");
+      summarize(g);
+    });
+    const lines = document.createElement("div");
+    lines.className = "lines";
+    g.append(head, lines);
+    box().appendChild(g);
+    current = g;
+    summarize(g);
+    fold();
+    return g;
+  }
+
+  // summarize skriver gruppens rubrik: rundan, och när den är hopfälld
+  // rummen man kom till och hur många rader den har.
+  function summarize(g) {
+    const head = g.querySelector(".roundhead");
+    const lines = g.querySelectorAll(".lines > div");
+    const folded = g.classList.contains("folded");
+    let text = (folded ? "▸ " : "▾ ") + label(g.dataset.key);
+    if (folded) {
+      const rooms = [...g.querySelectorAll(".lines > .rubrik")].map((d) => d.textContent.replace(/\.$/, ""));
+      if (rooms.length) text += " · " + rooms.join(", ");
+      text += " · " + lines.length + (lines.length === 1 ? " rad" : " rader");
+    }
+    head.textContent = text;
+    head.setAttribute("aria-expanded", String(!folded));
+  }
+
+  // fold fäller ihop alla grupper utom de två senaste. Det väntar tills man
+  // är längst ner, så att texten man läser inte flyttar sig.
+  function fold() {
+    if (!stick) return;
+    const groups = [...box().querySelectorAll(".round")];
+    groups.slice(0, -2).forEach((g) => {
+      if (g.dataset.auto) return;
+      g.dataset.auto = "1";
+      g.classList.add("folded");
+      summarize(g);
+    });
+    trim();
+    follow();
+  }
+
+  function trim() {
+    let n = box().querySelectorAll(".lines > div").length;
+    while (n > MAX_LINES && box().children.length > 2) {
+      const first = box().firstElementChild;
+      n -= first.querySelectorAll(".lines > div").length;
+      first.remove();
+    }
+  }
+
+  function atBottom() {
+    const b = box();
+    return b.scrollTop + b.clientHeight >= b.scrollHeight - 6;
+  }
+
+  // follow håller loggen längst ner, eller visar att det finns nya rader.
+  function follow() {
+    const b = box();
+    if (stick) {
+      b.scrollTop = b.scrollHeight;
+      $("logDown").hidden = true;
+    } else {
+      $("logDown").hidden = false;
     }
   }
 
@@ -46,37 +140,56 @@ const Log = (() => {
       return;
     }
     busy = true;
-    const box = $("log");
+    const g = group(item.key);
+    const list = g.querySelector(".lines");
+    const first = list.children.length === 0;
     const line = document.createElement("div");
     if (item.cls) line.className = item.cls;
+    list.appendChild(line);
+    if (g.classList.contains("folded")) summarize(g);
+    if (!first) {
+      // Hela raden på en gång, med en mjuk övergång.
+      line.textContent = item.text;
+      line.classList.add("appear");
+      follow();
+      setTimeout(next, LINE_GAP);
+      return;
+    }
     line.classList.add("cursor");
-    line.dataset.round = item.round;
-    const prev = box.lastElementChild;
-    if (prev && item.round > 0 && Number(prev.dataset.round) !== item.round) line.classList.add("ny-runda");
-    box.appendChild(line);
-    while (box.children.length > MAX_LINES) box.removeChild(box.firstChild);
     const chars = [...item.text];
     let i = 0;
     function tick() {
-      // Skriv snabbare om det står mycket i kö.
-      const step = queue.length > 2 ? 4 : 1;
-      i = Math.min(chars.length, i + step);
+      i = Math.min(chars.length, i + 1);
       line.textContent = chars.slice(0, i).join("");
-      box.scrollTop = box.scrollHeight;
+      follow();
       if (i < chars.length) {
         const ch = chars[i - 1];
-        const pause = ".!?".includes(ch) ? 180 : ",".includes(ch) ? 70 : 22;
-        setTimeout(tick, queue.length > 2 ? 6 : pause);
+        setTimeout(tick, ".!?".includes(ch) ? 180 : ",".includes(ch) ? 70 : CHAR_MS);
       } else {
         line.classList.remove("cursor");
-        setTimeout(next, 120);
+        setTimeout(next, LINE_GAP);
       }
     }
     tick();
   }
 
-  return { push, age };
+  function init() {
+    box().addEventListener("scroll", () => {
+      const was = stick;
+      stick = atBottom();
+      if (stick) $("logDown").hidden = true;
+      if (stick && !was) fold();
+    });
+    $("logDown").addEventListener("click", () => {
+      stick = true;
+      fold();
+      follow();
+    });
+  }
+
+  return { push, init };
 })();
+Log.init();
 
 function send(obj) {
   if (ws && ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify(obj));
@@ -135,7 +248,6 @@ function handle(msg) {
       renderOverlay();
       renderChoose();
       firstHelp();
-      if (state.phase === "spel") Log.age(state.round);
       break;
     case "log":
       Log.push(msg.text, msg.c);

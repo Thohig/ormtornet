@@ -476,35 +476,80 @@ body.touch #helpBtn { display: none; }
 #help { color: var(--dim); }
 #help b { display: inline-block; width: 11ch; font-weight: normal; color: var(--fg); }
 
-#log {
+#logwrap {
+  position: relative;
   flex: 1 1 auto;
   min-height: 6em;
+  display: flex;
+  flex-direction: column;
+}
+#log {
+  flex: 1 1 auto;
+  min-height: 0;
   overflow-y: auto;
   line-height: 1.35;
   padding-right: 6px;
-  scrollbar-width: none;
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 2.2em);
-  mask-image: linear-gradient(to bottom, transparent 0, #000 2.2em);
+  scrollbar-width: thin;
+  scrollbar-color: var(--chalkline) transparent;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 1.2em);
+  mask-image: linear-gradient(to bottom, transparent 0, #000 1.2em);
 }
-#log::-webkit-scrollbar { display: none; }
-/* Loggen: ett tecken i marginalen säger vad slags rad det är, ett streck
-   skiljer rundorna åt och rader från äldre rundor bleknar. */
-#log div {
+#log::-webkit-scrollbar { width: 5px; }
+#log::-webkit-scrollbar-thumb { background: var(--chalkline); border-radius: 3px; }
+#logDown {
+  position: absolute;
+  right: 10px;
+  bottom: 6px;
+  padding: 3px 10px;
+  border: 1px solid var(--chalkline);
+  border-radius: 12px;
+  background: var(--slate);
+  color: var(--hi);
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+}
+/* Rundorna: en rubrik som skiljer dem åt. En hopfälld runda är bara
+   rubriken, med rummen man kom till. */
+#log .round { margin-top: 6px; }
+#log .roundhead {
+  display: block;
+  width: 100%;
+  margin: 0 0 3px;
+  padding: 3px 0 2px;
+  border: 0;
+  border-top: 1px solid var(--chalkline);
+  background: none;
+  color: var(--dim);
+  font: inherit;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-align: left;
+  cursor: pointer;
+}
+#log .roundhead:hover { color: var(--fg); }
+#log .round:first-child .roundhead { border-top: 0; }
+#log .folded .lines { display: none; }
+#log .folded .roundhead { margin-bottom: 0; }
+#log .appear { animation: logfade 0.35s ease-out; }
+@keyframes logfade { from { opacity: 0; transform: translateY(3px); } }
+
+/* Loggen: ett tecken i marginalen säger vad slags rad det är. */
+#log .lines > div {
   margin: 2px 0;
   white-space: pre-wrap;
   padding-left: 2.2ch;
   text-indent: -2.2ch;
   transition: opacity 1.2s;
 }
-#log div::before { display: inline-block; width: 2.2ch; text-indent: 0; content: ""; }
+#log .lines > div::before { display: inline-block; width: 2.2ch; text-indent: 0; content: ""; }
 #log .varn::before { content: "!"; }
 #log .syn::before { content: "›"; }
 #log .rubrik::before { content: "▸"; }
 #log .info::before { content: "·"; }
 #log .rost::before { content: "❝"; }
 #log .krita::before { content: "✎"; color: #f2f0e8; }
-#log .ny-runda { margin-top: 7px; padding-top: 5px; border-top: 1px solid var(--chalkline); }
-#log .old { opacity: 0.45; }
 #log .dim { color: var(--dim); }
 #log .info { color: var(--info); }
 #log .syn { color: var(--hi); }
@@ -589,7 +634,8 @@ body.touch #side { overflow-y: auto; }
   }
   #side > :not(.block) { grid-column: 1 / -1; }
   #side h2 { margin: 0 0 4px; }
-  #log { height: 14em; margin-top: 8px; grid-column: 1 / -1; }
+  #logwrap { margin-top: 8px; grid-column: 1 / -1; }
+  #log { height: 14em; flex: 0 0 auto; }
   #hud { max-width: 85%; }
   .hudicon { opacity: 0.8; }
   body.touch #game.active { padding-bottom: calc(170px + env(safe-area-inset-bottom)); }

@@ -198,7 +198,11 @@ spelarsidan (`/`), med tre vyer i tur och ordning:
      kammaren och vad som väntar, och viskningen skrivs i en egen ruta där.
      I loggen säger ett tecken i marginalen vad slags rad det är (`!` fara,
      `›` det du ser, `▸` rummets namn, `·` besked, `❝` tornets röst,
-     `✎` krita), ett streck skiljer rundorna åt och äldre rundor bleknar,
+     `✎` krita). Varje runda har en rubrik. Den första raden i en runda
+     skrivs fram tecken för tecken, resten kommer en hel rad i taget. Har
+     man rullat upp för att läsa stannar loggen där, och "↓ nya rader" tar
+     en tillbaka. Rundorna före den förra fälls ihop till en rad med rummen
+     man kom till, och ett klick fäller upp dem igen,
    - **slutet**: resultatrutan över kartan, och i loggen vinnaren, krönikan
      och epilogen. Enter (Nytt torn) leder tillbaka till lobbyn när alla
      har tryckt, med ett nytt torn. Därefter kommer ett nytt klassval.
