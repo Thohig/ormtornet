@@ -29,8 +29,10 @@ Så här skiljer vi på sakerna när användaren ger instruktioner:
   ingreppen, kartan och tabellen över vandrarna.
 - **ingrepp**: det spelledaren gör under en vandring: tid, ormen,
   avslöjandet, tornets röst och rum.
-- **spelarsidan**: sidan på `/` som spelarna öppnar: introt, namnrutan och
-  spelet.
+- **spelarsidan**: sidan på `/` som spelarna öppnar, med vyerna introt,
+  namnrutan och spelet. Spelet har faserna lobbyn, vandringen och slutet
+  (`lobby`, `spel`, `slut`). README beskriver under "Vad en spelare ser"
+  vad en spelare möter.
 - **tornets dator**: datorn som kör servern.
 
 Spelarna ser ordet "spelledare" i spelets texter, aldrig "värdsidan".

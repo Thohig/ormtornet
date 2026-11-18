@@ -130,6 +130,32 @@ en annan flik ("Gå in själv", som leder till introt och sedan namnrutan). Andr
 2. Skriv ditt namn och tryck Enter.
 3. Tryck Enter igen när du är redo. Vandringen börjar när alla är redo.
 
+### Vad en spelare ser
+
+En spelare som ansluter från en annan dator eller telefon ser bara
+spelarsidan (`/`), med tre vyer i tur och ordning:
+
+1. **Introt**: tornet i solnedgången, ryktena och "Gå in i tornet". Hela
+   övergången in genom porten visas bara första gången i fliken.
+2. **Namnrutan**: "Vad heter du, vandrare?" Är tornet fullt eller namnet
+   upptaget står felet här.
+3. **Spelet**, där spelaren stannar resten av kvällen. Det går igenom tre faser:
+   - **lobbyn**: vandrarna och "Tryck Enter när du är redo" (Redo på en
+     pekskärm),
+   - **vandringen**: kartan, solmätaren, sidopanelen och loggen,
+   - **slutet**: resultatrutan över kartan, och i loggen vinnaren, krönikan
+     och epilogen. Enter (Nytt torn) leder tillbaka till lobbyn.
+
+Under spelet kan spelaren också se att tornet har en spelledare, tornets röst
+i loggen, "tornet är stängt" när tornet stänger och "förbindelsen bröts,
+försöker igen" om förbindelsen bryts.
+
+Värdsidan ser spelaren aldrig. Den som öppnar `/spelledare` från en annan
+dator får bara veta att sidan visas på datorn som kör tornet. Rutan "DU LEDER
+TORNET" visas bara på tornets dator. Där leder introt till värdsidan i
+stället för namnrutan. Den som vill spela där öppnar `/?spela` eller trycker
+"Gå in själv" på värdsidan.
+
 Spelet går i rundor. Alla väljer sitt drag samtidigt, och när alla har valt
 (eller turtiden tar slut) utförs alla drag på en gång. Du kan ändra dig tills
 dess. Den som inte hinner välja blir stående.
