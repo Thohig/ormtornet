@@ -6,6 +6,18 @@ eller leder tornet.
 
 ## 2026-11-19
 
+### Vandrarna i översta raden och i loggen
+
+- Under vandringen står vandrarna som prickar i sin färg i översta raden,
+  bredvid solen. En fylld prick har valt drag (i lobbyn: är redo), en tom
+  väljer fortfarande, ✕ är död och ◌ har gått ut. Den egna är
+  understruken. Håll musen över en prick, eller tryck på den, så står
+  namn, klass och läge, till exempel "sågs runda 12".
+- Panelen Vandrare syns bara i lobbyn och i slutet. Under vandringen får
+  loggen platsen.
+- I loggen står vandrarnas namn i sin färg, så att det syns vem en rad
+  handlar om.
+
 ### Rundans sammanfattning
 
 - Efter varje runda kommer ett kort nere på kartan med vad som hände dig:

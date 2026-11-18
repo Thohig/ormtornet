@@ -186,8 +186,12 @@ spelarsidan (`/`), med tre vyer i tur och ordning:
      styrka och svaghet. Välj med 1–8 eller ett klick. Kort som andra har
      tagit är gråa. Den som inte har valt när tiden är slut får ett av de
      lediga korten,
-   - **vandringen**: kartan, solmätaren och högerkolumnen med panelerna
-     Vandrare och Nu och loggen, som fyller resten av höjden. Uppe till
+   - **vandringen**: kartan, solmätaren, vandrarna som prickar i sin färg
+     i översta raden, och högerkolumnen med panelen Nu och loggen, som
+     fyller resten av höjden. En prick är fylld när vandraren har valt drag
+     (i lobbyn när den är redo), ✕ är död och ◌ ute; håll musen över den,
+     eller tryck, för namn, klass och läge. Panelen Vandrare syns i lobbyn
+     och i slutet. I loggen står vandrarnas namn i deras färg. Uppe till
      vänster på kartan står rummets namn. Uppe till höger står statusen
      som halvt genomskinliga tecken: klassens tecken, liv, skatt, drycker,
      tillstånd som fast, gift och mörker, kompassen, dunket och viskningen,

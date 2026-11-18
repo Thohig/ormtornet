@@ -290,6 +290,18 @@ body[data-niva="4"] #crt::after { animation: throb 0.95s infinite; }
 .meter.sun.low .seg.on { background: #ff9a5a; }
 .meter.sun.last .seg.on { background: var(--warn); animation: blink 1s steps(1) infinite; }
 #turn { color: var(--dim); min-width: 18ch; text-align: right; }
+#crew { display: inline-flex; gap: 2px; align-self: center; }
+#crew .dot {
+  padding: 0 3px;
+  font-size: 15px;
+  line-height: 1;
+  border-radius: 3px;
+  cursor: default;
+}
+#crew .dot:hover, #crew .dot:focus-visible { background: var(--slate); outline: none; }
+#crew .dot.me { text-decoration: underline; text-underline-offset: 4px; }
+#crew .dot.off { opacity: 0.35; }
+#playersBlock[hidden] { display: none; }
 #turn.urgent { color: var(--warn); }
 
 #main {
@@ -406,8 +418,8 @@ body[data-niva="4"] #crt::after { animation: throb 0.95s infinite; }
 #helpBtn:hover, #helpBtn[aria-expanded="true"] { opacity: 1; color: var(--hi); }
 body.touch #helpBtn { display: none; }
 #tip {
-  position: absolute;
-  z-index: 4;
+  position: fixed;
+  z-index: 20;
   max-width: 300px;
   padding: 6px 9px;
   border: 1px solid var(--chalkline);
@@ -668,7 +680,7 @@ body.touch #side { overflow-y: auto; }
     gap: 0 16px;
     overflow: visible;
   }
-  #side > :not(.block) { grid-column: 1 / -1; }
+  #side > :not(.block), #playersBlock[hidden] + .block { grid-column: 1 / -1; }
   #side h2 { margin: 0 0 4px; }
   #logwrap { margin-top: 8px; grid-column: 1 / -1; }
   #log { height: 14em; flex: 0 0 auto; }

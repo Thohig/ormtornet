@@ -119,6 +119,32 @@ const Log = (() => {
     }
   }
 
+  // paint skriver raden och färgar vandrarnas namn i deras färg, så att
+  // det syns vem raden handlar om. Ett s efter namnet hör till namnet.
+  function paint(line, text) {
+    const players = (state && state.players) || [];
+    const names = players.map((p) => p.name).filter(Boolean).sort((a, b) => b.length - a.length);
+    if (!names.length) {
+      line.textContent = text;
+      return;
+    }
+    const esc = names.map((n) => n.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
+    const re = new RegExp("(?<![\\p{L}\\p{N}])(" + esc.join("|") + ")(?=s?(?![\\p{L}\\p{N}]))", "gu");
+    line.textContent = "";
+    let at = 0;
+    for (const m of text.matchAll(re)) {
+      if (m.index > at) line.appendChild(document.createTextNode(text.slice(at, m.index)));
+      const p = players.find((x) => x.name === m[1]);
+      const s = document.createElement("span");
+      s.className = "who";
+      s.textContent = m[1];
+      if (p) s.style.color = MapView.PLAYER_COLORS[p.slot];
+      line.appendChild(s);
+      at = m.index + m[1].length;
+    }
+    if (at < text.length) line.appendChild(document.createTextNode(text.slice(at)));
+  }
+
   function atBottom() {
     const b = box();
     return b.scrollTop + b.clientHeight >= b.scrollHeight - 6;
@@ -154,7 +180,7 @@ const Log = (() => {
     const behind = queue.some((q) => q.key !== item.key);
     if (!first || behind) {
       // Hela raden på en gång, med en mjuk övergång.
-      line.textContent = item.text;
+      paint(line, item.text);
       line.classList.add("appear");
       follow();
       setTimeout(next, behind ? CATCH_UP : LINE_GAP);
@@ -172,6 +198,7 @@ const Log = (() => {
         setTimeout(tick, ".!?".includes(ch) ? 180 : ",".includes(ch) ? 70 : CHAR_MS);
       } else {
         line.classList.remove("cursor");
+        paint(line, item.text);
         setTimeout(next, LINE_GAP);
       }
     }
@@ -254,6 +281,7 @@ function handle(msg) {
       renderChoose();
       firstHelp();
       checkRoundCard();
+      restoreTip();
       break;
     case "log":
       Log.push(msg.text, msg.c);
@@ -484,6 +512,8 @@ function updateChooseStatus() {
 
 function renderSide() {
   setEnterLabel(state.phase === "slut" ? "Nytt torn" : "Redo");
+  // Under vandringen står vandrarna som prickar i översta raden.
+  $("playersBlock").hidden = state.phase === "spel";
   const ul = $("players");
   ul.innerHTML = "";
   state.players.forEach((p) => {
@@ -522,7 +552,6 @@ function renderHud(me) {
   const bag = $("bag");
   box.innerHTML = "";
   bag.innerHTML = "";
-  $("tip").hidden = true;
   if (!me) return;
   const icon = (glyph, value, tip, cls) => {
     const d = document.createElement("span");
@@ -578,12 +607,6 @@ function renderHud(me) {
     if (it.aktiv) b.addEventListener("click", () => useItemSlot(i));
     bag.appendChild(b);
   });
-  // Förklaringen som visades ligger kvar när läget ritas om.
-  if (tipKey) {
-    const el = [...$("hud").querySelectorAll("[data-tip]")].find((x) => keyOf(x) === tipKey);
-    if (el) showTip(el);
-    else tipKey = "";
-  }
 }
 
 // Ett tecken känns igen på sitt glyftecken, eller på platsen i väskan.
@@ -707,48 +730,62 @@ $("roundcard").addEventListener("click", hideRoundCard);
 // kartans ruta.
 function showTip(el) {
   const tip = $("tip");
-  const box = $("mapbox").getBoundingClientRect();
   const r = el.getBoundingClientRect();
   tip.textContent = el.dataset.tip;
   tip.hidden = false;
   tipKey = keyOf(el);
   const w = tip.offsetWidth;
-  tip.style.top = r.bottom - box.top + 6 + "px";
-  tip.style.left = Math.max(4, Math.min(box.width - w - 4, r.right - box.left - w)) + "px";
+  // Under tecknet, inom fönstret. Tecknen på kartan står till höger, så
+  // förklaringen slutar där tecknet slutar; prickarna börjar där de börjar.
+  const left = el.closest("#crew") ? r.left : r.right - w;
+  tip.style.top = r.bottom + 6 + "px";
+  tip.style.left = Math.max(4, Math.min(window.innerWidth - w - 4, left)) + "px";
 }
 function hideTip() {
   $("tip").hidden = true;
   tipKey = "";
 }
-$("hud").addEventListener("mouseover", (e) => {
-  if (touch) return; // på en pekskärm är det trycket som räknas
-  const el = e.target.closest("[data-tip]");
-  if (el) showTip(el);
-});
-$("hud").addEventListener("mouseout", (e) => {
-  if (touch) return;
-  if (!e.relatedTarget || !e.relatedTarget.closest || !e.relatedTarget.closest("[data-tip]")) hideTip();
-});
-$("hud").addEventListener("focusin", (e) => {
-  if (touch) return;
-  const el = e.target.closest("[data-tip]");
-  if (el) showTip(el);
-});
-$("hud").addEventListener("focusout", () => {
-  if (!touch) hideTip();
-});
-$("hud").addEventListener("click", (e) => {
-  // På en pekskärm visar ett tryck förklaringen, och ett tryck till döljer den.
-  const el = e.target.closest(".hudicon:not(button)");
-  if (!el) return;
-  e.stopPropagation();
-  if (!$("tip").hidden && tipKey === keyOf(el)) hideTip();
-  else showTip(el);
-});
+// Tecknen på kartan och prickarna i översta raden har samma förklaringar.
+for (const id of ["hud", "crew"]) {
+  const area = $(id);
+  area.addEventListener("mouseover", (e) => {
+    if (touch) return; // på en pekskärm är det trycket som räknas
+    const el = e.target.closest("[data-tip]");
+    if (el) showTip(el);
+  });
+  area.addEventListener("mouseout", (e) => {
+    if (touch) return;
+    if (!e.relatedTarget || !e.relatedTarget.closest || !e.relatedTarget.closest("[data-tip]")) hideTip();
+  });
+  area.addEventListener("focusin", (e) => {
+    if (touch) return;
+    const el = e.target.closest("[data-tip]");
+    if (el) showTip(el);
+  });
+  area.addEventListener("focusout", () => {
+    if (!touch) hideTip();
+  });
+  area.addEventListener("click", (e) => {
+    // På en pekskärm visar ett tryck förklaringen, och ett tryck till döljer den.
+    const el = e.target.closest("[data-tip]:not(button)");
+    if (!el) return;
+    e.stopPropagation();
+    if (!$("tip").hidden && tipKey === keyOf(el)) hideTip();
+    else showTip(el);
+  });
+}
 // Ett tryck någon annanstans döljer förklaringen.
 document.addEventListener("click", (e) => {
-  if (touch && tipKey && !e.target.closest("#hud")) hideTip();
+  if (touch && tipKey && !e.target.closest("#hud, #crew")) hideTip();
 });
+
+// restoreTip visar förklaringen igen efter att läget har ritats om.
+function restoreTip() {
+  if (!tipKey) return;
+  const el = [...document.querySelectorAll("#hud [data-tip], #crew [data-tip]")].find((x) => keyOf(x) === tipKey);
+  if (el) showTip(el);
+  else hideTip();
+}
 
 // Styrningen ligger bakom frågetecknet. Första vandringen visas den en gång.
 function toggleHelp(open) {
@@ -808,7 +845,34 @@ function renderTop() {
   if (state.sun <= 3) m.classList.add("last");
   else if (state.sun <= state.sunMax / 4) m.classList.add("low");
   el.appendChild(m);
+  renderCrew();
   updateTimer();
+}
+
+// Vandrarna som prickar i sin färg i översta raden. Under vandringen är
+// pricken fylld när vandraren har valt drag, i lobbyn när den är redo.
+// Förklaringen säger vem det är, klassen och läget.
+function renderCrew() {
+  const box = $("crew");
+  box.innerHTML = "";
+  state.players.forEach((p) => {
+    const d = document.createElement("span");
+    d.className = "dot" + (p.id === state.you ? " me" : "") + (p.online ? "" : " off");
+    d.dataset.slot = "p" + p.id;
+    d.tabIndex = 0;
+    let glyph;
+    if (p.status === "dod") glyph = "✕";
+    else if (p.status === "ute") glyph = "◌";
+    else if (p.status === "forlorad") glyph = "✕";
+    else glyph = (state.phase === "spel" ? p.chosen : p.ready) ? "●" : "○";
+    d.textContent = glyph;
+    d.style.color = MapView.PLAYER_COLORS[p.slot];
+    const who = p.name + (p.id === state.you ? " (du)" : p.ai ? " (AI spelar)" : p.bot ? " (dator)" : "");
+    const tag = playerTag(p);
+    d.dataset.tip = who + (p.klass ? ", " + p.klass : "") + (tag ? "\n" + tag : "");
+    d.setAttribute("aria-label", d.dataset.tip);
+    box.appendChild(d);
+  });
 }
 
 function remainingMs() {

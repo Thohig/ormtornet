@@ -96,6 +96,7 @@
     <header id="top">
       <span class="title">ORMTORNET</span>
       <span id="solmatare"></span>
+      <span id="crew" aria-label="Vandrarna"></span>
       <span id="turn"></span>
       <span id="conn"></span>
     </header>
@@ -129,12 +130,11 @@
           </div>
           <p class="hint">Håll musen över tecknen uppe till höger för att se vad de betyder.</p>
         </div>
-        <div id="tip" role="tooltip" hidden></div>
         <div id="roundcard" hidden aria-live="polite"></div>
         <pre id="overlay" hidden></pre>
       </div>
       <aside id="side">
-        <div class="block">
+        <div class="block" id="playersBlock">
           <div class="panel">
             <h2>Vandrare</h2>
             <ul id="players"></ul>
@@ -176,6 +176,7 @@
         </div>
       </aside>
     </div>
+    <div id="tip" role="tooltip" hidden></div>
   </section>
 </div>
 <script src="audio.js"></script>
