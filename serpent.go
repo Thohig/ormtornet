@@ -113,6 +113,7 @@ func (g *Game) take(p *Player) {
 		g.buildDeck()
 	}
 	i := rand.IntN(len(g.deck))
+	i = g.flute(p, i)
 	// Ormen känner den som vet: ibland drar den invigde ett vakna-kort.
 	if p.initiated && rand.Float64() < g.data.Avslojande.Invigd.Vacker {
 		for j, id := range g.deck {

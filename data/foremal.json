@@ -69,6 +69,87 @@
         "vikt": 2,
         "anvandningar": 0,
         "verkar": []
+      },
+      {
+        "id": "rokpulver",
+        "namn": "Rökpulver",
+        "kort": "rökpulvret",
+        "beskrivning": "Fly ur en strid utan att varelsen hinner slå. Välj håll med pilarna.",
+        "vikt": 2,
+        "anvandningar": 1,
+        "aktiv": true,
+        "riktning": true,
+        "verkar": [
+          "Du kastar pulvret i golvet. Rummet fylls av grå rök, och du är borta åt {riktning} innan något hinner reagera."
+        ]
+      },
+      {
+        "id": "spegel",
+        "namn": "Spegelskärva",
+        "kort": "spegelskärvan",
+        "beskrivning": "Titta in i rummet bakom en dörr. Tre gånger.",
+        "vikt": 2,
+        "anvandningar": 3,
+        "aktiv": true,
+        "riktning": true,
+        "verkar": [
+          "Du håller ut skärvan genom dörröppningen åt {riktning} och vinklar den."
+        ],
+        "slut": [
+          "Skärvan blir matt, som om något har andats på den."
+        ]
+      },
+      {
+        "id": "kastkniv",
+        "namn": "Kastkniv",
+        "kort": "kastkniven",
+        "beskrivning": "Kasta den genom en dörr mot en varelse i nästa rum.",
+        "vikt": 2,
+        "anvandningar": 1,
+        "aktiv": true,
+        "riktning": true,
+        "verkar": [
+          "Du kastar kniven genom dörröppningen åt {riktning}."
+        ]
+      },
+      {
+        "id": "krita",
+        "namn": "Krita",
+        "kort": "kritan",
+        "beskrivning": "Rita en pil på golvet. Alla som kommer in ser den, men inte vem som ritade. Fem gånger.",
+        "vikt": 2,
+        "anvandningar": 5,
+        "aktiv": true,
+        "riktning": true,
+        "verkar": [
+          "Du ritar en pil på golvet som pekar åt {riktning}."
+        ],
+        "slut": [
+          "Kritan är slut. Det sista dammet blåser bort."
+        ]
+      },
+      {
+        "id": "flojt",
+        "namn": "Sövande flöjt",
+        "kort": "flöjten",
+        "beskrivning": "Drar du ett kort som väcker ormen får du dra om, en gång.",
+        "vikt": 1,
+        "anvandningar": 1,
+        "verkar": [
+          "Ormen rör sig, och du spelar tre låga toner på flöjten. Andetagen blir långsamma igen. Flöjten spricker. Du sträcker dig efter en ny näve."
+        ]
+      },
+      {
+        "id": "timglas",
+        "namn": "Timglas av ben",
+        "kort": "timglaset",
+        "beskrivning": "Vänd det, och solen står still en runda för alla.",
+        "vikt": 1,
+        "anvandningar": 1,
+        "aktiv": true,
+        "verkar": [
+          "Du vänder timglaset. Sanden står still. Ljuset genom gluggarna slutar röra sig."
+        ]
       }
     ]
   },
@@ -92,6 +173,36 @@
     ],
     "kompass_har": [
       "Kompassen snurrar. Du står i en port."
+    ],
+    "spegel_vagg": [
+      "Det finns ingen dörr åt {riktning}. Skärvan visar bara sten."
+    ],
+    "spegel_ser": [
+      "I skärvan ser du {rum}."
+    ],
+    "spegel_falla": [
+      "Något på golvet där ser fel ut: {falla}."
+    ],
+    "spegel_varelse": [
+      "Där inne rör sig {varelse}."
+    ],
+    "spegel_vandrare": [
+      "Där inne står {namn}."
+    ],
+    "kniv_miss": [
+      "Kniven skramlar mot stenen åt {riktning}. Där finns inget att träffa."
+    ],
+    "kniv_traff": [
+      "Kniven träffar {varelse}."
+    ],
+    "krita_ser": [
+      "Någon har ritat en pil med krita på golvet. Den pekar åt {riktning}."
+    ],
+    "timglas_alla": [
+      "Ett ögonblick står allt stilla. Solen rör sig inte."
+    ],
+    "foremal_av_sig_sjalv": [
+      "{foremal} verkar av sig självt."
     ],
     "kronika_foremal": [
       "{namn} hittade {foremal}."

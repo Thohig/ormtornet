@@ -213,6 +213,8 @@ const MapView = (() => {
     }
 
     if (r.mark) put(x0 + Math.floor(RW / 2), y0 + Math.floor(RH / 2), r.mark, COLORS.mark);
+    // En pil i krita, ritad av någon vandrare.
+    if (r.c >= 0 && r.c !== undefined) put(x0 + 1, y0 + 1, ARROWS[r.c], "#d8d8d0");
 
     if (r.k === "kammare") {
       const now = performance.now();

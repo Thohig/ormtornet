@@ -178,6 +178,8 @@ type Room struct {
 	Searched bool
 	trail    trail    // den som senast gick ut ur rummet, för spåren
 	items    []string // föremål som någon har lämnat här
+	chalk    Dir      // pilen någon har ritat med krita
+	hasChalk bool
 }
 
 // trail är spåren efter den som senast lämnade ett rum.
@@ -417,6 +419,7 @@ type roomView struct {
 	Name string  `json:"name"`
 	Mark string  `json:"mark,omitempty"`
 	S    bool    `json:"s,omitempty"` // genomsökt
+	C    int     `json:"c"`           // pilen i krita, -1 om ingen
 }
 
 type resultView struct {
@@ -617,7 +620,10 @@ func (g *Game) stateFor(me *Player) stateMsg {
 			if !g.knowsRoom(me, x, y) || (blind && (x != me.X || y != me.Y)) {
 				continue
 			}
-			rv := roomView{X: x, Y: y, D: r.Doors, K: r.Kind, Exit: -1, Name: g.roomName(r), Mark: r.Mark, S: r.Searched}
+			rv := roomView{X: x, Y: y, D: r.Doors, K: r.Kind, Exit: -1, Name: g.roomName(r), Mark: r.Mark, S: r.Searched, C: -1}
+			if r.hasChalk {
+				rv.C = int(r.chalk)
+			}
 			if r.HasExit {
 				rv.Exit = int(r.Exit)
 			}
@@ -1094,7 +1100,9 @@ func (g *Game) actPlayer(p *Player, a string, monsterID int) {
 			return
 		}
 	default:
-		return
+		if _, _, _, ok := g.parseItemAction(p, a); !ok {
+			return
+		}
 	}
 	p.Action = a
 	g.soundTo(p, "val")
@@ -1250,6 +1258,8 @@ func (g *Game) playTurn(p *Player) {
 		}
 	}
 	switch {
+	case isItemAction(a):
+		g.useActive(p, a)
 	case g.combatTurn(p, a):
 	case isCombatAction(a):
 		// Striden mot en annan vandrare är redan avgjord i resolveFights.
@@ -1367,6 +1377,7 @@ func (g *Game) move(p *Player, d Dir, depth int) {
 		g.soundTo(p, "steg")
 		g.logTo(p, g.data.Text("kant_rum", "rum", name), "dim")
 		g.noticeTrail(p) // i ett nytt rum har ingen gått förut
+		g.noticeChalk(p)
 	}
 	// En fälla kan ha flyttat spelaren; varelsen gäller rummet spelaren står i nu.
 	if p.X == nx && p.Y == ny {

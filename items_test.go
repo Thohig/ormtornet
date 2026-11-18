@@ -1,6 +1,9 @@
 package main
 
-import "testing"
+import (
+	"strings"
+	"testing"
+)
 
 func TestCarryThreeAndLeaveInRoom(t *testing.T) {
 	g, a, b := startTwo(t)
@@ -118,5 +121,97 @@ func TestItemsResetWithNewTower(t *testing.T) {
 	g.newTower()
 	if len(a.player.items) != 0 {
 		t.Fatal("föremålen följde med till nästa torn")
+	}
+}
+
+// openRoom ställer p i ett rum med dörrar åt alla håll och tomma grannrum.
+func openRoom(g *Game, p *Player, x, y int) {
+	r := putInRoom(g, p, x, y)
+	r.Doors = [4]bool{true, true, true, true}
+	for d := North; d <= West; d++ {
+		n := g.reveal(x+dirDX[d], y+dirDY[d])
+		n.Kind, n.Event = "rum", ""
+		n.Doors[d.Opp()] = true
+	}
+}
+
+func TestSmokeFleesWithoutBlow(t *testing.T) {
+	g, a, _ := startTwo(t)
+	p := a.player
+	openRoom(g, p, 4, 3)
+	typ := &g.data.Monster.Typer[0]
+	typ.Vanor = map[string]int{actAttack: 1}
+	g.monsters = append(g.monsters, &Monster{ID: 60, Type: typ.ID, X: 4, Y: 3, HP: 9})
+	g.give(p, "rokpulver")
+	hp := p.HP
+	g.actPlayer(p, "f1E", 0)
+	if p.Action != "f1E" {
+		t.Fatalf("draget togs inte emot: %q", p.Action)
+	}
+	g.playTurn(p)
+	if p.HP != hp || p.X != 5 || p.has("rokpulver") != nil {
+		t.Fatalf("liv %d av %d, står på %d", p.HP, hp, p.X)
+	}
+}
+
+func TestMirrorKnifeChalkHourglass(t *testing.T) {
+	g, a, b := startTwo(t)
+	p, o := a.player, b.player
+	openRoom(g, p, 4, 3)
+	g.rooms[3][5].Event = "pilar"
+	g.monsters = append(g.monsters, &Monster{ID: 61, Type: g.data.Monster.Typer[0].ID, X: 3, Y: 3, HP: 1})
+
+	g.give(p, "spegel")
+	logs(a)
+	g.useActive(p, "f1E")
+	if !containsPart(logs(a), "pilfällan") && !containsPart(logs(a), strings.ToLower(g.data.trap("pilar").Namn)) {
+		t.Fatal("spegeln visade inte fällan")
+	}
+	if p.has("spegel").uses != 2 {
+		t.Fatal("spegeln förbrukades inte")
+	}
+	p.items = nil
+
+	g.give(p, "kastkniv")
+	gold := p.Treasure
+	g.useActive(p, "f1W")
+	if g.monsterAt(3, 3) != nil || p.Treasure <= gold {
+		t.Fatal("kniven fällde inte varelsen")
+	}
+
+	g.give(p, "krita")
+	g.useActive(p, "f1N")
+	if r := g.rooms[3][4]; !r.hasChalk || r.chalk != North {
+		t.Fatal("ingen pil")
+	}
+	openRoom(g, o, 4, 2)
+	logs(b)
+	g.move(o, South, 0)
+	if !containsPart(logs(b), "krita") {
+		t.Fatal("Bo såg inte pilen")
+	}
+	p.items = nil
+
+	g.give(p, "timglas")
+	sun := g.sun
+	g.useActive(p, "f1")
+	if g.sun != sun+1 {
+		t.Fatal("timglaset stoppade inte solen")
+	}
+}
+
+func TestFluteRedraws(t *testing.T) {
+	g, a, _ := startTwo(t)
+	p := a.player
+	g.give(p, "flojt")
+	wake := -1
+	for i, id := range g.deck {
+		if c := g.data.card(id); c != nil && c.Vaknar {
+			wake = i
+		}
+	}
+	g.flute(p, wake)
+	if p.has("flojt") != nil {
+		t.Fatal("flöjten användes inte")
 	}
 }

@@ -165,6 +165,13 @@ const ACTION_WORDS = {
   vanta: "vänta", ta: "ta skatt", sok: "sök i rummet", drick: "drick",
   anfall: "anfall", parera: "parera", undan: "undanmanöver",
 };
+function actionWord(a) {
+  if (/^f\d/.test(a)) {
+    const it = (state.foremal || [])[+a[1] - 1];
+    return "använd " + (it ? it.namn.toLowerCase() : "föremål") + (a[2] ? " " + DIR_WORDS[a[2]] : "");
+  }
+  return ACTION_WORDS[a] || a;
+}
 const DIR_WORDS = { N: "norrut", E: "österut", S: "söderut", W: "västerut" };
 
 // Strid mot andra vandrare: Tab väljer vem när flera står i rummet.
@@ -336,13 +343,17 @@ function renderSide() {
   if (me.status === "dod") line("Död", "cond");
   line("Skatt: " + me.treasure + " guld");
   if (state.potions > 0) line("Drycker: " + state.potions);
-  (state.foremal || []).forEach((it) => {
+  (state.foremal || []).forEach((it, i) => {
     const d = document.createElement("div");
-    d.className = "item";
-    d.textContent = "· " + it.namn + (it.kvar > 1 ? " (" + it.kvar + ")" : "");
+    d.className = "item" + (it.aktiv ? " active" : "");
+    d.textContent = (it.aktiv && !touch ? i + 1 + " " : "· ") + it.namn + (it.kvar > 1 ? " (" + it.kvar + ")" : "");
     d.title = it.beskrivning;
+    if (it.aktiv) d.addEventListener("click", () => useItemSlot(i));
     box.appendChild(d);
   });
+  if (aimSlot !== null && state.foremal && state.foremal[aimSlot]) {
+    line("Åt vilket håll? (pilarna" + (touch ? "" : ", esc ångrar") + ")", "plan");
+  }
   if (state.kompass) line(state.kompass, "dimline");
   if (state.invigd) line("Tornet har hört dig", "rost");
   if (state.hjartslag) line(state.hjartslag, "dimline");
@@ -390,7 +401,7 @@ function renderSide() {
     return;
   }
   if (state.phase === "spel" && me.status === "inne") {
-    line(state.action ? "Drag: " + ACTION_WORDS[state.action] : "Välj ditt drag", "plan");
+    line(state.action ? "Drag: " + actionWord(state.action) : "Välj ditt drag", "plan");
   } else if (state.phase === "lobby") {
     line(me.ready ? "Du är redo" : "Tryck " + keyName("Enter") + " när du är redo", "plan");
   } else if (state.phase === "slut") {
@@ -871,6 +882,20 @@ document.addEventListener("keydown", (e) => {
   if (pressKey(e.key)) e.preventDefault();
 });
 
+// Föremålen: 1–3 använder föremålet på den platsen i väskan. Ett föremål som
+// pekar åt ett håll väntar på en pil.
+let aimSlot = null;
+function useItemSlot(i) {
+  const it = state && (state.foremal || [])[i];
+  if (!it || !it.aktiv || state.phase !== "spel") return;
+  if (it.riktning) {
+    aimSlot = i;
+    renderSide();
+    return;
+  }
+  send({ t: "act", a: "f" + (i + 1) });
+}
+
 // Viskningen: en egen ruta under panelen, så att bokstäverna inte blir drag.
 function openWhisper() {
   const f = $("whisper");
@@ -906,6 +931,25 @@ function pressKey(key) {
     return true;
   }
   if (!joined) return false;
+  if (aimSlot !== null) {
+    // Ett föremål som pekar åt ett håll: nästa pil väljer riktningen.
+    const dir = { ArrowUp: "N", ArrowRight: "E", ArrowDown: "S", ArrowLeft: "W" }[key];
+    if (dir) {
+      send({ t: "act", a: "f" + (aimSlot + 1) + dir });
+      aimSlot = null;
+      renderSide();
+      return true;
+    }
+    if (key === "Escape") {
+      aimSlot = null;
+      renderSide();
+      return true;
+    }
+  }
+  if (state && state.phase === "spel" && /^[1-9]$/.test(key)) {
+    useItemSlot(+key - 1);
+    return true;
+  }
   const offer = (state && state.erbjudande) || [];
   if ((key === "1" || key === "2") && offer[+key - 1]) {
     send({ t: "klass", name: offer[+key - 1].id });

@@ -6,6 +6,7 @@ package main
 
 import (
 	"math/rand/v2"
+	"strconv"
 	"time"
 )
 
@@ -275,7 +276,7 @@ func (g *Game) botDecide(p *Player) (string, int) {
 		typ := g.data.monsterType(g.monsterTypeID(foe.ID))
 		if typ != nil && st.HP <= typ.Skada+pers.FlyMarginal && foe.HP > 1 {
 			if exitDist > 0 {
-				return dirLetter[exitDir], 0
+				return g.botFlee(p, exitDir), 0
 			}
 			if known {
 				var doors []Dir
@@ -285,7 +286,7 @@ func (g *Game) botDecide(p *Player) (string, int) {
 					}
 				}
 				if len(doors) > 0 {
-					return dirLetter[doors[rand.IntN(len(doors))]], 0
+					return g.botFlee(p, doors[rand.IntN(len(doors))]), 0
 				}
 			}
 		}
@@ -309,6 +310,19 @@ func (g *Game) botDecide(p *Player) (string, int) {
 
 	if st.HP <= pers.DrickVidLiv && st.Potions > 0 {
 		return actDrink, 0
+	}
+
+	// Kastkniven mot en varelse i ett grannrum, innan den går in.
+	if slot := botItemSlot(p, "kastkniv"); slot >= 0 && known {
+		for d := North; d <= West; d++ {
+			if _, foe := bm.monsters[pos{p.X + dirDX[d], p.Y + dirDY[d]}]; foe && room.D[d] {
+				return "f" + strconv.Itoa(slot+1) + dirLetter[d], 0
+			}
+		}
+	}
+	// Timglaset när solen hinner ner innan den är ute.
+	if slot := botItemSlot(p, "timglas"); slot >= 0 && exitDist >= 0 && st.Sun <= exitDist {
+		return "f" + strconv.Itoa(slot+1), 0
 	}
 
 	// Gå ut i tid, när väskan är full nog eller när livet tryter.
@@ -431,4 +445,22 @@ func abs(v int) int {
 		return -v
 	}
 	return v
+}
+
+// botItemSlot ger platsen i väskan för föremålet id, eller -1.
+func botItemSlot(p *Player, id string) int {
+	for i, it := range p.items {
+		if it.ID == id {
+			return i
+		}
+	}
+	return -1
+}
+
+// botFlee flyr åt hållet d, med rökpulver om AI-spelaren har det.
+func (g *Game) botFlee(p *Player, d Dir) string {
+	if slot := botItemSlot(p, "rokpulver"); slot >= 0 {
+		return "f" + strconv.Itoa(slot+1) + dirLetter[d]
+	}
+	return dirLetter[d]
 }

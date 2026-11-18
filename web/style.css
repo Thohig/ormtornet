@@ -490,3 +490,5 @@ body.touch #side { overflow-y: auto; }
   outline: none;
 }
 #me .rost { color: #e3b8f0; }
+.item.active { cursor: pointer; }
+.item.active:hover { color: var(--hi); }

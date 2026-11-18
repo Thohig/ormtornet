@@ -205,6 +205,10 @@ func (g *Game) actionText(p *Player) string {
 		return g.choiceWord(a)
 	case a[0] == 'm':
 		return "styr en varelse"
+	case isItemAction(a):
+		if _, t, _, ok := g.parseItemAction(p, a); ok {
+			return "använder " + t.Kort
+		}
 	}
 	words := map[string]string{"N": "går norrut", "E": "går österut", "S": "går söderut", "W": "går västerut",
 		actWait: "väntar", actTake: "tar skatt", actSearch: "söker", actDrink: "dricker"}
