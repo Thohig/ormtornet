@@ -25,7 +25,9 @@
         "-ai",
         "2",
         "-turtid",
-        "8s"
+        "8s",
+        "-synlighet",
+        "egen"
       ],
       "port": 8091
     }

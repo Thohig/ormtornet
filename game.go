@@ -47,7 +47,7 @@ type Config struct {
 	AI           int    // önskat antal datorspelare
 	AbsentRounds int    // rundor innan AI tar över en frånvarande vandrare, 0 = aldrig
 	PvP          string // strid mellan vandrare: "av", "pa" eller "halva"
-	Sight        string // vilka vandrare man ser: "alla" eller "moten"
+	Sight        string // vilka vandrare och rum man ser: "alla", "moten" eller "egen"
 	GMMode       bool   // spelledarläge: spelledaren spelar inte och ser allt
 	Reveal       bool   // false stänger av avslöjandet
 	SunMax       int
@@ -110,8 +110,9 @@ type Player struct {
 	Action   string
 	Treasure int
 	Status   string
-	Seen     map[string]bool // fällor och varelser spelaren har mött
-	bot      *botBrain       // satt för datorstyrda vandrare
+	Seen     map[string]bool          // fällor och varelser spelaren har mött
+	known    [gridSize][gridSize]bool // rum vandraren själv har varit i, för synligheten "egen"
+	bot      *botBrain                // satt för datorstyrda vandrare
 
 	awayRound int  // rundan då människan lämnade mitt i vandringen, 0 om den är här
 	takenOver bool // en AI-spelare styr vandraren medan människan är borta
@@ -347,7 +348,7 @@ type stateMsg struct {
 	PvP        string        `json:"pvp"` // om det går att strida mot andra vandrare här
 	Paused     bool          `json:"paused,omitempty"`
 	SleepText  string        `json:"sleepText,omitempty"`
-	Sight      string        `json:"sight"` // "alla" eller "moten"
+	Sight      string        `json:"sight"` // "alla", "moten" eller "egen"
 	Players    []playerView  `json:"players"`
 	Rooms      []roomView    `json:"rooms"`
 	Results    []resultView  `json:"results,omitempty"`
@@ -415,17 +416,22 @@ func (g *Game) soundAll(s string) {
 // vandrare bara i samma rum. Den döda spelaren som styr varelserna ser alla,
 // annars kan den inte jaga, och när vandringen är slut syns alla igen.
 func (g *Game) sees(me, o *Player) bool {
-	if g.cfg.Sight != sightMeet || g.phase != phasePlay || g.isController(me) {
+	if g.cfg.Sight == sightAll || g.cfg.Sight == "" || g.phase != phasePlay || g.isController(me) {
 		return true
 	}
 	return me.Status == statusIn && o.Status == statusIn && me.Cellar == 0 &&
 		o.X == me.X && o.Y == me.Y
 }
 
+// hidesOthers är sant när vandrarna inte ser var de andra är.
+func (g *Game) hidesOthers() bool {
+	return g.cfg.Sight == sightMeet || g.cfg.Sight == sightOwn
+}
+
 // hiddenText väljer den vaga varianten av en text (nyckeln med "_dolt")
 // när vandrarna inte ser varandra, om den finns i datafilerna.
 func (g *Game) hiddenText(key string, vars ...string) string {
-	if g.cfg.Sight == sightMeet && len(g.data.Texter[key+"_dolt"]) > 0 {
+	if g.hidesOthers() && len(g.data.Texter[key+"_dolt"]) > 0 {
 		key += "_dolt"
 	}
 	return g.data.Text(key, vars...)
@@ -434,6 +440,7 @@ func (g *Game) hiddenText(key string, vars ...string) string {
 // stateFor bygger det en viss spelare får se. Andras skatt och val av drag
 // hålls hemliga tills spelet är slut.
 func (g *Game) stateFor(me *Player) stateMsg {
+	g.noteRoom(me)
 	st := stateMsg{
 		T: "state", You: me.ID, Size: gridSize, Level: g.level, Reveal: g.cfg.Reveal,
 		Phase: g.phase, Sun: g.sun, SunMax: g.cfg.SunMax, Round: g.round,
@@ -476,7 +483,7 @@ func (g *Game) stateFor(me *Player) stateMsg {
 	for y := range gridSize {
 		for x := range gridSize {
 			r := &g.rooms[y][x]
-			if !r.Revealed || (blind && (x != me.X || y != me.Y)) {
+			if !g.knowsRoom(me, x, y) || (blind && (x != me.X || y != me.Y)) {
 				continue
 			}
 			rv := roomView{X: x, Y: y, D: r.Doors, K: r.Kind, Exit: -1, Name: g.roomName(r), Mark: r.Mark, S: r.Searched}
@@ -555,7 +562,29 @@ func (g *Game) placeAtCorner(p *Player) {
 	p.HP = g.data.Regler.Liv
 	p.Seen = map[string]bool{}
 	p.Potions, p.Stuck, p.Cellar, p.Poison, p.Dark = 0, 0, 0, 0, 0
+	p.known = [gridSize][gridSize]bool{}
 	g.reveal(cn.x, cn.y)
+	g.noteRoom(p)
+}
+
+// noteRoom kommer ihåg att vandraren har varit i rummet den står i.
+func (g *Game) noteRoom(p *Player) {
+	if p.Status == statusIn && p.Cellar == 0 && inBounds(p.X, p.Y) {
+		p.known[p.Y][p.X] = true
+	}
+}
+
+// knowsRoom är sant om me ser rummet på sin karta. Med synligheten "egen"
+// ser man bara rum man själv har varit i. Den döda spelaren som styr
+// varelserna ser hela tornet, och när vandringen är slut syns allt.
+func (g *Game) knowsRoom(me *Player, x, y int) bool {
+	if !g.rooms[y][x].Revealed {
+		return false
+	}
+	if g.cfg.Sight != sightOwn || g.phase != phasePlay || g.isController(me) {
+		return true
+	}
+	return me.known[y][x]
 }
 
 func (g *Game) Join(c *Client, rawName string) {
@@ -749,8 +778,11 @@ func (g *Game) startGame() {
 	if s := g.data.difficulty(g.cfg.Difficulty); s != nil {
 		g.logAll(g.data.Text("svarighet", "namn", s.Namn, "liv", strconv.Itoa(g.data.Regler.Liv)), "dim")
 	}
-	if g.cfg.Sight == sightMeet {
+	switch g.cfg.Sight {
+	case sightMeet:
 		g.logAll(g.data.Text("synlighet_moten"), "dim")
+	case sightOwn:
+		g.logAll(g.data.Text("synlighet_egen"), "dim")
 	}
 	g.startRound()
 }
@@ -1091,18 +1123,21 @@ func (g *Game) move(p *Player, d Dir, depth int) {
 	isNew := !target.Revealed
 	g.reveal(nx, ny)
 	p.X, p.Y = nx, ny
+	g.noteRoom(p)
 
 	name := g.roomName(target)
 	if isNew {
-		g.soundAll("nyttrum")
+		g.newRoomSound(p)
 		if p.Dark > 0 {
 			g.logTo(p, g.data.Text("morker_nytt"), "dim")
 		} else {
 			g.logTo(p, name+".", "rubrik")
 			g.logTo(p, g.describe(p, target, nx, ny), "")
 		}
-		g.logOthers(p, g.hiddenText("nytt_rum_andra",
-			"namn", p.Name, "region", g.data.region(nx, ny)), "info")
+		if g.cfg.Sight != sightOwn {
+			g.logOthers(p, g.hiddenText("nytt_rum_andra",
+				"namn", p.Name, "region", g.data.region(nx, ny)), "info")
+		}
 		if target.Event != "" {
 			ev := target.Event
 			target.Event = ""
@@ -1163,4 +1198,14 @@ func (g *Game) serve(conn *wsConn, local bool) {
 	g.Leave(c)
 	g.mu.Unlock()
 	conn.Close()
+}
+
+// newRoomSound spelar ljudet för ett nytt rum. Med synligheten "egen" hör
+// bara den som gick in det, annars hela tornet.
+func (g *Game) newRoomSound(p *Player) {
+	if g.cfg.Sight == sightOwn {
+		g.soundTo(p, "nyttrum")
+		return
+	}
+	g.soundAll("nyttrum")
 }

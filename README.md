@@ -61,7 +61,7 @@ Flaggor:
 - `-min 2` minsta antal spelare för att börja, datorspelare inräknade (sätt `-min 1` för att prova ensam)
 - `-ai 2` antal datorstyrda vandrare (0–3, eller 4 i spelledarläget)
 - `-svarighet normal` svårighet: `latt`, `normal`, `svar` eller `mardrom`
-- `-synlighet moten` vilka vandrare man ser: `moten` (bara i samma rum) eller `alla`
+- `-synlighet moten` vilka vandrare och rum man ser: `moten` (andra vandrare bara i samma rum), `egen` (dessutom bara egna rum på kartan) eller `alla`
 - `-avslojande=false` stänger av avslöjandet, för spelare som redan känner till tornets hemlighet
 - `-oppna` öppnar introt i webbläsaren när servern har startat; på den här datorn leder det till värdsidan
 - `-vaken` håller datorn vaken så länge servern är igång
@@ -207,6 +207,16 @@ Att någon går ut eller dör får alla veta.
 
 Den döda spelaren som styr varelserna ser alla vandrare. Spelledaren ser
 allt i översikten, och när vandringen är slut syns alla igen.
+
+Med "Vandrarna syns: bara när de möts, egen karta" på värdsidan, eller
+`-synlighet egen`, har varje vandrare dessutom sin egen karta. Den visar
+bara rum du själv har gått igenom, med fällornas tecken och varelserna i
+dem. Rummen finns ändå bara en gång i tornet: en fälla slår bara till för
+den som först går in, och den som kommer efter ser tecknet. Ljudet för ett
+nytt rum hör bara den som gick in, och tornet berättar inte om andras nya
+rum. Vill ni veta hur tornet ser ut får ni berätta för varandra. Den döda
+spelaren som styr varelserna ser hela tornet så långt det har vuxit fram,
+och när vandringen är slut syns hela tornet för alla.
 
 Med "Vandrarna syns: alltid, för alla" på värdsidan, eller `-synlighet alla`,
 syns alla på kartan som förut.

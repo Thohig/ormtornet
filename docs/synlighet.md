@@ -1,8 +1,8 @@
 # Förslag: Synlighet
 
-Status: förslaget skrevs 2026-11-18. Steg 1 är byggt och är förval (README,
-"Vem ser vem"). Steg 2 och 3 är inte byggda. Användaren bestämmer om de ska
-byggas.
+Status: förslaget skrevs 2026-11-18. Steg 1 och 2 är byggda (README, "Vem
+ser vem"). Steg 1 är förval, steg 2 väljs med "egen karta". Steg 3 är inte
+byggt. Användaren bestämmer om det ska byggas.
 
 Varje vandrare ser bara sig själv. De andra syns bara när man möter dem i
 samma rum. Ingen vet säkert var de andra är, hur långt de har kommit eller
@@ -117,7 +117,19 @@ Texterna ligger i `texter.json`.
 - Den döda spelaren som styr varelserna ser alla vandrare.
 - De vaga texterna ligger i datafilerna med `_dolt` och `andra_dolt`.
 
+## Beslut för steg 2
+
+- Steg 2 är ett eget val, `egen`, och inte förval. Förvalet är fortfarande
+  `moten`.
+- Ett rum blir känt när man står i det, även i mörker. En hemlig gång gör
+  inte grannrummet känt, bara dörren dit.
+- Den döda spelaren som styr varelserna ser hela tornet så långt det har
+  vuxit fram, och när vandringen är slut ser alla hela tornet.
+- Texterna om att någon faller ner i källaren eller kommer upp, och om
+  fällor, finns kvar som ljud från en del av tornet. Bara raden om nya rum
+  tas bort.
+
 ## Att bestämma
 
-- Om steg 2 och 3 ska byggas.
-- I steg 2: om den som dör ska se hela tornet medan den styr varelserna.
+- Om steg 3 ska byggas.
+- Om "egen karta" ska bli förval.

@@ -294,7 +294,7 @@ func (g *Game) moveMonsters() {
 func (g *Game) monsterViews(me *Player, blind bool) []monsterView {
 	var out []monsterView
 	for _, m := range g.monsters {
-		if !g.rooms[m.Y][m.X].Revealed || (blind && (m.X != me.X || m.Y != me.Y)) {
+		if !g.knowsRoom(me, m.X, m.Y) || (blind && (m.X != me.X || m.Y != me.Y)) {
 			continue
 		}
 		t := g.data.monsterType(m.Type)

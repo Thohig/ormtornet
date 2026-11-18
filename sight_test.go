@@ -91,3 +91,75 @@ func TestSightSetting(t *testing.T) {
 		t.Fatalf("settingsFrom %q", s.Synlighet)
 	}
 }
+
+func hasRoom(st stateMsg, x, y int) bool {
+	for _, r := range st.Rooms {
+		if r.X == x && r.Y == y {
+			return true
+		}
+	}
+	return false
+}
+
+func TestSightOwnMap(t *testing.T) {
+	g, a, b := startTwo(t)
+	g.cfg.Sight = sightOwn
+	pa, pb := a.player, b.player
+	putInRoom(g, pa, 4, 3)
+	putInRoom(g, pb, 1, 1)
+	g.rooms[3][5] = Room{}
+	g.noteRoom(pa)
+	g.noteRoom(pb)
+	logs(b)
+
+	// Alva går in i ett nytt rum. Bo får inte veta något och ser inte rummet.
+	g.move(pa, East, 0)
+	if !hasRoom(g.stateFor(pa), 5, 3) {
+		t.Fatal("Alva ser inte rummet hon gick in i")
+	}
+	if hasRoom(g.stateFor(pb), 5, 3) || hasRoom(g.stateFor(pb), 4, 3) {
+		t.Fatal("Bo ser rum han aldrig har varit i")
+	}
+	for _, line := range logs(b) {
+		if strings.Contains(line, "nytt rum") || strings.Contains(line, "ny väg") {
+			t.Fatalf("Bo fick höra om det nya rummet: %q", line)
+		}
+	}
+	// Bo ser sin egen startport.
+	cn := corners[pb.Slot]
+	if !hasRoom(g.stateFor(pb), cn.x, cn.y) {
+		t.Fatal("Bo ser inte sin egen port")
+	}
+
+	// En varelse i ett rum Bo inte känner till syns inte för honom.
+	g.monsters = append(g.monsters, &Monster{ID: 99, Type: g.data.Monster.Typer[0].ID, X: 5, Y: 3, HP: 1})
+	for _, m := range g.stateFor(pb).Monsters {
+		if m.ID == 99 {
+			t.Fatal("Bo ser en varelse i ett okänt rum")
+		}
+	}
+
+	// När Bo går dit blir rummet hans.
+	putInRoom(g, pb, 5, 3)
+	if !hasRoom(g.stateFor(pb), 5, 3) {
+		t.Fatal("Bo ser inte rummet han står i")
+	}
+
+	// I slutet syns hela tornet.
+	g.phase = phaseEnd
+	if !hasRoom(g.stateFor(pb), 4, 3) {
+		t.Fatal("hela tornet syns inte i slutet")
+	}
+}
+
+func TestSightOwnController(t *testing.T) {
+	g, a, b := startTwo(t)
+	g.cfg.Sight = sightOwn
+	pa, pb := a.player, b.player
+	putInRoom(g, pb, 6, 6)
+	pa.Status = statusDead
+	g.controller = pa.ID
+	if !hasRoom(g.stateFor(pa), 6, 6) {
+		t.Fatal("den som styr varelserna ser inte hela tornet")
+	}
+}

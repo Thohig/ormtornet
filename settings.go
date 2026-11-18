@@ -21,12 +21,13 @@ type Settings struct {
 	Strid      string `json:"strid"`         // strid mellan vandrare: "av", "pa" eller "halva"
 	Spelledare bool   `json:"spelledarlage"` // spelledaren spelar inte själv och ser allt
 	Svarighet  string `json:"svarighet"`     // förval i data/svarighet.json, tomt för standard
-	Synlighet  string `json:"synlighet"`     // vilka vandrare man ser: "alla" eller "moten"
+	Synlighet  string `json:"synlighet"`     // vilka vandrare och rum man ser: "alla", "moten" eller "egen"
 }
 
 const (
 	sightAll  = "alla"
 	sightMeet = "moten" // andra vandrare syns bara i samma rum
+	sightOwn  = "egen"  // som "moten", och var och en ser bara rum den själv har varit i
 )
 
 var defaultSettings = Settings{AI: 0, Min: 2, Sol: 40, Turtid: 30, Avslojande: true, Franvaro: 2, Strid: pvpOn, Synlighet: sightMeet}
@@ -49,7 +50,7 @@ func (s Settings) normalize() Settings {
 	if s.Strid != pvpOff && s.Strid != pvpOn && s.Strid != pvpHalf {
 		s.Strid = pvpOn
 	}
-	if s.Synlighet != sightAll && s.Synlighet != sightMeet {
+	if s.Synlighet != sightAll && s.Synlighet != sightMeet && s.Synlighet != sightOwn {
 		s.Synlighet = sightMeet
 	}
 	return s

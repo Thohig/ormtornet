@@ -57,7 +57,7 @@ func (g *Game) trigger(p *Player, t *Trap, depth int) {
 	g.logTo(p, t.Namn+"!", "varn")
 	g.logTo(p, pick(t.Texter), "")
 	others := t.Andra
-	if g.cfg.Sight == sightMeet && len(t.AndraDolt) > 0 {
+	if g.hidesOthers() && len(t.AndraDolt) > 0 {
 		others = t.AndraDolt
 	}
 	if other := pick(others); other != "" {
@@ -127,7 +127,8 @@ func (g *Game) leaveCellar(p *Player) {
 	p.X, p.Y = s[0], s[1]
 	room := g.reveal(p.X, p.Y)
 	room.Event = "" // ingen ny fälla direkt efter källaren
-	g.soundAll("nyttrum")
+	g.noteRoom(p)
+	g.newRoomSound(p)
 	g.logTo(p, g.data.Text("kallare_ut", "rum", g.roomName(room)), "info")
 	g.logTo(p, g.describe(p, room, p.X, p.Y), "")
 	g.logOthers(p, g.hiddenText("kallare_ut_andra", "namn", p.Name, "region", g.data.region(p.X, p.Y)), "info")

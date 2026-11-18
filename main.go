@@ -32,7 +32,7 @@ func main() {
 	bots := flag.Int("ai", defaultSettings.AI, "antal datorstyrda vandrare (0-3, eller 4 i spelledarläget)")
 	difficulty := flag.String("svarighet", "", "svårighet: latt, normal, svar eller mardrom (förvalen står i data/svarighet.json)")
 	reveal := flag.Bool("avslojande", defaultSettings.Avslojande, "låt tornet avslöja sin hemlighet (false för den som redan känner till den)")
-	sight := flag.String("synlighet", defaultSettings.Synlighet, "vilka vandrare man ser: alla, eller moten för bara dem man möter")
+	sight := flag.String("synlighet", defaultSettings.Synlighet, "vilka vandrare och rum man ser: alla, moten (bara dem man möter) eller egen (dessutom bara egna rum)")
 	settingsPath := flag.String("installningar", defaultSettingsPath(), "fil där spelledarens inställningar sparas (tom för att inte spara)")
 	openPage := flag.Bool("oppna", false, "öppna introt i webbläsaren när servern har startat; det leder till värdsidan")
 	awake := flag.Bool("vaken", false, "håll datorn vaken så länge servern är igång")
