@@ -82,11 +82,11 @@ func (g *Game) AddBots(n int) int {
 		}
 		g.nextID++
 		p := &Player{
-			ID: g.nextID, Name: name, Slot: slot, Corner: slot,
+			ID: g.nextID, Name: name, Slot: slot,
 			bot: &botBrain{pers: &ai.Personligheter[g.botCount()%len(ai.Personligheter)], habits: map[string]map[string]int{}},
 		}
 		g.players[slot] = p
-		g.placeAtCorner(p)
+		g.fitTower(p)
 		g.offerClasses(p)
 		added++
 	}

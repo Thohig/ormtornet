@@ -108,7 +108,7 @@ func (g *Game) GMView(visible bool) gmView {
 	}
 	m := stateMsg{
 		T: "state", You: 0, Size: g.size, Level: g.level, Reveal: g.cfg.Reveal,
-		Phase: g.phase, Sun: g.sun, SunMax: g.cfg.SunMax, Round: g.round,
+		Phase: g.phase, Sun: g.sun, SunMax: g.sunMax, Round: g.round,
 		Sleep: -1,
 	}
 	v := gmView{MaxHP: g.data.Regler.Liv, Level: g.level, Clues: len(g.usedClues), Players: []gmPlayer{}}

@@ -50,7 +50,7 @@ func (g *Game) pvpStatus(p *Player) string {
 		return pvpDisabled
 	case g.rooms[p.Y][p.X].Kind == "ingang":
 		return pvpPeace
-	case g.cfg.PvP == pvpHalf && g.sun > g.cfg.SunMax/2:
+	case g.cfg.PvP == pvpHalf && g.sun > g.sunMax/2:
 		return pvpTooEarly
 	}
 	return pvpYes

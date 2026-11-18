@@ -18,7 +18,9 @@ const MapView = (() => {
     mark: "#c0503e",
     monster: "#e0806a",
   };
-  const PLAYER_COLORS = ["#ffcc66", "#66e0ff", "#ff7a9a", "#9dff7a"];
+  // Åtta färger som skiljer sig i ljushet och ton, så att de går att skilja
+  // åt även för den som har svårt att se skillnad på rött och grönt.
+  const PLAYER_COLORS = ["#ffcc66", "#66e0ff", "#ff7a9a", "#9dff7a", "#c9a0ff", "#ff9a3c", "#3fd0b0", "#f2f2f2"];
 
   const WALL = ["⣿", "⣷", "⣾", "⡿", "⢿", "⣯", "⣟", "⣻", "⣽"];
   const ARROWS = ["▲", "▶", "▼", "◀"];
@@ -92,10 +94,19 @@ const MapView = (() => {
     put(x, y, ch, color);
   }
 
-  // Spelarnas platser inne i ett rum, en per hörnplats.
-  const SLOTS = [[2, 1], [5, 1], [2, 3], [5, 3]];
+  // Spelarnas platser inne i ett rum, en per plats i listan. Mitten hålls
+  // fri åt tecken för fällor och varelser.
+  const SLOTS = [[2, 1], [5, 1], [2, 3], [5, 3], [1, 2], [6, 2], [3, 1], [4, 3]];
 
   let canvas, ctx, cols, rows, cellW, cellH, fontPx;
+  // Utsnittet: i ett stort torn på en liten skärm visas bara rummen runt den
+  // egna vandraren, så att tecknen går att läsa. Ett tryck på kartan växlar.
+  const VIEW_ROOMS = 9;
+  const MIN_FONT = 8;
+  let towerSize = 0;
+  let viewing = false; // utsnittet används just nu
+  let wantWhole = false; // den som spelar vill se hela tornet
+  let vcols = 0, vrows = 0, ox = 0, oy = 0;
   let grid, colr;
 
   function hash(x, y) {
@@ -118,6 +129,7 @@ const MapView = (() => {
     ctx = canvas.getContext("2d");
     cols = size * RW + 1;
     rows = size * RH + 1;
+    towerSize = size;
     if (!listening) {
       window.addEventListener("resize", resize);
       listening = true;
@@ -125,25 +137,35 @@ const MapView = (() => {
     resize();
   }
 
+  // fit räknar ut teckenstorleken för c x r tecken i rutan box.
+  function fit(box, c, r) {
+    let px = Math.max(6, Math.floor(Math.min(box.width / (c * 0.62), box.height / (r * 1.12))));
+    // Avrundningen kan göra kartan lite för bred på en smal skärm.
+    while (px > 6 && (c * Math.round(px * 0.62) > box.width || r * Math.round(px * 1.12) > box.height)) px--;
+    return px;
+  }
+
   function resize() {
     if (!canvas) return;
     const box = canvas.parentElement.getBoundingClientRect();
-    const byW = box.width / (cols * 0.62);
-    const byH = box.height / (rows * 1.12);
-    fontPx = Math.max(6, Math.floor(Math.min(byW, byH)));
+    fontPx = fit(box, cols, rows);
+    viewing = false;
+    vcols = cols;
+    vrows = rows;
+    const mine = lastState && lastState.you;
+    if (fontPx < MIN_FONT && towerSize > VIEW_ROOMS && mine && !wantWhole) {
+      viewing = true;
+      vcols = VIEW_ROOMS * RW + 1;
+      vrows = VIEW_ROOMS * RH + 1;
+      fontPx = fit(box, vcols, vrows);
+    }
     cellW = Math.round(fontPx * 0.62);
     cellH = Math.round(fontPx * 1.12);
-    // Avrundningen kan göra kartan lite för bred på en smal skärm.
-    while (fontPx > 6 && (cols * cellW > box.width || rows * cellH > box.height)) {
-      fontPx--;
-      cellW = Math.round(fontPx * 0.62);
-      cellH = Math.round(fontPx * 1.12);
-    }
     const dpr = window.devicePixelRatio || 1;
-    canvas.width = cols * cellW * dpr;
-    canvas.height = rows * cellH * dpr;
-    canvas.style.width = cols * cellW + "px";
-    canvas.style.height = rows * cellH + "px";
+    canvas.width = vcols * cellW * dpr;
+    canvas.height = vrows * cellH * dpr;
+    canvas.style.width = vcols * cellW + "px";
+    canvas.style.height = vrows * cellH + "px";
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     if (lastState) draw(lastState);
   }
@@ -181,11 +203,13 @@ const MapView = (() => {
 
     // Utgång genom ytterväggen. På sista nivån är porten en mun med tänder,
     // och när spelet är slut har den stängts.
-    const ex = r.exit === 1 ? x0 + RW : r.exit === 3 ? x0 : -1;
+    // Portarna i hörnen går ut åt sidan, portarna mitt på sidorna rakt ut.
+    const ex = r.exit === 1 ? x0 + RW : r.exit === 3 ? x0 : r.exit >= 0 ? x0 + mid : -1;
+    const ey = r.exit === 0 ? y0 : r.exit === 2 ? y0 + RH : midY;
     if (ex >= 0) {
-      if (lvl === 4 && lastState && lastState.phase === "slut") put(ex, midY, "⣿", "#d0503a");
-      else if (lvl === 4) put(ex, midY, Math.floor(nowMs / 400) % 2 ? "⩚" : "⩛", "#ff7a5a");
-      else put(ex, midY, r.exit === 1 ? "›" : "‹", COLORS.exit);
+      if (lvl === 4 && lastState && lastState.phase === "slut") put(ex, ey, "⣿", "#d0503a");
+      else if (lvl === 4) put(ex, ey, Math.floor(nowMs / 400) % 2 ? "⩚" : "⩛", "#ff7a5a");
+      else put(ex, ey, ["˄", "›", "˅", "‹"][r.exit], COLORS.exit);
     }
 
     if (r.mark) put(x0 + Math.floor(RW / 2), y0 + Math.floor(RH / 2), r.mark, COLORS.mark);
@@ -205,6 +229,7 @@ const MapView = (() => {
   }
 
   let lastState = null;
+  let centerX = 0, centerY = 0; // rummet utsnittet senast följde
   const PING_MS = 4500;
   let pings = [];
 
@@ -213,7 +238,12 @@ const MapView = (() => {
   }
 
   function draw(state, t) {
+    const first = !lastState;
     lastState = state;
+    if (first) {
+      resize(); // nu vet kartan vem som tittar, och om utsnittet behövs
+      return;
+    }
     if (!ctx) return;
     reveal = !!state.reveal;
     lvl = reveal ? Math.min(4, Math.max(1, state.level || 1)) : 1;
@@ -306,23 +336,43 @@ const MapView = (() => {
       if (blink) put(pos[0], pos[1], ARROWS[dir], color);
     }
 
-    ctx.clearRect(0, 0, cols * cellW, rows * cellH);
+    // Utsnittet följer den egna vandraren, utom när den inte syns.
+    ox = 0;
+    oy = 0;
+    if (viewing) {
+      const half = Math.floor(VIEW_ROOMS / 2);
+      const meNow = state.players.find((p) => p.id === state.you);
+      if (meNow && meNow.x >= 0) {
+        centerX = meNow.x;
+        centerY = meNow.y;
+      }
+      const limit = towerSize - VIEW_ROOMS;
+      ox = Math.max(0, Math.min(limit, centerX - half)) * RW;
+      oy = Math.max(0, Math.min(limit, centerY - half)) * RH;
+    }
+    ctx.clearRect(0, 0, vcols * cellW, vrows * cellH);
     ctx.font = fontPx + "px Menlo, Monaco, monospace";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    for (let y = 0; y < rows; y++) {
-      for (let x = 0; x < cols; x++) {
-        const ch = grid[y][x];
-        if (ch === " ") continue;
-        ctx.fillStyle = colr[y][x];
+    for (let y = 0; y < vrows; y++) {
+      for (let x = 0; x < vcols; x++) {
+        const ch = grid[y + oy] && grid[y + oy][x + ox];
+        if (!ch || ch === " ") continue;
+        ctx.fillStyle = colr[y + oy][x + ox];
         ctx.fillText(ch, x * cellW + cellW / 2, y * cellH + cellH / 2);
       }
     }
+  }
+
+  // toggleWhole växlar mellan utsnittet och hela tornet.
+  function toggleWhole() {
+    wantWhole = !wantWhole;
+    resize();
   }
 
   function wake() {
     wokeAt = performance.now();
   }
 
-  return { setup, draw, resize, ping, wake, PLAYER_COLORS };
+  return { setup, draw, resize, ping, wake, toggleWhole, PLAYER_COLORS };
 })();

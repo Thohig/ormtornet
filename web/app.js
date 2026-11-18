@@ -439,7 +439,7 @@ function updateTimer() {
   if (!state) return;
   if (state.phase === "lobby") {
     const n = state.players.filter((p) => p.online).length;
-    el.textContent = n < state.minPlayers ? "väntar på vandrare" : "väntar på att alla är redo";
+    el.textContent = (n < state.minPlayers ? "väntar på vandrare" : "väntar på att alla är redo") + " · tornet " + state.size + " × " + state.size;
     el.classList.remove("urgent");
     return;
   }
@@ -814,6 +814,10 @@ const Intro = (() => {
     entering() { return entering; },
   };
 })();
+
+// Ett tryck på kartan växlar mellan utsnittet och hela tornet, när tornet
+// är för stort för skärmen.
+$("map").addEventListener("click", () => MapView.toggleWhole());
 
 $("enter").addEventListener("click", (e) => {
   e.stopPropagation();

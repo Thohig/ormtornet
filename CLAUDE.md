@@ -1,6 +1,6 @@
 # Ormtornet
 
-En dungeon crawler för 2–4 spelare i webbläsaren på ett lokalt nätverk.
+En dungeon crawler för 2–8 spelare i webbläsaren på ett lokalt nätverk.
 README beskriver spelet, flaggorna och filerna.
 
 ## Arbetssätt

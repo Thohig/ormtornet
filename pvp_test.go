@@ -111,6 +111,11 @@ func TestBotsFightEachOtherOnlyWithoutHumans(t *testing.T) {
 		t.Fatal("en AI-spelare gav sig på en annan AI-spelare fast en människa var med")
 	}
 	g.Leave(h)
+	// I lobbyn byggs tornet om när någon går, så ställ AI-spelarna i rummet igen.
+	for _, p := range bots {
+		p.Status = statusIn
+		putInRoom(g, p, 4, 1)
+	}
 	if g.botFoe(bots[0]) != bots[1] {
 		t.Fatal("utan människor ska AI-spelarna kunna slåss med varandra")
 	}

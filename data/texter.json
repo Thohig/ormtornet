@@ -6,7 +6,11 @@
     "nordväst",
     "nordöst",
     "sydväst",
-    "sydöst"
+    "sydöst",
+    "norr",
+    "söder",
+    "väster",
+    "öster"
   ],
   "riktningar": [
     "norr",

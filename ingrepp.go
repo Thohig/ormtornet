@@ -143,7 +143,7 @@ func (g *Game) gmSun(delta int) error {
 		return nil
 	}
 	before := g.sun
-	g.sun = max(1, min(g.cfg.SunMax, g.sun+delta))
+	g.sun = max(1, min(g.sunMax, g.sun+delta))
 	if g.sun == before {
 		return nil
 	}

@@ -6,6 +6,36 @@ eller leder tornet.
 
 ## 2026-11-18
 
+### Upp till 8 spelare
+
+Tornet tar emot upp till 8 vandrare, AI-spelarna inräknade, och växer med
+dem:
+
+| Vandrare | Torn | Portar | Sol (med 40 på värdsidan) |
+|---|---|---|---|
+| 2–4 | 9 × 9 | 4 i hörnen | 40 |
+| 5–6 | 11 × 11 | 8 | 50 |
+| 7–8 | 13 × 13 | 8 | 60 |
+
+- Tornet byggs om i lobbyn när någon kommer eller går, så att det alltid
+  har rätt storlek. Den som redan är redo förblir det.
+- I ett torn på 11 × 11 eller mer finns fyra nya portar mitt på varje sida,
+  med tre dörrar inåt och en utgång rakt ut. De heter norr, söder, väster
+  och öster i texterna.
+- Solen räknas från värdsidans val för ett torn på 9 × 9 och växer lika
+  mycket som vägen till kammaren.
+- Ormleken får två extra sovkort per vandrare över fyra
+  (`sovkort_per_vandrare_over_fyra` i `ormen.json`), så att risken växer i
+  samma takt som med fyra.
+- Spelledaren väljer 0–7 AI-spelare, eller 8 i spelledarläget, och minst
+  1–8 vandrare. Värdsidan visar tornets storlek och solen under Vid porten.
+- Väljer spelledaren en storlek blir tornet aldrig mindre än vad antalet
+  vandrare kräver.
+- Åtta färger och åtta platser i varje rum. AI-spelarna har tio namn.
+- På en liten skärm visar kartan 9 × 9 rum runt den egna vandraren när
+  tornet är för stort för att läsas. Ett tryck på kartan visar hela tornet,
+  och ett tryck till går tillbaka.
+
 ### Tornets storlek
 
 Spelledaren kan välja "Tornets storlek: 9 × 9, 11 × 11 eller 13 × 13" på

@@ -1,7 +1,7 @@
 {
   "ai": {
     "_om": "Datorstyrda vandrare. Personligheterna turas om: den första datorspelaren får den första personligheten, nästa den andra och så vidare. Namnen väljs i tur och ordning.",
-    "namn": ["Ingrid", "Sigge", "Ylva", "Tore", "Märta", "Gösta"],
+    "namn": ["Ingrid", "Sigge", "Ylva", "Tore", "Märta", "Gösta", "Hedvig", "Folke", "Sigrid", "Alrik"],
 
     "personligheter": [
       {

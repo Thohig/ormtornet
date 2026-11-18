@@ -140,6 +140,7 @@
     <h2>Vid porten</h2>
     <p id="status">…</p>
     <ul id="slots"></ul>
+    <p class="dimtext" id="towerInfo"></p>
     <div class="buttons">
       <button class="btn" id="startNow" type="button">Starta nu</button>
     </div>
@@ -195,11 +196,11 @@
     <h2>Inför nästa vandring</h2>
     <form id="settings" autocomplete="off">
       <label for="sAI">AI-spelare</label>
-      <select id="sAI" name="ai"><option>0</option><option>1</option><option>2</option><option>3</option></select>
+      <select id="sAI" name="ai"><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option></select>
       <span class="note" id="aiNote"></span>
 
       <label for="sMin">Minst antal vandrare</label>
-      <select id="sMin" name="min"><option>1</option><option>2</option><option>3</option><option>4</option></select>
+      <select id="sMin" name="min"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option></select>
       <span class="note">AI-spelare räknas med</span>
 
       <label for="sSv">Svårighet</label>
@@ -250,7 +251,7 @@
         <option value="11">11 × 11 rum</option>
         <option value="13">13 × 13 rum</option>
       </select>
-      <span class="note">automatisk är 9 × 9 för upp till fyra</span>
+      <span class="note">automatisk: 9 för upp till fyra, 11 för sex, 13 för åtta</span>
 
       <label for="sKlass">Klasser</label>
       <select id="sKlass" name="klasser">
@@ -289,7 +290,7 @@
 <script>
 "use strict";
 const $ = (id) => document.getElementById(id);
-const COLORS = ["#ffcc66", "#66e0ff", "#ff7a9a", "#9dff7a"];
+const COLORS = MapView.PLAYER_COLORS;
 let view = null;
 let closed = false;
 
@@ -375,6 +376,7 @@ function render(v) {
   $("status").textContent = statusText(v);
   $("status").classList.remove("dead");
 
+  $("towerInfo").textContent = "Tornet: " + v.size + " × " + v.size + " rum, solen går ner efter " + v.sunMax + " rundor.";
   const ul = $("slots");
   ul.textContent = "";
   for (let slot = 0; slot < v.maxPlayers; slot++) {
@@ -663,9 +665,10 @@ function renderSettings(v) {
   fillOptions($("sTur"), [15, 30, 45, 60], s.turtid);
   // Fyra AI-spelare går bara i spelledarläget, när ingen människa behöver plats.
   const aiSel = $("sAI");
-  const four = [...aiSel.options].find((o) => o.value === "4");
-  if (s.spelledarlage && !four) aiSel.append(new Option("4", "4"));
-  if (!s.spelledarlage && four) four.remove();
+  // I spelledarläget kan alla åtta vara AI-spelare, annars högst sju.
+  const all = [...aiSel.options].find((o) => o.value === "8");
+  if (s.spelledarlage && !all) aiSel.append(new Option("8", "8"));
+  if (!s.spelledarlage && all) all.remove();
   aiSel.value = String(s.ai);
   $("sMin").value = String(s.min);
   $("sSol").value = String(s.sol);

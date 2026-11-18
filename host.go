@@ -41,6 +41,7 @@ type hostView struct {
 	Players    []hostPlayer `json:"players"`
 	Settings   Settings     `json:"settings"`
 	Bots       int          `json:"bots"` // datorspelare som är med just nu
+	Size       int          `json:"size"` // tornets storlek i rum
 
 	Svarigheter []difficultyView `json:"svarigheter"` // förvalen att välja bland
 }
@@ -56,10 +57,10 @@ func (g *Game) HostView(visible bool) hostView {
 		g.seen()
 	}
 	v := hostView{
-		Phase: g.phase, Round: g.round, Sun: g.sun, SunMax: g.cfg.SunMax,
+		Phase: g.phase, Round: g.round, Sun: g.sun, SunMax: g.sunMax,
 		TurnSecs: int(g.cfg.TurnTime / time.Second), MinPlayers: g.cfg.MinPlayers,
 		MaxPlayers: maxPlayers, Reveal: g.cfg.Reveal, Players: []hostPlayer{},
-		Settings: settingsFrom(g.cfg), Bots: g.botCount(),
+		Settings: settingsFrom(g.cfg), Bots: g.botCount(), Size: g.size,
 		Svarigheter: g.base.difficulties(),
 	}
 	for _, p := range g.players {

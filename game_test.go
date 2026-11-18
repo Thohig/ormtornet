@@ -527,6 +527,7 @@ func contains(list []string, s string) bool {
 func TestRevealLevels(t *testing.T) {
 	g := testGame(t)
 	g.cfg.SunMax = 100
+	g.sunMax = 100
 	want := map[int]int{100: 1, 71: 1, 70: 2, 41: 2, 40: 3, 16: 3, 15: 4, 0: 4}
 	for sun, lvl := range want {
 		if got := g.levelFor(sun); got != lvl {

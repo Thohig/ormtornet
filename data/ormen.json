@@ -6,6 +6,7 @@
     "skatt_forlust": 0.5,
     "farre_efter_vakning": 2,
     "minst_sovkort": 3,
+    "sovkort_per_vandrare_over_fyra": 2,
 
     "kort": [
       {

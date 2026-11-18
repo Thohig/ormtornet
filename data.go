@@ -50,17 +50,18 @@ type Search struct {
 
 // Serpent styr ormen i skattkammaren och leken med ormkort.
 type Serpent struct {
-	SkattMin          int      `json:"skatt_min"`
-	SkattMax          int      `json:"skatt_max"`
-	Skada             int      `json:"skada"`
-	SkattForlust      float64  `json:"skatt_forlust"`
-	FarreEfterVakning int      `json:"farre_efter_vakning"`
-	MinstSovkort      int      `json:"minst_sovkort"`
-	Kort              []Card   `json:"kort"`
-	VaknarAndra       []string `json:"vaknar_andra"`
-	KastasUt          []string `json:"kastas_ut"`
-	SomnarOm          []string `json:"somnar_om"`
-	Somn              []string `json:"somn"`
+	SkattMin           int      `json:"skatt_min"`
+	SkattMax           int      `json:"skatt_max"`
+	Skada              int      `json:"skada"`
+	SkattForlust       float64  `json:"skatt_forlust"`
+	FarreEfterVakning  int      `json:"farre_efter_vakning"`
+	MinstSovkort       int      `json:"minst_sovkort"`
+	Kort               []Card   `json:"kort"`
+	VaknarAndra        []string `json:"vaknar_andra"`
+	SovkortPerVandrare int      `json:"sovkort_per_vandrare_over_fyra"` // fler sovkort när fler än fyra vandrar
+	KastasUt           []string `json:"kastas_ut"`
+	SomnarOm           []string `json:"somnar_om"`
+	Somn               []string `json:"somn"`
 }
 
 // Monsters styr varelserna i tornet och striderna mot dem.
@@ -180,8 +181,8 @@ func loadData(dir string) (*Data, string, error) {
 	if len(d.Rumstyper) == 0 {
 		return nil, "", fmt.Errorf("inga rumstyper")
 	}
-	if len(d.Horn) != 4 || len(d.Riktningar) != 4 || len(d.Regioner) != 3 {
-		return nil, "", fmt.Errorf("horn och riktningar ska ha 4 ord, regioner 3 rader")
+	if len(d.Horn) != maxPlayers || len(d.Riktningar) != 4 || len(d.Regioner) != 3 {
+		return nil, "", fmt.Errorf("horn ska ha 8 ord (fyra hörn och fyra sidor), riktningar 4 ord och regioner 3 rader")
 	}
 	if d.Regler.Liv <= 0 {
 		d.Regler.Liv = 6

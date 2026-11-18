@@ -7,7 +7,7 @@ ordning. Varje steg byggs, committas och provas innan nästa.
 |---|---|---|
 | 1 | Klasser | byggt |
 | 2 | Tornets storlek blir rörlig i koden, fortfarande högst 4 vandrare | byggt |
-| 3 | Upp till 8 vandrare och automatisk skalning | på gång |
+| 3 | Upp till 8 vandrare och automatisk skalning | byggt |
 
 ## Steg 1: klasser (byggt)
 
@@ -41,7 +41,21 @@ på värdsidan ("Tornets storlek: 9 / 11 / 13") för att prova.
 - Klienten ritar redan efter den storlek servern skickar. Kartan på en
   telefon behöver provas på 13×13.
 
-## Steg 3: upp till 8 vandrare och automatisk skalning
+## Steg 3: upp till 8 vandrare och automatisk skalning (byggt)
+
+Byggt som planerat, med de här besluten:
+
+- Solen: i stället för ett nytt val "automatisk" räknas värdsidans antal
+  rundor för ett torn på 9 × 9 och skalas med storleken. Då gäller sparade
+  inställningar som förut.
+- Tornet byggs om i lobbyn när antalet vandrare ändras. Portarna delas ut
+  i platsordning, och lottas när vandringen börjar om vandrarna inte ser
+  varandra.
+- Ett för litet val av storlek höjs till det antalet vandrare kräver.
+- Utsnittet på telefonen visar 9 × 9 rum och slås på när tecknen annars
+  skulle bli mindre än 8 bildpunkter. Ett tryck på kartan växlar.
+
+Det ursprungliga förslaget:
 
 | Vandrare | Torn | Väg port–kammare | Portar | Sol |
 |---|---|---|---|---|

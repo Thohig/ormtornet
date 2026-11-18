@@ -146,7 +146,8 @@ func (g *Game) ApplySettings(s Settings) (Settings, error) {
 		g.gmAnnounce(g.cfg.GMMode)
 	}
 	if g.phase == phaseLobby {
-		g.sun = g.cfg.SunMax
+		g.sunMax = g.scaledSun()
+		g.sun = g.sunMax
 	}
 	if g.cfg.Classes && g.phase != phasePlay {
 		g.offerAll()
@@ -239,6 +240,7 @@ func (g *Game) removeBot(announce bool) int {
 	for i, p := range g.players {
 		if p != nil && p.bot != nil {
 			g.players[i] = nil
+			g.fitTower(nil)
 			if announce && len(g.data.AI.Lamnar) > 0 {
 				g.logAll(fill(pick(g.aiTexts(g.data.AI.Lamnar, g.data.AI.LamnarDolt)), "namn", p.Name, "horn", g.data.Horn[p.Corner]), "dim")
 			}

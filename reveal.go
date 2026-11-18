@@ -15,7 +15,7 @@ func (g *Game) levelFor(sun int) int {
 	if !g.cfg.Reveal {
 		return 1
 	}
-	frac := float64(sun) / float64(g.cfg.SunMax)
+	frac := float64(sun) / float64(g.sunMax)
 	level := 1
 	for _, limit := range g.data.Avslojande.Granser {
 		if frac <= limit {

@@ -1,8 +1,8 @@
 # Ormtornet
 
-En dungeon crawler för 2–4 spelare i webbläsaren, på ett lokalt nätverk.
-Mitt i ett torn på 9x9 rum (11x11 eller 13x13 om spelledaren vill) sägs en
-jättelik orm sova kring en skatt.
+En dungeon crawler för 2–8 spelare i webbläsaren, på ett lokalt nätverk.
+Mitt i ett torn på 9x9 rum (11x11 för fem eller sex, 13x13 för sju eller
+åtta) sägs en jättelik orm sova kring en skatt.
 Ta så mycket du vågar och kom ut innan solen går ner.
 
 Vad som är nytt står i [docs/andringar.md](docs/andringar.md).
@@ -59,13 +59,13 @@ Flaggor:
 
 - `-addr 0.0.0.0:8080` adress och port
 - `-data data` mapp med datafilerna
-- `-sol 40` antal rundor innan solen går ner
+- `-sol 40` antal rundor innan solen går ner i ett torn på 9 × 9; större torn får fler (50 på 11 × 11, 60 på 13 × 13)
 - `-turtid 30s` längsta tid att välja drag per runda
 - `-min 2` minsta antal spelare för att börja, datorspelare inräknade (sätt `-min 1` för att prova ensam)
-- `-ai 2` antal datorstyrda vandrare (0–3, eller 4 i spelledarläget)
+- `-ai 2` antal datorstyrda vandrare (0–7, eller 8 i spelledarläget)
 - `-svarighet normal` svårighet: `latt`, `normal`, `svar` eller `mardrom`
 - `-klasser=false` vandrarna väljer ingen klass
-- `-storlek 0` tornets storlek i rum: `9`, `11` eller `13`, eller `0` för automatisk (9 × 9 tills vidare)
+- `-storlek 0` tornets storlek i rum: `9`, `11` eller `13`, eller `0` för automatisk (efter antalet vandrare). Ett torn blir aldrig för litet för alla
 - `-synlighet egen` vilka vandrare och rum man ser: `egen` (andra vandrare bara i samma rum, och bara egna rum på kartan), `moten` (andra vandrare bara i samma rum) eller `alla`
 - `-avslojande=false` stänger av avslöjandet, för spelare som redan känner till tornets hemlighet
 - `-oppna` öppnar introt i webbläsaren när servern har startat; på den här datorn leder det till värdsidan
@@ -198,7 +198,9 @@ vandringen är slut). På en smal skärm ligger knapparna fast längst ner och
 sidan rullar. Står telefonen på ljudlöst hörs inget ljud.
 
 Solen sjunker en handsbredd per runda och visas som en mätare överst.
-Gå ut genom en port i något av hörnen för att lämna tornet. Den som kommer
+Gå ut genom en port för att lämna tornet: en i varje hörn, och i ett torn
+på 11 × 11 eller mer även en mitt på varje sida. Vilken port som helst
+duger. Den som kommer
 ut med skatt räknas, och den med mest skatt vinner. Den som är kvar inne när
 solen har gått ner är förlorad.
 
@@ -212,7 +214,7 @@ lobbyn. Där du senast såg någon står ett svagt `@` i dess färg, och i
 listan över vandrare står "sågs runda 12" eller "inte sedd". Tecknet
 försvinner när du ser vandraren igen, eller när den har gått ut eller dött.
 
-Alla fyra portrummen syns på kartan för alla från början, så alla vet var
+Alla portrummen syns på kartan för alla från början, så alla vet var
 utgångarna är. Vem som börjar vid vilken port lottas när vandringen börjar,
 och var och en får bara veta sin egen. Ordningen i listan och färgen säger
 inget om porten, och när någon kommer till tornet står det inte vid vilken

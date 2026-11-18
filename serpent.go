@@ -42,6 +42,16 @@ func (g *Game) buildDeck() {
 		}
 		counts[most]--
 	}
+	// Fler vandrare tömmer leken fortare: lägg till sovkort för var och en
+	// över fyra, så att risken växer i samma takt som med fyra.
+	if extra := o.SovkortPerVandrare * max(0, g.vandrare()-4); extra > 0 {
+		for i, c := range o.Kort {
+			if !c.Vaknar {
+				counts[i] += extra
+				break
+			}
+		}
+	}
 	g.deckSleep = 0
 	for i, c := range o.Kort {
 		if !c.Vaknar {

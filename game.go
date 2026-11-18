@@ -14,7 +14,7 @@ import (
 
 const (
 	defaultSize = 9 // tornets storlek i rum, när inget annat är valt
-	maxPlayers  = 4
+	maxPlayers  = 8
 	maxNameLen  = 16
 	doorChance  = 0.55
 )
@@ -74,23 +74,48 @@ var (
 
 func (d Dir) Opp() Dir { return (d + 2) % 4 }
 
-// Varje spelarplats hör till ett hörn. Hörnrummen har två fasta dörrar inåt
-// och en utgång genom ytterväggen.
+// En port: ett rum i ytterväggen med fasta dörrar inåt och en utgång.
+// Portarna i hörnen har två dörrar inåt, de mitt på sidorna tre.
 type corner struct {
 	x, y   int
-	inward [2]Dir
+	inward []Dir
 	exit   Dir
 }
 
-// corners är portarna i tornets fyra hörn, räknade från tornets storlek.
+// corners är tornets portar, räknade från storleken: en i varje hörn, och
+// i ett torn på 11 rum eller mer även en mitt på varje sida. Ordningen
+// följer orden under "horn" i texter.json.
 func (g *Game) corners() []corner {
-	s := g.size - 1
-	return []corner{
-		{0, 0, [2]Dir{East, South}, West},
-		{s, 0, [2]Dir{West, South}, East},
-		{0, s, [2]Dir{East, North}, West},
-		{s, s, [2]Dir{West, North}, East},
+	s, c := g.size-1, g.size/2
+	ports := []corner{
+		{0, 0, []Dir{East, South}, West},
+		{s, 0, []Dir{West, South}, East},
+		{0, s, []Dir{East, North}, West},
+		{s, s, []Dir{West, North}, East},
 	}
+	if g.size >= bigTower {
+		ports = append(ports,
+			corner{c, 0, []Dir{South, East, West}, North},
+			corner{c, s, []Dir{North, East, West}, South},
+			corner{0, c, []Dir{East, North, South}, West},
+			corner{s, c, []Dir{West, North, South}, East},
+		)
+	}
+	return ports
+}
+
+// bigTower är den minsta storleken med åtta portar.
+const bigTower = 11
+
+// vandrare räknar platserna som är tagna, AI-spelare inräknade.
+func (g *Game) vandrare() int {
+	n := 0
+	for _, p := range g.players {
+		if p != nil {
+			n++
+		}
+	}
+	return n
 }
 
 // g.center() är kammarens plats, mitt i tornet.
@@ -104,13 +129,41 @@ func newGrid[T any](size int) [][]T {
 	return grid
 }
 
-// towerSize är storleken på nästa torn: spelledarens val, annars förvalet.
-// Udda, så att kammaren står mitt i.
+// towerSize är storleken på nästa torn. Automatiskt växer tornet med antalet
+// vandrare: 9 rum för upp till fyra, 11 för fem eller sex och 13 för sju
+// eller åtta. Spelledaren kan välja ett större torn, men aldrig ett som är
+// för litet för alla. Udda, så att kammaren står mitt i.
 func (g *Game) towerSize() int {
-	if s := g.cfg.Size; s >= 5 && s%2 == 1 {
+	need := defaultSize
+	switch n := g.vandrare(); {
+	case n > 6:
+		need = 13
+	case n > 4:
+		need = 11
+	}
+	if s := g.cfg.Size; s >= need && s%2 == 1 {
 		return s
 	}
-	return defaultSize
+	return need
+}
+
+// scaledSun är solens rundor i det här tornet. Spelledarens val gäller ett
+// torn på 9 rum; ett större torn får fler rundor, lika många fler som vägen
+// till kammaren är längre.
+func (g *Game) scaledSun() int {
+	return max(4, g.cfg.SunMax*(g.size-1)/(defaultSize-1))
+}
+
+// portIndex numrerar vandrarna i platsordning, så att var och en får en
+// egen port även när platserna inte följer på varandra.
+func (g *Game) assignPorts() {
+	i := 0
+	for _, p := range g.players {
+		if p != nil {
+			p.Corner = i
+			i++
+		}
+	}
 }
 
 type Room struct {
@@ -187,6 +240,7 @@ type Game struct {
 	data    *Data // datafilerna med svårighetens förval
 	cfg     Config
 	size    int // tornets bredd och höjd i rum
+	sunMax  int // solens rundor i det här tornet
 	rooms   [][]Room
 	players [maxPlayers]*Player
 	nextID  int
@@ -228,6 +282,8 @@ func NewGame(d *Data, cfg Config) *Game {
 	g := &Game{base: d, data: d.withDifficulty(cfg.Difficulty), cfg: cfg, level: 1, phase: phaseLobby, sun: cfg.SunMax, usedClues: map[string]bool{}, lastActive: time.Now(), lastReal: time.Now()}
 	g.size = g.towerSize()
 	g.rooms = newGrid[Room](g.size)
+	g.sunMax = g.scaledSun()
+	g.sun = g.sunMax
 	return g
 }
 
@@ -486,7 +542,7 @@ func (g *Game) stateFor(me *Player) stateMsg {
 	g.noteRoom(me)
 	st := stateMsg{
 		T: "state", You: me.ID, Size: g.size, Level: g.level, Reveal: g.cfg.Reveal,
-		Phase: g.phase, Sun: g.sun, SunMax: g.cfg.SunMax, Round: g.round,
+		Phase: g.phase, Sun: g.sun, SunMax: g.sunMax, Round: g.round,
 		MinPlayers: g.cfg.MinPlayers, Action: me.Action, Sight: g.cfg.Sight,
 		HP: me.HP, MaxHP: g.maxHP(me), Potions: me.Potions,
 		Stuck: me.Stuck, Cellar: me.Cellar, Poison: me.Poison, Dark: me.Dark,
@@ -705,10 +761,10 @@ func (g *Game) Join(c *Client, rawName string) {
 		return
 	}
 	g.nextID++
-	p := &Player{ID: g.nextID, Name: name, Slot: slot, Corner: slot, client: c}
+	p := &Player{ID: g.nextID, Name: name, Slot: slot, client: c}
 	g.players[slot] = p
 	c.player = p
-	g.placeAtCorner(p)
+	g.fitTower(p)
 	horn := g.data.Horn[slot]
 	if g.phase != phasePlay {
 		g.offerClasses(p)
@@ -746,6 +802,7 @@ func (g *Game) Leave(c *Client) {
 		// Utanför spelet lämnar man sin plats helt, och en datorspelare
 		// kan ta den om spelledaren vill ha fler.
 		g.players[p.Slot] = nil
+		g.fitTower(nil)
 		g.syncBots(true)
 		g.checkStart()
 	} else if g.allChosen() && !g.paused {
@@ -800,11 +857,17 @@ func (g *Game) checkStart() bool {
 func (g *Game) newTower() {
 	g.size = g.towerSize()
 	g.rooms = newGrid[Room](g.size)
+	g.sunMax = g.scaledSun()
+	if g.phase != phasePlay {
+		g.sun = g.sunMax
+	}
 	g.monsters = nil
+	g.assignPorts()
 	for _, p := range g.players {
 		if p != nil {
-			p.Corner = p.Slot
+			ready := p.Ready // den som redan är redo förblir det
 			g.placeAtCorner(p)
+			p.Ready = ready || p.bot != nil
 		}
 	}
 	g.revealPorts()
@@ -825,12 +888,14 @@ func (g *Game) drawCorners() {
 	if !g.hidesOthers() {
 		return
 	}
-	order := rand.Perm(maxPlayers)
+	order := rand.Perm(len(g.corners()))
+	i := 0
 	for _, p := range g.players {
 		if p == nil {
 			continue
 		}
-		p.Corner = order[p.Slot]
+		p.Corner = order[i]
+		i++
 		cn := g.corners()[p.Corner]
 		p.X, p.Y = cn.x, cn.y
 		p.known = newGrid[bool](g.size)
@@ -847,8 +912,12 @@ func (g *Game) startGame() {
 		g.syncBots(true) // AI-spelare kan ta de lediga platserna
 	}
 	g.ensureClasses()
+	if g.towerSize() != g.size {
+		g.newTower() // fler eller färre vandrare än när tornet byggdes
+	}
 	g.phase = phasePlay
-	g.sun = g.cfg.SunMax
+	g.sunMax = g.scaledSun()
+	g.sun = g.sunMax
 	g.round = 1
 	g.wakes = 0
 	g.buildDeck()
@@ -1078,9 +1147,9 @@ func (g *Game) sunWarning(before int) {
 	switch {
 	case passed(3):
 		key = "sol_snart"
-	case passed(g.cfg.SunMax / 4):
+	case passed(g.sunMax / 4):
 		key = "sol_kvart"
-	case passed(g.cfg.SunMax / 2):
+	case passed(g.sunMax / 2):
 		key = "sol_halv"
 	}
 	if key != "" {
@@ -1317,6 +1386,31 @@ func (g *Game) aiTexts(list, hidden []string) []string {
 		return hidden
 	}
 	return list
+}
+
+// fitTower håller tornet i lobbyn lagom stort och ger alla en egen port
+// när någon kommer eller går. Under en vandring får den som kommer sin port
+// utan att någon annan flyttas.
+func (g *Game) fitTower(p *Player) {
+	if g.phase == phaseLobby {
+		g.newTower()
+		return
+	}
+	if p != nil {
+		used := map[int]bool{}
+		for _, o := range g.players {
+			if o != nil && o != p {
+				used[o.Corner] = true
+			}
+		}
+		for i := range g.corners() {
+			if !used[i] {
+				p.Corner = i
+				break
+			}
+		}
+		g.placeAtCorner(p)
+	}
 }
 
 // newRoomSound spelar ljudet för ett nytt rum. Med synligheten "egen" hör

@@ -31,26 +31,26 @@ func TestSettingsAddAndRemoveBots(t *testing.T) {
 	}
 }
 
-func TestFourBotsOnlyInGMMode(t *testing.T) {
+func TestAllBotsOnlyInGMMode(t *testing.T) {
 	g := testGame(t)
-	got, _ := g.ApplySettings(Settings{AI: 4, Min: 2, Sol: 20, Turtid: 30})
-	if got.AI != 3 {
-		t.Fatalf("utan spelledarläge: %d AI-spelare, ville ha högst 3", got.AI)
+	got, _ := g.ApplySettings(Settings{AI: 8, Min: 2, Sol: 20, Turtid: 30})
+	if got.AI != 7 {
+		t.Fatalf("utan spelledarläge: %d AI-spelare, ville ha högst 7", got.AI)
 	}
-	got, _ = g.ApplySettings(Settings{AI: 4, Min: 2, Sol: 20, Turtid: 30, Spelledare: true})
-	if got.AI != 4 || countBots(g) != 4 {
-		t.Fatalf("i spelledarläget: %d inställt, %d vid portarna, ville ha 4", got.AI, countBots(g))
+	got, _ = g.ApplySettings(Settings{AI: 8, Min: 2, Sol: 20, Turtid: 30, Spelledare: true})
+	if got.AI != 8 || countBots(g) != 8 {
+		t.Fatalf("i spelledarläget: %d inställt, %d vid portarna, ville ha 8", got.AI, countBots(g))
 	}
-	got, _ = g.ApplySettings(Settings{AI: 4, Min: 2, Sol: 20, Turtid: 30})
-	if got.AI != 3 || countBots(g) != 3 {
-		t.Fatalf("när spelledarläget slogs av: %d inställt, %d vid portarna, ville ha 3", got.AI, countBots(g))
+	got, _ = g.ApplySettings(Settings{AI: 8, Min: 2, Sol: 20, Turtid: 30})
+	if got.AI != 7 || countBots(g) != 7 {
+		t.Fatalf("när spelledarläget slogs av: %d inställt, %d vid portarna, ville ha 7", got.AI, countBots(g))
 	}
 }
 
 func TestSettingsClamped(t *testing.T) {
 	g := testGame(t)
 	got, _ := g.ApplySettings(Settings{AI: 9, Min: 0, Sol: 1, Turtid: 0})
-	if got.AI != 3 || got.Min != 1 || got.Sol != 4 || got.Turtid != 3 {
+	if got.AI != 7 || got.Min != 1 || got.Sol != 4 || got.Turtid != 3 {
 		t.Fatalf("%+v", got)
 	}
 }
@@ -75,22 +75,22 @@ func TestSettingsLockedDuringPlay(t *testing.T) {
 
 func TestBotStepsAsideForHuman(t *testing.T) {
 	g := testGame(t)
-	g.ApplySettings(Settings{AI: 3, Min: 2, Sol: 10, Turtid: 30, Avslojande: true})
+	g.ApplySettings(Settings{AI: 7, Min: 2, Sol: 10, Turtid: 30, Avslojande: true})
 	a, b := testClient(), testClient()
 	g.Join(a, "Alva")
-	if a.player == nil || countBots(g) != 3 {
-		t.Fatalf("Alva kom inte in bredvid tre datorspelare (%d)", countBots(g))
+	if a.player == nil || countBots(g) != 7 {
+		t.Fatalf("Alva kom inte in bredvid sju datorspelare (%d)", countBots(g))
 	}
 	g.Join(b, "Bo")
 	if b.player == nil {
 		t.Fatal("Bo kom inte in fast en datorspelare kunde gå")
 	}
-	if n := countBots(g); n != 2 {
-		t.Fatalf("%d datorspelare, ville ha 2", n)
+	if n := countBots(g); n != 6 {
+		t.Fatalf("%d datorspelare, ville ha 6", n)
 	}
 	g.Leave(b)
-	if n := countBots(g); n != 3 {
-		t.Fatalf("%d datorspelare efter att Bo gick, ville ha 3", n)
+	if n := countBots(g); n != 7 {
+		t.Fatalf("%d datorspelare efter att Bo gick, ville ha 7", n)
 	}
 }
 
