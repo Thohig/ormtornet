@@ -142,7 +142,9 @@ func (g *Game) scheduleBotIn(p *Player, lo, hi int) {
 
 // botAct fattar och lämnar datorspelarens beslut för rundan.
 func (g *Game) botAct(p *Player, round int) {
-	if g.phase != phasePlay || g.round != round || p.Action != "" {
+	// En människa kan ha kommit tillbaka och tagit över efter att draget
+	// planerades, och då finns ingen AI kvar som kan välja.
+	if p.bot == nil || g.phase != phasePlay || g.round != round || p.Action != "" {
 		return
 	}
 	if !g.isController(p) && (p.Status != statusIn || p.Cellar > 0) {

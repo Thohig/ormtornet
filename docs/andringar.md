@@ -6,6 +6,12 @@ eller leder tornet.
 
 ## 2026-11-18
 
+### Rättat efter provspel
+
+- Tornet kraschade om en vandrare kom tillbaka just när AI:n hade tagit
+  över och skulle välja drag. Nu tar människan över utan att något händer.
+- Hjälptexten för `-ai` säger 0–7, eller 8 i spelledarläget, som README.
+
 ### Viska hemligheten
 
 Den som vet tornets hemlighet kan viska den till tornet med V, från nivå 2

@@ -93,3 +93,25 @@ func TestTakenOverAtEndAndNextTower(t *testing.T) {
 		}
 	}
 }
+
+// En AI-spelare som har planerat ett drag får inte krascha tornet när
+// människan kommer tillbaka innan draget hinner väljas.
+func TestHandBackBeforeBotActs(t *testing.T) {
+	g, _, b := twoPlaying(t, 0)
+	bo := b.player
+	g.Leave(b)
+	if !g.TakeOverSlot(bo.Slot) {
+		t.Fatal("AI:n tog inte över Bo")
+	}
+	round := g.round
+	g.Join(testClient(), "Bo")
+	if bo.bot != nil {
+		t.Fatal("Bo fick inte tillbaka sin vandrare")
+	}
+	g.mu.Lock()
+	defer g.mu.Unlock()
+	g.botAct(bo, round) // timern från övertagandet löser ut
+	if bo.Action != "" {
+		t.Fatalf("en AI som inte finns valde %q åt Bo", bo.Action)
+	}
+}
