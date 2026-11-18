@@ -17,7 +17,7 @@ Startsidan visar tornet i en storm vid solnedgången.
   ibland ett dunk långt inne i tornet. Webbläsaren tillåter inget ljud
   innan man har klickat, så utan klick är introt tyst.
 - Ryktena fladdrar lite, och ögat i tornet glöder ibland efter en blixt.
-- "Gå in i tornet" visas först efter 30 sekunder, precis efter en blixt,
+- "Gå in i tornet" visas först efter 15 sekunder, precis efter en blixt,
   och då börjar porten glimma. Före det startar klick och Enter bara
   ljudet.
 - Den som redan har sett introt i fliken, och spelledaren på tornets dator,

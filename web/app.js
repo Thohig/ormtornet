@@ -651,7 +651,7 @@ const Intro = (() => {
       setTimeout(() => $("eye").classList.add("glint"), 600);
       setTimeout(() => $("eye").classList.remove("glint"), 1900);
     }
-    if (after) setTimeout(after, 250);
+    if (after) setTimeout(after, reduced ? 700 : 480); // när blixten har slocknat
   }
 
   function scheduleFlash() {
@@ -673,8 +673,13 @@ const Intro = (() => {
       $("gate").classList.add("glow");
       if (Intro.active()) b.focus();
     };
-    if (withFlash && !reduced) flash(appear);
-    else appear();
+    if (withFlash) {
+      // Blixten kommer precis innan knappen, och nästa blixt dröjer en stund.
+      flash(appear);
+      scheduleFlash();
+    } else {
+      appear();
+    }
   }
 
   function listen() {
@@ -702,7 +707,7 @@ const Intro = (() => {
       showRumor();
       setInterval(showRumor, 7500);
       if (seen || toHostPage) showEnter(false);
-      else readyTimer = setTimeout(() => showEnter(true), (info.vanta || 30) * 1000);
+      else readyTimer = setTimeout(() => showEnter(true), (info.vanta || 15) * 1000);
     })
     .catch(() => showEnter(false));
   startStorm();

@@ -131,7 +131,7 @@ en annan flik ("Gå in själv", som leder till introt och sedan namnrutan). Andr
    tonar fram. Moln driver förbi, det regnar och blixtrar, och efter varje
    blixt mullrar åskan. Klicka var som helst, eller tryck Enter, för att
    höra stormen: en låg, hotfull ton, vind, regn och åska. Webbläsaren
-   tillåter inget ljud innan man har klickat. Efter 30 sekunder tonar
+   tillåter inget ljud innan man har klickat. Efter 15 sekunder tonar
    "Gå in i tornet" fram efter en blixt, och porten börjar glimma. Klicka
    på den eller tryck Enter. Den som redan har sett introt i fliken, och
    spelledaren på tornets dator, får knappen direkt. Ryktena står i
