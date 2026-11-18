@@ -1,6 +1,6 @@
 #!/bin/zsh
 # Ormtornet.app: bygger spelet, startar tornet i bakgrunden och öppnar
-# introt, som sedan leder till spelledarens sida. Tornet stängs med knappen
+# introt, som sedan leder till värdsidan. Tornet stängs med knappen
 # Stäng tornet, eller av sig självt (se autostopp i README): efter 10 minuter
 # utan spelare och utan synliga sidor, och senast när ingen har gjort något
 # på 12 timmar. Macen hålls vaken så länge tornet är öppet.

@@ -105,7 +105,7 @@ func TestAutostop(t *testing.T) {
 		t.Fatal("ett tomt torn stängde inte")
 	}
 
-	// En gömd flik med spelledarens sida håller inte tornet öppet.
+	// En gömd flik med värdsidan håller inte tornet öppet.
 	g.lastActive, g.lastReal = hourAgo, hourAgo
 	g.HostView(false)
 	if !g.ShouldClose(empty, abandoned) {

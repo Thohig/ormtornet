@@ -24,7 +24,7 @@ type DifficultyStep struct {
 	SkattForlust *float64 `json:"skatt_forlust"` // andel av skatten som går förlorad när ormen vaknar
 }
 
-// difficultyView är det spelledarens sida behöver för att visa ett förval.
+// difficultyView är det värdsidan behöver för att visa ett förval.
 type difficultyView struct {
 	ID          string `json:"id"`
 	Namn        string `json:"namn"`

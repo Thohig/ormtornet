@@ -6,7 +6,7 @@
 #   ./starta.sh -ai 2      med två datorstyrda vandrare
 #
 # Alla flaggor som spelet förstår går att skicka med (se README).
-# Stäng tornet med Ctrl+C eller knappen på spelledarens sida.
+# Stäng tornet med Ctrl+C eller knappen på värdsidan.
 set -e
 cd "$(dirname "$0")"
 

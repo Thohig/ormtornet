@@ -501,7 +501,7 @@ const Intro = (() => {
   let seen = false; // har sett hela övergången förut i den här fliken
   try { seen = sessionStorage.getItem("ormtornet-intro") === "1"; } catch {}
   let rumors = [];
-  // På tornets egen dator leder introt till spelledarens sida, utom när man
+  // På tornets egen dator leder introt till värdsidan, utom när man
   // har valt att spela själv (adressen slutar med ?spela).
   let toHostPage = false;
   const wantsToPlay = new URLSearchParams(location.search).has("spela");

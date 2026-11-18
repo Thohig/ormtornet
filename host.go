@@ -1,6 +1,6 @@
 package main
 
-// Spelledarens sida: adressen spelarna ska öppna, vilka som har anslutit och
+// Värdsidan: adressen spelarna ska öppna, vilka som har anslutit och
 // vilka inställningar tornet har. Sidan och dess data visas bara på datorn
 // som kör servern.
 
@@ -123,7 +123,7 @@ func isLocal(r *http.Request) bool {
 func localOnly(h http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if !isLocal(r) {
-			http.Error(w, "Spelledarens sida visas bara på datorn som kör tornet.", http.StatusForbidden)
+			http.Error(w, "Den här sidan visas bara på datorn som kör tornet.", http.StatusForbidden)
 			return
 		}
 		w.Header().Set("Cache-Control", "no-store")
@@ -147,7 +147,7 @@ func (g *Game) Close() {
 	}
 }
 
-// hostHooks är det spelledarens sida behöver från resten av programmet.
+// hostHooks är det värdsidan behöver från resten av programmet.
 type hostHooks struct {
 	Close func()               // stänger tornet
 	Save  func(Settings) error // sparar inställningarna till nästa gång
@@ -172,7 +172,7 @@ func writeJSON(w http.ResponseWriter, code int, v any) {
 	json.NewEncoder(w).Encode(v)
 }
 
-// addHostRoutes lägger till spelledarens sida och det den kan göra.
+// addHostRoutes lägger till värdsidan och det den kan göra.
 func addHostRoutes(mux *http.ServeMux, web fs.FS, game *Game, addrs hostAddrs, hooks hostHooks) {
 	mux.HandleFunc("POST /spelledare/stang", hostAction(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusNoContent)

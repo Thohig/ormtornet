@@ -5,7 +5,7 @@ package main
 //
 // Två regler gäller:
 //   - Ingen spelare är ansluten och ingen sida är synlig på tornets dator
-//     (introt eller spelledarens sida): tornet stänger efter autostopp, 10 min.
+//     (introt eller värdsidan): tornet stänger efter autostopp, 10 min.
 //   - Ingen har gjort något alls, inte ens med en flik som står öppen men
 //     gömd: tornet stänger efter autostopp-max, 12 timmar.
 //

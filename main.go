@@ -33,7 +33,7 @@ func main() {
 	difficulty := flag.String("svarighet", "", "svårighet: latt, normal, svar eller mardrom (förvalen står i data/svarighet.json)")
 	reveal := flag.Bool("avslojande", defaultSettings.Avslojande, "låt tornet avslöja sin hemlighet (false för den som redan känner till den)")
 	settingsPath := flag.String("installningar", defaultSettingsPath(), "fil där spelledarens inställningar sparas (tom för att inte spara)")
-	openPage := flag.Bool("oppna", false, "öppna introt i webbläsaren när servern har startat; det leder till spelledarens sida")
+	openPage := flag.Bool("oppna", false, "öppna introt i webbläsaren när servern har startat; det leder till värdsidan")
 	awake := flag.Bool("vaken", false, "håll datorn vaken så länge servern är igång")
 	autostop := flag.Duration("autostopp", 10*time.Minute, "stäng tornet när ingen spelare är ansluten och ingen sida har synts på den här datorn så här länge (0 = aldrig)")
 	abandoned := flag.Duration("autostopp-max", 12*time.Hour, "stäng tornet när ingen har gjort något så här länge, även om flikar står öppna (0 = aldrig)")
@@ -94,7 +94,7 @@ func main() {
 		_, port, _ := net.SplitHostPort(*addr)
 		if errors.Is(err, syscall.EADDRINUSE) && towerRunning(port) {
 			fmt.Println("Ormtornet är redan igång på den här datorn.")
-			fmt.Printf("Spelledaren: http://localhost:%s/spelledare\n", port)
+			fmt.Printf("Värdsidan: http://localhost:%s/spelledare\n", port)
 			if *openPage {
 				openBrowser("http://localhost:" + port + "/")
 			}
@@ -107,7 +107,7 @@ func main() {
 	}
 	_, port, _ := net.SplitHostPort(ln.Addr().String())
 
-	// Tornet stänger på samma sätt från knappen på spelledarens sida och från
+	// Tornet stänger på samma sätt från knappen på värdsidan och från
 	// Ctrl+C i terminalen: spelarna får ett meddelande och sedan avslutas servern.
 	closeTower := sync.OnceFunc(func() {
 		fmt.Println()
@@ -157,7 +157,7 @@ func main() {
 		fmt.Printf("  %s  (om namnet inte fungerar)\n", ip)
 	}
 	fmt.Println()
-	fmt.Println("Spelledaren (bara på den här datorn):")
+	fmt.Println("Värdsidan (bara på den här datorn):")
 	fmt.Printf("  http://localhost:%s/spelledare\n", port)
 	fmt.Println()
 	if *awake {
@@ -166,7 +166,7 @@ func main() {
 			fmt.Println("Datorn hålls vaken så länge tornet är öppet.")
 		}
 	}
-	fmt.Println("Stäng tornet med Ctrl+C eller knappen på spelledarens sida.")
+	fmt.Println("Stäng tornet med Ctrl+C eller knappen på värdsidan.")
 	if *autostop > 0 || *abandoned > 0 {
 		if *autostop > 0 {
 			fmt.Printf("Tornet stänger av sig självt när det har stått tomt i %s.\n", short(*autostop))

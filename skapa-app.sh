@@ -1,6 +1,6 @@
 #!/bin/zsh
 # Skapar Ormtornet.app med tornets ikon. Dubbelklick på appen startar tornet
-# i bakgrunden och öppnar spelledarens sida i webbläsaren.
+# i bakgrunden och öppnar värdsidan i webbläsaren.
 #
 #   ./skapa-app.sh             skapar ~/Projekt/Ormtornet.app
 #   ./skapa-app.sh ~/Desktop   skapar appen i en annan mapp

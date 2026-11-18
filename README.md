@@ -15,7 +15,7 @@ spelet. De andra öppnar en adress i webbläsaren.
 
 Skriptet bygger spelet, öppnar introt i webbläsaren och håller datorn vaken
 så länge tornet är öppet. På datorn som kör tornet leder introt till
-spelledarens sida. Flaggor skickas vidare, till exempel `./starta.sh -ai 2`.
+värdsidan. Flaggor skickas vidare, till exempel `./starta.sh -ai 2`.
 Är tornet redan igång öppnas bara introt.
 
 Det går också att starta direkt med `go run .`.
@@ -37,19 +37,19 @@ Servern lyssnar på `0.0.0.0:8080` och skriver ut adressen spelarna ska
 kan öppna den i Safari eller Chrome.
 
 Stäng tornet med Ctrl+C i terminalen eller knappen "Stäng tornet" på
-spelledarens sida. Spelarna får då ett meddelande om att tornet stänger.
+värdsidan. Spelarna får då ett meddelande om att tornet stänger.
 
 Ett bortglömt torn stänger av sig självt, hur det än har startats:
 
 - efter 10 minuter utan någon ansluten spelare och utan att introt eller
-  spelledarens sida har synts på skärmen på tornets dator (en flik som ligger
+  värdsidan har synts på skärmen på tornets dator (en flik som ligger
   gömd bakom andra räknas inte), och
 - senast när ingen har gjort något på 12 timmar, även om flikar står öppna.
 
 En minut innan får alla som är anslutna en varning. Tiderna ändras med
 `-autostopp` och `-autostopp-max`, och `0` stänger av regeln.
 
-Inställningarna ändras enklast på spelledarens sida (se nedan) och sparas
+Inställningarna ändras enklast på värdsidan (se nedan) och sparas
 till nästa gång. Flaggorna nedan gäller före det sparade, men bara den gången.
 
 Flaggor:
@@ -62,13 +62,13 @@ Flaggor:
 - `-ai 2` antal datorstyrda vandrare (0–3, eller 4 i spelledarläget)
 - `-svarighet normal` svårighet: `latt`, `normal`, `svar` eller `mardrom`
 - `-avslojande=false` stänger av avslöjandet, för spelare som redan känner till tornets hemlighet
-- `-oppna` öppnar introt i webbläsaren när servern har startat; på den här datorn leder det till spelledarens sida
+- `-oppna` öppnar introt i webbläsaren när servern har startat; på den här datorn leder det till värdsidan
 - `-vaken` håller datorn vaken så länge servern är igång
 - `-autostopp 10m` stänger tornet när ingen spelare är ansluten och ingen sida har synts på tornets dator så länge (`0` = aldrig)
 - `-autostopp-max 12h` stänger tornet när ingen har gjort något så länge, även om flikar står öppna (`0` = aldrig)
 - `-installningar fil` var spelledarens inställningar sparas (standard `~/Library/Application Support/Ormtornet/installningar.json`, tom för att inte spara)
 
-### Spelledarens sida
+### Värdsidan
 
 Öppna `http://localhost:8080/spelledare` på datorn som kör servern. Dit
 kommer man också efter introt på den datorn. Där står
@@ -76,7 +76,7 @@ adressen spelarna ska öppna, med knappar som kopierar en färdig inbjudan att
 skicka i en gruppchatt. Sidan visar också vilka som har anslutit och är redo,
 och vad man kan göra om någon inte kommer in.
 
-Under Inställningar väljer spelledaren antal AI-spelare, minsta antal
+Under Inför nästa vandring väljer spelledaren antal AI-spelare, minsta antal
 vandrare, svårighet, solnedgång, turtid och avslöjandet. AI-spelare kommer och går
 direkt i lobbyn, resten gäller från nästa omgång. Under en pågående vandring
 är inställningarna låsta. Om tornet är fullt när en människa ansluter i
@@ -185,7 +185,7 @@ eller av.
 
 ### Spela mot datorn
 
-Välj antal AI-spelare på spelledarens sida, eller med `-ai`:
+Välj antal AI-spelare på värdsidan, eller med `-ai`:
 
 ```bash
 go run . -ai 3

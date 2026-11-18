@@ -11,7 +11,7 @@ import (
 	"unicode/utf8"
 )
 
-// gmRequest är ett ingrepp från spelledarens sida.
+// gmRequest är ett ingrepp från värdsidan.
 type gmRequest struct {
 	Typ     string `json:"typ"`
 	Spelare int    `json:"spelare"` // vandrarens id, 0 = alla (för tornets röst)

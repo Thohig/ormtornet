@@ -7,7 +7,7 @@ läget nedan. Resten av dokumentet är det ursprungliga förslaget.
 
 Byggt (README beskriver hur det fungerar):
 
-- Spelledarens sida på `/spelledare`, bara från tornets egen dator.
+- Värdsidan på `/spelledare`, bara från tornets egen dator.
 - Inställningar som ändras utan omstart: AI-spelare, minsta antal, sol,
   turtid, avslöjandet, strid mellan vandrare, frånvarande vandrare och
   spelledarläget. De sparas till nästa gång.
@@ -103,7 +103,7 @@ redo och de är minst `-min`.
 
 Förslag:
 
-- **Med Spelledarens sida öppen** startar spelledaren omgången. Lobbyn visar
+- **Med Värdsidan öppen** startar spelledaren omgången. Lobbyn visar
   "Väntar på spelledaren …". Enter betyder bara "jag är här och klar".
   Spelledaren kan starta även om någon inte är redo, ta bort spelare och fylla
   tomma platser med datorspelare. Efter omgången trycker spelledaren
