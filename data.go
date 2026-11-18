@@ -325,6 +325,8 @@ type AIData struct {
 	BetanketidMs   []int         `json:"betanketid_ms"`
 	Ansluter       []string      `json:"ansluter"`
 	Lamnar         []string      `json:"lamnar"`
+	TarOver        []string      `json:"tar_over"`
+	Tillbaka       []string      `json:"tillbaka"`
 }
 
 // Personality styr hur modig en datorspelare är.

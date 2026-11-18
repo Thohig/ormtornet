@@ -66,6 +66,9 @@
   #slots .tag { color: var(--dim); }
   #slots .tag.ok { color: var(--info); }
   #slots .tag.away { color: var(--warn); }
+  #slots .tag.ai { color: var(--info); }
+  #slots li { align-items: baseline; }
+  .btn.small { padding: 1px 8px; font-size: 12px; }
   #settings { display: grid; grid-template-columns: 20ch auto 1fr; gap: 8px 12px; align-items: baseline; }
   #settings label { color: var(--dim); }
   #settings .note { color: var(--dim); font-size: 12px; }
@@ -76,6 +79,7 @@
     font: inherit;
     padding: 3px 6px;
   }
+  #settings select { justify-self: start; }
   #settings select:focus-visible { outline: none; border-color: var(--fg); }
   #settings select:disabled { color: var(--dim); border-color: var(--faint); }
   #saved { min-height: 1.2em; color: var(--info); }
@@ -132,6 +136,15 @@
       <label for="sRev">Avslöjandet</label>
       <select id="sRev" name="avslojande"><option value="1">på</option><option value="0">av</option></select>
       <span class="note">tornets hemlighet</span>
+
+      <label for="sFr">Frånvarande vandrare</label>
+      <select id="sFr" name="franvaro">
+        <option value="0">står still</option>
+        <option value="1">AI tar över efter 1 runda</option>
+        <option value="2">AI tar över efter 2 rundor</option>
+        <option value="3">AI tar över efter 3 rundor</option>
+      </select>
+      <span class="note">när någon lämnar under vandringen</span>
     </form>
     <p id="saved"></p>
     <p class="dimtext" id="settingsHint">Sparas till nästa gång. AI-spelare kommer och går direkt, resten gäller från nästa omgång.</p>
@@ -213,6 +226,7 @@ function statusText(v) {
 
 function tag(p, phase) {
   if (!p.online) return ["borta", "away"];
+  if (p.ai) return ["AI spelar tills " + p.name + " är tillbaka", "ai"];
   if (p.bot) return ["datorstyrd", ""];
   if (phase === "spel") {
     return { ute: ["ute", "ok"], forlorad: ["förlorad", "away"], dod: ["död", "away"] }[p.status] || ["i tornet", ""];
@@ -254,6 +268,14 @@ function render(v) {
       t.className = "tag " + cls;
       t.textContent = text;
       li.append(name, t);
+      if (p.canTakeOver) {
+        const b = document.createElement("button");
+        b.type = "button";
+        b.className = "btn small";
+        b.dataset.slot = String(slot);
+        b.textContent = "AI tar över";
+        li.append(b);
+      }
     } else {
       name.className = "name empty";
       name.textContent = "·  ledig plats";
@@ -303,6 +325,11 @@ function renderSettings(v) {
   $("sSol").value = String(s.sol);
   $("sTur").value = String(s.turtid);
   $("sRev").value = s.avslojande ? "1" : "0";
+  const fr = $("sFr");
+  if (![...fr.options].some((o) => +o.value === s.franvaro)) {
+    fr.append(new Option("AI tar över efter " + s.franvaro + " rundor", String(s.franvaro)));
+  }
+  fr.value = String(s.franvaro);
 }
 
 function post(path, body) {
@@ -329,6 +356,7 @@ $("settings").addEventListener("change", async () => {
     sol: +$("sSol").value,
     turtid: +$("sTur").value,
     avslojande: $("sRev").value === "1",
+    franvaro: +$("sFr").value,
   };
   saving = true;
   try {
@@ -341,6 +369,21 @@ $("settings").addEventListener("change", async () => {
     say("Tornet svarar inte.", true);
   }
   saving = false;
+});
+
+$("slots").addEventListener("click", async (ev) => {
+  const b = ev.target.closest("button[data-slot]");
+  if (!b) return;
+  b.disabled = true;
+  try {
+    const r = await post("/spelledare/ta-over", { slot: +b.dataset.slot });
+    if (!r.ok) {
+      const data = await r.json().catch(() => ({}));
+      alert(data.fel || "AI:n kunde inte ta över.");
+    }
+  } catch {
+    alert("Tornet svarar inte.");
+  }
 });
 
 $("startNow").onclick = async () => {

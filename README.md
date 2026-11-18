@@ -72,6 +72,14 @@ lobbyn kliver en AI-spelare åt sidan, och kommer tillbaka om platsen blir
 ledig igen. Knappen Starta nu börjar vandringen även om inte alla har
 tryckt Enter.
 
+Om en spelare lämnar mitt i en vandring tar en AI-spelare över vandraren
+efter två rundor (ändras under "Frånvarande vandrare", eller sätts till "står
+still"). Spelledaren kan också trycka "AI tar över" direkt. AI:n fortsätter
+med vandrarens plats, skatt och liv, och de andra ser namnet märkt "(AI)".
+Kommer spelaren tillbaka och skriver samma namn får den genast tillbaka sina
+steg. I resultatet märks den som AI har spelat åt med "~". Den som inte kommer
+tillbaka innan vandringen är slut är inte med i nästa.
+
 Sidan visar inga skatter, positioner eller drag, så spelledaren kan spela med i
 en annan flik ("Gå in själv"). Andra datorer i nätverket kommer inte åt sidan.
 

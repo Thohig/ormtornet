@@ -44,11 +44,12 @@ const (
 )
 
 type Config struct {
-	AI         int  // önskat antal datorspelare
-	Reveal     bool // false stänger av avslöjandet
-	SunMax     int
-	TurnTime   time.Duration
-	MinPlayers int
+	AI           int  // önskat antal datorspelare
+	AbsentRounds int  // rundor innan AI tar över en frånvarande vandrare, 0 = aldrig
+	Reveal       bool // false stänger av avslöjandet
+	SunMax       int
+	TurnTime     time.Duration
+	MinPlayers   int
 }
 
 type Dir int
@@ -107,6 +108,10 @@ type Player struct {
 	Status   string
 	Seen     map[string]bool // fällor och varelser spelaren har mött
 	bot      *botBrain       // satt för datorstyrda vandrare
+
+	awayRound int  // rundan då människan lämnade mitt i vandringen, 0 om den är här
+	takenOver bool // en AI-spelare styr vandraren medan människan är borta
+	aiPlayed  bool // AI:n har styrt vandraren någon gång under vandringen
 
 	HP      int
 	Potions int
@@ -268,6 +273,7 @@ type playerView struct {
 	Treasure int    `json:"treasure"` // -1 om spelaren inte får veta
 	Bot      bool   `json:"bot"`
 	Hidden   bool   `json:"hidden"` // positionen är okänd för den som tittar
+	AI       bool   `json:"ai"`     // en AI-spelare styr medan människan är borta
 }
 
 type roomView struct {
@@ -287,6 +293,7 @@ type resultView struct {
 	Treasure int    `json:"treasure"`
 	Status   string `json:"status"`
 	Winner   bool   `json:"winner"`
+	AI       bool   `json:"ai"` // AI:n spelade en del av vandringen
 }
 
 type stateMsg struct {
@@ -402,7 +409,7 @@ func (g *Game) stateFor(me *Player) stateMsg {
 		pv := playerView{
 			ID: p.ID, Name: p.Name, Slot: p.Slot, X: p.X, Y: p.Y,
 			Online: p.present(), Bot: p.bot != nil, Status: p.Status, Ready: p.Ready,
-			Chosen: p.Action != "", Treasure: -1,
+			Chosen: p.Action != "", Treasure: -1, AI: p.takenOver,
 		}
 		if p == me || g.phase == phaseEnd {
 			pv.Treasure = p.Treasure
@@ -449,7 +456,7 @@ func (g *Game) results() []resultView {
 		if p == nil {
 			continue
 		}
-		res = append(res, resultView{Name: p.Name, Slot: p.Slot, Treasure: p.Treasure, Status: p.Status})
+		res = append(res, resultView{Name: p.Name, Slot: p.Slot, Treasure: p.Treasure, Status: p.Status, AI: p.aiPlayed})
 	}
 	score := func(r resultView) int {
 		if r.Status == statusOut && r.Treasure > 0 {
@@ -507,10 +514,15 @@ func (g *Game) Join(c *Client, rawName string) {
 	// Återanslutning: samma namn tar tillbaka sin vandrare.
 	for _, p := range g.players {
 		if p != nil && strings.EqualFold(p.Name, name) {
-			if p.client != nil || p.bot != nil {
+			if p.client != nil || (p.bot != nil && !p.takenOver) {
 				g.send(c, logMsg{T: "error", Text: g.data.Text("namn_upptaget")})
 				return
 			}
+			if p.takenOver {
+				g.handBack(p, c)
+				return
+			}
+			p.awayRound = 0
 			p.client, c.player = c, p
 			g.broadcastState()
 			g.logTo(p, g.data.Text("tillbaka"), "syn")
@@ -574,6 +586,9 @@ func (g *Game) Leave(c *Client) {
 		return
 	}
 	p.client = nil
+	if g.phase == phasePlay {
+		p.awayRound = g.round
+	}
 	g.logOthers(p, g.data.Text("lamnar", "namn", p.Name), "dim")
 	if g.phase != phasePlay {
 		// Utanför spelet lämnar man sin plats helt, och en datorspelare
@@ -641,6 +656,10 @@ func (g *Game) newTower() {
 }
 
 func (g *Game) startGame() {
+	// De som lämnade förra vandringen och inte kom tillbaka är inte med längre.
+	if g.dropAbsent() > 0 {
+		g.syncBots(true) // AI-spelare kan ta de lediga platserna
+	}
 	g.phase = phasePlay
 	g.sun = g.cfg.SunMax
 	g.round = 1
@@ -654,6 +673,8 @@ func (g *Game) startGame() {
 		if p != nil {
 			p.Ready = p.bot != nil
 			p.Action = ""
+			p.awayRound = 0
+			p.aiPlayed = false
 		}
 	}
 	g.soundAll("start")
@@ -672,6 +693,7 @@ func (g *Game) startRound() {
 	if g.timer != nil {
 		g.timer.Stop()
 	}
+	g.autoTakeOver()
 	g.scheduleBots()
 	g.timer = time.AfterFunc(wait, func() {
 		g.mu.Lock()
@@ -845,6 +867,7 @@ func (g *Game) endGame() {
 	if g.timer != nil {
 		g.timer.Stop()
 	}
+	g.releaseTakenOver()
 	for _, p := range g.players {
 		if p == nil {
 			continue

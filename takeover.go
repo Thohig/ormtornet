@@ -1,0 +1,88 @@
+package main
+
+// Frånvarande vandrare: när en människa har lämnat mitt i en vandring kan en
+// AI-spelare ta över vandraren, med dess plats, skatt, liv och tillstånd.
+// Kommer människan tillbaka med samma namn får den genast tillbaka sina steg.
+
+// canTakeOver är sant för en vandrare vars människa är borta och som
+// fortfarande har något att göra i tornet.
+func (g *Game) canTakeOver(p *Player) bool {
+	return g.phase == phasePlay && p != nil && p.client == nil && p.bot == nil &&
+		(p.Status == statusIn || g.isController(p))
+}
+
+func (g *Game) takeOver(p *Player) {
+	pers := g.data.AI.Personligheter
+	if len(pers) == 0 {
+		return
+	}
+	p.bot = &botBrain{pers: &pers[p.Slot%len(pers)], habits: map[string]map[string]int{}}
+	p.takenOver = true
+	p.aiPlayed = true
+	if len(g.data.AI.TarOver) > 0 {
+		g.logAll(fill(pick(g.data.AI.TarOver), "namn", p.Name), "info")
+	}
+	g.scheduleBot(p)
+}
+
+// autoTakeOver körs när en runda börjar och låter AI:n ta över dem som har
+// varit borta i så många hela rundor som spelledaren har valt.
+func (g *Game) autoTakeOver() {
+	if g.cfg.AbsentRounds <= 0 {
+		return
+	}
+	for _, p := range g.players {
+		if g.canTakeOver(p) && p.awayRound > 0 && g.round-p.awayRound >= g.cfg.AbsentRounds {
+			g.takeOver(p)
+		}
+	}
+}
+
+// TakeOverSlot låter spelledaren be AI:n ta över en frånvarande vandrare direkt.
+func (g *Game) TakeOverSlot(slot int) bool {
+	g.mu.Lock()
+	defer g.mu.Unlock()
+	if slot < 0 || slot >= maxPlayers || !g.canTakeOver(g.players[slot]) {
+		return false
+	}
+	g.takeOver(g.players[slot])
+	g.broadcastState()
+	return true
+}
+
+// handBack ger tillbaka vandraren till människan som kom tillbaka.
+func (g *Game) handBack(p *Player, c *Client) {
+	p.bot = nil
+	p.takenOver = false
+	p.awayRound = 0
+	p.client, c.player = c, p
+	g.broadcastState()
+	g.logTo(p, g.data.Text("tillbaka"), "syn")
+	if len(g.data.AI.Tillbaka) > 0 {
+		g.logOthers(p, fill(pick(g.data.AI.Tillbaka), "namn", p.Name), "info")
+	}
+}
+
+// releaseTakenOver körs när vandringen är slut: AI:n släpper de vandrare den
+// har tagit över, så att platserna blir lediga om människorna inte kommer tillbaka.
+func (g *Game) releaseTakenOver() {
+	for _, p := range g.players {
+		if p != nil && p.takenOver {
+			p.bot = nil
+			p.takenOver = false
+		}
+	}
+}
+
+// dropAbsent tar bort människor som lämnade under förra vandringen och inte
+// har kommit tillbaka, innan en ny vandring börjar. Den säger hur många.
+func (g *Game) dropAbsent() int {
+	n := 0
+	for i, p := range g.players {
+		if p != nil && p.bot == nil && p.client == nil {
+			g.players[i] = nil
+			n++
+		}
+	}
+	return n
+}

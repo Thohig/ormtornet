@@ -203,7 +203,7 @@ function renderSide() {
     mark.textContent = "@ ";
     mark.style.color = MapView.PLAYER_COLORS[p.slot];
     li.appendChild(mark);
-    li.appendChild(document.createTextNode(p.name + (p.id === state.you ? " (du)" : p.bot ? " (dator)" : "")));
+    li.appendChild(document.createTextNode(p.name + (p.id === state.you ? " (du)" : p.ai ? " (AI)" : p.bot ? " (dator)" : "")));
     const tag = playerTag(p);
     if (tag) {
       const t = document.createElement("span");
@@ -365,10 +365,11 @@ function renderOverlay() {
     if (r.status === "ute") what = r.treasure > 0 ? r.treasure + " guld" : "tomhänt";
     else if (r.status === "dod") what = "död";
     else what = "förlorad";
-    const name = (r.winner ? "* " : "  ") + r.name;
+    const name = (r.winner ? "*" : " ") + (r.ai ? "~" : " ") + r.name;
     const row = name.padEnd(20, " ") + what.padStart(10, " ");
     lines.push({ text: row, cls: r.winner ? "win" : r.status !== "ute" ? "lost" : "" });
   });
+  if (state.results.some((r) => r.ai)) lines.push({ text: "" }, { text: "~ AI spelade en del av vandringen" });
   lines.push({ text: "" }, { text: "Enter: nytt torn" });
   el.innerHTML = "";
   frame(lines, 32).forEach((l) => {

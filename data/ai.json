@@ -35,6 +35,12 @@
     ],
     "lamnar": [
       "{namn} vänder i porten i {horn} och går sin väg. Det finns andra torn."
+    ],
+    "tar_over": [
+      "{namn} verkar ha somnat vid sin lykta. Någon annan styr nu stegen åt {namn}."
+    ],
+    "tillbaka": [
+      "{namn} är tillbaka och tar själv över sina steg igen."
     ]
   }
 }

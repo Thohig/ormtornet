@@ -107,21 +107,35 @@ func (g *Game) scheduleBots() {
 	if t := g.data.AI.BetanketidMs; len(t) == 2 && t[1] >= t[0] {
 		lo, hi = t[0], t[1]
 	}
-	round := g.round
 	for _, p := range g.players {
-		if p == nil || p.bot == nil {
-			continue
-		}
-		if !g.isController(p) && (p.Status != statusIn || p.Cellar > 0) {
-			continue
-		}
-		delay := time.Duration(lo+rand.IntN(hi-lo+1)) * time.Millisecond
-		time.AfterFunc(delay, func() {
-			g.mu.Lock()
-			defer g.mu.Unlock()
-			g.botAct(p, round)
-		})
+		g.scheduleBotIn(p, lo, hi)
 	}
+}
+
+// scheduleBot låter en datorspelare välja sitt drag i den pågående rundan,
+// till exempel när den just har tagit över en frånvarande vandrare.
+func (g *Game) scheduleBot(p *Player) {
+	lo, hi := 700, 2200
+	if t := g.data.AI.BetanketidMs; len(t) == 2 && t[1] >= t[0] {
+		lo, hi = t[0], t[1]
+	}
+	g.scheduleBotIn(p, lo, hi)
+}
+
+func (g *Game) scheduleBotIn(p *Player, lo, hi int) {
+	if p == nil || p.bot == nil {
+		return
+	}
+	if !g.isController(p) && (p.Status != statusIn || p.Cellar > 0) {
+		return
+	}
+	round := g.round
+	delay := time.Duration(lo+rand.IntN(hi-lo+1)) * time.Millisecond
+	time.AfterFunc(delay, func() {
+		g.mu.Lock()
+		defer g.mu.Unlock()
+		g.botAct(p, round)
+	})
 }
 
 // botAct fattar och lämnar datorspelarens beslut för rundan.

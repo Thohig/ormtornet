@@ -24,6 +24,8 @@ type hostPlayer struct {
 	Online bool   `json:"online"`
 	Ready  bool   `json:"ready"`
 	Status string `json:"status"`
+	AI     bool   `json:"ai"`          // en AI-spelare styr medan människan är borta
+	CanAI  bool   `json:"canTakeOver"` // spelledaren kan låta AI:n ta över
 }
 
 type hostView struct {
@@ -60,6 +62,7 @@ func (g *Game) HostView() hostView {
 		v.Players = append(v.Players, hostPlayer{
 			Name: p.Name, Slot: p.Slot, Bot: p.bot != nil, Online: p.present(),
 			Ready: p.Ready || p.bot != nil, Status: p.Status,
+			AI: p.takenOver, CanAI: g.canTakeOver(p),
 		})
 	}
 	return v
@@ -163,6 +166,16 @@ func addHostRoutes(mux *http.ServeMux, web fs.FS, game *Game, addrs hostAddrs, h
 	mux.HandleFunc("POST /spelledare/starta", hostAction(func(w http.ResponseWriter, r *http.Request) {
 		if !game.ForceStart() {
 			writeJSON(w, http.StatusConflict, map[string]string{"fel": "Det går inte att starta nu. Minst en människa måste vara i tornet, och ingen vandring får pågå."})
+			return
+		}
+		w.WriteHeader(http.StatusNoContent)
+	}))
+	mux.HandleFunc("POST /spelledare/ta-over", hostAction(func(w http.ResponseWriter, r *http.Request) {
+		var req struct {
+			Slot int `json:"slot"`
+		}
+		if err := json.NewDecoder(http.MaxBytesReader(w, r.Body, 256)).Decode(&req); err != nil || !game.TakeOverSlot(req.Slot) {
+			writeJSON(w, http.StatusConflict, map[string]string{"fel": "AI:n kan bara ta över en vandrare vars spelare är borta, mitt i en vandring."})
 			return
 		}
 		w.WriteHeader(http.StatusNoContent)
