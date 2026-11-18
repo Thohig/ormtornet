@@ -6,11 +6,25 @@ eller leder tornet.
 
 ## 2026-11-19
 
+### Rundans sammanfattning
+
+- Efter varje runda kommer ett kort nere på kartan med vad som hände dig:
+  vart du gick eller vad du gjorde, liv och guld du vann eller förlorade,
+  drycker och föremål du hittade, fast, gift, mörker, en varelse i rummet
+  och om ormen vaknade, och sist solen. Det farliga står först, med `!`
+  och i varningsfärg.
+- Kortet försvinner när du väljer nästa drag, efter sju sekunder eller
+  vid ett klick. En kort rad står kvar i loggen, till exempel "Runda 12:
+  österut, −1 liv, +10 guld".
+- Servern jämför vandrarens läge före och efter rundan. Texterna står i
+  `data/texter.json` under `sam_`, med en kort form under `sam_*_kort`.
+- Loggen hamnar inte längre efter när rundorna går fort: rader från en
+  runda som redan är förbi skrivs ikapp fort.
+
 ### Lugnare logg
 
 - Bara den första raden i en runda skrivs fram tecken för tecken. Resten
-  kommer en hel rad i taget, ungefär tre rader i sekunden, och loggen
-  skyndar sig aldrig även om många rader väntar.
+  kommer en hel rad i taget, ungefär tre rader i sekunden.
 - Varje runda har en rubrik, "Runda 12", i stället för ett streck. Före
   vandringen och slutet har egna rubriker.
 - Har man rullat upp för att läsa stannar loggen där, och knappen "↓ nya

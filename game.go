@@ -1181,6 +1181,7 @@ func (g *Game) resolve() {
 		g.timer.Stop()
 	}
 	sunBefore := g.sun
+	snap, wakes := g.snapshot(), g.wakes
 	g.moveMonsters()
 	for _, p := range g.players {
 		if g.isController(p) {
@@ -1208,15 +1209,16 @@ func (g *Game) resolve() {
 	}
 
 	g.sun--
+	if g.sun < 0 {
+		g.sun = 0
+	}
+	g.summarize(snap, wakes)
 	g.soundAll("runda")
 	inside := 0
 	for _, p := range g.players {
 		if p != nil && p.Status == statusIn {
 			inside++
 		}
-	}
-	if g.sun < 0 {
-		g.sun = 0
 	}
 	switch {
 	case inside == 0:

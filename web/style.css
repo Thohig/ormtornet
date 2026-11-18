@@ -432,6 +432,40 @@ body.touch #helpBtn { display: none; }
   cursor: pointer;
 }
 #helpbox[hidden] { display: none; }
+/* Rundans sammanfattning, nere på kartan. */
+#roundcard {
+  position: absolute;
+  left: 50%;
+  bottom: 14px;
+  transform: translateX(-50%);
+  z-index: 2;
+  min-width: 260px;
+  max-width: min(420px, 92%);
+  padding: 8px 14px 10px;
+  border: 1px solid var(--chalkline);
+  border-radius: 8px;
+  background: rgba(14, 15, 18, 0.93);
+  box-shadow: 0 0 18px rgba(0, 0, 0, 0.7);
+  font-size: 13px;
+  line-height: 1.45;
+  cursor: pointer;
+  animation: cardin 0.3s ease-out;
+  transition: opacity 0.4s;
+}
+#roundcard[hidden] { display: none; }
+#roundcard.leaving { opacity: 0; }
+@keyframes cardin { from { opacity: 0; transform: translate(-50%, 8px); } }
+#roundcard .cardhead {
+  margin-bottom: 4px;
+  color: var(--chalk);
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+}
+#roundcard .varn { color: var(--warn); }
+#roundcard .varn::before { content: "! "; }
+#roundcard .gold { color: #ffd36b; }
+#roundcard .dim { color: var(--dim); }
 #helpbox h2 {
   font-size: 11px;
   font-weight: normal;
@@ -550,6 +584,8 @@ body.touch #helpBtn { display: none; }
 #log .info::before { content: "·"; }
 #log .rost::before { content: "❝"; }
 #log .krita::before { content: "✎"; color: #f2f0e8; }
+#log .sam::before { content: "≡"; color: var(--chalk); }
+#log .sam { color: var(--chalk); }
 #log .dim { color: var(--dim); }
 #log .info { color: var(--info); }
 #log .syn { color: var(--hi); }

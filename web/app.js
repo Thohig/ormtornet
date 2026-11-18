@@ -19,7 +19,8 @@ function show(id) {
 
 // Loggen. Raderna samlas i grupper, en per runda (och en för tiden före
 // och efter vandringen). Den första raden i en grupp skrivs fram tecken för
-// tecken, resten kommer en hel rad i taget i lugn takt. Har man rullat upp
+// tecken, resten kommer en hel rad i taget i lugn takt. Ligger loggen
+// efter skrivs rader från förbigångna rundor ikapp fort. Har man rullat upp
 // för att läsa stannar loggen där, och "↓ nya rader" tar en tillbaka. När
 // en ny runda börjar fälls rundorna före den förra ihop till en rad som går
 // att klicka upp.
@@ -29,6 +30,7 @@ const Log = (() => {
   const MAX_LINES = 300;
   const LINE_GAP = 320; // ms mellan hela rader
   const CHAR_MS = 24;
+  const CATCH_UP = 60; // ms mellan rader från en runda som redan är förbi
   let stick = true; // loggen följer med nedåt
   let current = null; // gruppen som raderna hamnar i
 
@@ -147,12 +149,15 @@ const Log = (() => {
     if (item.cls) line.className = item.cls;
     list.appendChild(line);
     if (g.classList.contains("folded")) summarize(g);
-    if (!first) {
+    // Rader från en runda som redan är förbi kommer ikapp fort, så att
+    // loggen inte hamnar efter. Den aktuella rundan kommer i lugn takt.
+    const behind = queue.some((q) => q.key !== item.key);
+    if (!first || behind) {
       // Hela raden på en gång, med en mjuk övergång.
       line.textContent = item.text;
       line.classList.add("appear");
       follow();
-      setTimeout(next, LINE_GAP);
+      setTimeout(next, behind ? CATCH_UP : LINE_GAP);
       return;
     }
     line.classList.add("cursor");
@@ -248,9 +253,13 @@ function handle(msg) {
       renderOverlay();
       renderChoose();
       firstHelp();
+      checkRoundCard();
       break;
     case "log":
       Log.push(msg.text, msg.c);
+      break;
+    case "runda":
+      showRoundCard(msg);
       break;
     case "sound":
       Sound.play(msg.s);
@@ -642,6 +651,57 @@ function renderNow(me) {
     line(me.ready ? "Väntar på de andra" : touch ? "Tryck Nytt torn" : "Enter: nytt torn", "plan");
   }
 }
+
+// Rundans sammanfattning: ett kort över kartan med vad som hände dig, det
+// farliga först, och en kort rad i loggen. Kortet försvinner när du väljer
+// nästa drag, efter en stund, eller vid ett klick.
+const CARD_MS = 7000;
+let cardTimer = null;
+let cardAction = "";
+function showRoundCard(msg) {
+  const lines = msg.lines || [];
+  if (!lines.length) return;
+  const short = lines.filter((l) => l.kort).map((l) => l.kort);
+  if (short.length) Log.push("Runda " + msg.round + ": " + short.join(", ") + ".", "sam");
+  const card = $("roundcard");
+  card.innerHTML = "";
+  const h = document.createElement("div");
+  h.className = "cardhead";
+  h.textContent = "Runda " + msg.round;
+  card.appendChild(h);
+  lines.forEach((l) => {
+    const d = document.createElement("div");
+    d.textContent = l.text;
+    if (l.c) d.className = l.c;
+    card.appendChild(d);
+  });
+  card.hidden = false;
+  card.classList.remove("leaving");
+  cardAction = "";
+  clearTimeout(cardTimer);
+  cardTimer = setTimeout(hideRoundCard, CARD_MS);
+}
+function hideRoundCard() {
+  const card = $("roundcard");
+  if (card.hidden || card.classList.contains("leaving")) return;
+  clearTimeout(cardTimer);
+  card.classList.add("leaving");
+  setTimeout(() => {
+    if (card.classList.contains("leaving")) card.hidden = true;
+  }, 400);
+}
+// checkRoundCard döljer kortet när ett nytt drag är valt eller vandringen
+// är slut.
+function checkRoundCard() {
+  if ($("roundcard").hidden) return;
+  if (state.phase !== "spel") {
+    $("roundcard").hidden = true;
+    return;
+  }
+  if (state.action && state.action !== cardAction) hideRoundCard();
+  cardAction = state.action || "";
+}
+$("roundcard").addEventListener("click", hideRoundCard);
 
 // Förklaringen till ett tecken på kartan. Den läggs under tecknet, inom
 // kartans ruta.
