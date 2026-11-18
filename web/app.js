@@ -193,7 +193,7 @@ function renderSide() {
     mark.textContent = "@ ";
     mark.style.color = MapView.PLAYER_COLORS[p.slot];
     li.appendChild(mark);
-    li.appendChild(document.createTextNode(p.name + (p.id === state.you ? " (du)" : "")));
+    li.appendChild(document.createTextNode(p.name + (p.id === state.you ? " (du)" : p.bot ? " (dator)" : "")));
     const tag = playerTag(p);
     if (tag) {
       const t = document.createElement("span");

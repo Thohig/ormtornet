@@ -67,7 +67,8 @@ func (g *Game) dealClues(pool map[string][]string, kind, class string) {
 	}
 	var receivers []*Player
 	for _, p := range g.players {
-		if p != nil && p.Status == statusIn {
+		// Ledtrådarna går bara till människor; datorspelare behöver dem inte.
+		if p != nil && p.Status == statusIn && p.bot == nil {
 			receivers = append(receivers, p)
 		}
 	}

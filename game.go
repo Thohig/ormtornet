@@ -105,6 +105,7 @@ type Player struct {
 	Treasure int
 	Status   string
 	Seen     map[string]bool // fällor och varelser spelaren har mött
+	bot      *botBrain       // satt för datorstyrda vandrare
 
 	HP      int
 	Potions int
@@ -113,6 +114,10 @@ type Player struct {
 	Poison  int // rundor kvar med gift i kroppen
 	Dark    int // rundor kvar utan ljus
 }
+
+// present är sant för en spelare som deltar just nu: en människa med öppen
+// webbläsare, eller en datorspelare.
+func (p *Player) present() bool { return p.client != nil || p.bot != nil }
 
 type Client struct {
 	conn   *wsConn
@@ -258,7 +263,8 @@ type playerView struct {
 	Ready    bool   `json:"ready"`
 	Chosen   bool   `json:"chosen"`
 	Treasure int    `json:"treasure"` // -1 om spelaren inte får veta
-	Hidden   bool   `json:"hidden"`   // positionen är okänd för den som tittar
+	Bot      bool   `json:"bot"`
+	Hidden   bool   `json:"hidden"` // positionen är okänd för den som tittar
 }
 
 type roomView struct {
@@ -269,6 +275,7 @@ type roomView struct {
 	Exit int     `json:"exit"`
 	Name string  `json:"name"`
 	Mark string  `json:"mark,omitempty"`
+	S    bool    `json:"s,omitempty"` // genomsökt
 }
 
 type resultView struct {
@@ -391,7 +398,7 @@ func (g *Game) stateFor(me *Player) stateMsg {
 		}
 		pv := playerView{
 			ID: p.ID, Name: p.Name, Slot: p.Slot, X: p.X, Y: p.Y,
-			Online: p.client != nil, Status: p.Status, Ready: p.Ready,
+			Online: p.present(), Bot: p.bot != nil, Status: p.Status, Ready: p.Ready,
 			Chosen: p.Action != "", Treasure: -1,
 		}
 		if p == me || g.phase == phaseEnd {
@@ -409,7 +416,7 @@ func (g *Game) stateFor(me *Player) stateMsg {
 			if !r.Revealed || (blind && (x != me.X || y != me.Y)) {
 				continue
 			}
-			rv := roomView{X: x, Y: y, D: r.Doors, K: r.Kind, Exit: -1, Name: g.roomName(r), Mark: r.Mark}
+			rv := roomView{X: x, Y: y, D: r.Doors, K: r.Kind, Exit: -1, Name: g.roomName(r), Mark: r.Mark, S: r.Searched}
 			if r.HasExit {
 				rv.Exit = int(r.Exit)
 			}
@@ -478,7 +485,7 @@ func (g *Game) placeAtCorner(p *Player) {
 	p.Status = statusIn
 	p.Treasure = 0
 	p.Action = ""
-	p.Ready = false
+	p.Ready = p.bot != nil // datorspelare är alltid redo
 	p.HP = g.data.Regler.Liv
 	p.Seen = map[string]bool{}
 	p.Potions, p.Stuck, p.Cellar, p.Poison, p.Dark = 0, 0, 0, 0, 0
@@ -497,7 +504,7 @@ func (g *Game) Join(c *Client, rawName string) {
 	// Återanslutning: samma namn tar tillbaka sin vandrare.
 	for _, p := range g.players {
 		if p != nil && strings.EqualFold(p.Name, name) {
-			if p.client != nil {
+			if p.client != nil || p.bot != nil {
 				g.send(c, logMsg{T: "error", Text: g.data.Text("namn_upptaget")})
 				return
 			}
@@ -522,7 +529,7 @@ func (g *Game) Join(c *Client, rawName string) {
 	if slot < 0 {
 		// Alla platser tagna: en vandrare som lämnat spelet får ge plats.
 		for i, p := range g.players {
-			if p.client == nil {
+			if !p.present() {
 				slot = i
 				break
 			}
@@ -543,6 +550,11 @@ func (g *Game) Join(c *Client, rawName string) {
 	g.soundAll("ansluter")
 	g.logTo(p, g.data.Text("valkommen", "namn", name, "horn", horn), "syn")
 	g.logTo(p, g.describe(p, &g.rooms[p.Y][p.X], p.X, p.Y), "")
+	for _, b := range g.players {
+		if b != nil && b.bot != nil {
+			g.logTo(p, fill(pick(g.data.AI.Ansluter), "namn", b.Name, "horn", g.data.Horn[b.Slot]), "info")
+		}
+	}
 	g.logTo(p, g.data.Text("lobby", "min", strconv.Itoa(g.cfg.MinPlayers)), "info")
 	g.logOthers(p, g.data.Text("ansluter", "namn", name, "horn", horn), "info")
 }
@@ -582,19 +594,23 @@ func (g *Game) Ready(c *Client) {
 	}
 }
 
-// checkStart startar spelet när alla anslutna är redo.
+// checkStart startar spelet när alla anslutna människor är redo.
+// Datorspelare är alltid redo, men minst en människa måste vara med.
 func (g *Game) checkStart() bool {
-	n := 0
+	n, humans := 0, 0
 	for _, p := range g.players {
-		if p == nil || p.client == nil {
+		if p == nil || !p.present() {
 			continue
 		}
-		if !p.Ready {
-			return false
+		if p.bot == nil {
+			if !p.Ready {
+				return false
+			}
+			humans++
 		}
 		n++
 	}
-	if n < g.cfg.MinPlayers {
+	if humans == 0 || n < g.cfg.MinPlayers {
 		return false
 	}
 	if g.phase == phaseEnd {
@@ -627,7 +643,7 @@ func (g *Game) startGame() {
 	g.usedClues = map[string]bool{}
 	for _, p := range g.players {
 		if p != nil {
-			p.Ready = false
+			p.Ready = p.bot != nil
 			p.Action = ""
 		}
 	}
@@ -647,6 +663,7 @@ func (g *Game) startRound() {
 	if g.timer != nil {
 		g.timer.Stop()
 	}
+	g.scheduleBots()
 	g.timer = time.AfterFunc(wait, func() {
 		g.mu.Lock()
 		defer g.mu.Unlock()
@@ -661,7 +678,7 @@ func (g *Game) startRound() {
 func (g *Game) onlyCellar() bool {
 	cellar := false
 	for _, p := range g.players {
-		if p == nil || p.Status != statusIn || p.client == nil {
+		if p == nil || p.Status != statusIn || !p.present() {
 			continue
 		}
 		if p.Cellar == 0 {
@@ -676,7 +693,7 @@ func (g *Game) onlyCellar() bool {
 func (g *Game) allChosen() bool {
 	any := false
 	for _, p := range g.players {
-		if p == nil || p.client == nil {
+		if p == nil || !p.present() {
 			continue
 		}
 		if !g.isController(p) && (p.Status != statusIn || p.Cellar > 0) {
@@ -692,7 +709,11 @@ func (g *Game) allChosen() bool {
 
 // Act tar emot spelarens val för rundan. Valet kan ändras tills rundan utförs.
 func (g *Game) Act(c *Client, a string, monsterID int) {
-	p := c.player
+	g.actPlayer(c.player, a, monsterID)
+}
+
+// actPlayer tar emot ett val från en människa eller en datorspelare.
+func (g *Game) actPlayer(p *Player, a string, monsterID int) {
 	if p != nil && g.phase == phasePlay && g.isController(p) {
 		g.actController(p, a, monsterID)
 		return
@@ -819,7 +840,7 @@ func (g *Game) endGame() {
 		if p == nil {
 			continue
 		}
-		p.Ready = false
+		p.Ready = p.bot != nil
 		p.Action = ""
 		if p.Status == statusIn {
 			p.Status = statusLost

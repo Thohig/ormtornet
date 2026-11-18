@@ -23,6 +23,7 @@ Flaggor:
 - `-sol 40` antal rundor innan solen går ner
 - `-turtid 30s` längsta tid att välja drag per runda
 - `-min 2` minsta antal spelare för att börja (sätt `-min 1` för att prova ensam)
+- `-ai 2` antal datorstyrda vandrare (0–3)
 - `-avslojande=false` stänger av avslöjandet, för spelare som redan känner till tornets hemlighet
 
 ## Spela
@@ -54,6 +55,32 @@ ut med skatt räknas, och den med mest skatt vinner. Den som är kvar inne när
 solen har gått ner är förlorad.
 
 Andras skatt och val av drag syns inte förrän spelet är slut.
+
+### Spela mot datorn
+
+Med `-ai` fyller servern upp hörnen med datorstyrda vandrare:
+
+```bash
+go run . -ai 3
+```
+
+Datorspelarna står redo vid portarna. Omgången börjar när alla människor har
+tryckt Enter; minst en människa måste vara med. I listan över vandrare står
+de som "(dator)".
+
+- De ser bara det en människa skulle se: kända rum, varelser i kända rum och
+  sin egen skatt. De ser inte okända rum, ormkorten eller andras skatt.
+- De utforskar mot mitten, tar skatt i kammaren så länge ormen sover djupt
+  nog, och går mot närmaste port när solen börjar bli låg, väskan är full
+  eller livet tryter.
+- I strid gissar de varelsens vanor utifrån dess beskrivning och lär sig av
+  det de ser. De flyr när nästa slag kan döda dem.
+- Det finns två personligheter som turas om: en djärv och en försiktig.
+- Dör en datorspelare först tar den över varelserna och flyttar dem mot
+  närmaste levande vandrare.
+- Ledtrådarna om tornets hemlighet går bara till människor.
+
+Namn, personligheter och betänketid ligger i `data/ai.json`.
 
 ### Skattkammaren och ormen
 
@@ -155,6 +182,7 @@ så starta om servern efter en ändring.
 - `fallor.json` regler (liv, chans för händelse, drycker), fällor och sökresultat
 - `ormen.json` ormkorten, skatten i kammaren och vad som händer när ormen vaknar
 - `monster.json` varelserna (liv, skada, guld, vanor, texter) och striderna
+- `ai.json` datorspelarnas namn, personligheter och betänketid
 - `avslojande.json` nivågränser, ledtrådar, texter vid nivåbyte, nya
   förklaringar till fällorna och epilogen. Rumsbeskrivningarna för varje
   nivå (`"1"` till `"4"`) ligger i `texter.json`.
@@ -173,6 +201,7 @@ Beskrivningarna för rummen ligger under nivåerna `"1"` till `"4"`.
 - `serpent.go` skattkammaren och ormkorten
 - `monster.go` varelser, strider och den döda spelarens styrning
 - `reveal.go` avslöjandet: nivåer, ledtrådar och epilog
+- `ai.go` datorstyrda vandrare
 - `data.go` läser in datafilerna
 - `ws.go` en liten websocket-implementation utan beroenden
 - `web/` klienten: HTML, CSS och JavaScript utan ramverk

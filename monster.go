@@ -147,6 +147,9 @@ func (g *Game) announceMonster(p *Player) {
 func (g *Game) duel(p *Player, m *Monster, a string) {
 	t := g.data.monsterType(m.Type)
 	mc := g.monsterChoice(m)
+	if p.bot != nil {
+		p.bot.saw(m.Type, mc)
+	}
 	g.logTo(p, g.data.MonsterText("duell", g.monsterVars(m,
 		"ditt_val", g.choiceWord(a), "dess_val", g.choiceWord(mc))...), "")
 	g.logOthers(p, g.data.MonsterText("strid_andra", "region", g.data.region(p.X, p.Y)), "dim")

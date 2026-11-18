@@ -133,10 +133,11 @@ type Data struct {
 	Ormen        Serpent             `json:"ormen"`
 	Monster      Monsters            `json:"monster"`
 	Avslojande   Reveal              `json:"avslojande"`
+	AI           AIData              `json:"ai"`
 }
 
 // Filerna i datamappen. Alla läses in i samma struktur; "texter" slås ihop.
-var dataFiles = []string{"texter.json", "fallor.json", "ormen.json", "monster.json", "avslojande.json"}
+var dataFiles = []string{"texter.json", "fallor.json", "ormen.json", "monster.json", "avslojande.json", "ai.json"}
 
 // loadData läser filerna i mappen dir. Saknas en fil används den inbyggda kopian.
 func loadData(dir string) (*Data, string, error) {
@@ -230,6 +231,9 @@ func mergeData(d, part *Data) {
 	if len(part.Avslojande.Granser) > 0 {
 		d.Avslojande = part.Avslojande
 	}
+	if len(part.AI.Personligheter) > 0 {
+		d.AI = part.AI
+	}
 }
 
 // weighted väljer en nyckel efter vikt.
@@ -312,6 +316,27 @@ func (rt *RoomType) Describe(level, variant int) string {
 		}
 	}
 	return ""
+}
+
+// AIData beskriver de datorstyrda vandrarna.
+type AIData struct {
+	Namn           []string      `json:"namn"`
+	Personligheter []Personality `json:"personligheter"`
+	BetanketidMs   []int         `json:"betanketid_ms"`
+	Ansluter       []string      `json:"ansluter"`
+}
+
+// Personality styr hur modig en datorspelare är.
+type Personality struct {
+	ID          string    `json:"id"`
+	Namn        string    `json:"namn"`
+	Marginal    int       `json:"marginal"`       // extra rundor att ha kvar när den går mot porten
+	SkattMal    int       `json:"skatt_mal"`      // går ut när den bär så här mycket
+	TaVidSomn   []float64 `json:"ta_vid_somn"`    // chans att ta skatt per sömnnivå
+	SokChans    float64   `json:"sok_chans"`      // chans att söka igenom ett rum
+	FlyMarginal int       `json:"fly_marginal"`   // flyr när ett slag till (plus så här mycket) kan döda
+	GaHemVidLiv int       `json:"ga_hem_vid_liv"` // går mot porten vid så här lite liv
+	DrickVidLiv int       `json:"drick_vid_liv"`  // dricker vid så här lite liv
 }
 
 // Reveal styr hur tornet avslöjas i fyra nivåer.

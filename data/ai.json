@@ -1,0 +1,37 @@
+{
+  "ai": {
+    "_om": "Datorstyrda vandrare. Personligheterna turas om: den första datorspelaren får den första personligheten, nästa den andra och så vidare. Namnen väljs i tur och ordning.",
+    "namn": ["Ingrid", "Sigge", "Ylva", "Tore", "Märta", "Gösta"],
+
+    "personligheter": [
+      {
+        "id": "djarv",
+        "namn": "djärv",
+        "marginal": 1,
+        "skatt_mal": 160,
+        "ta_vid_somn": [1.0, 0.7, 0.25],
+        "sok_chans": 0.08,
+        "fly_marginal": 0,
+        "ga_hem_vid_liv": 2,
+        "drick_vid_liv": 2
+      },
+      {
+        "id": "forsiktig",
+        "namn": "försiktig",
+        "marginal": 4,
+        "skatt_mal": 80,
+        "ta_vid_somn": [1.0, 0.3, 0.0],
+        "sok_chans": 0.2,
+        "fly_marginal": 1,
+        "ga_hem_vid_liv": 3,
+        "drick_vid_liv": 3
+      }
+    ],
+
+    "betanketid_ms": [700, 2200],
+
+    "ansluter": [
+      "{namn} kliver in genom porten i {horn}. Hen ser ut att ha gjort det här förut."
+    ]
+  }
+}

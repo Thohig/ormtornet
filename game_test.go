@@ -603,3 +603,119 @@ func TestEpilogue(t *testing.T) {
 		t.Fatal("den som är kvar inne ska få veta var den är")
 	}
 }
+
+// simulate spelar en hel omgång med en människa som bara väntar och tre
+// datorspelare. Timrar används inte; testet driver rundorna själv.
+func simulate(t *testing.T, sun int) (*Game, *Player) {
+	t.Helper()
+	d, _, err := loadData("data")
+	if err != nil {
+		t.Fatal(err)
+	}
+	d.AI.BetanketidMs = []int{3600000, 3600000} // timrarna ska aldrig hinna gå
+	g := NewGame(d, Config{Reveal: true, SunMax: sun, TurnTime: time.Hour, MinPlayers: 2})
+	if n := g.AddBots(3); n != 3 {
+		t.Fatalf("lade till %d datorspelare", n)
+	}
+	c := testClient()
+	g.Join(c, "Människa")
+	g.Ready(c)
+	if g.phase != phasePlay {
+		t.Fatal("spelet startade inte med datorspelare")
+	}
+	for guard := 0; g.phase == phasePlay; guard++ {
+		if guard > 10*sun {
+			t.Fatal("omgången tog aldrig slut")
+		}
+		round := g.round
+		for _, p := range g.players {
+			if p != nil && p.bot != nil {
+				g.botAct(p, round)
+			}
+		}
+		if g.phase == phasePlay && g.round == round && c.player.Status == statusIn && c.player.Cellar == 0 {
+			g.Act(c, actWait, 0)
+		}
+		if g.phase == phasePlay && g.round == round {
+			g.resolve() // som när turtiden går ut
+		}
+		for len(c.send) > 0 {
+			<-c.send
+		}
+	}
+	return g, c.player
+}
+
+func TestBotsPlayWholeGames(t *testing.T) {
+	escaped, rich, dead, total := 0, 0, 0, 0
+	for i := 0; i < 300; i++ {
+		g, _ := simulate(t, 40)
+		for _, p := range g.players {
+			if p == nil || p.bot == nil {
+				continue
+			}
+			total++
+			switch p.Status {
+			case statusOut:
+				escaped++
+				if p.Treasure > 0 {
+					rich++
+				}
+			case statusDead:
+				dead++
+			}
+		}
+	}
+	t.Logf("datorspelare: %d av %d kom ut, %d med skatt, %d dog", escaped, total, rich, dead)
+	if rich*4 < total {
+		t.Errorf("för få datorspelare kom ut med skatt: %d av %d", rich, total)
+	}
+}
+
+func TestBotsNeverTakeHumanNamesOrNeedReady(t *testing.T) {
+	g := testGame(t)
+	g.AddBots(2)
+	c := testClient()
+	g.Join(c, g.data.AI.Namn[0])
+	if c.player != nil {
+		t.Fatal("en människa tog över en datorspelare via namnet")
+	}
+	g.Join(c, "Alva")
+	if g.phase != phaseLobby {
+		t.Fatal("spelet startade innan människan var redo")
+	}
+	g.Ready(c)
+	if g.phase != phasePlay {
+		t.Fatal("datorspelarna hindrade starten")
+	}
+}
+
+func TestBotControlsMonstersWhenDead(t *testing.T) {
+	g := testGame(t)
+	g.AddBots(1)
+	c := testClient()
+	g.Join(c, "Alva")
+	g.Ready(c)
+	var bot *Player
+	for _, p := range g.players {
+		if p != nil && p.bot != nil {
+			bot = p
+		}
+	}
+	human := c.player
+	putInRoom(g, human, 4, 1)
+	r := putInRoom(g, &Player{Seen: map[string]bool{}}, 4, 2)
+	r.Doors[North] = true
+	g.rooms[1][4].Doors[South] = true
+	g.monsters = append(g.monsters, &Monster{ID: 5, Type: "krypare", X: 4, Y: 3, HP: 2})
+	g.reveal(4, 3).Doors[North] = true
+	g.rooms[2][4].Doors[South] = true
+	g.damage(bot, 100, false)
+	if !g.isController(bot) {
+		t.Fatal("datorspelaren styr inte varelserna")
+	}
+	a, id := g.botDecide(bot)
+	if a != "N" || id != 5 {
+		t.Fatalf("varelsen skulle gå mot Alva, fick %q %d", a, id)
+	}
+}

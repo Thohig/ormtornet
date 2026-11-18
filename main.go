@@ -23,6 +23,7 @@ func main() {
 	sun := flag.Int("sol", 40, "antal rundor innan solen går ner")
 	turn := flag.Duration("turtid", 30*time.Second, "längsta tid att välja drag per runda")
 	minPlayers := flag.Int("min", 2, "minsta antal spelare för att börja")
+	bots := flag.Int("ai", 0, "antal datorstyrda vandrare (0-3)")
 	reveal := flag.Bool("avslojande", true, "låt tornet avslöja sin hemlighet (false för den som redan känner till den)")
 	flag.Parse()
 	cfg := Config{Reveal: *reveal, SunMax: max(4, *sun), TurnTime: max(3*time.Second, *turn), MinPlayers: max(1, min(maxPlayers, *minPlayers))}
@@ -32,6 +33,7 @@ func main() {
 		log.Fatalf("kunde inte läsa texterna: %v", err)
 	}
 	game := NewGame(data, cfg)
+	addedBots := game.AddBots(max(0, min(maxPlayers-1, *bots)))
 
 	sub, _ := fs.Sub(webFS, "web")
 	files := http.FileServer(http.FS(sub))
@@ -59,6 +61,9 @@ func main() {
 	fmt.Printf("Solen går ner efter %d rundor. Turtid %s. Minst %d spelare.\n", cfg.SunMax, cfg.TurnTime, cfg.MinPlayers)
 	if !cfg.Reveal {
 		fmt.Println("Avslöjandet är avstängt.")
+	}
+	if addedBots > 0 {
+		fmt.Printf("%d datorstyrda vandrare väntar vid portarna.\n", addedBots)
 	}
 	fmt.Println()
 	fmt.Println("Spelarna öppnar:")
