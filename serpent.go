@@ -113,6 +113,15 @@ func (g *Game) take(p *Player) {
 		g.buildDeck()
 	}
 	i := rand.IntN(len(g.deck))
+	// Ormen känner den som vet: ibland drar den invigde ett vakna-kort.
+	if p.initiated && rand.Float64() < g.data.Avslojande.Invigd.Vacker {
+		for j, id := range g.deck {
+			if c := g.data.card(id); c != nil && c.Vaknar {
+				i = j
+				break
+			}
+		}
+	}
 	c := g.data.card(g.deck[i])
 	if c == nil {
 		g.deck = append(g.deck[:i], g.deck[i+1:]...)

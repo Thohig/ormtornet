@@ -385,6 +385,15 @@ type Reveal struct {
 	EpilogDod        []string            `json:"epilog_dod"`
 	Svar             []string            `json:"svar"`            // viskningar som visar att man vet hemligheten
 	ViskaFranNiva    int                 `json:"viska_fran_niva"` // första nivån då man kan viska
+	Invigd           Initiate            `json:"invigd"`
+}
+
+// Initiate är fördelarna och svagheten för den som har viskat hemligheten.
+type Initiate struct {
+	Guld        float64 `json:"guld"`         // andel extra guld när den invigde kommer ut
+	Falla       float64 `json:"falla"`        // chansen att känna igen en fälla och kliva förbi
+	ExtraAnfall int     `json:"extra_anfall"` // varelserna anfaller oftare
+	Vacker      float64 `json:"vacker"`       // chansen att en näve drar ett vakna-kort
 }
 
 func (d *Data) roomType(id string) *RoomType {

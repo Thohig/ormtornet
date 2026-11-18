@@ -94,3 +94,57 @@ func TestPortWaitsForInitiated(t *testing.T) {
 		t.Fatal("porten väntade mer än en runda")
 	}
 }
+
+func TestInitiatedBenefits(t *testing.T) {
+	g, a, _ := startTwo(t)
+	p := a.player
+	p.initiated = true
+	g.data.Avslojande.Invigd.Falla = 1
+	// Fällan i ett nytt rum: den invigde kliver förbi.
+	putInRoom(g, p, 4, 3)
+	g.rooms[3][4].Doors[East] = true
+	g.rooms[3][5] = Room{}
+	g.reveal(5, 3).Event = "pilar"
+	g.rooms[3][5].Revealed = false
+	g.rooms[3][5].Event = "pilar"
+	hp := p.HP
+	g.move(p, East, 0)
+	if p.HP != hp || g.rooms[3][5].Mark == "" {
+		t.Fatalf("liv %d av %d, tecken %q", p.HP, hp, g.rooms[3][5].Mark)
+	}
+
+	// Lugna ormen i kammaren, en gång.
+	p.X, p.Y = g.center(), g.center()
+	g.reveal(p.X, p.Y)
+	before := g.wakeCardsLeft()
+	if !g.canWhisper(p) {
+		t.Fatal("kan inte viska i kammaren")
+	}
+	g.Whisper(a, "sov")
+	if g.wakeCardsLeft() != before-1 || !p.calmed || g.canWhisper(p) {
+		t.Fatalf("vakna-kort %d, före %d", g.wakeCardsLeft(), before)
+	}
+
+	// Guld när den invigde kommer ut.
+	cn := g.corners()[0]
+	p.X, p.Y, p.Treasure = cn.x, cn.y, 100
+	g.reveal(cn.x, cn.y)
+	g.move(p, cn.exit, 0)
+	if p.Status != statusOut || p.Treasure != 125 {
+		t.Fatalf("%s med %d", p.Status, p.Treasure)
+	}
+}
+
+func TestInitiatedWakesSerpentMoreEasily(t *testing.T) {
+	g, a, _ := startTwo(t)
+	p := a.player
+	p.initiated = true
+	g.data.Avslojande.Invigd.Vacker = 1
+	p.X, p.Y = g.center(), g.center()
+	g.reveal(p.X, p.Y)
+	wakes := g.wakes
+	g.take(p)
+	if g.wakes != wakes+1 {
+		t.Fatal("ormen vaknade inte")
+	}
+}

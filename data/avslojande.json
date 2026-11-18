@@ -6,6 +6,8 @@
 
     "_om_svar": "Viskningar som visar att vandraren vet hemligheten. Stämmer en viskning med något av svaren, som hela ord, blir vandraren invigd. Man kan viska en gång per nivå, från viska_fran_niva.",
     "viska_fran_niva": 2,
+    "_om_invigd": "Fördelarna och svagheten för den invigde: extra guld när hen kommer ut, chansen att kliva förbi en fälla, hur mycket oftare varelserna anfaller och chansen att en näve väcker ormen.",
+    "invigd": { "guld": 0.25, "falla": 0.5, "extra_anfall": 1, "vacker": 0.15 },
     "svar": [
       "tornet är ormen",
       "ormen är tornet",
@@ -144,6 +146,18 @@
     ],
     "porten_vantar": [
       "Solen har gått ner, men porten väntar. Den väntar på dig. Du har en runda till."
+    ],
+    "invigd_falla": [
+      "Du känner igen det här, {falla}. Du vet vad väggarna vill, och kliver förbi."
+    ],
+    "invigd_lugnar": [
+      "Du lägger handen mot väggen och viskar. Andetagen runt dig blir långsammare. Ormen sover djupare."
+    ],
+    "invigd_lugnat": [
+      "Du har redan lugnat ormen en gång. Den lyssnar inte en gång till."
+    ],
+    "invigd_guld": [
+      "Porten släpper ut dig, och i väskan ligger mer än du minns. {antal} guld till."
     ],
     "kronika_invigd": [
       "{namn} viskade något till tornet, och tornet hörde."

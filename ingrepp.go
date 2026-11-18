@@ -239,19 +239,11 @@ func (g *Game) gmMonster(x, y int, id string) error {
 // gmCalm tar bort ett vakna-kort ur ormens lek, eller lägger till ett
 // sovkort om det inte finns något att ta bort.
 func (g *Game) gmCalm() error {
-	for i, id := range g.deck {
-		if c := g.data.card(id); c != nil && c.Vaknar {
-			g.deck = append(g.deck[:i], g.deck[i+1:]...)
-			g.gmNote("Lugnade ormen: ett vakna-kort mindre.")
-			return nil
-		}
-	}
-	for _, c := range g.data.Ormen.Kort {
-		if !c.Vaknar {
-			g.deck = append(g.deck, c.ID)
-			g.gmNote("Lugnade ormen: ett sovkort till.")
-			return nil
-		}
+	switch g.calmSerpent() {
+	case "vakna":
+		g.gmNote("Lugnade ormen: ett vakna-kort mindre.")
+	case "sov":
+		g.gmNote("Lugnade ormen: ett sovkort till.")
 	}
 	return nil
 }

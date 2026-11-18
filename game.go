@@ -199,6 +199,7 @@ type Player struct {
 	initiated  bool   // vandraren har viskat tornets hemlighet
 	guessLevel int    // nivån då vandraren senast viskade
 	whispered  string // det vandraren senast viskade, för spelledaren
+	calmed     bool   // den invigde har lugnat ormen under vandringen
 	X, Y       int
 	client     *Client
 	Ready      bool
@@ -576,8 +577,7 @@ func (g *Game) stateFor(me *Player) stateMsg {
 		st.Compass = g.compass(me)
 		st.Heart = g.heartbeat(me)
 		st.Initiated = me.initiated
-		st.CanWhisper = g.cfg.Reveal && me.bot == nil && !me.initiated && me.Status == statusIn &&
-			g.level >= max(1, g.data.Avslojande.ViskaFranNiva) && me.guessLevel < g.level
+		st.CanWhisper = g.canWhisper(me)
 	}
 	if g.cfg.Classes && me.classID == "" && g.phase != phasePlay {
 		for _, id := range me.offer {
@@ -695,7 +695,7 @@ func (g *Game) placeAtCorner(p *Player) {
 	p.Potions, p.Stuck, p.Cellar, p.Poison, p.Dark = 0, 0, 0, 0, 0
 	p.known = newGrid[bool](g.size)
 	p.items = nil
-	p.initiated, p.guessLevel, p.whispered = false, 0, ""
+	p.initiated, p.guessLevel, p.whispered, p.calmed = false, 0, "", false
 	g.revealPorts()
 	g.noteRoom(p)
 }
@@ -1300,6 +1300,12 @@ func (g *Game) move(p *Player, d Dir, depth int) {
 	}
 	if room.HasExit && room.Exit == d {
 		p.Status = statusOut
+		if p.initiated && p.Treasure > 0 {
+			if bonus := int(float64(p.Treasure) * g.data.Avslojande.Invigd.Guld); bonus > 0 {
+				p.Treasure += bonus
+				g.logTo(p, g.data.Text("invigd_guld", "antal", strconv.Itoa(bonus)), "rost")
+			}
+		}
 		if p.Treasure > 0 {
 			g.chronicle("kronika_ut", "namn", p.Name, "guld", strconv.Itoa(p.Treasure))
 		} else {
@@ -1343,11 +1349,17 @@ func (g *Game) move(p *Player, d Dir, depth int) {
 		if target.Event != "" {
 			ev := target.Event
 			target.Event = ""
-			if t := g.data.trap(ev); t != nil && g.is(p, "sparfinnare") && rand.Float64() < g.classVal(p, "se_falla", 0) {
+			t := g.data.trap(ev)
+			switch {
+			case t != nil && g.is(p, "sparfinnare") && rand.Float64() < g.classVal(p, "se_falla", 0):
 				// Spårfinnaren ser fällan i tid. Tecknet visar att den finns.
 				target.Mark = t.Tecken
 				g.logTo(p, g.data.Text("klass_sparfinnare_falla", "falla", lowerFirst(t.Namn)), "info")
-			} else {
+			case t != nil && p.initiated && rand.Float64() < g.data.Avslojande.Invigd.Falla:
+				// Den invigde känner igen fällan för vad den är.
+				target.Mark = t.Tecken
+				g.logTo(p, g.data.Text("invigd_falla", "falla", lowerFirst(t.Namn)), "rost")
+			default:
 				g.trigger(p, g.data.trap(ev), depth)
 			}
 		}

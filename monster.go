@@ -120,6 +120,9 @@ func (g *Game) monsterChoice(m *Monster) string {
 // fram fler anfall.
 func (g *Game) monsterChoiceVs(m *Monster, p *Player) string {
 	extra := int(g.classVal(p, "extra_anfall", 0))
+	if p.initiated {
+		extra += g.data.Avslojande.Invigd.ExtraAnfall
+	}
 	t := g.data.monsterType(m.Type)
 	if extra <= 0 || t == nil || len(t.Vanor) == 0 {
 		return g.monsterChoice(m)

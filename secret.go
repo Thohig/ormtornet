@@ -46,7 +46,17 @@ func (g *Game) Whisper(c *Client, text string) {
 		return
 	}
 	if p.initiated {
-		g.logTo(p, g.data.Text("viskning_redan"), "dim")
+		// I kammaren kan den invigde lugna ormen, en gång per vandring.
+		switch {
+		case g.rooms[p.Y][p.X].Kind != "kammare":
+			g.logTo(p, g.data.Text("viskning_redan"), "dim")
+		case p.calmed:
+			g.logTo(p, g.data.Text("invigd_lugnat"), "dim")
+		default:
+			p.calmed = true
+			g.calmSerpent()
+			g.logTo(p, g.data.Text("invigd_lugnar"), "rost")
+		}
 		return
 	}
 	if len([]rune(text)) > 80 {
@@ -124,4 +134,34 @@ func (g *Game) portGrace() bool {
 		g.logOthers(p, g.data.Text("forlorad", "namn", p.Name), "varn")
 	}
 	return true
+}
+
+// canWhisper är sant när vandraren kan viska nu: för att bli invigd, eller
+// som invigd i kammaren för att lugna ormen.
+func (g *Game) canWhisper(p *Player) bool {
+	if !g.cfg.Reveal || p.bot != nil || p.Status != statusIn || p.Cellar > 0 || g.phase != phasePlay {
+		return false
+	}
+	if p.initiated {
+		return !p.calmed && g.rooms[p.Y][p.X].Kind == "kammare"
+	}
+	return g.level >= max(1, g.data.Avslojande.ViskaFranNiva) && p.guessLevel < g.level
+}
+
+// calmSerpent tar ett vakna-kort ur leken, eller lägger till ett sovkort om
+// det inte finns något vakna-kort kvar.
+func (g *Game) calmSerpent() string {
+	for i, id := range g.deck {
+		if c := g.data.card(id); c != nil && c.Vaknar {
+			g.deck = append(g.deck[:i], g.deck[i+1:]...)
+			return "vakna"
+		}
+	}
+	for _, c := range g.data.Ormen.Kort {
+		if !c.Vaknar {
+			g.deck = append(g.deck, c.ID)
+			return "sov"
+		}
+	}
+	return ""
 }
