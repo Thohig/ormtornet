@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
+	"time"
 )
 
 func TestHostViewListsPlayersAndBots(t *testing.T) {
@@ -90,5 +91,24 @@ func TestCloseTellsPlayers(t *testing.T) {
 	}
 	if !got {
 		t.Fatal("Alva fick inte veta att tornet stänger")
+	}
+}
+
+func TestIdleFor(t *testing.T) {
+	g := testGame(t)
+	g.lastActive = time.Now().Add(-time.Hour)
+	if g.IdleFor() < 59*time.Minute {
+		t.Fatal("ett tomt torn räknades inte som tomt")
+	}
+	a := testClient()
+	g.Join(a, "Alva")
+	if g.IdleFor() > time.Second {
+		t.Fatal("en ansluten spelare räknades inte")
+	}
+	g.Leave(a)
+	g.lastActive = time.Now().Add(-time.Hour)
+	g.HostView() // spelledarens sida frågar
+	if g.IdleFor() > time.Second {
+		t.Fatal("spelledarens sida räknades inte")
 	}
 }

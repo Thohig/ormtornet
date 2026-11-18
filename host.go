@@ -46,6 +46,7 @@ type hostView struct {
 func (g *Game) HostView() hostView {
 	g.mu.Lock()
 	defer g.mu.Unlock()
+	g.lastActive = time.Now()
 	v := hostView{
 		Phase: g.phase, Round: g.round, Sun: g.sun, SunMax: g.cfg.SunMax,
 		TurnSecs: int(g.cfg.TurnTime / time.Second), MinPlayers: g.cfg.MinPlayers,
@@ -62,6 +63,17 @@ func (g *Game) HostView() hostView {
 		})
 	}
 	return v
+}
+
+// IdleFor säger hur länge tornet har stått tomt: ingen människa ansluten och
+// ingen spelledarsida öppen. Används för att stänga ett bortglömt torn.
+func (g *Game) IdleFor() time.Duration {
+	g.mu.Lock()
+	defer g.mu.Unlock()
+	if g.humansPresent() > 0 {
+		g.lastActive = time.Now()
+	}
+	return time.Since(g.lastActive)
 }
 
 // isLocal är sant när förfrågan kommer från den här datorn, oavsett om den

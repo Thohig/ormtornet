@@ -19,6 +19,20 @@ datorn vaken så länge tornet är öppet. Flaggor skickas vidare, till exempel
 
 Det går också att starta direkt med `go run .`.
 
+### Ormtornet.app
+
+```bash
+./skapa-app.sh
+```
+
+skapar `~/Projekt/Ormtornet.app` med tornets ikon (ange en annan mapp som
+argument om du vill). Dubbelklick på appen bygger spelet från den här mappen,
+startar tornet i bakgrunden och öppnar spelledarens sida. Inget
+terminalfönster behövs. Tornet stängs med knappen "Stäng tornet", eller av sig
+självt när ingen spelare är ansluten och spelledarens sida har varit stängd i
+10 minuter. Loggen hamnar i `/tmp/ormtornet.log`. Appen behöver bara skapas om
+när den här mappen flyttas.
+
 Servern lyssnar på `0.0.0.0:8080` och skriver ut adressen spelarna ska
 öppna, till exempel `http://Din-Mac.local:8080`. Alla Macar i samma nätverk
 kan öppna den i Safari eller Chrome.
@@ -40,6 +54,7 @@ Flaggor:
 - `-avslojande=false` stänger av avslöjandet, för spelare som redan känner till tornets hemlighet
 - `-oppna` öppnar spelledarens sida i webbläsaren när servern har startat
 - `-vaken` håller datorn vaken så länge servern är igång
+- `-autostopp 10m` stänger tornet när ingen spelare är ansluten och spelledarens sida har varit stängd så länge
 - `-installningar fil` var spelledarens inställningar sparas (standard `~/Library/Application Support/Ormtornet/installningar.json`, tom för att inte spara)
 
 ### Spelledarens sida

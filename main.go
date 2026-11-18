@@ -34,6 +34,7 @@ func main() {
 	settingsPath := flag.String("installningar", defaultSettingsPath(), "fil där spelledarens inställningar sparas (tom för att inte spara)")
 	openPage := flag.Bool("oppna", false, "öppna spelledarens sida i webbläsaren när servern har startat")
 	awake := flag.Bool("vaken", false, "håll datorn vaken så länge servern är igång")
+	autostop := flag.Duration("autostopp", 0, "stäng tornet när ingen spelare är ansluten och spelledarens sida har varit stängd så här länge, t.ex. 10m (0 = aldrig)")
 	flag.Parse()
 
 	// Spelledarens sparade inställningar gäller, utom det som anges med
@@ -110,7 +111,11 @@ func main() {
 		os.Exit(0)
 	})
 	sigs := make(chan os.Signal, 2)
-	signal.Notify(sigs, os.Interrupt, syscall.SIGTERM, syscall.SIGHUP)
+	signal.Notify(sigs, os.Interrupt, syscall.SIGTERM)
+	if !signal.Ignored(syscall.SIGHUP) {
+		// Startad med nohup (som från Ormtornet.app) ska den inte börja lyssna på SIGHUP.
+		signal.Notify(sigs, syscall.SIGHUP)
+	}
 	go func() {
 		<-sigs
 		go closeTower()
@@ -152,6 +157,18 @@ func main() {
 		}
 	}
 	fmt.Println("Stäng tornet med Ctrl+C eller knappen på spelledarens sida.")
+	if *autostop > 0 {
+		fmt.Printf("Tornet stänger av sig självt när det har stått tomt i %s.\n", *autostop)
+		go func() {
+			tick := time.NewTicker(min(30*time.Second, *autostop/4))
+			for range tick.C {
+				if game.IdleFor() >= *autostop {
+					fmt.Printf("\nIngen har varit här på %s.", *autostop)
+					closeTower()
+				}
+			}
+		}()
+	}
 	fmt.Println()
 	if *openPage {
 		openBrowser("http://localhost:" + port + "/spelledare")

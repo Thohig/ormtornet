@@ -152,10 +152,12 @@ type Game struct {
 	pendingMove   *monsterMove // varelsens drag för rundan
 
 	usedClues map[string]bool // ledtrådar som redan har delats ut
+
+	lastActive time.Time // senast en människa var ansluten eller spelledarens sida frågade
 }
 
 func NewGame(d *Data, cfg Config) *Game {
-	return &Game{data: d, cfg: cfg, level: 1, phase: phaseLobby, sun: cfg.SunMax, usedClues: map[string]bool{}}
+	return &Game{data: d, cfg: cfg, level: 1, phase: phaseLobby, sun: cfg.SunMax, usedClues: map[string]bool{}, lastActive: time.Now()}
 }
 
 func inBounds(x, y int) bool { return x >= 0 && y >= 0 && x < gridSize && y < gridSize }
