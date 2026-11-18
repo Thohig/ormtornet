@@ -26,6 +26,15 @@ Flaggor:
 - `-ai 2` antal datorstyrda vandrare (0–3)
 - `-avslojande=false` stänger av avslöjandet, för spelare som redan känner till tornets hemlighet
 
+### Spelledarens sida
+
+Öppna `http://localhost:8080/spelledare` på datorn som kör servern. Där står
+adressen spelarna ska öppna, med knappar som kopierar en färdig inbjudan att
+skicka i en gruppchatt. Sidan visar också vilka som har anslutit och är redo,
+vilka inställningar tornet har och vad man kan göra om någon inte kommer in.
+Den visar inga skatter, positioner eller drag, så spelledaren kan spela med i
+en annan flik ("Gå in själv"). Andra datorer i nätverket kommer inte åt sidan.
+
 ## Spela
 
 1. Klicka på "Gå in i tornet" (det startar ljudet).

@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ormtornet – spelledare</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  html, body { overflow: auto; }
+  #crt { min-height: 100%; height: auto; }
+  #host {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 28px 20px 48px;
+  }
+  #host h1 {
+    font-size: 14px;
+    font-weight: normal;
+    letter-spacing: 0.4em;
+    color: var(--dim);
+    margin: 0 0 4px;
+  }
+  #host h2 {
+    font-size: 11px;
+    font-weight: normal;
+    letter-spacing: 0.3em;
+    color: var(--dim);
+    margin: 34px 0 10px;
+    text-transform: uppercase;
+  }
+  #host p { margin: 6px 0; line-height: 1.45; }
+  .dimtext { color: var(--dim); }
+  #addr {
+    font-size: clamp(14px, 2.6vw, 24px);
+    color: var(--hi);
+    text-shadow: 0 0 8px var(--glow);
+    overflow-wrap: anywhere;
+    margin: 6px 0;
+  }
+  #ips { color: var(--dim); }
+  #ips span { color: var(--fg); }
+  .buttons { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 14px; }
+  .btn {
+    background: none;
+    border: 1px solid var(--dim);
+    color: var(--fg);
+    font: inherit;
+    padding: 7px 14px;
+    cursor: pointer;
+    text-decoration: none;
+    text-shadow: inherit;
+  }
+  .btn:hover, .btn:focus-visible { color: var(--hi); border-color: var(--fg); outline: none; }
+  .btn.main { border-color: var(--fg); color: var(--hi); }
+  #copied { color: var(--info); min-height: 1.2em; }
+  #status { color: var(--hi); }
+  #status.dead { color: var(--warn); }
+  #slots { list-style: none; margin: 10px 0 0; padding: 0; }
+  #slots li { display: flex; gap: 12px; margin: 5px 0; }
+  #slots .name { flex: 0 0 22ch; }
+  #slots .empty { color: var(--faint); }
+  #slots .tag { color: var(--dim); }
+  #slots .tag.ok { color: var(--info); }
+  #slots .tag.away { color: var(--warn); }
+  #settings { display: grid; grid-template-columns: 18ch 1fr; gap: 4px 12px; margin: 0; }
+  #settings dt { color: var(--dim); }
+  #settings dd { margin: 0; }
+  #help li { margin: 6px 0; line-height: 1.45; }
+  #help { padding-left: 1.4em; margin: 0; }
+  code { color: var(--hi); font: inherit; }
+</style>
+</head>
+<body>
+<div id="crt">
+  <main id="host">
+    <h1>ORMTORNET · SPELLEDARE</h1>
+    <p class="dimtext">Den här sidan syns bara på din dator. Spelarna ser den inte.</p>
+
+    <h2>Bjud in</h2>
+    <p>Alla som ska spela öppnar Safari eller Chrome på samma wifi som du och går till:</p>
+    <div id="addr">…</div>
+    <p id="ips"></p>
+    <div class="buttons">
+      <button class="btn main" id="copyInvite" type="button">Kopiera inbjudan</button>
+      <button class="btn" id="copyAddr" type="button">Kopiera adressen</button>
+      <a class="btn" href="/" target="_blank" rel="noopener">Gå in själv</a>
+    </div>
+    <p id="copied"></p>
+
+    <h2>Vandrare</h2>
+    <p id="status">…</p>
+    <ul id="slots"></ul>
+
+    <h2>Inställningar</h2>
+    <dl id="settings"></dl>
+    <p class="dimtext">Ändras i dag med flaggor när servern startas, till exempel <code>go run . -ai 2</code>.</p>
+
+    <h2>Om någon inte kommer in</h2>
+    <ul id="help">
+      <li>Kontrollera att alla är på samma wifi. Gästnät hindrar ofta datorer från att nå varandra.</li>
+      <li>Fungerar inte namnet med <code>.local</code>, prova adressen med siffror.</li>
+      <li>Frågade macOS om spelet får ta emot nätverksanslutningar? Då måste du ha svarat Tillåt.
+        Det går att ändra under Systeminställningar → Nätverk → Brandvägg.</li>
+      <li>Den som tappar anslutningen går tillbaka till adressen och skriver samma namn igen.</li>
+    </ul>
+  </main>
+</div>
+<script>
+"use strict";
+const $ = (id) => document.getElementById(id);
+const COLORS = ["#ffcc66", "#66e0ff", "#ff7a9a", "#9dff7a"];
+let view = null;
+
+function inviteText(v) {
+  let t = "Kom och spela Ormtornet!\n" +
+    "Var på samma wifi som jag, öppna Safari eller Chrome och gå till:\n" + v.addrs.name;
+  if (v.addrs.ips.length) t += "\n\nFungerar inte det, prova:\n" + v.addrs.ips.join("\n");
+  return t;
+}
+
+async function copy(text, what) {
+  try {
+    await navigator.clipboard.writeText(text);
+    $("copied").textContent = what + " kopierad. Klistra in den i Meddelanden eller er gruppchatt.";
+  } catch {
+    $("copied").textContent = "Kunde inte kopiera. Markera texten ovan och kopiera själv.";
+  }
+}
+
+$("copyInvite").onclick = () => view && copy(inviteText(view), "Inbjudan");
+$("copyAddr").onclick = () => view && copy(view.addrs.name, "Adressen");
+
+function statusText(v) {
+  const here = v.players.filter((p) => p.online);
+  const humans = here.filter((p) => !p.bot);
+  const ready = humans.filter((p) => p.ready);
+  if (v.phase === "spel") {
+    return "Vandringen pågår. Runda " + v.round + ", " + v.sun + " av " + v.sunMax + " rundor kvar till solnedgången.";
+  }
+  const prefix = v.phase === "slut" ? "Vandringen är slut. " : "";
+  if (humans.length === 0) return prefix + "Väntar på vandrare.";
+  if (here.length < v.minPlayers) {
+    return prefix + "Väntar på fler vandrare. Minst " + v.minPlayers + " behövs, " + here.length + " är här.";
+  }
+  if (ready.length < humans.length) {
+    return prefix + ready.length + " av " + humans.length + " är redo. Det börjar när alla har tryckt Enter.";
+  }
+  return prefix + "Alla är redo.";
+}
+
+function tag(p, phase) {
+  if (!p.online) return ["borta", "away"];
+  if (p.bot) return ["datorstyrd", ""];
+  if (phase === "spel") {
+    return { ute: ["ute", "ok"], forlorad: ["förlorad", "away"], dod: ["död", "away"] }[p.status] || ["i tornet", ""];
+  }
+  return p.ready ? ["redo", "ok"] : ["inte redo", ""];
+}
+
+function render(v) {
+  $("addr").textContent = v.addrs.name;
+  const ips = $("ips");
+  ips.textContent = "";
+  if (v.addrs.ips.length) {
+    ips.append("Om namnet inte fungerar: ");
+    v.addrs.ips.forEach((a, i) => {
+      if (i) ips.append(" eller ");
+      const s = document.createElement("span");
+      s.textContent = a;
+      ips.append(s);
+    });
+  }
+
+  $("status").textContent = statusText(v);
+  $("status").classList.remove("dead");
+
+  const ul = $("slots");
+  ul.textContent = "";
+  for (let slot = 0; slot < v.maxPlayers; slot++) {
+    const p = v.players.find((q) => q.slot === slot);
+    const li = document.createElement("li");
+    const name = document.createElement("span");
+    name.className = "name";
+    if (p) {
+      const mark = document.createElement("span");
+      mark.textContent = "@ ";
+      mark.style.color = COLORS[slot];
+      name.append(mark, p.name);
+      const [text, cls] = tag(p, v.phase);
+      const t = document.createElement("span");
+      t.className = "tag " + cls;
+      t.textContent = text;
+      li.append(name, t);
+    } else {
+      name.className = "name empty";
+      name.textContent = "·  ledig plats";
+      li.append(name);
+    }
+    ul.append(li);
+  }
+
+  const rows = [
+    ["Solnedgång", "efter " + v.sunMax + " rundor"],
+    ["Turtid", v.turnSecs + " sekunder"],
+    ["Minst spelare", v.minPlayers],
+    ["Datorspelare", v.players.filter((p) => p.bot).length],
+    ["Avslöjandet", v.reveal ? "på" : "av"],
+  ];
+  const dl = $("settings");
+  dl.textContent = "";
+  rows.forEach(([k, val]) => {
+    const dt = document.createElement("dt");
+    dt.textContent = k;
+    const dd = document.createElement("dd");
+    dd.textContent = val;
+    dl.append(dt, dd);
+  });
+}
+
+async function poll() {
+  try {
+    const r = await fetch("/spelledare/status", { cache: "no-store" });
+    if (!r.ok) throw new Error(r.status);
+    view = await r.json();
+    render(view);
+  } catch {
+    $("status").textContent = "Tornet svarar inte. Är servern stängd?";
+    $("status").classList.add("dead");
+  }
+  setTimeout(poll, 1000);
+}
+poll();
+</script>
+</body>
+</html>

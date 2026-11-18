@@ -55,6 +55,11 @@ func main() {
 		log.Fatalf("kan inte lyssna på %s: %v", *addr, err)
 	}
 	_, port, _ := net.SplitHostPort(ln.Addr().String())
+	addrs := hostAddrs{Name: "http://" + localName() + ":" + port}
+	for _, ip := range lanIPs() {
+		addrs.IPs = append(addrs.IPs, "http://"+ip+":"+port)
+	}
+	addHostRoutes(mux, sub, game, addrs)
 
 	fmt.Println("Ormtornet är vaket.")
 	fmt.Println("Texter från:", src)
@@ -67,10 +72,13 @@ func main() {
 	}
 	fmt.Println()
 	fmt.Println("Spelarna öppnar:")
-	fmt.Printf("  http://%s:%s\n", localName(), port)
-	for _, ip := range lanIPs() {
-		fmt.Printf("  http://%s:%s  (om namnet inte fungerar)\n", ip, port)
+	fmt.Printf("  %s\n", addrs.Name)
+	for _, ip := range addrs.IPs {
+		fmt.Printf("  %s  (om namnet inte fungerar)\n", ip)
 	}
+	fmt.Println()
+	fmt.Println("Spelledaren (bara på den här datorn):")
+	fmt.Printf("  http://localhost:%s/spelledare\n", port)
 	fmt.Println()
 	log.Fatal(http.Serve(ln, mux))
 }
