@@ -19,6 +19,8 @@ En riktig kväll behövs för att se:
 - Åtta spelare med telefoner och datorer: utsnittet på kartan och knappen
   för hela tornet.
 - Stormen i introt: hur musiken och åskan låter. Den är inte avlyssnad.
+- Introts första 15 sekunder, när Enter inte gör något: fastnar någon
+  där och tror att sidan har hängt sig?
 
 ### Justera efter provet
 

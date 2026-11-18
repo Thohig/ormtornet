@@ -6,8 +6,13 @@ eller leder tornet.
 
 ## 2026-11-18
 
-### Rättat efter provspel
+### Efter provspelet
 
+- Nytt torn leder tillbaka till lobbyn, och alla väljer klass på nytt
+  bland två nya. Förut följde klassen med till nästa vandring.
+- Tornet väntar när ingen människa är ansluten. Förut gick rundorna så fort
+  AI:n hann välja, så ett nätavbrott kunde kosta halva vandringen.
+- Tab heter "byt mål" i styrningen, så att raden får plats.
 - Tornet kraschade om en vandrare kom tillbaka just när AI:n hade tagit
   över och skulle välja drag. Nu tar människan över utan att något händer.
 - Hjälptexten för `-ai` säger 0–7, eller 8 i spelledarläget, som README.

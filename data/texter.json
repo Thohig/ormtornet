@@ -531,6 +531,9 @@
     "kronika_dod_tornet": [
       "{namn} dog. Ingen vet riktigt av vad."
     ],
+    "nytt_torn": [
+      "Ett nytt torn reser sig ur dimman. Tryck Enter när du är redo (på en pekskärm: Redo). Vandringen börjar när alla är redo och ni är minst {min}."
+    ],
     "spela_igen": [
       "Tryck Enter för att gå in i ett nytt torn (på en pekskärm: Nytt torn)."
     ],

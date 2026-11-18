@@ -119,7 +119,7 @@ func (g *Game) gmResume() error {
 	if !g.paused {
 		return nil
 	}
-	g.paused = false
+	g.paused, g.awaiting = false, false
 	g.armTimer(g.pauseLeft)
 	g.logAll(g.data.Text("gm_fortsatt"), "rost")
 	g.gmNote("Lät rundan fortsätta.")

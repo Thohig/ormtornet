@@ -175,6 +175,7 @@ func (g *Game) ForceStart() bool {
 		return false
 	}
 	if g.phase == phaseEnd {
+		g.resetClasses() // spelledaren hoppar över lobbyn: nya klasser lottas
 		g.newTower()
 	}
 	g.startGame()

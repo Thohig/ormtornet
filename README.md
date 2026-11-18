@@ -115,6 +115,12 @@ Kommer spelaren tillbaka och skriver samma namn får den genast tillbaka sina
 steg. I resultatet märks den som AI har spelat åt med "~". Den som inte kommer
 tillbaka innan vandringen är slut är inte med i nästa.
 
+Är ingen människa ansluten alls, till exempel när nätet försvinner för
+alla, väntar tornet: rundan står pausad tills någon kommer tillbaka, så att
+solen inte hinner gå ner medan AI:n spelar ensam. I spelledarläget syns
+det i översikten, och spelledaren kan släppa pausen med Fortsätt. En
+vandring med bara AI-spelare går som vanligt.
+
 Med "Spelledarläge: på" leder spelledaren tornet utan att spela. Ingen kan
 då ansluta som vandrare från spelledarens dator, och spelarna får veta att
 tornet har en spelledare. Spelledaren startar vandringen med Starta nu, även
@@ -181,7 +187,10 @@ spelarsidan (`/`), med tre vyer i tur och ordning:
      för den invigde dunket. När det går att viska står det där,
      och viskningen skrivs i en egen ruta under panelen,
    - **slutet**: resultatrutan över kartan, och i loggen vinnaren, krönikan
-     och epilogen. Enter (Nytt torn) leder tillbaka till lobbyn.
+     och epilogen. Enter (Nytt torn) leder tillbaka till lobbyn när alla
+     har tryckt, med ett nytt torn och två nya klasser att välja mellan.
+     Utan klasser börjar nästa vandring direkt. Starta nu på värdsidan
+     hoppar över lobbyn och lottar nya klasser.
 
 Under spelet kan spelaren också se att tornet har en spelledare, tornets röst
 i loggen, "tornet är stängt" när tornet stänger och "förbindelsen bröts,

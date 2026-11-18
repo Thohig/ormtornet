@@ -1,6 +1,9 @@
 package main
 
-import "testing"
+import (
+	"testing"
+	"time"
+)
 
 // twoPlaying startar en vandring med Alva och Bo.
 func twoPlaying(t *testing.T, absentRounds int) (*Game, *Client, *Client) {
@@ -113,5 +116,40 @@ func TestHandBackBeforeBotActs(t *testing.T) {
 	g.botAct(bo, round) // timern från övertagandet löser ut
 	if bo.Action != "" {
 		t.Fatalf("en AI som inte finns valde %q åt Bo", bo.Action)
+	}
+}
+
+// När ingen människa är ansluten väntar tornet, så att rundorna inte rusar
+// i väg. Det fortsätter när någon kommer tillbaka.
+func TestTowerWaitsWhenAllAreGone(t *testing.T) {
+	g, a, b := twoPlaying(t, 1)
+	g.Leave(a)
+	if g.paused {
+		t.Fatal("tornet väntade fast Bo är kvar")
+	}
+	g.Leave(b)
+	if !g.paused || !g.awaiting {
+		t.Fatal("tornet väntar inte när alla har gått")
+	}
+	g.Join(testClient(), "Bo")
+	if g.paused || g.awaiting {
+		t.Fatal("tornet fortsatte inte när Bo kom tillbaka")
+	}
+	if left := time.Until(g.deadline); left <= 0 {
+		t.Fatal("rundan fick ingen tid kvar")
+	}
+}
+
+// Spelledaren kan släppa tornets paus, och då rör tornet den inte mer.
+func TestHostCanResumeWaitingTower(t *testing.T) {
+	g, a, b := twoPlaying(t, 0)
+	g.Leave(a)
+	g.Leave(b)
+	if err := g.gmResume(); err != nil || g.paused || g.awaiting {
+		t.Fatal("spelledaren kunde inte släppa pausen")
+	}
+	g.Join(testClient(), "Alva")
+	if g.paused {
+		t.Fatal("tornet pausade när Alva kom tillbaka")
 	}
 }

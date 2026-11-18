@@ -202,3 +202,38 @@ func TestSparfinnareNamesTrail(t *testing.T) {
 		t.Fatal("spårfinnaren ser inte vems spåren är")
 	}
 }
+
+// Nytt torn leder tillbaka till lobbyn, där alla får välja klass igen.
+func TestNewTowerOffersNewClasses(t *testing.T) {
+	g, a, b := classGame(t)
+	g.Ready(a)
+	g.Ready(b)
+	if g.phase != phasePlay || a.player.classID == "" {
+		t.Fatal("vandringen startade inte med klasser")
+	}
+	g.level = 3
+	g.endGame()
+	g.Ready(a)
+	g.Ready(b)
+	if g.level != 1 {
+		t.Fatalf("lobbyn har kvar nivå %d från förra vandringen", g.level)
+	}
+	if g.phase != phaseLobby {
+		t.Fatalf("nytt torn ledde till %q, inte lobbyn", g.phase)
+	}
+	for _, c := range []*Client{a, b} {
+		p := c.player
+		if p.classID != "" || len(p.offer) != 2 || p.Ready {
+			t.Fatalf("%s: klass %q, %d att välja på, redo %v", p.Name, p.classID, len(p.offer), p.Ready)
+		}
+		if p.Status != statusIn || p.Treasure != 0 {
+			t.Fatalf("%s står inte vid porten i det nya tornet", p.Name)
+		}
+	}
+	g.ChooseClass(a, a.player.offer[1])
+	g.Ready(a)
+	g.Ready(b)
+	if g.phase != phasePlay || b.player.classID == "" {
+		t.Fatal("nästa vandring startade inte från lobbyn")
+	}
+}

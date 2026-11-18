@@ -214,6 +214,15 @@ func (g *Game) ensureClasses() {
 	}
 }
 
+// resetClasses tar bort allas klasser inför ett nytt torn.
+func (g *Game) resetClasses() {
+	for _, p := range g.players {
+		if p != nil {
+			p.classID, p.offer = "", nil
+		}
+	}
+}
+
 // offerAll låter alla som saknar klass välja, till exempel när spelledaren
 // slår på klasserna i lobbyn.
 func (g *Game) offerAll() {

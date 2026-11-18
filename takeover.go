@@ -1,5 +1,7 @@
 package main
 
+import "time"
+
 // Frånvarande vandrare: när en människa har lämnat mitt i en vandring kan en
 // AI-spelare ta över vandraren, med dess plats, skatt, liv och tillstånd.
 // Kommer människan tillbaka med samma namn får den genast tillbaka sina steg.
@@ -56,6 +58,7 @@ func (g *Game) handBack(p *Player, c *Client) {
 	p.takenOver = false
 	p.awayRound = 0
 	p.client, c.player = c, p
+	g.checkAwait()
 	g.broadcastState()
 	g.logTo(p, g.data.Text("tillbaka"), "syn")
 	if len(g.data.AI.Tillbaka) > 0 {
@@ -85,4 +88,46 @@ func (g *Game) dropAbsent() int {
 		}
 	}
 	return n
+}
+
+// shouldAwait är sant när ingen människa är ansluten men någon människas
+// vandrare fortfarande är kvar i tornet. Utan någon som ser på skulle
+// rundorna annars gå så fort AI:n hinner välja. En vandring med bara
+// AI-spelare, som spelledaren kan leda, går som vanligt.
+func (g *Game) shouldAwait() bool {
+	if g.phase != phasePlay {
+		return false
+	}
+	waiting := false
+	for _, p := range g.players {
+		if p == nil {
+			continue
+		}
+		if p.client != nil {
+			return false
+		}
+		if (p.bot == nil || p.takenOver) && (p.Status == statusIn || g.isController(p)) {
+			waiting = true
+		}
+	}
+	return waiting
+}
+
+// checkAwait pausar rundan när den sista människan har gått, och låter den
+// fortsätta när någon kommer tillbaka. Har spelledaren pausat själv, eller
+// släppt tornets paus, rör den inte pausen.
+func (g *Game) checkAwait() {
+	switch should := g.shouldAwait(); {
+	case should && !g.paused:
+		g.paused, g.awaiting = true, true
+		g.pauseLeft = max(time.Second, time.Until(g.deadline))
+		if g.timer != nil {
+			g.timer.Stop()
+		}
+		g.gmNote("Ingen vandrare är ansluten. Tornet väntar.")
+	case !should && g.awaiting:
+		g.paused, g.awaiting = false, false
+		g.armTimer(g.pauseLeft)
+		g.gmNote("En vandrare är tillbaka. Tornet fortsätter.")
+	}
 }

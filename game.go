@@ -280,6 +280,7 @@ type Game struct {
 
 	paused    bool          // spelledaren har pausat rundan
 	pauseLeft time.Duration // tid som var kvar när rundan pausades
+	awaiting  bool          // pausen är tornets egen: ingen människa är ansluten
 
 	chron []chronEvent // krönikan över vandringen
 
@@ -760,6 +761,7 @@ func (g *Game) Join(c *Client, rawName string) {
 			}
 			p.awayRound = 0
 			p.client, c.player = c, p
+			g.checkAwait()
 			g.broadcastState()
 			g.logTo(p, g.data.Text("tillbaka"), "syn")
 			g.logOthers(p, g.data.Text("atervander", "namn", p.Name), "info")
@@ -832,6 +834,7 @@ func (g *Game) Leave(c *Client) {
 		p.awayRound = g.round
 	}
 	g.logOthers(p, g.data.Text("lamnar", "namn", p.Name), "dim")
+	g.checkAwait()
 	if g.phase != phasePlay {
 		// Utanför spelet lämnar man sin plats helt, och en datorspelare
 		// kan ta den om spelledaren vill ha fler.
@@ -880,11 +883,42 @@ func (g *Game) checkStart() bool {
 	if humans == 0 || n < g.cfg.MinPlayers {
 		return false
 	}
+	if g.phase == phaseEnd && g.cfg.Classes {
+		// Nytt torn: tillbaka till lobbyn, där alla får välja klass igen.
+		g.toLobby()
+		return true
+	}
 	if g.phase == phaseEnd {
 		g.newTower()
 	}
 	g.startGame()
 	return true
+}
+
+// toLobby bygger ett nytt torn efter en vandring och låter alla vänta i
+// lobbyn med två nya klasser att välja mellan. Vandringen börjar när alla
+// har valt och är redo igen.
+func (g *Game) toLobby() {
+	g.phase = phaseLobby
+	g.level, g.levelHeld = 1, false // tornet i lobbyn har inte börjat avslöja något
+	if g.dropAbsent() > 0 {
+		g.syncBots(true)
+	}
+	g.resetClasses()
+	for _, p := range g.players {
+		if p != nil {
+			p.Ready = false // newTower behåller den som var redo
+		}
+	}
+	g.newTower()
+	g.sun = g.sunMax
+	for _, p := range g.players {
+		if p != nil && p.client != nil {
+			g.logTo(p, g.data.Text("nytt_torn", "min", strconv.Itoa(g.cfg.MinPlayers)), "syn")
+		}
+	}
+	g.offerAll()
+	g.broadcastState()
 }
 
 // newTower bygger ett nytt torn och ställer alla vid sina portar.
@@ -940,7 +974,7 @@ func (g *Game) drawCorners() {
 }
 
 func (g *Game) startGame() {
-	g.paused = false
+	g.paused, g.awaiting = false, false
 	// De som lämnade förra vandringen och inte kom tillbaka är inte med längre.
 	if g.dropAbsent() > 0 {
 		g.syncBots(true) // AI-spelare kan ta de lediga platserna
@@ -1205,6 +1239,7 @@ func (g *Game) sunWarning(before int) {
 
 func (g *Game) endGame() {
 	g.phase = phaseEnd
+	g.paused, g.awaiting = false, false
 	if g.timer != nil {
 		g.timer.Stop()
 	}
