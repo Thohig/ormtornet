@@ -15,6 +15,7 @@ const MapView = (() => {
     chamber: "#c9a24f",
     gold: "#ffd36b",
     lost: "#8a3b30",
+    mark: "#c0503e",
   };
   const PLAYER_COLORS = ["#ffcc66", "#66e0ff", "#ff7a9a", "#9dff7a"];
 
@@ -108,6 +109,8 @@ const MapView = (() => {
     if (r.exit === 1) put(x0 + RW, midY, "›", COLORS.exit);
     if (r.exit === 3) put(x0, midY, "‹", COLORS.exit);
 
+    if (r.mark) put(x0 + Math.floor(RW / 2), y0 + Math.floor(RH / 2), r.mark, COLORS.mark);
+
     if (r.k === "kammare") {
       CHAMBER.forEach((line, j) => {
         [...line].forEach((ch, i) => {
@@ -119,6 +122,12 @@ const MapView = (() => {
   }
 
   let lastState = null;
+  const PING_MS = 4500;
+  let pings = [];
+
+  function ping(x, y, slot) {
+    pings.push({ x, y, slot, at: performance.now() });
+  }
 
   function draw(state, t) {
     lastState = state;
@@ -139,13 +148,28 @@ const MapView = (() => {
 
     const now = t || performance.now();
     const blink = Math.floor(now / 550) % 2 === 0;
+
+    // Eko: rummets väggar lyser i spelarens färg en stund.
+    pings = pings.filter((p) => now - p.at < PING_MS);
+    pings.forEach((p) => {
+      const x0 = p.x * RW;
+      const y0 = p.y * RH;
+      const color = Math.floor((now - p.at) / 250) % 2 ? PLAYER_COLORS[p.slot] : COLORS.wall;
+      for (let j = 0; j <= RH; j++) {
+        for (let i = 0; i <= RW; i++) {
+          const edge = i === 0 || j === 0 || i === RW || j === RH;
+          if (edge && grid[y0 + j] && grid[y0 + j][x0 + i] !== " ") colr[y0 + j][x0 + i] = color;
+        }
+      }
+      put(x0 + Math.floor(RW / 2), y0 + Math.floor(RH / 2), "◎", PLAYER_COLORS[p.slot]);
+    });
     state.players.forEach((p) => {
-      if (p.status === "ute") return;
+      if (p.status === "ute" || p.hidden) return;
       const [sx, sy] = SLOTS[p.slot] || SLOTS[0];
       let color = PLAYER_COLORS[p.slot] || "#fff";
       let ch = "@";
       if (!p.online) color = COLORS.floor;
-      if (p.status === "forlorad") {
+      if (p.status === "forlorad" || p.status === "dod") {
         ch = "x";
         color = COLORS.lost;
       } else if (p.id === state.you && !blink) {
@@ -181,5 +205,5 @@ const MapView = (() => {
     }
   }
 
-  return { setup, draw, resize, PLAYER_COLORS };
+  return { setup, draw, resize, ping, PLAYER_COLORS };
 })();

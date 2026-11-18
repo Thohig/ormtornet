@@ -1,0 +1,231 @@
+{
+  "regler": {
+    "liv": 6,
+    "handelsechans": 0.45,
+    "dryck_helar": 2,
+    "sok_skatt_min": 5,
+    "sok_skatt_max": 30
+  },
+
+  "fallor": [
+    {
+      "id": "fallgaller",
+      "namn": "Fallgallret",
+      "vikt": 3,
+      "rundor": 2,
+      "tecken": "╫",
+      "texter": [
+        "Ett gnissel ovanför dig, och ett galler av spetsiga järnstänger rasar ner i dörröppningen bakom dig. Det tar tid att bända upp det.",
+        "Gallret slår ner med en smäll. Stängerna är krökta inåt och nästan vassa i spetsarna. Du sitter fast en stund."
+      ],
+      "andra": [
+        "Järn slår mot sten någonstans i tornets {region} del."
+      ]
+    },
+    {
+      "id": "rasande_golv",
+      "namn": "Det rasande golvet",
+      "vikt": 2,
+      "skada": 1,
+      "rundor": 2,
+      "tecken": "○",
+      "texter": [
+        "Golvet ger efter under dig. Du faller ner i källarvalven, där det är mörkt, fuktigt och trångt.",
+        "Plattorna sjunker som om de vore mjuka, och du glider ner genom ett hål i golvet. Nedanför finns bara mörka, smala valv."
+      ],
+      "andra": [
+        "Ett dovt brak hörs i tornets {region} del. Sedan är det tyst. {namn} syns inte längre."
+      ]
+    },
+    {
+      "id": "roterande",
+      "namn": "Det roterande rummet",
+      "vikt": 2,
+      "tecken": "↻",
+      "texter": [
+        "Rummet börjar vrida sig med ett långsamt, malande ljud. Du tappar fotfästet och knuffas ut genom en öppning.",
+        "Väggarna drar ihop sig och vrider sig. När det är över är du någon annanstans."
+      ],
+      "andra": [
+        "Ett malande ljud hörs i tornets {region} del."
+      ]
+    },
+    {
+      "id": "pilar",
+      "namn": "Pilfällan",
+      "vikt": 3,
+      "skada": 2,
+      "tecken": "→",
+      "texter": [
+        "Ett klick under foten. Pilar viner ut ur små hål i väggen. Två av dem träffar.",
+        "Pilar skjuter ut ur väggen. De är inte av trä utan av något benvitt och böjt."
+      ],
+      "andra": []
+    },
+    {
+      "id": "dimma",
+      "namn": "Den giftiga dimman",
+      "vikt": 2,
+      "skada": 1,
+      "rundor": 2,
+      "tecken": "≈",
+      "texter": [
+        "En gulgrön dimma väller upp ur springorna i golvet. Den luktar sött och svider i lungorna. Giftet stannar i kroppen.",
+        "Dimman är varm och fuktig, som en utandning. Du hostar, och det smakar bittert långt efter."
+      ],
+      "andra": []
+    },
+    {
+      "id": "ormgrop",
+      "namn": "Ormgropen",
+      "vikt": 2,
+      "skada": 2,
+      "rundor": 1,
+      "tecken": "§",
+      "texter": [
+        "Du trampar ner i en grop full av små ormar. De biter och slingrar sig runt anklarna innan du kommer loss.",
+        "Gropen kryllar av ormar, tunna som maskar. De biter, och det tar tid att ta sig upp."
+      ],
+      "andra": [
+        "Ett väsande hörs i tornets {region} del, som av hundra små ormar."
+      ]
+    },
+    {
+      "id": "skinn",
+      "namn": "Det ömsade skinnet",
+      "vikt": 2,
+      "rundor": 1,
+      "tecken": "∫",
+      "texter": [
+        "Ett väldigt, genomskinligt skinn hänger över rummet som ett segel. Du trasslar in dig i det. Fjällen prasslar mot varandra.",
+        "Ett ömsat ormskinn, så stort att det fyller hela rummet. Det klibbar fast vid dig och du får slita dig loss."
+      ],
+      "andra": []
+    },
+    {
+      "id": "klocka",
+      "namn": "Klockan",
+      "vikt": 2,
+      "sol": 2,
+      "tecken": "♁",
+      "texter": [
+        "Du stöter i en väldig klocka som hänger i taket. Klangen går genom hela tornet, och genom gluggarna ser du solen sjunka hastigt.",
+        "En klocka slår av sig själv när du kliver in. Ljuset utanför blir genast rödare."
+      ],
+      "andra": [
+        "En klocka slår någonstans i tornet. Ljuset genom gluggarna blir rödare. Solen sjunker fortare."
+      ]
+    },
+    {
+      "id": "morker",
+      "namn": "Mörkret",
+      "vikt": 2,
+      "rundor": 4,
+      "tecken": "●",
+      "texter": [
+        "En varm vindpust drar genom rummet och lyktan slocknar. Du ser ingenting. Du får treva dig fram.",
+        "Något andas ut, och din låga fladdrar och dör. Mörkret är totalt."
+      ],
+      "andra": []
+    },
+    {
+      "id": "eko",
+      "namn": "Ekokammaren",
+      "vikt": 2,
+      "tecken": "◎",
+      "texter": [
+        "Ditt steg ekar, och ekot fortsätter och växer tills hela tornet ljuder. Nu vet alla var du är.",
+        "Rummet fångar varje ljud och kastar ut det i gångarna. Alla i tornet hör var du står."
+      ],
+      "andra": [
+        "Ett eko rullar genom tornet. {namn} är i {rum}, i tornets {region} del."
+      ]
+    }
+  ],
+
+  "sok": {
+    "vikter": {
+      "skatt": 3,
+      "dryck": 2,
+      "gang": 2,
+      "falla": 2,
+      "inget": 3
+    },
+    "texter": {
+      "skatt": [
+        "Under en lös sten ligger några mynt. {antal} guld. Du har nu {skatt}.",
+        "I en springa i väggen glimmar något. {antal} guld, lite klibbiga. Du har nu {skatt}."
+      ],
+      "dryck": [
+        "Bakom en hylla hittar du en liten flaska med en röd dryck. Den läker sår.",
+        "En hel flaska, fortfarande förseglad. Du stoppar den i väskan."
+      ],
+      "gang": [
+        "Du trycker på en sten som ger efter. En hemlig gång öppnar sig åt {riktning}.",
+        "Bakom ett förhänge av damm finns en smal öppning åt {riktning}. Kanterna är mjuka."
+      ],
+      "gang_ingen": [
+        "Du hittar spåren av en hemlig gång, men den leder ingenstans."
+      ],
+      "falla": [
+        "Du letar för noga och utlöser något."
+      ],
+      "inget": [
+        "Du letar länge men hittar ingenting.",
+        "Damm, smuts och ett par gamla knappar. Inget av värde."
+      ],
+      "redan": [
+        "Det här rummet är redan genomsökt."
+      ],
+      "inte_har": [
+        "Det finns inget att söka igenom här."
+      ]
+    }
+  },
+
+  "texter": {
+    "skada": [
+      "Du förlorar {skada} liv. Du har {liv} kvar."
+    ],
+    "dod": [
+      "Det blir svart. Tornet har tagit dig."
+    ],
+    "dod_andra": [
+      "Ett skrik hörs och dör bort. {namn} är död."
+    ],
+    "fast": [
+      "Du sitter fast och kommer inte vidare."
+    ],
+    "kallare": [
+      "Du trevar dig fram genom källarvalven. De är trånga och väggarna är mjuka.",
+      "Källarvalven slingrar sig åt alla håll. Du letar efter en väg upp."
+    ],
+    "kallare_ut": [
+      "Du hittar en trappa och kliver upp ur källarvalven. Du är i {rum}."
+    ],
+    "kallare_ut_andra": [
+      "{namn} kliver upp ur ett hål i golvet i tornets {region} del."
+    ],
+    "morker_nytt": [
+      "Du trevar dig in i ett rum du inte kan se."
+    ],
+    "morker_slut": [
+      "Du får fyr på lyktan igen. Ljuset känns svagt."
+    ],
+    "gift": [
+      "Giftet svider. Du förlorar 1 liv och har {liv} kvar."
+    ],
+    "gift_slut": [
+      "Giftet har gått ur kroppen."
+    ],
+    "drick": [
+      "Du dricker. Värmen sprider sig och såren drar ihop sig. Du har {liv} liv."
+    ],
+    "drick_gift": [
+      "Drycken driver ut giftet."
+    ],
+    "ingen_dryck": [
+      "Du har ingen dryck."
+    ]
+  }
+}

@@ -1,20 +1,49 @@
 package main
 
-// Läser in rum och texter från data/texter.json. Själva innehållet ligger
-// i JSON-filen så att det kan ändras utan att röra koden.
+// Läser in rum, fällor och texter från datamappen. Själva innehållet ligger
+// i JSON-filerna så att det kan ändras utan att röra koden.
 
 import (
-	_ "embed"
+	"embed"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"math/rand/v2"
 	"os"
+	"path/filepath"
+	"sort"
 	"strings"
 )
 
-//go:embed data/texter.json
-var embeddedData []byte
+//go:embed data/*.json
+var embeddedData embed.FS
+
+// Trap är en fälla. Vad den gör styrs av id:t i koden; siffror och texter
+// kommer från datafilen.
+type Trap struct {
+	ID     string   `json:"id"`
+	Namn   string   `json:"namn"`
+	Vikt   int      `json:"vikt"`
+	Skada  int      `json:"skada"`
+	Rundor int      `json:"rundor"`
+	Sol    int      `json:"sol"`
+	Tecken string   `json:"tecken"`
+	Texter []string `json:"texter"`
+	Andra  []string `json:"andra"`
+}
+
+type Rules struct {
+	Liv           int     `json:"liv"`
+	Handelsechans float64 `json:"handelsechans"`
+	DryckHelar    int     `json:"dryck_helar"`
+	SokSkattMin   int     `json:"sok_skatt_min"`
+	SokSkattMax   int     `json:"sok_skatt_max"`
+}
+
+type Search struct {
+	Vikter map[string]int      `json:"vikter"`
+	Texter map[string][]string `json:"texter"`
+}
 
 type RoomType struct {
 	ID            string              `json:"id"`
@@ -30,28 +59,128 @@ type Data struct {
 	Riktningar   []string            `json:"riktningar"`
 	Regioner     [][]string          `json:"regioner"`
 	Texter       map[string][]string `json:"texter"`
+	Regler       Rules               `json:"regler"`
+	Fallor       []Trap              `json:"fallor"`
+	Sok          Search              `json:"sok"`
 }
 
-// loadData läser filen på disk om den finns, annars den inbyggda kopian.
-func loadData(path string) (*Data, string, error) {
-	raw, err := os.ReadFile(path)
-	src := path
-	if errors.Is(err, os.ErrNotExist) {
-		raw, src = embeddedData, "inbyggd kopia"
-	} else if err != nil {
-		return nil, "", err
-	}
-	var d Data
-	if err := json.Unmarshal(raw, &d); err != nil {
-		return nil, "", fmt.Errorf("%s: %w", src, err)
+// Filerna i datamappen. Alla läses in i samma struktur; "texter" slås ihop.
+var dataFiles = []string{"texter.json", "fallor.json"}
+
+// loadData läser filerna i mappen dir. Saknas en fil används den inbyggda kopian.
+func loadData(dir string) (*Data, string, error) {
+	d := &Data{Texter: map[string][]string{}}
+	var sources []string
+	for _, name := range dataFiles {
+		path := filepath.Join(dir, name)
+		raw, err := os.ReadFile(path)
+		src := path
+		if errors.Is(err, os.ErrNotExist) {
+			raw, err = embeddedData.ReadFile("data/" + name)
+			src = name + " (inbyggd)"
+		}
+		if err != nil {
+			return nil, "", err
+		}
+		var part Data
+		if err := json.Unmarshal(raw, &part); err != nil {
+			return nil, "", fmt.Errorf("%s: %w", src, err)
+		}
+		texts := part.Texter
+		part.Texter = nil
+		mergeData(d, &part)
+		for k, v := range texts {
+			d.Texter[k] = v
+		}
+		sources = append(sources, src)
 	}
 	if len(d.Rumstyper) == 0 {
-		return nil, "", fmt.Errorf("%s: inga rumstyper", src)
+		return nil, "", fmt.Errorf("inga rumstyper")
 	}
 	if len(d.Horn) != 4 || len(d.Riktningar) != 4 || len(d.Regioner) != 3 {
-		return nil, "", fmt.Errorf("%s: horn och riktningar ska ha 4 ord, regioner 3 rader", src)
+		return nil, "", fmt.Errorf("horn och riktningar ska ha 4 ord, regioner 3 rader")
 	}
-	return &d, src, nil
+	if d.Regler.Liv <= 0 {
+		d.Regler.Liv = 6
+	}
+	return d, strings.Join(sources, ", "), nil
+}
+
+// mergeData kopierar de fält som är satta i part till d.
+func mergeData(d, part *Data) {
+	if len(part.Rumstyper) > 0 {
+		d.Rumstyper = part.Rumstyper
+	}
+	if part.Ingang.ID != "" {
+		d.Ingang = part.Ingang
+	}
+	if part.Skattkammare.ID != "" {
+		d.Skattkammare = part.Skattkammare
+	}
+	if len(part.Horn) > 0 {
+		d.Horn = part.Horn
+	}
+	if len(part.Riktningar) > 0 {
+		d.Riktningar = part.Riktningar
+	}
+	if len(part.Regioner) > 0 {
+		d.Regioner = part.Regioner
+	}
+	if part.Regler.Liv > 0 {
+		d.Regler = part.Regler
+	}
+	if len(part.Fallor) > 0 {
+		d.Fallor = part.Fallor
+	}
+	if len(part.Sok.Vikter) > 0 {
+		d.Sok = part.Sok
+	}
+}
+
+// weighted väljer en nyckel efter vikt.
+func weighted(weights map[string]int) string {
+	keys := make([]string, 0, len(weights))
+	total := 0
+	for k, w := range weights {
+		if w > 0 {
+			keys = append(keys, k)
+			total += w
+		}
+	}
+	if total == 0 {
+		return ""
+	}
+	sort.Strings(keys)
+	n := rand.IntN(total)
+	for _, k := range keys {
+		n -= weights[k]
+		if n < 0 {
+			return k
+		}
+	}
+	return keys[len(keys)-1]
+}
+
+func (d *Data) randomTrap() *Trap {
+	w := map[string]int{}
+	for _, t := range d.Fallor {
+		w[t.ID] = t.Vikt
+	}
+	return d.trap(weighted(w))
+}
+
+func (d *Data) trap(id string) *Trap {
+	for i := range d.Fallor {
+		if d.Fallor[i].ID == id {
+			return &d.Fallor[i]
+		}
+	}
+	return nil
+}
+
+// SearchText väljer en text för ett sökresultat.
+func (d *Data) SearchText(key string, vars ...string) string {
+	return fill(pick(d.Sok.Texter[key]), vars...)
 }
 
 func pick(list []string) string {

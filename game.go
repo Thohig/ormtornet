@@ -32,12 +32,15 @@ const (
 	statusIn   = "inne"
 	statusOut  = "ute"
 	statusLost = "forlorad"
+	statusDead = "dod"
 )
 
 // Drag en spelare kan välja under en runda.
 const (
-	actWait = "vanta"
-	actTake = "ta"
+	actWait   = "vanta"
+	actTake   = "ta"
+	actSearch = "sok"
+	actDrink  = "drick"
 )
 
 type Config struct {
@@ -85,6 +88,9 @@ type Room struct {
 	HasExit  bool
 	Kind     string // "rum", "ingang" eller "kammare"
 	TypeID   string
+	Event    string // fälla som väntar på den som först går in
+	Mark     string // tecken som visar att en fälla har slagit till
+	Searched bool
 }
 
 type Player struct {
@@ -97,6 +103,13 @@ type Player struct {
 	Action   string
 	Treasure int
 	Status   string
+
+	HP      int
+	Potions int
+	Stuck   int // rundor kvar fast (fallgaller, ormgrop, skinn)
+	Cellar  int // rundor kvar i källarvalven
+	Poison  int // rundor kvar med gift i kroppen
+	Dark    int // rundor kvar utan ljus
 }
 
 type Client struct {
@@ -172,6 +185,11 @@ func (g *Game) reveal(x, y int) *Room {
 	}
 	r.Kind = "rum"
 	r.TypeID = g.data.Rumstyper[rand.IntN(len(g.data.Rumstyper))].ID
+	if rand.Float64() < g.data.Regler.Handelsechans {
+		if t := g.data.randomTrap(); t != nil {
+			r.Event = t.ID
+		}
+	}
 	var undecided []Dir
 	open := 0
 	for d := North; d <= West; d++ {
@@ -225,6 +243,7 @@ type playerView struct {
 	Ready    bool   `json:"ready"`
 	Chosen   bool   `json:"chosen"`
 	Treasure int    `json:"treasure"` // -1 om spelaren inte får veta
+	Hidden   bool   `json:"hidden"`   // positionen är okänd för den som tittar
 }
 
 type roomView struct {
@@ -234,6 +253,7 @@ type roomView struct {
 	K    string  `json:"k"`
 	Exit int     `json:"exit"`
 	Name string  `json:"name"`
+	Mark string  `json:"mark,omitempty"`
 }
 
 type resultView struct {
@@ -256,6 +276,13 @@ type stateMsg struct {
 	DeadlineMs int64        `json:"deadlineMs"`
 	MinPlayers int          `json:"minPlayers"`
 	Action     string       `json:"action"`
+	HP         int          `json:"hp"`
+	MaxHP      int          `json:"maxHp"`
+	Potions    int          `json:"potions"`
+	Stuck      int          `json:"stuck"`
+	Cellar     int          `json:"cellar"`
+	Poison     int          `json:"poison"`
+	Dark       int          `json:"dark"`
 	Players    []playerView `json:"players"`
 	Rooms      []roomView   `json:"rooms"`
 	Results    []resultView `json:"results,omitempty"`
@@ -325,7 +352,11 @@ func (g *Game) stateFor(me *Player) stateMsg {
 		T: "state", You: me.ID, Size: gridSize, Level: g.level,
 		Phase: g.phase, Sun: g.sun, SunMax: g.cfg.SunMax, Round: g.round,
 		MinPlayers: g.cfg.MinPlayers, Action: me.Action,
+		HP: me.HP, MaxHP: g.data.Regler.Liv, Potions: me.Potions,
+		Stuck: me.Stuck, Cellar: me.Cellar, Poison: me.Poison, Dark: me.Dark,
 	}
+	// I mörker ser man bara sig själv och rummet man står i.
+	blind := g.phase == phasePlay && me.Status == statusIn && me.Dark > 0
 	if g.phase == phasePlay {
 		st.DeadlineMs = max(0, time.Until(g.deadline).Milliseconds())
 	}
@@ -341,15 +372,19 @@ func (g *Game) stateFor(me *Player) stateMsg {
 		if p == me || g.phase == phaseEnd {
 			pv.Treasure = p.Treasure
 		}
+		if p.Cellar > 0 || (blind && p != me) {
+			pv.Hidden = true
+			pv.X, pv.Y = -1, -1
+		}
 		st.Players = append(st.Players, pv)
 	}
 	for y := range gridSize {
 		for x := range gridSize {
 			r := &g.rooms[y][x]
-			if !r.Revealed {
+			if !r.Revealed || (blind && (x != me.X || y != me.Y)) {
 				continue
 			}
-			rv := roomView{X: x, Y: y, D: r.Doors, K: r.Kind, Exit: -1, Name: g.roomName(r)}
+			rv := roomView{X: x, Y: y, D: r.Doors, K: r.Kind, Exit: -1, Name: g.roomName(r), Mark: r.Mark}
 			if r.HasExit {
 				rv.Exit = int(r.Exit)
 			}
@@ -417,6 +452,8 @@ func (g *Game) placeAtCorner(p *Player) {
 	p.Treasure = 0
 	p.Action = ""
 	p.Ready = false
+	p.HP = g.data.Regler.Liv
+	p.Potions, p.Stuck, p.Cellar, p.Poison, p.Dark = 0, 0, 0, 0, 0
 	g.reveal(cn.x, cn.y)
 }
 
@@ -565,12 +602,17 @@ func (g *Game) startGame() {
 }
 
 func (g *Game) startRound() {
-	g.deadline = time.Now().Add(g.cfg.TurnTime)
+	wait := g.cfg.TurnTime
+	if g.onlyCellar() {
+		// De anslutna ligger alla i källaren och kan inte välja: gå vidare snabbt.
+		wait = min(wait, 2*time.Second)
+	}
+	g.deadline = time.Now().Add(wait)
 	round := g.round
 	if g.timer != nil {
 		g.timer.Stop()
 	}
-	g.timer = time.AfterFunc(g.cfg.TurnTime, func() {
+	g.timer = time.AfterFunc(wait, func() {
 		g.mu.Lock()
 		defer g.mu.Unlock()
 		if g.phase == phasePlay && g.round == round {
@@ -580,11 +622,26 @@ func (g *Game) startRound() {
 	g.broadcastState()
 }
 
+// onlyCellar är sant om alla anslutna spelare i tornet ligger i källaren.
+func (g *Game) onlyCellar() bool {
+	cellar := false
+	for _, p := range g.players {
+		if p == nil || p.Status != statusIn || p.client == nil {
+			continue
+		}
+		if p.Cellar == 0 {
+			return false
+		}
+		cellar = true
+	}
+	return cellar
+}
+
 // allChosen är sant när alla anslutna spelare i tornet har valt drag.
 func (g *Game) allChosen() bool {
 	any := false
 	for _, p := range g.players {
-		if p == nil || p.Status != statusIn || p.client == nil {
+		if p == nil || p.Status != statusIn || p.client == nil || p.Cellar > 0 {
 			continue
 		}
 		if p.Action == "" {
@@ -598,14 +655,29 @@ func (g *Game) allChosen() bool {
 // Act tar emot spelarens val för rundan. Valet kan ändras tills rundan utförs.
 func (g *Game) Act(c *Client, a string) {
 	p := c.player
-	if p == nil || g.phase != phasePlay || p.Status != statusIn {
+	if p == nil || g.phase != phasePlay || p.Status != statusIn || p.Cellar > 0 {
 		return
 	}
+	room := &g.rooms[p.Y][p.X]
 	switch a {
 	case "N", "E", "S", "W", actWait:
 	case actTake:
-		if g.rooms[p.Y][p.X].Kind != "kammare" {
+		if room.Kind != "kammare" {
 			g.logTo(p, g.data.Text("ingen_skatt_har"), "dim")
+			return
+		}
+	case actSearch:
+		if room.Kind != "rum" {
+			g.logTo(p, g.data.SearchText("inte_har"), "dim")
+			return
+		}
+		if room.Searched {
+			g.logTo(p, g.data.SearchText("redan"), "dim")
+			return
+		}
+	case actDrink:
+		if p.Potions <= 0 {
+			g.logTo(p, g.data.Text("ingen_dryck"), "dim")
 			return
 		}
 	default:
@@ -625,6 +697,7 @@ func (g *Game) resolve() {
 	if g.timer != nil {
 		g.timer.Stop()
 	}
+	sunBefore := g.sun
 	var active []*Player
 	for _, p := range g.players {
 		if p != nil && p.Status == statusIn {
@@ -633,17 +706,8 @@ func (g *Game) resolve() {
 	}
 	rand.Shuffle(len(active), func(i, j int) { active[i], active[j] = active[j], active[i] })
 	for _, p := range active {
-		a := p.Action
-		if a == "" {
-			a = actWait
-			g.logTo(p, g.data.Text("tvekade"), "dim")
-		}
-		switch a {
-		case actWait:
-		case actTake:
-			g.take(p)
-		default:
-			g.move(p, dirCodes[a])
+		if p.Status == statusIn {
+			g.playTurn(p)
 		}
 		p.Action = ""
 	}
@@ -656,6 +720,9 @@ func (g *Game) resolve() {
 			inside++
 		}
 	}
+	if g.sun < 0 {
+		g.sun = 0
+	}
 	switch {
 	case inside == 0:
 		g.endGame()
@@ -664,21 +731,24 @@ func (g *Game) resolve() {
 		g.soundAll("solnedgang")
 		g.endGame()
 	default:
-		g.sunWarning()
+		g.sunWarning(sunBefore)
 		g.round++
 		g.startRound()
 	}
 }
 
-func (g *Game) sunWarning() {
+// sunWarning varnar när solen passerar halva, en fjärdedel och tre kvar.
+// Klockfällan kan få solen att hoppa över en gräns, därför jämförs före och efter.
+func (g *Game) sunWarning(before int) {
+	passed := func(limit int) bool { return before > limit && g.sun <= limit }
 	key := ""
 	switch {
-	case g.sun == g.cfg.SunMax/2:
-		key = "sol_halv"
-	case g.sun == g.cfg.SunMax/4:
-		key = "sol_kvart"
-	case g.sun == 3:
+	case passed(3):
 		key = "sol_snart"
+	case passed(g.cfg.SunMax / 4):
+		key = "sol_kvart"
+	case passed(g.cfg.SunMax / 2):
+		key = "sol_halv"
 	}
 	if key != "" {
 		g.logAll(g.data.Text(key, "sol", strconv.Itoa(g.sun)), "varn")
@@ -721,8 +791,66 @@ func (g *Game) endGame() {
 	g.broadcastState()
 }
 
-// move flyttar spelaren ett rum, eller ut genom porten.
-func (g *Game) move(p *Player, d Dir) {
+// playTurn utför en spelares drag för rundan, och räknar ner det som
+// pågår (gift, mörker, fastklämd, källaren).
+func (g *Game) playTurn(p *Player) {
+	if p.Cellar > 0 {
+		p.Cellar--
+		if p.Cellar == 0 {
+			g.leaveCellar(p)
+		} else {
+			g.logTo(p, g.data.Text("kallare"), "dim")
+		}
+		return
+	}
+	wasStuck, wasPoisoned, wasDark := p.Stuck > 0, p.Poison > 0, p.Dark > 0
+	a := p.Action
+	if a == "" {
+		a = actWait
+		if p.client != nil {
+			g.logTo(p, g.data.Text("tvekade"), "dim")
+		}
+	}
+	switch a {
+	case actWait:
+	case actTake:
+		g.take(p)
+	case actSearch:
+		g.search(p)
+	case actDrink:
+		g.drink(p)
+	default:
+		if p.Stuck > 0 {
+			g.logTo(p, g.data.Text("fast"), "dim")
+		} else {
+			g.move(p, dirCodes[a], 0)
+		}
+	}
+	if p.Status != statusIn || p.Cellar > 0 {
+		return
+	}
+	if wasStuck && p.Stuck > 0 {
+		p.Stuck--
+	}
+	if wasPoisoned && p.Poison > 0 {
+		p.Poison--
+		g.logTo(p, g.data.Text("gift", "liv", strconv.Itoa(max(0, p.HP-1))), "varn")
+		g.damage(p, 1, false)
+		if p.Poison == 0 && p.Status == statusIn {
+			g.logTo(p, g.data.Text("gift_slut"), "dim")
+		}
+	}
+	if wasDark && p.Dark > 0 {
+		p.Dark--
+		if p.Dark == 0 {
+			g.logTo(p, g.data.Text("morker_slut"), "info")
+		}
+	}
+}
+
+// move flyttar spelaren ett rum, eller ut genom porten. depth hindrar att
+// roterande rum kastar runt spelaren i all oändlighet.
+func (g *Game) move(p *Player, d Dir, depth int) {
 	room := &g.rooms[p.Y][p.X]
 	if room.HasExit && room.Exit == d {
 		p.Status = statusOut
@@ -749,10 +877,19 @@ func (g *Game) move(p *Player, d Dir) {
 	name := g.roomName(target)
 	if isNew {
 		g.soundAll("nyttrum")
-		g.logTo(p, name+".", "rubrik")
-		g.logTo(p, g.describe(target), "")
+		if p.Dark > 0 {
+			g.logTo(p, g.data.Text("morker_nytt"), "dim")
+		} else {
+			g.logTo(p, name+".", "rubrik")
+			g.logTo(p, g.describe(target), "")
+		}
 		g.logOthers(p, g.data.Text("nytt_rum_andra",
 			"namn", p.Name, "region", g.data.region(nx, ny)), "info")
+		if target.Event != "" {
+			ev := target.Event
+			target.Event = ""
+			g.trigger(p, g.data.trap(ev), depth)
+		}
 	} else {
 		g.soundTo(p, "steg")
 		g.logTo(p, g.data.Text("kant_rum", "rum", name), "dim")

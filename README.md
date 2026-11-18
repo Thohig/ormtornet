@@ -19,7 +19,7 @@ kan öppna den i Safari eller Chrome.
 Flaggor:
 
 - `-addr 0.0.0.0:8080` adress och port
-- `-data data/texter.json` fil med rum och texter
+- `-data data` mapp med datafilerna
 - `-sol 40` antal rundor innan solen går ner
 - `-turtid 30s` längsta tid att välja drag per runda
 - `-min 2` minsta antal spelare för att börja (sätt `-min 1` för att prova ensam)
@@ -39,6 +39,8 @@ dess. Den som inte hinner välja blir stående.
 | Pilar      | gå åt det hållet                  |
 | Mellanslag | vänta                             |
 | T          | ta skatt (bara i skattkammaren)   |
+| S          | sök igenom rummet                 |
+| D          | drick en dryck                    |
 | Enter      | redo / spela igen                 |
 
 Solen sjunker en handsbredd per runda och visas som en mätare överst.
@@ -48,12 +50,43 @@ solen har gått ner är förlorad.
 
 Andras skatt och val av drag syns inte förrän spelet är slut.
 
+### Rum och fällor
+
+När någon går in i ett nytt rum kan en fälla slå till. Ett tecken i rummet
+visar sedan för alla att något har hänt där.
+
+| Fälla           | Vad som händer                                      |
+|-----------------|-----------------------------------------------------|
+| Fallgaller      | du sitter fast i 2 rundor                           |
+| Rasande golv    | 1 skada, du faller ner i källarvalven i 2 rundor och kommer upp någon annanstans; ingen ser var du är |
+| Roterande rum   | du kastas ut genom en slumpad öppning               |
+| Pilar           | 2 skada                                             |
+| Giftig dimma    | 1 skada nu och 1 skada per runda i 2 rundor         |
+| Ormgrop         | 2 skada och fast i 1 runda                          |
+| Ömsat skinn     | fast i 1 runda                                      |
+| Klocka          | solen sjunker 2 extra steg för alla                 |
+| Mörker          | lyktan slocknar i 4 rundor; du ser bara ditt eget rum |
+| Eko             | alla får veta var du är                             |
+
+Du har 6 liv. Den som når noll liv dör.
+
+Ett vanligt rum kan sökas igenom en gång (S). Man kan hitta skatt, en dryck,
+en hemlig gång till ett grannrum, eller utlösa en fälla. En dryck (D) ger
+tillbaka 2 liv och tar bort gift.
+
 Om du laddar om sidan och skriver samma namn igen får du tillbaka din vandrare.
 
 ## Ändra innehåll
 
-Alla rum och texter ligger i `data/texter.json`. Filen läses när servern
-startar, så starta om servern efter en ändring. I texterna kan du använda
+Allt innehåll ligger i mappen `data/`. Filerna läses när servern startar,
+så starta om servern efter en ändring.
+
+- `texter.json` rum, beskrivningar och allmänna texter
+- `fallor.json` regler (liv, chans för händelse, drycker), fällor och sökresultat
+
+För varje fälla kan du ändra namn, vikt (hur ofta den dyker upp), skada,
+antal rundor, tecknet på kartan och texterna. Vad fällan gör styrs av dess
+`id` i `events.go`. I texterna kan du använda
 `{namn}`, `{horn}`, `{riktning}`, `{region}` och `{rum}` där de passar.
 Beskrivningarna för rummen ligger under nivå `"1"`; fler nivåer kommer senare.
 
@@ -61,7 +94,8 @@ Beskrivningarna för rummen ligger under nivå `"1"`; fler nivåer kommer senare
 
 - `main.go` startar webbservern och skriver ut adressen
 - `game.go` all spellogik (tornet, rummen, spelarna)
-- `data.go` läser in texterna
+- `events.go` fällor, sökande och drycker
+- `data.go` läser in datafilerna
 - `ws.go` en liten websocket-implementation utan beroenden
 - `web/` klienten: HTML, CSS och JavaScript utan ramverk
   - `map.js` ritar kartan med ASCII- och braille-tecken

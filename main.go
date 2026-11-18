@@ -19,7 +19,7 @@ var webFS embed.FS
 
 func main() {
 	addr := flag.String("addr", "0.0.0.0:8080", "adress och port att lyssna på")
-	dataPath := flag.String("data", "data/texter.json", "fil med rum och texter")
+	dataPath := flag.String("data", "data", "mapp med rum, fällor och texter")
 	sun := flag.Int("sol", 40, "antal rundor innan solen går ner")
 	turn := flag.Duration("turtid", 30*time.Second, "längsta tid att välja drag per runda")
 	minPlayers := flag.Int("min", 2, "minsta antal spelare för att börja")

@@ -7,7 +7,7 @@ import (
 
 func testGame(t *testing.T) *Game {
 	t.Helper()
-	d, _, err := loadData("data/texter.json")
+	d, _, err := loadData("data")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -102,6 +102,187 @@ func TestRoomsStayConsistent(t *testing.T) {
 					t.Fatalf("dörrarna stämmer inte mellan %d,%d och %d,%d", x, y, nx, ny)
 				}
 			}
+		}
+	}
+}
+
+// startTwo startar ett spel med två spelare och returnerar dem.
+func startTwo(t *testing.T) (*Game, *Client, *Client) {
+	t.Helper()
+	g := testGame(t)
+	a, b := testClient(), testClient()
+	g.Join(a, "Alva")
+	g.Join(b, "Bo")
+	g.Ready(a)
+	g.Ready(b)
+	if g.phase != phasePlay {
+		t.Fatal("spelet startade inte")
+	}
+	return g, a, b
+}
+
+// step låter båda välja drag så att rundan utförs.
+func step(g *Game, a, b *Client, actA, actB string) {
+	if a.player.Status == statusIn && a.player.Cellar == 0 {
+		g.Act(a, actA)
+	}
+	if b.player.Status == statusIn && b.player.Cellar == 0 {
+		g.Act(b, actB)
+	}
+}
+
+// putInRoom ställer spelaren i ett vanligt rum mitt i tornet med dörrar åt alla håll.
+func putInRoom(g *Game, p *Player, x, y int) *Room {
+	r := g.reveal(x, y)
+	r.Kind, r.Event, r.Searched = "rum", "", false
+	p.X, p.Y = x, y
+	return r
+}
+
+func TestTraps(t *testing.T) {
+	cases := []struct {
+		id    string
+		check func(t *testing.T, g *Game, p *Player, sunBefore int)
+	}{
+		{"fallgaller", func(t *testing.T, g *Game, p *Player, _ int) {
+			if p.Stuck != 2 {
+				t.Fatalf("fast %d", p.Stuck)
+			}
+		}},
+		{"pilar", func(t *testing.T, g *Game, p *Player, _ int) {
+			if p.HP != g.data.Regler.Liv-2 {
+				t.Fatalf("liv %d", p.HP)
+			}
+		}},
+		{"dimma", func(t *testing.T, g *Game, p *Player, _ int) {
+			if p.Poison != 2 || p.HP != g.data.Regler.Liv-1 {
+				t.Fatalf("gift %d liv %d", p.Poison, p.HP)
+			}
+		}},
+		{"ormgrop", func(t *testing.T, g *Game, p *Player, _ int) {
+			if p.Stuck != 1 || p.HP != g.data.Regler.Liv-2 {
+				t.Fatalf("fast %d liv %d", p.Stuck, p.HP)
+			}
+		}},
+		{"skinn", func(t *testing.T, g *Game, p *Player, _ int) {
+			if p.Stuck != 1 {
+				t.Fatalf("fast %d", p.Stuck)
+			}
+		}},
+		{"klocka", func(t *testing.T, g *Game, p *Player, sunBefore int) {
+			if g.sun != sunBefore-2 {
+				t.Fatalf("sol %d före %d", g.sun, sunBefore)
+			}
+		}},
+		{"morker", func(t *testing.T, g *Game, p *Player, _ int) {
+			if p.Dark != 4 {
+				t.Fatalf("mörker %d", p.Dark)
+			}
+			st := g.stateFor(p)
+			if len(st.Rooms) != 1 {
+				t.Fatalf("ser %d rum i mörkret", len(st.Rooms))
+			}
+		}},
+		{"rasande_golv", func(t *testing.T, g *Game, p *Player, _ int) {
+			if p.Cellar != 2 {
+				t.Fatalf("källare %d", p.Cellar)
+			}
+		}},
+		{"roterande", func(t *testing.T, g *Game, p *Player, _ int) {
+			if p.X == 4 && p.Y == 2 {
+				t.Fatal("spelaren kastades inte ut")
+			}
+		}},
+		{"eko", func(t *testing.T, g *Game, p *Player, _ int) {}},
+	}
+	for _, c := range cases {
+		t.Run(c.id, func(t *testing.T) {
+			g, a, _ := startTwo(t)
+			p := a.player
+			r := putInRoom(g, p, 4, 2)
+			r.Doors = [4]bool{true, true, true, true}
+			before := g.sun
+			g.trigger(p, g.data.trap(c.id), 0)
+			c.check(t, g, p, before)
+		})
+	}
+}
+
+func TestStuckPoisonCellarAndDeath(t *testing.T) {
+	g, a, b := startTwo(t)
+	p := a.player
+	putInRoom(g, p, 4, 2)
+	g.rooms[2][4].Doors[North] = true
+	g.reveal(4, 1)
+
+	// Fast: draget norrut misslyckas så länge gallret är nere.
+	g.trigger(p, g.data.trap("fallgaller"), 0)
+	step(g, a, b, "N", actWait)
+	step(g, a, b, "N", actWait)
+	if p.Y != 2 {
+		t.Fatal("kom loss för tidigt")
+	}
+	step(g, a, b, "N", actWait)
+	if p.Y != 1 {
+		t.Fatalf("kom inte loss, fast %d", p.Stuck)
+	}
+
+	// Gift tickar en gång per runda; en dryck tar bort det.
+	hp := p.HP
+	g.trigger(p, g.data.trap("dimma"), 0)
+	step(g, a, b, actWait, actWait)
+	if p.HP != hp-2 {
+		t.Fatalf("liv %d, väntade %d", p.HP, hp-2)
+	}
+	p.Potions = 1
+	step(g, a, b, actDrink, actWait)
+	if p.Poison != 0 || p.Potions != 0 {
+		t.Fatal("drycken hjälpte inte")
+	}
+
+	// Källaren: dold för andra, sedan upp i ett annat rum.
+	g.trigger(p, g.data.trap("rasande_golv"), 0)
+	if !g.stateFor(b.player).Players[0].Hidden {
+		t.Fatal("spelaren i källaren syns för andra")
+	}
+	step(g, a, b, actWait, actWait)
+	step(g, a, b, actWait, actWait)
+	if p.Cellar != 0 || !g.rooms[p.Y][p.X].Revealed {
+		t.Fatal("kom inte upp ur källaren")
+	}
+
+	// Döden.
+	g.damage(p, 100, true)
+	if p.Status != statusDead {
+		t.Fatal("dog inte")
+	}
+}
+
+func TestSearch(t *testing.T) {
+	g, a, _ := startTwo(t)
+	p := a.player
+	seen := map[string]bool{}
+	for i := 0; i < 300; i++ {
+		r := putInRoom(g, p, 4, 2)
+		r.Doors = [4]bool{}
+		p.Status, p.HP, p.Cellar, p.X, p.Y = statusIn, 99, 0, 4, 2
+		gold, pot := p.Treasure, p.Potions
+		g.search(p)
+		switch {
+		case p.Treasure > gold:
+			seen["skatt"] = true
+		case p.Potions > pot:
+			seen["dryck"] = true
+		case r.Doors != [4]bool{}:
+			seen["gang"] = true
+		}
+		if !r.Searched {
+			t.Fatal("rummet markerades inte som genomsökt")
+		}
+	}
+	for _, k := range []string{"skatt", "dryck", "gang"} {
+		if !seen[k] {
+			t.Errorf("hittade aldrig %s", k)
 		}
 	}
 }

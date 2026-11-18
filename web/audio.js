@@ -181,6 +181,93 @@ const Sound = (() => {
     slut() {
       [294, 247, 196, 147].forEach((f, i) => tone(f, null, "triangle", 0.05, 0.1, 1.4, true, i * 0.45));
     },
+    // Fällor. Varje fälla har sitt eget ljud.
+    fallgaller() {
+      // Järn som slår i sten: flera ojämna metalltoner och en smäll.
+      [347, 523, 811, 1213].forEach((f) => tone(f, f * 0.97, "square", 0.03, 0.002, 0.9, true));
+      noiseHit(white, "highpass", 2500, 0.2, 0.002, 0.25, true);
+      tone(70, 40, "sine", 0.35, 0.005, 0.4, false);
+    },
+    rasande_golv() {
+      const f = noiseHit(brown, "lowpass", 900, 0.5, 0.05, 1.6, true);
+      f.frequency.exponentialRampToValueAtTime(90, ctx.currentTime + 1.6);
+      tone(80, 30, "sine", 0.35, 0.05, 1.4, false);
+      for (let i = 0; i < 6; i++) tone(200 + Math.random() * 300, 80, "triangle", 0.05, 0.003, 0.15, false, 0.2 + i * 0.12);
+    },
+    roterande() {
+      // Malande sten som vrider sig.
+      const f = noiseHit(white, "bandpass", 180, 0.35, 0.3, 1.6, true);
+      f.Q.value = 6;
+      f.frequency.exponentialRampToValueAtTime(420, ctx.currentTime + 1.0);
+      f.frequency.exponentialRampToValueAtTime(150, ctx.currentTime + 1.9);
+      tone(55, 50, "sawtooth", 0.05, 0.3, 1.5, false);
+    },
+    pilar() {
+      for (let i = 0; i < 3; i++) {
+        const d = i * 0.13;
+        setTimeout(() => {
+          const f = noiseHit(white, "bandpass", 3000, 0.12, 0.01, 0.12, false);
+          f.frequency.exponentialRampToValueAtTime(900, ctx.currentTime + 0.13);
+          tone(160, 90, "triangle", 0.15, 0.002, 0.08, true, 0.12);
+        }, d * 1000);
+      }
+    },
+    dimma() {
+      // Ett långt, fuktigt väsande.
+      const f = noiseHit(white, "highpass", 3500, 0.07, 0.8, 2.5, true);
+      f.frequency.linearRampToValueAtTime(2000, ctx.currentTime + 3);
+      tone(98, 92, "sine", 0.05, 1.0, 2.0, false);
+    },
+    ormgrop() {
+      for (let i = 0; i < 8; i++) {
+        setTimeout(() => {
+          const f = noiseHit(white, "highpass", 4000 + Math.random() * 2500, 0.05, 0.05, 0.35, false);
+          f.Q.value = 3;
+        }, i * 110 + Math.random() * 80);
+      }
+    },
+    skinn() {
+      // Torrt prassel.
+      for (let i = 0; i < 14; i++) {
+        setTimeout(() => noiseHit(white, "bandpass", 2500 + Math.random() * 3000, 0.06, 0.002, 0.03, false), i * 45 + Math.random() * 40);
+      }
+    },
+    klocka() {
+      // En djup klocka med långt efterljud.
+      [110, 220.5, 267, 331, 440.8].forEach((f, i) => tone(f, f * 0.998, "sine", 0.12 / (i + 1), 0.004, 5, true));
+    },
+    morker() {
+      // En pust som blåser ut lågan.
+      const f = noiseHit(white, "lowpass", 1400, 0.2, 0.05, 0.5, false);
+      f.frequency.exponentialRampToValueAtTime(200, ctx.currentTime + 0.5);
+      tone(140, 60, "sine", 0.08, 0.05, 0.8, false);
+    },
+    eko() {
+      for (let i = 0; i < 6; i++) tone(660, 640, "sine", 0.1 * Math.pow(0.7, i), 0.003, 0.3, false, i * 0.33);
+    },
+    skada() {
+      tone(120, 60, "square", 0.08, 0.003, 0.18, false);
+      noiseHit(white, "lowpass", 1200, 0.15, 0.002, 0.1, false);
+    },
+    dod() {
+      tone(196, 49, "sawtooth", 0.06, 0.05, 2.5, true);
+      tone(98, 40, "sine", 0.2, 0.05, 2.5, false);
+    },
+    hitta() {
+      tone(660, null, "triangle", 0.05, 0.005, 0.3, true);
+      tone(990, null, "triangle", 0.04, 0.005, 0.4, true, 0.12);
+    },
+    gang() {
+      const f = noiseHit(brown, "lowpass", 300, 0.4, 0.2, 1.2, true);
+      f.frequency.linearRampToValueAtTime(150, ctx.currentTime + 1.4);
+    },
+    inget() {
+      noiseHit(white, "bandpass", 1200, 0.04, 0.02, 0.2, false);
+    },
+    drick() {
+      // Klunkar.
+      for (let i = 0; i < 3; i++) tone(260, 120, "sine", 0.12, 0.01, 0.12, false, i * 0.28);
+    },
     ansluter() {
       tone(196, null, "triangle", 0.05, 0.4, 1.6, true);
       tone(294, null, "triangle", 0.035, 0.4, 1.6, true, 0.25);

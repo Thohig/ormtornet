@@ -185,6 +185,9 @@ html, body {
 #here { color: var(--fg); }
 #me div { margin: 2px 0; }
 #me .plan { color: var(--hi); }
+#me .hp { color: #e06a5a; }
+#me .hp .empty { color: var(--faint); }
+#me .cond { color: var(--warn); }
 #players .tag { color: var(--dim); }
 #help { color: var(--dim); }
 #help b { display: inline-block; width: 11ch; font-weight: normal; color: var(--fg); }
