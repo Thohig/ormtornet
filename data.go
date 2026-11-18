@@ -340,6 +340,7 @@ type Personality struct {
 	FlyMarginal int       `json:"fly_marginal"`   // flyr när ett slag till (plus så här mycket) kan döda
 	GaHemVidLiv int       `json:"ga_hem_vid_liv"` // går mot porten vid så här lite liv
 	DrickVidLiv int       `json:"drick_vid_liv"`  // dricker vid så här lite liv
+	Stridslust  float64   `json:"stridslust"`     // chans att slåss med en vandrare i samma rum
 }
 
 // Reveal styr hur tornet avslöjas i fyra nivåer.

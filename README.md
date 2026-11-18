@@ -106,7 +106,7 @@ dess. Den som inte hinner välja blir stående.
 | A          | anfall (i strid)                  |
 | P          | parera (i strid)                  |
 | U          | undanmanöver (i strid)            |
-| Tab        | byt varelse (när du är död)       |
+| Tab        | byt motståndare, eller varelse när du är död |
 | Enter      | redo / spela igen                 |
 
 Solen sjunker en handsbredd per runda och visas som en mätare överst.
@@ -115,6 +115,19 @@ ut med skatt räknas, och den med mest skatt vinner. Den som är kvar inne när
 solen har gått ner är förlorad.
 
 Andras skatt och val av drag syns inte förrän spelet är slut.
+
+### Strid mellan vandrare
+
+Står två vandrare i samma rum utan någon varelse kan de slåss med samma
+sten-sax-påse som mot varelserna (A, P, U, och Tab för att välja motståndare
+när flera står där). Den som inte försvarar sig blir träffad om den andra
+anfaller, även om den går ut ur rummet. Varje träff kostar 1 liv och river
+åt sig en tredjedel av motståndarens guld (minst 1). Den som dödar tar allt.
+Hur mycket någon bär syns inte, men man får en vink när man möter dem.
+Portrummen är fredade, och varje runda med strid gör ormen lite oroligare.
+AI-spelare anfaller bara människor, utom när alla vandrare är AI-spelare.
+Spelledaren väljer under "Strid mellan vandrare": på, efter halva tiden
+eller av.
 
 ### Spela mot datorn
 

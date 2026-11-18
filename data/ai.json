@@ -13,7 +13,8 @@
         "sok_chans": 0.08,
         "fly_marginal": 0,
         "ga_hem_vid_liv": 2,
-        "drick_vid_liv": 2
+        "drick_vid_liv": 2,
+        "stridslust": 0.6
       },
       {
         "id": "forsiktig",
@@ -24,7 +25,8 @@
         "sok_chans": 0.2,
         "fly_marginal": 1,
         "ga_hem_vid_liv": 3,
-        "drick_vid_liv": 3
+        "drick_vid_liv": 3,
+        "stridslust": 0.25
       }
     ],
 

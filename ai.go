@@ -291,6 +291,17 @@ func (g *Game) botDecide(p *Player) (string, int) {
 		return p.bot.counter(typ), 0
 	}
 
+	// Strid mot en annan vandrare: ibland, beroende på hur stridslysten den är.
+	if foe := g.botFoe(p); foe != nil && rand.Float64() < pers.Stridslust {
+		a := actAttack
+		if r := rand.Float64(); r > 0.8 {
+			a = actDodge
+		} else if r > 0.6 {
+			a = actParry
+		}
+		return a, -foe.ID
+	}
+
 	if st.HP <= pers.DrickVidLiv && st.Potions > 0 {
 		return actDrink, 0
 	}

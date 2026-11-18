@@ -44,9 +44,10 @@ const (
 )
 
 type Config struct {
-	AI           int  // önskat antal datorspelare
-	AbsentRounds int  // rundor innan AI tar över en frånvarande vandrare, 0 = aldrig
-	Reveal       bool // false stänger av avslöjandet
+	AI           int    // önskat antal datorspelare
+	AbsentRounds int    // rundor innan AI tar över en frånvarande vandrare, 0 = aldrig
+	PvP          string // strid mellan vandrare: "av", "pa" eller "halva"
+	Reveal       bool   // false stänger av avslöjandet
 	SunMax       int
 	TurnTime     time.Duration
 	MinPlayers   int
@@ -112,6 +113,9 @@ type Player struct {
 	awayRound int  // rundan då människan lämnade mitt i vandringen, 0 om den är här
 	takenOver bool // en AI-spelare styr vandraren medan människan är borta
 	aiPlayed  bool // AI:n har styrt vandraren någon gång under vandringen
+
+	target int    // vandraren som ett stridsval den här rundan riktas mot
+	met    string // vilka andra vandrare som stod i rummet förra gången, så att det bara sägs en gång
 
 	HP      int
 	Potions int
@@ -319,6 +323,7 @@ type stateMsg struct {
 	Sleep      int           `json:"sleep"` // -1 utanför kammaren
 	Controller bool          `json:"controller"`
 	Monsters   []monsterView `json:"monsters"`
+	PvP        string        `json:"pvp"` // om det går att strida mot andra vandrare här
 	SleepText  string        `json:"sleepText,omitempty"`
 	Players    []playerView  `json:"players"`
 	Rooms      []roomView    `json:"rooms"`
@@ -434,6 +439,9 @@ func (g *Game) stateFor(me *Player) stateMsg {
 		}
 	}
 	st.Monsters = g.monsterViews(me, blind)
+	if g.phase == phasePlay {
+		st.PvP = g.pvpStatus(me)
+	}
 	st.Controller = g.isController(me) && g.phase == phasePlay
 	if g.phase == phaseEnd {
 		st.Results = g.results()
@@ -756,8 +764,21 @@ func (g *Game) actPlayer(p *Player, a string, monsterID int) {
 	switch a {
 	case actAttack, actParry, actDodge:
 		if g.monsterAt(p.X, p.Y) == nil {
-			g.logTo(p, g.data.MonsterText("inget_monster_har"), "dim")
-			return
+			// Ingen varelse: kanske en annan vandrare. Ett negativt id pekar
+			// ut vandraren man vill slåss mot.
+			switch g.pvpStatus(p) {
+			case pvpYes:
+				p.target = g.pickFoe(p, -monsterID).ID
+			case pvpPeace:
+				g.logTo(p, g.data.Text("pvp_fredat"), "dim")
+				return
+			case pvpTooEarly:
+				g.logTo(p, g.data.Text("pvp_for_tidigt"), "dim")
+				return
+			default:
+				g.logTo(p, g.data.MonsterText("inget_monster_har"), "dim")
+				return
+			}
 		}
 	case "N", "E", "S", "W", actWait:
 	case actTake:
@@ -810,11 +831,17 @@ func (g *Game) resolve() {
 		}
 	}
 	rand.Shuffle(len(active), func(i, j int) { active[i], active[j] = active[j], active[i] })
+	g.resolveFights(active)
 	for _, p := range active {
 		if p.Status == statusIn {
 			g.playTurn(p)
 		}
 		p.Action = ""
+	}
+	for _, p := range g.players {
+		if p != nil {
+			g.meetIfNew(p)
+		}
 	}
 
 	g.sun--
@@ -921,6 +948,8 @@ func (g *Game) playTurn(p *Player) {
 	}
 	switch {
 	case g.combatTurn(p, a):
+	case isCombatAction(a):
+		// Striden mot en annan vandrare är redan avgjord i resolveFights.
 	case a == actWait:
 	case a == actTake:
 		g.take(p)

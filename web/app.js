@@ -152,6 +152,26 @@ const ACTION_WORDS = {
 };
 const DIR_WORDS = { N: "norrut", E: "österut", S: "söderut", W: "västerut" };
 
+// Strid mot andra vandrare: Tab väljer vem när flera står i rummet.
+let selectedFoe = 0;
+function foesHere() {
+  const me = myPlayer();
+  if (!me || me.status !== "inne") return [];
+  return state.players.filter((p) => p.id !== me.id && !p.hidden && p.status === "inne" && p.x === me.x && p.y === me.y);
+}
+function currentFoe() {
+  const foes = foesHere();
+  if (!foes.length) return null;
+  return foes.find((p) => p.id === selectedFoe) || foes[0];
+}
+function cycleFoe() {
+  const foes = foesHere();
+  if (!foes.length) return;
+  const i = foes.findIndex((p) => p.id === (currentFoe() || {}).id);
+  selectedFoe = foes[(i + 1) % foes.length].id;
+  renderSide();
+}
+
 // Den döda spelaren som styr varelserna väljer en av dem med Tab.
 let selectedMonster = 0;
 function controlledMonster() {
@@ -246,6 +266,19 @@ function renderSide() {
       line("Strid: " + foe.name, "foe");
       box.appendChild(meter("foehp", "", foe.hp, foe.maxHp, "■", "□"));
       line("A anfall · P parera · U undan", "dimline");
+    }
+    const others = foe || state.cellar > 0 ? [] : foesHere();
+    if (others.length) {
+      const names = others.map((p) => p.name).join(" och ");
+      const f = currentFoe();
+      if (state.pvp === "ja") {
+        line("Strid: " + f.name + (others.length > 1 ? " (Tab byter)" : ""), "foe");
+        line("A anfall · P parera · U undan", "dimline");
+      } else {
+        line("Här står också " + names, "dimline");
+        if (state.pvp === "fredat") line("Porten är fredad", "dimline");
+        if (state.pvp === "for_tidigt") line("Ingen strid förrän solen sjunkit halvvägs", "dimline");
+      }
     }
   }
   if (state.controller) {
@@ -504,10 +537,23 @@ document.addEventListener("keydown", (e) => {
     else if (m) send({ t: "act", a, m: m.id });
     return;
   }
+  if (e.key === "Tab" && foesHere().length) {
+    e.preventDefault();
+    cycleFoe();
+    return;
+  }
   const a = KEYS[e.key];
   if (!a) return;
   e.preventDefault();
-  if (state && state.phase === "spel") send({ t: "act", a });
+  if (!state || state.phase !== "spel") return;
+  const me = myPlayer();
+  const monsterHere = me && (state.monsters || []).some((m) => m.x === me.x && m.y === me.y);
+  const foe = currentFoe();
+  if (["anfall", "parera", "undan"].includes(a) && !monsterHere && foe) {
+    send({ t: "act", a, m: -foe.id }); // negativt id: en annan vandrare
+  } else {
+    send({ t: "act", a });
+  }
 });
 
 // Rita om då och då så att den egna markören blinkar.

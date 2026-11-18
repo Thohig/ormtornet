@@ -145,6 +145,14 @@
         <option value="3">AI tar över efter 3 rundor</option>
       </select>
       <span class="note">när någon lämnar under vandringen</span>
+
+      <label for="sStrid">Strid mellan vandrare</label>
+      <select id="sStrid" name="strid">
+        <option value="pa">på</option>
+        <option value="halva">efter halva tiden</option>
+        <option value="av">av</option>
+      </select>
+      <span class="note">portrummen är alltid fredade</span>
     </form>
     <p id="saved"></p>
     <p class="dimtext" id="settingsHint">Sparas till nästa gång. AI-spelare kommer och går direkt, resten gäller från nästa omgång.</p>
@@ -330,6 +338,7 @@ function renderSettings(v) {
     fr.append(new Option("AI tar över efter " + s.franvaro + " rundor", String(s.franvaro)));
   }
   fr.value = String(s.franvaro);
+  $("sStrid").value = s.strid;
 }
 
 function post(path, body) {
@@ -357,6 +366,7 @@ $("settings").addEventListener("change", async () => {
     turtid: +$("sTur").value,
     avslojande: $("sRev").value === "1",
     franvaro: +$("sFr").value,
+    strid: $("sStrid").value,
   };
   saving = true;
   try {

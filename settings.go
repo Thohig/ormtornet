@@ -12,15 +12,16 @@ import (
 )
 
 type Settings struct {
-	AI         int  `json:"ai"`         // datorspelare, 0–3
-	Min        int  `json:"min"`        // minsta antal vandrare, datorspelare inräknade
-	Sol        int  `json:"sol"`        // rundor innan solen går ner
-	Turtid     int  `json:"turtid"`     // sekunder per runda
-	Avslojande bool `json:"avslojande"` // låt tornet avslöja sin hemlighet
-	Franvaro   int  `json:"franvaro"`   // rundor innan AI tar över en frånvarande vandrare, 0 = aldrig
+	AI         int    `json:"ai"`         // datorspelare, 0–3
+	Min        int    `json:"min"`        // minsta antal vandrare, datorspelare inräknade
+	Sol        int    `json:"sol"`        // rundor innan solen går ner
+	Turtid     int    `json:"turtid"`     // sekunder per runda
+	Avslojande bool   `json:"avslojande"` // låt tornet avslöja sin hemlighet
+	Franvaro   int    `json:"franvaro"`   // rundor innan AI tar över en frånvarande vandrare, 0 = aldrig
+	Strid      string `json:"strid"`      // strid mellan vandrare: "av", "pa" eller "halva"
 }
 
-var defaultSettings = Settings{AI: 0, Min: 2, Sol: 40, Turtid: 30, Avslojande: true, Franvaro: 2}
+var defaultSettings = Settings{AI: 0, Min: 2, Sol: 40, Turtid: 30, Avslojande: true, Franvaro: 2, Strid: pvpOn}
 
 var errPlaying = errors.New("inställningarna kan ändras när omgången är slut")
 
@@ -31,16 +32,19 @@ func (s Settings) normalize() Settings {
 	s.Sol = max(4, min(200, s.Sol))
 	s.Turtid = max(3, min(600, s.Turtid))
 	s.Franvaro = max(0, min(10, s.Franvaro))
+	if s.Strid != pvpOff && s.Strid != pvpOn && s.Strid != pvpHalf {
+		s.Strid = pvpOn
+	}
 	return s
 }
 
 func (s Settings) config() Config {
 	s = s.normalize()
-	return Config{AI: s.AI, AbsentRounds: s.Franvaro, MinPlayers: s.Min, SunMax: s.Sol, TurnTime: time.Duration(s.Turtid) * time.Second, Reveal: s.Avslojande}
+	return Config{AI: s.AI, AbsentRounds: s.Franvaro, PvP: s.Strid, MinPlayers: s.Min, SunMax: s.Sol, TurnTime: time.Duration(s.Turtid) * time.Second, Reveal: s.Avslojande}
 }
 
 func settingsFrom(cfg Config) Settings {
-	return Settings{AI: cfg.AI, Franvaro: cfg.AbsentRounds, Min: cfg.MinPlayers, Sol: cfg.SunMax, Turtid: int(cfg.TurnTime / time.Second), Avslojande: cfg.Reveal}
+	return Settings{AI: cfg.AI, Franvaro: cfg.AbsentRounds, Strid: cfg.PvP, Min: cfg.MinPlayers, Sol: cfg.SunMax, Turtid: int(cfg.TurnTime / time.Second), Avslojande: cfg.Reveal}
 }
 
 // defaultSettingsPath ger ~/Library/Application Support/Ormtornet/installningar.json.
