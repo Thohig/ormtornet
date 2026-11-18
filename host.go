@@ -79,7 +79,9 @@ func (g *Game) HostView(visible bool) hostView {
 type introInfo struct {
 	Avslojande bool     `json:"avslojande"`
 	Rykten     []string `json:"rykten"`
-	Vard       bool     `json:"vard"` // sidan visas på datorn som kör tornet
+	Vard       bool     `json:"vard"`  // sidan visas på datorn som kör tornet
+	Vanta      int      `json:"vanta"` // sekunder innan knappen visas
+	Ljud       string   `json:"ljud"`  // uppmaningen att klicka för att höra stormen
 }
 
 // Intro väljer rykten till startsidan. Med avslöjandet avstängt, för spelare
@@ -91,7 +93,8 @@ func (g *Game) Intro() introInfo {
 	if !g.cfg.Reveal {
 		key = "rykten_invigda"
 	}
-	return introInfo{Avslojande: g.cfg.Reveal, Rykten: g.data.Texter[key]}
+	return introInfo{Avslojande: g.cfg.Reveal, Rykten: g.data.Texter[key],
+		Vanta: g.data.Intro.Vanta, Ljud: g.data.Text("intro_ljud")}
 }
 
 // isLocal är sant när förfrågan kommer från den här datorn, oavsett om den

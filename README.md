@@ -125,10 +125,17 @@ en annan flik ("Gå in själv", som leder till introt och sedan namnrutan). Andr
 
 ## Spela
 
-1. Startsidan visar tornet i solnedgången medan rykten om det tonar fram.
-   Klicka på "Gå in i tornet" (det startar ljudet). Ryktena står i
+1. Startsidan visar tornet i en storm vid solnedgången medan rykten om det
+   tonar fram. Moln driver förbi, det regnar och blixtrar, och efter varje
+   blixt mullrar åskan. Klicka var som helst, eller tryck Enter, för att
+   höra stormen: en låg, hotfull ton, vind, regn och åska. Webbläsaren
+   tillåter inget ljud innan man har klickat. Efter 30 sekunder tonar
+   "Gå in i tornet" fram efter en blixt, och porten börjar glimma. Klicka
+   på den eller tryck Enter. Den som redan har sett introt i fliken, och
+   spelledaren på tornets dator, får knappen direkt. Ryktena står i
    `data/texter.json` under `rykten`, och under `rykten_invigda` för den som
-   spelar med `-avslojande=false`.
+   spelar med `-avslojande=false`. Väntetiden står under `intro` → `vanta`
+   och uppmaningen att klicka under `intro_ljud`.
 2. Skriv ditt namn och tryck Enter.
 3. Tryck Enter igen när du är redo. Vandringen börjar när alla är redo.
 
@@ -137,8 +144,9 @@ en annan flik ("Gå in själv", som leder till introt och sedan namnrutan). Andr
 En spelare som ansluter från en annan dator eller telefon ser bara
 spelarsidan (`/`), med tre vyer i tur och ordning:
 
-1. **Introt**: tornet i solnedgången, ryktena och "Gå in i tornet". Hela
-   övergången in genom porten visas bara första gången i fliken.
+1. **Introt**: tornet i stormen, ryktena och, efter en stund, "Gå in i
+   tornet". Hela övergången in genom porten visas bara första gången i
+   fliken.
 2. **Namnrutan**: "Vad heter du, vandrare?" Är tornet fullt eller namnet
    upptaget står felet här.
 3. **Spelet**, där spelaren stannar resten av kvällen. Det går igenom tre faser:

@@ -138,6 +138,12 @@ type Data struct {
 	Avslojande   Reveal              `json:"avslojande"`
 	AI           AIData              `json:"ai"`
 	Svarighet    Difficulty          `json:"svarighet"`
+	Intro        IntroData           `json:"intro"`
+}
+
+// IntroData styr startsidan.
+type IntroData struct {
+	Vanta int `json:"vanta"` // sekunder innan "Gå in i tornet" visas första gången
 }
 
 // Filerna i datamappen. Alla läses in i samma struktur; "texter" slås ihop.
@@ -213,6 +219,9 @@ func mergeData(d, part *Data) {
 	}
 	if len(part.Riktningar) > 0 {
 		d.Riktningar = part.Riktningar
+	}
+	if part.Intro.Vanta > 0 {
+		d.Intro = part.Intro
 	}
 	if len(part.Regioner) > 0 {
 		d.Regioner = part.Regioner

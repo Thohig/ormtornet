@@ -524,8 +524,10 @@ function renderOverlay() {
   el.hidden = false;
 }
 
-// Introt: tornet i solnedgången med rykten som tonar fram. Ljudet får bara
-// starta efter ett klick, så övergången in genom porten är där ljudet börjar.
+// Introt: tornet i en storm vid solnedgången, med rykten som tonar fram.
+// Ljudet får bara starta efter ett klick eller en tangent. "Gå in i tornet"
+// visas först efter en stund, utom för den som redan har sett introt i
+// fliken och på tornets egen dator.
 const Intro = (() => {
   const reduced = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
   let seen = false; // har sett hela övergången förut i den här fliken
@@ -535,10 +537,15 @@ const Intro = (() => {
   // har valt att spela själv (adressen slutar med ?spela).
   let toHostPage = false;
   const wantsToPlay = new URLSearchParams(location.search).has("spela");
+  let reveal = true;
   let next = 0;
   let entering = false;
   let done = false;
   let timer = null;
+  let ready = false; // knappen syns och går att använda
+  let heard = false; // besökaren har startat stormens ljud
+  let flashTimer = null;
+  let readyTimer = null;
 
   function showRumor() {
     if (!rumors.length || entering) return;
@@ -550,16 +557,155 @@ const Intro = (() => {
     }, el.textContent ? 900 : 0);
   }
 
+  // Regnet ritas på en egen duk: sneda streck som faller i vinden.
+  const Rain = (() => {
+    const canvas = $("rain");
+    const c = canvas.getContext("2d");
+    let drops = [];
+    let w = 0;
+    let h = 0;
+    let running = false;
+    let last = 0;
+
+    function resize() {
+      const dpr = window.devicePixelRatio || 1;
+      w = canvas.clientWidth;
+      h = canvas.clientHeight;
+      canvas.width = Math.round(w * dpr);
+      canvas.height = Math.round(h * dpr);
+      c.setTransform(dpr, 0, 0, dpr, 0, 0);
+      const n = Math.min(220, Math.round((w * h) / (reduced ? 30000 : 9000)));
+      drops = Array.from({ length: n }, () => drop(Math.random() * h));
+    }
+
+    function drop(y) {
+      const near = Math.random();
+      return {
+        x: Math.random() * (w + 200) - 100,
+        y,
+        len: 8 + near * 16,
+        speed: 420 + near * 520, // bildpunkter per sekund
+        alpha: 0.12 + near * 0.28,
+      };
+    }
+
+    function frame(t) {
+      if (!running) return;
+      if (canvas.clientWidth !== w || canvas.clientHeight !== h) resize();
+      const dt = Math.min(0.05, (t - last) / 1000 || 0);
+      last = t;
+      draw(dt);
+      requestAnimationFrame(frame);
+    }
+
+    function draw(dt) {
+      c.clearRect(0, 0, w, h);
+      c.lineWidth = 1;
+      drops.forEach((d) => {
+        d.y += d.speed * dt;
+        d.x -= d.speed * dt * 0.28;
+        if (d.y > h + d.len) Object.assign(d, drop(-d.len));
+        c.strokeStyle = "rgba(160, 175, 210, " + d.alpha + ")";
+        c.beginPath();
+        c.moveTo(d.x, d.y);
+        c.lineTo(d.x + d.len * 0.28, d.y - d.len);
+        c.stroke();
+      });
+    }
+
+    return {
+      start() {
+        resize();
+        if (reduced) {
+          draw(0); // en stilla bild av regnet
+          return;
+        }
+        if (running) return;
+        running = true;
+        last = performance.now();
+        requestAnimationFrame(frame);
+      },
+      stop() { running = false; },
+      resize() { if (drops.length) resize(); if (reduced) draw(0); },
+    };
+  })();
+  window.addEventListener("resize", () => Rain.resize());
+
+  // Blixten: himlen blir vit, tornet en svart siluett och sedan mullrar det.
+  function flash(after) {
+    if (entering) return;
+    const scene = $("scene");
+    const fl = $("flash");
+    const steps = reduced
+      ? [[0, 0.22, true], [900, 0, false]]
+      : [[0, 0.7, true], [70, 0.1, true], [140, 0.45, true], [230, 0, false], [420, 0.25, true], [480, 0, false]];
+    fl.style.transition = reduced ? "opacity 0.8s" : "none";
+    steps.forEach(([ms, op, lit]) => setTimeout(() => {
+      fl.style.opacity = op;
+      scene.classList.toggle("lit", lit);
+    }, ms));
+    const near = Math.random();
+    if (heard) setTimeout(() => Sound.thunder(near), 300 + (1 - near) * 2600);
+    // Ibland glöder ögat i tornet en stund efter blixten.
+    if (reveal && Math.random() < 0.35) {
+      setTimeout(() => $("eye").classList.add("glint"), 600);
+      setTimeout(() => $("eye").classList.remove("glint"), 1900);
+    }
+    if (after) setTimeout(after, 250);
+  }
+
+  function scheduleFlash() {
+    clearTimeout(flashTimer);
+    flashTimer = setTimeout(() => {
+      flash();
+      scheduleFlash();
+    }, 8000 + Math.random() * 12000);
+  }
+
+  // Knappen tonar fram, helst precis efter en blixt, och porten glimmar.
+  function showEnter(withFlash) {
+    if (ready) return;
+    const appear = () => {
+      ready = true;
+      const b = $("enter");
+      b.classList.remove("waiting");
+      b.classList.add("appear");
+      $("gate").classList.add("glow");
+      if (Intro.active()) b.focus();
+    };
+    if (withFlash && !reduced) flash(appear);
+    else appear();
+  }
+
+  function listen() {
+    if (heard) return;
+    heard = true;
+    Sound.start();
+    Sound.storm(reveal);
+    $("listen").classList.add("gone");
+  }
+
+  function startStorm() {
+    Rain.start();
+    scheduleFlash();
+    if (heard) Sound.storm(reveal);
+  }
+
   fetch("/intro" + (document.visibilityState === "visible" ? "?synlig" : ""), { cache: "no-store" })
     .then((r) => r.json())
     .then((info) => {
-      if (!info.avslojande) $("intro").classList.add("invigd");
+      reveal = !!info.avslojande;
+      if (!reveal) $("intro").classList.add("invigd");
       toHostPage = info.vard && !wantsToPlay;
+      $("listen").textContent = info.ljud || "";
       rumors = (info.rykten || []).slice().sort(() => Math.random() - 0.5);
       showRumor();
       setInterval(showRumor, 7500);
+      if (seen || toHostPage) showEnter(false);
+      else readyTimer = setTimeout(() => showEnter(true), (info.vanta || 30) * 1000);
     })
-    .catch(() => {});
+    .catch(() => showEnter(false));
+  startStorm();
 
   // Fönstret blinkar, en enda gång, en stund efter att sidan har öppnats.
   if (!reduced) {
@@ -574,6 +720,7 @@ const Intro = (() => {
     if (done) return;
     done = true;
     clearTimeout(timer);
+    Rain.stop();
     if (toHostPage) {
       location.href = "/spelledare";
       return;
@@ -585,23 +732,40 @@ const Intro = (() => {
 
   function enter() {
     if (entering) return;
+    if (!ready) {
+      listen(); // innan knappen syns startar ett klick bara ljudet
+      return;
+    }
     entering = true;
+    clearTimeout(flashTimer);
+    clearTimeout(readyTimer);
     Sound.start();
+    Sound.calm(3);
     Sound.play("intro");
     try { sessionStorage.setItem("ormtornet-intro", "1"); } catch {}
     const quick = seen;
+    seen = true;
+    $("start").classList.add("leaving");
     $("intro").classList.add(quick ? "quick" : "entering");
     timer = setTimeout(finish, quick ? 600 : 3000);
   }
 
   return {
     enter,
-    skip() { if (entering) finish(); },
+    // poke: ett klick någonstans på startsidan. Under övergången hoppar det
+    // fram, annars startar det stormens ljud.
+    poke() {
+      if (entering) finish();
+      else listen();
+    },
     reset() {
       clearTimeout(timer);
       entering = false;
       done = false;
       $("intro").classList.remove("entering", "quick");
+      $("start").classList.remove("leaving");
+      showEnter(false);
+      startStorm();
     },
     active() { return $("start").classList.contains("active"); },
     entering() { return entering; },
@@ -612,12 +776,12 @@ $("enter").addEventListener("click", (e) => {
   e.stopPropagation();
   Intro.enter();
 });
-$("start").addEventListener("click", () => Intro.skip());
+$("start").addEventListener("click", () => Intro.poke());
 document.addEventListener("keydown", (e) => {
   if (!Intro.active() || e.metaKey || e.ctrlKey || e.altKey) return;
   if (Intro.entering()) {
     e.preventDefault();
-    Intro.skip();
+    Intro.poke();
   } else if (e.key === "Enter" || e.key === " ") {
     e.preventDefault();
     Intro.enter();

@@ -270,6 +270,143 @@ const Sound = (() => {
     src.stop(t + 3.3);
   }
 
+  // Stormen på startsidan: en låg drönarton i moll, vind, regn och ibland
+  // ett dunk långt inne i tornet. Allt går genom en egen volym så att
+  // stormen kan tona ut när man går in.
+  let storm = null;
+
+  function startStorm(reveal) {
+    if (storm) return;
+    const t = ctx.currentTime;
+    const bus = ctx.createGain();
+    bus.gain.setValueAtTime(0.0001, t);
+    bus.gain.exponentialRampToValueAtTime(1, t + 4);
+    bus.connect(master);
+    const nodes = [];
+    const loop = (buf) => {
+      const src = ctx.createBufferSource();
+      src.buffer = buf;
+      src.loop = true;
+      src.start();
+      nodes.push(src);
+      return src;
+    };
+
+    // Drönaren: A och C djupt nere, svävande, med en sakta pulserande volym.
+    const drone = ctx.createGain();
+    drone.gain.value = 0.05;
+    const dlp = ctx.createBiquadFilter();
+    dlp.type = "lowpass";
+    dlp.frequency.value = 420;
+    drone.connect(dlp);
+    dlp.connect(bus);
+    dlp.connect(echo);
+    [[55, "sawtooth", 0.5], [55.4, "sine", 1], [65.4, "triangle", 0.7], [110, "sine", 0.25]].forEach(([f, type, level]) => {
+      const o = ctx.createOscillator();
+      o.type = type;
+      o.frequency.value = f;
+      const g = ctx.createGain();
+      g.gain.value = level;
+      o.connect(g);
+      g.connect(drone);
+      o.start();
+      nodes.push(o);
+    });
+    lfo(0.07, 0.025, drone.gain);
+    lfo(0.03, 180, dlp.frequency);
+
+    // Tritonus: Ess som sväller in och tonar bort med ojämna mellanrum.
+    const tritone = ctx.createOscillator();
+    tritone.type = "triangle";
+    tritone.frequency.value = 77.8;
+    const tg = ctx.createGain();
+    tg.gain.value = 0.0001;
+    tritone.connect(tg);
+    tg.connect(dlp);
+    tritone.start();
+    nodes.push(tritone);
+
+    // Vinden: starkare och mer ojämn än i tornet.
+    const wsrc = loop(brown);
+    const wbp = ctx.createBiquadFilter();
+    wbp.type = "bandpass";
+    wbp.frequency.value = 500;
+    wbp.Q.value = 0.9;
+    const wg = ctx.createGain();
+    wg.gain.value = 0.16;
+    lfo(0.09, 380, wbp.frequency);
+    lfo(0.17, 0.08, wg.gain);
+    wsrc.connect(wbp);
+    wbp.connect(wg);
+    wg.connect(bus);
+
+    // Regnet: vitt brus, ljust men inte vasst.
+    const rsrc = loop(white);
+    const rhp = ctx.createBiquadFilter();
+    rhp.type = "highpass";
+    rhp.frequency.value = 1200;
+    const rlp = ctx.createBiquadFilter();
+    rlp.type = "lowpass";
+    rlp.frequency.value = 7000;
+    const rg = ctx.createGain();
+    rg.gain.value = 0.035;
+    lfo(0.13, 0.012, rg.gain);
+    rsrc.connect(rhp);
+    rhp.connect(rlp);
+    rlp.connect(rg);
+    rg.connect(bus);
+
+    storm = { bus, nodes, timers: [] };
+    const later = (fn, ms) => storm && storm.timers.push(setTimeout(fn, ms));
+    const swell = () => {
+      if (!storm || !ctx) return;
+      const now = ctx.currentTime;
+      tg.gain.cancelScheduledValues(now);
+      tg.gain.setValueAtTime(0.0001, now);
+      tg.gain.exponentialRampToValueAtTime(0.35, now + 3.5);
+      tg.gain.exponentialRampToValueAtTime(0.0001, now + 8);
+      later(swell, 14000 + Math.random() * 12000);
+    };
+    later(swell, 6000);
+    if (reveal) {
+      // Ett dubbelt slag långt inne i tornet, som ett hjärta som sover.
+      const beat = () => {
+        if (!storm || !ctx) return;
+        const now = ctx.currentTime;
+        thump(now, 0.16);
+        thump(now + 0.24, 0.1);
+        later(beat, 15000 + Math.random() * 10000);
+      };
+      later(beat, 9000);
+    }
+  }
+
+  function stopStorm(seconds) {
+    if (!storm || !ctx) return;
+    const s = storm;
+    storm = null;
+    s.timers.forEach(clearTimeout);
+    const t = ctx.currentTime;
+    s.bus.gain.cancelScheduledValues(t);
+    s.bus.gain.setValueAtTime(Math.max(0.0001, s.bus.gain.value), t);
+    s.bus.gain.exponentialRampToValueAtTime(0.0001, t + seconds);
+    s.nodes.forEach((n) => n.stop(t + seconds + 0.1));
+  }
+
+  // Åska: ett skarpt brak när den är nära, och ett långt muller. near går
+  // från 0 (långt bort) till 1 (precis här).
+  function thunder(near) {
+    if (!ctx) return;
+    const t = ctx.currentTime;
+    if (near > 0.6) {
+      noiseHit(white, "highpass", 900, 0.12 * near, 0.005, 0.5, true);
+    }
+    const r = noiseHit(brown, "lowpass", 160 + 260 * near, 0.5 + 0.4 * near, 0.08 + 0.4 * (1 - near), 3.5 + 2 * (1 - near), true);
+    r.frequency.setValueAtTime(r.frequency.value, t);
+    r.frequency.linearRampToValueAtTime(90, t + 4);
+    tone(38, 30, "sine", 0.18 * near + 0.05, 0.1, 3, false);
+  }
+
   const effects = {
     intro,
     // Tornets röst: en viskning med en låg ton under.
@@ -526,6 +663,21 @@ const Sound = (() => {
       if (heartTimer) clearTimeout(heartTimer);
       heartTimer = null;
       setTimeout(() => closing.close(), 2800);
+    },
+    // storm startar stormen på startsidan. reveal lägger till tornets dunk.
+    storm(reveal) {
+      if (!ctx) return;
+      if (ctx.state === "suspended") ctx.resume();
+      startStorm(reveal);
+    },
+    calm(seconds) {
+      stopStorm(seconds || 3);
+    },
+    thunder(near) {
+      thunder(near);
+    },
+    running() {
+      return !!ctx && ctx.state === "running";
     },
     breath(level) {
       setBreath(level);

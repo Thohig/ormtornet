@@ -132,6 +132,67 @@ body[data-niva="4"] #crt::after { animation: throb 0.95s infinite; }
 }
 #rumor.fade { opacity: 0; }
 
+/* Stormen: moln som driver över solen, regn, blixtar och åska. */
+#start { position: relative; overflow: hidden; }
+#intro { position: relative; z-index: 3; }
+#rain, #flash { position: absolute; inset: 0; pointer-events: none; }
+/* Ljuset ligger bakom tornet och regnet, så att tornet blir en siluett. */
+#flash { z-index: 1; background: radial-gradient(ellipse at 50% 35%, #eef2ff 0%, #b9c4e8 45%, #6d7aa3 100%); opacity: 0; }
+#rain { z-index: 2; width: 100%; height: 100%; }
+#scene .stars { opacity: 0.15; }
+#clouds .far { fill: #232838; opacity: 0.9; animation: drift 70s ease-in-out infinite alternate; }
+#clouds .near { fill: #141720; opacity: 0.85; animation: drift 45s ease-in-out infinite alternate-reverse; }
+@keyframes drift {
+  from { transform: translateX(-70px); }
+  to { transform: translateX(70px); }
+}
+#sun { filter: brightness(0.75) saturate(0.8); }
+
+/* Blixten: himlen blir vit och tornet en svart siluett. */
+#scene.lit #clouds { opacity: 0.4; }
+#scene.lit #tower > path, #scene.lit #tower > rect { fill: #0d0f14; }
+#scene.lit #scales { stroke: #0d0f14; }
+#scene.lit #sun { opacity: 0.15; }
+#scene.lit #shadow { stroke: #0d0f14; }
+
+/* Ögat glöder en stund efter en blixt. */
+#scene #eye.glint { fill: #b8401c; transition: fill 0.4s; filter: drop-shadow(0 0 3px #ff6a2a); }
+
+/* Ryktena fladdrar lite, som i vinden. */
+#rumor:not(.fade) { animation: fladder 3.7s ease-in-out infinite; }
+@keyframes fladder {
+  0%, 100% { transform: translateX(0) skewX(0); }
+  20% { transform: translateX(1px) skewX(-1.5deg); }
+  45% { transform: translateX(-1px) skewX(0.8deg); }
+  70% { transform: translateX(0.5px) skewX(-0.6deg); }
+}
+
+/* Knappen syns först efter en stund. Då glimmar porten. */
+#enter { transition: opacity 2.5s; }
+#enter.waiting { opacity: 0; visibility: hidden; animation: none; }
+#enter.appear { animation: appear 2.5s ease-out, breathe 5s ease-in-out 2.5s infinite; }
+@keyframes appear {
+  from { opacity: 0; letter-spacing: 0.6em; }
+  to { opacity: 0.55; letter-spacing: 0.25em; }
+}
+#scene #gate.glow { animation: portljus 4s ease-in-out infinite; }
+@keyframes portljus {
+  0%, 100% { fill: #2a1d0c; }
+  50% { fill: #6b4a1a; }
+}
+#listen {
+  margin: 0;
+  min-height: 1.2em;
+  color: var(--dim);
+  font-size: 12px;
+  letter-spacing: 0.15em;
+  cursor: pointer;
+  transition: opacity 1.5s;
+}
+#listen.gone { opacity: 0; }
+#intro.entering #listen, #intro.quick #listen { opacity: 0; }
+#start.leaving #rain { opacity: 0; transition: opacity 1.5s; }
+
 /* Den som redan känner till hemligheten får tornet utan antydningar. */
 #intro.invigd #tower { animation: none; }
 #intro.invigd #scales, #intro.invigd #eye, #intro.invigd #shadow { display: none; }
@@ -153,7 +214,8 @@ body[data-niva="4"] #crt::after { animation: throb 0.95s infinite; }
 #intro.quick #scene { opacity: 0; transition: opacity 0.5s; }
 
 @media (prefers-reduced-motion: reduce) {
-  #sun, #tower { animation: none; }
+  #sun, #tower, #clouds .far, #clouds .near, #rumor:not(.fade), #scene #gate.glow { animation: none; }
+  #scene #gate.glow { fill: #4a3412; }
   #intro.entering #scene { transform: none; transition: opacity 1.2s ease-in 1.4s; }
   #intro.entering:not(.invigd) #gate { transform: none; }
 }

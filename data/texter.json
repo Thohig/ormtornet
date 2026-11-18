@@ -1,4 +1,7 @@
 {
+  "intro": {
+    "vanta": 30
+  },
   "horn": [
     "nordväst",
     "nordöst",
@@ -560,6 +563,9 @@
     "gm_dryck_mer": ["I fickan hittar du en flaska som inte fanns där nyss."],
     "gm_dryck_mindre": ["En av dina flaskor är borta. Du hörde den aldrig gå sönder."],
     "stanger_snart": ["Tornet stänger om en minut om ingen är kvar."],
+    "intro_ljud": [
+      "klicka för att höra stormen"
+    ],
     "rykten": [
       "De som har gått in säger att väggarna är varma, även på natten.",
       "Ingen har sett tornet byggas. Ingen minns att det inte fanns.",
