@@ -159,7 +159,7 @@ en annan flik ("Gå in själv", som leder till introt och sedan namnrutan). Andr
    tonar fram. Moln driver förbi, det regnar och blixtrar, och efter varje
    blixt mullrar åskan. Klicka var som helst, eller tryck Enter, för att
    höra stormen: en låg, hotfull ton, vind, regn och åska. Webbläsaren
-   tillåter inget ljud innan man har klickat. Efter 15 sekunder tonar
+   tillåter inget ljud innan man har klickat. Efter 5 sekunder tonar
    "Gå in i tornet" fram efter en blixt, och porten börjar glimma. Klicka
    på den eller tryck Enter. Den som redan har sett introt i fliken, och
    spelledaren på tornets dator, får knappen direkt. Ryktena står i
@@ -186,11 +186,16 @@ spelarsidan (`/`), med tre vyer i tur och ordning:
      styrka och svaghet. Välj med 1–8 eller ett klick. Kort som andra har
      tagit är gråa. Den som inte har valt när tiden är slut får ett av de
      lediga korten,
-   - **vandringen**: kartan, solmätaren, sidopanelen och loggen. Panelen
-     är små skiffertavlor: Vandrare, Här, Du och Styrning. Under Du står
-     klassen, liv som en mätare, skatt, drycker, föremålen, kompassen och
-     för den invigde dunket, och sist det valda draget. När det går att
-     viska står det där, och viskningen skrivs i en egen ruta i panelen.
+   - **vandringen**: kartan, solmätaren och högerkolumnen med panelerna
+     Vandrare och Nu och loggen, som fyller resten av höjden. Uppe till
+     vänster på kartan står rummets namn. Uppe till höger står statusen
+     som halvt genomskinliga tecken: klassens tecken, liv, skatt, drycker,
+     tillstånd som fast, gift och mörker, kompassen, dunket och viskningen,
+     och under dem föremålen. Håll musen över ett tecken, eller tryck på
+     det på en pekskärm, så står det vad det betyder. Styrningen ligger
+     bakom **?** (eller tangenten `?` eller `H`) och visas en gång första
+     vandringen. Panelen Nu visar det valda draget, striden, ormen i
+     kammaren och vad som väntar, och viskningen skrivs i en egen ruta där.
      I loggen säger ett tecken i marginalen vad slags rad det är (`!` fara,
      `›` det du ser, `▸` rummets namn, `·` besked, `❝` tornets röst,
      `✎` krita), ett streck skiljer rundorna åt och äldre rundor bleknar,

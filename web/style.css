@@ -333,12 +333,114 @@ body[data-niva="4"] #crt::after { animation: throb 0.95s infinite; }
 #overlay .win { color: var(--hi); }
 #overlay .lost { color: var(--warn); }
 
+/* Högerkolumnen: vandrarna, det som gäller nu och loggen, som fyller
+   resten av höjden. */
 #side {
-  flex: 0 0 220px;
+  flex: 0 0 340px;
+  display: flex;
+  flex-direction: column;
   font-size: 13px;
   min-height: 0;
-  overflow-y: auto; /* valet av klass kan göra panelen längre än skärmen */
 }
+#side > .block { flex: 0 0 auto; }
+
+/* Rummets namn uppe till vänster och statusen uppe till höger på kartan. */
+#roomname {
+  position: absolute;
+  top: 8px;
+  left: 10px;
+  color: var(--chalk);
+  letter-spacing: 0.08em;
+  opacity: 0.75;
+  pointer-events: none;
+}
+#roomname:not(:empty)::before { content: "▸ "; }
+#hud {
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  max-width: 70%;
+}
+.hudrow { display: flex; align-items: center; gap: 6px; }
+#status, #bag { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 4px; }
+.hudicon {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 6px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  background: rgba(21, 23, 26, 0.55);
+  color: var(--chalk);
+  font: inherit;
+  text-shadow: inherit;
+  opacity: 0.6;
+  cursor: default;
+  transition: opacity 0.2s, border-color 0.2s;
+}
+.hudicon:hover, .hudicon:focus-visible { opacity: 1; border-color: var(--chalkline); outline: none; }
+.hudicon .glyph { font-size: 15px; }
+.hudicon.hp .glyph { color: #e07a6a; }
+.hudicon.gold { color: #ffd36b; }
+.hudicon.warn { color: var(--warn); opacity: 0.9; }
+.hudicon.rost { color: #e3b8f0; }
+.hudicon.klass .glyph { color: var(--hi); }
+#bag .item { font-size: 12px; }
+#bag .item.active { cursor: pointer; color: var(--fg); }
+#bag .item.aiming { opacity: 1; border-color: var(--hi); color: var(--hi); }
+#helpBtn {
+  width: 26px;
+  height: 26px;
+  border: 1px solid var(--chalkline);
+  border-radius: 50%;
+  background: rgba(21, 23, 26, 0.55);
+  color: var(--chalk);
+  font: inherit;
+  opacity: 0.6;
+  cursor: pointer;
+}
+#helpBtn:hover, #helpBtn[aria-expanded="true"] { opacity: 1; color: var(--hi); }
+body.touch #helpBtn { display: none; }
+#tip {
+  position: absolute;
+  z-index: 4;
+  max-width: 300px;
+  padding: 6px 9px;
+  border: 1px solid var(--chalkline);
+  border-radius: 6px;
+  background: rgba(10, 11, 13, 0.95);
+  color: var(--fg);
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre-line;
+  pointer-events: none;
+}
+#helpbox {
+  position: absolute;
+  top: 40px;
+  right: 8px;
+  z-index: 3;
+  padding: 8px 12px 10px;
+  border: 1px solid var(--chalkline);
+  border-radius: 6px;
+  background: rgba(21, 23, 26, 0.94);
+  font-size: 13px;
+  cursor: pointer;
+}
+#helpbox[hidden] { display: none; }
+#helpbox h2 {
+  font-size: 11px;
+  font-weight: normal;
+  letter-spacing: 0.3em;
+  color: var(--chalk);
+  margin: 0 0 6px;
+  text-transform: uppercase;
+}
+#helpbox .hint { color: var(--dim); font-size: 12px; margin: 8px 0 0; max-width: 30ch; }
 /* Panelerna är små skiffertavlor, som kartan. */
 .panel {
   background: var(--slate);
@@ -375,7 +477,8 @@ body[data-niva="4"] #crt::after { animation: throb 0.95s infinite; }
 #help b { display: inline-block; width: 11ch; font-weight: normal; color: var(--fg); }
 
 #log {
-  flex: 0 0 9.5em;
+  flex: 1 1 auto;
+  min-height: 6em;
   overflow-y: auto;
   line-height: 1.35;
   padding-right: 6px;
@@ -486,7 +589,9 @@ body.touch #side { overflow-y: auto; }
   }
   #side > :not(.block) { grid-column: 1 / -1; }
   #side h2 { margin: 0 0 4px; }
-  #log { height: 10em; margin-top: 8px; }
+  #log { height: 14em; margin-top: 8px; grid-column: 1 / -1; }
+  #hud { max-width: 85%; }
+  .hudicon { opacity: 0.8; }
   body.touch #game.active { padding-bottom: calc(170px + env(safe-area-inset-bottom)); }
   body.touch #pad {
     position: fixed;
@@ -598,3 +703,4 @@ body.touch .card .num { display: none; }
   #cards { grid-template-columns: 1fr; }
   .card { min-height: 0; }
 }
+#me .plan:first-child { margin-top: 0; padding-top: 0; border-top: none; }

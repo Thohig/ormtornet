@@ -4,6 +4,7 @@
   "klasser": [
     {
       "id": "legoknekt",
+      "tecken": "⛨",
       "namn": "Legoknekten",
       "kort": "legoknekten",
       "beskrivning": "Har slagits för den som betalar i tjugo år. Bär en bucklig sköld och litar inte på någon.",
@@ -15,6 +16,7 @@
     },
     {
       "id": "tjuv",
+      "tecken": "⚷",
       "namn": "Tjuven",
       "kort": "tjuven",
       "beskrivning": "Lätta fingrar och lätta steg. Har tagit sig in i fler hus än hen har gått ut ur.",
@@ -26,6 +28,7 @@
     },
     {
       "id": "ortkvinna",
+      "tecken": "⚘",
       "namn": "Örtkvinnan",
       "kort": "örtkvinnan",
       "beskrivning": "Kokar drycker av det som växer i diken. Vet vad som läker och vad som dödar.",
@@ -37,6 +40,7 @@
     },
     {
       "id": "kartritare",
+      "tecken": "⌖",
       "namn": "Kartritaren",
       "kort": "kartritaren",
       "beskrivning": "Har ritat kartor över grottor, gruvor och kloster. Ingen har ritat tornet. Än.",
@@ -48,6 +52,7 @@
     },
     {
       "id": "ormtjusare",
+      "tecken": "∿",
       "namn": "Ormtjusaren",
       "kort": "ormtjusaren",
       "beskrivning": "Har spelat för huggormar på marknader och aldrig blivit biten. Nästan aldrig.",
@@ -59,6 +64,7 @@
     },
     {
       "id": "sparfinnare",
+      "tecken": "⁂",
       "namn": "Spårfinnaren",
       "kort": "spårfinnaren",
       "beskrivning": "Läser marken som andra läser böcker. Ser var någon har gått, och när.",
@@ -70,6 +76,7 @@
     },
     {
       "id": "lyktbarare",
+      "tecken": "☼",
       "namn": "Lyktbäraren",
       "kort": "lyktbäraren",
       "beskrivning": "Bär en lykta som aldrig har slocknat. Ingen vet vad den brinner på.",
@@ -81,6 +88,7 @@
     },
     {
       "id": "pilgrim",
+      "tecken": "⚲",
       "namn": "Pilgrimen",
       "kort": "pilgrimen",
       "beskrivning": "Har gått hela vägen för att se tornet med egna ögon. Tror att det har något att berätta.",

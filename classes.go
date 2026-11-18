@@ -14,7 +14,8 @@ import (
 type Class struct {
 	ID          string             `json:"id"`
 	Namn        string             `json:"namn"`
-	Kort        string             `json:"kort"` // med liten bokstav, för listan och texterna
+	Kort        string             `json:"kort"`   // med liten bokstav, för listan och texterna
+	Tecken      string             `json:"tecken"` // klassens tecken på kartan
 	Beskrivning string             `json:"beskrivning"`
 	Styrka      string             `json:"styrka"`
 	Svaghet     string             `json:"svaghet"`
@@ -27,6 +28,7 @@ type Class struct {
 type classView struct {
 	ID          string `json:"id"`
 	Namn        string `json:"namn"`
+	Tecken      string `json:"tecken,omitempty"`
 	Beskrivning string `json:"beskrivning"`
 	Styrka      string `json:"styrka"`
 	Svaghet     string `json:"svaghet"`
@@ -40,7 +42,7 @@ func viewOfClass(c *Class) *classView {
 	if c == nil {
 		return nil
 	}
-	return &classView{ID: c.ID, Namn: c.Namn, Beskrivning: c.Beskrivning, Styrka: c.Styrka, Svaghet: c.Svaghet, Liv: c.Liv, Drycker: c.Drycker}
+	return &classView{ID: c.ID, Namn: c.Namn, Tecken: c.Tecken, Beskrivning: c.Beskrivning, Styrka: c.Styrka, Svaghet: c.Svaghet, Liv: c.Liv, Drycker: c.Drycker}
 }
 
 func (d *Data) class(id string) *Class {

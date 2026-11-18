@@ -23,16 +23,16 @@ En riktig kväll behövs för att se:
 - Kartritaren som ser in i grannrummen: för stark nu när alla andra bara
   börjar med sitt eget rum?
 - Stormen i introt: hur musiken och åskan låter. Den är inte avlyssnad.
-- Introts första 15 sekunder, när Enter inte gör något: fastnar någon
+- Introts första 5 sekunder, när Enter inte gör något: fastnar någon
   där och tror att sidan har hängt sig?
 - Kritkartan (2026-11-18): syns vandrarnas prickar och varelserna bra på
   en telefon, och märks avslöjandet lika tydligt i kritan som i braillen?
   Nivå 3 och 4 är bara sedda genom att tvinga fram dem.
 - Bara den egna porten: hittar spelarna ut, eller går de vilse när de
   inte ser de andra portarna?
-- Panelerna (2026-11-19): ryms Du-panelen med tre föremål, strid och
-  förbannelser utan att Styrning hamnar långt ner? Hjälper tecknen i
-  loggens marginal, eller blir de brus?
+- Tecknen på kartan (2026-11-19): går de att förstå, och skymmer de
+  kartan när den har vuxit? Hjälper tecknen i loggens marginal, eller
+  blir de brus?
 
 ### Justera efter provet
 

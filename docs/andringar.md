@@ -6,6 +6,25 @@ eller leder tornet.
 
 ## 2026-11-19
 
+### Statusen på kartan och loggen till höger
+
+- Sidopanelen Du är borta. Klassen, liv, skatt, drycker och tillstånd står
+  som halvt genomskinliga tecken uppe till höger på kartan, och föremålen
+  under dem. Håll musen över ett tecken, eller tryck på det på en
+  pekskärm, så står det vad det betyder.
+- Klasserna har fått ett tecken, `tecken` i `data/klasser.json`. Det syns
+  på kartan och på korten i klassvalet.
+- Rummets namn står uppe till vänster på kartan i stället för i panelen
+  Här.
+- Styrningen ligger bakom ett **?** på kartan, och tangenterna `?` och `H`.
+  Den visas en gång första vandringen.
+- Loggen fyller högerkolumnen under panelerna Vandrare och Nu, så att
+  många fler rader syns. På en telefon är den högre än förut.
+- Panelen Nu visar det som gäller just nu: draget, striden, ormen och vad
+  som väntar.
+- Introt visar "Gå in i tornet" efter 5 sekunder i stället för 15, precis
+  efter en blixt.
+
 ### Klassvalet på en egen skärm, och kartan växer fram
 
 - Klassvalet är inte längre i lobbyn. När alla är redo kommer en egen

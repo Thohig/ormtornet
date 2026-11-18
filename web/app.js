@@ -134,6 +134,7 @@ function handle(msg) {
       renderTop();
       renderOverlay();
       renderChoose();
+      firstHelp();
       if (state.phase === "spel") Log.age(state.round);
       break;
     case "log":
@@ -323,7 +324,7 @@ function renderChoose() {
     };
     add("num", String(i + 1));
     add("num low", String(i + 1));
-    add("cname", c.namn);
+    add("cname", (c.tecken ? c.tecken + " " : "") + c.namn);
     add("desc", c.beskrivning);
     const stats = [];
     if (c.liv) stats.push((c.liv > 0 ? "+" : "−") + Math.abs(c.liv) + " liv");
@@ -360,17 +361,6 @@ function updateChooseStatus() {
   el.appendChild(s);
 }
 
-function renderClass(box, line) {
-  const c = state.klass;
-  if (!c) return;
-  line(c.namn, "classname");
-  if (state.phase !== "spel") {
-    line(c.beskrivning, "dimline");
-    line("+ " + c.styrka, "dimline");
-    line("− " + c.svaghet, "dimline");
-  }
-}
-
 function renderSide() {
   setEnterLabel(state.phase === "slut" ? "Nytt torn" : "Redo");
   const ul = $("players");
@@ -398,8 +388,91 @@ function renderSide() {
   let here = me && me.status === "inne" && room ? room.name : "";
   if (state.cellar > 0) here = "Källarvalven";
   else if (state.dark > 0 && room) here = "Mörker";
-  $("here").textContent = here;
+  $("roomname").textContent = here;
+  renderHud(me);
+  renderNow(me);
+}
 
+// Statusen står som tecken uppe till höger på kartan: klassen, liv, skatt,
+// drycker, tillstånd och föremålen. Varje tecken har en förklaring som syns
+// när musen är över det, eller efter ett tryck på en pekskärm.
+function renderHud(me) {
+  const box = $("status");
+  const bag = $("bag");
+  box.innerHTML = "";
+  bag.innerHTML = "";
+  $("tip").hidden = true;
+  if (!me) return;
+  const icon = (glyph, value, tip, cls) => {
+    const d = document.createElement("span");
+    d.className = "hudicon" + (cls ? " " + cls : "");
+    d.dataset.tip = tip;
+    d.tabIndex = 0;
+    const g = document.createElement("span");
+    g.className = "glyph";
+    g.textContent = glyph;
+    d.appendChild(g);
+    if (value !== "") {
+      const v = document.createElement("span");
+      v.className = "val";
+      v.textContent = value;
+      d.appendChild(v);
+    }
+    d.setAttribute("aria-label", tip);
+    box.appendChild(d);
+  };
+  const c = state.klass;
+  if (c) icon(c.tecken || c.namn[0], "", c.namn + "\n" + c.beskrivning + "\n+ " + c.styrka + "\n− " + c.svaghet, "klass");
+  if (me.status === "dod") {
+    icon("✕", "", "Du är död.", "warn");
+  } else {
+    const low = state.hp <= Math.max(1, Math.floor(state.maxHp / 3));
+    icon("♥", state.hp + "/" + state.maxHp, "Liv: " + state.hp + " av " + state.maxHp + ". Vid noll är du död.", low ? "warn" : "hp");
+  }
+  icon("¤", String(me.treasure), "Skatt: " + me.treasure + " guld. Den räknas bara om du bär ut den genom en port.", "gold");
+  if (state.potions > 0) {
+    icon("⚱", String(state.potions), (state.potions === 1 ? "En dryck. " : state.potions + " drycker. ") +
+      (touch ? "Tryck Drick" : "Tryck D") + " för att dricka en. Den ger tillbaka liv och tar bort gift.", "");
+  }
+  if (me.status === "inne") {
+    if (state.cellar > 0) icon("▼", "", "I källarvalven. Ingen ser var du är, och du kommer upp någon annanstans.", "warn");
+    if (state.stuck > 0) icon("⛓", String(state.stuck), "Fast i " + state.stuck + (state.stuck === 1 ? " runda" : " rundor") + ". Du kan inte gå härifrån.", "warn");
+    if (state.poison > 0) icon("☠", "", "Förgiftad. Du tappar liv varje runda tills giftet går ur. En dryck tar bort det.", "warn");
+    if (state.dark > 0) icon("◐", "", "Lyktan är släckt. Du ser bara rummet du står i.", "warn");
+  }
+  if (state.kompass) icon("✧", "", state.kompass, "");
+  if (state.hjartslag) icon("♡", "", state.hjartslag, "");
+  if (state.invigd) icon("❝", "", "Tornet har hört dig.", "rost");
+  if (state.kanViska) icon("V", "", (touch ? "Tryck Viska" : "Tryck V") + " för att viska till tornet.", "rost");
+  const pw = $("padWhisper");
+  if (pw) pw.hidden = !state.kanViska;
+
+  (state.foremal || []).forEach((it, i) => {
+    const b = document.createElement("button");
+    b.dataset.slot = "f" + i;
+    b.type = "button";
+    b.className = "hudicon item" + (it.aktiv ? " active" : "") + (aimSlot === i ? " aiming" : "");
+    b.textContent = (it.aktiv && !touch ? i + 1 + " " : "") + it.namn + (it.kvar > 1 ? " ×" + it.kvar : "");
+    b.dataset.tip = it.beskrivning + (it.aktiv ? (touch ? "" : " Tryck " + (i + 1) + " för att använda det.") : "");
+    if (it.aktiv) b.addEventListener("click", () => useItemSlot(i));
+    bag.appendChild(b);
+  });
+  // Förklaringen som visades ligger kvar när läget ritas om.
+  if (tipKey) {
+    const el = [...$("hud").querySelectorAll("[data-tip]")].find((x) => keyOf(x) === tipKey);
+    if (el) showTip(el);
+    else tipKey = "";
+  }
+}
+
+// Ett tecken känns igen på sitt glyftecken, eller på platsen i väskan.
+let tipKey = "";
+function keyOf(el) {
+  return el.dataset.slot || (el.querySelector(".glyph") || el).textContent;
+}
+
+// Panelen Nu: det som gäller just nu, som draget, striden och vad som väntar.
+function renderNow(me) {
   const box = $("me");
   box.innerHTML = "";
   const line = (text, cls) => {
@@ -409,33 +482,11 @@ function renderSide() {
     box.appendChild(d);
   };
   if (!me) return;
-  renderClass(box, line);
-  box.appendChild(hpMeter(state.hp, state.maxHp));
-  if (me.status === "dod") line("Död", "cond");
-  line("Skatt: " + me.treasure + " guld", "gold");
-  if (state.potions > 0) line("Drycker: " + state.potions);
-  (state.foremal || []).forEach((it, i) => {
-    const d = document.createElement("div");
-    d.className = "item" + (it.aktiv ? " active" : "");
-    d.textContent = (it.aktiv && !touch ? i + 1 + " " : "· ") + it.namn + (it.kvar > 1 ? " (" + it.kvar + ")" : "");
-    d.title = it.beskrivning;
-    if (it.aktiv) d.addEventListener("click", () => useItemSlot(i));
-    box.appendChild(d);
-  });
   if (aimSlot !== null && state.foremal && state.foremal[aimSlot]) {
-    line("Åt vilket håll? (pilarna" + (touch ? "" : ", esc ångrar") + ")", "plan");
+    line(state.foremal[aimSlot].namn + ": åt vilket håll? (pilarna" + (touch ? "" : ", esc ångrar") + ")", "plan");
   }
-  if (state.kompass) line(state.kompass, "dimline");
-  if (state.invigd) line("Tornet har hört dig", "rost");
-  if (state.hjartslag) line(state.hjartslag, "dimline");
-  if (state.kanViska && !touch) line("V viskar till tornet", "dimline");
-  const pw = $("padWhisper");
-  if (pw) pw.hidden = !state.kanViska;
+  if (me.status === "dod" && !state.controller) line("Du är död", "cond");
   if (me.status === "inne") {
-    if (state.cellar > 0) line("I källarvalven", "cond");
-    if (state.stuck > 0) line("Fast i " + state.stuck + (state.stuck === 1 ? " runda" : " rundor"), "cond");
-    if (state.poison > 0) line("Förgiftad", "cond");
-    if (state.dark > 0) line("Lyktan är släckt", "cond");
     if (state.sleep >= 0 && state.sleepText) line(state.sleepText, state.sleep >= 2 ? "cond" : "sleep");
     const foe = (state.monsters || []).find((m) => m.x === me.x && m.y === me.y);
     if (foe && state.cellar === 0) {
@@ -474,10 +525,84 @@ function renderSide() {
   if (state.phase === "spel" && me.status === "inne") {
     line(state.action ? "Drag: " + actionWord(state.action) : "Välj ditt drag", "plan");
   } else if (state.phase === "lobby") {
-    line(me.ready ? "Du är redo" : "Tryck " + keyName("Enter") + " när du är redo", "plan");
+    line(me.ready ? "Du är redo. Väntar på de andra" : "Tryck " + keyName("Enter") + " när du är redo", "plan");
   } else if (state.phase === "slut") {
     line(me.ready ? "Väntar på de andra" : touch ? "Tryck Nytt torn" : "Enter: nytt torn", "plan");
   }
+}
+
+// Förklaringen till ett tecken på kartan. Den läggs under tecknet, inom
+// kartans ruta.
+function showTip(el) {
+  const tip = $("tip");
+  const box = $("mapbox").getBoundingClientRect();
+  const r = el.getBoundingClientRect();
+  tip.textContent = el.dataset.tip;
+  tip.hidden = false;
+  tipKey = keyOf(el);
+  const w = tip.offsetWidth;
+  tip.style.top = r.bottom - box.top + 6 + "px";
+  tip.style.left = Math.max(4, Math.min(box.width - w - 4, r.right - box.left - w)) + "px";
+}
+function hideTip() {
+  $("tip").hidden = true;
+  tipKey = "";
+}
+$("hud").addEventListener("mouseover", (e) => {
+  if (touch) return; // på en pekskärm är det trycket som räknas
+  const el = e.target.closest("[data-tip]");
+  if (el) showTip(el);
+});
+$("hud").addEventListener("mouseout", (e) => {
+  if (touch) return;
+  if (!e.relatedTarget || !e.relatedTarget.closest || !e.relatedTarget.closest("[data-tip]")) hideTip();
+});
+$("hud").addEventListener("focusin", (e) => {
+  if (touch) return;
+  const el = e.target.closest("[data-tip]");
+  if (el) showTip(el);
+});
+$("hud").addEventListener("focusout", () => {
+  if (!touch) hideTip();
+});
+$("hud").addEventListener("click", (e) => {
+  // På en pekskärm visar ett tryck förklaringen, och ett tryck till döljer den.
+  const el = e.target.closest(".hudicon:not(button)");
+  if (!el) return;
+  e.stopPropagation();
+  if (!$("tip").hidden && tipKey === keyOf(el)) hideTip();
+  else showTip(el);
+});
+// Ett tryck någon annanstans döljer förklaringen.
+document.addEventListener("click", (e) => {
+  if (touch && tipKey && !e.target.closest("#hud")) hideTip();
+});
+
+// Styrningen ligger bakom frågetecknet. Första vandringen visas den en gång.
+function toggleHelp(open) {
+  const box = $("helpbox");
+  const show = open === undefined ? box.hidden : open;
+  box.hidden = !show;
+  $("helpBtn").setAttribute("aria-expanded", String(show));
+  if (show) {
+    try { localStorage.setItem("ormtornet-styrning", "1"); } catch {}
+  }
+}
+$("helpBtn").addEventListener("click", (e) => {
+  e.stopPropagation();
+  toggleHelp();
+});
+$("helpbox").addEventListener("click", (e) => {
+  e.stopPropagation();
+  toggleHelp(false);
+});
+let helpOffered = false;
+function firstHelp() {
+  if (touch || helpOffered || state.phase !== "spel") return;
+  helpOffered = true;
+  let seen = false;
+  try { seen = localStorage.getItem("ormtornet-styrning") === "1"; } catch {}
+  if (!seen) toggleHelp(true);
 }
 
 // Namnet på en tangent så som spelaren ser den: tangenten på en dator,
@@ -836,7 +961,7 @@ const Intro = (() => {
       showRumor();
       setInterval(showRumor, 7500);
       if (seen || toHostPage) showEnter(false);
-      else readyTimer = setTimeout(() => showEnter(true), (info.vanta || 15) * 1000);
+      else readyTimer = setTimeout(() => showEnter(true), (info.vanta || 5) * 1000);
     })
     .catch(() => showEnter(false));
   startStorm();
@@ -998,6 +1123,14 @@ function pressKey(key) {
     return true;
   }
   if (!joined) return false;
+  if (key === "?" || ((key === "h" || key === "H") && state && state.phase !== "klassval")) {
+    toggleHelp();
+    return true;
+  }
+  if (key === "Escape" && !$("helpbox").hidden) {
+    toggleHelp(false);
+    return true;
+  }
   if (aimSlot !== null) {
     // Ett föremål som pekar åt ett håll: nästa pil väljer riktningen.
     const dir = { ArrowUp: "N", ArrowRight: "E", ArrowDown: "S", ArrowLeft: "W" }[key];
