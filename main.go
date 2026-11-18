@@ -2,6 +2,8 @@ package main
 
 import (
 	"embed"
+	"encoding/json"
+	"errors"
 	"flag"
 	"fmt"
 	"io/fs"
@@ -10,7 +12,11 @@ import (
 	"net/http"
 	"os"
 	"os/exec"
+	"os/signal"
+	"strconv"
 	"strings"
+	"sync"
+	"syscall"
 	"time"
 )
 
@@ -25,6 +31,8 @@ func main() {
 	minPlayers := flag.Int("min", 2, "minsta antal spelare för att börja")
 	bots := flag.Int("ai", 0, "antal datorstyrda vandrare (0-3)")
 	reveal := flag.Bool("avslojande", true, "låt tornet avslöja sin hemlighet (false för den som redan känner till den)")
+	openPage := flag.Bool("oppna", false, "öppna spelledarens sida i webbläsaren när servern har startat")
+	awake := flag.Bool("vaken", false, "håll datorn vaken så länge servern är igång")
 	flag.Parse()
 	cfg := Config{Reveal: *reveal, SunMax: max(4, *sun), TurnTime: max(3*time.Second, *turn), MinPlayers: max(1, min(maxPlayers, *minPlayers))}
 
@@ -52,14 +60,45 @@ func main() {
 
 	ln, err := net.Listen("tcp", *addr)
 	if err != nil {
+		_, port, _ := net.SplitHostPort(*addr)
+		if errors.Is(err, syscall.EADDRINUSE) && towerRunning(port) {
+			fmt.Println("Ormtornet är redan igång på den här datorn.")
+			fmt.Printf("Spelledaren: http://localhost:%s/spelledare\n", port)
+			if *openPage {
+				openBrowser("http://localhost:" + port + "/spelledare")
+			}
+			return
+		}
+		if errors.Is(err, syscall.EADDRINUSE) {
+			log.Fatalf("Port %s används redan av ett annat program. Prova en annan, till exempel -addr 0.0.0.0:8081", port)
+		}
 		log.Fatalf("kan inte lyssna på %s: %v", *addr, err)
 	}
 	_, port, _ := net.SplitHostPort(ln.Addr().String())
+
+	// Tornet stänger på samma sätt från knappen på spelledarens sida och från
+	// Ctrl+C i terminalen: spelarna får ett meddelande och sedan avslutas servern.
+	closeTower := sync.OnceFunc(func() {
+		fmt.Println()
+		fmt.Println("Tornet stänger ...")
+		game.Close()
+		time.Sleep(1500 * time.Millisecond) // låt meddelandet nå fram
+		fmt.Println("Tornet är stängt.")
+		os.Exit(0)
+	})
+	sigs := make(chan os.Signal, 2)
+	signal.Notify(sigs, os.Interrupt, syscall.SIGTERM, syscall.SIGHUP)
+	go func() {
+		<-sigs
+		go closeTower()
+		<-sigs // ett andra Ctrl+C stänger direkt
+		os.Exit(1)
+	}()
 	addrs := hostAddrs{Name: "http://" + localName() + ":" + port}
 	for _, ip := range lanIPs() {
 		addrs.IPs = append(addrs.IPs, "http://"+ip+":"+port)
 	}
-	addHostRoutes(mux, sub, game, addrs)
+	addHostRoutes(mux, sub, game, addrs, closeTower)
 
 	fmt.Println("Ormtornet är vaket.")
 	fmt.Println("Texter från:", src)
@@ -80,7 +119,36 @@ func main() {
 	fmt.Println("Spelledaren (bara på den här datorn):")
 	fmt.Printf("  http://localhost:%s/spelledare\n", port)
 	fmt.Println()
+	if *awake {
+		// caffeinate släpper av sig själv när servern avslutas.
+		if err := exec.Command("caffeinate", "-i", "-w", strconv.Itoa(os.Getpid())).Start(); err == nil {
+			fmt.Println("Datorn hålls vaken så länge tornet är öppet.")
+		}
+	}
+	fmt.Println("Stäng tornet med Ctrl+C eller knappen på spelledarens sida.")
+	fmt.Println()
+	if *openPage {
+		openBrowser("http://localhost:" + port + "/spelledare")
+	}
 	log.Fatal(http.Serve(ln, mux))
+}
+
+// towerRunning är sant om det redan är ett Ormtornet som svarar på porten.
+func towerRunning(port string) bool {
+	c := http.Client{Timeout: 2 * time.Second}
+	resp, err := c.Get("http://127.0.0.1:" + port + "/spelledare/status")
+	if err != nil {
+		return false
+	}
+	defer resp.Body.Close()
+	var v hostView
+	return resp.StatusCode == http.StatusOK && json.NewDecoder(resp.Body).Decode(&v) == nil && v.MaxPlayers > 0
+}
+
+func openBrowser(url string) {
+	if err := exec.Command("open", url).Start(); err != nil {
+		fmt.Println("Kunde inte öppna webbläsaren. Gå till", url)
+	}
 }
 
 // localName ger Macens Bonjour-namn, t.ex. "Stefans-MacBook.local".

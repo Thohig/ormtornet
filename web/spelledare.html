@@ -52,6 +52,7 @@
   }
   .btn:hover, .btn:focus-visible { color: var(--hi); border-color: var(--fg); outline: none; }
   .btn.main { border-color: var(--fg); color: var(--hi); }
+  .btn:disabled { opacity: 0.4; cursor: default; }
   #copied { color: var(--info); min-height: 1.2em; }
   #status { color: var(--hi); }
   #status.dead { color: var(--warn); }
@@ -95,6 +96,12 @@
     <dl id="settings"></dl>
     <p class="dimtext">Ändras i dag med flaggor när servern startas, till exempel <code>go run . -ai 2</code>.</p>
 
+    <h2>När ni är klara</h2>
+    <p>Stäng tornet här eller med Ctrl+C i terminalen. Spelarna får ett meddelande om att tornet stänger, och datorn får somna igen.</p>
+    <div class="buttons">
+      <button class="btn" id="closeTower" type="button">Stäng tornet</button>
+    </div>
+
     <h2>Om någon inte kommer in</h2>
     <ul id="help">
       <li>Kontrollera att alla är på samma wifi. Gästnät hindrar ofta datorer från att nå varandra.</li>
@@ -110,6 +117,7 @@
 const $ = (id) => document.getElementById(id);
 const COLORS = ["#ffcc66", "#66e0ff", "#ff7a9a", "#9dff7a"];
 let view = null;
+let closed = false;
 
 function inviteText(v) {
   let t = "Kom och spela Ormtornet!\n" +
@@ -129,6 +137,21 @@ async function copy(text, what) {
 
 $("copyInvite").onclick = () => view && copy(inviteText(view), "Inbjudan");
 $("copyAddr").onclick = () => view && copy(view.addrs.name, "Adressen");
+
+$("closeTower").onclick = async () => {
+  if (!confirm("Stäng tornet? Alla spelare kopplas bort och servern stängs.")) return;
+  try {
+    const r = await fetch("/spelledare/stang", { method: "POST", headers: { "X-Ormtornet": "stang" } });
+    if (!r.ok) throw new Error(r.status);
+    closed = true;
+    $("status").textContent = "Tornet är stängt. Du kan stänga den här fliken.";
+    $("status").classList.add("dead");
+    $("closeTower").disabled = true;
+  } catch {
+    $("copied").textContent = "";
+    alert("Tornet svarade inte. Kanske är det redan stängt.");
+  }
+};
 
 function statusText(v) {
   const here = v.players.filter((p) => p.online);
@@ -218,12 +241,15 @@ function render(v) {
 }
 
 async function poll() {
+  if (closed) return;
   try {
     const r = await fetch("/spelledare/status", { cache: "no-store" });
     if (!r.ok) throw new Error(r.status);
     view = await r.json();
+    if (closed) return;
     render(view);
   } catch {
+    if (closed) return;
     $("status").textContent = "Tornet svarar inte. Är servern stängd?";
     $("status").classList.add("dead");
   }

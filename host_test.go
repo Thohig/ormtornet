@@ -28,7 +28,7 @@ func TestHostViewListsPlayersAndBots(t *testing.T) {
 
 func TestHostPageOnlyLocal(t *testing.T) {
 	mux := http.NewServeMux()
-	addHostRoutes(mux, nil, testGame(t), hostAddrs{Name: "http://test.local:8080"})
+	addHostRoutes(mux, nil, testGame(t), hostAddrs{Name: "http://test.local:8080"}, func() {})
 
 	for _, tc := range []struct {
 		remote string
@@ -45,5 +45,50 @@ func TestHostPageOnlyLocal(t *testing.T) {
 		if w.Code != tc.want {
 			t.Errorf("%s: fick %d, ville ha %d", tc.remote, w.Code, tc.want)
 		}
+	}
+}
+
+func TestCloseNeedsHeader(t *testing.T) {
+	mux := http.NewServeMux()
+	closed := make(chan bool, 2)
+	addHostRoutes(mux, nil, testGame(t), hostAddrs{}, func() { closed <- true })
+
+	post := func(header string) int {
+		r := httptest.NewRequest("POST", "/spelledare/stang", nil)
+		r.RemoteAddr = "127.0.0.1:5000"
+		if header != "" {
+			r.Header.Set("X-Ormtornet", header)
+		}
+		w := httptest.NewRecorder()
+		mux.ServeHTTP(w, r)
+		return w.Code
+	}
+	if code := post(""); code != http.StatusBadRequest {
+		t.Fatalf("utan huvud: %d", code)
+	}
+	if code := post("stang"); code != http.StatusNoContent {
+		t.Fatalf("med huvud: %d", code)
+	}
+	if !<-closed {
+		t.Fatal("tornet stängdes inte")
+	}
+}
+
+func TestCloseTellsPlayers(t *testing.T) {
+	g := testGame(t)
+	a := testClient()
+	g.Join(a, "Alva")
+	for len(a.send) > 0 {
+		<-a.send
+	}
+	g.Close()
+	got := false
+	for len(a.send) > 0 {
+		if string(<-a.send) == `{"t":"stangt"}` {
+			got = true
+		}
+	}
+	if !got {
+		t.Fatal("Alva fick inte veta att tornet stänger")
 	}
 }

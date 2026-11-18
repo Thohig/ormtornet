@@ -6,15 +6,25 @@ Ta så mycket du vågar och kom ut innan solen går ner.
 
 ## Starta
 
-Kräver Go (`brew install go`).
+Kräver Go (`brew install go`). Det är bara den som kör tornet som behöver
+spelet. De andra öppnar en adress i webbläsaren.
 
 ```bash
-go run .
+./starta.sh
 ```
+
+Skriptet bygger spelet, öppnar spelledarens sida i webbläsaren och håller
+datorn vaken så länge tornet är öppet. Flaggor skickas vidare, till exempel
+`./starta.sh -ai 2`. Är tornet redan igång öppnas bara spelledarens sida.
+
+Det går också att starta direkt med `go run .`.
 
 Servern lyssnar på `0.0.0.0:8080` och skriver ut adressen spelarna ska
 öppna, till exempel `http://Din-Mac.local:8080`. Alla Macar i samma nätverk
 kan öppna den i Safari eller Chrome.
+
+Stäng tornet med Ctrl+C i terminalen eller knappen "Stäng tornet" på
+spelledarens sida. Spelarna får då ett meddelande om att tornet stänger.
 
 Flaggor:
 
@@ -25,6 +35,8 @@ Flaggor:
 - `-min 2` minsta antal spelare för att börja (sätt `-min 1` för att prova ensam)
 - `-ai 2` antal datorstyrda vandrare (0–3)
 - `-avslojande=false` stänger av avslöjandet, för spelare som redan känner till tornets hemlighet
+- `-oppna` öppnar spelledarens sida i webbläsaren när servern har startat
+- `-vaken` håller datorn vaken så länge servern är igång
 
 ### Spelledarens sida
 

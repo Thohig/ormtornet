@@ -98,7 +98,35 @@ func localOnly(h http.HandlerFunc) http.HandlerFunc {
 	}
 }
 
-func addHostRoutes(mux *http.ServeMux, web fs.FS, game *Game, addrs hostAddrs) {
+// Close säger till alla spelare att tornet stänger. Klienterna slutar då
+// försöka ansluta på nytt.
+func (g *Game) Close() {
+	g.mu.Lock()
+	defer g.mu.Unlock()
+	if g.timer != nil {
+		g.timer.Stop()
+	}
+	g.logAll(g.data.Text("stanger"), "syn")
+	for _, p := range g.players {
+		if p != nil {
+			g.send(p.client, map[string]string{"t": "stangt"})
+		}
+	}
+}
+
+// addHostRoutes lägger till spelledarens sida. closeTower anropas när
+// spelledaren trycker på Stäng tornet.
+func addHostRoutes(mux *http.ServeMux, web fs.FS, game *Game, addrs hostAddrs, closeTower func()) {
+	mux.HandleFunc("POST /spelledare/stang", localOnly(func(w http.ResponseWriter, r *http.Request) {
+		// Kräver ett eget huvud, så att en annan webbsida i samma
+		// webbläsare inte kan stänga tornet (den skulle stoppas av CORS).
+		if r.Header.Get("X-Ormtornet") != "stang" {
+			http.Error(w, "fel förfrågan", http.StatusBadRequest)
+			return
+		}
+		w.WriteHeader(http.StatusNoContent)
+		go closeTower()
+	}))
 	mux.HandleFunc("GET /spelledare", localOnly(func(w http.ResponseWriter, r *http.Request) {
 		http.ServeFileFS(w, r, web, "spelledare.html")
 	}))

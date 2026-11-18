@@ -8,6 +8,7 @@ let state = null;
 let myName = "";
 let joined = false;
 let mapReady = false;
+let towerClosed = false; // spelledaren har stängt tornet
 
 function show(id) {
   document.querySelectorAll(".screen").forEach((s) => s.classList.toggle("active", s.id === id));
@@ -83,6 +84,10 @@ function connect() {
   };
   ws.onclose = () => {
     if (!joined) return;
+    if (towerClosed) {
+      $("conn").textContent = "tornet är stängt";
+      return;
+    }
     $("conn").textContent = "förbindelsen bröts, försöker igen";
     setTimeout(connect, 2000);
   };
@@ -116,6 +121,10 @@ function handle(msg) {
       break;
     case "sound":
       Sound.play(msg.s);
+      break;
+    case "stangt":
+      towerClosed = true;
+      $("conn").textContent = "tornet är stängt";
       break;
     case "vaknar":
       MapView.wake();
