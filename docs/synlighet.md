@@ -7,7 +7,7 @@ Varje vandrare ser bara sig själv. De andra syns bara när man möter dem i
 samma rum. Ingen vet säkert var de andra är, hur långt de har kommit eller
 vad de gör.
 
-## Så fungerar det i dag
+## Så fungerade det före steg 1
 
 - Alla vandrares plats skickas till alla (`stateFor` i `game.go`) och ritas
   på kartan (`web/map.js`). De döljs bara i källarvalven och för den som
@@ -32,7 +32,7 @@ En ny inställning under Inför nästa vandring på värdsidan, med flaggan
 
 | Val | Flagga | Vad det betyder |
 |---|---|---|
-| Alla syns | `alla` | som i dag |
+| Alla syns | `alla` | som före steg 1 |
 | Bara vid möten | `moten` | steg 1 |
 | Egen karta | `egen` | steg 1 och 2 |
 

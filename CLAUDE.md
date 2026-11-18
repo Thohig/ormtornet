@@ -34,8 +34,18 @@ Så här skiljer vi på sakerna när användaren ger instruktioner:
   (`lobby`, `spel`, `slut`). README beskriver under "Vad en spelare ser"
   vad en spelare möter.
 - **tornets dator**: datorn som kör servern.
+- **synligheten**: inställningen "Vandrarna syns" (`-synlighet`), med
+  valen `egen` (egen karta, förval), `moten` och `alla`. Spåren och ljuden
+  från grannrummen hör till den (`sounds.go`). Se
+  [docs/synlighet.md](docs/synlighet.md).
+- **stormen**: introts moln, regn, blixtar, åska och musik.
 
 Spelarna ser ordet "spelledare" i spelets texter, aldrig "värdsidan".
+
+## Ändringar
+
+[docs/andringar.md](docs/andringar.md) säger vad som är nytt, nyast först.
+Skriv dit när ett steg är klart.
 
 ## Planerat
 

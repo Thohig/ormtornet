@@ -4,6 +4,8 @@ En dungeon crawler för 2–4 spelare i webbläsaren, på ett lokalt nätverk.
 Mitt i ett torn på 9x9 rum sägs en jättelik orm sova kring en skatt.
 Ta så mycket du vågar och kom ut innan solen går ner.
 
+Vad som är nytt står i [docs/andringar.md](docs/andringar.md).
+
 ## Starta
 
 Kräver Go (`brew install go`). Det är bara den som kör tornet som behöver
@@ -386,10 +388,11 @@ pulserande väggar och ingen epilog.
 ## Ändra innehåll
 
 Allt innehåll ligger i mappen `data/`. Filerna läses när servern startar,
-så starta om servern efter en ändring.
+så starta om servern efter en ändring. Det gäller också filerna i `web/`:
+de byggs in i programmet.
 
-- `texter.json` rum, beskrivningar och allmänna texter
-- `fallor.json` regler (liv, chans för händelse, drycker), fällor och sökresultat
+- `texter.json` rum, beskrivningar, allmänna texter och introts väntetid
+- `fallor.json` regler (liv, chans för händelse, drycker, hur länge spåren syns), fällor och sökresultat
 - `ormen.json` ormkorten, skatten i kammaren och vad som händer när ormen vaknar
 - `monster.json` varelserna (liv, skada, guld, vanor, texter) och striderna
 - `ai.json` datorspelarnas namn, personligheter och betänketid

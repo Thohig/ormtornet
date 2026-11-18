@@ -9,8 +9,8 @@ Byggt (README beskriver hur det fungerar):
 
 - Värdsidan på `/spelledare`, bara från tornets egen dator.
 - Inställningar som ändras utan omstart: AI-spelare, minsta antal, sol,
-  turtid, avslöjandet, strid mellan vandrare, frånvarande vandrare och
-  spelledarläget. De sparas till nästa gång.
+  turtid, avslöjandet, strid mellan vandrare, frånvarande vandrare,
+  vandrarna syns och spelledarläget. De sparas till nästa gång.
 - Starta nu, Stäng tornet, och inbjudan att kopiera till en gruppchatt.
 - Översikten i spelledarläget: hela tornet, vandrarna, varelserna, hur djupt
   ormen sover, avslöjandets nivå och allt vandrarna har läst.
