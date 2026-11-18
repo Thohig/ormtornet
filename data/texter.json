@@ -372,7 +372,7 @@
       "{rum}."
     ],
     "lobby": [
-      "Tryck Enter när du är redo. Vandringen börjar när alla är redo och ni är minst {min}."
+      "Tryck Enter när du är redo (på en pekskärm: Redo). Vandringen börjar när alla är redo och ni är minst {min}."
     ],
     "redo_andra": [
       "{namn} är redo."
@@ -431,7 +431,7 @@
       "Ingen kom ut med någon skatt. Tornet vann."
     ],
     "spela_igen": [
-      "Tryck Enter för att gå in i ett nytt torn."
+      "Tryck Enter för att gå in i ett nytt torn (på en pekskärm: Nytt torn)."
     ],
     "spel_pagar": [
       "Vandringen har redan börjat. Vänta tills solen har gått ner."

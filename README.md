@@ -142,6 +142,15 @@ dess. Den som inte hinner välja blir stående.
 | Tab        | byt motståndare, eller varelse när du är död |
 | Enter      | redo / spela igen                 |
 
+### På en telefon eller surfplatta
+
+En iPhone, iPad eller Android-telefon i samma nätverk kan vara med. Öppna
+samma adress i Safari eller Chrome. På en pekskärm visas knappar i stället
+för tangenterna: pilarna och `·` (vänta), och Ta, Sök, Drick, Anfall,
+Parera, Undan, Byt (som Tab) och Redo (som Enter, och Nytt torn när
+vandringen är slut). På en smal skärm ligger knapparna fast längst ner och
+sidan rullar. Står telefonen på ljudlöst hörs inget ljud.
+
 Solen sjunker en handsbredd per runda och visas som en mätare överst.
 Gå ut genom en port i något av hörnen för att lämna tornet. Den som kommer
 ut med skatt räknas, och den med mest skatt vinner. Den som är kvar inne när

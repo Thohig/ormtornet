@@ -227,6 +227,7 @@ function playerTag(p) {
 }
 
 function renderSide() {
+  setEnterLabel(state.phase === "slut" ? "Nytt torn" : "Redo");
   const ul = $("players");
   ul.innerHTML = "";
   state.players.forEach((p) => {
@@ -277,15 +278,15 @@ function renderSide() {
     if (foe && state.cellar === 0) {
       line("Strid: " + foe.name, "foe");
       box.appendChild(meter("foehp", "", foe.hp, foe.maxHp, "■", "□"));
-      line("A anfall · P parera · U undan", "dimline");
+      if (!touch) line("A anfall · P parera · U undan", "dimline");
     }
     const others = foe || state.cellar > 0 ? [] : foesHere();
     if (others.length) {
       const names = others.map((p) => p.name).join(" och ");
       const f = currentFoe();
       if (state.pvp === "ja") {
-        line("Strid: " + f.name + (others.length > 1 ? " (Tab byter)" : ""), "foe");
-        line("A anfall · P parera · U undan", "dimline");
+        line("Strid: " + f.name + (others.length > 1 ? " (" + keyName("Tab") + " byter)" : ""), "foe");
+        if (!touch) line("A anfall · P parera · U undan", "dimline");
       } else {
         line("Här står också " + names, "dimline");
         if (state.pvp === "fredat") line("Porten är fredad", "dimline");
@@ -297,7 +298,7 @@ function renderSide() {
     line("Du styr tornets varelser", "cond");
     const m = controlledMonster();
     if (m) {
-      line("Vald: " + m.name + " (Tab byter)", "foe");
+      line("Vald: " + m.name + " (" + keyName("Tab") + " byter)", "foe");
       const a = state.action;
       if (a && a[0] === "m") line("Drag: " + a.replace(/^m\d+/, "").split("").map((d) => DIR_WORDS[d]).join(""), "plan");
       else if (a === "vanta") line("Drag: vila", "plan");
@@ -310,10 +311,23 @@ function renderSide() {
   if (state.phase === "spel" && me.status === "inne") {
     line(state.action ? "Drag: " + ACTION_WORDS[state.action] : "Välj ditt drag", "plan");
   } else if (state.phase === "lobby") {
-    line(me.ready ? "Du är redo" : "Tryck Enter när du är redo", "plan");
+    line(me.ready ? "Du är redo" : "Tryck " + keyName("Enter") + " när du är redo", "plan");
   } else if (state.phase === "slut") {
-    line(me.ready ? "Väntar på de andra" : "Enter: nytt torn", "plan");
+    line(me.ready ? "Väntar på de andra" : touch ? "Tryck Nytt torn" : "Enter: nytt torn", "plan");
   }
+}
+
+// Namnet på en tangent så som spelaren ser den: tangenten på en dator,
+// knappen på en pekskärm.
+const TOUCH_NAMES = { Tab: "Byt", Enter: "Redo" };
+function keyName(k) {
+  return touch ? TOUCH_NAMES[k] || k : k;
+}
+
+// Pekknappen för Enter heter olika saker beroende på vad den gör.
+function setEnterLabel(text) {
+  const b = $("padEnter");
+  if (b.textContent !== text) b.textContent = text;
 }
 
 function hpMeter(hp, maxHp) {
@@ -415,7 +429,8 @@ function showHosting(text) {
     }
   });
   if (row) lines.push({ text: row });
-  lines.push({ text: "" }, { text: "Enter: tillbaka till början" });
+  lines.push({ text: "" }, { text: touch ? "Tryck Tillbaka" : "Enter: tillbaka till början" });
+  setEnterLabel("Tillbaka");
   el.innerHTML = "";
   frame(lines, 32).forEach((l) => {
     const d = document.createElement("div");
@@ -468,7 +483,7 @@ function renderOverlay() {
     lines.push({ text: row, cls: r.winner ? "win" : r.status !== "ute" ? "lost" : "" });
   });
   if (state.results.some((r) => r.ai)) lines.push({ text: "" }, { text: "~ AI spelade en del av vandringen" });
-  lines.push({ text: "" }, { text: "Enter: nytt torn" });
+  lines.push({ text: "" }, { text: touch ? "Tryck Nytt torn" : "Enter: nytt torn" });
   el.innerHTML = "";
   frame(lines, 32).forEach((l) => {
     const d = document.createElement("div");
@@ -579,6 +594,7 @@ document.addEventListener("keydown", (e) => {
   }
 });
 
+$("back").addEventListener("click", () => pressKey("Escape"));
 $("nameform").addEventListener("submit", (e) => {
   e.preventDefault();
   myName = $("name").value.trim();
@@ -597,43 +613,44 @@ const KEYS = {
 };
 document.addEventListener("keydown", (e) => {
   if (e.metaKey || e.ctrlKey || e.altKey) return;
+  if (pressKey(e.key)) e.preventDefault();
+});
+
+// pressKey gör det en tangent gör. Pekknapparna använder samma väg och
+// skickar namnet på den tangent de står för. Svarar true om tangenten
+// betydde något.
+function pressKey(key) {
   // Esc i namnrutan, eller Enter när den här datorn har blivit spelledare,
   // går tillbaka till startsidan.
-  if ((e.key === "Escape" && $("namescreen").classList.contains("active")) || (e.key === "Enter" && hostingHere)) {
-    e.preventDefault();
+  if ((key === "Escape" && $("namescreen").classList.contains("active")) || (key === "Enter" && hostingHere)) {
     backToStart();
-    return;
+    return true;
   }
-  if (!joined) return;
-  if (e.key === "Enter") {
-    e.preventDefault();
+  if (!joined) return false;
+  if (key === "Enter") {
     send({ t: "ready" });
-    return;
+    return true;
   }
   if (state && state.controller) {
     // Den döda spelaren: Tab väljer varelse, pilarna flyttar den.
-    if (e.key === "Tab") {
-      e.preventDefault();
+    if (key === "Tab") {
       cycleMonster();
-      return;
+      return true;
     }
-    const a = KEYS[e.key];
-    if (a !== "vanta" && !DIR_WORDS[a]) return;
-    e.preventDefault();
+    const a = KEYS[key];
+    if (a !== "vanta" && !DIR_WORDS[a]) return false;
     const m = controlledMonster();
     if (a === "vanta") send({ t: "act", a });
     else if (m) send({ t: "act", a, m: m.id });
-    return;
+    return true;
   }
-  if (e.key === "Tab" && foesHere().length) {
-    e.preventDefault();
+  if (key === "Tab" && foesHere().length) {
     cycleFoe();
-    return;
+    return true;
   }
-  const a = KEYS[e.key];
-  if (!a) return;
-  e.preventDefault();
-  if (!state || state.phase !== "spel") return;
+  const a = KEYS[key];
+  if (!a) return false;
+  if (!state || state.phase !== "spel") return true;
   const me = myPlayer();
   const monsterHere = me && (state.monsters || []).some((m) => m.x === me.x && m.y === me.y);
   const foe = currentFoe();
@@ -642,7 +659,32 @@ document.addEventListener("keydown", (e) => {
   } else {
     send({ t: "act", a });
   }
+  return true;
+}
+
+// Pekknapparna: varje knapp står för en tangent (data-key).
+$("pad").addEventListener("click", (e) => {
+  const b = e.target.closest("button[data-key]");
+  if (!b) return;
+  pressKey(b.dataset.key);
 });
+
+// Pekskärm: knapparna visas från början på en telefon, och annars så fort
+// någon rör vid skärmen.
+let touch = !!(window.matchMedia && matchMedia("(pointer: coarse)").matches);
+function setTouch() {
+  document.body.classList.toggle("touch", touch);
+  if (state && !hostingHere) {
+    renderSide();
+    renderOverlay();
+  }
+}
+window.addEventListener("touchstart", () => {
+  if (touch) return;
+  touch = true;
+  setTouch();
+}, { passive: true });
+setTouch();
 
 // Säg till tornet då och då att sidan syns, så att det inte stänger av sig
 // självt medan någon sitter och tittar. En gömd flik säger ingenting.

@@ -310,3 +310,93 @@ body[data-niva="4"] #crt::after { animation: throb 0.95s infinite; }
   animation: blink 0.8s steps(1) infinite;
 }
 @keyframes blink { 50% { opacity: 0; } }
+
+/* Pekskärm: knappar i stället för tangenter. */
+.touchonly { display: none; }
+body.touch .touchonly { display: flex; }
+body.touch .keys { display: none; }
+
+#nameform .touchonly { gap: 28px; }
+#nameform .touchonly button, #pad button {
+  background: none;
+  border: 1px solid var(--faint);
+  border-radius: 4px;
+  color: var(--fg);
+  font: inherit;
+  text-shadow: inherit;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  -webkit-user-select: none;
+}
+#nameform .touchonly button { padding: 10px 18px; letter-spacing: 0.1em; }
+#nameform .touchonly button[type="submit"] { color: var(--hi); border-color: var(--dim); }
+
+#pad {
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-top: 14px;
+}
+#pad button { min-height: 44px; padding: 0 4px; }
+#pad button:active { background: var(--faint); color: var(--hi); }
+#pad .dirs {
+  display: grid;
+  grid-template-columns: repeat(3, 44px);
+  grid-template-rows: repeat(3, 44px);
+  gap: 4px;
+}
+#pad .dirs button { font-size: 20px; }
+#pad .n { grid-area: 1 / 2; }
+#pad .w { grid-area: 2 / 1; }
+#pad .c { grid-area: 2 / 2; color: var(--dim); }
+#pad .e { grid-area: 2 / 3; }
+#pad .s { grid-area: 3 / 2; }
+#pad .acts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(48px, 1fr));
+  gap: 4px;
+  flex: 1 1 180px;
+  max-width: 260px;
+}
+#pad .wide { grid-column: span 2; color: var(--hi); border-color: var(--dim); }
+body.touch #side { overflow-y: auto; }
+
+/* Smal skärm, som en telefon på höjden: kartan överst, sedan läget och
+   loggen, och knapparna fast längst ner. Sidan rullar. */
+@media (max-width: 700px) {
+  html, body { overflow-x: hidden; overflow-y: auto; }
+  #crt { height: auto; min-height: 100%; }
+  #game.active { display: block; height: auto; padding: 8px 12px; }
+  #top { flex-wrap: wrap; gap: 2px 12px; }
+  #top .title { display: none; }
+  #turn { min-width: 0; }
+  #main { display: block; }
+  #mapbox { width: 100%; aspect-ratio: 0.95; margin: 6px 0; }
+  #side {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 16px;
+    overflow: visible;
+  }
+  #side > :not(.block) { grid-column: 1 / -1; }
+  #side h2 { margin: 8px 0 4px; }
+  #log { height: 10em; margin-top: 8px; }
+  body.touch #game.active { padding-bottom: calc(170px + env(safe-area-inset-bottom)); }
+  body.touch #pad {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 5;
+    margin: 0;
+    flex-wrap: nowrap;
+    gap: 12px;
+    padding: 8px 12px calc(8px + env(safe-area-inset-bottom));
+    background: var(--bg);
+    border-top: 1px solid var(--faint);
+  }
+  #pad .acts { flex: 1 1 auto; }
+}

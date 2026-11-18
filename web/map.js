@@ -124,9 +124,15 @@ const MapView = (() => {
     const box = canvas.parentElement.getBoundingClientRect();
     const byW = box.width / (cols * 0.62);
     const byH = box.height / (rows * 1.12);
-    fontPx = Math.max(8, Math.floor(Math.min(byW, byH)));
+    fontPx = Math.max(6, Math.floor(Math.min(byW, byH)));
     cellW = Math.round(fontPx * 0.62);
     cellH = Math.round(fontPx * 1.12);
+    // Avrundningen kan göra kartan lite för bred på en smal skärm.
+    while (fontPx > 6 && (cols * cellW > box.width || rows * cellH > box.height)) {
+      fontPx--;
+      cellW = Math.round(fontPx * 0.62);
+      cellH = Math.round(fontPx * 1.12);
+    }
     const dpr = window.devicePixelRatio || 1;
     canvas.width = cols * cellW * dpr;
     canvas.height = rows * cellH * dpr;

@@ -2,7 +2,7 @@
 <html lang="sv">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Ormtornet</title>
 <link rel="icon" href="ikon.svg" type="image/svg+xml">
 <link rel="icon" href="ikon.png" type="image/png" sizes="180x180">
@@ -57,7 +57,11 @@
     <form id="nameform" autocomplete="off">
       <label for="name">Vad heter du, vandrare?</label>
       <input id="name" maxlength="16" spellcheck="false">
-      <div class="hint">tryck enter · esc går tillbaka</div>
+      <div class="hint keys">tryck enter · esc går tillbaka</div>
+      <div class="touchonly">
+        <button type="button" id="back">Tillbaka</button>
+        <button type="submit">Gå in</button>
+      </div>
       <div id="nameerr"></div>
     </form>
   </section>
@@ -75,14 +79,18 @@
         <pre id="overlay" hidden></pre>
       </div>
       <aside id="side">
-        <h2>Vandrare</h2>
-        <ul id="players"></ul>
-        <h2>Här</h2>
-        <div id="here"></div>
-        <h2>Du</h2>
-        <div id="me"></div>
-        <h2>Styrning</h2>
-        <div id="help">
+        <div class="block">
+          <h2>Vandrare</h2>
+          <ul id="players"></ul>
+        </div>
+        <div class="block">
+          <h2>Här</h2>
+          <div id="here"></div>
+          <h2>Du</h2>
+          <div id="me"></div>
+        </div>
+        <h2 class="keys">Styrning</h2>
+        <div id="help" class="keys">
           <div><b>Pilar</b>gå</div>
           <div><b>Mellanslag</b>vänta</div>
           <div><b>T</b>ta skatt</div>
@@ -93,6 +101,25 @@
           <div><b>U</b>undanmanöver</div>
           <div><b>Tab</b>byt motståndare</div>
           <div><b>Enter</b>redo</div>
+        </div>
+        <div id="pad" class="touchonly" aria-label="Styrning">
+          <div class="dirs">
+            <button type="button" data-key="ArrowUp" class="n" aria-label="Gå norrut">↑</button>
+            <button type="button" data-key="ArrowLeft" class="w" aria-label="Gå västerut">←</button>
+            <button type="button" data-key=" " class="c" aria-label="Vänta">·</button>
+            <button type="button" data-key="ArrowRight" class="e" aria-label="Gå österut">→</button>
+            <button type="button" data-key="ArrowDown" class="s" aria-label="Gå söderut">↓</button>
+          </div>
+          <div class="acts">
+            <button type="button" data-key="t">Ta</button>
+            <button type="button" data-key="s">Sök</button>
+            <button type="button" data-key="d">Drick</button>
+            <button type="button" data-key="a">Anfall</button>
+            <button type="button" data-key="p">Parera</button>
+            <button type="button" data-key="u">Undan</button>
+            <button type="button" data-key="Tab">Byt</button>
+            <button type="button" data-key="Enter" id="padEnter" class="wide">Redo</button>
+          </div>
         </div>
       </aside>
     </div>
