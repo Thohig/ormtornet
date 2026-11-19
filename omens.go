@@ -17,11 +17,6 @@ type omenNote struct {
 	Round int
 }
 
-// randomTrap väljer en fälla för ett nytt rum.
-func (g *Game) randomTrap() *Trap {
-	return g.data.randomTrap(g.rng)
-}
-
 // rollOmen bestämmer vad som väntar i ett rum, med samma chanser som när
 // rummet byggs: en varelse, annars kanske en fälla, annars ingenting.
 func (g *Game) rollOmen() string {

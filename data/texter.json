@@ -596,6 +596,7 @@
     "tecken_forlorad": ["En vandrare som tornet har tagit."],
     "tecken_drag": ["Ditt drag, åt det hållet."],
     "tecken_port": ["En port ut. Skatten räknas bara om den bärs ut här."],
+    "tecken_port_stangd": ["En port som har slutit sig. Det går inte att komma ut genom den."],
     "tecken_okand": ["Ett rum som ingen har varit i än."],
     "tecken_mitten": ["Tornets mitt."],
     "tecken_kammare": ["Kammaren, med en hög av guld."],

@@ -44,6 +44,7 @@ func main() {
 	simulate := flag.Int("simulera", 0, "spela så många vandringar med bara AI-spelare (-ai, förval 4) och skriv hur det gick, utan att öppna tornet")
 	check := flag.Bool("kontrollera", false, "kontrollera datafilerna och avsluta")
 	initiation := flag.String("invigning", defaultSettings.Invigning, "invigningen: namn (ormens namn, nytt för varje vandring) eller svar (fasta svar)")
+	change := flag.Bool("forandras", defaultSettings.Forandras, "tornet förändras med avslöjandets nivåer: fler fällor från nivå 3, portarna stängs på nivå 4")
 	lang := flag.String("sprak", defaultSettings.Sprak, "språket i spelet och på värdsidan: sv eller en (texter som inte är översatta visas på svenska)")
 	flag.Parse()
 
@@ -77,6 +78,8 @@ func main() {
 			settings.Sprak = *lang
 		case "invigning":
 			settings.Invigning = *initiation
+		case "forandras":
+			settings.Forandras = *change
 		}
 	})
 	cfg := settings.config()

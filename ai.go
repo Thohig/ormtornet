@@ -239,7 +239,7 @@ func (bm *botMap) toExit(start pos) (Dir, int) {
 	best, step := -1, Dir(0)
 	for _, p := range places(bm.rooms) {
 		r := bm.rooms[p]
-		if r.Exit < 0 {
+		if r.Exit < 0 || r.Shut {
 			continue
 		}
 		dist, ok := bm.dist[p]

@@ -478,6 +478,13 @@ type Reveal struct {
 	EpilogNamn  []string            `json:"epilog_namn"`   // epilogen säger namnet
 	NadAndel    float64             `json:"nad_andel"`     // andelen vakna-kort som tornets nåd tar bort
 	Varsel      Omens               `json:"varsel"`        // varslen om rum som ingen har varit i
+	Forandring  Change              `json:"forandring"`    // hur tornet förändras med nivåerna
+}
+
+// Change är hur tornet förändras med avslöjandets nivåer (se change.go).
+type Change struct {
+	Fallvikter    map[string]map[string]int `json:"fallvikter"`      // nivå -> fälla -> vikt
+	PortStangsVar int                       `json:"port_stangs_var"` // rundor mellan portarna som stängs på nivå 4
 }
 
 // Omens är texterna för varslen (se omens.go).

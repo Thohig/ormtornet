@@ -299,6 +299,18 @@
     ],
     "kronika_invigda_ute": [
       "Those who knew and got out: {namn}."
+    ],
+    "port_darrar": [
+      "The gate to the {horn} trembles. It is closing."
+    ],
+    "port_stangs": [
+      "The gate to the {horn} has closed. It will not open again."
+    ],
+    "port_stangd_har": [
+      "The gate has closed. What was a gate is a mouth, and the mouth is shut."
+    ],
+    "kronika_port": [
+      "The gate to the {horn} closed."
     ]
   }
 }

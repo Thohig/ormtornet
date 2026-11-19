@@ -6,6 +6,21 @@ eller leder tornet.
 
 ## 2026-11-19
 
+### Tornet förändras
+
+- Ny inställning under Fler inställningar: Tornet förändras, på som
+  förval. Den kräver avslöjandet. Flaggan heter `-forandras`.
+- Från nivå 3 blir fällorna som hör till ormens kropp vanligare i nya rum:
+  det rasande golvet, det roterande rummet, ormgropen och det ömsade
+  skinnet (`forandring.fallvikter` i `avslojande.json`).
+- På nivå 4 sluter sig portarna en i taget, var tredje runda
+  (`port_stangs_var`). Först den som ligger längst från vandrarna, och
+  rundan innan får alla som är inne en varning. Den sista porten stängs
+  aldrig. Kartan visar en stängd port som ett rött block, och ingen kommer
+  ut genom den. Datorspelarna söker sig till en öppen.
+- Med 600 simulerade vandringar för 2, 4 och 7 AI-spelare ändrades andelen
+  som blev kvar i mörkret med högst två procentenheter (2–6 %).
+
 ### Varslen
 
 - Från avslöjandets nivå 2 är varannan ledtråd ett varsel: tornet förråder

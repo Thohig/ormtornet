@@ -55,6 +55,7 @@ type Config struct {
 	GMMode       bool   // spelledarläge: spelledaren spelar inte och ser allt
 	Reveal       bool   // false stänger av avslöjandet
 	Initiation   string // invigningen: "namn" (ormens namn) eller "svar" (fasta svar, också när tomt)
+	Change       bool   // tornet förändras med avslöjandets nivåer
 	SunMax       int
 	TurnTime     time.Duration
 	MinPlayers   int
@@ -214,6 +215,7 @@ type Room struct {
 	chalk    Dir      // pilen någon har ritat med krita
 	hasChalk bool
 	omen     string // det ett varsel har lovat: "falla:id", "varelse:id" eller "tomt"
+	Shut     bool   // porten har slutit sig (tornet förändras, nivå 4)
 }
 
 // trail är spåren efter den som senast lämnade ett rum.
@@ -332,6 +334,8 @@ type Game struct {
 	mercyGiven  bool     // tornets nåd har kommit i den här vandringen
 	clueDeals   int      // ledtrådar som har delats ut, för att varannan ska bli ett varsel
 	omens       []omenNote
+	portClock   int // rundor sedan nivå 4 eller sedan en port stängdes
+	portNext    int // porten som ska stängas, eller -1
 }
 
 func NewGame(d *Data, cfg Config) *Game {
@@ -499,10 +503,11 @@ type roomView struct {
 	Exit  int     `json:"exit"`
 	Name  string  `json:"name"`
 	Mark  string  `json:"mark,omitempty"`
-	MarkN string  `json:"markn,omitempty"` // fällans namn, för teckenförklaringen
-	S     bool    `json:"s,omitempty"`     // genomsökt
-	C     int     `json:"c"`               // pilen i krita, -1 om ingen
-	F     bool    `json:"f,omitempty"`     // här ligger ett föremål (bara för spårfinnaren)
+	MarkN string  `json:"markn,omitempty"`  // fällans namn, för teckenförklaringen
+	S     bool    `json:"s,omitempty"`      // genomsökt
+	C     int     `json:"c"`                // pilen i krita, -1 om ingen
+	F     bool    `json:"f,omitempty"`      // här ligger ett föremål (bara för spårfinnaren)
+	Shut  bool    `json:"stangd,omitempty"` // porten har slutit sig
 }
 
 type resultView struct {
@@ -713,6 +718,7 @@ func (g *Game) stateFor(me *Player) stateMsg {
 			rv.F = len(r.items) > 0 && g.is(me, "sparfinnare")
 			if r.HasExit {
 				rv.Exit = int(r.Exit)
+				rv.Shut = r.Shut
 			}
 			st.Rooms = append(st.Rooms, rv)
 		}
@@ -1096,6 +1102,7 @@ func (g *Game) startGame() {
 	g.wakes = 0
 	g.mercy, g.mercyGiven = 0, false
 	g.clueDeals, g.omens = 0, nil
+	g.portClock, g.portNext = 0, -1
 	g.buildDeck()
 	g.controller = 0
 	g.pendingMove = nil
@@ -1333,6 +1340,7 @@ func (g *Game) resolve() {
 	default:
 		g.sunWarning(sunBefore)
 		g.updateLevel()
+		g.closePorts()
 		g.round++
 		g.startRound()
 	}
@@ -1465,6 +1473,11 @@ func (g *Game) playTurn(p *Player) {
 // roterande rum kastar runt spelaren i all oändlighet.
 func (g *Game) move(p *Player, d Dir, depth int) {
 	room := &g.rooms[p.Y][p.X]
+	if room.HasExit && room.Exit == d && room.Shut {
+		g.soundTo(p, "vagg")
+		g.logTo(p, g.data.Text("port_stangd_har"), "varn")
+		return
+	}
 	if room.HasExit && room.Exit == d || room.Doors[d] {
 		room.trail = trail{by: p.ID, round: g.round, dir: d}
 	}

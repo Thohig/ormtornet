@@ -215,6 +215,16 @@ func (d *Data) validate() []string {
 			bad("avslojande.json", "varsel: varelsen %q saknar text", t.ID)
 		}
 	}
+	for lvl, w := range a.Forandring.Fallvikter {
+		for id := range w {
+			if d.trap(id) == nil {
+				bad("avslojande.json", "forandring: fallvikter %s: fällan %q finns inte", lvl, id)
+			}
+		}
+	}
+	if a.Forandring.PortStangsVar < 1 {
+		bad("avslojande.json", "forandring: port_stangs_var ska vara minst 1")
+	}
 	if len(a.Varsel.Tomt) == 0 || len(a.Varsel.Avstand) != 2 {
 		bad("avslojande.json", "varsel: tomt ska ha texter och avstand två ord")
 	}

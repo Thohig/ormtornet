@@ -592,6 +592,7 @@
     "tecken_forlorad": ["A wanderer the tower has taken."],
     "tecken_drag": ["Your move, in that direction."],
     "tecken_port": ["A gate out. Treasure only counts if carried out here."],
+    "tecken_port_stangd": ["A gate that has closed. There is no way out through it."],
     "tecken_okand": ["A room no one has been in yet."],
     "tecken_mitten": ["The middle of the tower."],
     "tecken_kammare": ["The chamber, with a heap of gold."],

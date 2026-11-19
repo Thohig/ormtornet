@@ -352,7 +352,11 @@ const MapView = (() => {
     const ey = r.exit === 0 ? y0 : r.exit === 2 ? y0 + RH : midY;
     if (ex >= 0) {
       setWall(ex, ey, false);
-      if (lvl === 4 && lastState && lastState.phase === "slut") {
+      if (r.stangd) {
+        // Porten har slutit sig medan vandringen pågår (tornet förändras).
+        put(ex, ey, "█", "#d0503a");
+        note("port_stangd", "█", "#d0503a");
+      } else if (lvl === 4 && lastState && lastState.phase === "slut") {
         put(ex, ey, "█", "#d0503a");
         note("port", "█", "#d0503a");
       } else if (lvl === 4) {
@@ -529,7 +533,7 @@ const MapView = (() => {
     if (f && spanNow(state)) {
       const at = (x, y, glyph, color) => beyond.push({ x: x * RW + RW / 2 - 0.5, y: y * RH + RH / 2 - 0.5, glyph, color });
       state.rooms.forEach((r) => {
-        if (r.exit >= 0) at(r.x, r.y, "˄", COLORS.exit);
+        if (r.exit >= 0 && !r.stangd) at(r.x, r.y, "˄", COLORS.exit);
         if (r.k === "kammare") at(r.x, r.y, "¤", COLORS.gold);
       });
       state.players.forEach((p) => {
@@ -545,7 +549,7 @@ const MapView = (() => {
 
   // Förklaringen byggs bara om när tecknen på kartan har ändrats.
   const LEGEND_ORDER = ["du", "vandrare", "borta", "skymd", "forlorad", "drag", "varelse", "falla",
-    "kammare", "vaken", "port", "foremal", "krita", "eko", "okand", "mitten"];
+    "kammare", "vaken", "port", "port_stangd", "foremal", "krita", "eko", "okand", "mitten"];
   function tellLegend() {
     if (!onLegend) return;
     const rank = (e) => LEGEND_ORDER.indexOf(e.key.split(":")[0]);
