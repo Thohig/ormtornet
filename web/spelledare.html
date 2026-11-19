@@ -145,6 +145,13 @@
           <select id="sRev" name="avslojande"><option value="1" data-t="val_pa"></option><option value="0" data-t="val_av"></option></select>
           <span class="note" data-t="not_avslojande"></span>
 
+          <label for="sInv" data-t="inst_invigning"></label>
+          <select id="sInv" name="invigning">
+            <option value="namn" data-t="val_invigning_namn"></option>
+            <option value="svar" data-t="val_invigning_svar"></option>
+          </select>
+          <span class="note" id="invNote"></span>
+
           <label for="sFr" data-t="inst_franvaro"></label>
           <select id="sFr" name="franvaro">
             <option value="0" data-t="val_franvaro_star"></option>
@@ -452,6 +459,7 @@ function moreText(s) {
   return [
     t("kort_min", { antal: s.min }),
     t(s.avslojande ? "kort_avslojande_pa" : "kort_avslojande_av"),
+    s.avslojande && s.invigning === "svar" ? t("kort_invigning_svar") : "",
     s.franvaro ? t("kort_franvaro", { antal: s.franvaro }) : t("kort_franvaro_star"),
     strid ? t(strid) : t("kort_strid", { strid: s.strid }),
     syn ? t(syn) : t("kort_syn", { syn: s.synlighet }),
@@ -471,6 +479,9 @@ function renderSettings(v) {
   form.querySelectorAll("select").forEach((el) => (el.disabled = playing));
   $("settingsHint").textContent = playing ? t("inst_hint_spel") : t("inst_hint");
   $("aiNote").textContent = s.ai > v.bots && !playing ? t("not_ai", { antal: v.bots }) : "";
+  // Invigningen hör till avslöjandet och går inte att välja utan det.
+  $("sInv").disabled = playing || !s.avslojande;
+  $("invNote").textContent = s.avslojande ? t("not_invigning") : t("not_kraver_avslojande");
   // De hopfällda inställningarna i korthet, så att de syns utan att fällas ut.
   $("moreNote").textContent = moreText(s);
   // Vad Automatisk ger just nu: solen efter tornets storlek, turtiden efter
@@ -507,6 +518,7 @@ function renderSettings(v) {
   $("sSol").value = String(s.sol);
   $("sTur").value = String(s.turtid);
   $("sRev").value = s.avslojande ? "1" : "0";
+  $("sInv").value = s.invigning || "namn";
   const fr = $("sFr");
   if (![...fr.options].some((o) => +o.value === s.franvaro)) {
     fr.append(new Option(t("val_franvaro_n", { antal: s.franvaro }), String(s.franvaro)));
@@ -551,6 +563,7 @@ $("settings").addEventListener("change", async () => {
     sol: +$("sSol").value,
     turtid: +$("sTur").value,
     avslojande: $("sRev").value === "1",
+    invigning: $("sInv").value,
     franvaro: +$("sFr").value,
     strid: $("sStrid").value,
     synlighet: $("sSyn").value,

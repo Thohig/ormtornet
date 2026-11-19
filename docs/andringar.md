@@ -6,6 +6,19 @@ eller leder tornet.
 
 ## 2026-11-19
 
+### Invigningen med ormens namn (spoilervarning)
+
+- Ny inställning under Fler inställningar på värdsidan: Invigningen, med
+  valen ormens namn (förval) och fasta svar. Den kräver avslöjandet.
+- Med ormens namn har varje vandring ett eget namn i tre delar. Vid nivå 2,
+  3 och 4 får varje människa i tornet en del, så att gruppen tillsammans
+  vet så mycket som möjligt. Delarna syns i tecknen, till exempel `· RU ·`.
+- För att bli invigd ska viskningen innehålla namnet och visa att man
+  förstår, till exempel "Karumeth, tornet är ormen" eller "tornet är
+  Karumeth". De fasta svaren räcker inte ensamma.
+- Epilogen säger namnet.
+- Fasta svar fungerar som förut. Flaggan heter `-invigning`.
+
 ### Spelledarbordet
 
 - Översikten och ingreppen i spelledarläget har flyttat från värdsidan

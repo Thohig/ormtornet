@@ -84,6 +84,7 @@
     "tecken_morker": "Lyktan är släckt. Du ser bara rummet du står i.",
     "tecken_invigd": "Tornet har hört dig.",
     "tecken_viska": "{tryck} för att viska till tornet.",
+    "tecken_namndelar": "Tecken du har hittat i väggarna. Prickarna är de du saknar.",
     "tecken_anvand": "{tryck} för att använda det.",
     "tryck_tangent": "Tryck {tangent}",
     "tryck_knapp": "Tryck {knapp}",

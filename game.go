@@ -54,6 +54,7 @@ type Config struct {
 	Size         int    // tornets storlek i rum, 0 för automatisk
 	GMMode       bool   // spelledarläge: spelledaren spelar inte och ser allt
 	Reveal       bool   // false stänger av avslöjandet
+	Initiation   string // invigningen: "namn" (ormens namn) eller "svar" (fasta svar, också när tomt)
 	SunMax       int
 	TurnTime     time.Duration
 	MinPlayers   int
@@ -229,10 +230,11 @@ type Player struct {
 	classID string  // vald klass, tom om ingen
 	items   []*Item // föremål i väskan
 
-	initiated  bool   // vandraren har viskat tornets hemlighet
-	guessLevel int    // nivån då vandraren senast viskade
-	whispered  string // det vandraren senast viskade, för spelledaren
-	calmed     bool   // den invigde har lugnat ormen under vandringen
+	initiated  bool    // vandraren har viskat tornets hemlighet
+	guessLevel int     // nivån då vandraren senast viskade
+	whispered  string  // det vandraren senast viskade, för spelledaren
+	parts      [3]bool // delarna av ormens namn som vandraren har fått
+	calmed     bool    // den invigde har lugnat ormen under vandringen
 	X, Y       int
 	client     *Client
 	Ready      bool
@@ -323,6 +325,8 @@ type Game struct {
 	graceUsed bool // porten har redan väntat på de invigda
 
 	levelHeld bool // spelledaren håller kvar avslöjandets nivå
+
+	serpentName []string // ormens namn i tre delar, med invigningen "ormens namn"
 }
 
 func NewGame(d *Data, cfg Config) *Game {
@@ -534,6 +538,7 @@ type stateMsg struct {
 	Heart      string        `json:"hjartslag,omitempty"`
 	Initiated  bool          `json:"invigd,omitempty"`
 	CanWhisper bool          `json:"kanViska,omitempty"`
+	NameParts  []string      `json:"namndelar,omitempty"` // delarna av ormens namn, tomma där vandraren inte vet
 	Offer      []*classView  `json:"erbjudande,omitempty"`
 	Players    []playerView  `json:"players"`
 	Rooms      []roomView    `json:"rooms"`
@@ -654,6 +659,7 @@ func (g *Game) stateFor(me *Player) stateMsg {
 		st.Heart = g.heartbeat(me)
 		st.Initiated = me.initiated
 		st.CanWhisper = g.canWhisper(me)
+		st.NameParts = g.namePartsFor(me)
 	}
 	if g.phase == phaseChoose {
 		st.Offer = g.classCards(me)
@@ -773,6 +779,7 @@ func (g *Game) placeAtCorner(p *Player) {
 	p.known = newGrid[bool](g.size)
 	p.items = nil
 	p.initiated, p.guessLevel, p.whispered, p.calmed = false, 0, "", false
+	p.parts = [3]bool{}
 	g.revealPorts()
 	g.noteRoom(p)
 }
@@ -1084,6 +1091,7 @@ func (g *Game) startGame() {
 	g.levelHeld = false
 	g.graceUsed = false
 	g.usedClues = map[string]bool{}
+	g.pickSerpentName()
 	g.resetChronicle()
 	for _, p := range g.players {
 		if p != nil {

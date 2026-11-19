@@ -172,6 +172,41 @@ func (d *Data) validate() []string {
 			}
 		}
 	}
+	a := &d.Avslojande
+	if len(a.Namn) == 0 {
+		bad("avslojande.json", "namn: inga namn")
+	}
+	for i, n := range a.Namn {
+		if len(n) != 3 {
+			bad("avslojande.json", "namn %d: ska ha tre delar, har %d", i+1, len(n))
+		}
+		for _, part := range n {
+			if part == "" || strings.Trim(strings.ToLower(part), "abcdefghijklmnopqrstuvwxyz") != "" {
+				bad("avslojande.json", "namn %d: delen %q ska ha bara bokstäver a–z", i+1, part)
+			}
+		}
+	}
+	if len(a.Ordning) != 3 {
+		bad("avslojande.json", "ordning: ska ha tre ord")
+	}
+	for _, lvl := range []string{"2", "3", "4"} {
+		if len(a.Delar[lvl]) == 0 {
+			bad("avslojande.json", "delar: nivå %s saknar texter", lvl)
+		}
+		for _, s := range a.Delar[lvl] {
+			if !strings.Contains(s, "{del}") {
+				bad("avslojande.json", "delar %s: %q saknar {del}", lvl, s)
+			}
+		}
+	}
+	for _, s := range a.SvarMedNamn {
+		if !strings.Contains(s, "{namn}") {
+			bad("avslojande.json", "svar_med_namn: %q saknar {namn}", s)
+		}
+	}
+	if len(a.EpilogNamn) == 0 {
+		bad("avslojande.json", "epilog_namn: inga texter")
+	}
 	levels := unique("svarighet.json", "förvalet", ids)
 	if d.Svarighet.Standard != "" && !levels[d.Svarighet.Standard] {
 		bad("svarighet.json", "standard %q är inget av förvalen", d.Svarighet.Standard)

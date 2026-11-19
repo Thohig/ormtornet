@@ -21,6 +21,53 @@
       "i ormens buk"
     ],
 
+    "_om_namn": "Med invigningen \"ormens namn\" lottas ett av namnen för varje vandring. Varje namn har tre delar med bara bokstäver a–z. Delarna delas ut till människorna i tornet vid nivå 2, 3 och 4, med texterna under delar ({ordning} är första, andra eller tredje och {del} delen). Viskningen ska innehålla namnet och något av svaren, eller en av mallarna i svar_med_namn.",
+    "namn": [
+      ["Ka", "ru", "meth"],
+      ["Ys", "ge", "rah"],
+      ["Mor", "va", "ul"],
+      ["Tha", "le", "mun"],
+      ["Ves", "sor", "ak"],
+      ["Ul", "dra", "xis"],
+      ["Ne", "ko", "bah"],
+      ["Sa", "ra", "voth"],
+      ["Ish", "ta", "mel"],
+      ["Go", "rum", "ba"],
+      ["Az", "ze", "rel"],
+      ["Om", "bra", "thul"],
+      ["Ve", "li", "sha"],
+      ["Kur", "a", "gon"],
+      ["Zu", "le", "rath"],
+      ["Ha", "ma", "rok"]
+    ],
+    "ordning": ["första", "andra", "tredje"],
+    "delar": {
+      "2": [
+        "Någon har ristat tre tecken i väggen, nästan utnötta. Det {ordning} går att läsa: {del}.",
+        "Under dammet på golvet syns tre tecken som bildar ett ord. Det {ordning} är {del}.",
+        "En skåra i stenen, sedan en till. Tre tecken, ett ord. Det {ordning} är {del}."
+      ],
+      "3": [
+        "Det är ett namn, ristat av någon som visste. Det {ordning} av dess tre tecken är {del}.",
+        "Väggen viskar ett namn i tre delar. Du hör den {ordning} tydligt: {del}.",
+        "Namnet står skrivet med naglar i murbruket. Den {ordning} delen: {del}."
+      ],
+      "4": [
+        "Det är tornet självt som heter så. Den {ordning} delen av namnet: {del}.",
+        "Väggarna säger sitt namn nu, i tre andetag. Det {ordning} är {del}.",
+        "Allt runt dig bär samma namn. Dess {ordning} del är {del}."
+      ]
+    },
+    "svar_med_namn": [
+      "tornet är {namn}",
+      "{namn} är tornet",
+      "vi är inne i {namn}",
+      "vi är i {namn}",
+      "inne i {namn}",
+      "inuti {namn}"
+    ],
+    "epilog_namn": ["Det hette {namn}."],
+
     "nivabyte": {
       "2": [
         "Något förändras. Tornet har börjat andas.",

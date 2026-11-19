@@ -39,6 +39,146 @@ func whisperMatches(whisper string, answers []string) bool {
 	return false
 }
 
+// Invigningen: med "ormens namn" (initName) räcker inte de fasta svaren.
+// Varje vandring har ett eget namn i tre delar, som delas ut till
+// människorna i tornet, och viskningen ska innehålla namnet.
+const (
+	initName    = "namn"
+	initAnswers = "svar"
+)
+
+// usesName är sant när invigningen kräver ormens namn i den här vandringen.
+func (g *Game) usesName() bool {
+	return g.cfg.Reveal && g.cfg.Initiation == initName && len(g.serpentName) == 3
+}
+
+// pickSerpentName lottar ormens namn när en vandring börjar.
+func (g *Game) pickSerpentName() {
+	g.serpentName = nil
+	names := g.data.Avslojande.Namn
+	if !g.cfg.Reveal || g.cfg.Initiation != initName || len(names) == 0 {
+		return
+	}
+	g.serpentName = names[g.rng.IntN(len(names))]
+}
+
+// serpentNameText är namnet som det skrivs, till exempel Karumeth.
+func (g *Game) serpentNameText() string {
+	s := strings.ToLower(strings.Join(g.serpentName, ""))
+	if s == "" {
+		return ""
+	}
+	r := []rune(s)
+	return strings.ToUpper(string(r[0])) + string(r[1:])
+}
+
+func (p *Player) partCount() int {
+	n := 0
+	for _, k := range p.parts {
+		if k {
+			n++
+		}
+	}
+	return n
+}
+
+// namePartsFor är delarna vandraren har, med versaler, och tomma där den
+// inte vet. Ingenting om vandraren inte har fått någon del.
+func (g *Game) namePartsFor(p *Player) []string {
+	if !g.usesName() || p.partCount() == 0 {
+		return nil
+	}
+	out := make([]string, 3)
+	for i, k := range p.parts {
+		if k {
+			out[i] = strings.ToUpper(g.serpentName[i])
+		}
+	}
+	return out
+}
+
+// dealNameParts ger människorna i tornet delar av namnet, så att var och en
+// har lika många delar som nivån minus ett (högst tre). Varje del som delas
+// ut är den som färst i gruppen har, så att gruppen tillsammans vet så
+// mycket som möjligt och måste prata för att få ihop namnet.
+func (g *Game) dealNameParts() {
+	if !g.usesName() {
+		return
+	}
+	want := min(g.level-1, 3)
+	var group []*Player
+	for _, p := range g.players {
+		if p != nil && p.bot == nil && p.Status == statusIn {
+			group = append(group, p)
+		}
+	}
+	g.rng.Shuffle(len(group), func(i, j int) { group[i], group[j] = group[j], group[i] })
+	for range 3 {
+		for _, p := range group {
+			if p.partCount() >= want {
+				continue
+			}
+			best, bestN := -1, 0
+			for i := range 3 {
+				if p.parts[i] {
+					continue
+				}
+				n := 0
+				for _, o := range group {
+					if o.parts[i] {
+						n++
+					}
+				}
+				if best < 0 || n < bestN {
+					best, bestN = i, n
+				}
+			}
+			p.parts[best] = true
+			g.logTo(p, g.namePartText(best), "info")
+		}
+	}
+}
+
+// namePartText är texten när vandraren får del i av namnet.
+func (g *Game) namePartText(i int) string {
+	a := &g.data.Avslojande
+	list := a.Delar[strconv.Itoa(g.level)]
+	if len(list) == 0 {
+		list = a.Delar["4"]
+	}
+	ord := ""
+	if i < len(a.Ordning) {
+		ord = a.Ordning[i]
+	}
+	return strings.NewReplacer("{ordning}", ord, "{del}", strings.ToUpper(g.serpentName[i])).Replace(pick(list))
+}
+
+// whisperRight avgör om viskningen gör vandraren invigd: ett av de fasta
+// svaren, eller med ormens namn namnet tillsammans med ett svar eller en
+// mall som "tornet är {namn}". Namnet får skrivas ihop eller med
+// mellanrum och bindestreck mellan delarna.
+func (g *Game) whisperRight(text string) bool {
+	a := &g.data.Avslojande
+	if !g.usesName() {
+		return whisperMatches(text, a.Svar)
+	}
+	name := normalizeWhisper(strings.Join(g.serpentName, ""))
+	spaced := normalizeWhisper(strings.Join(g.serpentName, " "))
+	w := " " + normalizeWhisper(text) + " "
+	w = strings.ReplaceAll(w, " "+spaced+" ", " "+name+" ")
+	if !strings.Contains(w, " "+name+" ") {
+		return false
+	}
+	if whisperMatches(w, a.Svar) {
+		return true
+	}
+	forms := make([]string, len(a.SvarMedNamn))
+	for i, f := range a.SvarMedNamn {
+		forms[i] = strings.ReplaceAll(f, "{namn}", name)
+	}
+	return whisperMatches(w, forms)
+}
+
 // Whisper tar emot en viskning från en vandrare.
 func (g *Game) Whisper(c *Client, text string) {
 	p := c.player
@@ -76,7 +216,7 @@ func (g *Game) Whisper(c *Client, text string) {
 	}
 	p.guessLevel = g.level
 	p.whispered = text
-	if !whisperMatches(text, g.data.Avslojande.Svar) {
+	if !g.whisperRight(text) {
 		g.logTo(p, g.data.Text("viskning_fel"), "dim")
 		return
 	}

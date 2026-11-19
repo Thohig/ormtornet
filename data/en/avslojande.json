@@ -48,6 +48,40 @@
       "i ormens buk"
     ],
 
+    "ordning": ["first", "second", "third"],
+    "delar": {
+      "2": [
+        "Someone has carved three signs into the wall, almost worn away. The {ordning} can be read: {del}.",
+        "Under the dust on the floor are three signs that make a word. The {ordning} is {del}.",
+        "A notch in the stone, then another. Three signs, one word. The {ordning} is {del}."
+      ],
+      "3": [
+        "It is a name, carved by someone who knew. The {ordning} of its three signs is {del}.",
+        "The wall whispers a name in three parts. You hear the {ordning} clearly: {del}.",
+        "The name is written with fingernails in the mortar. The {ordning} part: {del}."
+      ],
+      "4": [
+        "It is the tower itself that bears this name. The {ordning} part of the name: {del}.",
+        "The walls speak their name now, in three breaths. The {ordning} is {del}.",
+        "Everything around you bears the same name. Its {ordning} part is {del}."
+      ]
+    },
+    "svar_med_namn": [
+      "the tower is {namn}",
+      "{namn} is the tower",
+      "we are inside {namn}",
+      "we are in {namn}",
+      "inside {namn}",
+      "within {namn}",
+      "tornet är {namn}",
+      "{namn} är tornet",
+      "vi är inne i {namn}",
+      "vi är i {namn}",
+      "inne i {namn}",
+      "inuti {namn}"
+    ],
+    "epilog_namn": ["Its name was {namn}."],
+
     "nivabyte": {
       "2": [
         "Something is changing. The tower has begun to breathe.",

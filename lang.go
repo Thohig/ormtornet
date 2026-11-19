@@ -225,8 +225,8 @@ func (r *translationReport) compare(o, t any, path string) {
 	case map[string]any:
 		tm, _ := t.(map[string]any)
 		for k, e := range ov {
-			if strings.HasPrefix(k, "_") || k == "id" || k == "tecken" || isCode(path+"."+k) || path+"."+k == ".ai.namn" {
-				continue // inget att översätta: id, tecken på kartan, val i koden och AI-namnen
+			if strings.HasPrefix(k, "_") || k == "id" || k == "tecken" || isCode(path+"."+k) || path+"."+k == ".ai.namn" || path+"."+k == ".avslojande.namn" {
+				continue // inget att översätta: id, tecken på kartan, val i koden, AI-namnen och ormens namn
 			}
 			var te any
 			if tm != nil {

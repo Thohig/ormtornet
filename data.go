@@ -469,6 +469,13 @@ type Reveal struct {
 	Svar             []string            `json:"svar"`            // viskningar som visar att man vet hemligheten
 	ViskaFranNiva    int                 `json:"viska_fran_niva"` // första nivån då man kan viska
 	Invigd           Initiate            `json:"invigd"`
+
+	// Med invigningen "ormens namn" (se secret.go).
+	Namn        [][]string          `json:"namn"`          // namnen, tre delar vardera
+	Ordning     []string            `json:"ordning"`       // första, andra och tredje
+	Delar       map[string][]string `json:"delar"`         // texterna när en del delas ut, per nivå
+	SvarMedNamn []string            `json:"svar_med_namn"` // mallar med {namn} som räknas som svar
+	EpilogNamn  []string            `json:"epilog_namn"`   // epilogen säger namnet
 }
 
 // Initiate är fördelarna och svagheten för den som har viskat hemligheten.

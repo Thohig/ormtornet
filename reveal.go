@@ -7,6 +7,7 @@ package main
 
 import (
 	"strconv"
+	"strings"
 )
 
 // levelFor räknar ut nivån för ett visst solvärde.
@@ -52,6 +53,7 @@ func (g *Game) onLevelUp() {
 	g.soundAll("niva")
 	g.dealClues(g.data.Avslojande.Nivabyte, "nivabyte", "syn")
 	g.dealClues(g.data.Avslojande.Ledtradar, "ledtrad", "info")
+	g.dealNameParts()
 	for _, p := range g.players {
 		if p != nil && p.Status == statusIn && g.is(p, "pilgrim") {
 			p.Potions++
@@ -150,6 +152,9 @@ func (g *Game) epilogue() {
 	g.level = 4
 	a := &g.data.Avslojande
 	g.logAll(pick(a.Epilog), "syn")
+	if g.usesName() && len(a.EpilogNamn) > 0 {
+		g.logAll(strings.ReplaceAll(pick(a.EpilogNamn), "{namn}", g.serpentNameText()), "syn")
+	}
 	for _, p := range g.players {
 		if p == nil {
 			continue

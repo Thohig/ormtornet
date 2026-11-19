@@ -76,6 +76,7 @@
     "tecken_morker": "The lantern is out. You see only the chamber you stand in.",
     "tecken_invigd": "The tower has heard you.",
     "tecken_viska": "{tryck} to whisper to the tower.",
+    "tecken_namndelar": "Signs you have found in the walls. The dots are the ones you are missing.",
     "tecken_anvand": "{tryck} to use it.",
     "tryck_tangent": "Press {tangent}",
     "tryck_knapp": "Tap {knapp}",

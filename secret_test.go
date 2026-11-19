@@ -168,3 +168,85 @@ func TestGMInitiateAndGiveItem(t *testing.T) {
 		t.Fatal("översikten saknar föremålen")
 	}
 }
+
+// nameGame startar en vandring med n människor och invigningen "ormens namn".
+func nameGame(t *testing.T, n int) (*Game, []*Client) {
+	t.Helper()
+	g := testGame(t)
+	g.cfg.Initiation = initName
+	g.cfg.MinPlayers = 1
+	var cs []*Client
+	for i := range n {
+		c := testClient()
+		g.Join(c, string(rune('A'+i))+"lva")
+		cs = append(cs, c)
+	}
+	if !g.ForceStart() || len(g.serpentName) != 3 {
+		t.Fatalf("vandringen startade inte, eller inget namn: %v", g.serpentName)
+	}
+	return g, cs
+}
+
+func TestNamePartsDealt(t *testing.T) {
+	for _, n := range []int{1, 2, 3, 8} {
+		g, cs := nameGame(t, n)
+		for level := 2; level <= 4; level++ {
+			g.level = level
+			g.dealNameParts()
+			union := [3]bool{}
+			for _, c := range cs {
+				p := c.player
+				if got, want := p.partCount(), min(level-1, 3); got != want {
+					t.Fatalf("%d människor, nivå %d: %s har %d delar, ville ha %d", n, level, p.Name, got, want)
+				}
+				for i, k := range p.parts {
+					union[i] = union[i] || k
+				}
+				if st := g.stateFor(p); len(st.NameParts) != 3 {
+					t.Fatalf("klienten fick inte delarna: %v", st.NameParts)
+				}
+			}
+			known := 0
+			for _, k := range union {
+				if k {
+					known++
+				}
+			}
+			if want := min(3, n*(level-1)); known != want {
+				t.Fatalf("%d människor, nivå %d: gruppen vet %d delar, ville ha %d", n, level, known, want)
+			}
+		}
+	}
+}
+
+func TestNameWhisper(t *testing.T) {
+	g, _ := nameGame(t, 1)
+	g.serpentName = []string{"Ka", "ru", "meth"}
+	for _, c := range []struct {
+		w  string
+		ok bool
+	}{
+		{"Karumeth, tornet är ormen", true},
+		{"tornet är Karumeth!", true},
+		{"tornet är ka-ru-meth", true},
+		{"tornet är KA RU METH", true},
+		{"tornet är ormen", false},
+		{"Karumeth", false},
+		{"tornet är Karumet", false},
+		{"tornet är karumeths", false},
+	} {
+		if got := g.whisperRight(c.w); got != c.ok {
+			t.Errorf("%q: %v", c.w, got)
+		}
+	}
+	// Med fasta svar räcker svaret som förut.
+	g.cfg.Initiation = initAnswers
+	if !g.whisperRight("tornet är ormen") {
+		t.Fatal("fasta svar gick inte igenom")
+	}
+	// Epilogen säger namnet.
+	g.cfg.Initiation = initName
+	if g.serpentNameText() != "Karumeth" {
+		t.Fatalf("namnet skrivs %q", g.serpentNameText())
+	}
+}

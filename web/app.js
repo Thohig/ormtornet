@@ -652,6 +652,8 @@ function renderHud(me) {
   if (state.hjartslag) icon("♡", "", state.hjartslag, "");
   if (state.invigd) icon("❝", "", t("tecken_invigd"), "rost");
   if (state.kanViska) icon("V", "", t("tecken_viska", { tryck: pressWord("knapp_viska", "V") }), "rost");
+  // Delarna av ormens namn som vandraren har fått, med prickar för resten.
+  if (state.namndelar) icon("⁂", state.namndelar.map((p) => p || "·").join(" "), t("tecken_namndelar"), "rost");
   const pw = $("padWhisper");
   if (pw) pw.hidden = !state.kanViska;
 

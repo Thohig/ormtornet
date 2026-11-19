@@ -25,6 +25,7 @@ type Settings struct {
 	Klasser    bool   `json:"klasser"`       // vandrarna väljer klass
 	Storlek    int    `json:"storlek"`       // tornets storlek i rum: 9, 11 eller 13, 0 för automatisk
 	Sprak      string `json:"sprak"`         // språket i spelet och på värdsidan: "sv" eller "en"
+	Invigning  string `json:"invigning"`     // invigningen: "namn" (ormens namn) eller "svar" (fasta svar)
 }
 
 const (
@@ -33,7 +34,7 @@ const (
 	sightOwn  = "egen"  // som "moten", och var och en ser bara rum den själv har varit i
 )
 
-var defaultSettings = Settings{AI: 0, Min: 2, Sol: 0, Turtid: 0, Avslojande: true, Franvaro: 2, Strid: pvpOn, Synlighet: sightOwn, Klasser: true, Sprak: langSv}
+var defaultSettings = Settings{AI: 0, Min: 2, Sol: 0, Turtid: 0, Avslojande: true, Franvaro: 2, Strid: pvpOn, Synlighet: sightOwn, Klasser: true, Sprak: langSv, Invigning: initName}
 
 var errPlaying = errors.New("inställningarna kan ändras när omgången är slut")
 
@@ -64,16 +65,19 @@ func (s Settings) normalize() Settings {
 		s.Synlighet = sightOwn
 	}
 	s.Sprak = langOrDefault(s.Sprak)
+	if s.Invigning != initAnswers {
+		s.Invigning = initName
+	}
 	return s
 }
 
 func (s Settings) config() Config {
 	s = s.normalize()
-	return Config{Difficulty: s.Svarighet, AI: s.AI, AbsentRounds: s.Franvaro, PvP: s.Strid, Sight: s.Synlighet, Classes: s.Klasser, Size: s.Storlek, GMMode: s.Spelledare, MinPlayers: s.Min, SunMax: s.Sol, TurnTime: time.Duration(s.Turtid) * time.Second, Reveal: s.Avslojande, Lang: s.Sprak}
+	return Config{Difficulty: s.Svarighet, AI: s.AI, AbsentRounds: s.Franvaro, PvP: s.Strid, Sight: s.Synlighet, Classes: s.Klasser, Size: s.Storlek, GMMode: s.Spelledare, MinPlayers: s.Min, SunMax: s.Sol, TurnTime: time.Duration(s.Turtid) * time.Second, Reveal: s.Avslojande, Lang: s.Sprak, Initiation: s.Invigning}
 }
 
 func settingsFrom(cfg Config) Settings {
-	return Settings{Svarighet: cfg.Difficulty, AI: cfg.AI, Franvaro: cfg.AbsentRounds, Strid: cfg.PvP, Synlighet: cfg.Sight, Klasser: cfg.Classes, Storlek: cfg.Size, Spelledare: cfg.GMMode, Min: cfg.MinPlayers, Sol: cfg.SunMax, Turtid: int(cfg.TurnTime / time.Second), Avslojande: cfg.Reveal, Sprak: langOrDefault(cfg.Lang)}
+	return Settings{Svarighet: cfg.Difficulty, AI: cfg.AI, Franvaro: cfg.AbsentRounds, Strid: cfg.PvP, Synlighet: cfg.Sight, Klasser: cfg.Classes, Storlek: cfg.Size, Spelledare: cfg.GMMode, Min: cfg.MinPlayers, Sol: cfg.SunMax, Turtid: int(cfg.TurnTime / time.Second), Avslojande: cfg.Reveal, Sprak: langOrDefault(cfg.Lang), Invigning: cfg.Initiation}
 }
 
 // defaultSettingsPath ger ~/Library/Application Support/Ormtornet/installningar.json.
