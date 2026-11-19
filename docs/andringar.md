@@ -6,6 +6,11 @@ eller leder tornet.
 
 ## 2026-11-19
 
+### Simuleringen skriver "fälla"
+
+- Dödsorsakerna i `-simulera` står som `fälla: pilfällan` i stället för
+  `falla: pilfällan`.
+
 ### Spelledaren följer en vandrare
 
 - I översikten låter ett klick på en vandrares namn i tabellen kartan

@@ -30,3 +30,11 @@ func TestSimulation(t *testing.T) {
 		t.Fatalf("samma frön gav olika resultat:\n%s\n---\n%s", a, b)
 	}
 }
+
+func TestSimCause(t *testing.T) {
+	for kind, want := range map[string]string{"falla": "fälla", "vandrare": "en annan vandrare", "": "okänt", "gift": "gift"} {
+		if got := simCause(kind); got != want {
+			t.Errorf("simCause(%q) = %q, vill ha %q", kind, got, want)
+		}
+	}
+}

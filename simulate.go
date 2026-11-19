@@ -82,19 +82,28 @@ func simulateOne(d *Data, cfg Config, n int, seed uint64) (simResult, error) {
 			w.class = c.Kort
 		}
 		if p.Status == statusDead {
-			w.death = p.hurtKind
-			if w.death == "" {
-				w.death = "okänt"
-			}
-			if p.hurtKind == "vandrare" {
-				w.death = "en annan vandrare"
-			} else if p.hurtWhat != "" {
+			w.death = simCause(p.hurtKind)
+			if p.hurtKind != "vandrare" && p.hurtWhat != "" {
 				w.death += ": " + p.hurtWhat
 			}
 		}
 		res.walkers = append(res.walkers, w)
 	}
 	return res, nil
+}
+
+// simCause gör skadans slag läsbart i utskriften, till exempel "fälla"
+// i stället för nyckeln "falla".
+func simCause(kind string) string {
+	switch kind {
+	case "":
+		return "okänt"
+	case "falla":
+		return "fälla"
+	case "vandrare":
+		return "en annan vandrare"
+	}
+	return kind
 }
 
 // runSimulation spelar count vandringar och skriver en sammanfattning till
