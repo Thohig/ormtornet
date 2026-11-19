@@ -15,6 +15,7 @@ func testGame(t *testing.T) *Game {
 	// Inga slumpade varelser eller fällor; testerna placerar dem själva.
 	d.Monster.Chans = 0
 	d.Regler.Handelsechans = 0
+	noWander(d)
 	return NewGame(d, Config{Reveal: true, SunMax: 10, TurnTime: time.Hour, MinPlayers: 2})
 }
 
@@ -484,9 +485,13 @@ func TestDeadPlayerControlsMonsters(t *testing.T) {
 	if g.round != 1 {
 		t.Fatal("rundan utfördes utan den döda spelarens val")
 	}
-	// Varelsen kan inte gå till ett okänt rum eller in i en vägg.
-	if g.canMonsterGo(m, East) && !g.rooms[2][5].Revealed {
-		t.Fatal("varelsen kan gå till ett okänt rum")
+	// Varelsen kan inte gå genom en vägg, men väl till ett rum som inte finns än.
+	g.rooms[2][4].Doors[East], g.rooms[2][4].Doors[West] = false, true
+	if g.canMonsterGo(m, East) {
+		t.Fatal("varelsen kan gå genom väggen")
+	}
+	if !g.rooms[2][3].Revealed && !g.canMonsterGo(m, West) {
+		t.Fatal("varelsen kan inte gå till ett rum som inte finns än")
 	}
 	g.Act(a, "N", m.ID)
 	if g.round != 2 || m.Y != 1 {

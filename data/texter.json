@@ -470,6 +470,10 @@
       "Åt {riktning} gnisslar en port, och ett drag av kall luft går genom rummet.",
       "Genom väggen åt {riktning} slår en port igen. Någon har gått ut."
     ],
+    "ljud_varelse": [
+      "Något släpar sig fram i rummet åt {riktning}.",
+      "Genom väggen åt {riktning} hörs klor mot sten. Något rör sig där."
+    ],
     "ljud_drick": [
       "I rummet åt {riktning} dras en kork ur en flaska. Någon dricker.",
       "Genom väggen åt {riktning} hörs några snabba klunkar."

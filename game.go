@@ -330,6 +330,12 @@ func (g *Game) fixedDoors(x, y int) ([4]bool, bool) {
 // reveal skapar rummet om det är okänt. Dörrarna stämmer alltid med
 // grannar som redan finns, så att väggarna hänger ihop.
 func (g *Game) reveal(x, y int) *Room {
+	return g.build(x, y, true)
+}
+
+// build skapar rummet om det är okänt. Med spawn kan en varelse dyka upp i
+// det; ett rum som en varelse vandrar in i får ingen egen.
+func (g *Game) build(x, y int, spawn bool) *Room {
 	r := &g.rooms[y][x]
 	if r.Revealed {
 		return r
@@ -377,7 +383,7 @@ func (g *Game) reveal(x, y int) *Room {
 		undecided = append(undecided[:i], undecided[i+1:]...)
 	}
 	// Händelse: en varelse, en fälla eller ingenting.
-	if !g.spawnMonster(x, y) && rand.Float64() < g.data.Regler.Handelsechans {
+	if !(spawn && g.spawnMonster(x, y)) && rand.Float64() < g.data.Regler.Handelsechans {
 		if t := g.data.randomTrap(); t != nil {
 			r.Event = t.ID
 		}

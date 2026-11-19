@@ -441,10 +441,20 @@ Gör du något annat än att slåss (söker, dricker, väntar) får varelsen ett
 fritt drag mot dig. Du kan fly genom att gå ut ur rummet, men varelsen får
 ett fritt drag mot din rygg först.
 
+Varelserna vandrar också av sig själva. I början av varje runda kan en
+varelse gå genom en öppen dörr till ett grannrum, ibland ut i delar av
+tornet som ingen har hittat än. Där väntar den tills någon går in. En
+varelse som står hos en vandrare stannar och strider, och ingen vandrar
+på egen hand in till en vandrare. Portrummen och kammaren går varelserna
+aldrig in i. Står du bredvid kan du höra den röra sig genom väggen. Hur
+ofta de vandrar står i `vandra_chans` i `data/monster.json`, och en sort
+kan ha en egen chans i `vandrar` (benväktaren rör sig nästan aldrig,
+gallgasten ofta).
+
 Den första spelaren som dör tar över tornets varelser. Var det en
 datorspelare tar den första människa som dör över efter den. Med Tab väljer den spelaren en
-varelse och med pilarna flyttar den ett rum per runda (bara till kända,
-vanliga rum utan annan varelse). Mellanslag låter varelserna vila. Rundan
+varelse och med pilarna flyttar den ett rum per runda (till vanliga rum
+utan annan varelse, också till rum som ingen har hittat än). Mellanslag låter varelserna vila. Rundan
 väntar på det valet som på alla andras.
 
 ### Rum och fällor
@@ -580,7 +590,7 @@ de byggs in i programmet.
 - `texter.json` rum, beskrivningar, allmänna texter och introts väntetid
 - `fallor.json` regler (liv, chans för händelse, drycker, hur länge spåren syns), fällor och sökresultat
 - `ormen.json` ormkorten, skatten i kammaren och vad som händer när ormen vaknar
-- `monster.json` varelserna (liv, skada, guld, vanor, texter) och striderna
+- `monster.json` varelserna (liv, skada, guld, vanor, hur ofta de vandrar, texter) och striderna
 - `ai.json` datorspelarnas namn, personligheter och betänketid
 - `svarighet.json` förvalen för svårighet (se nedan)
 - `klasser.json` klasserna: namn, styrka, svaghet, liv, drycker, siffror och texter

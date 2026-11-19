@@ -1,6 +1,7 @@
 {
   "monster": {
     "chans": 0.2,
+    "vandra_chans": 0.25,
     "spelarskada": 1,
 
     "val": {
@@ -18,6 +19,7 @@
         "skada": 1,
         "guld": 10,
         "tecken": "k",
+        "vandrar": 0.35,
         "vanor": { "anfall": 1, "parera": 1, "undan": 3 },
         "dyker_upp": [
           "Något blekt och mångbent kryper fram ur en springa. Det har inga ögon, men det vänder sig mot dig.",
@@ -35,6 +37,7 @@
         "skada": 1,
         "guld": 15,
         "tecken": "s",
+        "vandrar": 0.3,
         "vanor": { "anfall": 3, "parera": 1, "undan": 1 },
         "dyker_upp": [
           "Ett ormyngel, långt som en man, reser sig ur en hög av damm. Det väser och slår genast.",
@@ -52,6 +55,7 @@
         "skada": 2,
         "guld": 30,
         "tecken": "V",
+        "vandrar": 0.15,
         "vanor": { "anfall": 1, "parera": 3, "undan": 1 },
         "dyker_upp": [
           "En gestalt i rustning av överlappande fjäll kliver fram. Den håller en sköld framför sig och väntar.",
@@ -69,6 +73,7 @@
         "skada": 2,
         "guld": 20,
         "tecken": "g",
+        "vandrar": 0.4,
         "vanor": { "anfall": 2, "parera": 1, "undan": 2 },
         "dyker_upp": [
           "En grönaktig skepnad glider fram. Den bär en äventyrares kläder, men de hänger i trasor och är blekta, som om de legat i syra.",
@@ -86,6 +91,7 @@
         "skada": 2,
         "guld": 40,
         "tecken": "B",
+        "vandrar": 0.05,
         "vanor": { "anfall": 2, "parera": 2, "undan": 1 },
         "dyker_upp": [
           "Ett väsen byggt av böjda, vita ben reser sig. Benen är alla lika, som revben från ett och samma djur."

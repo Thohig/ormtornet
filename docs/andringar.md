@@ -6,6 +6,22 @@ eller leder tornet.
 
 ## 2026-11-19
 
+### Varelserna vandrar
+
+- Varelserna står inte längre still i rummet där de dök upp. I början av
+  varje runda kan en varelse gå genom en öppen dörr till ett grannrum,
+  också till ett rum som ingen har hittat än. Där väntar den tills någon
+  går in, och rummet syns inte på kartan förrän dess.
+- En varelse som står hos en vandrare stannar och strider, och ingen
+  varelse vandrar på egen hand in till en vandrare. Portrummen och
+  kammaren går de aldrig in i.
+- Står du i ett grannrum kan du höra varelsen röra sig (`ljud_varelse` i
+  `data/texter.json`), när vandrarna inte ser varandra.
+- Den döda spelaren som styr varelserna kan också föra dem ut i det okända.
+- Hur ofta: `vandra_chans` i `data/monster.json` (1 på 4), och en egen
+  `vandrar` för varje sort. Benväktaren rör sig nästan aldrig, gallgasten
+  och blekkryparen ofta.
+
 ### En död människa tar över varelserna från en AI-spelare
 
 - Förut styrde den första som dog varelserna resten av vandringen, även om

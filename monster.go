@@ -11,6 +11,7 @@ package main
 
 import (
 	"math/rand/v2"
+	"slices"
 	"strconv"
 	"strings"
 	"unicode"
@@ -278,19 +279,74 @@ func (g *Game) makeController(p *Player) {
 	g.logOthers(p, g.data.MonsterText("tjanare_andra", "namn", p.Name), "varn")
 }
 
-// canMonsterGo säger om varelsen kan gå åt hållet d. Varelser går bara genom
-// öppningar till kända, vanliga rum där ingen annan varelse finns.
+// canMonsterGo säger om varelsen kan gå åt hållet d. Varelser går genom
+// öppningar till vanliga rum där ingen annan varelse finns, också till rum
+// som ingen har hittat än. Portrummen och kammaren går de aldrig in i.
 func (g *Game) canMonsterGo(m *Monster, d Dir) bool {
 	room := &g.rooms[m.Y][m.X]
 	if !room.Doors[d] {
 		return false
 	}
 	nx, ny := m.X+dirDX[d], m.Y+dirDY[d]
-	if !g.inBounds(nx, ny) {
+	if !g.inBounds(nx, ny) || g.monsterAt(nx, ny) != nil {
 		return false
 	}
 	n := &g.rooms[ny][nx]
-	return n.Revealed && n.Kind == "rum" && g.monsterAt(nx, ny) == nil
+	if !n.Revealed {
+		_, fixed := g.fixedDoors(nx, ny)
+		return !fixed
+	}
+	return n.Kind == "rum"
+}
+
+// stepMonster flyttar varelsen ett rum åt hållet d. Finns rummet inte än
+// byggs det, men det räknas inte som hittat förrän en vandrare går in.
+func (g *Game) stepMonster(m *Monster, d Dir) {
+	m.X += dirDX[d]
+	m.Y += dirDY[d]
+	g.build(m.X, m.Y, false)
+}
+
+// playerIn är sant när en vandrare står i rummet (x, y).
+func (g *Game) playerIn(x, y int) bool {
+	for _, p := range g.players {
+		if p != nil && p.Status == statusIn && p.X == x && p.Y == y {
+			return true
+		}
+	}
+	return false
+}
+
+// wanderMonsters låter varelserna vandra av sig själva i början av rundan.
+// En varelse som står hos en vandrare stannar och strider, och ingen
+// vandrar in till en vandrare. Varelsen som den döda spelaren just flyttade
+// står kvar.
+func (g *Game) wanderMonsters(moved *Monster) {
+	order := slices.Clone(g.monsters)
+	rand.Shuffle(len(order), func(i, j int) { order[i], order[j] = order[j], order[i] })
+	for _, m := range order {
+		if m == moved || g.playerIn(m.X, m.Y) {
+			continue
+		}
+		chance := g.data.Monster.VandraChans
+		if t := g.data.monsterType(m.Type); t != nil && t.Vandrar != nil {
+			chance = *t.Vandrar
+		}
+		if rand.Float64() >= chance {
+			continue
+		}
+		var dirs []Dir
+		for d := North; d <= West; d++ {
+			if g.canMonsterGo(m, d) && !g.playerIn(m.X+dirDX[d], m.Y+dirDY[d]) {
+				dirs = append(dirs, d)
+			}
+		}
+		if len(dirs) == 0 {
+			continue
+		}
+		g.stepMonster(m, dirs[rand.IntN(len(dirs))])
+		g.hear(m.X, m.Y, "ljud_varelse", "", "dim")
+	}
 }
 
 // actController tar emot den döda spelarens val. a är en riktning eller "vanta".
@@ -319,19 +375,24 @@ func (g *Game) actController(p *Player, a string, id int) {
 	g.broadcastState()
 }
 
-// moveMonsters utför den döda spelarens drag i början av rundan.
+// moveMonsters utför den döda spelarens drag i början av rundan, och låter
+// sedan de andra varelserna vandra.
 func (g *Game) moveMonsters() {
 	mv := g.pendingMove
 	g.pendingMove = nil
-	if mv == nil {
-		return
+	var moved *Monster
+	if mv != nil {
+		if m := g.monsterByID(mv.id); m != nil && g.canMonsterGo(m, mv.dir) {
+			g.stepMonster(m, mv.dir)
+			g.monsterArrives(m)
+			moved = m
+		}
 	}
-	m := g.monsterByID(mv.id)
-	if m == nil || !g.canMonsterGo(m, mv.dir) {
-		return
-	}
-	m.X += dirDX[mv.dir]
-	m.Y += dirDY[mv.dir]
+	g.wanderMonsters(moved)
+}
+
+// monsterArrives berättar för vandrarna i rummet att varelsen kommer in.
+func (g *Game) monsterArrives(m *Monster) {
 	for _, p := range g.players {
 		if p != nil && p.Status == statusIn && p.Cellar == 0 && p.X == m.X && p.Y == m.Y {
 			g.soundTo(p, "monster")

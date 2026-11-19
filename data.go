@@ -67,6 +67,7 @@ type Serpent struct {
 // Monsters styr varelserna i tornet och striderna mot dem.
 type Monsters struct {
 	Chans       float64             `json:"chans"`
+	VandraChans float64             `json:"vandra_chans"` // chans per runda att en varelse vandrar av sig själv
 	Spelarskada int                 `json:"spelarskada"`
 	Val         map[string]string   `json:"val"`
 	Typer       []MonsterType       `json:"typer"`
@@ -82,6 +83,7 @@ type MonsterType struct {
 	Guld     int            `json:"guld"`
 	Tecken   string         `json:"tecken"`
 	Vanor    map[string]int `json:"vanor"`
+	Vandrar  *float64       `json:"vandrar,omitempty"` // egen chans att vandra, annars vandra_chans
 	DykerUpp []string       `json:"dyker_upp"`
 	Dor      []string       `json:"dor"`
 }
