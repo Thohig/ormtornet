@@ -6,6 +6,18 @@ eller leder tornet.
 
 ## 2026-11-19
 
+### Kartritaren och örtkvinnan
+
+- Kartritaren börjar med en dryck.
+- Örtkvinnan har inte längre ett liv mindre än de andra. I stället tappar
+  hon mycket mer skatt när ormen vaknar: hälften mer än andra, mot en
+  fjärdedel förut.
+- I 10 000 simulerade vandringar på Svår kom kartritaren ut med skatt i
+  39 % av vandringarna i stället för 30 %, och örtkvinnan i 48 % i stället
+  för 34 %. Hon dog i 33 % av dem i stället för 56 %. På Normal ligger alla
+  klasser nu mellan 50 och 61 %. På Mardröm dör örtkvinnan något oftare
+  än förut, eftersom hon vågar gå längre in.
+
 ### Simuleringen jämför klasserna rättvist
 
 - I `-simulera` får AI-spelarna klasserna i tur och ordning, så att varje
