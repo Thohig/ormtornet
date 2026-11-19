@@ -355,6 +355,15 @@ func (g *Game) botDecide(p *Player) (string, int) {
 		return dirLetter[exitDir], 0
 	}
 
+	// Vilse: ingen känd väg ut, till exempel efter ett fall genom golvet.
+	// Med skatt i väskan, eller när solen börjar sjunka, letar den sig ut
+	// mot portarna i stället för in mot kammaren.
+	if exitDist < 0 && (p.Treasure > 0 || st.Sun <= 2*g.size) {
+		if d, ok := g.botTowardPorts(bm); ok {
+			return dirLetter[d], 0
+		}
+	}
+
 	// I kammaren: ta skatt så länge ormen sover tillräckligt djupt.
 	if known && room.K == "kammare" {
 		chance := 0.0
@@ -407,6 +416,23 @@ func (g *Game) botDecide(p *Player) (string, int) {
 		}
 	}
 	return actWait, 0
+}
+
+// botTowardPorts ger första steget mot det okända rum som ligger närmast
+// en port. Var portarna sitter vet alla vandrare, så det kräver inga rum
+// som AI-spelaren inte har sett.
+func (g *Game) botTowardPorts(bm *botMap) (Dir, bool) {
+	unknown := func(q pos) bool { _, k := bm.rooms[q]; return !k }
+	toPort := func(q pos) int {
+		best := -1
+		for _, c := range g.corners() {
+			if d := abs(q.x-c.x) + abs(q.y-c.y); best < 0 || d < best {
+				best = d
+			}
+		}
+		return best
+	}
+	return bm.toward(unknown, toPort)
 }
 
 func (g *Game) monsterTypeID(id int) string {

@@ -6,6 +6,16 @@ eller leder tornet.
 
 ## 2026-11-19
 
+### AI-spelarna hittar ut när de är vilse
+
+- En AI-spelare som har tappat vägen ut, till exempel efter ett fall genom
+  golvet, letar sig mot portarna när den bär skatt eller solen börjar
+  sjunka. Förut letade den bara mot kammaren och pendlade där tills solen
+  gick ner.
+- I 10 000 simulerade vandringar på Lätt blev 14 % kvar i mörkret förut,
+  nu omkring hälften så många. Fler kommer ut med skatt på alla
+  svårigheter.
+
 ### Simuleringen skriver "fälla"
 
 - Dödsorsakerna i `-simulera` står som `fälla: pilfällan` i stället för

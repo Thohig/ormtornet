@@ -440,6 +440,9 @@ de som "(dator)".
 - De utforskar mot mitten, tar skatt i kammaren så länge ormen sover djupt
   nog, och går mot närmaste port när solen börjar bli låg, väskan är full
   eller livet tryter.
+- Har de tappat vägen ut, till exempel efter ett fall genom golvet, letar
+  de sig mot portarna i stället för mot mitten när de bär skatt eller
+  solen börjar sjunka.
 - I strid gissar de varelsens vanor utifrån dess beskrivning och lär sig av
   det de ser. De flyr när nästa slag kan döda dem.
 - Det finns två personligheter som turas om: en djärv och en försiktig.
