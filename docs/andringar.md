@@ -6,6 +6,10 @@ eller leder tornet.
 
 ## 2026-11-19
 
+### Inga droppar
+
+- Droppljudet i bakgrunden är borta. Vinden hörs som förut.
+
 ### Teckenförklaringen visar bara tecknen
 
 - Teckenförklaringen uppe till vänster på kartan visar bara tecknen,

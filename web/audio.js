@@ -25,7 +25,7 @@ const Sound = (() => {
     return buf;
   }
 
-  // Ett eko-rum som droppar och steg kan skickas genom.
+  // Ett eko-rum som steg och andra ljud kan skickas genom.
   function makeEcho() {
     const delay = ctx.createDelay(1.5);
     delay.delayTime.value = 0.29;
@@ -68,26 +68,6 @@ const Sound = (() => {
     bp.connect(g);
     g.connect(master);
     src.start();
-  }
-
-  function drip() {
-    if (!ctx) return;
-    const t = ctx.currentTime;
-    const f0 = 1300 + Math.random() * 1000;
-    const o = ctx.createOscillator();
-    o.type = "sine";
-    o.frequency.setValueAtTime(f0, t);
-    o.frequency.exponentialRampToValueAtTime(f0 * 0.45, t + 0.09);
-    const g = ctx.createGain();
-    g.gain.setValueAtTime(0, t);
-    g.gain.linearRampToValueAtTime(0.05 + Math.random() * 0.04, t + 0.004);
-    g.gain.exponentialRampToValueAtTime(0.0001, t + 0.18);
-    o.connect(g);
-    g.connect(master);
-    g.connect(echo);
-    o.start(t);
-    o.stop(t + 0.2);
-    setTimeout(drip, 1500 + Math.random() * 5500);
   }
 
   function env(g, t, peak, attack, release) {
@@ -648,7 +628,6 @@ const Sound = (() => {
       brown = noiseBuffer(4, "brown");
       white = noiseBuffer(2, "white");
       wind();
-      setTimeout(drip, 800);
     },
     // stop tonar ut allt ljud och stänger av ljudet för gott, till exempel
     // när tornet har stängts.
