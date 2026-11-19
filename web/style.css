@@ -374,22 +374,19 @@ body[data-niva="4"] #crt::after { animation: throb 0.95s infinite; }
   border-radius: 4px;
   background: rgba(21, 23, 26, 0.7);
   font-size: 12px;
-  opacity: 0.7;
   pointer-events: auto;
-  transition: opacity 0.2s;
 }
-#legend:hover, #legend:focus-within { opacity: 1; }
 #legend[hidden] { display: none; }
 #legendBtn {
   padding: 0;
   border: 0;
   background: none;
-  color: var(--dim);
+  color: var(--chalk);
   font: inherit;
   letter-spacing: 0.08em;
   cursor: pointer;
 }
-#legendBtn:hover, #legendBtn:focus-visible { color: var(--chalk); outline: none; }
+#legendBtn:hover, #legendBtn:focus-visible { color: var(--hi); outline: none; }
 #legendBtn::after { content: " ▾"; }
 #legendBtn[aria-expanded="false"]::after { content: " ▸"; }
 #legendList { margin-top: 3px; }

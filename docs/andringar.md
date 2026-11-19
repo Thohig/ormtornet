@@ -6,6 +6,12 @@ eller leder tornet.
 
 ## 2026-11-19
 
+### Tydligare teckenförklaring
+
+- Teckenförklaringen på kartan är inte längre dämpad. Den syns med full
+  styrka hela tiden, och rubriken "Tecken" står i samma ljusa färg som
+  förklaringarna.
+
 ### Översikten i två kolumner
 
 - På en bred skärm står kartan till vänster och ingreppen till höger i
