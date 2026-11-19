@@ -6,10 +6,17 @@ värdsidan och spelets texter.
 
 ## Läget
 
-Steg 1 är byggt: inställningen Språk på värdsidan, `-sprak`, inläsningen
-av `data/en/` och kontrollen. Svårigheternas namn och beskrivningar är
-översatta (`data/en/svarighet.json`), så att bytet syns. Steg 2 är nästa
-steg.
+Alla fem stegen är byggda (2026-11-19). Allt i `data/` finns på engelska,
+1 206 texter, och ett test kräver att det förblir så. Engelskan är skriven
+av AI-agenter och bör läsas av någon som spelar, särskilt introt och
+avslöjandet.
+
+Kvar att ta ställning till:
+- Rumsnamnen står med stor bokstav mitt i meningar, som på svenska: "You
+  went north to The Silent Chapel."
+- Värdsidans svar till en annan dator än tornets ("Den här sidan visas
+  bara på datorn som kör tornet.") är fortfarande bara på svenska.
+- Ryktena i introt byts inte förrän sidan laddas om.
 
 ## Beslut
 

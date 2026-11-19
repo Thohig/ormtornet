@@ -6,6 +6,21 @@ eller leder tornet.
 
 ## 2026-11-19
 
+### Hela tornet på engelska
+
+- Med Språk: English på värdsidan är allt på engelska: spelarsidan,
+  värdsidan, rummen, fällorna, varelserna, klasserna, föremålen, ormen,
+  avslöjandet och epilogen. Spelet heter då The Serpent Tower.
+- Öppna sidor byter språk utan att laddas om.
+- På engelska heter undanmanövern E (evade). U fungerar som förut, på
+  båda språken.
+- En viskning till tornet räknas på både svenska och engelska.
+- Sidornas egna texter ligger nu i `data/spelarsidan.json` och
+  `data/vardsidan.json`, och kan ändras där som allt annat innehåll.
+- Rundans kort skriver riktningen som texterna vill ("norrut" på svenska,
+  "north" på engelska), och beskedet när tornet är fullt säger inte längre
+  "Fyra är redan inne".
+
 ### Språk: svenska eller engelska
 
 - Värdsidan har en ny inställning, Språk, under Inför nästa vandring, och

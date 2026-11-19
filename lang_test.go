@@ -99,8 +99,8 @@ func TestTranslationStatus(t *testing.T) {
 		if s.Done > s.Texts {
 			t.Errorf("%s: %d av %d", s.File, s.Done, s.Texts)
 		}
-		if s.File == "svarighet.json" && (s.Texts == 0 || s.Done != s.Texts) {
-			t.Errorf("svårigheterna ska vara översatta: %d av %d", s.Done, s.Texts)
+		if s.Texts == 0 || s.Done != s.Texts {
+			t.Errorf("%s: %d av %d texter är översatta till engelska", s.File, s.Done, s.Texts)
 		}
 	}
 }

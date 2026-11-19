@@ -657,6 +657,8 @@ Fält som börjar med `_` är kommentarer och får stå var som helst.
 - `avslojande.json` nivågränser, ledtrådar, texter vid nivåbyte, nya
   förklaringar till fällorna och epilogen. Rumsbeskrivningarna för varje
   nivå (`"1"` till `"4"`) ligger i `texter.json`.
+- `spelarsidan.json` spelarsidans egna texter: introt, namnrutan, klassvalet, styrningen, panelerna och knapparna
+- `vardsidan.json` värdsidans texter, och tornets besked och loggrader till spelledaren (`server_*`)
 - `en/` översättningarna till engelska (se Språk nedan)
 
 ### Språk
@@ -678,8 +680,15 @@ Det som inte är översatt visas på svenska. Tornet vägrar starta på
 engelska om översättningen har ett fält som inte finns på svenska, ett id
 som inte finns, ett tal, eller en platshållare som `{namn}` som den
 svenska texten inte har. `-kontrollera` skriver hur många texter i varje
-fil som är översatta. Spelarsidans och värdsidans egna texter är ännu
-inte översatta; se [docs/engelska.md](docs/engelska.md).
+fil som är översatta, och ett test kräver att allt är översatt.
+
+Sidorna hämtar sina texter från `/texter/spelarsidan.js` och
+`/texter/vardsidan.js` (se `web/texter.js`). HTML:en har bara nycklar
+(`data-t="nyckel"`), och skripten skriver texter med `t("nyckel")`. Byts
+språket hämtar öppna sidor de nya texterna utan att laddas om.
+
+På engelska heter undanmanövern E (evade). U fungerar också, på båda
+språken. En viskning till tornet räknas på båda språken.
 
 ### Svårighet
 
@@ -734,6 +743,7 @@ Beskrivningarna för rummen ligger under nivåerna `"1"` till `"4"`.
 - `reload.go` läser om datafilerna från värdsidan
 - `simulate.go` simulerar vandringar med bara AI-spelare (`-simulera`)
 - `lang.go` språken: översättningarna i `data/en/` läggs över de svenska texterna
+- `web/texter.js` sidornas texter: `t()`, `applyTexts()` och språkbytet
 - `ws.go` en liten websocket-implementation utan beroenden
 - `web/` klienten: HTML, CSS och JavaScript utan ramverk
   - `index.html` och `app.js` spelarsidan: introt, namnrutan, klassvalet
