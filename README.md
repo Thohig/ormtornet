@@ -222,13 +222,15 @@ spelarsidan (`/`), med tre vyer i tur och ordning:
      krita och okända rum. Den fälls ihop med ett klick på rubriken (på en
      liten skärm är den hopfälld från början), och texterna står under
      `tecken_*` i `data/texter.json`. Uppe till höger står statusen
-     som halvt genomskinliga tecken: klassens tecken, liv, skatt, drycker,
+     som tecken: klassens tecken, liv, skatt, drycker,
      tillstånd som fast, gift och mörker, kompassen, dunket och viskningen,
      och under dem föremålen. Håll musen över ett tecken, eller tryck på
      det på en pekskärm, så står det vad det betyder. Styrningen ligger
      bakom **?** (eller tangenten `?` eller `H`) och visas en gång första
      vandringen. Panelen Nu visar det valda draget, striden, ormen i
      kammaren och vad som väntar, och viskningen skrivs i en egen ruta där.
+     Ingen text på spelskärmen är dämpad; bara det som inte går att
+     använda, som frånkopplade vandrare och tagna kort, är utgråat.
      I loggen säger ett tecken i marginalen vad slags rad det är (`!` fara,
      `›` det du ser, `▸` rummets namn, `·` besked, `❝` tornets röst,
      `✎` krita, `≡` rundans sammanfattning). Varje runda har en rubrik, och den senaste rundan står
