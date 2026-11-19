@@ -261,10 +261,16 @@ func (g *Game) isController(p *Player) bool {
 	return p != nil && g.controller != 0 && p.ID == g.controller && p.Status == statusDead
 }
 
-// makeController låter den första som dör ta över varelserna.
+// makeController låter den första som dör ta över varelserna. Styr en
+// AI-spelare dem redan, tar en människa som dör över efter den.
 func (g *Game) makeController(p *Player) {
 	if g.controller != 0 {
-		return
+		old := g.playerByID(g.controller)
+		if old == nil || old.bot == nil || old.takenOver || (p.bot != nil && !p.takenOver) {
+			return
+		}
+		old.Action = ""
+		g.pendingMove = nil
 	}
 	g.controller = p.ID
 	g.soundTo(p, "tjanare")

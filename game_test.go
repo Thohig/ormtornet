@@ -691,6 +691,36 @@ func TestBotsNeverTakeHumanNamesOrNeedReady(t *testing.T) {
 	}
 }
 
+// Har en AI-spelare tagit varelserna tar en människa som dör över dem.
+func TestHumanTakesMonstersFromDeadBot(t *testing.T) {
+	g := testGame(t)
+	g.AddBots(2)
+	c := testClient()
+	g.Join(c, "Alva")
+	g.Ready(c)
+	var bots []*Player
+	for _, p := range g.players {
+		if p != nil && p.bot != nil {
+			bots = append(bots, p)
+		}
+	}
+	g.damage(bots[0], 100, false)
+	if !g.isController(bots[0]) {
+		t.Fatal("den första döda AI-spelaren styr inte varelserna")
+	}
+	g.damage(bots[1], 100, false)
+	if !g.isController(bots[0]) {
+		t.Fatal("en annan AI-spelare tog varelserna")
+	}
+	g.damage(c.player, 100, false)
+	if !g.isController(c.player) || g.isController(bots[0]) {
+		t.Fatal("Alva tog inte över varelserna")
+	}
+	if !g.stateFor(c.player).Controller {
+		t.Fatal("Alvas skärm visar inte att Alva styr varelserna")
+	}
+}
+
 func TestBotControlsMonstersWhenDead(t *testing.T) {
 	g := testGame(t)
 	g.AddBots(1)

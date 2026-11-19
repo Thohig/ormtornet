@@ -403,7 +403,7 @@ de som "(dator)".
   det de ser. De flyr när nästa slag kan döda dem.
 - Det finns två personligheter som turas om: en djärv och en försiktig.
 - Dör en datorspelare först tar den över varelserna och flyttar dem mot
-  närmaste levande vandrare.
+  närmaste levande vandrare, tills en människa dör. Då tar människan över.
 - Ledtrådarna om tornets hemlighet går bara till människor.
 
 Namn, personligheter och betänketid ligger i `data/ai.json`.
@@ -441,7 +441,8 @@ Gör du något annat än att slåss (söker, dricker, väntar) får varelsen ett
 fritt drag mot dig. Du kan fly genom att gå ut ur rummet, men varelsen får
 ett fritt drag mot din rygg först.
 
-Den första spelaren som dör tar över tornets varelser. Med Tab väljer den spelaren en
+Den första spelaren som dör tar över tornets varelser. Var det en
+datorspelare tar den första människa som dör över efter den. Med Tab väljer den spelaren en
 varelse och med pilarna flyttar den ett rum per runda (bara till kända,
 vanliga rum utan annan varelse). Mellanslag låter varelserna vila. Rundan
 väntar på det valet som på alla andras.

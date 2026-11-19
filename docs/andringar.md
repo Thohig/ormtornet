@@ -6,6 +6,13 @@ eller leder tornet.
 
 ## 2026-11-19
 
+### En död människa tar över varelserna från en AI-spelare
+
+- Förut styrde den första som dog varelserna resten av vandringen, även om
+  det var en AI-spelare. Nu tar den första människa som dör över
+  varelserna från AI-spelaren. Dör en annan människa sedan är det
+  fortfarande den första som styr.
+
 ### Människorna väljer klass först
 
 - I klassvalet väntar AI-spelarna tills alla människor har valt. Den som
