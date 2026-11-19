@@ -10,8 +10,9 @@ eller leder tornet.
 
 - Kartritaren börjar med en dryck.
 - Örtkvinnan har inte längre ett liv mindre än de andra. I stället tappar
-  hon mycket mer skatt när ormen vaknar: hälften mer än andra, mot en
-  fjärdedel förut.
+  hon mycket mer skatt om ormen vaknar medan hon är i kammaren: all
+  skatt på Normal och svårare, och 85 % på Lätt. Förut tappade hon en
+  fjärdedel av skatten mer än andra.
 - I 10 000 simulerade vandringar på Svår kom kartritaren ut med skatt i
   39 % av vandringarna i stället för 30 %, och örtkvinnan i 48 % i stället
   för 34 %. Hon dog i 33 % av dem i stället för 56 %. På Normal ligger alla
