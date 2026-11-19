@@ -6,6 +6,17 @@ eller leder tornet.
 
 ## 2026-11-19
 
+### Simuleringen jämför klasserna rättvist
+
+- I `-simulera` får AI-spelarna klasserna i tur och ordning, så att varje
+  klass, även pilgrimen, spelas lika ofta och lika ofta av den djärva och
+  den försiktiga. Förut valde den försiktiga alltid örtkvinnan och
+  kartritaren, och tabellen jämförde lika mycket personligheter som
+  klasser.
+- Utskriften har en ny tabell, Personligheterna, och tabellen Klasserna
+  visar andelen som kom ut med skatt för varje personlighet.
+- I riktiga vandringar väljer AI-spelarna som förut.
+
 ### AI-spelarnas livsgränser följer deras liv
 
 - Hur lite liv en AI-spelare går hem eller dricker vid räknas nu om efter

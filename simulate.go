@@ -20,6 +20,7 @@ import (
 // simWalker är hur det gick för en AI-spelare under en vandring.
 type simWalker struct {
 	class    string
+	pers     string // AI-spelarens personlighet, till exempel "djärv"
 	status   string
 	treasure int
 	death    string // vad som dödade vandraren, till exempel "varelse: blekkryparen"
@@ -50,6 +51,7 @@ func simulateOne(d *Data, cfg Config, n int, seed uint64) (simResult, error) {
 	if added := g.AddBots(n); added != n {
 		return simResult{}, fmt.Errorf("fick bara plats för %d AI-spelare", added)
 	}
+	simDealClasses(g, seed)
 	g.begin()
 	if g.phase == phaseChoose {
 		g.startGame() // AI-spelarna har valt; vänta inte på tiden
@@ -81,6 +83,9 @@ func simulateOne(d *Data, cfg Config, n int, seed uint64) (simResult, error) {
 		if c := g.classOf(p); c != nil {
 			w.class = c.Kort
 		}
+		if p.bot != nil && p.bot.pers != nil {
+			w.pers = p.bot.pers.Namn
+		}
 		if p.Status == statusDead {
 			w.death = simCause(p.hurtKind)
 			if p.hurtKind != "vandrare" && p.hurtWhat != "" {
@@ -90,6 +95,32 @@ func simulateOne(d *Data, cfg Config, n int, seed uint64) (simResult, error) {
 		res.walkers = append(res.walkers, w)
 	}
 	return res, nil
+}
+
+// simDealClasses ger AI-spelarna klasserna i tur och ordning efter fröet, i
+// stället för efter personligheten. Så spelas varje klass lika ofta, och
+// lika ofta av varje personlighet, och klasserna kan jämföras med varandra.
+// Varje AI-spelare får en kopia av sin personlighet som bara vill ha den
+// klassen; allt annat i personligheten är som förut. Med samma frö blir
+// det samma klasser, så att -simulera 1 -fro fungerar.
+func simDealClasses(g *Game, seed uint64) {
+	k := len(g.data.Klasser)
+	if !g.cfg.Classes || k == 0 {
+		return
+	}
+	var bots []*Player
+	for _, p := range g.players {
+		if p != nil && p.bot != nil && p.bot.pers != nil {
+			bots = append(bots, p)
+		}
+	}
+	// I den ordning de kom in, som är den ordning personligheterna turas om.
+	sort.Slice(bots, func(i, j int) bool { return bots[i].ID < bots[j].ID })
+	for i, p := range bots {
+		pers := *p.bot.pers
+		pers.Klasser = []string{g.data.Klasser[(int(seed%uint64(k))+i)%k].ID}
+		p.bot.pers = &pers
+	}
 }
 
 // simCause gör skadans slag läsbart i utskriften, till exempel "fälla"
@@ -189,6 +220,9 @@ func writeSimSummary(out io.Writer, results []simResult) {
 	var all simTally
 	rounds, wakes, takes := 0, 0, 0
 	byClass := map[string]*simTally{}
+	byPers := map[string]*simTally{}
+	byClassPers := map[[2]string]*simTally{}
+	var persNames []string
 	deaths := map[string]int{}
 	for _, r := range results {
 		rounds += r.rounds
@@ -204,6 +238,18 @@ func writeSimSummary(out io.Writer, results []simResult) {
 				byClass[c] = &simTally{}
 			}
 			byClass[c].add(w)
+			if w.pers != "" {
+				if byPers[w.pers] == nil {
+					byPers[w.pers] = &simTally{}
+					persNames = append(persNames, w.pers)
+				}
+				byPers[w.pers].add(w)
+				key := [2]string{c, w.pers}
+				if byClassPers[key] == nil {
+					byClassPers[key] = &simTally{}
+				}
+				byClassPers[key].add(w)
+			}
 			if w.death != "" {
 				deaths[w.death]++
 			}
@@ -252,17 +298,52 @@ func writeSimSummary(out io.Writer, results []simResult) {
 		fmt.Fprintln(out)
 	}
 
+	sort.Strings(persNames)
+	if len(byPers) > 0 {
+		fmt.Fprintln(out, "Personligheterna")
+		writeSimHeader(out, nil)
+		for _, k := range persNames {
+			writeSimRow(out, k, byPers[k], nil)
+		}
+		fmt.Fprintln(out)
+	}
+
+	// Klasserna, med andelen som kom ut med skatt för varje personlighet
+	// längst till höger.
 	fmt.Fprintln(out, "Klasserna")
-	fmt.Fprintf(out, "  %-14s %8s %10s %6s %6s %8s\n", "", "vandrare", "med skatt", "dog", "skatt", "varelser")
+	writeSimHeader(out, persNames)
 	var names []string
 	for k := range byClass {
 		names = append(names, k)
 	}
 	sort.Strings(names)
 	for _, k := range names {
-		t := byClass[k]
-		fmt.Fprintf(out, "  %-14s %8d %10s %6s %6s %8s\n", k, t.walkers,
-			percent(t.rich, t.walkers), percent(t.dead, t.walkers),
-			average(t.gold, t.rich), average(t.kills, t.walkers))
+		var extra []string
+		for _, pn := range persNames {
+			t := byClassPers[[2]string{k, pn}]
+			if t == nil {
+				t = &simTally{}
+			}
+			extra = append(extra, percent(t.rich, t.walkers))
+		}
+		writeSimRow(out, k, byClass[k], extra)
 	}
+}
+
+func writeSimHeader(out io.Writer, extra []string) {
+	fmt.Fprintf(out, "  %-14s %8s %10s %6s %6s %8s", "", "vandrare", "med skatt", "dog", "skatt", "varelser")
+	for _, e := range extra {
+		fmt.Fprintf(out, " %10s", e)
+	}
+	fmt.Fprintln(out)
+}
+
+func writeSimRow(out io.Writer, name string, t *simTally, extra []string) {
+	fmt.Fprintf(out, "  %-14s %8d %10s %6s %6s %8s", name, t.walkers,
+		percent(t.rich, t.walkers), percent(t.dead, t.walkers),
+		average(t.gold, t.rich), average(t.kills, t.walkers))
+	for _, e := range extra {
+		fmt.Fprintf(out, " %10s", e)
+	}
+	fmt.Fprintln(out)
 }

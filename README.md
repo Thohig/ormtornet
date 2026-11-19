@@ -748,5 +748,11 @@ dog av, hur ofta ormen vaknade och hur det gick för varje klass.
 Inställningarna är desamma som när tornet öppnas (`-sol`, `-storlek`,
 `-synlighet`, `-klasser` och de sparade). Vandringarna får frön i följd
 från `-fro`, så samma kommando ger samma resultat, och en enskild vandring
-kan köras om med `-simulera 1 -fro` och dess frö. AI-spelarna väljer klass efter sin personlighet, så
-klasserna fördelas inte jämnt mellan dem.
+kan köras om med `-simulera 1 -fro` och dess frö.
+
+I simuleringen får AI-spelarna klasserna i tur och ordning i stället för
+efter sin personlighet, så att varje klass spelas lika ofta och lika ofta
+av varje personlighet. Tabellen Personligheterna visar hur det gick för
+den djärva och den försiktiga. Tabellen Klasserna har längst till höger
+en kolumn per personlighet med andelen som kom ut med skatt. I riktiga
+vandringar väljer AI-spelarna fortfarande efter sin personlighet.
