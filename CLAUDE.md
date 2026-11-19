@@ -79,6 +79,15 @@ Så här skiljer vi på sakerna när användaren ger instruktioner:
 - **viska** och **invigd**: den som vet tornets hemlighet kan viska den
   med V och blir då invigd (`secret.go`, `svar` och `invigd` i
   `data/avslojande.json`). Bara med avslöjandet på.
+- **invigningen**: inställningen för vad som gör någon invigd, **ormens
+  namn** (förval) eller **fasta svar**. Med ormens namn har varje vandring
+  ett namn i tre **delar** som delas ut till vandrarna; till det hör
+  **byte vid dödande** och **tornets nåd** (`secret.go`).
+- **varsel**: en ledtråd om ett rum som ingen har varit i, där innehållet
+  bestäms när varslet ges (`omens.go`, `varsel` i `avslojande.json`).
+- **tornet förändras**: inställningen där fällorna ändras från nivå 3 och
+  portarna sluter sig på nivå 4 (`change.go`, `forandring` i
+  `avslojande.json`).
 
 Spelarna ser ordet "spelledare" i spelets texter, aldrig "värdsidan".
 
@@ -105,6 +114,9 @@ Skriv dit när ett steg är klart.
 - [docs/engelska.md](docs/engelska.md): engelska som språk, valt på
   värdsidan. Allt är byggt. Nya texter ska in på båda språken (`data/` och
   `data/en/`); ett test kräver att allt är översatt.
+- [docs/avslojandet.md](docs/avslojandet.md): invigningen med ormens namn,
+  byte vid dödande, tornets nåd, varslen och tornet som förändras. Allt är
+  byggt.
 - [docs/synlighet.md](docs/synlighet.md): att vandrarna bara ser varandra
   när de möts, och på sikt bara sin egen karta. Alla tre stegen är
   byggda.

@@ -1,7 +1,10 @@
 # Förslag: avslöjandet och invigningen
 
-Status: förslaget skrevs 2026-11-19 och byggs i ett svep, steg för steg.
-README beskriver hur det fungerar när det är byggt (spoilervarning).
+Status: förslaget skrevs 2026-11-19 och är byggt i fem steg samma dag.
+README beskriver hur det fungerar (spoilervarning). Med 600 simulerade
+vandringar ändrade portarna som sluter sig andelen som blev kvar i mörkret
+med högst två procentenheter. Invigningen, bytet och nåden kan inte
+simuleras, eftersom datorspelarna inte viskar, och behöver provas i spel.
 
 ## Varför
 

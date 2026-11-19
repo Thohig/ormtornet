@@ -124,3 +124,28 @@ func TestGMViewEndAndIntro(t *testing.T) {
 		t.Fatalf("efter vandringen: %d resultat, krönikan %+v", len(v.Results), v.Chronicle)
 	}
 }
+
+// Spelledarbordet visar ormens namn, vandrarnas delar, varslen och portarna.
+func TestGMViewNameOmensPorts(t *testing.T) {
+	g, cs := nameGame(t, 2)
+	g.cfg.GMMode = true
+	g.level = 2
+	g.dealNameParts()
+	g.data.Regler.Handelsechans = 1
+	g.dealOmens()
+	v := g.GMView(false)
+	if v.SerpentName != g.serpentNameText() || v.SerpentName == "" {
+		t.Fatalf("namnet %q", v.SerpentName)
+	}
+	for _, p := range v.Players {
+		if len(p.Parts) != 3 {
+			t.Fatalf("%s: delarna %v", p.Name, p.Parts)
+		}
+	}
+	if len(v.Omens) != len(cs) || v.Omens[0].What == "" {
+		t.Fatalf("varslen %+v", v.Omens)
+	}
+	if v.Ports != 4 || v.OpenPorts != 4 || v.Mercy {
+		t.Fatalf("portar %d/%d, nåd %v", v.OpenPorts, v.Ports, v.Mercy)
+	}
+}

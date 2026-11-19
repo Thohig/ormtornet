@@ -73,7 +73,9 @@ Flaggor:
 - `-fro 0` frö för den första vandringen. Varje vandring skriver sitt frö i terminalen och på värdsidan. Startar du med samma frö och vandrarna gör samma drag blir tornet detsamma, rum för rum, så att en konstig vandring kan spelas upp igen. `0` ger ett slumpat frö
 - `-storlek 0` tornets storlek i rum: `9`, `11` eller `13`, eller `0` för automatisk (efter antalet vandrare). Ett torn blir aldrig för litet för alla
 - `-synlighet egen` vilka vandrare och rum man ser: `egen` (andra vandrare bara i samma rum, och bara egna rum på kartan), `moten` (andra vandrare bara i samma rum) eller `alla`
-- `-avslojande=false` stänger av avslöjandet, för spelare som redan känner till tornets hemlighet
+- `-avslojande=false` stänger av avslöjandet: ingen berättelse, inga varsel, ingen invigning och inget tornet som förändras
+- `-invigning namn` invigningen: `namn` (ormens namn, nytt för varje vandring) eller `svar` (fasta svar)
+- `-forandras=false` tornet förändras inte med avslöjandets nivåer
 - `-oppna` öppnar introt i webbläsaren när servern har startat; på den här datorn leder det till värdsidan, eller till spelledarbordet i spelledarläget
 - `-vaken` håller datorn vaken så länge servern är igång
 - `-autostopp 10m` stänger tornet när ingen spelare är ansluten och ingen sida har synts på tornets dator så länge (`0` = aldrig)
@@ -112,6 +114,8 @@ den. Solnedgång och Turtid står där bara när de inte är automatiska.
 | Minst antal vandrare | 1–8, AI-spelare inräknade | 2 |
 | Svårighet | Lätt, Normal, Svår, Mardröm | Normal |
 | Avslöjandet | på eller av | på |
+| Invigningen | ormens namn eller fasta svar (kräver avslöjandet) | ormens namn |
+| Tornet förändras | på eller av (kräver avslöjandet) | på |
 | Frånvarande vandrare | AI tar över efter 1–3 rundor, eller står still | 2 rundor |
 | Strid mellan vandrare | på, efter halva tiden, av | på |
 | Vandrarna syns | bara när de möts med egen karta, bara när de möts, alltid | egen karta |
@@ -634,9 +638,31 @@ gradvis, i fyra nivåer som följer solen:
 
 Från nivå 2 kan en människa viska till tornet med V (eller knappen Viska),
 en gång per nivå. Viskningen skrivs i en egen ruta och syns bara för
-servern och spelledaren. Stämmer den med något av svaren under `svar` i
-`avslojande.json`, som hela ord, blir vandraren **invigd**. Tornet svarar
-bara "Det vet att du vet", och de andra hör att det blev tyst någonstans.
+servern och spelledaren. Rätt viskning gör vandraren **invigd**. Tornet
+svarar bara "Det vet att du vet", och de andra hör att det blev tyst
+någonstans. Vad som är rätt beror på inställningen Invigningen:
+
+- **Ormens namn** (förval). Varje vandring lottar ett namn i tre delar ur
+  `namn` i `avslojande.json`, till exempel Karumeth (Ka, ru, meth). Vid
+  nivå 2 får varje människa i tornet en del, fördelat så att gruppen
+  tillsammans vet så mycket som möjligt, och vid nivå 3 och 4 en del till
+  som den saknar. Den som spelar ensam har hela namnet vid nivå 4. Delarna
+  står i loggen och i tecknen (`· RU ·`). Viskningen ska innehålla namnet,
+  ihop eller i delar, och visa att man förstår: ett av svaren under `svar`
+  ("Karumeth, tornet är ormen") eller en mall under `svar_med_namn`
+  ("tornet är Karumeth"). Svaren räcker inte ensamma, så pusslet är nytt
+  varje gång, också för den som har spelat förut.
+- **Fasta svar**. Det räcker att viskningen innehåller något av svaren
+  under `svar`, som hela ord. Passar första kvällen.
+
+Med ormens namn finns två saker till:
+
+- **Byte vid dödande.** Den som dödar en annan vandrare hittar de delar av
+  namnet som offret hade och dödaren saknade.
+- **Tornets nåd.** När alla människor som är kvar inne är invigda tas
+  hälften av vakna-korten i leken bort (`nad_andel`, minst ett), en gång
+  per vandring. Nåden gäller också när leken byggs om efter att ormen har
+  vaknat. Den som tiger om sin del håller alltså tillbaka alla.
 
 Den invigde:
 
@@ -648,12 +674,37 @@ Den invigde:
 
 Men varelserna anfaller den invigde oftare, och en näve ur kammaren väcker
 ormen lättare. Siffrorna står under `invigd` i `avslojande.json`.
-Spelledaren ser vad var och en har viskat, och kan inviga eller ta
-tillbaka det. Krönikan och epilogen nämner den som förstod.
+Spelledaren ser på spelledarbordet vad var och en har viskat, ormens namn
+och vilka delar var och en har, och kan inviga eller ta tillbaka det.
+Krönikan nämner den som förstod, bytena, nåden och de invigda som kom ut,
+och epilogen säger namnet.
+
+### Varslen
+
+Från nivå 2 är varannan ledtråd ett varsel: tornet förråder ett rum som
+ingen har varit i, två eller tre rum från vandraren, till exempel "Det
+gnisslar av järn två rum bort åt nordöst". Vad som finns i rummet bestäms
+när varslet ges, med samma chanser som annars, och blir så när någon går
+in: en fälla, en varelse eller ingenting. Varslet gäller aldrig en port
+eller kammaren. Varje vandrare får sitt eget, så det lönar sig att berätta,
+eller att låta bli. Texterna står under `varsel` i `avslojande.json`.
+
+### Tornet förändras
+
+Med inställningen Tornet förändras (förval på):
+
+- Från nivå 3 blir fällorna som hör till ormens kropp vanligare i nya rum:
+  det rasande golvet, det roterande rummet, ormgropen och det ömsade
+  skinnet (`forandring.fallvikter`).
+- På nivå 4 sluter sig portarna en i taget, var tredje runda
+  (`port_stangs_var`), först den som ligger längst från vandrarna. Rundan
+  innan får alla som är inne en varning. Den sista porten stängs aldrig.
+  Kartan visar en stängd port som ett rött block, och ingen kommer ut genom
+  den.
 
 Med `-avslojande=false` stannar tornet på nivå 1: inget dunk, inga
-pulserande väggar och ingen epilog. Då går det inte heller att viska, och
-ingen blir invigd.
+pulserande väggar, inga varsel och ingen epilog. Då går det inte heller att
+viska, ingen blir invigd och tornet förändras inte.
 
 ## Ändra innehåll
 
@@ -680,7 +731,8 @@ Fält som börjar med `_` är kommentarer och får stå var som helst.
 - `klasser.json` klasserna: namn, styrka, svaghet, liv, drycker, siffror och texter
 - `foremal.json` föremålen: namn, beskrivning, hur ofta, hur länge och texter
 - `avslojande.json` nivågränser, ledtrådar, texter vid nivåbyte, nya
-  förklaringar till fällorna och epilogen. Rumsbeskrivningarna för varje
+  förklaringar till fällorna, epilogen, svaren, ormens namn och texterna
+  för delarna, tornets nåd, varslen och hur tornet förändras. Rumsbeskrivningarna för varje
   nivå (`"1"` till `"4"`) ligger i `texter.json`.
 - `spelarsidan.json` spelarsidans egna texter: introt, namnrutan, klassvalet, styrningen, panelerna och knapparna
 - `vardsidan.json` värdsidans texter, och tornets besked och loggrader till spelledaren (`server_*`)
@@ -761,7 +813,9 @@ Beskrivningarna för rummen ligger under nivåerna `"1"` till `"4"`.
 - `difficulty.go` förvalen för svårighet
 - `classes.go` klasserna och valet av klass
 - `items.go` föremålen
-- `secret.go` viskningen och den invigde
+- `secret.go` viskningen, den invigde, ormens namn och tornets nåd
+- `omens.go` varslen
+- `change.go` tornet som förändras: fällvikterna och portarna som sluter sig
 - `ai.go` datorstyrda vandrare
 - `data.go` läser in datafilerna
 - `validate.go` kontrollerar datafilerna när tornet startar

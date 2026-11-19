@@ -39,6 +39,9 @@ fungerar under "Föremål" och "Att viska hemligheten" (spoilervarning).
 - Med avslöjandet avstängt går det inte att viska, och ingen blir invigd.
 - AI-spelarna viskar aldrig.
 
+Hemligheten har sedan byggts ut med ormens namn, byte vid dödande, tornets
+nåd, varslen och tornet som förändras; se [avslojandet.md](avslojandet.md).
+
 ## Inte byggt
 
 - Att släppa ett föremål med flit, eller byta föremål med en annan vandrare.

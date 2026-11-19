@@ -6,6 +6,15 @@ eller leder tornet.
 
 ## 2026-11-19
 
+### Spelledarbordet visar namnet, varslen och portarna
+
+- Översikten visar ormens namn, om tornets nåd har kommit och hur många
+  portar som är öppna.
+- Tabellen visar under Tillstånd vilka delar av namnet var och en har.
+- Under tabellen står de senaste varslen: vem som fick dem, vad som väntar
+  och om någon har gått in i rummet.
+- Förslaget och läget står i `docs/avslojandet.md`.
+
 ### Tornet förändras
 
 - Ny inställning under Fler inställningar: Tornet förändras, på som

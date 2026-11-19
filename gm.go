@@ -4,7 +4,10 @@ package main
 // finns i tornet och kan starta en vandring även när alla vandrare är
 // AI-spelare. Ingen kan ansluta som vandrare från spelledarens dator.
 
-import "time"
+import (
+	"strings"
+	"time"
+)
 
 // gmEntry är en rad i spelledarens logg: en text och vilka som fick den.
 type gmEntry struct {
@@ -62,6 +65,17 @@ type gmPlayer struct {
 	Items    []string `json:"foremal,omitempty"`
 	Invigd   bool     `json:"invigd,omitempty"`
 	Viskning string   `json:"viskning,omitempty"`
+	Parts    []string `json:"namndelar,omitempty"` // delarna av ormens namn som vandraren har
+}
+
+// gmOmen är ett varsel som har getts, för spelledaren.
+type gmOmen struct {
+	Round int    `json:"round"`
+	To    string `json:"to"`
+	What  string `json:"what"` // fällans eller varelsens namn, tomt för ett tomt rum
+	X     int    `json:"x"`
+	Y     int    `json:"y"`
+	Found bool   `json:"found"` // någon har gått in i rummet
 }
 
 type gmItem struct {
@@ -100,6 +114,12 @@ type gmView struct {
 
 	Results   []resultView `json:"results,omitempty"`   // när vandringen är slut
 	Chronicle []chronLine  `json:"chronicle,omitempty"` // när vandringen är slut
+
+	SerpentName string   `json:"namn,omitempty"` // ormens namn, med invigningen "ormens namn"
+	Mercy       bool     `json:"nad,omitempty"`  // tornets nåd har kommit
+	Omens       []gmOmen `json:"varsel,omitempty"`
+	Ports       int      `json:"portar"`      // portarna i tornet
+	OpenPorts   int      `json:"oppnaPortar"` // portarna som inte har slutit sig
 }
 
 type gmRoomRef struct {
@@ -134,6 +154,7 @@ func (g *Game) GMView(visible bool) gmView {
 			rv := roomView{X: x, Y: y, D: r.Doors, K: r.Kind, Exit: -1, Name: g.roomName(r), Mark: r.Mark, MarkN: g.data.trapName(r.Mark), S: r.Searched}
 			if r.HasExit {
 				rv.Exit = int(r.Exit)
+				rv.Shut = r.Shut
 			}
 			if r.Event != "" {
 				// En fälla som väntar visas med sitt tecken, för spelledaren.
@@ -170,6 +191,7 @@ func (g *Game) GMView(visible bool) gmView {
 			Bot: p.bot != nil && !p.takenOver, AI: p.takenOver, HP: p.HP, Treasure: p.Treasure, Potions: p.Potions,
 			Stuck: p.Stuck, Cellar: p.Cellar, Poison: p.Poison, Dark: p.Dark, Action: g.actionText(p), Room: room,
 			Class: g.classLabel(p), MaxHP: g.maxHP(p), Items: g.itemNames(p), Invigd: p.initiated, Viskning: p.whispered,
+			Parts: g.namePartsFor(p),
 		})
 	}
 	for _, t := range g.data.Foremal.Lista {
@@ -201,6 +223,27 @@ func (g *Game) GMView(visible bool) gmView {
 		v.TimeLeft = int(max(0, left.Round(time.Second)/time.Second))
 	}
 	v.TrapTypes, v.MonsterTypes = g.gmCatalogs()
+	if g.usesName() {
+		v.SerpentName = g.serpentNameText()
+	}
+	v.Mercy = g.mercyGiven
+	v.Ports, v.OpenPorts = len(g.corners()), len(g.openPorts())
+	for i := len(g.omens) - 1; i >= 0; i-- {
+		o := g.omens[i]
+		kind, id, _ := strings.Cut(o.What, ":")
+		what := ""
+		switch kind {
+		case "falla":
+			if t := g.data.trap(id); t != nil {
+				what = t.Namn
+			}
+		case "varelse":
+			if t := g.data.monsterType(id); t != nil {
+				what = t.Namn
+			}
+		}
+		v.Omens = append(v.Omens, gmOmen{Round: o.Round, To: o.To, What: what, X: o.X, Y: o.Y, Found: g.rooms[o.Y][o.X].Revealed})
+	}
 	if g.phase == phaseEnd {
 		v.Results = g.results()
 		v.Chronicle = g.chronicleLines()

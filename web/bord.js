@@ -219,6 +219,9 @@ function renderGM(o) {
     parts.push(t(key, { niva: o.level, solniva: o.sunLevel, ledtradar: o.clues }));
   }
   parts.push(t(o.traps === 1 ? "top_falla" : "top_fallor", { antal: o.traps }));
+  if (o.namn) parts.push(t("top_namn", { namn: o.namn }));
+  if (o.nad) parts.push(t("top_nad"));
+  if (o.oppnaPortar < o.portar) parts.push(t("top_portar", { oppna: o.oppnaPortar, alla: o.portar }));
   top.textContent = parts.join(" · ");
 
   if (!mapReady || mapSize !== m.size) {
@@ -241,6 +244,7 @@ function renderGM(o) {
     if (p.dark) cond.push(t("till_morker", { antal: p.dark }));
     if (!p.online) cond.push(t("borta"));
     if (p.foremal && p.foremal.length) cond.push(p.foremal.join(", "));
+    if (p.namndelar) cond.push(p.namndelar.map((d) => d || "·").join(" "));
     if (p.invigd) cond.push(t("till_invigd"));
     else if (p.viskning) cond.push(t("till_viskade", { text: p.viskning }));
     const who = whoText(p);
@@ -310,8 +314,20 @@ function renderGM(o) {
     tb.append(tr);
   });
 
+  renderOmens(o);
   renderLog(o);
   if (m.phase === "slut") renderEnd(o);
+}
+
+// Varslen som har getts, de senaste först: vem som fick dem, vad som väntar
+// och om någon redan har gått in i rummet.
+function renderOmens(o) {
+  const el = $("gmOmens");
+  const list = o.varsel || [];
+  el.textContent = list.length
+    ? t("varsel_rubrik") + " " + list.slice(0, 8).map((v) =>
+      t(v.found ? "varsel_rad_funnet" : "varsel_rad", { runda: v.round, vem: v.to, vad: v.what || t("varsel_tomt"), x: v.x, y: v.y })).join(" · ")
+    : "";
 }
 
 // Vandrarnas logg: en grupp per runda, den senaste överst, och inom
