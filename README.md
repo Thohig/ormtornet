@@ -5,6 +5,8 @@ Mitt i ett torn på 9x9 rum (11x11 för fem eller sex, 13x13 för sju eller
 åtta) sägs en jättelik orm sova kring en skatt.
 Ta så mycket du vågar och kom ut innan solen går ner.
 
+Tornet kan spelas på svenska eller engelska (The Serpent Tower); se Språk.
+
 Vad som är nytt står i [docs/andringar.md](docs/andringar.md).
 
 ## Starta
@@ -282,7 +284,7 @@ dess. Den som inte hinner välja blir stående.
 | D          | drick en dryck                    |
 | A          | anfall (i strid)                  |
 | P          | parera (i strid)                  |
-| U          | undanmanöver (i strid)            |
+| U eller E  | undanmanöver (i strid; E för evade på engelska) |
 | Tab        | byt mål: motståndare, eller varelse när du är död |
 | Enter      | redo / spela igen                 |
 | 1–3        | använd ett föremål i väskan       |
@@ -415,7 +417,7 @@ värdsidan, eller med `-klasser=false`.
 ### Strid mellan vandrare
 
 Står två vandrare i samma rum utan någon varelse kan de slåss med samma
-sten-sax-påse som mot varelserna (A, P, U, och Tab för att välja motståndare
+sten-sax-påse som mot varelserna (A, P, U eller E, och Tab för att välja motståndare
 när flera står där). Den som inte försvarar sig blir träffad om den andra
 anfaller, även om den går ut ur rummet. Varje träff kostar 1 liv och river
 åt sig en tredjedel av motståndarens guld (minst 1). Den som dödar tar allt.

@@ -53,6 +53,11 @@ En riktig kväll behövs för att se:
   färgen (plats 8) syns knappt bland den vanliga texten i loggen. Hjälper tecknen i loggens marginal, eller
   blir de brus?
 
+- Engelskan (2026-11-19): är tonen rätt, särskilt i introt, ledtrådarna
+  och avslöjandet? Är det bättre med "the Silent Chapel" än "The Silent
+  Chapel" mitt i meningar? Får alla knappar och etiketter plats på en
+  telefon? Engelskan är skriven av AI och inte läst av någon som spelar.
+
 ### Justera efter provet
 
 - Legoknekten på Mardröm: med AI-spelare kommer hen ut med skatt i 43 %

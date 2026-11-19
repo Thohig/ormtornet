@@ -5,7 +5,9 @@ README beskriver spelet, flaggorna och filerna.
 
 ## Arbetssätt
 
-- Skriv på svenska, både i svar och i spelets texter.
+- Skriv på svenska, både i svar och i spelets texter. Spelet finns också
+  på engelska: en ny eller ändrad text ska in både i `data/` och i
+  `data/en/` (se [docs/engelska.md](docs/engelska.md)).
 - Bygg i steg. Gör en commit efter varje steg och stanna sedan så att
   användaren kan testa innan nästa steg.
 - Allt innehåll (rum, fällor, varelser, texter, ledtrådar) ligger i `data/`
@@ -49,6 +51,13 @@ Så här skiljer vi på sakerna när användaren ger instruktioner:
   - **panelen Vandrare**: listan över vandrarna, bara i lobbyn och slutet,
   - **loggen**: raderna i högerkolumnen, grupperade per runda.
 - **tornets dator**: datorn som kör servern.
+- **språket**: inställningen Språk på värdsidan (`-sprak`), svenska eller
+  engelska, för hela tornet (`lang.go`). Översättningarna ligger i
+  `data/en/` med bara texter.
+- **sidornas texter**: spelarsidans och värdsidans egna texter i
+  `data/spelarsidan.json` och `data/vardsidan.json`. HTML:en har nycklar
+  (`data-t`), skripten använder `t()` (`web/texter.js`), och Go-koden
+  `HostText`, `hostErr` och `gmNote` med nycklar som börjar med `server_`.
 - **synligheten**: inställningen "Vandrarna syns" (`-synlighet`), med
   valen `egen` (egen karta, förval), `moten` och `alla`. Spåren och ljuden
   från grannrummen hör till den (`sounds.go`). Se
