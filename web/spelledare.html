@@ -113,6 +113,20 @@
   #gmLog .rost { color: #e3b8f0; }
   #gmLog { max-height: 340px; overflow-y: auto; font-size: 13px; line-height: 1.4; border-top: 1px solid var(--faint); padding-top: 6px; }
   #gmLog div { margin: 2px 0; }
+  #gmLog .roundhead {
+    display: block; width: 100%; margin: 6px 0 2px; padding: 3px 0 2px;
+    border: 0; border-top: 1px solid var(--faint); background: none;
+    color: var(--dim); font: inherit; font-size: 11px; letter-spacing: 0.12em;
+    text-align: left; cursor: pointer;
+  }
+  #gmLog .round:first-child .roundhead { border-top: 0; margin-top: 0; }
+  #gmLog .roundhead:hover { color: var(--fg); }
+  #host summary { cursor: pointer; list-style: none; }
+  #host summary::-webkit-details-marker { display: none; }
+  #host summary h2 { display: inline-block; }
+  #host summary h2::before { content: "▸ "; }
+  #host details[open] > summary h2::before { content: "▾ "; }
+  #host summary:hover h2 { color: var(--fg); }
   #gmLog .who { color: var(--dim); }
   #gmLog .varn { color: var(--warn); }
   #gmLog .info { color: var(--info); }
@@ -192,8 +206,14 @@
           <tbody></tbody>
         </table>
       </div>
-      <h2>Vandrarnas logg</h2>
-      <div id="gmLog"></div>
+      <details id="gmLogBox">
+        <summary><h2>Vandrarnas logg</h2></summary>
+        <div class="gmrow">
+          <span class="gmlabel">Visa</span>
+          <select id="gmLogWho"></select>
+        </div>
+        <div id="gmLog"></div>
+      </details>
     </section>
 
     <h2>Inför nästa vandring</h2>
@@ -540,21 +560,69 @@ function renderGM(o) {
     tb.append(tr);
   });
 
-  const box = $("gmLog");
-  const atBottom = box.scrollHeight - box.scrollTop - box.clientHeight < 30;
-  box.textContent = "";
-  o.log.slice(-200).forEach((e) => {
-    const d = document.createElement("div");
-    const who = document.createElement("span");
-    who.className = "who";
-    who.textContent = (e.round ? "R" + e.round + " " : "") + e.to.join(", ") + ": ";
-    const t = document.createElement("span");
-    if (e.c) t.className = e.c;
-    t.textContent = e.text;
-    d.append(who, t);
-    box.append(d);
+  renderLog(o);
+}
+
+// Vandrarnas logg: en grupp per runda, den senaste överst, och inom
+// rundan raderna i den ordning de hände. De två senaste rundorna står
+// öppna; spelledaren kan fälla upp och ihop de andra själv.
+const logOpen = {}; // runda -> öppen eller stängd, när spelledaren har klickat
+let logKey = "";
+
+function renderLog(o) {
+  const who = $("gmLogWho");
+  fillSelect(who, [{ label: "alla vandrare", value: "" }].concat(o.players.map((p) => ({ label: p.name, value: p.name }))));
+  const entries = o.log.filter((e) => !who.value || e.to.includes(who.value));
+  const key = JSON.stringify([entries.length, entries.length && entries[entries.length - 1].text, who.value, logOpen]);
+  if (key === logKey) return;
+  logKey = key;
+  const rounds = new Map();
+  entries.forEach((e) => {
+    if (!rounds.has(e.round)) rounds.set(e.round, []);
+    rounds.get(e.round).push(e);
   });
-  if (atBottom) box.scrollTop = box.scrollHeight;
+  const order = [...rounds.keys()].sort((a, b) => b - a);
+  const box = $("gmLog");
+  const st = box.scrollTop;
+  const before = box.scrollHeight;
+  box.textContent = "";
+  if (!order.length) {
+    const d = document.createElement("div");
+    d.className = "dim";
+    d.textContent = "Inget än.";
+    box.append(d);
+  }
+  order.forEach((round, i) => {
+    const list = rounds.get(round);
+    const open = round in logOpen ? logOpen[round] : i < 2;
+    const sec = document.createElement("section");
+    sec.className = "round";
+    const head = document.createElement("button");
+    head.type = "button";
+    head.className = "roundhead";
+    head.textContent = (open ? "▾ " : "▸ ") + (round ? "Runda " + round : "Före vandringen") +
+      (open ? "" : " · " + list.length + (list.length === 1 ? " rad" : " rader"));
+    head.addEventListener("click", () => {
+      logOpen[round] = !open;
+      renderLog(o);
+    });
+    sec.append(head);
+    if (open) {
+      list.forEach((e) => {
+        const d = document.createElement("div");
+        const w = document.createElement("span");
+        w.className = "who";
+        w.textContent = e.to.join(", ") + ": ";
+        const t = document.createElement("span");
+        if (e.c) t.className = e.c;
+        t.textContent = e.text;
+        d.append(w, t);
+        sec.append(d);
+      });
+    }
+    box.append(sec);
+  });
+  if (st > 6) box.scrollTop = st + (box.scrollHeight - before);
 }
 
 // Ingreppen. Listorna byggs bara om när innehållet ändras, så att ett val

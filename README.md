@@ -132,7 +132,9 @@ långt det har vuxit fram, med fällor som väntar och alla varelser, varje
 vandrares plats, klass, liv, skatt, drycker, föremål, tillstånd och valda
 drag, vad var och en har viskat till tornet och vem som är invigd, hur djupt
 ormen sover och risken att den vaknar vid nästa näve, avslöjandets nivå och
-allt vandrarna har fått läsa.
+allt vandrarna har fått läsa. Vandrarnas logg är hopfälld tills man klickar
+på den. Där står den senaste rundan överst, de två senaste rundorna är
+öppna och de äldre fällda ihop, och loggen kan visa en vandrare i taget.
 
 I spelledarläget kan spelledaren också göra ingrepp under en vandring, och
 varje ingrepp skrivs i loggen:

@@ -6,6 +6,15 @@ eller leder tornet.
 
 ## 2026-11-19
 
+### Vandrarnas logg per runda
+
+- Vandrarnas logg i översikten är hopfälld tills spelledaren klickar på
+  den.
+- Den är grupperad per runda med den senaste överst, som loggen på
+  spelarsidan. De två senaste rundorna står öppna och de äldre går att
+  fälla upp.
+- Under Visa kan loggen visa bara en vandrare.
+
 ### Senaste rundan överst i loggen
 
 - I loggen på spelarsidan står den senaste rundan överst. Inom en runda
