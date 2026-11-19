@@ -92,6 +92,7 @@ const MapView = (() => {
   // grid och colr: tecknen. wall: väggceller (true), wallc: en färg som
   // tar över kritans, för ekot. Golv, kammare och vandrare samlas i listor.
   let grid, colr, wall, wallc, floors, rings, figures;
+  let here = null; // rummet vandraren står i, som ritas ljusare med en ram
 
   function hash(x, y) {
     let h = (x * 374761393 + y * 668265263) | 0;
@@ -179,9 +180,15 @@ const MapView = (() => {
     });
     if (x0 === Infinity) return { x: 0, y: 0, w: towerSize, h: towerSize };
     const all = grow({ x: x0, y: y0, w: x1 - x0, h: y1 - y0 }, MIN_SPAN);
-    const me = state.players.find((p) => p.id === state.you);
-    if (level === ALL || !me || me.status !== "inne" || me.x < 0) return all;
+    const me = focus(state);
+    if (level === ALL || !me) return all;
     return around(me, LEVELS[level].span);
+  }
+
+  // focus ger vandraren kartan följer: den egna, så länge den är inne.
+  function focus(state) {
+    const me = state.players.find((p) => p.id === state.you);
+    return me && me.status === "inne" && me.x >= 0 ? me : null;
   }
 
   // loadLevel ger nivån som valdes senast på den här enheten, annars Nära
@@ -222,9 +229,12 @@ const MapView = (() => {
   }
 
   // around ger en ruta på n × n rum med rummet där p står i mitten. Vid
-  // tornets kanter skjuts rutan in, så att den stannar inom tornet.
+  // tornets kanter skjuts rutan in, men den får gå lite utanför (EDGE rum),
+  // så att ett rum i hörnet inte hamnar under knapparna och tecknen i
+  // kartans hörn, och portarna ut syns.
+  const EDGE = 0.75;
   function around(p, n) {
-    const fit = (c) => (n >= towerSize ? (towerSize - n) / 2 : Math.max(0, Math.min(towerSize - n, c + 0.5 - n / 2)));
+    const fit = (c) => (n >= towerSize ? (towerSize - n) / 2 : Math.max(-EDGE, Math.min(towerSize - n + EDGE, c + 0.5 - n / 2)));
     return { x: fit(p.x), y: fit(p.y), w: n, h: n };
   }
 
@@ -486,6 +496,9 @@ const MapView = (() => {
       note("drag", ARROWS[dir], color);
     }
 
+    const f = focus(state);
+    here = f ? { x0: f.x * RW, y0: f.y * RH, color: PLAYER_COLORS[f.slot] || "#ffffff" } : null;
+
     aim(wanted(state), nowMs);
     place(nowMs);
     paint();
@@ -532,6 +545,20 @@ const MapView = (() => {
       const [bx, by] = px(x0 + RW, y0 + RH, false);
       ctx.fillRect(ax, ay, bx - ax, by - ay);
     });
+    // Rummet vandraren står i: ljusare golv och en tunn ram i dess färg,
+    // lite innanför väggarna.
+    if (here) {
+      const [ax, ay] = px(here.x0, here.y0, false);
+      const [bx, by] = px(here.x0 + RW, here.y0 + RH, false);
+      ctx.fillStyle = "rgba(255, 250, 235, 0.07)";
+      ctx.fillRect(ax, ay, bx - ax, by - ay);
+      const inset = Math.min(cellW, cellH) * 0.45;
+      ctx.strokeStyle = here.color;
+      ctx.globalAlpha = 0.75;
+      ctx.lineWidth = Math.max(1, cellW * 0.12);
+      ctx.strokeRect(ax + inset, ay + inset, bx - ax - 2 * inset, by - ay - 2 * inset);
+      ctx.globalAlpha = 1;
+    }
 
     // Väggarna samlas i en bana per nyans, så att det går fort att rita.
     const base = Math.max(1.4, cellW * 0.3);

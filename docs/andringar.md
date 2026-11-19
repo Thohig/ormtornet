@@ -6,6 +6,11 @@ eller leder tornet.
 
 ## 2026-11-19
 
+### Ditt rum syns tydligt
+
+- Rummet du står i har ljusare golv och en tunn ram i din färg. Inget
+  annat på kartan har blivit mörkare.
+
 ### Kartan följer snabbare
 
 - När du går till ett nytt rum glider kartan efter på 0,4 sekunder. Den
@@ -27,7 +32,8 @@ eller leder tornet.
 - Kartan har alltid rummet du står i i mitten, med två rum åt varje håll
   (ett på en smal skärm). Förut visade den allt du kände till och följde
   dig bara när tornet blev för stort för skärmen.
-- Vid tornets kanter stannar rutan inom tornet.
+- Vid tornets kanter går rutan bara lite utanför tornet, så att portarna
+  syns och ett rum i hörnet inte hamnar under knapparna och tecknen.
 
 ### Teckenförklaringen går att läsa
 
