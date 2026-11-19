@@ -1,7 +1,7 @@
 {
   "_om": "Engelsk översättning av avslojande.json. Bara texter; siffrorna står i den svenska filen.",
   "avslojande": {
-    "_om_svar": "Viskningar på engelska som visar att vandraren vet hemligheten. Fler varianter än på svenska, eftersom engelskan har fler sätt att säga det. Undvik för korta svar som \"in the serpent\", som också stämmer med \"in the serpent's lair\". En apostrof blir ett mellanrum, så skriv både serpent's och serpents.",
+    "_om_svar": "Viskningar på engelska som visar att vandraren vet hemligheten. Fler varianter än på svenska, eftersom engelskan har fler sätt att säga det. Undvik för korta svar som \"in the serpent\", som också stämmer med \"in the serpent's lair\". En apostrof blir ett mellanrum, så skriv både serpent's och serpents. Sist står de svenska svaren, så att en viskning på svenska också räknas.",
     "svar": [
       "the tower is the serpent",
       "the serpent is the tower",
@@ -35,7 +35,17 @@
       "in the stomach of the serpent",
       "in the snake's stomach",
       "in the snakes stomach",
-      "in the stomach of the snake"
+      "in the stomach of the snake",
+      "tornet är ormen",
+      "ormen är tornet",
+      "tornet är en orm",
+      "tornet är ormens kropp",
+      "vi är inne i ormen",
+      "vi är i ormen",
+      "inne i ormen",
+      "inuti ormen",
+      "i ormens mage",
+      "i ormens buk"
     ],
 
     "nivabyte": {

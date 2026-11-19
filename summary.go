@@ -151,7 +151,7 @@ func (g *Game) summaryFor(p *Player, b before, woke bool) []summaryLine {
 func (g *Game) actionLine(p *Player, b before, moved bool, room string, t func(string, ...string) summaryLine) summaryLine {
 	a := b.action
 	if d, ok := dirCodes[a]; ok {
-		dir := g.data.Riktningar[d] + "ut"
+		dir := g.data.Riktningar[d] // texterna böjer själva, till exempel "{riktning}ut"
 		switch {
 		case moved && p.Dark > 0:
 			return t("sam_gick_morker", "riktning", dir)

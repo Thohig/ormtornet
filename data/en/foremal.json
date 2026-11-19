@@ -1,0 +1,240 @@
+{
+  "_om": "Engelsk översättning av foremal.json. Bara texter; siffrorna står i den svenska filen. Föremålen kopplas ihop med sina id:n. namn sätts in med liten första bokstav mitt i meningar, kort är formen i listor och korta rader.",
+  "foremal": {
+    "lista": [
+      {
+        "id": "rep",
+        "namn": "A rope with its hook",
+        "kort": "the rope",
+        "beskrivning": "If you fall into the cellar vaults, you climb straight back up.",
+        "verkar": [
+          "The floor gives way, but the hook catches on the edge. You hang from the rope a while and haul yourself up again. The rope stays down there."
+        ]
+      },
+      {
+        "id": "amulett",
+        "namn": "The scale amulet",
+        "kort": "the scale amulet",
+        "beskrivning": "The next trap does not strike.",
+        "verkar": [
+          "The amulet grows warm against your chest. {falla} strikes, but not at you. When you look, the amulet has cracked."
+        ]
+      },
+      {
+        "id": "veke",
+        "namn": "A spare wick",
+        "kort": "the wick",
+        "beskrivning": "Your lantern withstands one darkness.",
+        "verkar": [
+          "The lantern goes out, but you have another wick. With trembling fingers you get it lit again."
+        ]
+      },
+      {
+        "id": "skold",
+        "namn": "A dented shield",
+        "kort": "the shield",
+        "beskrivning": "Creatures do one wound less. Breaks after three hits.",
+        "verkar": [
+          "The blow strikes the shield and glances off."
+        ],
+        "slut": [
+          "The shield cracks and falls to pieces."
+        ]
+      },
+      {
+        "id": "vaska",
+        "namn": "The bag with a false bottom",
+        "kort": "the bag",
+        "beskrivning": "Half of what you lose when the serpent wakes, or when someone snatches gold, is hidden in the false bottom.",
+        "verkar": [
+          "The false bottom holds. {antal} gold is still there."
+        ]
+      },
+      {
+        "id": "kompass",
+        "namn": "A compass without north",
+        "kort": "the compass",
+        "beskrivning": "The needle points to the nearest gate.",
+        "verkar": []
+      },
+      {
+        "id": "rokpulver",
+        "namn": "Smoke powder",
+        "kort": "the smoke powder",
+        "beskrivning": "Flee a fight before the creature can strike. Choose the way with the arrows.",
+        "verkar": [
+          "You throw the powder at the floor. The room fills with grey smoke, and you are gone to the {riktning} before anything can react."
+        ]
+      },
+      {
+        "id": "spegel",
+        "namn": "A mirror shard",
+        "kort": "the mirror shard",
+        "beskrivning": "Look into the room beyond a door. Three times.",
+        "verkar": [
+          "You hold the shard out through the doorway to the {riktning} and tilt it."
+        ],
+        "slut": [
+          "The shard turns dull, as if something has breathed on it."
+        ]
+      },
+      {
+        "id": "kastkniv",
+        "namn": "A throwing knife",
+        "kort": "the throwing knife",
+        "beskrivning": "Throw it through a door at a creature in the next room.",
+        "verkar": [
+          "You throw the knife through the doorway to the {riktning}."
+        ]
+      },
+      {
+        "id": "krita",
+        "namn": "A piece of chalk",
+        "kort": "the chalk",
+        "beskrivning": "Draw an arrow on the floor. Everyone who comes in sees it, but not who drew it. Five times.",
+        "verkar": [
+          "You draw an arrow on the floor pointing to the {riktning}."
+        ],
+        "slut": [
+          "The chalk is used up. The last of the dust blows away."
+        ]
+      },
+      {
+        "id": "flojt",
+        "namn": "A lulling flute",
+        "kort": "the flute",
+        "beskrivning": "If you draw a card that wakes the serpent, you may draw again, once.",
+        "verkar": [
+          "The serpent stirs, and you play three low notes on the flute. The breathing slows again. The flute cracks. You reach for another handful."
+        ]
+      },
+      {
+        "id": "timglas",
+        "namn": "An hourglass of bone",
+        "kort": "the hourglass",
+        "beskrivning": "Turn it, and the sun stands still for a round for everyone.",
+        "verkar": [
+          "You turn the hourglass. The sand stands still. The light through the slits stops moving."
+        ]
+      },
+      {
+        "id": "svart_parla",
+        "namn": "The black pearl",
+        "kort": "the pearl",
+        "beskrivning": "Large as a dove's egg and worth 40 gold when you get out.",
+        "forbannelse": [
+          "The pearl turns cold in your bag as you reach for the gold. The breathing around you quickens. Every handful wakes the serpent a little more while you carry it."
+        ]
+      },
+      {
+        "id": "mynt_hal",
+        "namn": "The holed coin",
+        "kort": "the coin",
+        "beskrivning": "A heavy gold coin with a hole in the middle. Worth 25 gold when you get out.",
+        "forbannelse": [
+          "The creature sniffs at your bag. The coin has a smell, and everything in the tower with teeth knows where you are."
+        ]
+      },
+      {
+        "id": "rostkrona",
+        "namn": "The crown of rust",
+        "kort": "the crown",
+        "beskrivning": "A small crown that someone has dropped. Worth 30 gold when you get out.",
+        "forbannelse": [
+          "The crown begins to glow faintly through your bag. Whoever stands in the next room sees the light."
+        ]
+      },
+      {
+        "id": "brev",
+        "namn": "A letter",
+        "kort": "the letter",
+        "beskrivning": "From someone who was here before."
+      }
+    ],
+    "brev": {
+      "1": [
+        "\"Day two. The walls are warm, though it is raining outside. Bertil says it is the sun that has lain on them. I do not believe him.\"",
+        "\"If you find this: do not go to the middle on the first day. Listen first. There is a sound beneath everything else.\""
+      ],
+      "2": [
+        "\"The floor moves when I lie still. Up and down, slowly, as when you sleep beside someone.\"",
+        "\"I have counted. The sound comes every eighth breath, my breaths. It is not the wind.\""
+      ],
+      "3": [
+        "\"The vaults are too many and too alike. I have seen such before, in a whale that drifted ashore when I was small.\"",
+        "\"The stair has vertebrae. I have felt them. Do not go down it in the dark.\""
+      ],
+      "4": [
+        "\"The gate is not a gate. Get out before it closes. I have no time to write more.\"",
+        "\"I know now where we are. I know why it is warm. If you are reading this, it is already too late to be afraid. Run.\""
+      ]
+    }
+  },
+
+  "texter": {
+    "foremal_hittar": [
+      "Under a loose stone lies something: {foremal}. {beskrivning}",
+      "Deep in a niche, wrapped in a rag: {foremal}. {beskrivning}"
+    ],
+    "foremal_full": [
+      "Here lies {foremal}, but you cannot carry more than {max} things. You leave it."
+    ],
+    "foremal_ligger": [
+      "Someone has left {foremal} here. You take it. {beskrivning}"
+    ],
+    "foremal_ligger_full": [
+      "Here lies {foremal}, but your bag is full."
+    ],
+    "kompass_pekar": [
+      "The compass points towards the {horn}."
+    ],
+    "kompass_har": [
+      "The compass spins. You are standing in a gate."
+    ],
+    "spegel_vagg": [
+      "There is no door to the {riktning}. The shard shows only stone."
+    ],
+    "spegel_ser": [
+      "In the shard you see {rum}."
+    ],
+    "spegel_falla": [
+      "Something on the floor there looks wrong: {falla}."
+    ],
+    "spegel_varelse": [
+      "In there moves {varelse}."
+    ],
+    "spegel_vandrare": [
+      "In there stands {namn}."
+    ],
+    "kniv_miss": [
+      "The knife clatters against the stone to the {riktning}. There is nothing there to hit."
+    ],
+    "kniv_traff": [
+      "The knife hits {varelse}."
+    ],
+    "krita_ser": [
+      "Someone has drawn an arrow in chalk on the floor. It points to the {riktning}."
+    ],
+    "timglas_alla": [
+      "For a moment everything stands still. The sun does not move."
+    ],
+    "foremal_av_sig_sjalv": [
+      "{foremal} works of its own accord."
+    ],
+    "brev_hittar": [
+      "Under a stone lies a folded paper, damp and brittle. Someone has written in charcoal:"
+    ],
+    "pilgrim_forbannad": [
+      "Here lies {foremal}. Something in you says no. You leave it be."
+    ],
+    "foremal_guld": [
+      "What you carry in your bag is worth {antal} gold out here."
+    ],
+    "foremal_fran_tornet": [
+      "Something heavy slides into your bag, though no one is here: {foremal}. {beskrivning}"
+    ],
+    "kronika_foremal": [
+      "{namn} found {foremal}."
+    ]
+  }
+}

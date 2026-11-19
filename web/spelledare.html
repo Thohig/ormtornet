@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Ormtornet – värd</title>
+<title data-t="sidtitel"></title>
 <link rel="icon" href="ikon.svg" type="image/svg+xml">
 <link rel="icon" href="ikon.png" type="image/png" sizes="180x180">
 <link rel="apple-touch-icon" href="ikon.png">
@@ -189,8 +189,8 @@
 <body>
 <div id="crt">
   <main id="host">
-    <h1>ORMTORNET · VÄRD</h1>
-    <p class="dimtext">Den här sidan syns bara på din dator. Spelarna ser den inte.</p>
+    <h1 data-t="rubrik"></h1>
+    <p class="dimtext" data-t="bara_din_dator"></p>
 
     <div id="bar">
       <span id="barPhase">…</span>
@@ -199,83 +199,83 @@
     </div>
 
     <section id="invite">
-    <h2>Bjud in</h2>
-    <p class="full">Alla som ska spela öppnar Safari eller Chrome på samma wifi som du och går till:</p>
+    <h2 data-t="bjud_in"></h2>
+    <p class="full" data-t="bjud_in_text"></p>
     <div id="addr">…</div>
     <p id="ips" class="full"></p>
     <div class="buttons">
-      <button class="btn main" id="copyInvite" type="button">Kopiera inbjudan</button>
-      <button class="btn" id="copyAddr" type="button">Kopiera adressen</button>
-      <a class="btn" id="joinSelf" href="/?spela" target="_blank" rel="noopener">Gå in själv</a>
+      <button class="btn main" id="copyInvite" type="button" data-t="kopiera_inbjudan"></button>
+      <button class="btn" id="copyAddr" type="button" data-t="kopiera_adressen"></button>
+      <a class="btn" id="joinSelf" href="/?spela" target="_blank" rel="noopener" data-t="ga_in_sjalv"></a>
     </div>
     <p id="copied"></p>
     </section>
 
     <section id="port">
-    <h2>Vid porten</h2>
+    <h2 data-t="vid_porten"></h2>
     <p id="status">…</p>
     <ul id="slots"></ul>
     <p class="dimtext" id="towerInfo"></p>
     <div class="buttons">
-      <button class="btn" id="startNow" type="button">Starta nu</button>
+      <button class="btn" id="startNow" type="button" data-t="starta_nu"></button>
     </div>
-    <p id="startHint">Börjar vandringen även om inte alla har tryckt Enter.</p>
+    <p id="startHint" data-t="start_hint"></p>
     </section>
 
     <section id="gm" hidden>
-      <h2>Översikt</h2>
+      <h2 data-t="oversikt"></h2>
       <p id="gmTop"></p>
       <div id="gmCols">
       <div id="gmMapCol">
         <div id="gmMapBox"><canvas id="gmMap"></canvas></div>
         <p id="gmFollow"></p>
-        <p class="dimtext">Klicka på en vandrares namn i tabellen för att låta kartan följa den. Fällor som väntar visas med sitt tecken. Tornet växer fram när någon går in i ett nytt rum, så rum som ingen har varit i finns inte än.</p>
+        <p class="dimtext" data-t="gm_karta_hjalp"></p>
       </div>
       <div id="gmCtl">
       <div class="gmrow">
-        <span class="gmlabel">Tid</span>
-        <button class="btn small" type="button" id="gmPause" data-gm="paus">Pausa</button>
-        <button class="btn small" type="button" data-gm="mer_tid">+30 s</button>
-        <button class="btn small" type="button" data-gm="avgor">Avgör rundan nu</button>
-        <button class="btn small" type="button" data-gm="sol" data-antal="-1">Solen −1</button>
-        <button class="btn small" type="button" data-gm="sol" data-antal="-5">Solen −5</button>
-        <button class="btn small" type="button" data-gm="sol" data-antal="1">Solen +1</button>
+        <span class="gmlabel" data-t="gm_tid"></span>
+        <button class="btn small" type="button" id="gmPause" data-gm="paus" data-t="pausa"></button>
+        <button class="btn small" type="button" data-gm="mer_tid" data-t="gm_mer_tid"></button>
+        <button class="btn small" type="button" data-gm="avgor" data-t="gm_avgor"></button>
+        <button class="btn small" type="button" data-gm="sol" data-antal="-1" data-t="gm_sol_minus_1"></button>
+        <button class="btn small" type="button" data-gm="sol" data-antal="-5" data-t="gm_sol_minus_5"></button>
+        <button class="btn small" type="button" data-gm="sol" data-antal="1" data-t="gm_sol_plus_1"></button>
       </div>
       <div class="gmrow">
-        <span class="gmlabel">Ormen</span>
-        <button class="btn small" type="button" data-gm="vack">Väck ormen</button>
-        <button class="btn small" type="button" data-gm="lugna">Lugna ormen</button>
+        <span class="gmlabel" data-t="gm_ormen"></span>
+        <button class="btn small" type="button" data-gm="vack" data-t="gm_vack"></button>
+        <button class="btn small" type="button" data-gm="lugna" data-t="gm_lugna"></button>
       </div>
       <div class="gmrow" id="gmReveal">
-        <span class="gmlabel">Avslöjandet</span>
-        <button class="btn small" type="button" id="gmLevelUp" data-gm="niva_upp">Nästa nivå</button>
-        <button class="btn small" type="button" id="gmHold" data-gm="niva_hall">Håll kvar nivån</button>
+        <span class="gmlabel" data-t="gm_avslojandet"></span>
+        <button class="btn small" type="button" id="gmLevelUp" data-gm="niva_upp" data-t="gm_niva_upp"></button>
+        <button class="btn small" type="button" id="gmHold" data-gm="niva_hall" data-t="gm_niva_hall"></button>
       </div>
       <form class="gmrow" id="gmVoice" autocomplete="off">
-        <span class="gmlabel">Tornets röst</span>
+        <span class="gmlabel" data-t="gm_rost"></span>
         <select id="gmVoiceTo"></select>
-        <input id="gmVoiceText" maxlength="200" placeholder="Någon viskar ditt namn i mörkret.">
-        <button class="btn small" type="submit">Säg</button>
+        <input id="gmVoiceText" maxlength="200" data-t-placeholder="gm_rost_exempel">
+        <button class="btn small" type="submit" data-t="gm_sag"></button>
       </form>
       <form class="gmrow" id="gmPlace" autocomplete="off">
-        <span class="gmlabel">I ett rum</span>
+        <span class="gmlabel" data-t="gm_i_rum"></span>
         <select id="gmRoom"></select>
         <select id="gmWhat"></select>
-        <button class="btn small" type="submit">Lägg dit</button>
+        <button class="btn small" type="submit" data-t="gm_lagg_dit"></button>
       </form>
       <p id="gmMsg"></p>
       </div>
       </div>
       <div class="tablewrap">
         <table id="gmPlayers">
-          <thead><tr><th>Vandrare</th><th>Var</th><th>Liv</th><th>Skatt</th><th>Drycker</th><th>Tillstånd</th><th>Drag</th><th>Ge eller ta</th></tr></thead>
+          <thead><tr><th data-t="kol_vandrare"></th><th data-t="kol_var"></th><th data-t="kol_liv"></th><th data-t="kol_skatt"></th><th data-t="kol_drycker"></th><th data-t="kol_tillstand"></th><th data-t="kol_drag"></th><th data-t="kol_ge"></th></tr></thead>
           <tbody></tbody>
         </table>
       </div>
       <details id="gmLogBox">
-        <summary><h2>Vandrarnas logg</h2></summary>
+        <summary><h2 data-t="logg"></h2></summary>
         <div class="gmrow">
-          <span class="gmlabel">Visa</span>
+          <span class="gmlabel" data-t="logg_visa"></span>
           <select id="gmLogWho"></select>
         </div>
         <div id="gmLog"></div>
@@ -283,121 +283,120 @@
     </section>
 
     <section id="next">
-    <h2>Inför nästa vandring</h2>
+    <h2 data-t="infor_nasta"></h2>
     <form id="settings" autocomplete="off">
-      <label for="sSv">Svårighet</label>
+      <label for="sSv" data-t="inst_svarighet"></label>
       <select id="sSv" name="svarighet"></select>
       <span class="note" id="svNote"></span>
 
-      <label for="sAI">AI-spelare</label>
+      <label for="sAI" data-t="inst_ai"></label>
       <select id="sAI" name="ai"><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option></select>
       <span class="note" id="aiNote"></span>
 
-      <label for="sSol">Solnedgång</label>
+      <label for="sSol" data-t="inst_sol"></label>
       <select id="sSol" name="sol"></select>
-      <span class="note">rundor</span>
+      <span class="note" data-t="not_sol"></span>
 
-      <label for="sTur">Turtid</label>
+      <label for="sTur" data-t="inst_turtid"></label>
       <select id="sTur" name="turtid"></select>
-      <span class="note">sekunder per runda</span>
+      <span class="note" data-t="not_turtid"></span>
 
-      <label for="sGM">Spelledarläge</label>
+      <label for="sGM" data-t="inst_spelledarlage"></label>
       <select id="sGM" name="spelledarlage">
-        <option value="0">av, jag spelar själv</option>
-        <option value="1">på, jag leder och ser allt</option>
+        <option value="0" data-t="val_spelledarlage_av"></option>
+        <option value="1" data-t="val_spelledarlage_pa"></option>
       </select>
-      <span class="note">då kan ingen spela från den här datorn</span>
+      <span class="note" data-t="not_spelledarlage"></span>
 
       <label for="sSprak" data-t="sprak"></label>
       <select id="sSprak" name="sprak">
-        <option value="sv">svenska</option>
-        <option value="en">English</option>
+        <option value="sv" data-t="val_svenska"></option>
+        <option value="en" data-t="val_english"></option>
       </select>
       <span class="note" data-t="sprak_not"></span>
 
       <details id="moreSettings">
-        <summary>Fler inställningar<span class="note" id="moreNote"></span></summary>
+        <summary><span data-t="fler_installningar"></span><span class="note" id="moreNote"></span></summary>
         <div class="grid">
-          <label for="sMin">Minst antal vandrare</label>
+          <label for="sMin" data-t="inst_min"></label>
           <select id="sMin" name="min"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option></select>
-          <span class="note">AI-spelare räknas med</span>
+          <span class="note" data-t="not_min"></span>
 
-          <label for="sRev">Avslöjandet</label>
-          <select id="sRev" name="avslojande"><option value="1">på</option><option value="0">av</option></select>
-          <span class="note">tornets hemlighet</span>
+          <label for="sRev" data-t="inst_avslojande"></label>
+          <select id="sRev" name="avslojande"><option value="1" data-t="val_pa"></option><option value="0" data-t="val_av"></option></select>
+          <span class="note" data-t="not_avslojande"></span>
 
-          <label for="sFr">Frånvarande vandrare</label>
+          <label for="sFr" data-t="inst_franvaro"></label>
           <select id="sFr" name="franvaro">
-            <option value="0">står still</option>
-            <option value="1">AI tar över efter 1 runda</option>
-            <option value="2">AI tar över efter 2 rundor</option>
-            <option value="3">AI tar över efter 3 rundor</option>
+            <option value="0" data-t="val_franvaro_star"></option>
+            <option value="1" data-t="val_franvaro_1"></option>
+            <option value="2"></option>
+            <option value="3"></option>
           </select>
-          <span class="note">när någon lämnar under vandringen</span>
+          <span class="note" data-t="not_franvaro"></span>
 
-          <label for="sStrid">Strid mellan vandrare</label>
+          <label for="sStrid" data-t="inst_strid"></label>
           <select id="sStrid" name="strid">
-            <option value="pa">på</option>
-            <option value="halva">efter halva tiden</option>
-            <option value="av">av</option>
+            <option value="pa" data-t="val_pa"></option>
+            <option value="halva" data-t="val_strid_halva"></option>
+            <option value="av" data-t="val_av"></option>
           </select>
-          <span class="note">portrummen är alltid fredade</span>
+          <span class="note" data-t="not_strid"></span>
 
-          <label for="sSyn">Vandrarna syns</label>
+          <label for="sSyn" data-t="inst_synlighet"></label>
           <select id="sSyn" name="synlighet">
-            <option value="egen">bara när de möts, egen karta</option>
-            <option value="moten">bara när de möts</option>
-            <option value="alla">alltid, för alla</option>
+            <option value="egen" data-t="val_syn_egen"></option>
+            <option value="moten" data-t="val_syn_moten"></option>
+            <option value="alla" data-t="val_syn_alla"></option>
           </select>
-          <span class="note">egen karta: bara rum man själv har gått igenom</span>
+          <span class="note" data-t="not_synlighet"></span>
 
-          <label for="sStorlek">Tornets storlek</label>
+          <label for="sStorlek" data-t="inst_storlek"></label>
           <select id="sStorlek" name="storlek">
-            <option value="0">automatisk</option>
-            <option value="9">9 × 9 rum</option>
-            <option value="11">11 × 11 rum</option>
-            <option value="13">13 × 13 rum</option>
+            <option value="0" data-t="val_storlek_auto"></option>
+            <option value="9"></option>
+            <option value="11"></option>
+            <option value="13"></option>
           </select>
-          <span class="note">automatisk: 9 för upp till fyra, 11 för sex, 13 för åtta</span>
+          <span class="note" data-t="not_storlek"></span>
 
-          <label for="sKlass">Klasser</label>
+          <label for="sKlass" data-t="inst_klasser"></label>
           <select id="sKlass" name="klasser">
-            <option value="1">på, vandrarna väljer en av två</option>
-            <option value="0">av, alla är vanliga vandrare</option>
+            <option value="1" data-t="val_klasser_pa"></option>
+            <option value="0" data-t="val_klasser_av"></option>
           </select>
-          <span class="note">styrkor och svagheter, se klasser.json</span>
+          <span class="note" data-t="not_klasser"></span>
         </div>
       </details>
     </form>
     <p id="saved"></p>
-    <p class="dimtext" id="settingsHint">Sparas till nästa gång. AI-spelare kommer och går direkt, resten gäller från nästa omgång.</p>
+    <p class="dimtext" id="settingsHint" data-t="inst_hint"></p>
     </section>
 
     <section id="foot">
     <details id="helpBox">
-    <summary><h2>Kommer någon inte in?</h2></summary>
+    <summary><h2 data-t="hjalp"></h2></summary>
     <ul id="help">
-      <li>Kontrollera att alla är på samma wifi. Gästnät hindrar ofta datorer från att nå varandra.</li>
-      <li>Fungerar inte namnet med <code>.local</code>, prova adressen med siffror.</li>
-      <li>Frågade macOS om spelet får ta emot nätverksanslutningar? Då måste du ha svarat Tillåt.
-        Det går att ändra under Systeminställningar → Nätverk → Brandvägg.</li>
-      <li>Den som tappar anslutningen går tillbaka till adressen och skriver samma namn igen.</li>
+      <li data-t="hjalp_wifi"></li>
+      <li data-t-html="hjalp_local"></li>
+      <li data-t="hjalp_macos"></li>
+      <li data-t="hjalp_tappar"></li>
     </ul>
     </details>
 
     <details id="reloadBox">
-    <summary><h2>Läs om innehållet</h2></summary>
+    <summary><h2 data-t="las_om"></h2></summary>
     <p>
-      <button class="btn" id="reload" type="button">Läs om innehållet</button>
-      <span class="note">rum, fällor, varelser och texter i data/, utan att starta om tornet</span>
+      <button class="btn" id="reload" type="button" data-t="las_om"></button>
+      <span class="note" data-t="las_om_not"></span>
     </p>
     <p id="reloadMsg"></p>
     </details>
 
-    <h2>Stäng tornet</h2>
+    <h2 data-t="stang"></h2>
     <p class="dimtext">
-      <button class="btn small" id="closeTower" type="button">Stäng tornet</button>
-      eller tryck Ctrl+C i terminalen. Spelarna får ett meddelande om att tornet stänger, och datorn får somna igen.
+      <button class="btn small" id="closeTower" type="button" data-t="stang"></button>
+      <span data-t="stang_not"></span>
     </p>
     </section>
   </main>
@@ -407,50 +406,51 @@
 <script src="map.js"></script>
 <script>
 "use strict";
+// Texterna står i data/vardsidan.json och hämtas med t("nyckel") (texter.js).
 const $ = (id) => document.getElementById(id);
 const COLORS = MapView.PLAYER_COLORS;
 let view = null;
+let lastGM = null; // den senaste översikten, för att rita om när språket byts
 const openedAt = Date.now();
 let helpShown = false;
 let closed = false;
 
 function inviteText(v) {
-  let t = "Kom och spela Ormtornet!\n" +
-    "Var på samma wifi som jag, öppna Safari eller Chrome och gå till:\n" + v.addrs.name;
-  if (v.addrs.ips.length) t += "\n\nFungerar inte det, prova:\n" + v.addrs.ips.join("\n");
-  return t;
+  let s = t("inbjudan", { adress: v.addrs.name });
+  if (v.addrs.ips.length) s += "\n\n" + t("inbjudan_ips", { adresser: v.addrs.ips.join("\n") });
+  return s;
 }
 
-async function copy(text, what) {
+async function copy(text, done) {
   try {
     await navigator.clipboard.writeText(text);
-    $("copied").textContent = what + " kopierad. Klistra in den i Meddelanden eller er gruppchatt.";
+    $("copied").textContent = t(done);
   } catch {
-    $("copied").textContent = "Kunde inte kopiera. Markera texten ovan och kopiera själv.";
+    $("copied").textContent = t("kopiera_fel");
   }
 }
 
-$("copyInvite").onclick = () => view && copy(inviteText(view), "Inbjudan");
-$("copyAddr").onclick = () => view && copy(view.addrs.name, "Adressen");
+$("copyInvite").onclick = () => view && copy(inviteText(view), "kopierad_inbjudan");
+$("copyAddr").onclick = () => view && copy(view.addrs.name, "kopierad_adressen");
 
 $("closeTower").onclick = async () => {
-  if (!confirm("Stäng tornet? Alla spelare kopplas bort och servern stängs.")) return;
+  if (!confirm(t("stang_fraga"))) return;
   try {
     const r = await fetch("/spelledare/stang", { method: "POST", headers: { "X-Ormtornet": "spelledare" } });
     if (!r.ok) throw new Error(r.status);
     closed = true;
-    $("status").textContent = "Tornet är stängt. Du kan stänga den här fliken.";
+    $("status").textContent = t("status_stangt");
     $("status").classList.add("dead");
     $("closeTower").disabled = true;
   } catch {
     $("copied").textContent = "";
-    alert("Tornet svarade inte. Kanske är det redan stängt.");
+    alert(t("stang_svarar_inte"));
   }
 };
 
 // seedText: vandringens frö, för att kunna spela upp samma torn igen (-fro).
 function seedText(v) {
-  return v.seed ? " Frö " + v.seed + "." : "";
+  return v.seed ? " " + t("fro", { fro: v.seed }) : "";
 }
 
 function statusText(v) {
@@ -458,34 +458,30 @@ function statusText(v) {
   const humans = here.filter((p) => !p.bot);
   const ready = humans.filter((p) => p.ready);
   if (v.phase === "spel") {
-    return "Vandringen pågår. Runda " + v.round + ", " + v.sun + " av " + v.sunMax + " rundor kvar till solnedgången." + seedText(v);
+    return t("status_spel", { runda: v.round, sol: v.sun, max: v.sunMax }) + seedText(v);
   }
-  if (v.phase === "klassval") {
-    return "Vandrarna väljer klass. Vandringen börjar när alla har valt eller tiden är slut. Starta nu börjar den direkt.";
-  }
-  const prefix = v.phase === "slut" ? "Vandringen är slut." + seedText(v) + " " : "";
-  if (v.settings.spelledarlage) {
-    return prefix + here.length + " vandrare vid portarna. Du startar vandringen med Starta nu.";
-  }
-  if (humans.length === 0) return prefix + "Väntar på vandrare.";
+  if (v.phase === "klassval") return t("status_klassval");
+  const prefix = v.phase === "slut" ? t("status_slut") + seedText(v) + " " : "";
+  if (v.settings.spelledarlage) return prefix + t("status_spelledarlage", { antal: here.length });
+  if (humans.length === 0) return prefix + t("status_vantar");
   if (here.length < v.minPlayers) {
-    return prefix + "Väntar på fler vandrare. Minst " + v.minPlayers + " behövs, " + here.length + " är här.";
+    return prefix + t("status_vantar_fler", { min: v.minPlayers, har: here.length });
   }
   if (ready.length < humans.length) {
-    return prefix + ready.length + " av " + humans.length + " är redo. Det börjar när alla har tryckt Enter.";
+    return prefix + t("status_redo", { redo: ready.length, alla: humans.length });
   }
-  return prefix + "Alla är redo.";
+  return prefix + t("status_alla_redo");
 }
 
 function tag(p, phase) {
-  if (!p.online) return ["borta", "away"];
-  if (p.ai) return ["AI spelar tills " + p.name + " är tillbaka", "ai"];
-  if (p.bot) return ["datorstyrd", ""];
-  if (phase === "klassval") return p.chosen ? ["har valt klass", "ok"] : ["väljer klass", ""];
+  if (!p.online) return [t("borta"), "away"];
+  if (p.ai) return [t("tagg_ai", { namn: p.name }), "ai"];
+  if (p.bot) return [t("tagg_dator"), ""];
+  if (phase === "klassval") return p.chosen ? [t("tagg_har_valt"), "ok"] : [t("tagg_valjer"), ""];
   if (phase === "spel") {
-    return { ute: ["ute", "ok"], forlorad: ["förlorad", "away"], dod: ["död", "away"] }[p.status] || ["i tornet", ""];
+    return { ute: [t("ute"), "ok"], forlorad: [t("forlorad"), "away"], dod: [t("dod"), "away"] }[p.status] || [t("tagg_i_tornet"), ""];
   }
-  return p.ready ? ["redo", "ok"] : ["inte redo", ""];
+  return p.ready ? [t("tagg_redo"), "ok"] : [t("tagg_inte_redo"), ""];
 }
 
 function render(v) {
@@ -493,9 +489,9 @@ function render(v) {
   const ips = $("ips");
   ips.textContent = "";
   if (v.addrs.ips.length) {
-    ips.append("Om namnet inte fungerar: ");
+    ips.append(t("ips_om") + " ");
     v.addrs.ips.forEach((a, i) => {
-      if (i) ips.append(" eller ");
+      if (i) ips.append(" " + t("ips_eller") + " ");
       const s = document.createElement("span");
       s.textContent = a;
       ips.append(s);
@@ -505,7 +501,7 @@ function render(v) {
   $("status").textContent = statusText(v);
   $("status").classList.remove("dead");
 
-  $("towerInfo").textContent = "Tornet: " + v.size + " × " + v.size + " rum, solen går ner efter " + v.sunMax + " rundor.";
+  $("towerInfo").textContent = t("torn_info", { storlek: v.size, max: v.sunMax });
   const ul = $("slots");
   ul.textContent = "";
   for (let slot = 0; slot < v.maxPlayers; slot++) {
@@ -519,21 +515,21 @@ function render(v) {
       mark.style.color = COLORS[slot];
       name.append(mark, p.name);
       const [text, cls] = tag(p, v.phase);
-      const t = document.createElement("span");
-      t.className = "tag " + cls;
-      t.textContent = text;
-      li.append(name, t);
+      const tg = document.createElement("span");
+      tg.className = "tag " + cls;
+      tg.textContent = text;
+      li.append(name, tg);
       if (p.canTakeOver) {
         const b = document.createElement("button");
         b.type = "button";
         b.className = "btn small";
         b.dataset.slot = String(slot);
-        b.textContent = "AI tar över";
+        b.textContent = t("ai_tar_over");
         li.append(b);
       }
     } else {
       name.className = "name empty";
-      name.textContent = "·  ledig plats";
+      name.textContent = "·  " + t("ledig_plats");
       li.append(name);
     }
     ul.append(li);
@@ -546,10 +542,10 @@ function render(v) {
   const canStart = humans > 0 || (gm && v.players.length > 0);
   $("startNow").disabled = v.phase === "spel" || !canStart;
   $("startHint").textContent = v.phase === "spel"
-    ? "Vandringen pågår."
+    ? t("start_pagar")
     : !canStart
-      ? (gm ? "Det behövs minst en vandrare, människa eller AI-spelare." : "Minst en människa måste vara i tornet.")
-      : "Börjar vandringen även om inte alla har tryckt Enter eller ni är färre än minsta antalet.";
+      ? (gm ? t("start_minst_en") : t("start_minst_manniska"))
+      : t("start_hint_alla");
 
   renderBar(v, canStart);
   for (const f of ["lobby", "klassval", "spel", "slut"]) document.body.classList.toggle("fas-" + f, v.phase === f);
@@ -570,30 +566,30 @@ function render(v) {
 let paused = false;
 
 function renderBar(v, canStart) {
-  const phase = { lobby: "Lobbyn", klassval: "Klassvalet", slut: "Vandringen är slut" }[v.phase] ||
-    "Runda " + v.round + " · solen " + v.sun + " av " + v.sunMax;
-  $("barPhase").textContent = phase + (paused && v.phase === "spel" ? " · pausad" : "");
+  const phase = { lobby: t("rad_lobby"), klassval: t("rad_klassval"), slut: t("rad_slut") }[v.phase] ||
+    t("rad_runda", { runda: v.round, sol: v.sun, max: v.sunMax });
+  $("barPhase").textContent = paused && v.phase === "spel" ? t("rad_pausad", { fas: phase }) : phase;
   const who = $("barWho");
   who.textContent = "";
   const here = v.players.filter((p) => p.online);
   const humans = here.filter((p) => !p.bot).length;
-  who.append(humans + (humans === 1 ? " människa" : " människor") + " och " + (here.length - humans) + " AI här");
+  who.append(t(humans === 1 ? "rad_har_manniska" : "rad_har_manniskor", { antal: humans, ai: here.length - humans }));
   const away = v.players.filter((p) => !p.online && !p.bot).map((p) => p.name);
   if (away.length) {
     const s = document.createElement("span");
     s.className = "away";
-    s.textContent = " · borta: " + away.join(", ");
+    s.textContent = " · " + t("rad_borta", { namn: away.join(", ") });
     who.append(s);
   }
   const b = $("barMain");
   if (v.phase !== "spel") {
     b.hidden = false;
-    b.textContent = "Starta nu";
+    b.textContent = t("starta_nu");
     b.dataset.act = "starta";
     b.disabled = !canStart;
   } else if (v.settings.spelledarlage) {
     b.hidden = false;
-    b.textContent = paused ? "Fortsätt" : "Pausa";
+    b.textContent = paused ? t("fortsatt") : t("pausa");
     b.dataset.act = paused ? "fortsatt" : "paus";
     b.disabled = false;
   } else {
@@ -619,25 +615,35 @@ $("gmPlayers").addEventListener("click", (ev) => {
   const id = +b.dataset.follow;
   following = following === id ? 0 : id;
   MapView.follow(following);
-  $("gmFollow").textContent = following ? "Kartan följer " + b.textContent.replace(/^◉ /, "") + ". Klicka på namnet igen för hela tornet." : "";
+  $("gmFollow").textContent = following ? t("folj_text", { namn: b.textContent.replace(/^◉ /, "") }) : "";
 });
-const SLEEP_WORDS = ["sover djupt", "sover oroligt", "är nära att vakna"];
+
+// whoText: vandrarens namn i tabellen, med AI, dator och klass.
+function whoText(p) {
+  let s = p.ai ? t("namn_ai", { namn: p.name }) : p.bot ? t("namn_dator", { namn: p.name }) : p.name;
+  if (p.klass) s = t("namn_klass", { vem: s, klass: p.klass });
+  return s;
+}
+
+// serpentText: ormens rad i översikten.
+function serpentText(s) {
+  const key = !s.wakes ? "top_ormen" : s.wakes === 1 ? "top_ormen_vaknat_en" : "top_ormen_vaknat";
+  return t(key, { somn: t("somn_" + s.sleep), sov: s.sleepCards, vakna: s.wakeCards, ganger: s.wakes, risk: s.risk });
+}
 
 function renderGM(o) {
+  lastGM = o;
   const top = $("gmTop");
   top.textContent = "";
   const m = o.map;
   const parts = [];
-  if (m.phase === "spel") parts.push("Runda " + m.round + ", solen " + m.sun + " av " + m.sunMax);
-  parts.push("Ormen " + SLEEP_WORDS[o.serpent.sleep] + " (" + o.serpent.sleepCards + " sovkort, " + o.serpent.wakeCards + " vakna-kort kvar" +
-    (o.serpent.wakes ? ", har vaknat " + o.serpent.wakes + (o.serpent.wakes === 1 ? " gång" : " gånger") : "") +
-    ", " + o.serpent.risk + " % risk att den vaknar vid nästa näve)");
+  if (m.phase === "spel") parts.push(t("top_runda", { runda: m.round, sol: m.sun, max: m.sunMax }));
+  parts.push(serpentText(o.serpent));
   if (m.reveal) {
-    let lvl = "Avslöjandet nivå " + o.level + " av 4";
-    if (o.held) lvl += " (hålls kvar" + (o.sunLevel > o.level ? ", solen säger " + o.sunLevel : "") + ")";
-    parts.push(lvl + ", " + o.clues + " ledtrådar utdelade");
+    const key = !o.held ? "top_niva" : o.sunLevel > o.level ? "top_niva_halls_sol" : "top_niva_halls";
+    parts.push(t(key, { niva: o.level, solniva: o.sunLevel, ledtradar: o.clues }));
   }
-  parts.push(o.traps + (o.traps === 1 ? " fälla väntar" : " fällor väntar"));
+  parts.push(t(o.traps === 1 ? "top_falla" : "top_fallor", { antal: o.traps }));
   top.textContent = parts.join(" · ");
 
   if (!mapReady || mapSize !== m.size) {
@@ -654,17 +660,18 @@ function renderGM(o) {
     const tr = document.createElement("tr");
     if (p.status !== "inne") tr.className = "dead";
     const cond = [];
-    if (p.cellar) cond.push("källaren " + p.cellar);
-    if (p.stuck) cond.push("fast " + p.stuck);
-    if (p.poison) cond.push("gift " + p.poison);
-    if (p.dark) cond.push("mörker " + p.dark);
-    if (!p.online) cond.push("borta");
+    if (p.cellar) cond.push(t("till_kallaren", { antal: p.cellar }));
+    if (p.stuck) cond.push(t("till_fast", { antal: p.stuck }));
+    if (p.poison) cond.push(t("till_gift", { antal: p.poison }));
+    if (p.dark) cond.push(t("till_morker", { antal: p.dark }));
+    if (!p.online) cond.push(t("borta"));
     if (p.foremal && p.foremal.length) cond.push(p.foremal.join(", "));
-    if (p.invigd) cond.push("invigd");
-    else if (p.viskning) cond.push("viskade: " + p.viskning);
-    const who = p.name + (p.ai ? " (AI)" : p.bot ? " (dator)" : "") + (p.klass ? ", " + p.klass : "");
-    const where = { ute: "ute", forlorad: "förlorad", dod: "död" }[p.status] || p.room || "";
-    const cells = [who, where, p.hp + "/" + (p.maxHp || o.maxHp), p.treasure + " guld", p.potions, cond.join(", "), p.action || (m.phase === "spel" && p.status === "inne" ? "väljer" : "")];
+    if (p.invigd) cond.push(t("till_invigd"));
+    else if (p.viskning) cond.push(t("till_viskade", { text: p.viskning }));
+    const who = whoText(p);
+    const where = { ute: t("ute"), forlorad: t("forlorad"), dod: t("dod") }[p.status] || p.room || "";
+    const action = p.action || (m.phase === "spel" && p.status === "inne" ? t("drag_valjer") : "");
+    const cells = [who, where, p.hp + "/" + (p.maxHp || o.maxHp), t("guld", { antal: p.treasure }), p.potions, cond.join(", "), action];
     cells.forEach((c, i) => {
       const td = document.createElement("td");
       td.textContent = c;
@@ -675,7 +682,7 @@ function renderGM(o) {
         b.type = "button";
         b.className = "follow" + (following === p.id ? " on" : "");
         b.dataset.follow = String(p.id);
-        b.title = following === p.id ? "Visa hela tornet igen" : "Låt kartan följa " + p.name;
+        b.title = following === p.id ? t("folj_hela") : t("folj_titel", { namn: p.name });
         b.textContent = (following === p.id ? "◉ " : "") + c;
         b.style.color = COLORS[p.slot];
         td.append(b);
@@ -683,18 +690,21 @@ function renderGM(o) {
       if (i === 5 && c) td.className = "cond";
       tr.append(td);
     });
+    // Följer kartan vandraren skrivs raden under kartan på nytt, så att den
+    // får nya texter när språket byts.
+    if (following === p.id) $("gmFollow").textContent = t("folj_text", { namn: who });
     const give = document.createElement("td");
     give.className = "give";
     if (m.phase === "spel" && p.status === "inne") {
-      [["liv", -1, "liv −"], ["liv", 1, "liv +"], ["guld", -10, "guld −10"], ["guld", 10, "guld +10"], ["dryck", -1, "dryck −"], ["dryck", 1, "dryck +"]]
-        .forEach(([typ, n, label]) => {
+      [["liv", -1, "ge_liv_minus"], ["liv", 1, "ge_liv_plus"], ["guld", -10, "ge_guld_minus"], ["guld", 10, "ge_guld_plus"], ["dryck", -1, "ge_dryck_minus"], ["dryck", 1, "ge_dryck_plus"]]
+        .forEach(([typ, n, key]) => {
           const b = document.createElement("button");
           b.type = "button";
           b.className = "btn small";
           b.dataset.gm = typ;
           b.dataset.antal = String(n);
           b.dataset.spelare = String(p.id);
-          b.textContent = label;
+          b.textContent = t(key);
           give.append(b);
         });
       // Inviga, eller ta tillbaka, och ge ett föremål.
@@ -704,7 +714,7 @@ function renderGM(o) {
         inv.className = "btn small";
         inv.dataset.gm = "invig";
         inv.dataset.spelare = String(p.id);
-        inv.textContent = p.invigd ? "glöm invigd" : "inviga";
+        inv.textContent = p.invigd ? t("ge_glom_invigd") : t("ge_inviga");
         give.append(inv);
       }
       // Översikten ritas om hela tiden: kom ihåg vilket föremål som är valt.
@@ -718,7 +728,7 @@ function renderGM(o) {
       gb.dataset.gm = "foremal";
       gb.dataset.spelare = String(p.id);
       gb.dataset.fromSelect = "1";
-      gb.textContent = "ge";
+      gb.textContent = t("ge_foremal");
       give.append(sel, gb);
     }
     tr.append(give);
@@ -736,9 +746,9 @@ let logKey = "";
 
 function renderLog(o) {
   const who = $("gmLogWho");
-  fillSelect(who, [{ label: "alla vandrare", value: "" }].concat(o.players.map((p) => ({ label: p.name, value: p.name }))));
+  fillSelect(who, [{ label: t("logg_alla"), value: "" }].concat(o.players.map((p) => ({ label: p.name, value: p.name }))));
   const entries = o.log.filter((e) => !who.value || e.to.includes(who.value));
-  const key = JSON.stringify([entries.length, entries.length && entries[entries.length - 1].text, who.value, logOpen]);
+  const key = JSON.stringify([entries.length, entries.length && entries[entries.length - 1].text, who.value, logOpen, UI.sprak]);
   if (key === logKey) return;
   logKey = key;
   const rounds = new Map();
@@ -754,7 +764,7 @@ function renderLog(o) {
   if (!order.length) {
     const d = document.createElement("div");
     d.className = "dim";
-    d.textContent = "Inget än.";
+    d.textContent = t("logg_tom");
     box.append(d);
   }
   order.forEach((round, i) => {
@@ -765,8 +775,9 @@ function renderLog(o) {
     const head = document.createElement("button");
     head.type = "button";
     head.className = "roundhead";
-    head.textContent = (open ? "▾ " : "▸ ") + (round ? "Runda " + round : "Före vandringen") +
-      (open ? "" : " · " + list.length + (list.length === 1 ? " rad" : " rader"));
+    let label = round ? t("logg_runda", { runda: round }) : t("logg_fore");
+    if (!open) label += " · " + t(list.length === 1 ? "logg_rad" : "logg_rader", { antal: list.length });
+    head.textContent = (open ? "▾ " : "▸ ") + label;
     head.addEventListener("click", () => {
       logOpen[round] = !open;
       renderLog(o);
@@ -778,10 +789,10 @@ function renderLog(o) {
         const w = document.createElement("span");
         w.className = "who";
         w.textContent = e.to.join(", ") + ": ";
-        const t = document.createElement("span");
-        if (e.c) t.className = e.c;
-        t.textContent = e.text;
-        d.append(w, t);
+        const line = document.createElement("span");
+        if (e.c) line.className = e.c;
+        line.textContent = e.text;
+        d.append(w, line);
         sec.append(d);
       });
     }
@@ -811,6 +822,14 @@ function fillSelect(sel, options) {
   if ([...sel.options].some((x) => x.value === keep)) sel.value = keep;
 }
 
+// roomLabel: rummet i listan I ett rum, med fälla och varelse.
+function roomLabel(r) {
+  const parts = [t("rum_namn", { namn: r.name, x: r.x, y: r.y })];
+  if (r.trap) parts.push(t("rum_falla"));
+  if (r.monster) parts.push(t("rum_varelse"));
+  return parts.join(" · ");
+}
+
 function renderControls(o) {
   const playing = o.map.phase === "spel";
   document.querySelectorAll("#gm .gmrow button[data-gm]").forEach((b) => (b.disabled = !playing));
@@ -818,23 +837,25 @@ function renderControls(o) {
   paused = !!o.paused;
   const pause = $("gmPause");
   pause.dataset.gm = o.paused ? "fortsatt" : "paus";
-  pause.textContent = o.paused ? "Fortsätt" : "Pausa";
+  pause.dataset.t = o.paused ? "fortsatt" : "pausa";
+  pause.textContent = t(pause.dataset.t);
   $("gmReveal").hidden = !o.map.reveal;
   $("gmLevelUp").disabled = !playing || o.level >= 4;
   const hold = $("gmHold");
   hold.dataset.gm = o.held ? "niva_slapp" : "niva_hall";
-  hold.textContent = o.held ? "Släpp nivån" : "Håll kvar nivån";
+  hold.dataset.t = o.held ? "gm_niva_slapp" : "gm_niva_hall";
+  hold.textContent = t(hold.dataset.t);
   if (playing) {
-    const t = o.paused ? "pausad med " + o.timeLeft + " s kvar" : o.timeLeft + " s kvar av rundan";
-    $("gmTop").textContent += " · " + t;
+    const left = o.paused ? t("top_pausad", { sek: o.timeLeft }) : t("top_tid", { sek: o.timeLeft });
+    $("gmTop").textContent += " · " + left;
   }
-  fillSelect($("gmVoiceTo"), [{ label: "till alla", value: "0" }].concat(o.players.map((p) => ({ label: "till " + p.name, value: String(p.id) }))));
+  fillSelect($("gmVoiceTo"), [{ label: t("rost_alla"), value: "0" }].concat(o.players.map((p) => ({ label: t("rost_till", { namn: p.name }), value: String(p.id) }))));
   fillSelect($("gmRoom"), o.rooms.length
-    ? o.rooms.map((r) => ({ label: r.name + " (" + r.x + "," + r.y + ")" + (r.trap ? " · fälla" : "") + (r.monster ? " · varelse" : ""), value: r.x + "," + r.y }))
-    : [{ label: "inga rum ännu", value: "" }]);
+    ? o.rooms.map((r) => ({ label: roomLabel(r), value: r.x + "," + r.y }))
+    : [{ label: t("rum_inga"), value: "" }]);
   fillSelect($("gmWhat"), [
-    { group: "Fälla", items: o.trapTypes.map((t) => ({ label: t.namn, value: "falla:" + t.id })) },
-    { group: "Varelse", items: o.monsterTypes.map((t) => ({ label: t.namn, value: "varelse:" + t.id })) },
+    { group: t("grupp_falla"), items: o.trapTypes.map((x) => ({ label: x.namn, value: "falla:" + x.id })) },
+    { group: t("grupp_varelse"), items: o.monsterTypes.map((x) => ({ label: x.namn, value: "varelse:" + x.id })) },
   ]);
 }
 
@@ -849,13 +870,13 @@ async function intervene(req) {
     const r = await post("/spelledare/ingrepp", req);
     if (!r.ok) {
       const data = await r.json().catch(() => ({}));
-      gmSay(data.fel || "Ingreppet gick inte.", true);
+      gmSay(data.fel || t("ingrepp_fel"), true);
       return false;
     }
     gmSay("");
     return true;
   } catch {
-    gmSay("Tornet svarar inte.", true);
+    gmSay(t("svarar_inte"), true);
     return false;
   }
 }
@@ -867,8 +888,8 @@ $("gm").addEventListener("click", (ev) => {
   if (b.dataset.antal) req.antal = +b.dataset.antal;
   if (b.dataset.spelare) req.spelare = +b.dataset.spelare;
   if (b.dataset.fromSelect) req.id = b.parentElement.querySelector("select").value;
-  if (req.typ === "niva_upp" && !confirm("Flytta fram avslöjandet en nivå? Alla vandrare märker det direkt.")) return;
-  if (req.typ === "vack" && !confirm("Väcka ormen? De som står i skattkammaren blir kastade ut och skadade.")) return;
+  if (req.typ === "niva_upp" && !confirm(t("fraga_niva_upp"))) return;
+  if (req.typ === "vack" && !confirm(t("fraga_vack"))) return;
   intervene(req);
 });
 
@@ -876,12 +897,12 @@ $("gmVoice").addEventListener("submit", async (ev) => {
   ev.preventDefault();
   const text = $("gmVoiceText").value.trim();
   if (!text) {
-    gmSay("Skriv något för tornet att säga.", true);
+    gmSay(t("rost_tom"), true);
     return;
   }
   if (await intervene({ typ: "rost", spelare: +$("gmVoiceTo").value, text })) {
     $("gmVoiceText").value = "";
-    gmSay("Tornet har talat.");
+    gmSay(t("rost_klar"));
   }
 });
 
@@ -889,7 +910,7 @@ $("gmPlace").addEventListener("submit", async (ev) => {
   ev.preventDefault();
   const [x, y] = $("gmRoom").value.split(",").map(Number);
   const [typ, id] = $("gmWhat").value.split(":");
-  if (await intervene({ typ, x, y, id })) gmSay("Klart.");
+  if (await intervene({ typ, x, y, id })) gmSay(t("klart"));
 });
 
 async function pollGM() {
@@ -899,6 +920,7 @@ async function pollGM() {
       const r = await fetch("/spelledare/oversikt" + seenParam(), { cache: "no-store" });
       if (r.ok) {
         const o = await r.json();
+        if (await refreshTexts("vardsidan", o.sprak)) redraw();
         renderGM(o);
         renderControls(o);
       }
@@ -919,27 +941,42 @@ function fillOptions(sel, values, current) {
   all.forEach((n) => sel.append(new Option(String(n), String(n))));
 }
 
+// optionTexts: de val i formuläret som har ett tal i texten. De andra
+// valen får sina texter av applyTexts.
+function optionTexts() {
+  [...$("sFr").options].forEach((o) => {
+    if (+o.value >= 2) o.text = t("val_franvaro_n", { antal: o.value });
+  });
+  [...$("sStorlek").options].forEach((o) => {
+    if (+o.value) o.text = t("storlek_rum", { storlek: o.value });
+  });
+}
+optionTexts();
+
+// moreText: de hopfällda inställningarna i korthet.
+function moreText(s) {
+  const strid = { pa: "kort_strid_pa", halva: "kort_strid_halva", av: "kort_strid_av" }[s.strid];
+  const syn = { egen: "kort_syn_egen", moten: "kort_syn_moten", alla: "kort_syn_alla" }[s.synlighet];
+  return [
+    t("kort_min", { antal: s.min }),
+    t(s.avslojande ? "kort_avslojande_pa" : "kort_avslojande_av"),
+    s.franvaro ? t("kort_franvaro", { antal: s.franvaro }) : t("kort_franvaro_star"),
+    strid ? t(strid) : t("kort_strid", { strid: s.strid }),
+    syn ? t(syn) : t("kort_syn", { syn: s.synlighet }),
+    s.storlek ? t("storlek_rum", { storlek: s.storlek }) : t("kort_storlek_auto"),
+    t(s.klasser ? "kort_klasser_pa" : "kort_klasser_av"),
+  ].join(" · ");
+}
+
 function renderSettings(v) {
   const s = v.settings;
   const form = $("settings");
   const playing = v.phase === "spel";
   form.querySelectorAll("select").forEach((el) => (el.disabled = playing));
-  $("settingsHint").textContent = playing
-    ? "Kan ändras när omgången är slut."
-    : "Sparas till nästa gång. AI-spelare kommer och går direkt, resten gäller från nästa omgång.";
-  $("aiNote").textContent = s.ai > v.bots && !playing
-    ? v.bots + " får plats just nu, resten kliver in om någon går"
-    : "";
+  $("settingsHint").textContent = playing ? t("inst_hint_spel") : t("inst_hint");
+  $("aiNote").textContent = s.ai > v.bots && !playing ? t("not_ai", { antal: v.bots }) : "";
   // De hopfällda inställningarna i korthet, så att de syns utan att fällas ut.
-  $("moreNote").textContent = [
-    "minst " + s.min,
-    "avslöjandet " + (s.avslojande ? "på" : "av"),
-    s.franvaro ? "AI tar över efter " + s.franvaro : "frånvarande står still",
-    "strid " + ({ pa: "på", halva: "efter halva tiden", av: "av" }[s.strid] || s.strid),
-    "syns " + ({ egen: "när de möts, egen karta", moten: "när de möts", alla: "alltid" }[s.synlighet] || s.synlighet),
-    s.storlek ? s.storlek + " × " + s.storlek + " rum" : "storlek automatisk",
-    "klasser " + (s.klasser ? "på" : "av"),
-  ].join(" · ");
+  $("moreNote").textContent = moreText(s);
   if (saving || form.contains(document.activeElement)) return;
   const sv = $("sSv");
   const levels = v.svarigheter || [];
@@ -966,7 +1003,7 @@ function renderSettings(v) {
   $("sRev").value = s.avslojande ? "1" : "0";
   const fr = $("sFr");
   if (![...fr.options].some((o) => +o.value === s.franvaro)) {
-    fr.append(new Option("AI tar över efter " + s.franvaro + " rundor", String(s.franvaro)));
+    fr.append(new Option(t("val_franvaro_n", { antal: s.franvaro }), String(s.franvaro)));
   }
   fr.value = String(s.franvaro);
   $("sStrid").value = s.strid;
@@ -975,6 +1012,18 @@ function renderSettings(v) {
   $("sKlass").value = s.klasser ? "1" : "0";
   $("sStorlek").value = String(s.storlek || 0);
   $("sSprak").value = s.sprak || "sv";
+}
+
+// redraw ritar om det skriptet själv har skrivit, när språket har bytts.
+// applyTexts har redan fyllt i det som står i HTML:en.
+function redraw() {
+  optionTexts();
+  logKey = "";
+  if (view) render(view);
+  if (lastGM) {
+    renderGM(lastGM);
+    renderControls(lastGM);
+  }
 }
 
 function post(path, body) {
@@ -1014,11 +1063,11 @@ $("settings").addEventListener("change", async () => {
   try {
     const r = await post("/spelledare/installningar", s);
     const data = await r.json().catch(() => ({}));
-    if (!r.ok) say(data.fel || "Kunde inte ändra inställningarna.", true);
+    if (!r.ok) say(data.fel || t("inst_fel"), true);
     else if (data.varning) say(data.varning, true);
-    else say(data.text || "Sparat.");
+    else say(data.text || t("sparat"));
   } catch {
-    say("Tornet svarar inte.", true);
+    say(t("svarar_inte"), true);
   }
   saving = false;
 });
@@ -1031,25 +1080,25 @@ $("slots").addEventListener("click", async (ev) => {
     const r = await post("/spelledare/ta-over", { slot: +b.dataset.slot });
     if (!r.ok) {
       const data = await r.json().catch(() => ({}));
-      alert(data.fel || "AI:n kunde inte ta över.");
+      alert(data.fel || t("ta_over_fel"));
     }
   } catch {
-    alert("Tornet svarar inte.");
+    alert(t("svarar_inte"));
   }
 });
 
 // Läs om innehållet: data/ läses och kontrolleras på tornets dator.
 $("reload").onclick = async () => {
   const el = $("reloadMsg");
-  el.textContent = "Läser ...";
+  el.textContent = t("las_om_laser");
   el.classList.remove("err");
   try {
     const r = await post("/spelledare/las-om");
     const data = await r.json().catch(() => ({}));
-    el.textContent = r.ok ? data.text : data.fel || "Det gick inte att läsa om innehållet.";
+    el.textContent = r.ok ? data.text : data.fel || t("las_om_fel");
     el.classList.toggle("err", !r.ok);
   } catch {
-    el.textContent = "Tornet svarar inte.";
+    el.textContent = t("svarar_inte");
     el.classList.add("err");
   }
 };
@@ -1059,10 +1108,10 @@ $("startNow").onclick = async () => {
     const r = await post("/spelledare/starta");
     if (!r.ok) {
       const data = await r.json().catch(() => ({}));
-      alert(data.fel || "Det gick inte att starta.");
+      alert(data.fel || t("starta_fel"));
     }
   } catch {
-    alert("Tornet svarar inte.");
+    alert(t("svarar_inte"));
   }
 };
 
@@ -1079,10 +1128,12 @@ async function poll() {
     if (!r.ok) throw new Error(r.status);
     view = await r.json();
     if (closed) return;
-    render(view);
+    // Har tornet bytt språk hämtas nya texter och allt ritas om.
+    if (await refreshTexts("vardsidan", view.sprak)) redraw();
+    else render(view);
   } catch {
     if (closed) return;
-    $("status").textContent = "Tornet svarar inte. Är servern stängd?";
+    $("status").textContent = t("status_svarar_inte");
     $("status").classList.add("dead");
   }
   setTimeout(poll, 1000);

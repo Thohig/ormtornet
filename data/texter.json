@@ -551,7 +551,7 @@
       "Någon med det namnet är redan i tornet."
     ],
     "fullt": [
-      "Tornet tar inte emot fler. Fyra är redan inne."
+      "Tornet tar inte emot fler. Alla platser är tagna."
     ],
     "stanger": [
       "Portarna slår igen. Tornet stänger för i kväll. Tack för vandringen."
@@ -623,12 +623,12 @@
       "Många har gått in. Färre har kommit ut.",
       "Portarna står öppna så länge solen är uppe."
     ],
-    "sam_gick": ["Du gick {riktning} till {rum}."],
-    "sam_gick_kort": ["{riktning}"],
-    "sam_gick_morker": ["Du gick {riktning} i mörkret."],
-    "sam_gick_morker_kort": ["{riktning} i mörkret"],
-    "sam_stod_kvar": ["Du ville gå {riktning} men kom inte vidare."],
-    "sam_stod_kvar_kort": ["kom inte {riktning}"],
+    "sam_gick": ["Du gick {riktning}ut till {rum}."],
+    "sam_gick_kort": ["{riktning}ut"],
+    "sam_gick_morker": ["Du gick {riktning}ut i mörkret."],
+    "sam_gick_morker_kort": ["{riktning}ut i mörkret"],
+    "sam_stod_kvar": ["Du ville gå {riktning}ut men kom inte vidare."],
+    "sam_stod_kvar_kort": ["kom inte {riktning}ut"],
     "sam_hamnade": ["Du hamnade i {rum}."],
     "sam_hamnade_kort": ["hamnade i {rum}"],
     "sam_upp": ["Du kom upp ur källarvalven i {rum}."],

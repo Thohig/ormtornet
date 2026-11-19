@@ -1,0 +1,682 @@
+{
+  "_om": "Engelsk översättning av texter.json. Bara texter; siffrorna står i den svenska filen. horn och riktningar sätts in efter \"the\" eller \"to the\", regioner i \"the {region} part of the tower\".",
+  "horn": [
+    "northwest",
+    "northeast",
+    "southwest",
+    "southeast",
+    "north",
+    "south",
+    "west",
+    "east"
+  ],
+  "riktningar": [
+    "north",
+    "east",
+    "south",
+    "west"
+  ],
+  "regioner": [
+    [
+      "northwestern",
+      "northern",
+      "northeastern"
+    ],
+    [
+      "western",
+      "central",
+      "eastern"
+    ],
+    [
+      "southwestern",
+      "southern",
+      "southeastern"
+    ]
+  ],
+  "ingang": {
+    "namn": "The Tower Gate",
+    "beskrivningar": {
+      "1": [
+        "The gate is a tall, vaulted opening in the wall. The threshold is worn smooth by all who went in before you. The air inside is warmer than the evening outside.",
+        "You stand inside the gate. The daylight reaches only a few steps in, then gives up. The stone underfoot is strangely soft at the edges."
+      ],
+      "2": [
+        "The edges of the gate are softer than before, and the threshold is damp.",
+        "Outside, the light falls aslant. The gate seems a little smaller than when you came."
+      ],
+      "3": [
+        "The arch of the gate has teeth: small, backward-curving teeth in a row along the edge, so that it is easy to go in and hard to go out.",
+        "On the threshold lies a boot. The foot is still in it."
+      ],
+      "4": [
+        "The gate is a mouth. It has stood open all day, and now it is beginning to close.",
+        "The lips draw together. The light outside has become a thin sliver. Run."
+      ]
+    }
+  },
+  "skattkammare": {
+    "namn": "The Treasure Chamber",
+    "beskrivningar": {
+      "1": [
+        "The hall is round and sinks towards the middle. There, gold glimmers in a heap, and around the heap lies something vast in heavy, slow coils. It is too dark to see where it begins or ends.",
+        "The air is still and thick with sweetness. Coins, crowns and dented goblets lie in a heap. Something large rests around it. You hear it breathe."
+      ],
+      "2": [
+        "The heap of gold rises and falls, like a chest. The coils around it are not quite still.",
+        "Something breathes in here, but the breaths do not come from the coils. They come from the walls."
+      ],
+      "3": [
+        "The walls are folded and glistening. Among the coins lie swords, shields, helmets and bones, all of them glossy and half dissolved.",
+        "The coils around the heap are not a sleeping serpent. They are folds in the wall, and they move when the wall moves."
+      ],
+      "4": [
+        "This is the stomach. The treasure is what the serpent has swallowed: gold, armour and everyone who came to take it.",
+        "There is no serpent in the chamber. The chamber is in the serpent. The gold is the bait, and you have taken it."
+      ]
+    }
+  },
+  "rumstyper": [
+    {
+      "id": "valvgang",
+      "namn": "The Vaulted Passage",
+      "beskrivningar": {
+        "1": [
+          "A narrow passage under low vaults. The stone is damp and faintly warm against your palm.",
+          "The vaults stand close, arch after arch, as if built to hold against a pressure from outside."
+        ],
+        "2": [
+          "The vaults rise and fall almost imperceptibly, at the same slow pace as your own breathing. Though not quite the same.",
+          "You lay your hand against the wall. It is warm, and beneath the surface runs a faint, steady motion, like waves."
+        ],
+        "3": [
+          "The vaults are not masonry. They are curved white arches that meet up in the ceiling, close after one another. Like ribs.",
+          "Between two arches a helmet is wedged fast, and in it the remains of a face, glossy and half dissolved."
+        ],
+        "4": [
+          "These are no vaults. They are ribs, and you are walking through the chest of something alive. It breathes around you.",
+          "The arches tighten as it breathes in. You are inside it. You have been all along."
+        ]
+      }
+    },
+    {
+      "id": "pelarsal",
+      "namn": "The Pillared Hall",
+      "beskrivningar": {
+        "1": [
+          "Thick pillars stand in two rows. Between them hangs a sweet, heavy scent you cannot place.",
+          "The pillars are coarse and lean slightly inwards, all in the same direction."
+        ],
+        "2": [
+          "The pillars swell a little and draw in again. The sweet scent comes in gusts, like breath.",
+          "The floor between the pillars is damp and lukewarm. It sways, barely noticeably, underfoot."
+        ],
+        "3": [
+          "The pillars are not stone. They are tough, pale strands stretched between floor and ceiling, and they tighten as you pass.",
+          "By a pillar lies a pack. The straps have dissolved, and what was inside has become a yellow slime."
+        ],
+        "4": [
+          "The pillars are sinews. The whole hall is a muscle, and it has begun to contract.",
+          "The scent is digestion. You understand now what it is that smells sweet here, and why."
+        ]
+      }
+    },
+    {
+      "id": "brunnsrum",
+      "namn": "The Well Chamber",
+      "beskrivningar": {
+        "1": [
+          "A well with no visible bottom in the middle of the floor. Far below, water drips, at long intervals.",
+          "The rim of the well is polished smooth. From the depths rises a lukewarm, damp air."
+        ],
+        "2": [
+          "The water in the well rises and sinks at a slow pace, as if something breathes down there.",
+          "The dripping from the depths has found a rhythm. Thud, thud. It no longer sounds like water."
+        ],
+        "3": [
+          "The rim of the well is round and soft, with folds like a gullet. A sour smell rises from the depths.",
+          "Far down in the well a hand is floating. It has no skin left, but the ring is still on its finger."
+        ],
+        "4": [
+          "The well is a gullet, and it leads downwards, towards the stomach. What falls in never comes up.",
+          "What you heard dripping was saliva. The sound from the depths is swallowing."
+        ]
+      }
+    },
+    {
+      "id": "vaktrum",
+      "namn": "The Guardroom",
+      "beskrivningar": {
+        "1": [
+          "An overturned bench and a rusty spear. Whoever kept watch here left in great haste.",
+          "Someone has carved a single sentence into the door frame: WE WERE WRONG ABOUT THE WAY IN. The rest is scraped away."
+        ],
+        "2": [
+          "The spear that lay on the floor has moved. The floor now slopes the other way.",
+          "The sentence in the door frame is clearer now. Someone has written more beneath it: IT MOVES."
+        ],
+        "3": [
+          "The guards' beds have grown fast into the wall. The wall has grown around them, slowly, like bark around a nail.",
+          "Under the bench lies a guard, or what is left of one. The bones are glossy and soft at the edges, as if something has sucked on them."
+        ],
+        "4": [
+          "The guards were not here to keep people out. They were trying to keep themselves alive, inside it.",
+          "WE WERE WRONG ABOUT THE WAY IN, it said. Now you understand: the way in was a mouth."
+        ]
+      }
+    },
+    {
+      "id": "kapell",
+      "namn": "The Silent Chapel",
+      "beskrivningar": {
+        "1": [
+          "A small chapel without images. The floor tiles are worn in a pattern of small, overlapping shields.",
+          "The pews face away from the altar, towards the wall. No one knows why."
+        ],
+        "2": [
+          "The shield pattern in the floor glistens, as if it were wet. The tiles lie closer than before.",
+          "It is quiet in the chapel, but the quiet beats. A dull, steady beat, somewhere beneath the floor."
+        ],
+        "3": [
+          "The floor tiles are scales. Real scales, large as shields, and beneath them something warm is pulsing.",
+          "Someone has carved a prayer into the wall. It ends in the middle of a word, and the carving is half grown over."
+        ],
+        "4": [
+          "No one has prayed here. The chapel is a fold of skin, and the pews face the wall because the flesh was once thinnest there.",
+          "Beneath the scales the heart is beating. You stand closer to it than any human should."
+        ]
+      }
+    },
+    {
+      "id": "trapphall",
+      "namn": "The Stair Hall",
+      "beskrivningar": {
+        "1": [
+          "A staircase winds upwards and ends flat against the ceiling. The steps are of uneven height.",
+          "The stair twists around a thick central pillar. It leads nowhere."
+        ],
+        "2": [
+          "The stair twists slowly, perhaps only half a step, and then twists back.",
+          "The steps are warm. They are joined by something tough, like gristle."
+        ],
+        "3": [
+          "Every step is a vertebra. You see the hole in the middle of each one, where something thick runs upwards.",
+          "Halfway up, an adventurer is stuck fast in the central pillar, embedded to the waist. They do not move."
+        ],
+        "4": [
+          "The stair is a spine. It runs through the whole tower, and it leads nowhere because it was never a way.",
+          "The spine bends. The whole tower bends, like a serpent making ready."
+        ]
+      }
+    },
+    {
+      "id": "forrad",
+      "namn": "The Storeroom",
+      "beskrivningar": {
+        "1": [
+          "Shelves of jugs and barrels. Everything is covered in a thin, glossy film, as of damp that never dries.",
+          "Sacks that once held grain. Now they are empty and sticky on the inside."
+        ],
+        "2": [
+          "The film on the barrels moves when you breathe, as if it breathes with you.",
+          "The sticky stuff in the sacks is warm. There is more of it than a moment ago."
+        ],
+        "3": [
+          "The jugs are not made of clay. They are glossy, hollow bones, and in them lie the remains of something that was once food.",
+          "Among the sacks lies a cloak. Of whoever wore it, not much is left: buckles, buttons, a tooth."
+        ],
+        "4": [
+          "This is no storeroom. It is where it keeps what it has not yet had time to digest. You are one of those things too.",
+          "The film is stomach juice. It has lain on everything in here, and now it lies on you."
+        ]
+      }
+    },
+    {
+      "id": "lyktrum",
+      "namn": "The Lantern Hall",
+      "beskrivningar": {
+        "1": [
+          "Iron hooks in the ceiling where lanterns once hung. Your own flame flickers in a draught that comes and goes, comes and goes.",
+          "Soot on the walls in long streaks. Someone once tried to smoke something out of here."
+        ],
+        "2": [
+          "The draught comes and goes, comes and goes. It is no draught. It is breath.",
+          "The flame bends inwards and then outwards, at a steady pace, as if the room breathes through a single nostril."
+        ],
+        "3": [
+          "The hooks in the ceiling are not iron. They are curved, yellow-white spikes pointing inwards.",
+          "The streaks of soot on the wall are finger marks. Someone clawed at the wall here, for a long time."
+        ],
+        "4": [
+          "The hooks are teeth, and the lantern hall is the palate. Whoever tried to smoke something out of here understood too late where they were.",
+          "The breaths come from the lungs just behind the wall. Each time the flame bends, it breathes."
+        ]
+      }
+    },
+    {
+      "id": "grotta",
+      "namn": "The Saltpetre Cave",
+      "beskrivningar": {
+        "1": [
+          "The walls here are not built but smooth, almost polished. White stripes run along them in even arcs.",
+          "The room is more cave than hall. The stone has a faint pattern, as of fine squares."
+        ],
+        "2": [
+          "The white stripes run in arcs that tighten and relax.",
+          "The fine pattern of squares in the stone glimmers faintly in your light, like scales in water."
+        ],
+        "3": [
+          "The pattern of squares is scales, seen from inside. You stand in a skin, between two layers of the same body.",
+          "On the floor lies a shed skin, and inside it a skeleton in armour, curled up like an unborn child."
+        ],
+        "4": [
+          "The cave is the skin seen from the inside. Everything smooth here has been worn down by what has moved past for a hundred years.",
+          "The white is scars: old wounds left by those who tried to cut their way out."
+        ]
+      }
+    },
+    {
+      "id": "smedja",
+      "namn": "The Cold Forge",
+      "beskrivningar": {
+        "1": [
+          "An anvil and a dead hearth. Even so, it is warmer here than it should be.",
+          "The tools hang neatly on the wall. All of them are bent, as if they have been squeezed."
+        ],
+        "2": [
+          "The warmth does not come from the hearth. It comes from the walls, in gusts.",
+          "The bent tools have bent a little further."
+        ],
+        "3": [
+          "The wall behind the hearth has an edge of dissolved iron, as if it has been eating a spade.",
+          "In the hearth lie ashes and teeth. Human teeth."
+        ],
+        "4": [
+          "What squeezed the tools was muscle. The forge is part of the gut, and the gut is pressing.",
+          "The warmth is body heat. You have been walking about inside a warm-blooded beast."
+        ]
+      }
+    },
+    {
+      "id": "bibliotek",
+      "namn": "The Mouldering Library",
+      "beskrivningar": {
+        "1": [
+          "The books have swollen together into a grey mass. Someone has scratched lines in the wall. Many lines.",
+          "A book lies open. The pages are stuck together by something sweet."
+        ],
+        "2": [
+          "The grey mass of books swells and sinks slowly. The pages rustle, as if someone were breathing on them.",
+          "There are more lines in the wall now. You start to count them. It takes too long."
+        ],
+        "3": [
+          "The lines are days. Whoever scratched them lived here, inside it, for months.",
+          "A hand is stuck in the mass of books, melted together with the pages. It is holding a pen."
+        ],
+        "4": [
+          "On the last legible page it says: the tower is no building. It is a body, and we are what it eats.",
+          "Whoever scratched the lines did not stop because they got out."
+        ]
+      }
+    },
+    {
+      "id": "korsvag",
+      "namn": "The Crossways",
+      "beskrivningar": {
+        "1": [
+          "The walls meet in a pointed arch. A distant sound, as of something heavy shifting, dies away before you can listen.",
+          "Here the passages cross. The floor slopes faintly towards the middle of the tower."
+        ],
+        "2": [
+          "The floor slopes towards the middle, and the slope has grown steeper.",
+          "The sound of something heavy shifting comes back, and now you hear that it comes from every side."
+        ],
+        "3": [
+          "The passages meet here like blood vessels, and the walls are full of thin pipes that pulse.",
+          "In the crossing lie three knucklebones in a heap, arranged as a warning. No one has understood it."
+        ],
+        "4": [
+          "All the passages lead towards the stomach. That was why the floor sloped. You have been led there, step by step.",
+          "The sound of something heavy shifting was you. You are what shifts inside it."
+        ]
+      }
+    }
+  ],
+  "texter": {
+    "valkommen": [
+      "{namn}, you stand inside the gate in the tower's {horn}. Somewhere in the middle, they say, a serpent sleeps around its treasure. Take what you dare, and come out before the sun goes down."
+    ],
+    "tillbaka": [
+      "You are back. The tower has been waiting for you."
+    ],
+    "ansluter": [
+      "{namn} steps in through the gate in the {horn}.",
+      "A new lantern is lit by the gate in the {horn}. It is {namn}."
+    ],
+    "ansluter_dolt": [
+      "{namn} has come to the tower. Somewhere a gate creaks.",
+      "A new lantern is lit by one of the gates. It is {namn}."
+    ],
+    "valkommen_dolt": [
+      "{namn}, you stand in the dusk at the foot of the tower. Somewhere in the middle, they say, a serpent sleeps around its treasure. Take what you dare, and come out before the sun goes down. Which gate you enter by, you will learn when the wandering begins."
+    ],
+    "start_port": [
+      "You step in through the gate in the tower's {horn}. None of the others know where you are."
+    ],
+    "atervander": [
+      "{namn} has found their way back into the tower."
+    ],
+    "lamnar": [
+      "{namn} disappears from sight. Perhaps only for a while."
+    ],
+    "vagg": [
+      "Solid wall to the {riktning}. The stone does not yield.",
+      "No opening to the {riktning}.",
+      "You run into the wall to the {riktning}. It is lukewarm."
+    ],
+    "utgang": [
+      "The evening light stings your eyes. Not yet. The tower has more to give.",
+      "You look out over the slope below. Then you turn back in."
+    ],
+    "nytt_rum_andra": [
+      "Stone scrapes on stone in the {region} part of the tower. {namn} has found a new room.",
+      "A dull rumble from the {region} part of the tower. {namn} has opened a new way."
+    ],
+    "nytt_rum_andra_dolt": [
+      "Stone scrapes on stone in the {region} part of the tower. Someone has found a new room.",
+      "A dull rumble from the {region} part of the tower. Someone has opened a new way."
+    ],
+    "kant_rum": [
+      "{rum}."
+    ],
+    "lobby": [
+      "Press Enter when you are ready (on a touch screen: Ready). The wandering begins when all are ready and there are at least {min} of you."
+    ],
+    "redo_andra": [
+      "{namn} is ready."
+    ],
+    "vantar_pa_andra": [
+      "You wait for the others by the gate."
+    ],
+    "start": [
+      "The sun stands {sol} hand-breadths above the horizon. Choose your moves. All moves are made at the same time.",
+      "The gate stands open behind you. The sun has {sol} hand-breadths left to travel. Go."
+    ],
+    "tvekade": [
+      "You hesitated and stayed where you were.",
+      "Time ran away from you. You stay where you stand."
+    ],
+    "ingen_skatt_har": [
+      "There is no treasure here to take."
+    ],
+    "skatt_totalt": [
+      "You now carry {skatt} gold."
+    ],
+    "ut_med_skatt": [
+      "You step out into the evening light with {skatt} gold. Behind you the gate sighs.",
+      "You are out. {skatt} gold weighs in your bag, and the air is cold and clean."
+    ],
+    "ut_utan_skatt": [
+      "You step out empty-handed. You live, but no one will sing of you.",
+      "Outside again, without a single coin. The tower let you go, but it gave you nothing."
+    ],
+    "andra_ut": [
+      "{namn} has left the tower.",
+      "Far off, the gate is heard to creak. {namn} is out."
+    ],
+    "sol_halv": [
+      "The sun has travelled halfway to the horizon. {sol} hand-breadths left."
+    ],
+    "sol_kvart": [
+      "The light through the arrow slits turns red. The sun has only {sol} hand-breadths left."
+    ],
+    "sol_snart": [
+      "The sun is almost touching the horizon. {sol} rounds left. Hurry out!"
+    ],
+    "solnedgang": [
+      "The sun sinks below the horizon. Somewhere the gate slams shut with a wet sound."
+    ],
+    "forlorad_du": [
+      "The darkness closes around you. You are still in the tower, and the tower will not let you go."
+    ],
+    "forlorad": [
+      "{namn} did not get out in time. {namn} is lost."
+    ],
+    "vinnare": [
+      "{namn} wins with {skatt} gold."
+    ],
+    "svarighet": [
+      "Difficulty: {namn}. You have {liv} lives."
+    ],
+    "spar": [
+      "Fresh footprints in the dust lead to the {riktning}.",
+      "Someone has passed here just now. The tracks lead to the {riktning}."
+    ],
+    "spar_ut": [
+      "Fresh footprints lead out through the gate."
+    ],
+    "ljud_strid": [
+      "From the room to the {riktning} come sounds of fighting.",
+      "Through the wall to the {riktning} you hear blows and a scream."
+    ],
+    "ljud_falla": [
+      "Something crashes in the room to the {riktning}.",
+      "A scream comes through the wall to the {riktning}, and then all is quiet."
+    ],
+    "ljud_port": [
+      "To the {riktning} a gate creaks, and a draught of cold air passes through the room.",
+      "Through the wall to the {riktning} a gate slams shut. Someone has gone out."
+    ],
+    "ljud_varelse": [
+      "Something drags itself along in the room to the {riktning}.",
+      "Through the wall to the {riktning} you hear claws on stone. Something is moving there."
+    ],
+    "ljud_drick": [
+      "In the room to the {riktning} a cork is pulled from a bottle. Someone is drinking.",
+      "Through the wall to the {riktning} you hear a few quick gulps."
+    ],
+    "synlighet_moten": [
+      "The tower is large and dark. You see the other wanderers only when you stand in the same room."
+    ],
+    "synlighet_egen": [
+      "The tower is large and dark. You see the other wanderers only when you stand in the same room, and your map shows only the rooms you have passed through yourself. Tell one another what you have seen."
+    ],
+    "ingen_vinnare": [
+      "No one came out with any treasure. The tower won."
+    ],
+    "kronika_rubrik": [
+      "Chronicle of the Wandering"
+    ],
+    "kronika_rad": [
+      "Round {runda}. {text}"
+    ],
+    "kronika_vandrare": [
+      "{namn}: the chamber {naver} times, {kammarguld} gold · traps {fallor} · creatures felled {varelser} · rooms searched {sokt}"
+    ],
+    "kronika_ut": [
+      "{namn} went out with {guld} gold."
+    ],
+    "kronika_ut_tom": [
+      "{namn} went out empty-handed."
+    ],
+    "kronika_forlorad": [
+      "{namn} was still in the tower when the sun went down."
+    ],
+    "kronika_vaknade": [
+      "The serpent woke when {namn} took treasure."
+    ],
+    "kronika_vaknade_sjalv": [
+      "The serpent woke, though no one touched the treasure."
+    ],
+    "kronika_varelse": [
+      "{namn} felled {varelse}."
+    ],
+    "kronika_dod": [
+      "{namn} died."
+    ],
+    "kronika_dod_falla": [
+      "{namn} was killed by {vad}."
+    ],
+    "kronika_dod_varelse": [
+      "{namn} fell to {vad}."
+    ],
+    "kronika_dod_vandrare": [
+      "{namn} was slain by {vad}."
+    ],
+    "kronika_dod_ormen": [
+      "{namn} died when the serpent woke."
+    ],
+    "kronika_dod_gift": [
+      "{namn} died of the poison in their body."
+    ],
+    "kronika_dod_tornet": [
+      "{namn} died. No one quite knows of what."
+    ],
+    "nytt_torn": [
+      "A new tower rises out of the mist. Press Enter when you are ready (on a touch screen: Ready). The wandering begins when all are ready and there are at least {min} of you."
+    ],
+    "spela_igen": [
+      "Press Enter to go into a new tower (on a touch screen: New tower)."
+    ],
+    "spel_pagar": [
+      "The wandering has already begun. Wait until the sun has gone down."
+    ],
+    "tomt_namn": [
+      "The tower wants to know your name."
+    ],
+    "namn_upptaget": [
+      "Someone by that name is already in the tower."
+    ],
+    "fullt": [
+      "The tower takes no more. It is already full."
+    ],
+    "stanger": [
+      "The gates slam shut. The tower is closing for tonight. Thank you for the wandering."
+    ],
+    "pvp_duell": ["You go for {ditt_val}. {namn} answers with {dess_val}."],
+    "pvp_inget": ["You circle each other. Neither of you can reach the other.", "{namn} and you clash, but no blow lands."],
+    "pvp_oberedd": ["{namn} does not see you coming. Your blow lands."],
+    "pvp_bakhall": ["A blow strikes you from behind. It is {namn}!"],
+    "pvp_vantar": ["You ready {ditt_val} and wait for an attack from {namn} that never comes."],
+    "pvp_byte": ["You strike {namn} and snatch {guld} gold. You now have {skatt}."],
+    "pvp_traff_tom": ["You strike {namn}, but their pack is empty."],
+    "pvp_dodar": ["{namn} falls. You take everything in their pack, {guld} gold. You now have {skatt}."],
+    "pvp_bytt": ["{namn} strikes you and snatches {guld} gold from your pack. You lose {skada} lives."],
+    "pvp_traffad": ["{namn} strikes you. You lose {skada} lives."],
+    "pvp_dodad": ["{namn} cuts you down and empties your pack."],
+    "pvp_borta": ["The one you meant to fight is no longer here."],
+    "pvp_tornet_kanner": ["The floor jerks beneath you, as if something has stirred awake.", "The walls draw together a little, and then let go."],
+    "pvp_fredat": ["The gate is sanctuary. Here no one raises a weapon against another wanderer."],
+    "pvp_for_tidigt": ["The sun still stands high. No fighting between wanderers until it has sunk halfway."],
+    "pack_tung": ["{namn} is here. {namn} walks heavily, as if their pack were full."],
+    "pack_lite": ["{namn} is here. Something clinks in their pack."],
+    "pack_tom": ["{namn} is here. Their pack hangs empty."],
+    "spelledare_pa": ["The tower has a Keeper tonight. Someone sees all that happens in here."],
+    "spelledare_av": ["The tower no longer has a Keeper."],
+    "spelledare_kan_inte": ["The one who keeps the tower cannot also wander in it."],
+    "gm_paus": ["Everything in the tower comes to a halt. Even the dust hangs still in the air."],
+    "gm_fortsatt": ["The tower draws breath, and everything moves again."],
+    "gm_sol_ner": ["The light through the arrow slits suddenly falls aslant. The sun has sunk faster than it should."],
+    "gm_sol_upp": ["The light grows stronger for a while, as if the sun hesitated."],
+    "gm_liv_mer": ["Something warm flows through you. You have {liv} lives."],
+    "gm_liv_mindre": ["A sudden pang within, and you cannot see from where. You have {liv} lives left."],
+    "gm_guld_mer": ["Your pack feels heavier than a moment ago."],
+    "gm_guld_mindre": ["Your pack feels lighter than a moment ago."],
+    "gm_dryck_mer": ["In your pocket you find a bottle that was not there before."],
+    "gm_dryck_mindre": ["One of your bottles is gone. You never heard it break."],
+    "stanger_snart": ["The tower closes in a minute if no one is left."],
+    "tecken_rubrik": ["Signs"],
+    "tecken_du": ["You, with a blinking ring."],
+    "tecken_vandrare": ["A wanderer, in their colour."],
+    "tecken_borta": ["A wanderer who has lost contact."],
+    "tecken_skymd": ["Where a wanderer was last seen."],
+    "tecken_forlorad": ["A wanderer the tower has taken."],
+    "tecken_drag": ["Your move, in that direction."],
+    "tecken_port": ["A gate out. Treasure only counts if carried out here."],
+    "tecken_okand": ["A room no one has been in yet."],
+    "tecken_mitten": ["The middle of the tower."],
+    "tecken_kammare": ["The chamber, with a heap of gold."],
+    "tecken_vaken": ["Something in the chamber has woken."],
+    "tecken_foremal": ["An item lies here."],
+    "tecken_krita": ["A chalk arrow, drawn by a wanderer."],
+    "tecken_eko": ["An echo. A wanderer was heard here."],
+    "tecken_falla": ["A trap has sprung here."],
+    "tecken_varelse": ["A creature."],
+    "intro_ljud": [
+      "click to hear the storm"
+    ],
+    "rykten": [
+      "Those who have gone in say the walls are warm, even at night.",
+      "No one saw the tower built. No one remembers a time it was not there.",
+      "Lay your ear to the wall and you will hear something beat.",
+      "It is said the tower stood in another place last summer.",
+      "The wall is laid of stones no stonemason recognises.",
+      "The birds never land on the tower. They fly the long way round it.",
+      "Those who come out smell sweet for days afterwards."
+    ],
+    "rykten_invigda": [
+      "In the middle of the tower, they say, a serpent sleeps around a treasure greater than a kingdom.",
+      "Take what you dare, and come out before the sun goes down.",
+      "Many have gone in. Fewer have come out.",
+      "The gates stand open as long as the sun is up."
+    ],
+    "sam_gick": ["You went {riktning} to {rum}."],
+    "sam_gick_kort": ["{riktning}"],
+    "sam_gick_morker": ["You went {riktning} in the dark."],
+    "sam_gick_morker_kort": ["{riktning} in the dark"],
+    "sam_stod_kvar": ["You tried to go {riktning} but got no further."],
+    "sam_stod_kvar_kort": ["blocked {riktning}"],
+    "sam_hamnade": ["You ended up in {rum}."],
+    "sam_hamnade_kort": ["ended up in {rum}"],
+    "sam_upp": ["You came up out of the cellar vaults in {rum}."],
+    "sam_upp_kort": ["up from the cellar"],
+    "sam_i_kallaren": ["You grope your way through the cellar vaults."],
+    "sam_i_kallaren_kort": ["in the cellar"],
+    "sam_kallare": ["You fell down into the cellar vaults."],
+    "sam_kallare_kort": ["down into the cellar"],
+    "sam_ute": ["You went out of the tower with {skatt} gold."],
+    "sam_ute_kort": ["out with {skatt} gold"],
+    "sam_dod": ["You died."],
+    "sam_dod_kort": ["dead"],
+    "sam_inget": ["You chose no move and stayed where you were."],
+    "sam_inget_kort": ["no move"],
+    "sam_vanta": ["You waited."],
+    "sam_vanta_kort": ["waited"],
+    "sam_ta": ["You reached for the treasure."],
+    "sam_ta_kort": ["took treasure"],
+    "sam_sok": ["You searched the room."],
+    "sam_sok_kort": ["searched"],
+    "sam_drick": ["You drank a potion."],
+    "sam_drick_kort": ["drank"],
+    "sam_anfall": ["You attacked."],
+    "sam_anfall_kort": ["attacked"],
+    "sam_parera": ["You parried."],
+    "sam_parera_kort": ["parried"],
+    "sam_undan": ["You evaded."],
+    "sam_undan_kort": ["evaded"],
+    "sam_anvande": ["You used {foremal}."],
+    "sam_anvande_kort": ["{foremal}"],
+    "sam_liv_minus": ["−{antal} lives. You have {liv} left."],
+    "sam_liv_minus_kort": ["−{antal} lives"],
+    "sam_liv_plus": ["+{antal} lives. You have {liv}."],
+    "sam_liv_plus_kort": ["+{antal} lives"],
+    "sam_guld_plus": ["+{antal} gold. You carry {skatt}."],
+    "sam_guld_plus_kort": ["+{antal} gold"],
+    "sam_guld_minus": ["−{antal} gold. You carry {skatt}."],
+    "sam_guld_minus_kort": ["−{antal} gold"],
+    "sam_dryck": ["+{antal} potion."],
+    "sam_dryck_kort": ["+{antal} potion"],
+    "sam_foremal": ["You found {foremal}."],
+    "sam_foremal_kort": ["found {foremal}"],
+    "sam_fast": ["You are stuck for {antal} rounds."],
+    "sam_fast_kort": ["stuck"],
+    "sam_gift": ["You are poisoned."],
+    "sam_gift_kort": ["poisoned"],
+    "sam_morker": ["Your lantern went out."],
+    "sam_morker_kort": ["darkness"],
+    "sam_varelse": ["{varelse} is in the room."],
+    "sam_varelse_kort": ["{varelse}"],
+    "sam_ormen": ["The serpent woke."],
+    "sam_ormen_kort": ["the serpent woke"],
+    "sam_sol": ["The sun: {sol} hand-breadths left."]
+  }
+}
