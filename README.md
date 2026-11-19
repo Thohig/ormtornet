@@ -310,8 +310,11 @@ lobbyn. Där du senast såg någon står en svag ring i dess färg, och i
 listan över vandrare står "sågs runda 12" eller "inte sedd". Tecknet
 försvinner när du ser vandraren igen, eller när den har gått ut eller dött.
 
-Från början känner du bara rummet du börjar i, och kartan växer därifrån
-och zoomar ut efter hand. De andras portar är okända tills någon går in i
+Från början känner du bara rummet du börjar i, och kartan växer därifrån.
+Kartan följer rummet du står i: det står i mitten, med två rum åt varje
+håll (ett på en smal skärm), och vid tornets kanter stannar rutan inom
+tornet. Ett tryck på kartan visar allt du känner till, och ett tryck till
+går tillbaka. De andras portar är okända tills någon går in i
 dem. Med egen karta ser du bara rum du själv har gått igenom; med de andra
 valen syns alla rum som någon har gått in i. Vem som börjar vid vilken port lottas när vandringen börjar,
 och var och en får bara veta sin egen. Ordningen i listan och färgen säger
@@ -697,7 +700,7 @@ Beskrivningarna för rummen ligger under nivåerna `"1"` till `"4"`.
   - `map.js` ritar kartan som krita på en skiffertavla: väggarna är
     handritade streck, vandrarna prickar i sin färg (den egna med en ring)
     och varelser och märken tecken. Kartan visar bara det kända och
-    zoomar ut efter hand; även utsnittet på en liten skärm. Den antecknar
+    följer rummet vandraren står i. Den antecknar
     också vilka tecken den ritar, och spelarsidan gör teckenförklaringen
     av dem
   - `audio.js` allt ljud, skapat med Web Audio API, även stormen i introt

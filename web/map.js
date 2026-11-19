@@ -65,14 +65,12 @@ const MapView = (() => {
   const SLOTS = [[2, 1], [5, 1], [2, 3], [5, 3], [1, 2], [6, 2], [3, 1], [4, 3]];
 
   let canvas, ctx, cols, rows, cellW, cellH, fontPx;
-  // Utsnittet: kartan visar bara det vandraren känner till. I början är det
-  // rummet vid porten, och kartan zoomar ut efter hand som tornet växer
-  // fram. Blir det för smått att läsa följer utsnittet den egna vandraren,
-  // och ett tryck på kartan visar allt man känner till. Spelledaren, som
-  // inte är någon vandrare, ser alltid hela tornet.
-  const VIEW_ROOMS = 9;
+  // Utsnittet: kartan följer det rum vandraren står i, som står i mitten
+  // med lika många rum åt varje håll. Vid tornets kanter stannar rutan, så
+  // att det inte blir tomt utanför tornet. Ett tryck på kartan visar allt
+  // man känner till. Spelledaren, som inte är någon vandrare, ser hela
+  // tornet.
   const MIN_SPAN = 3; // så nära går kartan som mest, i rum
-  const MIN_FONT = 8;
   const ZOOM_MS = 1100;
   let towerSize = 0;
   let wantWhole = false; // den som spelar vill se allt den känner till
@@ -169,16 +167,23 @@ const MapView = (() => {
       if (p.id === state.you || (state.sight === "alla" && !p.hidden && p.status !== "ute")) take(p.x, p.y);
     });
     if (x0 === Infinity) return { x: 0, y: 0, w: towerSize, h: towerSize };
+    const all = grow({ x: x0, y: y0, w: x1 - x0, h: y1 - y0 }, MIN_SPAN);
     const me = state.players.find((p) => p.id === state.you);
-    let v = grow({ x: x0, y: y0, w: x1 - x0, h: y1 - y0 }, MIN_SPAN);
-    if (!wantWhole && me && me.x >= 0 && scaleFor(v) < MIN_FONT && Math.max(v.w, v.h) > VIEW_ROOMS) {
-      // För smått att läsa: följ den egna vandraren inom det kända.
-      const n = Math.min(VIEW_ROOMS, Math.max(v.w, v.h));
-      const cx = Math.max(v.x, Math.min(v.x + v.w - n, me.x + 0.5 - n / 2));
-      const cy = Math.max(v.y, Math.min(v.y + v.h - n, me.y + 0.5 - n / 2));
-      v = { x: cx, y: cy, w: Math.min(n, v.w), h: Math.min(n, v.h) };
-    }
-    return v;
+    if (wantWhole || !me || me.status !== "inne" || me.x < 0) return all;
+    return around(me, span());
+  }
+
+  // span är hur många rum utsnittet visar åt varje håll: färre på en smal
+  // skärm, så att tecknen går att läsa.
+  function span() {
+    return window.matchMedia("(max-width: 700px)").matches ? 3 : 5;
+  }
+
+  // around ger en ruta på n × n rum med rummet där p står i mitten. Vid
+  // tornets kanter skjuts rutan in, så att den stannar inom tornet.
+  function around(p, n) {
+    const fit = (c) => (n >= towerSize ? (towerSize - n) / 2 : Math.max(0, Math.min(towerSize - n, c + 0.5 - n / 2)));
+    return { x: fit(p.x), y: fit(p.y), w: n, h: n };
   }
 
   function grow(v, span) {

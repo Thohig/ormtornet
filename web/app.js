@@ -1327,8 +1327,8 @@ const Intro = (() => {
   };
 })();
 
-// Ett tryck på kartan växlar mellan utsnittet och hela tornet, när tornet
-// är för stort för skärmen.
+// Ett tryck på kartan växlar mellan utsnittet runt vandraren och allt den
+// känner till.
 $("map").addEventListener("click", () => MapView.toggleWhole());
 
 $("enter").addEventListener("click", (e) => {
