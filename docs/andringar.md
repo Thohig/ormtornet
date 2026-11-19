@@ -6,6 +6,13 @@ eller leder tornet.
 
 ## 2026-11-19
 
+### En rad överst på värdsidan
+
+- Överst på värdsidan står en rad som följer med när sidan rullar: fasen,
+  rundan och solen, hur många som är här och vilka som är borta.
+- Där ligger Starta nu före vandringen, och Pausa eller Fortsätt under
+  vandringen i spelledarläget.
+
 ### Vandrarnas logg per runda
 
 - Vandrarnas logg i översikten är hopfälld tills spelledaren klickar på

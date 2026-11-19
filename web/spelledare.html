@@ -132,6 +132,16 @@
   #gmLog .info { color: var(--info); }
   #gmLog .syn { color: var(--hi); }
   #gmLog .dim { color: var(--dim); }
+  #bar {
+    position: sticky; top: 0; z-index: 3;
+    display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 18px;
+    margin: 14px -20px 0; padding: 8px 20px;
+    background: var(--bg); border-bottom: 1px solid var(--faint);
+  }
+  #barPhase { color: var(--hi); }
+  #barWho { color: var(--dim); flex: 1 1 auto; }
+  #barWho .away { color: var(--warn); }
+  #barMain { margin-left: auto; }
   #help li { margin: 6px 0; line-height: 1.45; }
   #help { padding-left: 1.4em; margin: 0; }
   code { color: var(--hi); font: inherit; }
@@ -142,6 +152,12 @@
   <main id="host">
     <h1>ORMTORNET · VÄRD</h1>
     <p class="dimtext">Den här sidan syns bara på din dator. Spelarna ser den inte.</p>
+
+    <div id="bar">
+      <span id="barPhase">…</span>
+      <span id="barWho"></span>
+      <button class="btn main small" id="barMain" type="button" hidden></button>
+    </div>
 
     <h2>Bjud in</h2>
     <p>Alla som ska spela öppnar Safari eller Chrome på samma wifi som du och går till:</p>
@@ -459,10 +475,54 @@ function render(v) {
       ? (gm ? "Det behövs minst en vandrare, människa eller AI-spelare." : "Minst en människa måste vara i tornet.")
       : "Börjar vandringen även om inte alla har tryckt Enter eller ni är färre än minsta antalet.";
 
+  renderBar(v, canStart);
+
   document.body.classList.toggle("gm", gm);
   $("joinSelf").hidden = gm;
   $("gm").hidden = !gm;
 }
+
+// Raden överst: fasen, vilka som är här och knappen som behövs just nu,
+// Starta nu före vandringen och Pausa eller Fortsätt i spelledarläget.
+let paused = false;
+
+function renderBar(v, canStart) {
+  const phase = { lobby: "Lobbyn", klassval: "Klassvalet", slut: "Vandringen är slut" }[v.phase] ||
+    "Runda " + v.round + " · solen " + v.sun + " av " + v.sunMax;
+  $("barPhase").textContent = phase + (paused && v.phase === "spel" ? " · pausad" : "");
+  const who = $("barWho");
+  who.textContent = "";
+  const here = v.players.filter((p) => p.online);
+  const humans = here.filter((p) => !p.bot).length;
+  who.append(humans + (humans === 1 ? " människa" : " människor") + " och " + (here.length - humans) + " AI här");
+  const away = v.players.filter((p) => !p.online && !p.bot).map((p) => p.name);
+  if (away.length) {
+    const s = document.createElement("span");
+    s.className = "away";
+    s.textContent = " · borta: " + away.join(", ");
+    who.append(s);
+  }
+  const b = $("barMain");
+  if (v.phase !== "spel") {
+    b.hidden = false;
+    b.textContent = "Starta nu";
+    b.dataset.act = "starta";
+    b.disabled = !canStart;
+  } else if (v.settings.spelledarlage) {
+    b.hidden = false;
+    b.textContent = paused ? "Fortsätt" : "Pausa";
+    b.dataset.act = paused ? "fortsatt" : "paus";
+    b.disabled = false;
+  } else {
+    b.hidden = true;
+  }
+}
+
+$("barMain").onclick = () => {
+  const act = $("barMain").dataset.act;
+  if (act === "starta") $("startNow").click();
+  else intervene({ typ: act });
+};
 
 // Översikten i spelledarläget: hela tornet, alla vandrare, ormen och loggen.
 let mapReady = false;
@@ -650,6 +710,7 @@ function renderControls(o) {
   const playing = o.map.phase === "spel";
   document.querySelectorAll("#gm .gmrow button[data-gm]").forEach((b) => (b.disabled = !playing));
   $("gmPlace").querySelector("button").disabled = !playing || !o.rooms.length;
+  paused = !!o.paused;
   const pause = $("gmPause");
   pause.dataset.gm = o.paused ? "fortsatt" : "paus";
   pause.textContent = o.paused ? "Fortsätt" : "Pausa";

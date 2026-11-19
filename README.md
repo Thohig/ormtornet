@@ -85,6 +85,12 @@ adressen spelarna ska öppna, med knappar som kopierar en färdig inbjudan att
 skicka i en gruppchatt. Sidan visar också vilka som har anslutit och är redo,
 och vad man kan göra om någon inte kommer in.
 
+Överst står en rad som följer med när sidan rullar: lobbyn, klassvalet,
+rundan och solen, eller att vandringen är slut, hur många människor och
+AI-spelare som är här och vilka som är borta. Där ligger också knappen som
+behövs just nu: Starta nu före vandringen och Pausa eller Fortsätt under
+vandringen i spelledarläget.
+
 Under Inför nästa vandring väljer spelledaren:
 
 | Inställning | Val | Förval |
