@@ -1606,6 +1606,7 @@ func (g *Game) serve(conn *wsConn, local bool) {
 			g.ChooseClass(c, m.Name)
 		case "viska":
 			g.Whisper(c, m.Name)
+			g.broadcastState() // invigd, nåden och om det går att viska igen syns direkt
 		}
 		g.mu.Unlock()
 	}
