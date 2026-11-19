@@ -160,8 +160,9 @@ func (g *Game) Close() {
 
 // hostHooks är det värdsidan behöver från resten av programmet.
 type hostHooks struct {
-	Close func()               // stänger tornet
-	Save  func(Settings) error // sparar inställningarna till nästa gång
+	Close func()                // stänger tornet
+	Save  func(Settings) error  // sparar inställningarna till nästa gång
+	Load  func() (*Data, error) // läser och kontrollerar datafilerna
 }
 
 // hostAction kräver förutom att förfrågan kommer från den här datorn ett
@@ -205,6 +206,22 @@ func addHostRoutes(mux *http.ServeMux, web fs.FS, game *Game, addrs hostAddrs, h
 			return
 		}
 		w.WriteHeader(http.StatusNoContent)
+	}))
+	mux.HandleFunc("POST /spelledare/las-om", hostAction(func(w http.ResponseWriter, r *http.Request) {
+		if hooks.Load == nil {
+			writeJSON(w, http.StatusNotImplemented, map[string]string{"fel": "Innehållet kan inte läsas om här."})
+			return
+		}
+		d, err := hooks.Load()
+		if err != nil {
+			writeJSON(w, http.StatusUnprocessableEntity, map[string]string{"fel": "Innehållet lästes inte in, tornet behåller det gamla. " + err.Error()})
+			return
+		}
+		text := "Innehållet är inläst och gäller nu. Tornet är byggt på nytt."
+		if !game.ReloadData(d) {
+			text = "Innehållet är inläst och gäller från nästa torn."
+		}
+		writeJSON(w, http.StatusOK, map[string]string{"text": text})
 	}))
 	mux.HandleFunc("POST /spelledare/installningar", hostAction(func(w http.ResponseWriter, r *http.Request) {
 		var s Settings

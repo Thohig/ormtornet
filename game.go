@@ -247,16 +247,17 @@ type Client struct {
 }
 
 type Game struct {
-	mu      sync.Mutex
-	base    *Data // datafilerna som de är
-	data    *Data // datafilerna med svårighetens förval
-	cfg     Config
-	size    int // tornets bredd och höjd i rum
-	sunMax  int // solens rundor i det här tornet
-	rooms   [][]Room
-	players [maxPlayers]*Player
-	nextID  int
-	level   int
+	mu       sync.Mutex
+	base     *Data // datafilerna som de är
+	nextData *Data // nyss inlästa datafiler som gäller från nästa torn
+	data     *Data // datafilerna med svårighetens förval
+	cfg      Config
+	size     int // tornets bredd och höjd i rum
+	sunMax   int // solens rundor i det här tornet
+	rooms    [][]Room
+	players  [maxPlayers]*Player
+	nextID   int
+	level    int
 
 	phase     string
 	sun       int
@@ -954,6 +955,9 @@ func (g *Game) begin() {
 // toLobby bygger ett nytt torn efter en vandring och låter alla vänta i
 // lobbyn. När alla är redo igen väljer de nya klasser.
 func (g *Game) toLobby() {
+	if g.nextData != nil {
+		g.useData(g.nextData)
+	}
 	g.phase = phaseLobby
 	g.level, g.levelHeld = 1, false // tornet i lobbyn har inte börjat avslöja något
 	if g.dropAbsent() > 0 {

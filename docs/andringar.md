@@ -6,6 +6,15 @@ eller leder tornet.
 
 ## 2026-11-19
 
+### Läs om innehållet
+
+- Under Inför nästa vandring på värdsidan finns knappen "Läs om
+  innehållet". Den läser och kontrollerar `data/` utan att tornet startas
+  om. I lobbyn gäller det nya genast och tornet byggs på nytt. Under och
+  efter en vandring gäller det från nästa torn.
+- Är något fel i filerna står felen under knappen, och tornet behåller
+  det gamla innehållet.
+
 ### Simulera många vandringar
 
 - `go run . -simulera 500 -ai 4` spelar 500 vandringar med bara

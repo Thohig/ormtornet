@@ -159,6 +159,10 @@ func main() {
 	addHostRoutes(mux, sub, game, addrs, hostHooks{
 		Close: closeTower,
 		Save:  func(s Settings) error { return saveSettings(*settingsPath, s) },
+		Load: func() (*Data, error) {
+			d, _, err := loadData(*dataPath)
+			return d, err
+		},
 	})
 
 	fmt.Println("Ormtornet är vaket.")

@@ -27,6 +27,8 @@ Byggt (README beskriver hur det fungerar):
   ge föremål, och inviga eller ta tillbaka invigningen.
 - Tornet pausar rundan själv när ingen vandrare är ansluten, och
   spelledaren kan släppa pausen med Fortsätt.
+- Läs om innehållet i `data/` utan omstart, med felen på värdsidan om
+  filerna inte går ihop. Vandringens frö visas under Vid porten.
 
 På gång: inget just nu.
 

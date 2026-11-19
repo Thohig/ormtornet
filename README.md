@@ -586,9 +586,13 @@ ingen blir invigd.
 
 ## Ändra innehåll
 
-Allt innehåll ligger i mappen `data/`. Filerna läses när servern startar,
-så starta om servern efter en ändring. Det gäller också filerna i `web/`:
-de byggs in i programmet.
+Allt innehåll ligger i mappen `data/`. Filerna läses när servern startar.
+Efter en ändring räcker det att trycka "Läs om innehållet" under Inför
+nästa vandring på värdsidan. I lobbyn gäller det nya genast och tornet
+byggs på nytt; under och efter en vandring gäller det från nästa torn. Är
+något fel i filerna står det under knappen, och tornet behåller det gamla.
+Filerna i `web/` byggs in i programmet, så efter en ändring där behöver
+servern startas om.
 
 Tornet kontrollerar filerna när det startar och vägrar starta om något är
 fel. Felet står i terminalen med filen och fältet, till exempel ett
@@ -658,6 +662,8 @@ Beskrivningarna för rummen ligger under nivåerna `"1"` till `"4"`.
 - `ai.go` datorstyrda vandrare
 - `data.go` läser in datafilerna
 - `validate.go` kontrollerar datafilerna när tornet startar
+- `reload.go` läser om datafilerna från värdsidan
+- `simulate.go` simulerar vandringar med bara AI-spelare (`-simulera`)
 - `ws.go` en liten websocket-implementation utan beroenden
 - `web/` klienten: HTML, CSS och JavaScript utan ramverk
   - `index.html` och `app.js` spelarsidan: introt, namnrutan, klassvalet

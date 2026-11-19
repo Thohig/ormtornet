@@ -84,6 +84,8 @@
   #settings select:disabled { color: var(--dim); border-color: var(--faint); }
   #saved { min-height: 1.2em; color: var(--info); }
   #saved.err { color: var(--warn); }
+  #reloadMsg { white-space: pre-wrap; }
+  #reloadMsg.err { color: var(--warn); }
   #startHint { color: var(--dim); }
   body.gm #host { max-width: 1100px; }
   #gmTop { color: var(--fg); }
@@ -270,6 +272,11 @@
     </form>
     <p id="saved"></p>
     <p class="dimtext" id="settingsHint">Sparas till nästa gång. AI-spelare kommer och går direkt, resten gäller från nästa omgång.</p>
+    <p>
+      <button class="btn" id="reload" type="button">Läs om innehållet</button>
+      <span class="note">rum, fällor, varelser och texter i data/, utan att starta om tornet</span>
+    </p>
+    <p id="reloadMsg"></p>
 
     <h2>Stäng tornet</h2>
     <p>Stäng tornet här eller med Ctrl+C i terminalen. Spelarna får ett meddelande om att tornet stänger, och datorn får somna igen.</p>
@@ -783,6 +790,22 @@ $("slots").addEventListener("click", async (ev) => {
     alert("Tornet svarar inte.");
   }
 });
+
+// Läs om innehållet: data/ läses och kontrolleras på tornets dator.
+$("reload").onclick = async () => {
+  const el = $("reloadMsg");
+  el.textContent = "Läser ...";
+  el.classList.remove("err");
+  try {
+    const r = await post("/spelledare/las-om");
+    const data = await r.json().catch(() => ({}));
+    el.textContent = r.ok ? data.text : data.fel || "Det gick inte att läsa om innehållet.";
+    el.classList.toggle("err", !r.ok);
+  } catch {
+    el.textContent = "Tornet svarar inte.";
+    el.classList.add("err");
+  }
+};
 
 $("startNow").onclick = async () => {
   try {
