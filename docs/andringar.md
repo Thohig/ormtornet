@@ -19,6 +19,9 @@ eller leder tornet.
   till, eller ett tryck någon annanstans, döljer förklaringen.
 - Den är utfälld från början även på en telefon. Den som har fällt ihop
   den har den fortfarande hopfälld.
+- Rutan har samma färg som kartan. Den ligger nu under skärmens
+  svepande linjer och mörka kanter, som kartan, i stället för över dem,
+  så att den inte syns som en ljusare fläck.
 
 ### Hela tornet på engelska
 

@@ -368,14 +368,14 @@ body[data-niva="4"] #crt::after { animation: throb 0.95s infinite; }
   gap: 6px;
   max-width: 40%;
   pointer-events: none;
-  /* Över skärmens svepande linjer och mörka kanter, så att texten går att
-     läsa i hörnet. */
-  z-index: 12;
+  /* Under skärmens svepande linjer och mörka kanter, som kartan, så att
+     teckenförklaringens ruta har samma färg som kartan runt den. */
+  z-index: 9;
 }
 #legend {
   padding: 4px 8px;
   border-radius: 4px;
-  background: rgba(21, 23, 26, 0.88);
+  background: var(--slate);
   font-size: 13px;
   pointer-events: auto;
 }
