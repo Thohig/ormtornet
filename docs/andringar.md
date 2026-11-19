@@ -13,6 +13,12 @@ eller leder tornet.
   förklaringarna.
 - Tecknen uppe till höger på kartan, frågetecknet och rummets namn syns
   också med full styrka hela tiden.
+- Text som stod i den dämpade bruna färgen på spelarsidan står nu i den
+  vanliga textfärgen: titeln och tiden i översta raden, rundornas
+  rubriker och de dämpade raderna i loggen, de extra raderna i panelerna,
+  kortet, tipsen i styrningen, texterna i klassvalet och ryktet och
+  uppmaningen i introt. Det utgråade, som frånkopplade vandrare och tagna
+  kort, är kvar.
 
 ### Översikten i två kolumner
 

@@ -126,7 +126,7 @@ body[data-niva="4"] #crt::after { animation: throb 0.95s infinite; }
   min-height: 2.8em;
   max-width: 60ch;
   text-align: center;
-  color: var(--dim);
+  color: var(--fg);
   line-height: 1.4;
   transition: opacity 0.9s;
 }
@@ -183,7 +183,7 @@ body[data-niva="4"] #crt::after { animation: throb 0.95s infinite; }
 #listen {
   margin: 0;
   min-height: 1.2em;
-  color: var(--dim);
+  color: var(--fg);
   font-size: 12px;
   letter-spacing: 0.15em;
   cursor: pointer;
@@ -258,7 +258,7 @@ body[data-niva="4"] #crt::after { animation: throb 0.95s infinite; }
   caret-color: var(--hi);
   text-shadow: 0 0 4px var(--glow);
 }
-.hint { color: var(--dim); font-size: 12px; }
+.hint { color: var(--fg); font-size: 12px; }
 #nameerr { color: var(--warn); min-height: 1.2em; }
 
 #game {
@@ -273,7 +273,7 @@ body[data-niva="4"] #crt::after { animation: throb 0.95s infinite; }
   align-items: baseline;
   flex: 0 0 auto;
 }
-.title { letter-spacing: 0.4em; color: var(--dim); }
+.title { letter-spacing: 0.4em; color: var(--fg); }
 #conn { color: var(--warn); font-size: 12px; }
 /* Mätarna: en etikett, en rad rutor och ett tal. Rutorna byggs i app.js. */
 :root { --slate: #15171a; --chalkline: #34373d; --chalk: #a9a69d; }
@@ -289,7 +289,7 @@ body[data-niva="4"] #crt::after { animation: throb 0.95s infinite; }
 .meter.sun .seg.on { background: var(--hi); }
 .meter.sun.low .seg.on { background: #ff9a5a; }
 .meter.sun.last .seg.on { background: var(--warn); animation: blink 1s steps(1) infinite; }
-#turn { color: var(--dim); min-width: 18ch; text-align: right; }
+#turn { color: var(--fg); min-width: 18ch; text-align: right; }
 #crew { display: inline-flex; gap: 2px; align-self: center; }
 #crew .dot {
   padding: 0 3px;
@@ -508,7 +508,7 @@ body.touch #helpBtn { display: none; }
 #roundcard .varn { color: var(--warn); }
 #roundcard .varn::before { content: "! "; }
 #roundcard .gold { color: #ffd36b; }
-#roundcard .dim { color: var(--dim); }
+#roundcard .dim { color: var(--fg); }
 #helpbox h2 {
   font-size: 11px;
   font-weight: normal;
@@ -517,7 +517,7 @@ body.touch #helpBtn { display: none; }
   margin: 0 0 6px;
   text-transform: uppercase;
 }
-#helpbox .hint { color: var(--dim); font-size: 12px; margin: 8px 0 0; max-width: 30ch; }
+#helpbox .hint { color: var(--fg); font-size: 12px; margin: 8px 0 0; max-width: 30ch; }
 /* Panelerna är små skiffertavlor, som kartan. */
 .panel {
   background: var(--slate);
@@ -548,9 +548,9 @@ body.touch #helpBtn { display: none; }
 #me .meter { margin: 4px 0; }
 /* Det egna draget står sist, avskilt med ett streck. */
 #me .plan { margin-top: 6px; padding-top: 5px; border-top: 1px dashed var(--chalkline); }
-#me .dimline { color: var(--dim); }
-#players .tag { color: var(--dim); }
-#help { color: var(--dim); }
+#me .dimline { color: var(--fg); }
+#players .tag { color: var(--fg); }
+#help { color: var(--fg); }
 #help b { display: inline-block; width: 11ch; font-weight: normal; color: var(--fg); }
 
 #logwrap {
@@ -598,14 +598,14 @@ body.touch #helpBtn { display: none; }
   border: 0;
   border-top: 1px solid var(--chalkline);
   background: none;
-  color: var(--dim);
+  color: var(--fg);
   font: inherit;
   font-size: 11px;
   letter-spacing: 0.12em;
   text-align: left;
   cursor: pointer;
 }
-#log .roundhead:hover { color: var(--fg); }
+#log .roundhead:hover { color: var(--hi); }
 #log .round:first-child .roundhead { border-top: 0; }
 /* Den aktuella rundan skiljs från de äldre med lite luft och en ljusare
    linje. */
@@ -633,7 +633,7 @@ body.touch #helpBtn { display: none; }
 #log .krita::before { content: "✎"; color: #f2f0e8; }
 #log .sam::before { content: "≡"; color: var(--chalk); }
 #log .sam { color: var(--chalk); }
-#log .dim { color: var(--dim); }
+#log .dim { color: var(--fg); }
 #log .info { color: var(--info); }
 #log .syn { color: var(--hi); }
 #log .rubrik { color: var(--hi); letter-spacing: 0.08em; }
@@ -685,7 +685,7 @@ body.touch .keys { display: none; }
 #pad .dirs button { font-size: 20px; }
 #pad .n { grid-area: 1 / 2; }
 #pad .w { grid-area: 2 / 1; }
-#pad .c { grid-area: 2 / 2; color: var(--dim); }
+#pad .c { grid-area: 2 / 2; color: var(--fg); }
 #pad .e { grid-area: 2 / 3; }
 #pad .s { grid-area: 3 / 2; }
 #pad .acts {
@@ -780,7 +780,7 @@ body.touch #side { overflow-y: auto; }
   font-weight: normal;
   letter-spacing: 0.3em;
 }
-#chooseLead, #chooseStatus { color: var(--dim); margin: 0 0 18px; }
+#chooseLead, #chooseStatus { color: var(--fg); margin: 0 0 18px; }
 #chooseStatus { margin: 18px 0 0; min-height: 1.4em; }
 #chooseStatus .secs { color: var(--hi); }
 #chooseStatus .secs.urgent { color: var(--warn); }
@@ -814,14 +814,14 @@ body.touch #side { overflow-y: auto; }
   box-shadow: 0 0 14px var(--glow);
   outline-color: var(--dim);
 }
-.card .num { position: absolute; top: 10px; right: 14px; color: var(--dim); }
+.card .num { position: absolute; top: 10px; right: 14px; color: var(--fg); }
 .card .num.low { top: auto; bottom: 10px; transform: rotate(180deg); }
 .card .cname { color: var(--hi); font-size: 16px; padding-right: 20px; }
-.card .desc { color: var(--dim); font-style: italic; font-size: 13px; }
+.card .desc { color: var(--fg); font-style: italic; font-size: 13px; }
 .card .stats { color: var(--info); font-size: 13px; }
 .card .good, .card .bad { font-size: 13px; line-height: 1.4; }
 .card .bad { color: #c99a7a; }
-.card .owner { margin-top: auto; color: var(--dim); }
+.card .owner { margin-top: auto; color: var(--fg); }
 .card:disabled { cursor: default; opacity: 0.4; }
 .card.mine { opacity: 1; border-color: var(--hi); box-shadow: 0 0 18px var(--glow); }
 .card.mine .owner { color: var(--hi); }
