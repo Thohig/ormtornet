@@ -19,6 +19,10 @@ eller leder tornet.
   kortet, tipsen i styrningen, texterna i klassvalet och ryktet och
   uppmaningen i introt. Det utgråade, som frånkopplade vandrare och tagna
   kort, är kvar.
+- På värdsidan står rubrikerna, etiketterna och förklaringarna vid
+  inställningarna, raden överst, tabellen och vandrarnas logg också i
+  den vanliga textfärgen. Knappar och val som inte går att använda just
+  nu är fortfarande utgråade.
 
 ### Översikten i två kolumner
 

@@ -20,19 +20,19 @@
     font-size: 14px;
     font-weight: normal;
     letter-spacing: 0.4em;
-    color: var(--dim);
+    color: var(--fg);
     margin: 0 0 4px;
   }
   #host h2 {
     font-size: 11px;
     font-weight: normal;
     letter-spacing: 0.3em;
-    color: var(--dim);
+    color: var(--fg);
     margin: 34px 0 10px;
     text-transform: uppercase;
   }
   #host p { margin: 6px 0; line-height: 1.45; }
-  .dimtext { color: var(--dim); }
+  .dimtext { color: var(--fg); }
   #addr {
     font-size: clamp(14px, 2.6vw, 24px);
     color: var(--hi);
@@ -40,7 +40,7 @@
     overflow-wrap: anywhere;
     margin: 6px 0;
   }
-  #ips { color: var(--dim); }
+  #ips { color: var(--fg); }
   #ips span { color: var(--fg); }
   .buttons { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 14px; }
   .btn {
@@ -63,7 +63,7 @@
   #slots li { display: flex; gap: 12px; margin: 5px 0; }
   #slots .name { flex: 0 0 22ch; }
   #slots .empty { color: var(--faint); }
-  #slots .tag { color: var(--dim); }
+  #slots .tag { color: var(--fg); }
   #slots .tag.ok { color: var(--info); }
   #slots .tag.away { color: var(--warn); }
   #slots .tag.ai { color: var(--info); }
@@ -71,14 +71,14 @@
   .btn.small { padding: 1px 8px; font-size: 12px; }
   #settings, #settings .grid { display: grid; grid-template-columns: 20ch auto 1fr; gap: 8px 12px; align-items: baseline; }
   #moreSettings { grid-column: 1 / -1; margin-top: 4px; }
-  #moreSettings summary { color: var(--dim); cursor: pointer; list-style: none; margin-bottom: 8px; }
+  #moreSettings summary { color: var(--fg); cursor: pointer; list-style: none; margin-bottom: 8px; }
   #moreSettings summary::-webkit-details-marker { display: none; }
   #moreSettings summary::before { content: "▸ "; }
   #moreSettings[open] summary::before { content: "▾ "; }
-  #moreSettings summary:hover { color: var(--fg); }
+  #moreSettings summary:hover { color: var(--hi); }
   #moreSettings summary .note { margin-left: 1ch; }
-  #settings label { color: var(--dim); }
-  #settings .note { color: var(--dim); font-size: 12px; }
+  #settings label { color: var(--fg); }
+  #settings .note { color: var(--fg); font-size: 12px; }
   #settings select {
     background: var(--bg);
     color: var(--hi);
@@ -93,7 +93,7 @@
   #saved.err { color: var(--warn); }
   #reloadMsg { white-space: pre-wrap; }
   #reloadMsg.err { color: var(--warn); }
-  #startHint { color: var(--dim); }
+  #startHint { color: var(--fg); }
   body.gm #host { max-width: 1100px; }
   #gmTop { color: var(--fg); }
   #gmTop .warn { color: var(--warn); }
@@ -112,12 +112,12 @@
   #gmMap { position: absolute; left: 0; top: 0; }
   .tablewrap { overflow-x: auto; }
   #gmPlayers { border-collapse: collapse; width: 100%; font-size: 13px; }
-  #gmPlayers th { text-align: left; font-weight: normal; color: var(--dim); padding: 4px 10px 4px 0; }
+  #gmPlayers th { text-align: left; font-weight: normal; color: var(--fg); padding: 4px 10px 4px 0; }
   #gmPlayers td { padding: 4px 10px 4px 0; vertical-align: top; }
   #gmPlayers .cond { color: var(--warn); }
   #gmPlayers .dead { opacity: 0.55; }
   .gmrow { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px; margin: 8px 0; }
-  .gmlabel { color: var(--dim); min-width: 13ch; }
+  .gmlabel { color: var(--fg); min-width: 13ch; }
   .gmrow select, .gmrow input {
     background: var(--bg); color: var(--hi); border: 1px solid var(--dim); font: inherit; font-size: 13px; padding: 2px 6px;
   }
@@ -134,22 +134,22 @@
   #gmLog .roundhead {
     display: block; width: 100%; margin: 6px 0 2px; padding: 3px 0 2px;
     border: 0; border-top: 1px solid var(--faint); background: none;
-    color: var(--dim); font: inherit; font-size: 11px; letter-spacing: 0.12em;
+    color: var(--fg); font: inherit; font-size: 11px; letter-spacing: 0.12em;
     text-align: left; cursor: pointer;
   }
   #gmLog .round:first-child .roundhead { border-top: 0; margin-top: 0; }
-  #gmLog .roundhead:hover { color: var(--fg); }
+  #gmLog .roundhead:hover { color: var(--hi); }
   #host summary { cursor: pointer; list-style: none; }
   #host summary::-webkit-details-marker { display: none; }
   #host summary h2 { display: inline-block; }
   #host summary h2::before { content: "▸ "; }
   #host details[open] > summary h2::before { content: "▾ "; }
-  #host summary:hover h2 { color: var(--fg); }
-  #gmLog .who { color: var(--dim); }
+  #host summary:hover h2 { color: var(--hi); }
+  #gmLog .who { color: var(--fg); }
   #gmLog .varn { color: var(--warn); }
   #gmLog .info { color: var(--info); }
   #gmLog .syn { color: var(--hi); }
-  #gmLog .dim { color: var(--dim); }
+  #gmLog .dim { color: var(--fg); }
   #bar {
     position: sticky; top: 0; z-index: 3;
     display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 18px;
@@ -157,7 +157,7 @@
     background: var(--bg); border-bottom: 1px solid var(--faint);
   }
   #barPhase { color: var(--hi); }
-  #barWho { color: var(--dim); flex: 1 1 auto; }
+  #barWho { color: var(--fg); flex: 1 1 auto; }
   #barWho .away { color: var(--warn); }
   #barMain { margin-left: auto; }
   /* Avsnitten byter plats efter fasen: det som behövs nu står först. */
