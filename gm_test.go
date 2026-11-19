@@ -96,3 +96,31 @@ func TestGMViewShowsEverything(t *testing.T) {
 		t.Fatalf("draget beskrivs som %q", g.actionText(a.player))
 	}
 }
+
+// När vandringen är slut har spelledarbordet resultatet och krönikan, och
+// introt på tornets dator leder dit i spelledarläget.
+func TestGMViewEndAndIntro(t *testing.T) {
+	g := testGame(t)
+	if g.Intro().Leder {
+		t.Fatal("introt leder till spelledarbordet utan spelledarläge")
+	}
+	s := gmSettings(g, true)
+	s.AI = 2
+	g.ApplySettings(s)
+	if !g.Intro().Leder {
+		t.Fatal("introt leder inte till spelledarbordet i spelledarläget")
+	}
+	if v := g.GMView(false); v.Results != nil || v.Chronicle != nil {
+		t.Fatal("resultat och krönika före vandringen")
+	}
+	if !g.ForceStart() {
+		t.Fatal("vandringen startade inte")
+	}
+	g.mu.Lock()
+	g.endGame()
+	g.mu.Unlock()
+	v := g.GMView(false)
+	if len(v.Results) != 2 || len(v.Chronicle) < 3 || v.Chronicle[0].Class != "rubrik" {
+		t.Fatalf("efter vandringen: %d resultat, krönikan %+v", len(v.Results), v.Chronicle)
+	}
+}

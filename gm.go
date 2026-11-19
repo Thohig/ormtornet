@@ -97,6 +97,9 @@ type gmView struct {
 	Rooms        []gmRoomRef `json:"rooms"`    // rum där spelledaren kan lägga fällor och varelser
 	TrapTypes    []gmCatalog `json:"trapTypes"`
 	MonsterTypes []gmCatalog `json:"monsterTypes"`
+
+	Results   []resultView `json:"results,omitempty"`   // när vandringen är slut
+	Chronicle []chronLine  `json:"chronicle,omitempty"` // när vandringen är slut
 }
 
 type gmRoomRef struct {
@@ -198,6 +201,10 @@ func (g *Game) GMView(visible bool) gmView {
 		v.TimeLeft = int(max(0, left.Round(time.Second)/time.Second))
 	}
 	v.TrapTypes, v.MonsterTypes = g.gmCatalogs()
+	if g.phase == phaseEnd {
+		v.Results = g.results()
+		v.Chronicle = g.chronicleLines()
+	}
 	return v
 }
 

@@ -17,7 +17,14 @@ eller leder tornet.
   nu före vandringen eller Pausa och Fortsätt under den. Kartan är större
   och loggen står utfälld.
 - Värdsidans rad säger när rundan är pausad, även utan spelledarläge.
-- Med spelledarläget av säger spelledarbordet bara det och var det slås på.
+- Med spelledarläget av säger spelledarbordet det och har knappen Slå på
+  spelledarläget, som fungerar mellan vandringarna.
+- I lobbyn och klassvalet visar spelledarbordet vilka som står vid porten,
+  om de är redo och vilken klass de har valt.
+- När vandringen är slut visar spelledarbordet hur det gick för var och en
+  och krönikan över vandringen.
+- Introt på tornets dator leder till spelledarbordet när spelledarläget är
+  på, och annars till värdsidan som förut.
 
 ### Automatisk solnedgång och turtid
 

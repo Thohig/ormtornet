@@ -11,7 +11,20 @@
 <link rel="stylesheet" href="/spelledare.css">
 <style>
   #host { max-width: 1100px; }
-  #off { color: var(--hi); margin-top: 24px; }
+  #off { margin-top: 24px; }
+  #offText { color: var(--hi); }
+  #offMsg { min-height: 1.2em; color: var(--warn); }
+  #door ul, #results { list-style: none; margin: 10px 0 0; padding: 0; }
+  #door li, #results li { display: flex; flex-wrap: wrap; gap: 4px 12px; margin: 5px 0; align-items: baseline; }
+  #door .name, #results .name { flex: 0 0 22ch; }
+  #door .tag { color: var(--fg); }
+  #door .tag.ok { color: var(--info); }
+  #door .tag.away { color: var(--warn); }
+  #results .win { color: var(--hi); }
+  #chronicle { font-size: 13px; line-height: 1.4; margin-top: 12px; }
+  #chronicle div { margin: 2px 0; }
+  #chronicle .rubrik { color: var(--hi); }
+  #chronicle .dim { color: var(--fg); }
   #gmTop { color: var(--fg); }
   #gmTop .warn { color: var(--warn); }
   #gmMapBox { position: relative; height: min(70vh, 640px); margin: 8px 0; }
@@ -78,7 +91,25 @@
       <span id="barBtns"><button class="btn main small" id="barMain" type="button" hidden></button></span>
     </div>
 
-    <p id="off" hidden data-t="bord_av"></p>
+    <section id="off" hidden>
+      <p id="offText" data-t="bord_av"></p>
+      <p class="dimtext" data-t="bord_av_not"></p>
+      <div class="buttons"><button class="btn main" id="turnOn" type="button" data-t="bord_sla_pa"></button></div>
+      <p id="offMsg"></p>
+    </section>
+
+    <section id="door" hidden>
+      <h2 data-t="vid_porten"></h2>
+      <p class="dimtext" id="doorNote"></p>
+      <ul id="doorList"></ul>
+    </section>
+
+    <section id="end" hidden>
+      <h2 data-t="bord_slut"></h2>
+      <ul id="results"></ul>
+      <div id="chronicle"></div>
+      <p class="dimtext"><span data-t="bord_slut_not"></span> <a href="/spelledare" target="ormtornet-vard" data-t="bord_till_vardsidan"></a></p>
+    </section>
 
     <section id="gm" hidden>
       <p id="gmTop"></p>

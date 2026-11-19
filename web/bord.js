@@ -78,8 +78,104 @@ function render(v) {
   const gm = v.settings.spelledarlage;
   $("off").hidden = gm;
   $("gm").hidden = !gm;
+  $("door").hidden = !gm || (v.phase !== "lobby" && v.phase !== "klassval");
+  $("end").hidden = !gm || v.phase !== "slut";
+  $("turnOn").disabled = v.phase === "spel";
+  if (!gm && v.phase === "spel") $("offMsg").textContent = t("bord_sla_pa_spel");
+  else if ($("offMsg").dataset.err !== "1") $("offMsg").textContent = "";
   paused = !!v.paused;
   renderBar(v);
+  if (gm && !$("door").hidden) renderDoor(v);
+}
+
+// Spelledarläget slås på härifrån, med de andra inställningarna som de är.
+// Det går bara mellan vandringarna.
+$("turnOn").onclick = async () => {
+  if (!view) return;
+  const msg = $("offMsg");
+  msg.dataset.err = "";
+  try {
+    const r = await post("/spelledare/installningar", { ...view.settings, spelledarlage: true });
+    const data = await r.json().catch(() => ({}));
+    if (!r.ok || data.varning) {
+      msg.dataset.err = "1";
+      msg.textContent = data.fel || data.varning || t("inst_fel");
+    }
+  } catch {
+    msg.dataset.err = "1";
+    msg.textContent = t("svarar_inte");
+  }
+};
+
+// Vid porten: vilka som har kommit, om de är redo och vilken klass de har
+// valt. Klassen kommer från översikten.
+function doorTag(p, phase) {
+  if (!p.online) return [t("borta"), "away"];
+  if (p.bot) return [t("tagg_dator"), ""];
+  if (phase === "klassval") return p.chosen ? [t("tagg_har_valt"), "ok"] : [t("tagg_valjer"), ""];
+  return p.ready ? [t("tagg_redo"), "ok"] : [t("tagg_inte_redo"), ""];
+}
+
+function renderDoor(v) {
+  $("doorNote").textContent = v.players.length
+    ? t("torn_info", { storlek: v.size, max: v.sunMax })
+    : t("bord_ingen_vid_porten");
+  const ul = $("doorList");
+  ul.textContent = "";
+  const classes = {};
+  (lastGM ? lastGM.players : []).forEach((p) => (classes[p.slot] = p.klass));
+  v.players
+    .slice()
+    .sort((a, b) => a.slot - b.slot)
+    .forEach((p) => {
+      const li = document.createElement("li");
+      const name = document.createElement("span");
+      name.className = "name";
+      const mark = document.createElement("span");
+      mark.textContent = "@ ";
+      mark.style.color = COLORS[p.slot];
+      name.append(mark, p.name);
+      const [text, cls] = doorTag(p, v.phase);
+      const tg = document.createElement("span");
+      tg.className = "tag " + cls;
+      tg.textContent = text;
+      li.append(name, tg);
+      if (classes[p.slot]) {
+        const k = document.createElement("span");
+        k.textContent = classes[p.slot];
+        li.append(k);
+      }
+      ul.append(li);
+    });
+}
+
+// Slutet: hur det gick för var och en, och krönikan.
+function renderEnd(o) {
+  const ul = $("results");
+  ul.textContent = "";
+  (o.results || []).forEach((r) => {
+    const li = document.createElement("li");
+    const name = document.createElement("span");
+    name.className = "name" + (r.winner ? " win" : "");
+    const mark = document.createElement("span");
+    mark.textContent = "@ ";
+    mark.style.color = COLORS[r.slot];
+    name.append(mark, r.name);
+    const st = document.createElement("span");
+    const status = { ute: t("ute"), forlorad: t("forlorad"), dod: t("dod") }[r.status] || r.status;
+    st.textContent = status + " · " + t("guld", { antal: r.treasure }) + (r.winner ? " · " + t("bord_vann") : "");
+    if (r.winner) st.className = "win";
+    li.append(name, st);
+    ul.append(li);
+  });
+  const box = $("chronicle");
+  box.textContent = "";
+  (o.chronicle || []).forEach((l) => {
+    const d = document.createElement("div");
+    if (l.c) d.className = l.c;
+    d.textContent = l.text;
+    box.append(d);
+  });
 }
 
 // Översikten i spelledarläget: hela tornet, alla vandrare, ormen och loggen.
@@ -215,6 +311,7 @@ function renderGM(o) {
   });
 
   renderLog(o);
+  if (m.phase === "slut") renderEnd(o);
 }
 
 // Vandrarnas logg: en grupp per runda, den senaste överst, och inom

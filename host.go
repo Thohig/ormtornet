@@ -95,6 +95,7 @@ type introInfo struct {
 	Avslojande bool     `json:"avslojande"`
 	Rykten     []string `json:"rykten"`
 	Vard       bool     `json:"vard"`  // sidan visas på datorn som kör tornet
+	Leder      bool     `json:"leder"` // spelledarläget är på; introt på tornets dator leder då till spelledarbordet
 	Vanta      int      `json:"vanta"` // sekunder innan knappen visas
 	Ljud       string   `json:"ljud"`  // uppmaningen att klicka för att höra stormen
 	// Tecken förklarar kartans tecken, från texterna tecken_* i texter.json.
@@ -110,7 +111,7 @@ func (g *Game) Intro() introInfo {
 	if !g.cfg.Reveal {
 		key = "rykten_invigda"
 	}
-	return introInfo{Sprak: g.base.Lang, Avslojande: g.cfg.Reveal, Rykten: g.data.Texter[key],
+	return introInfo{Sprak: g.base.Lang, Avslojande: g.cfg.Reveal, Rykten: g.data.Texter[key], Leder: g.cfg.GMMode,
 		Vanta: g.data.Intro.Vanta, Ljud: g.data.Text("intro_ljud"), Tecken: g.data.signs()}
 }
 

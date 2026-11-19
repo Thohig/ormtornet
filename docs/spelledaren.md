@@ -30,14 +30,13 @@ Byggt (README beskriver hur det fungerar):
 - Läs om innehållet i `data/` utan omstart, med felen på värdsidan om
   filerna inte går ihop. Vandringens frö visas under Vid porten.
 - Spelledarbordet på `/spelledare/bord`: översikten och ingreppen på en
-  egen sida, med en knapp dit från värdsidans rad.
+  egen sida, med en knapp dit från värdsidans rad. Där står också porten
+  före vandringen, resultatet och krönikan efter den, och en knapp som
+  slår på spelledarläget. Introt på tornets dator leder dit i
+  spelledarläget.
 
-På gång: spelledarbordet, steg 2 och 3.
+På gång: spelledarbordet, steg 3.
 
-- Steg 2: lobbyn och slutet på spelledarbordet (vilka som står vid porten
-  och deras klasser, krönikan och resultatet), att slå på spelledarläget
-  därifrån, och att introt på tornets dator leder dit när spelledarläget
-  är på.
 - Steg 3: värdsidan städas så att avsnitten inte längre byter plats, och
   dokumentationen ses över.
 

@@ -166,11 +166,15 @@ när alla vandrare är AI-spelare.
 Spelledaren leder vandringen på en egen sida, spelledarbordet på
 `http://localhost:8080/spelledare/bord`, som knappen Spelledarbordet på
 värdsidans rad öppnar. Den visas bara på tornets dator, som värdsidan.
-Inbjudan och inställningarna ligger kvar på värdsidan. Med spelledarläget av
-säger spelledarbordet bara det.
+Inbjudan och inställningarna ligger kvar på värdsidan. Introt på tornets
+dator leder hit när spelledarläget är på. Med spelledarläget av säger
+spelledarbordet det och har en knapp som slår på det mellan vandringarna.
 
 Överst står samma rad som på värdsidan, med Starta nu före vandringen och
-Pausa eller Fortsätt under den. Sidan visar en översikt: hela tornet så
+Pausa eller Fortsätt under den. I lobbyn och klassvalet står vilka som har
+kommit till porten, om de är redo och vilken klass de har valt. När
+vandringen är slut står hur det gick för var och en och krönikan över
+vandringen. Sidan visar också en översikt: hela tornet så
 långt det har vuxit fram, med fällor som väntar och alla varelser, varje
 vandrares plats, klass, liv, skatt, drycker, föremål, tillstånd och valda
 drag, vad var och en har viskat till tornet och vem som är invigd, hur djupt

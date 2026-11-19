@@ -56,4 +56,5 @@ html, body { overflow: auto; }
 #barWho { color: var(--fg); flex: 1 1 auto; }
 #barWho .away { color: var(--warn); }
 #barBtns { margin-left: auto; display: flex; gap: 8px; }
+.buttons { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 14px; }
 code { color: var(--hi); font: inherit; }

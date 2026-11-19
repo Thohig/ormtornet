@@ -1153,9 +1153,11 @@ const Intro = (() => {
   let seen = false; // har sett hela övergången förut i den här fliken
   try { seen = sessionStorage.getItem("ormtornet-intro") === "1"; } catch {}
   let rumors = [];
-  // På tornets egen dator leder introt till värdsidan, utom när man
-  // har valt att spela själv (adressen slutar med ?spela).
+  // På tornets egen dator leder introt till värdsidan, eller till
+  // spelledarbordet i spelledarläget, utom när man har valt att spela
+  // själv (adressen slutar med ?spela).
   let toHostPage = false;
+  let hostPage = "/spelledare"; // värdsidan, eller spelledarbordet i spelledarläget
   const wantsToPlay = new URLSearchParams(location.search).has("spela");
   let reveal = true;
   let next = 0;
@@ -1323,6 +1325,7 @@ const Intro = (() => {
       reveal = !!info.avslojande;
       if (!reveal) $("intro").classList.add("invigd");
       toHostPage = info.vard && !wantsToPlay;
+      hostPage = info.leder ? "/spelledare/bord" : "/spelledare";
       $("listen").textContent = info.ljud || "";
       signTexts = info.tecken || {};
       $("legendBtn").textContent = signTexts.rubrik || "";
@@ -1352,7 +1355,7 @@ const Intro = (() => {
     clearTimeout(timer);
     Rain.stop();
     if (toHostPage) {
-      location.href = "/spelledare";
+      location.href = hostPage;
       return;
     }
     show("namescreen");

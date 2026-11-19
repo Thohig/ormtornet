@@ -57,21 +57,35 @@ func (g *Game) resetChronicle() {
 	}
 }
 
-// tellChronicle berättar krönikan för alla: händelserna i tur och ordning,
-// och sedan en rad för varje vandrare.
-func (g *Game) tellChronicle() {
-	g.logAll(g.data.Text("kronika_rubrik"), "rubrik")
+// chronLine är en rad i krönikan, med sin klass i loggen.
+type chronLine struct {
+	Text  string `json:"text"`
+	Class string `json:"c,omitempty"`
+}
+
+// chronicleLines är krönikan: rubriken, händelserna i tur och ordning och
+// sedan en rad för varje vandrare.
+func (g *Game) chronicleLines() []chronLine {
+	lines := []chronLine{{g.data.Text("kronika_rubrik"), "rubrik"}}
 	for _, e := range g.chron {
-		g.logAll(g.data.Text("kronika_rad", "runda", strconv.Itoa(e.round), "text", e.text), "")
+		lines = append(lines, chronLine{g.data.Text("kronika_rad", "runda", strconv.Itoa(e.round), "text", e.text), ""})
 	}
 	for _, p := range g.players {
 		if p == nil {
 			continue
 		}
 		s := p.stats
-		g.logAll(g.data.Text("kronika_vandrare", "namn", p.Name,
+		lines = append(lines, chronLine{g.data.Text("kronika_vandrare", "namn", p.Name,
 			"naver", strconv.Itoa(s.takes), "kammarguld", strconv.Itoa(s.takeGold),
 			"fallor", strconv.Itoa(s.traps), "varelser", strconv.Itoa(s.kills),
-			"sokt", strconv.Itoa(s.searched)), "dim")
+			"sokt", strconv.Itoa(s.searched)), "dim"})
+	}
+	return lines
+}
+
+// tellChronicle berättar krönikan för alla.
+func (g *Game) tellChronicle() {
+	for _, l := range g.chronicleLines() {
+		g.logAll(l.Text, l.Class)
 	}
 }
