@@ -65,6 +65,7 @@ Flaggor:
 - `-ai 2` antal datorstyrda vandrare (0–7, eller 8 i spelledarläget)
 - `-svarighet normal` svårighet: `latt`, `normal`, `svar` eller `mardrom`
 - `-klasser=false` vandrarna väljer ingen klass
+- `-simulera 500` spelar 500 vandringar med bara AI-spelare och skriver hur det gick, utan att öppna tornet (se Simulera nedan)
 - `-kontrollera` kontrollerar datafilerna och avslutar, utan att öppna tornet
 - `-fro 0` frö för den första vandringen. Varje vandring skriver sitt frö i terminalen och på värdsidan. Startar du med samma frö och vandrarna gör samma drag blir tornet detsamma, rum för rum, så att en konstig vandring kan spelas upp igen. `0` ger ett slumpat frö
 - `-storlek 0` tornets storlek i rum: `9`, `11` eller `13`, eller `0` för automatisk (efter antalet vandrare). Ett torn blir aldrig för litet för alla
@@ -681,3 +682,21 @@ Spellogiken har tester:
 ```bash
 go test ./...
 ```
+
+### Simulera
+
+För att se hur siffrorna i `data/` verkar kan tornet spela många
+vandringar med bara AI-spelare, utan webbläsare och utan väntetider:
+
+```bash
+go run . -simulera 500 -ai 4 -svarighet svar
+```
+
+Det tar under en sekund. Utskriften säger hur många som kom ut med och
+utan skatt, dog eller blev kvar i mörkret, hur mycket skatt de bar, vad de
+dog av, hur ofta ormen vaknade och hur det gick för varje klass.
+Inställningarna är desamma som när tornet öppnas (`-sol`, `-storlek`,
+`-synlighet`, `-klasser` och de sparade). Vandringarna får frön i följd
+från `-fro`, så samma kommando ger samma resultat, och en enskild vandring
+kan köras om med `-simulera 1 -fro` och dess frö. AI-spelarna väljer klass efter sin personlighet, så
+klasserna fördelas inte jämnt mellan dem.

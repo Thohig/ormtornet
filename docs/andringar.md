@@ -6,6 +6,15 @@ eller leder tornet.
 
 ## 2026-11-19
 
+### Simulera många vandringar
+
+- `go run . -simulera 500 -ai 4` spelar 500 vandringar med bara
+  AI-spelare på under en sekund och skriver hur det gick: hur många som
+  kom ut med skatt, dog eller blev kvar, vad de dog av, hur ofta ormen
+  vaknade och hur det gick för varje klass. Till för att justera
+  siffrorna i `data/`.
+- Samma `-fro` ger samma resultat.
+
 ### Automatiska kontroller på GitHub
 
 - Vid varje push kör GitHub formateringen, `go vet`, testerna med

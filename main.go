@@ -41,6 +41,7 @@ func main() {
 	awake := flag.Bool("vaken", false, "håll datorn vaken så länge servern är igång")
 	autostop := flag.Duration("autostopp", 10*time.Minute, "stäng tornet när ingen spelare är ansluten och ingen sida har synts på den här datorn så här länge (0 = aldrig)")
 	abandoned := flag.Duration("autostopp-max", 12*time.Hour, "stäng tornet när ingen har gjort något så här länge, även om flikar står öppna (0 = aldrig)")
+	simulate := flag.Int("simulera", 0, "spela så många vandringar med bara AI-spelare (-ai, förval 4) och skriv hur det gick, utan att öppna tornet")
 	check := flag.Bool("kontrollera", false, "kontrollera datafilerna och avsluta")
 	flag.Parse()
 
@@ -81,6 +82,12 @@ func main() {
 	}
 	if *check {
 		fmt.Println("Datafilerna är i ordning:", src)
+		return
+	}
+	if *simulate > 0 {
+		if err := runSimulation(data, cfg, *simulate, cfg.AI, *seed, os.Stdout); err != nil {
+			log.Fatalf("simuleringen: %v", err)
+		}
 		return
 	}
 	if cfg.Difficulty != "" && data.difficultyID(cfg.Difficulty) != cfg.Difficulty {
