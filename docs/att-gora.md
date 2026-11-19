@@ -13,8 +13,13 @@ En riktig kväll behövs för att se:
 - Balansen på Normal: når någon kammaren, och vad tar livet?
 - Egen karta och lottade portar: pratar spelarna med varandra, eller blir
   det bara rörigt?
-- Klasserna: är någon för stark eller för svag? Tjuven var svagast med
-  AI-spelare.
+- Klasserna: är någon för stark eller för svag? Med AI-spelare
+  (2026-11-19, 10 000 vandringar, klasserna rättvist fördelade) kommer
+  alla ut med skatt i 50–61 % av vandringarna på Normal. Kartritaren och
+  örtkvinnan justerades då. Känns det rätt med människor?
+- Örtkvinnan (2026-11-19): hon tappar nu all sin skatt om ormen vaknar
+  medan hon är i kammaren (85 % på Lätt). Är det för hårt? Sänk i så fall
+  `extra_forlust` i `data/klasser.json` till cirka 0,35.
 - Viskningen: gissar någon rätt, och känns fördelen lagom?
 - Kartan (2026-11-19): är Mellan på datorn och Nära på telefonen bra
   förval? Går det att zooma med två fingrar på en riktig telefon (bara
@@ -49,6 +54,15 @@ En riktig kväll behövs för att se:
   blir de brus?
 
 ### Justera efter provet
+
+- Legoknekten på Mardröm: med AI-spelare kommer hen ut med skatt i 43 %
+  av vandringarna, mot 21–32 % för de andra klasserna. Extralivet och
+  skölden väger tungt när alla har få liv.
+- Svårigheterna med AI-spelare (2026-11-19, 10 000 vandringar, 4
+  AI-spelare): ut med skatt 71, 54, 45 och 28 % på Lätt, Normal, Svår och
+  Mardröm, döda 10, 24, 26 och 50 %. Fler varelser på Svår
+  (`varelsechans` 0,32) gav ingen mätbar skillnad; det som avgör är
+  antalet liv.
 
 - Göra Normal mildare om den är för hård, i `data/svarighet.json` (färre
   fällor eller ett liv till). Uppdatera då tabellen i README.
