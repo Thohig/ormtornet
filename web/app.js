@@ -45,9 +45,9 @@ const Log = (() => {
   }
 
   function label(key) {
-    if (key === "lobby") return "Före vandringen";
-    if (key === "slut") return "Slutet";
-    return "Runda " + key.slice(1);
+    if (key === "lobby") return t("logg_fore");
+    if (key === "slut") return t("logg_slut");
+    return t("logg_runda", { runda: key.slice(1) });
   }
 
   function push(text, cls) {

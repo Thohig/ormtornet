@@ -1,0 +1,51 @@
+{
+  "_om": "Engelsk översättning av ormen.json. Bara texter; siffrorna står i den svenska filen. Korten kopplas ihop med sina id:n.",
+  "ormen": {
+    "kort": [
+      {
+        "id": "sover",
+        "texter": [
+          "You reach into the hoard and take {antal} gold. The serpent sleeps on.",
+          "The coins are lukewarm and sticky. You take {antal} gold. Nothing stirs.",
+          "Carefully, coin by coin: {antal} gold. The breathing goes on at the same slow pace."
+        ]
+      },
+      {
+        "id": "ror_sig",
+        "texter": [
+          "You take {antal} gold. A coil slides aside and the floor beneath you sways. Then all is still again.",
+          "{antal} gold. A vast breath draws through the hall, and the whole room seems to go with it. The serpent sleeps. For now."
+        ],
+        "andra": [
+          "The floor sways beneath you. Something vast has moved in its sleep.",
+          "The whole tower seems to draw a deep breath."
+        ]
+      },
+      {
+        "id": "vaknar",
+        "texter": [
+          "A coin slips from your hand and clinks against the others. The breathing stops. Two yellow eyes open in the dark.",
+          "You pull at a chain that is stuck fast. The whole hoard shifts, and what lies around it wakes."
+        ]
+      }
+    ],
+
+    "vaknar_andra": [
+      "A hissing fills the tower, so loud the stones tremble. The serpent is awake!",
+      "A sound like a storm through a pipe. The serpent has woken."
+    ],
+    "kastas_ut": [
+      "The coils lash out and you are hurled across the hall and out through an opening. You drop {forlust} gold and take {skada} wounds.",
+      "Something strikes you in the chest and you fly out of the chamber. {forlust} gold spills from your bag. You take {skada} wounds."
+    ],
+    "somnar_om": [
+      "The hissing ebbs away. The breathing slows again, but it sounds more easily woken now."
+    ],
+
+    "somn": [
+      "The serpent sleeps deeply. The breaths are long and heavy.",
+      "The serpent sleeps uneasily. The breaths come faster.",
+      "The serpent is close to waking. You see the coils tighten."
+    ]
+  }
+}

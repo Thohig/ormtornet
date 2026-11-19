@@ -124,10 +124,10 @@ func (g *Game) checkAwait() {
 		if g.timer != nil {
 			g.timer.Stop()
 		}
-		g.gmNote("Ingen vandrare är ansluten. Tornet väntar.")
+		g.gmNote("server_not_vantar")
 	case !should && g.awaiting:
 		g.paused, g.awaiting = false, false
 		g.armTimer(g.pauseLeft)
-		g.gmNote("En vandrare är tillbaka. Tornet fortsätter.")
+		g.gmNote("server_not_tillbaka")
 	}
 }

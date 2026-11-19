@@ -1,0 +1,28 @@
+{
+  "_om": "Engelsk översättning av ai.json. Bara texter; siffrorna och AI-namnen står i den svenska filen. Personligheterna kopplas ihop med sina id:n.",
+  "ai": {
+    "personligheter": [
+      { "id": "djarv", "namn": "bold" },
+      { "id": "forsiktig", "namn": "cautious" }
+    ],
+
+    "ansluter": [
+      "{namn} steps in through the gate in the {horn}. They look as if they have done this before."
+    ],
+    "lamnar": [
+      "{namn} turns back at the gate in the {horn} and walks away. There are other towers."
+    ],
+    "ansluter_dolt": [
+      "{namn} has come to the tower. They look as if they have done this before."
+    ],
+    "lamnar_dolt": [
+      "{namn} turns back at the foot of the tower and walks away. There are other towers."
+    ],
+    "tar_over": [
+      "{namn} seems to have fallen asleep by their lantern. Someone else now guides the steps of {namn}."
+    ],
+    "tillbaka": [
+      "{namn} is back and guides their own steps again."
+    ]
+  }
+}

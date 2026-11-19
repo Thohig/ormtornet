@@ -1,0 +1,8 @@
+{
+  "_om": "Spelarsidans egna texter (web/index.html, app.js och map.js), på nyckel. Sidan visar dem med t(\"nyckel\") och data-t=\"nyckel\" (se web/texter.js). {namn} och liknande fylls i av sidan. Texter med data-t-html får innehålla enkel HTML som <kbd>.",
+  "spelarsidan": {
+    "logg_fore": "Före vandringen",
+    "logg_slut": "Slutet",
+    "logg_runda": "Runda {runda}"
+  }
+}

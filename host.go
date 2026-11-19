@@ -6,9 +6,11 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/fs"
 	"net"
 	"net/http"
+	"strings"
 	"time"
 )
 
@@ -46,6 +48,7 @@ type hostView struct {
 	Seed       uint64       `json:"seed,omitempty"` // vandringens frö, under och efter vandringen
 
 	Svarigheter []difficultyView `json:"svarigheter"` // förvalen att välja bland
+	Sprak       string           `json:"sprak"`       // texternas språk; byts det hämtar sidan nya texter
 }
 
 // HostView sammanfattar spelet för spelledaren. Den visar inte skatter,
@@ -63,7 +66,7 @@ func (g *Game) HostView(visible bool) hostView {
 		TurnSecs: int(g.cfg.TurnTime / time.Second), MinPlayers: g.cfg.MinPlayers,
 		MaxPlayers: maxPlayers, Reveal: g.cfg.Reveal, Players: []hostPlayer{},
 		Settings: settingsFrom(g.cfg), Bots: g.botCount(), Size: g.size,
-		Svarigheter: g.base.difficulties(),
+		Svarigheter: g.base.difficulties(), Sprak: g.base.Lang,
 	}
 	if g.phase == phasePlay || g.phase == phaseEnd {
 		v.Seed = g.seed
@@ -83,6 +86,7 @@ func (g *Game) HostView(visible bool) hostView {
 
 // introInfo är det startsidan behöver innan spelaren har anslutit.
 type introInfo struct {
+	Sprak      string   `json:"sprak"` // texternas språk
 	Avslojande bool     `json:"avslojande"`
 	Rykten     []string `json:"rykten"`
 	Vard       bool     `json:"vard"`  // sidan visas på datorn som kör tornet
@@ -101,7 +105,7 @@ func (g *Game) Intro() introInfo {
 	if !g.cfg.Reveal {
 		key = "rykten_invigda"
 	}
-	return introInfo{Avslojande: g.cfg.Reveal, Rykten: g.data.Texter[key],
+	return introInfo{Sprak: g.base.Lang, Avslojande: g.cfg.Reveal, Rykten: g.data.Texter[key],
 		Vanta: g.data.Intro.Vanta, Ljud: g.data.Text("intro_ljud"), Tecken: g.data.signs()}
 }
 
@@ -192,7 +196,7 @@ func addHostRoutes(mux *http.ServeMux, web fs.FS, game *Game, addrs hostAddrs, h
 	}))
 	mux.HandleFunc("POST /spelledare/starta", hostAction(func(w http.ResponseWriter, r *http.Request) {
 		if !game.ForceStart() {
-			writeJSON(w, http.StatusConflict, map[string]string{"fel": "Det går inte att starta nu. Minst en människa måste vara i tornet, och ingen vandring får pågå."})
+			writeJSON(w, http.StatusConflict, map[string]string{"fel": game.HostText("server_kan_inte_starta")})
 			return
 		}
 		w.WriteHeader(http.StatusNoContent)
@@ -202,37 +206,37 @@ func addHostRoutes(mux *http.ServeMux, web fs.FS, game *Game, addrs hostAddrs, h
 			Slot int `json:"slot"`
 		}
 		if err := json.NewDecoder(http.MaxBytesReader(w, r.Body, 256)).Decode(&req); err != nil || !game.TakeOverSlot(req.Slot) {
-			writeJSON(w, http.StatusConflict, map[string]string{"fel": "AI:n kan bara ta över en vandrare vars spelare är borta, mitt i en vandring."})
+			writeJSON(w, http.StatusConflict, map[string]string{"fel": game.HostText("server_ta_over")})
 			return
 		}
 		w.WriteHeader(http.StatusNoContent)
 	}))
 	mux.HandleFunc("POST /spelledare/las-om", hostAction(func(w http.ResponseWriter, r *http.Request) {
 		if hooks.Load == nil {
-			writeJSON(w, http.StatusNotImplemented, map[string]string{"fel": "Innehållet kan inte läsas om här."})
+			writeJSON(w, http.StatusNotImplemented, map[string]string{"fel": game.HostText("server_las_om_ej")})
 			return
 		}
 		d, err := hooks.Load(game.Settings().Sprak)
 		if err != nil {
-			writeJSON(w, http.StatusUnprocessableEntity, map[string]string{"fel": "Innehållet lästes inte in, tornet behåller det gamla. " + err.Error()})
+			writeJSON(w, http.StatusUnprocessableEntity, map[string]string{"fel": game.HostText("server_las_om_fel", "fel", err.Error())})
 			return
 		}
-		text := "Innehållet är inläst och gäller nu. Tornet är byggt på nytt."
+		text := "server_las_om_nu"
 		if !game.ReloadData(d) {
-			text = "Innehållet är inläst och gäller från nästa torn."
+			text = "server_las_om_sen"
 		}
-		writeJSON(w, http.StatusOK, map[string]string{"text": text})
+		writeJSON(w, http.StatusOK, map[string]string{"text": game.HostText(text)})
 	}))
 	mux.HandleFunc("POST /spelledare/installningar", hostAction(func(w http.ResponseWriter, r *http.Request) {
 		var s Settings
 		if err := json.NewDecoder(http.MaxBytesReader(w, r.Body, 4096)).Decode(&s); err != nil {
-			writeJSON(w, http.StatusBadRequest, map[string]string{"fel": "Kunde inte läsa inställningarna."})
+			writeJSON(w, http.StatusBadRequest, map[string]string{"fel": game.HostText("server_installningar_las")})
 			return
 		}
 		lang := game.Settings().Sprak
 		got, err := game.ApplySettings(s)
 		if err != nil {
-			writeJSON(w, http.StatusConflict, map[string]any{"fel": "Inställningarna kan ändras när omgången är slut.", "settings": got})
+			writeJSON(w, http.StatusConflict, map[string]any{"fel": game.HostText("server_installningar_slut"), "settings": got})
 			return
 		}
 		// Ett nytt språk betyder nya texter. De gäller som när innehållet
@@ -240,25 +244,25 @@ func addHostRoutes(mux *http.ServeMux, web fs.FS, game *Game, addrs hostAddrs, h
 		if got.Sprak != lang && hooks.Load != nil {
 			d, err := hooks.Load(got.Sprak)
 			if err != nil {
-				writeJSON(w, http.StatusOK, map[string]any{"settings": got, "varning": "Språket kunde inte läsas in, tornet behåller det gamla. " + err.Error()})
+				writeJSON(w, http.StatusOK, map[string]any{"settings": got, "varning": game.HostText("server_sprak_fel", "fel", err.Error())})
 				return
 			}
-			text := "Sparat. Språket gäller nu, och tornet är byggt på nytt."
+			text := "server_sprak_nu"
 			if !game.ReloadData(d) {
-				text = "Sparat. Språket gäller från nästa torn."
+				text = "server_sprak_sen"
 			}
 			if hooks.Save != nil {
 				if err := hooks.Save(got); err != nil {
-					writeJSON(w, http.StatusOK, map[string]any{"settings": got, "varning": "Gäller, men kunde inte sparas till nästa gång: " + err.Error()})
+					writeJSON(w, http.StatusOK, map[string]any{"settings": got, "varning": game.HostText("server_sparat_ej", "fel", err.Error())})
 					return
 				}
 			}
-			writeJSON(w, http.StatusOK, map[string]any{"settings": got, "text": text})
+			writeJSON(w, http.StatusOK, map[string]any{"settings": got, "text": game.HostText(text)})
 			return
 		}
 		if hooks.Save != nil {
 			if err := hooks.Save(got); err != nil {
-				writeJSON(w, http.StatusOK, map[string]any{"settings": got, "varning": "Gäller nu, men kunde inte sparas till nästa gång: " + err.Error()})
+				writeJSON(w, http.StatusOK, map[string]any{"settings": got, "varning": game.HostText("server_sparat_ej", "fel", err.Error())})
 				return
 			}
 		}
@@ -273,24 +277,45 @@ func addHostRoutes(mux *http.ServeMux, web fs.FS, game *Game, addrs hostAddrs, h
 		}
 		writeJSON(w, http.StatusOK, info)
 	})
+	// Sidornas texter, på tornets språk. Som skript läses de innan sidans
+	// eget skript, så att texterna finns från början; som JSON hämtas de
+	// när språket byts.
+	pageTexts := func(page string) func(http.ResponseWriter, *http.Request) {
+		return func(w http.ResponseWriter, r *http.Request) {
+			lang, texts := game.PageTexts(page)
+			body := map[string]any{"sprak": lang, "texter": texts}
+			w.Header().Set("Cache-Control", "no-store")
+			if strings.HasSuffix(r.URL.Path, ".js") {
+				w.Header().Set("Content-Type", "text/javascript; charset=utf-8")
+				b, _ := json.Marshal(body)
+				fmt.Fprintf(w, "window.UI = %s;\n", b)
+				return
+			}
+			writeJSON(w, http.StatusOK, body)
+		}
+	}
+	mux.HandleFunc("GET /texter/spelarsidan.js", pageTexts("spelarsidan"))
+	mux.HandleFunc("GET /texter/spelarsidan.json", pageTexts("spelarsidan"))
+	mux.HandleFunc("GET /texter/vardsidan.js", localOnly(pageTexts("vardsidan")))
+	mux.HandleFunc("GET /texter/vardsidan.json", localOnly(pageTexts("vardsidan")))
 	mux.HandleFunc("GET /spelledare", localOnly(func(w http.ResponseWriter, r *http.Request) {
 		http.ServeFileFS(w, r, web, "spelledare.html")
 	}))
 	mux.HandleFunc("POST /spelledare/ingrepp", hostAction(func(w http.ResponseWriter, r *http.Request) {
 		var req gmRequest
 		if err := json.NewDecoder(http.MaxBytesReader(w, r.Body, 4096)).Decode(&req); err != nil {
-			writeJSON(w, http.StatusBadRequest, map[string]string{"fel": "Kunde inte läsa ingreppet."})
+			writeJSON(w, http.StatusBadRequest, map[string]string{"fel": game.HostText("server_ingrepp_las")})
 			return
 		}
 		if err := game.Intervene(req); err != nil {
-			writeJSON(w, http.StatusConflict, map[string]string{"fel": err.Error()})
+			writeJSON(w, http.StatusConflict, map[string]string{"fel": game.ErrorText(err)})
 			return
 		}
 		w.WriteHeader(http.StatusNoContent)
 	}))
 	mux.HandleFunc("GET /spelledare/oversikt", localOnly(func(w http.ResponseWriter, r *http.Request) {
 		if !game.Settings().Spelledare {
-			writeJSON(w, http.StatusForbidden, map[string]string{"fel": "Översikten visas bara i spelledarläget."})
+			writeJSON(w, http.StatusForbidden, map[string]string{"fel": game.HostText("server_oversikt_bara_gm")})
 			return
 		}
 		writeJSON(w, http.StatusOK, game.GMView(r.URL.Query().Has("synlig")))
@@ -301,4 +326,40 @@ func addHostRoutes(mux *http.ServeMux, web fs.FS, game *Game, addrs hostAddrs, h
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		json.NewEncoder(w).Encode(v)
 	}))
+}
+
+// PageTexts ger språket och texterna för spelarsidan eller värdsidan.
+func (g *Game) PageTexts(page string) (string, map[string]string) {
+	g.mu.Lock()
+	defer g.mu.Unlock()
+	if page == "vardsidan" {
+		return g.base.Lang, g.base.Vardsidan
+	}
+	return g.base.Lang, g.base.Spelarsidan
+}
+
+// HostText är en av värdsidans texter på tornets språk (data/vardsidan.json).
+func (g *Game) HostText(key string, vars ...string) string {
+	g.mu.Lock()
+	defer g.mu.Unlock()
+	return g.base.HostText(key, vars...)
+}
+
+// hostError är ett fel som värdsidan visar. Texten står i
+// data/vardsidan.json under key, så att den kommer på tornets språk.
+type hostError struct {
+	key  string
+	vars []string
+}
+
+func (e *hostError) Error() string { return e.key }
+
+func hostErr(key string, vars ...string) error { return &hostError{key, vars} }
+
+// ErrorText gör ett fel till text för värdsidan.
+func (g *Game) ErrorText(err error) string {
+	if he, ok := err.(*hostError); ok {
+		return g.HostText(he.key, he.vars...)
+	}
+	return err.Error()
 }

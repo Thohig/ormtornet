@@ -1,0 +1,186 @@
+{
+  "_om": "Engelsk översättning av avslojande.json. Bara texter; siffrorna står i den svenska filen.",
+  "avslojande": {
+    "_om_svar": "Viskningar på engelska som visar att vandraren vet hemligheten. Fler varianter än på svenska, eftersom engelskan har fler sätt att säga det. Undvik för korta svar som \"in the serpent\", som också stämmer med \"in the serpent's lair\". En apostrof blir ett mellanrum, så skriv både serpent's och serpents.",
+    "svar": [
+      "the tower is the serpent",
+      "the serpent is the tower",
+      "the tower is a serpent",
+      "the tower is the snake",
+      "the snake is the tower",
+      "the tower is a snake",
+      "the tower is the serpent's body",
+      "the tower is the serpents body",
+      "the tower is the body of the serpent",
+      "the tower is the snake's body",
+      "the tower is the snakes body",
+      "we are inside the serpent",
+      "we are in the serpent",
+      "we are inside the snake",
+      "we are in the snake",
+      "inside the serpent",
+      "inside the snake",
+      "inside a serpent",
+      "inside a snake",
+      "within the serpent",
+      "within the snake",
+      "in the serpent's belly",
+      "in the serpents belly",
+      "in the snake's belly",
+      "in the snakes belly",
+      "in the belly of the serpent",
+      "in the belly of the snake",
+      "in the serpent's stomach",
+      "in the serpents stomach",
+      "in the stomach of the serpent",
+      "in the snake's stomach",
+      "in the snakes stomach",
+      "in the stomach of the snake"
+    ],
+
+    "nivabyte": {
+      "2": [
+        "Something is changing. The tower has begun to breathe.",
+        "The walls are moving. Slowly, but they are moving.",
+        "The thudding you have heard all along has found a rhythm. Two beats, a pause. Two beats, a pause.",
+        "The floor rises and falls beneath you, like a chest in sleep."
+      ],
+      "3": [
+        "The light has turned red, and in the red light you see what the walls are made of.",
+        "The smell is no longer sweet. It is sour.",
+        "You see now that the vaults all have the same shape. They were not built. They grew.",
+        "The heartbeats have quickened."
+      ],
+      "4": [
+        "The sun goes down. The tower swallows.",
+        "The whole tower draws itself together. At last you understand where you are.",
+        "The gate begins to close. It is no gate.",
+        "Everything moves now. Walls, floor and ceiling, in waves towards the middle."
+      ]
+    },
+
+    "ledtradar": {
+      "1": [
+        "The stones in the wall are shaped like scales, not like squared blocks.",
+        "A faint, sweet smell follows you. It is strongest when you walk towards the heart of the tower.",
+        "The walls are warm, and warmer the further in you go.",
+        "Far away there is a thud. It comes several seconds apart.",
+        "The floor is a little soft, like leather left lying in the damp.",
+        "You have seen no cobwebs, no rats, no birds. Nothing else living has moved in here.",
+        "The dust on the floor lies in long, curving streaks, as if something has been dragged along.",
+        "You have gone up and you have gone down, but no stair has led to another floor."
+      ],
+      "2": [
+        "The wall beside you is moving. Out, in. Out, in.",
+        "The thudding has grown clearer: two beats close together, then silence. Like a heart.",
+        "The air grows warmer as you breathe in and cooler as you breathe out. But it is not your breath.",
+        "A coin you dropped has rolled away towards the heart of the tower. The floor slopes that way.",
+        "The sweet smell has grown heavier. It calls to mind fruit that has begun to ferment.",
+        "You hear a gurgling in the walls, like liquid in pipes.",
+        "The ceiling sinks when you stand still. When you move, it rises again.",
+        "Someone has scratched an arrow on the wall, pointing to the gate. Beneath it is written: QUICKLY."
+      ],
+      "3": [
+        "The vaults in the ceiling come at even intervals, curved and white, and they go on in every direction. They look like ribs.",
+        "The steps you have seen are all alike, hollow in the middle and stacked one upon another. Like vertebrae.",
+        "You find a shoe. The leather has dissolved, and inside it are bones gone soft and translucent.",
+        "The scales in the walls overlap one another in the same direction: inwards, towards the middle.",
+        "A tuft of hair is caught between two stones. The stone has grown around it.",
+        "The floor is wet with a clear, sour liquid. Where it has lain long, the stone is slick and pitted.",
+        "The heartbeats now come from one particular place: somewhere beneath the treasury.",
+        "You find a journal. The last line reads: The tower is eating us one by one."
+      ],
+      "4": [
+        "The portcullis that fell was no portcullis. It was teeth.",
+        "What you called vaults are ribs. You are standing in the ribcage.",
+        "The treasury is the stomach. The gold is still there because it cannot be digested.",
+        "The gate is a mouth, and the mouth is closing.",
+        "The thudding is a heart, and now it beats faster. It is awake. It has always been awake.",
+        "The passages that twisted were bowels. They were to carry you to where you would be digested.",
+        "The scales in the walls are its skin, seen from within.",
+        "The stair that led nowhere is the spine."
+      ]
+    },
+
+    "forklaringar": {
+      "fallgaller": "The portcullis was teeth snapping shut.",
+      "rasande_golv": "The floor that gave way was a gullet opening, and the vaults of the cellar were its throat.",
+      "roterande": "The rooms that turned were the bowels, twisting to carry you onwards.",
+      "pilar": "The arrows were barbs, sharp scales it shot out when something tickled it.",
+      "dimma": "The poisonous mist was its breath.",
+      "ormgrop": "The snake pit was its young, which it carries within itself.",
+      "skinn": "The shed skin was its own. It changed its skin while you were inside it.",
+      "klocka": "The bell was a heartbeat, so mighty it made the day rush past.",
+      "morker": "The darkness came when it blinked, and your lanterns went out in its breath.",
+      "eko": "The echo was its ears. It heard where you were. It has always heard.",
+      "krypare": "The Pale Crawlers were parasites in its bowels.",
+      "yngel": "The Serpent Spawn were its offspring, hatched inside it.",
+      "fjallvakt": "The Scale Wardens were its defences: living scales that hunt what does not belong.",
+      "gallgast": "The Bile Ghasts were adventurers it had already digested.",
+      "benvaktare": "The Bone Keepers were built from its own ribs.",
+      "ormen": "The serpent that slept in the chamber was a fold of the stomach. When it woke, it was the stomach that clenched."
+    },
+    "forklaring_rubrik": "You remember what you have lived through, and now you understand it:",
+
+    "epilog": [
+      "The tower was the serpent. The walls were its body, the vaults its ribs, the stair its spine, the treasury its stomach and the gate its mouth."
+    ],
+    "epilog_ute": [
+      "You came out of its mouth before it closed. Behind you the tower sinks down, coils about itself and falls asleep."
+    ],
+    "epilog_forlorad": [
+      "The mouth closed. You remain in the stomach, among the gold and the others."
+    ],
+    "epilog_dod": [
+      "It has already begun to digest you."
+    ],
+    "epilog_invigd": [
+      "You knew. You whispered it to the walls, and the serpent heard you. It let you go all the same, this time."
+    ]
+  },
+
+  "texter": {
+    "invigd": [
+      "The tower falls silent. The thudding in the walls stops for a moment, as if something is listening. It knows that you know."
+    ],
+    "invigd_andra": [
+      "Somewhere in the tower, all goes silent for a moment."
+    ],
+    "viskning_fel": [
+      "You whisper to the wall. Nothing answers. Perhaps you will understand more once the sun has sunk."
+    ],
+    "viskning_tidigt": [
+      "The tower is still silent. There is nothing to whisper to yet."
+    ],
+    "viskning_vanta": [
+      "You have already whispered. Wait until the tower changes again."
+    ],
+    "viskning_redan": [
+      "The tower has already heard you."
+    ],
+    "hjartslag": [
+      "The thudding comes from the {horn}."
+    ],
+    "hjartslag_har": [
+      "The thudding comes from straight below."
+    ],
+    "porten_vantar": [
+      "The sun has gone down, but the gate is waiting. It is waiting for you. You have one more round."
+    ],
+    "invigd_falla": [
+      "You know this one, {falla}. You know what the walls want, and you step past."
+    ],
+    "invigd_lugnar": [
+      "You lay your hand against the wall and whisper. The breathing around you slows. The serpent sleeps more deeply."
+    ],
+    "invigd_lugnat": [
+      "You have already calmed the serpent once. It will not listen a second time."
+    ],
+    "invigd_guld": [
+      "The gate lets you out, and there is more in your bag than you remember. {antal} more gold."
+    ],
+    "kronika_invigd": [
+      "{namn} whispered something to the tower, and the tower heard."
+    ]
+  }
+}

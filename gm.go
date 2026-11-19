@@ -158,7 +158,7 @@ func (g *Game) GMView(visible bool) gmView {
 		m.Players = append(m.Players, pv)
 		room := ""
 		if p.Cellar > 0 {
-			room = "Källarvalven"
+			room = g.data.HostText("server_kallarvalven")
 		} else if g.inBounds(p.X, p.Y) && g.rooms[p.Y][p.X].Revealed {
 			room = g.roomName(&g.rooms[p.Y][p.X])
 		}
@@ -209,23 +209,23 @@ func (g *Game) actionText(p *Player) string {
 		return ""
 	case isCombatAction(a):
 		if m := g.monsterAt(p.X, p.Y); m != nil {
-			return g.choiceWord(a) + " mot " + lowerFirst(g.data.monsterType(m.Type).Namn)
+			return g.data.HostText("server_drag_mot", "drag", g.choiceWord(a), "mal", lowerFirst(g.data.monsterType(m.Type).Namn))
 		}
 		if foe := g.playerByID(p.target); foe != nil {
-			return g.choiceWord(a) + " mot " + foe.Name
+			return g.data.HostText("server_drag_mot", "drag", g.choiceWord(a), "mal", foe.Name)
 		}
 		return g.choiceWord(a)
 	case a[0] == 'm':
-		return "styr en varelse"
+		return g.data.HostText("server_drag_styr")
 	case isItemAction(a):
 		if _, t, _, ok := g.parseItemAction(p, a); ok {
-			return "använder " + t.Kort
+			return g.data.HostText("server_drag_anvander", "foremal", t.Kort)
 		}
 	}
-	words := map[string]string{"N": "går norrut", "E": "går österut", "S": "går söderut", "W": "går västerut",
-		actWait: "väntar", actTake: "tar skatt", actSearch: "söker", actDrink: "dricker"}
+	words := map[string]string{"N": "server_drag_n", "E": "server_drag_e", "S": "server_drag_s", "W": "server_drag_w",
+		actWait: "server_drag_vanta", actTake: "server_drag_ta", actSearch: "server_drag_sok", actDrink: "server_drag_drick"}
 	if w, ok := words[a]; ok {
-		return w
+		return g.data.HostText(w)
 	}
 	return a
 }

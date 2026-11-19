@@ -144,6 +144,11 @@ type Data struct {
 	Klasser          []Class             `json:"klasser"`
 	KlassvalSekunder int                 `json:"klassval_sekunder"` // hur länge klassvalet får ta
 	Foremal          ItemData            `json:"foremal"`
+	// Spelarsidan och Vardsidan är sidornas egna texter, på nyckel. Sidorna
+	// hämtar dem från /texter/ (se web/texter.js).
+	Spelarsidan map[string]string `json:"spelarsidan"`
+	Vardsidan   map[string]string `json:"vardsidan"`
+	Lang        string            `json:"-"` // språket texterna är på
 }
 
 // IntroData styr startsidan.
@@ -152,7 +157,7 @@ type IntroData struct {
 }
 
 // Filerna i datamappen. Alla läses in i samma struktur; "texter" slås ihop.
-var dataFiles = []string{"texter.json", "fallor.json", "ormen.json", "monster.json", "avslojande.json", "ai.json", "svarighet.json", "klasser.json", "foremal.json"}
+var dataFiles = []string{"texter.json", "fallor.json", "ormen.json", "monster.json", "avslojande.json", "ai.json", "svarighet.json", "klasser.json", "foremal.json", "spelarsidan.json", "vardsidan.json"}
 
 // loadData läser filerna i mappen dir på svenska. Saknas en fil används den
 // inbyggda kopian.
@@ -175,7 +180,7 @@ func readDataFile(dir, name string) ([]byte, string, error) {
 // loadDataLang läser datafilerna och lägger översättningen till lang över
 // dem (se lang.go). Text som inte är översatt står kvar på svenska.
 func loadDataLang(dir, lang string) (*Data, string, error) {
-	d := &Data{Texter: map[string][]string{}}
+	d := &Data{Texter: map[string][]string{}, Lang: langOrDefault(lang)}
 	var sources []string
 	for _, name := range dataFiles {
 		raw, src, err := readDataFile(dir, name)
@@ -272,6 +277,12 @@ func mergeData(d, part *Data) {
 	}
 	if len(part.Regioner) > 0 {
 		d.Regioner = part.Regioner
+	}
+	if len(part.Spelarsidan) > 0 {
+		d.Spelarsidan = part.Spelarsidan
+	}
+	if len(part.Vardsidan) > 0 {
+		d.Vardsidan = part.Vardsidan
 	}
 	if part.Regler.Liv > 0 {
 		d.Regler = part.Regler
@@ -381,6 +392,16 @@ func fill(s string, vars ...string) string {
 		s = strings.ReplaceAll(s, "{"+vars[i]+"}", vars[i+1])
 	}
 	return s
+}
+
+// HostText är en av värdsidans texter, till exempel ett besked eller ett
+// fel, med platshållarna ifyllda.
+func (d *Data) HostText(key string, vars ...string) string {
+	s, ok := d.Vardsidan[key]
+	if !ok {
+		return "[" + key + "]"
+	}
+	return fill(s, vars...)
 }
 
 // Text väljer en slumpad variant av texten med namnet key.

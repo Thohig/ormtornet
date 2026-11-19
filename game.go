@@ -474,6 +474,7 @@ type resultView struct {
 
 type stateMsg struct {
 	T          string        `json:"t"`
+	Sprak      string        `json:"sprak"` // texternas språk; byts det hämtar sidan nya texter
 	You        int           `json:"you"`
 	Size       int           `json:"size"`
 	Level      int           `json:"level"`
@@ -599,7 +600,7 @@ func (g *Game) hiddenText(key string, vars ...string) string {
 func (g *Game) stateFor(me *Player) stateMsg {
 	g.noteRoom(me)
 	st := stateMsg{
-		T: "state", You: me.ID, Size: g.size, Level: g.level, Reveal: g.cfg.Reveal,
+		T: "state", Sprak: g.base.Lang, You: me.ID, Size: g.size, Level: g.level, Reveal: g.cfg.Reveal,
 		Phase: g.phase, Sun: g.sun, SunMax: g.sunMax, Round: g.round,
 		MinPlayers: g.cfg.MinPlayers, Action: me.Action, Sight: g.cfg.Sight,
 		HP: me.HP, MaxHP: g.maxHP(me), Potions: me.Potions,

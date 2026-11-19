@@ -1,0 +1,115 @@
+{
+  "_om": "Engelsk översättning av monster.json. Bara texter; siffrorna och tecknen står i den svenska filen. Varelserna kopplas ihop med sina id:n. Valen i val är substantivfraser, eftersom samma ord sätts in efter både du och en varelse eller vandrare (duell här, pvp_duell och pvp_vantar i texter.json).",
+  "monster": {
+    "val": {
+      "anfall": "an attack",
+      "parera": "a parry",
+      "undan": "an evasive move"
+    },
+
+    "typer": [
+      {
+        "id": "krypare",
+        "namn": "The Pale Crawler",
+        "dyker_upp": [
+          "Something pale and many-legged crawls out of a crack. It has no eyes, but it turns towards you.",
+          "A pale crawler peels itself from the wall, where it lay so close you took it for part of the stone."
+        ],
+        "dor": [
+          "The Pale Crawler curls up and goes still. Beneath it lie a few coins."
+        ]
+      },
+      {
+        "id": "yngel",
+        "namn": "The Serpent Spawn",
+        "dyker_upp": [
+          "A serpent spawn, long as a man, rises from a heap of dust. It hisses and strikes at once.",
+          "A young, glistening serpent spawn lies coiled in the corner. It has already seen you."
+        ],
+        "dor": [
+          "The Serpent Spawn writhes one last time and then lies still. Gold glints in its belly."
+        ]
+      },
+      {
+        "id": "fjallvakt",
+        "namn": "The Scale Warden",
+        "dyker_upp": [
+          "A figure in armour of overlapping scales steps forward. It holds a shield before it and waits.",
+          "The Scale Warden stands motionless in the middle of the room. Its armour looks grown rather than forged."
+        ],
+        "dor": [
+          "The Scale Warden collapses. The armour is empty, like a shed skin. Coins rattle out of it."
+        ]
+      },
+      {
+        "id": "gallgast",
+        "namn": "The Bile Ghast",
+        "dyker_upp": [
+          "A greenish shape glides forward. It wears an adventurer's clothes, but they hang in rags and are bleached, as if they had lain in acid.",
+          "A ghast rises out of the floor. It looks at your bag, as if it remembers what it was like to carry one."
+        ],
+        "dor": [
+          "The Bile Ghast dissolves into a bitter mist. Left behind is the gold it never got out with."
+        ]
+      },
+      {
+        "id": "benvaktare",
+        "namn": "The Bone Keeper",
+        "dyker_upp": [
+          "A being built of curved white bones rises up. The bones are all alike, like ribs from one and the same beast."
+        ],
+        "dor": [
+          "The Bone Keeper falls apart into a heap of ribs. Between them lies gold."
+        ]
+      }
+    ],
+
+    "texter": {
+      "duell": [
+        "You go for {ditt_val}. {Monster} answers with {dess_val}."
+      ],
+      "du_traffar": [
+        "You hit {monster}.",
+        "Your blow lands."
+      ],
+      "monster_traffar": [
+        "{Monster} hits you. You lose {skada} of your lives.",
+        "You are too slow and lose {skada} of your lives."
+      ],
+      "bada_traffar": [
+        "You strike each other at once. You lose {skada} of your lives."
+      ],
+      "inget": [
+        "Neither of you reaches the other.",
+        "You circle each other."
+      ],
+      "inte_beredd": [
+        "You are not ready. {Monster} answers with {dess_val}."
+      ],
+      "fly": [
+        "You turn and flee. {Monster} answers with {dess_val}."
+      ],
+      "seger": [
+        "You have defeated {monster} and take {guld} gold. You now have {skatt}."
+      ],
+      "strid_andra": [
+        "Sounds of fighting in the {region} part of the tower."
+      ],
+      "monster_kommer": [
+        "{Monster} glides into the room."
+      ],
+      "tjanare": [
+        "You are dead, but the tower does not let you go. You feel its creatures as if they were your own fingers. Tab picks a creature, the arrows move it one room per round, space lets it rest. On a touch screen they are called Switch, the arrows and ·."
+      ],
+      "tjanare_andra": [
+        "{namn} is dead, but something of {namn} remains in the tower. The creatures now move with purpose."
+      ],
+      "inget_monster_har": [
+        "There is nothing here to fight."
+      ],
+      "kan_inte_flytta": [
+        "The creature cannot get there."
+      ]
+    }
+  }
+}

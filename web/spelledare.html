@@ -308,12 +308,12 @@
       </select>
       <span class="note">då kan ingen spela från den här datorn</span>
 
-      <label for="sSprak">Språk</label>
+      <label for="sSprak" data-t="sprak"></label>
       <select id="sSprak" name="sprak">
         <option value="sv">svenska</option>
         <option value="en">English</option>
       </select>
-      <span class="note">i spelet och här; det som inte är översatt står på svenska</span>
+      <span class="note" data-t="sprak_not"></span>
 
       <details id="moreSettings">
         <summary>Fler inställningar<span class="note" id="moreNote"></span></summary>
@@ -402,6 +402,8 @@
     </section>
   </main>
 </div>
+<script src="/texter/vardsidan.js"></script>
+<script src="texter.js"></script>
 <script src="map.js"></script>
 <script>
 "use strict";

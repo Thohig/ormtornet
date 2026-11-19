@@ -25,16 +25,18 @@ type gmRequest struct {
 const voiceMaxLen = 200
 
 var (
-	errNotGM      = errors.New("Ingrepp går bara i spelledarläget.")
-	errNotPlaying = errors.New("Det går bara medan en vandring pågår.")
-	errNoPlayer   = errors.New("Den vandraren finns inte i tornet.")
-	errNoRoom     = errors.New("Välj ett vanligt rum som någon redan har varit i.")
-	errUnknown    = errors.New("Okänt ingrepp.")
+	errNotGM      = hostErr("server_bara_gm")
+	errNotPlaying = hostErr("server_bara_under_vandring")
+	errNoPlayer   = hostErr("server_ingen_vandrare")
+	errNoRoom     = hostErr("server_valj_rum")
+	errUnknown    = hostErr("server_okant_ingrepp")
 )
 
 // gmNote skriver ett ingrepp i spelledarens logg.
-func (g *Game) gmNote(text string) {
-	g.gmLog = append(g.gmLog, gmEntry{Round: g.round, Text: text, Class: "gm", To: []string{"Spelledaren"}})
+// Texten står i data/vardsidan.json under key.
+func (g *Game) gmNote(key string, vars ...string) {
+	text := g.data.HostText(key, vars...)
+	g.gmLog = append(g.gmLog, gmEntry{Round: g.round, Text: text, Class: "gm", To: []string{g.data.HostText("server_spelledaren")}})
 	if len(g.gmLog) > gmLogMax {
 		g.gmLog = append([]gmEntry(nil), g.gmLog[len(g.gmLog)-gmLogMax:]...)
 	}
@@ -60,9 +62,9 @@ func (g *Game) Intervene(r gmRequest) error {
 		err = g.gmMoreTime()
 	case "avgor":
 		if g.paused {
-			return errors.New("Fortsätt först, rundan är pausad.")
+			return hostErr("server_pausad")
 		}
-		g.gmNote("Avgjorde rundan direkt.")
+		g.gmNote("server_not_avgjorde")
 		g.resolve()
 		return nil
 	case "sol":
@@ -74,7 +76,7 @@ func (g *Game) Intervene(r gmRequest) error {
 	case "varelse":
 		err = g.gmMonster(r.X, r.Y, r.ID)
 	case "vack":
-		g.gmNote("Väckte ormen.")
+		g.gmNote("server_not_vackte")
 		g.chronicle("kronika_vaknade_sjalv")
 		g.wakeSerpent()
 	case "lugna":
@@ -111,7 +113,7 @@ func (g *Game) gmPause() error {
 		g.timer.Stop()
 	}
 	g.logAll(g.data.Text("gm_paus"), "rost")
-	g.gmNote("Pausade rundan.")
+	g.gmNote("server_not_pausade")
 	return nil
 }
 
@@ -122,7 +124,7 @@ func (g *Game) gmResume() error {
 	g.paused, g.awaiting = false, false
 	g.armTimer(g.pauseLeft)
 	g.logAll(g.data.Text("gm_fortsatt"), "rost")
-	g.gmNote("Lät rundan fortsätta.")
+	g.gmNote("server_not_fortsatte")
 	if g.allChosen() {
 		g.resolve()
 	}
@@ -136,7 +138,7 @@ func (g *Game) gmMoreTime() error {
 	} else {
 		g.armTimer(time.Until(g.deadline) + extra)
 	}
-	g.gmNote("Gav rundan 30 sekunder till.")
+	g.gmNote("server_not_mer_tid", "sekunder", strconv.Itoa(int(extra/time.Second)))
 	return nil
 }
 
@@ -155,10 +157,10 @@ func (g *Game) gmSun(delta int) error {
 		g.logAll(g.data.Text("gm_sol_ner"), "rost")
 		g.sunWarning(before)
 		g.updateLevel()
-		g.gmNote("Lät solen sjunka till " + strconv.Itoa(g.sun) + ".")
+		g.gmNote("server_not_sol_ner", "sol", strconv.Itoa(g.sun))
 	} else {
 		g.logAll(g.data.Text("gm_sol_upp"), "rost")
-		g.gmNote("Lyfte solen till " + strconv.Itoa(g.sun) + ".")
+		g.gmNote("server_not_sol_upp", "sol", strconv.Itoa(g.sun))
 	}
 	return nil
 }
@@ -167,10 +169,10 @@ func (g *Game) gmSun(delta int) error {
 func (g *Game) gmVoice(to int, text string) error {
 	text = strings.TrimSpace(strings.ReplaceAll(text, "\n", " "))
 	if text == "" {
-		return errors.New("Skriv något för tornet att säga.")
+		return hostErr("server_rost_tom")
 	}
 	if utf8.RuneCountInString(text) > voiceMaxLen {
-		return errors.New("Tornets röst får vara högst " + strconv.Itoa(voiceMaxLen) + " tecken.")
+		return hostErr("server_rost_lang", "max", strconv.Itoa(voiceMaxLen))
 	}
 	if to == 0 {
 		g.logAll(text, "rost")
@@ -205,14 +207,14 @@ func (g *Game) gmTrap(x, y int, id string) error {
 	}
 	t := g.data.trap(id)
 	if t == nil {
-		return errors.New("Okänd fälla.")
+		return hostErr("server_okand_falla")
 	}
 	if r.Event != "" {
-		return errors.New("Det väntar redan en fälla i det rummet.")
+		return hostErr("server_falla_finns")
 	}
 	r.Event = id
 	r.Mark = ""
-	g.gmNote("Lade " + lowerFirst(t.Namn) + " i " + g.roomName(r) + ".")
+	g.gmNote("server_not_falla", "falla", lowerFirst(t.Namn), "rum", g.roomName(r))
 	return nil
 }
 
@@ -222,10 +224,10 @@ func (g *Game) gmMonster(x, y int, id string) error {
 	}
 	t := g.data.monsterType(id)
 	if t == nil {
-		return errors.New("Okänd varelse.")
+		return hostErr("server_okand_varelse")
 	}
 	if g.monsterAt(x, y) != nil {
-		return errors.New("Det finns redan en varelse i det rummet.")
+		return hostErr("server_varelse_finns")
 	}
 	g.nextMonsterID++
 	m := &Monster{ID: g.nextMonsterID, Type: t.ID, X: x, Y: y, HP: t.Liv}
@@ -236,7 +238,7 @@ func (g *Game) gmMonster(x, y int, id string) error {
 			g.logTo(p, g.data.MonsterText("monster_kommer", g.monsterVars(m)...), "varn")
 		}
 	}
-	g.gmNote("Släppte in " + lowerFirst(t.Namn) + " i " + g.roomName(&g.rooms[y][x]) + ".")
+	g.gmNote("server_not_varelse", "varelse", lowerFirst(t.Namn), "rum", g.roomName(&g.rooms[y][x]))
 	return nil
 }
 
@@ -245,14 +247,14 @@ func (g *Game) gmMonster(x, y int, id string) error {
 func (g *Game) gmCalm() error {
 	switch g.calmSerpent() {
 	case "vakna":
-		g.gmNote("Lugnade ormen: ett vakna-kort mindre.")
+		g.gmNote("server_not_lugna_vakna")
 	case "sov":
-		g.gmNote("Lugnade ormen: ett sovkort till.")
+		g.gmNote("server_not_lugna_sov")
 	}
 	return nil
 }
 
-var errNoReveal = errors.New("Avslöjandet är avstängt.")
+var errNoReveal = hostErr("server_avslojande_av")
 
 // gmLevelUp flyttar fram avslöjandet en nivå, med allt som hör till: ljud,
 // nya texter och ledtrådar, och förklaringar på nivå 4.
@@ -261,11 +263,11 @@ func (g *Game) gmLevelUp() error {
 		return errNoReveal
 	}
 	if g.level >= 4 {
-		return errors.New("Avslöjandet är redan på sista nivån.")
+		return hostErr("server_avslojande_sista")
 	}
 	g.level++
 	g.onLevelUp()
-	g.gmNote("Flyttade fram avslöjandet till nivå " + strconv.Itoa(g.level) + ".")
+	g.gmNote("server_not_niva_upp", "niva", strconv.Itoa(g.level))
 	return nil
 }
 
@@ -281,9 +283,9 @@ func (g *Game) gmHoldLevel(hold bool) error {
 	}
 	g.levelHeld = hold
 	if hold {
-		g.gmNote("Höll kvar avslöjandet på nivå " + strconv.Itoa(g.level) + ".")
+		g.gmNote("server_not_niva_hall", "niva", strconv.Itoa(g.level))
 	} else {
-		g.gmNote("Släppte avslöjandet, så att det följer solen igen.")
+		g.gmNote("server_not_niva_slapp")
 	}
 	return nil
 }
@@ -315,20 +317,20 @@ func (g *Game) gmGive(what string, id, n int) error {
 			p.hurt("tornet", "")
 			g.damage(p, -n, false)
 		}
-		g.gmNote(verb(n, "Gav", "Tog") + " " + strconv.Itoa(abs(n)) + " liv " + verb(n, "till", "från") + " " + p.Name + ".")
+		g.gmNote(verb(n, "server_not_gav_liv", "server_not_tog_liv"), "antal", strconv.Itoa(abs(n)), "namn", p.Name)
 	case "guld":
 		before := p.Treasure
 		p.Treasure = max(0, p.Treasure+n)
 		g.logTo(p, g.data.Text("gm_guld_"+sign), "rost")
-		g.gmNote(verb(n, "Gav", "Tog") + " " + strconv.Itoa(abs(p.Treasure-before)) + " guld " + verb(n, "till", "från") + " " + p.Name + ".")
+		g.gmNote(verb(n, "server_not_gav_guld", "server_not_tog_guld"), "antal", strconv.Itoa(abs(p.Treasure-before)), "namn", p.Name)
 	case "dryck":
 		before := p.Potions
 		p.Potions = max(0, p.Potions+n)
 		if p.Potions == before {
-			return errors.New(p.Name + " har inga drycker att ta.")
+			return hostErr("server_inga_drycker", "namn", p.Name)
 		}
 		g.logTo(p, g.data.Text("gm_dryck_"+sign), "rost")
-		g.gmNote(verb(n, "Gav", "Tog") + " en dryck " + verb(n, "till", "från") + " " + p.Name + ".")
+		g.gmNote(verb(n, "server_not_gav_dryck", "server_not_tog_dryck"), "namn", p.Name)
 	}
 	return nil
 }
@@ -369,9 +371,9 @@ func (g *Game) gmInitiate(id int) error {
 	p.initiated = !p.initiated
 	if p.initiated {
 		g.logTo(p, g.data.Text("invigd"), "rost")
-		g.gmNote("Invigde " + p.Name + ".")
+		g.gmNote("server_not_invigde", "namn", p.Name)
 	} else {
-		g.gmNote("Tog tillbaka invigningen från " + p.Name + ".")
+		g.gmNote("server_not_avinvigde", "namn", p.Name)
 	}
 	return nil
 }
@@ -387,12 +389,12 @@ func (g *Game) gmGiveItem(id int, item string) error {
 	}
 	t := g.data.itemType(item)
 	if t == nil || t.Brev {
-		return errors.New("Det föremålet finns inte.")
+		return hostErr("server_foremal_finns_inte")
 	}
 	if !g.give(p, item) {
-		return errors.New(p.Name + " kan inte bära mer.")
+		return hostErr("server_bar_inte_mer", "namn", p.Name)
 	}
 	g.logTo(p, g.data.Text("foremal_fran_tornet", "foremal", lowerFirst(t.Namn), "beskrivning", t.Beskrivning), "rost")
-	g.gmNote("Gav " + lowerFirst(t.Namn) + " till " + p.Name + ".")
+	g.gmNote("server_not_gav_foremal", "foremal", lowerFirst(t.Namn), "namn", p.Name)
 	return nil
 }

@@ -1,0 +1,192 @@
+{
+  "_om": "Engelsk översättning av fallor.json. Bara texter; siffrorna står i den svenska filen. Fällorna kopplas ihop med sina id:n.",
+  "fallor": [
+    {
+      "id": "fallgaller",
+      "namn": "The Portcullis",
+      "texter": [
+        "A screech above you, and a grate of spiked iron bars crashes down in the doorway behind you. It takes time to prise it open.",
+        "The grate slams down. The bars curve inwards and are almost sharp at the tips. You are stuck for a while."
+      ],
+      "andra": [
+        "Iron strikes stone somewhere in the {region} part of the tower."
+      ]
+    },
+    {
+      "id": "rasande_golv",
+      "namn": "The Collapsing Floor",
+      "texter": [
+        "The floor gives way beneath you. You fall into the cellar vaults, where it is dark, damp and cramped.",
+        "The flagstones sink as if they were soft, and you slide down through a hole in the floor. Below there is nothing but dark, narrow vaults."
+      ],
+      "andra": [
+        "A dull crash in the {region} part of the tower. Then silence. {namn} is no longer to be seen."
+      ],
+      "andra_dolt": [
+        "A dull crash in the {region} part of the tower. Then silence."
+      ]
+    },
+    {
+      "id": "roterande",
+      "namn": "The Turning Room",
+      "texter": [
+        "The room begins to turn with a slow, grinding sound. You lose your footing and are pushed out through an opening.",
+        "The walls draw together and twist. When it is over, you are somewhere else."
+      ],
+      "andra": [
+        "A grinding sound in the {region} part of the tower."
+      ]
+    },
+    {
+      "id": "pilar",
+      "namn": "The Arrow Trap",
+      "texter": [
+        "A click underfoot. Arrows whistle out of small holes in the wall. Two of them strike.",
+        "Arrows shoot out of the wall. They are not wood but something bone-white and curved."
+      ],
+      "andra": []
+    },
+    {
+      "id": "dimma",
+      "namn": "The Poison Mist",
+      "texter": [
+        "A yellow-green mist wells up from the cracks in the floor. It smells sweet and burns the lungs. The poison stays in the body.",
+        "The mist is warm and damp, like a breath. You cough, and the bitter taste lingers long after."
+      ],
+      "andra": []
+    },
+    {
+      "id": "ormgrop",
+      "namn": "The Snake Pit",
+      "texter": [
+        "You step into a pit full of small snakes. They bite and coil round your ankles before you get free.",
+        "The pit teems with snakes, thin as worms. They bite, and it takes time to climb out."
+      ],
+      "andra": [
+        "A hissing in the {region} part of the tower, as of a hundred small snakes."
+      ]
+    },
+    {
+      "id": "skinn",
+      "namn": "The Shed Skin",
+      "texter": [
+        "A vast, translucent skin hangs across the room like a sail. You get tangled in it. The scales rustle against each other.",
+        "A shed snakeskin, so large it fills the whole room. It clings to you and you must tear yourself free."
+      ],
+      "andra": []
+    },
+    {
+      "id": "klocka",
+      "namn": "The Bell",
+      "texter": [
+        "You knock against a great bell hanging from the ceiling. The toll runs through the whole tower, and through the slits you see the sun sink swiftly.",
+        "A bell tolls by itself as you step in. The light outside turns redder at once."
+      ],
+      "andra": [
+        "A bell tolls somewhere in the tower. The light through the slits turns redder. The sun sinks faster."
+      ]
+    },
+    {
+      "id": "morker",
+      "namn": "The Darkness",
+      "texter": [
+        "A warm gust passes through the room and your lantern goes out. You see nothing. You must grope your way.",
+        "Something breathes out, and your flame flutters and dies. The darkness is complete."
+      ],
+      "andra": []
+    },
+    {
+      "id": "eko",
+      "namn": "The Echoing Hall",
+      "texter": [
+        "Your step echoes, and the echo goes on and grows until the whole tower rings. Now everyone knows where you are.",
+        "The room catches every sound and throws it out into the passages. Everyone in the tower hears where you stand."
+      ],
+      "andra": [
+        "An echo rolls through the tower. {namn} is in {rum}, in the {region} part of the tower."
+      ]
+    }
+  ],
+
+  "sok": {
+    "texter": {
+      "skatt": [
+        "Under a loose stone lie a few coins. {antal} gold. You now have {skatt}.",
+        "Something glints in a crack in the wall. {antal} gold, a little sticky. You now have {skatt}."
+      ],
+      "dryck": [
+        "Behind a shelf you find a small flask of red potion. It heals wounds.",
+        "A whole flask, still sealed. You put it in your bag."
+      ],
+      "gang": [
+        "You press a stone and it gives. A secret passage opens to the {riktning}.",
+        "Behind a curtain of dust is a narrow opening to the {riktning}. Its edges are soft."
+      ],
+      "gang_ingen": [
+        "You find the traces of a secret passage, but it leads nowhere."
+      ],
+      "falla": [
+        "You search too thoroughly and set something off."
+      ],
+      "inget": [
+        "You search for a long time but find nothing.",
+        "Dust, dirt and a couple of old buttons. Nothing of value."
+      ],
+      "redan": [
+        "This room has already been searched."
+      ],
+      "inte_har": [
+        "There is nothing to search here."
+      ]
+    }
+  },
+
+  "texter": {
+    "skada": [
+      "You lose {skada} of your lives. You have {liv} left."
+    ],
+    "dod": [
+      "Everything goes black. The tower has taken you."
+    ],
+    "dod_andra": [
+      "A scream rings out and dies away. {namn} is dead."
+    ],
+    "fast": [
+      "You are stuck and cannot go on."
+    ],
+    "kallare": [
+      "You grope your way through the cellar vaults. They are cramped and the walls are soft.",
+      "The cellar vaults wind in every direction. You search for a way up."
+    ],
+    "kallare_ut": [
+      "You find a stair and climb up out of the cellar vaults. You are in {rum}."
+    ],
+    "kallare_ut_andra": [
+      "{namn} climbs up out of a hole in the floor in the {region} part of the tower."
+    ],
+    "kallare_ut_andra_dolt": [
+      "Something scrapes beneath the floor in the {region} part of the tower, and a hatch slams shut."
+    ],
+    "morker_nytt": [
+      "You grope your way into a room you cannot see."
+    ],
+    "morker_slut": [
+      "You get the lantern lit again. The light seems weak."
+    ],
+    "gift": [
+      "The poison burns. You lose 1 life and have {liv} left."
+    ],
+    "gift_slut": [
+      "The poison has left your body."
+    ],
+    "drick": [
+      "You drink. Warmth spreads and the wounds draw together. You are up to {liv} lives."
+    ],
+    "drick_gift": [
+      "The potion drives out the poison."
+    ],
+    "ingen_dryck": [
+      "You have no potion."
+    ]
+  }
+}
