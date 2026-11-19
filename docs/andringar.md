@@ -6,6 +6,15 @@ eller leder tornet.
 
 ## 2026-11-19
 
+### Senaste rundan överst i loggen
+
+- I loggen på spelarsidan står den senaste rundan överst. Inom en runda
+  står raderna fortfarande i den ordning de hände.
+- Äldre rundor fälls ihop under de två senaste. En ljusare linje skiljer
+  den aktuella rundan från de äldre.
+- Har man rullat ner för att läsa ligger texten kvar när en ny runda
+  kommer, och "↑ nya rader" tar en tillbaka upp.
+
 ### Läs om innehållet
 
 - Under Inför nästa vandring på värdsidan finns knappen "Läs om

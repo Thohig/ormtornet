@@ -210,11 +210,13 @@ spelarsidan (`/`), med tre vyer i tur och ordning:
      kammaren och vad som väntar, och viskningen skrivs i en egen ruta där.
      I loggen säger ett tecken i marginalen vad slags rad det är (`!` fara,
      `›` det du ser, `▸` rummets namn, `·` besked, `❝` tornets röst,
-     `✎` krita, `≡` rundans sammanfattning). Varje runda har en rubrik. Den första raden i en runda
-     skrivs fram tecken för tecken, resten kommer en hel rad i taget. Har
-     man rullat upp för att läsa stannar loggen där, och "↓ nya rader" tar
-     en tillbaka. Rundorna före den förra fälls ihop till en rad med rummen
-     man kom till, och ett klick fäller upp dem igen. Ligger loggen efter
+     `✎` krita, `≡` rundans sammanfattning). Varje runda har en rubrik, och den senaste rundan står
+     överst. Inom en runda står raderna i den ordning de hände. Den första
+     raden i en runda skrivs fram tecken för tecken, resten kommer en hel
+     rad i taget. Har man rullat ner för att läsa ligger texten kvar där,
+     och "↑ nya rader" tar en tillbaka upp. Rundorna före den förra fälls
+     ihop till en rad med rummen man kom till, och ett klick fäller upp dem
+     igen. Ligger loggen efter
      skrivs rader från rundor som redan är förbi ikapp fort. Efter varje
      runda kommer ett kort nere på kartan med vad som hände dig, det
      farliga först: vart du gick, liv och guld du vann eller förlorade,

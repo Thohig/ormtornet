@@ -574,15 +574,15 @@ body.touch #helpBtn { display: none; }
   padding-right: 6px;
   scrollbar-width: thin;
   scrollbar-color: var(--chalkline) transparent;
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 1.2em);
-  mask-image: linear-gradient(to bottom, transparent 0, #000 1.2em);
+  -webkit-mask-image: linear-gradient(to top, transparent 0, #000 1.2em);
+  mask-image: linear-gradient(to top, transparent 0, #000 1.2em);
 }
 #log::-webkit-scrollbar { width: 5px; }
 #log::-webkit-scrollbar-thumb { background: var(--chalkline); border-radius: 3px; }
-#logDown {
+#logNew {
   position: absolute;
   right: 10px;
-  bottom: 6px;
+  top: 6px;
   padding: 3px 10px;
   border: 1px solid var(--chalkline);
   border-radius: 12px;
@@ -613,6 +613,10 @@ body.touch #helpBtn { display: none; }
 }
 #log .roundhead:hover { color: var(--fg); }
 #log .round:first-child .roundhead { border-top: 0; }
+/* Den aktuella rundan skiljs från de äldre med lite luft och en ljusare
+   linje. */
+#log .round:first-child + .round { margin-top: 10px; }
+#log .round:first-child + .round > .roundhead { border-top-color: var(--dim); }
 #log .folded .lines { display: none; }
 #log .folded .roundhead { margin-bottom: 0; }
 #log .appear { animation: logfade 0.35s ease-out; }

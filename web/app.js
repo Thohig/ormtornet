@@ -18,12 +18,13 @@ function show(id) {
 }
 
 // Loggen. Raderna samlas i grupper, en per runda (och en för tiden före
-// och efter vandringen). Den första raden i en grupp skrivs fram tecken för
-// tecken, resten kommer en hel rad i taget i lugn takt. Ligger loggen
-// efter skrivs rader från förbigångna rundor ikapp fort. Har man rullat upp
-// för att läsa stannar loggen där, och "↓ nya rader" tar en tillbaka. När
-// en ny runda börjar fälls rundorna före den förra ihop till en rad som går
-// att klicka upp.
+// och efter vandringen). Den senaste rundan står överst, och inom en runda
+// står raderna i den ordning de hände. Den första raden i en grupp skrivs
+// fram tecken för tecken, resten kommer en hel rad i taget i lugn takt.
+// Ligger loggen efter skrivs rader från förbigångna rundor ikapp fort. Har
+// man rullat ner för att läsa ligger texten kvar där, och "↑ nya rader" tar
+// en tillbaka upp. När en ny runda börjar fälls rundorna före den förra
+// ihop till en rad som går att klicka upp.
 const Log = (() => {
   const queue = [];
   let busy = false;
@@ -31,8 +32,7 @@ const Log = (() => {
   const LINE_GAP = 320; // ms mellan hela rader
   const CHAR_MS = 24;
   const CATCH_UP = 60; // ms mellan rader från en runda som redan är förbi
-  let stick = true; // loggen följer med nedåt
-  let current = null; // gruppen som raderna hamnar i
+  let stick = true; // loggen står överst, där det nya kommer
 
   function box() {
     return $("log");
@@ -56,9 +56,27 @@ const Log = (() => {
     if (!busy) next();
   }
 
-  // group ger gruppen för key, och gör en ny när rundan har bytts.
+  // keep gör en ändring utan att texten man läser flyttar sig när man har
+  // rullat ner: raden överst i rutan står kvar på samma plats.
+  function keep(change) {
+    const b = box();
+    if (stick || b.scrollTop <= 0) {
+      change();
+      return;
+    }
+    const top = b.getBoundingClientRect().top;
+    const anchor = [...b.querySelectorAll(".roundhead, .lines > div")].find(
+      (el) => el.offsetParent && el.getBoundingClientRect().bottom > top
+    );
+    const before = anchor ? anchor.getBoundingClientRect().top : 0;
+    change();
+    if (anchor && anchor.isConnected) b.scrollTop += anchor.getBoundingClientRect().top - before;
+  }
+
+  // group ger gruppen för key, och gör en ny överst när rundan har bytts.
   function group(key) {
-    if (current && current.dataset.key === key) return current;
+    const first = box().firstElementChild;
+    if (first && first.dataset.key === key) return first;
     const g = document.createElement("section");
     g.className = "round";
     g.dataset.key = key;
@@ -72,8 +90,7 @@ const Log = (() => {
     const lines = document.createElement("div");
     lines.className = "lines";
     g.append(head, lines);
-    box().appendChild(g);
-    current = g;
+    keep(() => box().prepend(g));
     summarize(g);
     fold();
     return g;
@@ -96,11 +113,11 @@ const Log = (() => {
   }
 
   // fold fäller ihop alla grupper utom de två senaste. Det väntar tills man
-  // är längst ner, så att texten man läser inte flyttar sig.
+  // står överst, så att texten man läser inte flyttar sig.
   function fold() {
     if (!stick) return;
     const groups = [...box().querySelectorAll(".round")];
-    groups.slice(0, -2).forEach((g) => {
+    groups.slice(2).forEach((g) => {
       if (g.dataset.auto) return;
       g.dataset.auto = "1";
       g.classList.add("folded");
@@ -113,9 +130,9 @@ const Log = (() => {
   function trim() {
     let n = box().querySelectorAll(".lines > div").length;
     while (n > MAX_LINES && box().children.length > 2) {
-      const first = box().firstElementChild;
-      n -= first.querySelectorAll(".lines > div").length;
-      first.remove();
+      const last = box().lastElementChild;
+      n -= last.querySelectorAll(".lines > div").length;
+      last.remove();
     }
   }
 
@@ -145,19 +162,17 @@ const Log = (() => {
     if (at < text.length) line.appendChild(document.createTextNode(text.slice(at)));
   }
 
-  function atBottom() {
-    const b = box();
-    return b.scrollTop + b.clientHeight >= b.scrollHeight - 6;
+  function atTop() {
+    return box().scrollTop <= 6;
   }
 
-  // follow håller loggen längst ner, eller visar att det finns nya rader.
+  // follow håller loggen överst, eller visar att det finns nya rader.
   function follow() {
-    const b = box();
     if (stick) {
-      b.scrollTop = b.scrollHeight;
-      $("logDown").hidden = true;
+      box().scrollTop = 0;
+      $("logNew").hidden = true;
     } else {
-      $("logDown").hidden = false;
+      $("logNew").hidden = false;
     }
   }
 
@@ -173,14 +188,14 @@ const Log = (() => {
     const first = list.children.length === 0;
     const line = document.createElement("div");
     if (item.cls) line.className = item.cls;
-    list.appendChild(line);
+    keep(() => list.appendChild(line));
     if (g.classList.contains("folded")) summarize(g);
     // Rader från en runda som redan är förbi kommer ikapp fort, så att
     // loggen inte hamnar efter. Den aktuella rundan kommer i lugn takt.
     const behind = queue.some((q) => q.key !== item.key);
     if (!first || behind) {
       // Hela raden på en gång, med en mjuk övergång.
-      paint(line, item.text);
+      keep(() => paint(line, item.text));
       line.classList.add("appear");
       follow();
       setTimeout(next, behind ? CATCH_UP : LINE_GAP);
@@ -191,14 +206,14 @@ const Log = (() => {
     let i = 0;
     function tick() {
       i = Math.min(chars.length, i + 1);
-      line.textContent = chars.slice(0, i).join("");
+      keep(() => (line.textContent = chars.slice(0, i).join("")));
       follow();
       if (i < chars.length) {
         const ch = chars[i - 1];
         setTimeout(tick, ".!?".includes(ch) ? 180 : ",".includes(ch) ? 70 : CHAR_MS);
       } else {
         line.classList.remove("cursor");
-        paint(line, item.text);
+        keep(() => paint(line, item.text));
         setTimeout(next, LINE_GAP);
       }
     }
@@ -208,11 +223,11 @@ const Log = (() => {
   function init() {
     box().addEventListener("scroll", () => {
       const was = stick;
-      stick = atBottom();
-      if (stick) $("logDown").hidden = true;
+      stick = atTop();
+      if (stick) $("logNew").hidden = true;
       if (stick && !was) fold();
     });
-    $("logDown").addEventListener("click", () => {
+    $("logNew").addEventListener("click", () => {
       stick = true;
       fold();
       follow();
