@@ -93,9 +93,14 @@ func (g *Game) spawnMonster(x, y int) bool {
 	if t == nil {
 		return false
 	}
+	g.addMonster(t, x, y)
+	return true
+}
+
+// addMonster sätter en varelse av typen t i rummet (x, y).
+func (g *Game) addMonster(t *MonsterType, x, y int) {
 	g.nextMonsterID++
 	g.monsters = append(g.monsters, &Monster{ID: g.nextMonsterID, Type: t.ID, X: x, Y: y, HP: t.Liv})
-	return true
 }
 
 func (g *Game) removeMonster(m *Monster) {

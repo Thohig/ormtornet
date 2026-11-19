@@ -205,6 +205,19 @@ func (d *Data) validate() []string {
 		}
 	}
 	chance("avslojande.json", "nad_andel", a.NadAndel)
+	for _, t := range d.Fallor {
+		if len(a.Varsel.Fallor[t.ID]) == 0 {
+			bad("avslojande.json", "varsel: fällan %q saknar text", t.ID)
+		}
+	}
+	for _, t := range d.Monster.Typer {
+		if len(a.Varsel.Varelser[t.ID]) == 0 {
+			bad("avslojande.json", "varsel: varelsen %q saknar text", t.ID)
+		}
+	}
+	if len(a.Varsel.Tomt) == 0 || len(a.Varsel.Avstand) != 2 {
+		bad("avslojande.json", "varsel: tomt ska ha texter och avstand två ord")
+	}
 	if len(a.EpilogNamn) == 0 {
 		bad("avslojande.json", "epilog_namn: inga texter")
 	}

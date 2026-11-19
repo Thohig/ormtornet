@@ -6,6 +6,17 @@ eller leder tornet.
 
 ## 2026-11-19
 
+### Varslen
+
+- Från avslöjandets nivå 2 är varannan ledtråd ett varsel: tornet förråder
+  ett rum som ingen har varit i, två eller tre rum bort, till exempel "Det
+  gnisslar av järn två rum bort åt nordöst".
+- Vad som finns i rummet bestäms när varslet ges, med samma chanser som
+  annars, och blir så när någon går in: en fälla, en varelse eller
+  ingenting. Varslet gäller aldrig en port eller kammaren.
+- Texterna står under `varsel` i `avslojande.json`, en för varje fälla och
+  varelse.
+
 ### Byte vid dödande och tornets nåd (spoilervarning)
 
 - Med ormens namn får den som dödar en annan vandrare de delar av namnet

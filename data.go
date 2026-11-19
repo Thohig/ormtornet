@@ -477,6 +477,15 @@ type Reveal struct {
 	SvarMedNamn []string            `json:"svar_med_namn"` // mallar med {namn} som räknas som svar
 	EpilogNamn  []string            `json:"epilog_namn"`   // epilogen säger namnet
 	NadAndel    float64             `json:"nad_andel"`     // andelen vakna-kort som tornets nåd tar bort
+	Varsel      Omens               `json:"varsel"`        // varslen om rum som ingen har varit i
+}
+
+// Omens är texterna för varslen (se omens.go).
+type Omens struct {
+	Fallor   map[string][]string `json:"fallor"`   // per fälla
+	Varelser map[string][]string `json:"varelser"` // per varelse
+	Tomt     []string            `json:"tomt"`     // ett rum utan något
+	Avstand  []string            `json:"avstand"`  // två och tre rum bort
 }
 
 // Initiate är fördelarna och svagheten för den som har viskat hemligheten.

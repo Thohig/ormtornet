@@ -213,6 +213,7 @@ type Room struct {
 	items    []string // föremål som någon har lämnat här
 	chalk    Dir      // pilen någon har ritat med krita
 	hasChalk bool
+	omen     string // det ett varsel har lovat: "falla:id", "varelse:id" eller "tomt"
 }
 
 // trail är spåren efter den som senast lämnade ett rum.
@@ -329,6 +330,8 @@ type Game struct {
 	serpentName []string // ormens namn i tre delar, med invigningen "ormens namn"
 	mercy       int      // vakna-kort som tornets nåd har tagit bort, också när leken byggs om
 	mercyGiven  bool     // tornets nåd har kommit i den här vandringen
+	clueDeals   int      // ledtrådar som har delats ut, för att varannan ska bli ett varsel
+	omens       []omenNote
 }
 
 func NewGame(d *Data, cfg Config) *Game {
@@ -446,9 +449,14 @@ func (g *Game) build(x, y int, spawn bool) *Room {
 		}
 		undecided = append(undecided[:i], undecided[i+1:]...)
 	}
-	// Händelse: en varelse, en fälla eller ingenting.
+	// Händelse: en varelse, en fälla eller ingenting. Har ett varsel redan
+	// sagt vad som väntar blir det så.
+	if r.omen != "" {
+		g.fulfilOmen(r, x, y)
+		return r
+	}
 	if !(spawn && g.spawnMonster(x, y)) && g.rng.Float64() < g.data.Regler.Handelsechans {
-		if t := g.data.randomTrap(g.rng); t != nil {
+		if t := g.randomTrap(); t != nil {
 			r.Event = t.ID
 		}
 	}
@@ -1087,6 +1095,7 @@ func (g *Game) startGame() {
 	g.round = 1
 	g.wakes = 0
 	g.mercy, g.mercyGiven = 0, false
+	g.clueDeals, g.omens = 0, nil
 	g.buildDeck()
 	g.controller = 0
 	g.pendingMove = nil

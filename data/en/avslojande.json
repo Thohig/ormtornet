@@ -66,6 +66,65 @@
         "Everything around you bears the same name. Its {ordning} part is {del}."
       ]
     },
+    "varsel": {
+      "fallor": {
+        "fallgaller": [
+          "Iron creaks {avstand} to the {riktning}, as when something heavy hangs and waits."
+        ],
+        "rasande_golv": [
+          "The floor sounds hollow {avstand} to the {riktning}. There is nothing under it."
+        ],
+        "roterande": [
+          "Something grinds and turns {avstand} to the {riktning}, like a millstone."
+        ],
+        "pilar": [
+          "You hear a string being drawn {avstand} to the {riktning}."
+        ],
+        "dimma": [
+          "A stinging smell seeps out {avstand} to the {riktning}."
+        ],
+        "ormgrop": [
+          "Many small bodies rustle {avstand} to the {riktning}."
+        ],
+        "skinn": [
+          "Something thin and dry stirs in the draught {avstand} to the {riktning}, like paper."
+        ],
+        "klocka": [
+          "A bell tolls dully {avstand} to the {riktning}. No one should be ringing it."
+        ],
+        "morker": [
+          "The light dies {avstand} to the {riktning}. The darkness there is thicker than the air."
+        ],
+        "eko": [
+          "Your own steps come back {avstand} to the {riktning}, a moment too late."
+        ]
+      },
+      "varelser": {
+        "krypare": [
+          "Something pale and damp drags itself along {avstand} to the {riktning}."
+        ],
+        "yngel": [
+          "A hungry hissing comes from {avstand} to the {riktning}."
+        ],
+        "fjallvakt": [
+          "Scales scrape on stone {avstand} to the {riktning}, heavy and steady."
+        ],
+        "gallgast": [
+          "It smells of bile and rot {avstand} to the {riktning}."
+        ],
+        "benvaktare": [
+          "Bone knocks on bone {avstand} to the {riktning}, like someone counting."
+        ]
+      },
+      "tomt": [
+        "It is quiet {avstand} to the {riktning}. Too quiet.",
+        "The tower holds its breath {avstand} to the {riktning}. Nothing waits there."
+      ],
+      "avstand": [
+        "two rooms away",
+        "three rooms away"
+      ]
+    },
     "svar_med_namn": [
       "the tower is {namn}",
       "{namn} is the tower",

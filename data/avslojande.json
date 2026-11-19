@@ -60,6 +60,66 @@
         "Allt runt dig bär samma namn. Dess {ordning} del är {del}."
       ]
     },
+    "_om_varsel": "Varslen: från nivå 2 är varannan ledtråd ett varsel om ett rum som ingen har varit i, två eller tre steg bort. Rummets innehåll bestäms när varslet ges. Varje fälla och varelse har en text, tomt gäller ett rum utan något. {avstand} är ett av orden under avstand och {riktning} ett väderstreck.",
+    "varsel": {
+      "fallor": {
+        "fallgaller": [
+          "Det gnisslar av järn {avstand} åt {riktning}, som när något tungt hänger och väntar."
+        ],
+        "rasande_golv": [
+          "Golvet låter ihåligt {avstand} åt {riktning}. Under det finns ingenting."
+        ],
+        "roterande": [
+          "Något maler och vrider sig {avstand} åt {riktning}, som en kvarnsten."
+        ],
+        "pilar": [
+          "Du hör en sträng som spänns {avstand} åt {riktning}."
+        ],
+        "dimma": [
+          "En stickande lukt sipprar fram {avstand} åt {riktning}."
+        ],
+        "ormgrop": [
+          "Det prasslar av många små kroppar {avstand} åt {riktning}."
+        ],
+        "skinn": [
+          "Något tunt och torrt rör sig i draget {avstand} åt {riktning}, som papper."
+        ],
+        "klocka": [
+          "En klocka slår dovt {avstand} åt {riktning}. Ingen borde ringa i den."
+        ],
+        "morker": [
+          "Ljuset dör {avstand} åt {riktning}. Där är mörkret tjockare än luften."
+        ],
+        "eko": [
+          "Dina egna steg kommer tillbaka {avstand} åt {riktning}, ett ögonblick för sent."
+        ]
+      },
+      "varelser": {
+        "krypare": [
+          "Något blekt och fuktigt släpar sig fram {avstand} åt {riktning}."
+        ],
+        "yngel": [
+          "Ett hungrigt väsande hörs {avstand} åt {riktning}."
+        ],
+        "fjallvakt": [
+          "Fjäll skrapar mot sten {avstand} åt {riktning}, tungt och regelbundet."
+        ],
+        "gallgast": [
+          "Det luktar galla och förruttnelse {avstand} åt {riktning}."
+        ],
+        "benvaktare": [
+          "Ben slår mot ben {avstand} åt {riktning}, som någon som räknar."
+        ]
+      },
+      "tomt": [
+        "Det är tyst {avstand} åt {riktning}. För tyst.",
+        "Tornet håller andan {avstand} åt {riktning}. Där väntar ingenting."
+      ],
+      "avstand": [
+        "två rum bort",
+        "tre rum bort"
+      ]
+    },
     "svar_med_namn": [
       "tornet är {namn}",
       "{namn} är tornet",

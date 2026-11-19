@@ -42,6 +42,12 @@ func (g *Game) updateLevel() {
 	n := g.data.Avslojande.LedtradVarNRunda
 	switch {
 	case g.round%n == 0:
+		// Från nivå 2 är varannan ledtråd ett varsel om ett rum i närheten.
+		g.clueDeals++
+		if g.level >= 2 && g.clueDeals%2 == 0 {
+			g.dealOmens()
+			return
+		}
 		g.dealClues(g.data.Avslojande.Ledtradar, "ledtrad", "info")
 	case g.round%n == n/2:
 		// Pilgrimen får ledtrådar dubbelt så ofta.
