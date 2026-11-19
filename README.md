@@ -644,7 +644,9 @@ Beskrivningarna för rummen ligger under nivåerna `"1"` till `"4"`.
   - `map.js` ritar kartan som krita på en skiffertavla: väggarna är
     handritade streck, vandrarna prickar i sin färg (den egna med en ring)
     och varelser och märken tecken. Kartan visar bara det kända och
-    zoomar ut efter hand; även utsnittet på en liten skärm
+    zoomar ut efter hand; även utsnittet på en liten skärm. Den antecknar
+    också vilka tecken den ritar, och spelarsidan gör teckenförklaringen
+    av dem
   - `audio.js` allt ljud, skapat med Web Audio API, även stormen i introt
   - `style.css` utseendet
 

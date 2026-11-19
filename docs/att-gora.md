@@ -28,6 +28,10 @@ En riktig kväll behövs för att se:
 - Kritkartan (2026-11-18): syns vandrarnas prickar och varelserna bra på
   en telefon, och märks avslöjandet lika tydligt i kritan som i braillen?
   Nivå 3 och 4 är bara sedda genom att tvinga fram dem.
+- Teckenförklaringen på kartan (2026-11-19): skymmer den rum uppe till
+  vänster på en mindre skärm, och läser någon den? På en telefon är den
+  hopfälld från början; behövs den alls där? I utsnittet tar den med
+  tecken från kända rum som ligger utanför bild.
 - Bara den egna porten: hittar spelarna ut, eller går de vilse när de
   inte ser de andra portarna?
 - Tecknen på kartan (2026-11-19): går de att förstå, och skymmer de
