@@ -61,8 +61,8 @@ Flaggor:
 
 - `-addr 0.0.0.0:8080` adress och port
 - `-data data` mapp med datafilerna
-- `-sol 40` antal rundor innan solen går ner i ett torn på 9 × 9; större torn får fler (50 på 11 × 11, 60 på 13 × 13)
-- `-turtid 30s` längsta tid att välja drag per runda
+- `-sol 0` antal rundor innan solen går ner; `0` är automatiskt efter tornets storlek (40 på 9 × 9, 50 på 11 × 11, 60 på 13 × 13)
+- `-turtid 0` längsta tid att välja drag per runda; `0` är automatiskt efter antalet människor (30–40 sekunder)
 - `-min 2` minsta antal spelare för att börja, datorspelare inräknade (sätt `-min 1` för att prova ensam)
 - `-ai 2` antal datorstyrda vandrare (0–7, eller 8 i spelledarläget)
 - `-svarighet normal` svårighet: `latt`, `normal`, `svar` eller `mardrom`
@@ -104,25 +104,34 @@ människa kommit in en och en halv minut efter att sidan öppnades fälls
 Kommer någon inte in? ut av sig själv.
 
 Under Inför nästa vandring väljer spelledaren det här. Svårighet,
-AI-spelare, Solnedgång, Turtid, Spelledarläge och Språk syns direkt. Resten ligger
-under Fler inställningar, som visar de nuvarande valen i korthet tills man
-fäller ut den.
+AI-spelare, Spelledarläge och Språk syns direkt. Resten ligger under Fler
+inställningar, som visar de nuvarande valen i korthet tills man fäller ut
+den. Solnedgång och Turtid står där bara när de inte är automatiska.
 
 | Inställning | Val | Förval |
 |---|---|---|
 | AI-spelare | 0–7, eller 8 i spelledarläget | 0 |
 | Minst antal vandrare | 1–8, AI-spelare inräknade | 2 |
 | Svårighet | Lätt, Normal, Svår, Mardröm | Normal |
-| Solnedgång | rundor i ett torn på 9 × 9; större torn får fler | 40 |
-| Turtid | sekunder per runda | 30 |
 | Avslöjandet | på eller av | på |
 | Frånvarande vandrare | AI tar över efter 1–3 rundor, eller står still | 2 rundor |
 | Strid mellan vandrare | på, efter halva tiden, av | på |
 | Vandrarna syns | bara när de möts med egen karta, bara när de möts, alltid | egen karta |
 | Tornets storlek | automatisk, 9, 11 eller 13 rum | automatisk |
+| Solnedgång | automatisk, eller 20–80 rundor | automatisk |
+| Turtid | automatisk, eller 15–60 sekunder per runda | automatisk |
 | Klasser | på eller av | på |
 | Spelledarläge | på eller av | av |
 | Språk | svenska eller English | svenska |
+
+Automatisk solnedgång ger 40 rundor i ett torn på 9 × 9, 50 på 11 × 11
+och 60 på 13 × 13, lika många fler som vägen till kammaren är längre. Ett
+eget val gäller som det står, oavsett storlek. Automatisk turtid ger 30
+sekunder för upp till fyra människor, 35 för fem eller sex och 40 för sju
+eller åtta. AI-spelare räknas inte. Turtiden räknas ut när vandringen
+börjar och ligger fast under den. Tillägget är litet med flit: rundan
+avgörs så fort alla har valt, och ett högre tak låter bara alla vänta
+längre på den som dröjer. Bredvid valen står vad automatisk ger just nu.
 
 Under Vid porten står hur stort tornet blir och hur många rundor solen
 har. AI-spelare kommer och går direkt i lobbyn, och tornet byggs om i

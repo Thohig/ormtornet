@@ -26,8 +26,8 @@ var webFS embed.FS
 func main() {
 	addr := flag.String("addr", "0.0.0.0:8080", "adress och port att lyssna på")
 	dataPath := flag.String("data", "data", "mapp med rum, fällor och texter")
-	sun := flag.Int("sol", defaultSettings.Sol, "antal rundor innan solen går ner")
-	turn := flag.Duration("turtid", time.Duration(defaultSettings.Turtid)*time.Second, "längsta tid att välja drag per runda")
+	sun := flag.Int("sol", defaultSettings.Sol, "antal rundor innan solen går ner (0 = automatiskt: 40, 50 eller 60 efter tornets storlek)")
+	turn := flag.Duration("turtid", time.Duration(defaultSettings.Turtid)*time.Second, "längsta tid att välja drag per runda (0 = automatiskt: 30–40 sekunder efter antalet människor)")
 	minPlayers := flag.Int("min", defaultSettings.Min, "minsta antal spelare för att börja, datorspelare inräknade")
 	bots := flag.Int("ai", defaultSettings.AI, "antal datorstyrda vandrare (0-7, eller 8 i spelledarläget)")
 	seed := flag.Uint64("fro", 0, "frö för första vandringen; samma frö och samma drag ger samma torn (0 = slumpat)")
@@ -175,7 +175,14 @@ func main() {
 
 	fmt.Println("Ormtornet är vaket.")
 	fmt.Println("Texter från:", src)
-	fmt.Printf("Solen går ner efter %d rundor. Turtid %s. Minst %d spelare.\n", cfg.SunMax, cfg.TurnTime, cfg.MinPlayers)
+	sunText, turnText := "automatiskt efter tornets storlek", "automatisk efter antalet spelare"
+	if cfg.SunMax > 0 {
+		sunText = fmt.Sprintf("efter %d rundor", cfg.SunMax)
+	}
+	if cfg.TurnTime > 0 {
+		turnText = cfg.TurnTime.String()
+	}
+	fmt.Printf("Solen går ner %s. Turtid %s. Minst %d spelare.\n", sunText, turnText, cfg.MinPlayers)
 	if s := data.difficulty(cfg.Difficulty); s != nil {
 		fmt.Printf("Svårighet: %s.\n", s.Namn)
 	}

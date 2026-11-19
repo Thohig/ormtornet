@@ -293,14 +293,6 @@
       <select id="sAI" name="ai"><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option></select>
       <span class="note" id="aiNote"></span>
 
-      <label for="sSol" data-t="inst_sol"></label>
-      <select id="sSol" name="sol"></select>
-      <span class="note" data-t="not_sol"></span>
-
-      <label for="sTur" data-t="inst_turtid"></label>
-      <select id="sTur" name="turtid"></select>
-      <span class="note" data-t="not_turtid"></span>
-
       <label for="sGM" data-t="inst_spelledarlage"></label>
       <select id="sGM" name="spelledarlage">
         <option value="0" data-t="val_spelledarlage_av"></option>
@@ -359,6 +351,14 @@
             <option value="13"></option>
           </select>
           <span class="note" data-t="not_storlek"></span>
+
+          <label for="sSol" data-t="inst_sol"></label>
+          <select id="sSol" name="sol"></select>
+          <span class="note" id="solNote"></span>
+
+          <label for="sTur" data-t="inst_turtid"></label>
+          <select id="sTur" name="turtid"></select>
+          <span class="note" id="turNote"></span>
 
           <label for="sKlass" data-t="inst_klasser"></label>
           <select id="sKlass" name="klasser">
@@ -934,11 +934,14 @@ pollGM();
 // med det, eller medan en ändring är på väg till servern.
 let saving = false;
 
+// fillOptions fyller en lista med tal. 0 står först och betyder automatiskt.
 function fillOptions(sel, values, current) {
-  const all = [...new Set([...values, current])].sort((a, b) => a - b);
-  if (sel.options.length === all.length && [...sel.options].every((o, i) => +o.value === all[i])) return;
-  sel.textContent = "";
-  all.forEach((n) => sel.append(new Option(String(n), String(n))));
+  const all = [...new Set([0, ...values, current])].sort((a, b) => a - b);
+  if (!(sel.options.length === all.length && [...sel.options].every((o, i) => +o.value === all[i]))) {
+    sel.textContent = "";
+    all.forEach((n) => sel.append(new Option(String(n), String(n))));
+  }
+  sel.options[0].text = t("val_auto"); // också när språket byts
 }
 
 // optionTexts: de val i formuläret som har ett tal i texten. De andra
@@ -964,8 +967,12 @@ function moreText(s) {
     strid ? t(strid) : t("kort_strid", { strid: s.strid }),
     syn ? t(syn) : t("kort_syn", { syn: s.synlighet }),
     s.storlek ? t("storlek_rum", { storlek: s.storlek }) : t("kort_storlek_auto"),
+    s.sol ? t("kort_sol", { rundor: s.sol }) : "",
+    s.turtid ? t("kort_turtid", { sekunder: s.turtid }) : "",
     t(s.klasser ? "kort_klasser_pa" : "kort_klasser_av"),
-  ].join(" · ");
+  ]
+    .filter(Boolean)
+    .join(" · ");
 }
 
 function renderSettings(v) {
@@ -977,6 +984,16 @@ function renderSettings(v) {
   $("aiNote").textContent = s.ai > v.bots && !playing ? t("not_ai", { antal: v.bots }) : "";
   // De hopfällda inställningarna i korthet, så att de syns utan att fällas ut.
   $("moreNote").textContent = moreText(s);
+  // Vad Automatisk ger just nu: solen efter tornets storlek, turtiden efter
+  // människorna vid portarna, eller den som gäller under vandringen.
+  $("solNote").textContent = s.sol
+    ? t("not_sol")
+    : t("not_sol_auto", { rundor: v.sunMax, storlek: v.size });
+  $("turNote").textContent = s.turtid
+    ? t("not_turtid")
+    : playing
+      ? t("not_turtid_auto_spel", { sekunder: v.turnSecs })
+      : t("not_turtid_auto", { sekunder: v.turnSecs });
   if (saving || form.contains(document.activeElement)) return;
   const sv = $("sSv");
   const levels = v.svarigheter || [];
@@ -988,7 +1005,7 @@ function renderSettings(v) {
   sv.value = s.svarighet;
   const level = levels.find((l) => l.id === s.svarighet);
   $("svNote").textContent = level ? level.beskrivning : "";
-  fillOptions($("sSol"), [20, 30, 40, 60], s.sol);
+  fillOptions($("sSol"), [20, 30, 40, 50, 60, 80], s.sol);
   fillOptions($("sTur"), [15, 30, 45, 60], s.turtid);
   // Fyra AI-spelare går bara i spelledarläget, när ingen människa behöver plats.
   const aiSel = $("sAI");

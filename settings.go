@@ -14,8 +14,8 @@ import (
 type Settings struct {
 	AI         int    `json:"ai"`            // datorspelare, 0–3
 	Min        int    `json:"min"`           // minsta antal vandrare, datorspelare inräknade
-	Sol        int    `json:"sol"`           // rundor innan solen går ner
-	Turtid     int    `json:"turtid"`        // sekunder per runda
+	Sol        int    `json:"sol"`           // rundor innan solen går ner, 0 för automatiskt efter tornets storlek
+	Turtid     int    `json:"turtid"`        // sekunder per runda, 0 för automatiskt efter antalet människor
 	Avslojande bool   `json:"avslojande"`    // låt tornet avslöja sin hemlighet
 	Franvaro   int    `json:"franvaro"`      // rundor innan AI tar över en frånvarande vandrare, 0 = aldrig
 	Strid      string `json:"strid"`         // strid mellan vandrare: "av", "pa" eller "halva"
@@ -33,7 +33,7 @@ const (
 	sightOwn  = "egen"  // som "moten", och var och en ser bara rum den själv har varit i
 )
 
-var defaultSettings = Settings{AI: 0, Min: 2, Sol: 40, Turtid: 30, Avslojande: true, Franvaro: 2, Strid: pvpOn, Synlighet: sightOwn, Klasser: true, Sprak: langSv}
+var defaultSettings = Settings{AI: 0, Min: 2, Sol: 0, Turtid: 0, Avslojande: true, Franvaro: 2, Strid: pvpOn, Synlighet: sightOwn, Klasser: true, Sprak: langSv}
 
 var errPlaying = errors.New("inställningarna kan ändras när omgången är slut")
 
@@ -47,8 +47,12 @@ func (s Settings) normalize() Settings {
 	}
 	s.AI = max(0, min(maxAI, s.AI))
 	s.Min = max(1, min(maxPlayers, s.Min))
-	s.Sol = max(4, min(200, s.Sol))
-	s.Turtid = max(3, min(600, s.Turtid))
+	if s.Sol != 0 {
+		s.Sol = max(4, min(200, s.Sol))
+	}
+	if s.Turtid != 0 {
+		s.Turtid = max(3, min(600, s.Turtid))
+	}
 	s.Franvaro = max(0, min(10, s.Franvaro))
 	if s.Strid != pvpOff && s.Strid != pvpOn && s.Strid != pvpHalf {
 		s.Strid = pvpOn

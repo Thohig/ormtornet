@@ -37,7 +37,7 @@ type hostView struct {
 	Round      int          `json:"round"`
 	Sun        int          `json:"sun"`
 	SunMax     int          `json:"sunMax"`
-	TurnSecs   int          `json:"turnSecs"`
+	TurnSecs   int          `json:"turnSecs"` // turtiden under vandringen, annars den som skulle gälla nu
 	MinPlayers int          `json:"minPlayers"`
 	MaxPlayers int          `json:"maxPlayers"`
 	Reveal     bool         `json:"reveal"`
@@ -63,13 +63,16 @@ func (g *Game) HostView(visible bool) hostView {
 	}
 	v := hostView{
 		Phase: g.phase, Round: g.round, Sun: g.sun, SunMax: g.sunMax,
-		TurnSecs: int(g.cfg.TurnTime / time.Second), MinPlayers: g.cfg.MinPlayers,
+		TurnSecs: int(g.turnTime() / time.Second), MinPlayers: g.cfg.MinPlayers,
 		MaxPlayers: maxPlayers, Reveal: g.cfg.Reveal, Players: []hostPlayer{},
 		Settings: settingsFrom(g.cfg), Bots: g.botCount(), Size: g.size,
 		Svarigheter: g.base.difficulties(), Sprak: g.base.Lang,
 	}
 	if g.phase == phasePlay || g.phase == phaseEnd {
 		v.Seed = g.seed
+	}
+	if g.phase == phasePlay {
+		v.TurnSecs = int(g.turn / time.Second)
 	}
 	for _, p := range g.players {
 		if p == nil {

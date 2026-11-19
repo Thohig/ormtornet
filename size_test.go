@@ -122,8 +122,8 @@ func TestAutoSizeAndPorts(t *testing.T) {
 	if r.Kind != "ingang" || open != 3 || r.Exit != North {
 		t.Fatalf("mittporten: %s, %d dörrar, utgång %d", r.Kind, open, r.Exit)
 	}
-	// Solen och ormleken växer med tornet.
-	g.cfg.SunMax = 40
+	// Med automatisk sol växer solen och ormleken med tornet.
+	g.cfg.SunMax = 0
 	g.startGame()
 	if g.sunMax != 60 {
 		t.Fatalf("solen %d i ett torn på 13, ville ha 60", g.sunMax)

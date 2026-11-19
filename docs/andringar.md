@@ -6,6 +6,24 @@ eller leder tornet.
 
 ## 2026-11-19
 
+### Automatisk solnedgång och turtid
+
+- Solnedgång och Turtid har flyttat till Fler inställningar på
+  värdsidan, efter Tornets storlek. Båda har valet automatisk, som är
+  förvalt.
+- Automatisk solnedgång följer tornets storlek: 40 rundor på 9 × 9, 50 på
+  11 × 11 och 60 på 13 × 13.
+- Automatisk turtid följer antalet människor: 30 sekunder för upp till
+  fyra, 35 för fem eller sex och 40 för sju eller åtta. Den räknas ut när
+  vandringen börjar.
+- Ett eget val av solnedgång gäller nu som det står. Förut skalades det
+  upp i större torn.
+- Bredvid valen står vad automatisk ger just nu. Sammanfattningen av Fler
+  inställningar nämner solen och turtiden bara när de inte är automatiska.
+- En sparad inställning från förut (till exempel 40 rundor och 30
+  sekunder) gäller som eget val. Byt till automatisk en gång på värdsidan.
+- Flaggorna `-sol 0` och `-turtid 0` betyder automatiskt.
+
 ### Inga droppar
 
 - Droppljudet i bakgrunden är borta. Vinden hörs som förut.

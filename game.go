@@ -14,7 +14,8 @@ import (
 )
 
 const (
-	defaultSize = 9 // tornets storlek i rum, när inget annat är valt
+	defaultSize = 9  // tornets storlek i rum, när inget annat är valt
+	autoSunBase = 40 // solens rundor med automatisk sol i ett torn på defaultSize
 	maxPlayers  = 8
 	maxNameLen  = 16
 	doorChance  = 0.55
@@ -151,11 +152,37 @@ func (g *Game) towerSize() int {
 	return need
 }
 
-// scaledSun är solens rundor i det här tornet. Spelledarens val gäller ett
-// torn på 9 rum; ett större torn får fler rundor, lika många fler som vägen
-// till kammaren är längre.
+// scaledSun är solens rundor i det här tornet. Spelledarens eget val gäller
+// som det står; 0 är automatiskt efter tornets storlek (autoSun).
 func (g *Game) scaledSun() int {
-	return max(4, g.cfg.SunMax*(g.size-1)/(defaultSize-1))
+	if g.cfg.SunMax == 0 {
+		return autoSun(g.size)
+	}
+	return max(4, g.cfg.SunMax)
+}
+
+// autoSun är solens rundor med automatisk sol: 40 i ett torn på 9 rum, och
+// lika många fler i ett större torn som vägen till kammaren är längre
+// (50 på 11, 60 på 13).
+func autoSun(size int) int {
+	return autoSunBase * (size - 1) / (defaultSize - 1)
+}
+
+// turnTime är längsta tid att välja drag per runda med de människor som är
+// med nu. 0 i inställningen är automatiskt (autoTurn).
+func (g *Game) turnTime() time.Duration {
+	if g.cfg.TurnTime > 0 {
+		return g.cfg.TurnTime
+	}
+	return autoTurn(g.humansPresent())
+}
+
+// autoTurn är turtiden med automatisk turtid: 30 sekunder för upp till fyra
+// människor, 35 för fem eller sex och 40 för sju eller åtta. Datorspelare
+// behöver ingen tid. Tillägget är litet, eftersom rundan avgörs så fort alla
+// har valt och ett högre tak bara låter alla vänta längre på den som dröjer.
+func autoTurn(humans int) time.Duration {
+	return time.Duration(30+5*(max(0, humans-3)/2)) * time.Second
 }
 
 // portIndex numrerar vandrarna i platsordning, så att var och en får en
@@ -253,8 +280,9 @@ type Game struct {
 	nextData *Data // nyss inlästa datafiler som gäller från nästa torn
 	data     *Data // datafilerna med svårighetens förval
 	cfg      Config
-	size     int // tornets bredd och höjd i rum
-	sunMax   int // solens rundor i det här tornet
+	size     int           // tornets bredd och höjd i rum
+	sunMax   int           // solens rundor i det här tornet
+	turn     time.Duration // turtiden under den här vandringen
 	rooms    [][]Room
 	players  [maxPlayers]*Player
 	nextID   int
@@ -1046,6 +1074,7 @@ func (g *Game) startGame() {
 	g.phase = phasePlay
 	g.sunMax = g.scaledSun()
 	g.sun = g.sunMax
+	g.turn = g.turnTime() // ligger fast under vandringen
 	g.round = 1
 	g.wakes = 0
 	g.buildDeck()
@@ -1088,7 +1117,10 @@ func (g *Game) startGame() {
 }
 
 func (g *Game) startRound() {
-	wait := g.cfg.TurnTime
+	wait := g.turn
+	if wait == 0 {
+		wait = g.turnTime()
+	}
 	if g.onlyCellar() {
 		// De anslutna ligger alla i källaren och kan inte välja: gå vidare snabbt.
 		wait = min(wait, 2*time.Second)

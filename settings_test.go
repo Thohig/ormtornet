@@ -49,7 +49,7 @@ func TestAllBotsOnlyInGMMode(t *testing.T) {
 
 func TestSettingsClamped(t *testing.T) {
 	g := testGame(t)
-	got, _ := g.ApplySettings(Settings{AI: 9, Min: 0, Sol: 1, Turtid: 0})
+	got, _ := g.ApplySettings(Settings{AI: 9, Min: 0, Sol: 1, Turtid: 1})
 	if got.AI != 7 || got.Min != 1 || got.Sol != 4 || got.Turtid != 3 {
 		t.Fatalf("%+v", got)
 	}
@@ -140,5 +140,33 @@ func TestSettingsEndpointSaves(t *testing.T) {
 	}
 	if n := countBots(g); n != 2 {
 		t.Fatalf("%d datorspelare", n)
+	}
+}
+
+func TestAutoSunAndTurn(t *testing.T) {
+	for size, want := range map[int]int{9: 40, 11: 50, 13: 60} {
+		if got := autoSun(size); got != want {
+			t.Errorf("autoSun(%d) = %d, ville ha %d", size, got, want)
+		}
+	}
+	for humans, want := range map[int]int{0: 30, 1: 30, 4: 30, 5: 35, 6: 35, 7: 40, 8: 40} {
+		if got := int(autoTurn(humans).Seconds()); got != want {
+			t.Errorf("autoTurn(%d) = %d s, ville ha %d", humans, got, want)
+		}
+	}
+
+	// Ett eget val gäller som det står, också i ett större torn.
+	g := testGame(t)
+	g.ApplySettings(Settings{Min: 2, Sol: 30, Turtid: 20, Storlek: 13})
+	if g.size != 13 || g.sunMax != 30 || g.turnTime().Seconds() != 20 {
+		t.Fatalf("eget val: torn %d, sol %d, turtid %v", g.size, g.sunMax, g.turnTime())
+	}
+	// Automatiskt följer solen storleken.
+	got, _ := g.ApplySettings(Settings{Min: 2, Storlek: 11})
+	if got.Sol != 0 || got.Turtid != 0 || g.sunMax != 50 || g.sun != 50 {
+		t.Fatalf("automatiskt: %+v, sol %d av %d", got, g.sun, g.sunMax)
+	}
+	if v := g.HostView(false); v.SunMax != 50 || v.TurnSecs != 30 {
+		t.Fatalf("värdsidan: sol %d, turtid %d", v.SunMax, v.TurnSecs)
 	}
 }
