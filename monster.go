@@ -10,7 +10,6 @@ package main
 // Väljer båda anfall träffar båda. Annars händer ingenting vid lika val.
 
 import (
-	"math/rand/v2"
 	"slices"
 	"strconv"
 	"strings"
@@ -83,14 +82,14 @@ func (g *Game) monsterByID(id int) *Monster {
 
 // spawnMonster kanske placerar en varelse i ett nytt rum.
 func (g *Game) spawnMonster(x, y int) bool {
-	if rand.Float64() >= g.data.Monster.Chans {
+	if g.rng.Float64() >= g.data.Monster.Chans {
 		return false
 	}
 	w := map[string]int{}
 	for _, t := range g.data.Monster.Typer {
 		w[t.ID] = t.Vikt
 	}
-	t := g.data.monsterType(weighted(w))
+	t := g.data.monsterType(weighted(g.rng, w))
 	if t == nil {
 		return false
 	}
@@ -112,9 +111,9 @@ func (g *Game) removeMonster(m *Monster) {
 func (g *Game) monsterChoice(m *Monster) string {
 	t := g.data.monsterType(m.Type)
 	if t == nil || len(t.Vanor) == 0 {
-		return []string{actAttack, actParry, actDodge}[rand.IntN(3)]
+		return []string{actAttack, actParry, actDodge}[g.rng.IntN(3)]
 	}
-	return weighted(t.Vanor)
+	return weighted(g.rng, t.Vanor)
 }
 
 // monsterChoiceVs är varelsens val mot en viss vandrare. Ormtjusaren lockar
@@ -137,7 +136,7 @@ func (g *Game) monsterChoiceVs(m *Monster, p *Player) string {
 		w[k] = v
 	}
 	w[actAttack] += extra
-	return weighted(w)
+	return weighted(g.rng, w)
 }
 
 // monsterViews: lyktbäraren ser också varelser i grannrummen.
@@ -323,7 +322,7 @@ func (g *Game) playerIn(x, y int) bool {
 // står kvar.
 func (g *Game) wanderMonsters(moved *Monster) {
 	order := slices.Clone(g.monsters)
-	rand.Shuffle(len(order), func(i, j int) { order[i], order[j] = order[j], order[i] })
+	g.rng.Shuffle(len(order), func(i, j int) { order[i], order[j] = order[j], order[i] })
 	for _, m := range order {
 		if m == moved || g.playerIn(m.X, m.Y) {
 			continue
@@ -332,7 +331,7 @@ func (g *Game) wanderMonsters(moved *Monster) {
 		if t := g.data.monsterType(m.Type); t != nil && t.Vandrar != nil {
 			chance = *t.Vandrar
 		}
-		if rand.Float64() >= chance {
+		if g.rng.Float64() >= chance {
 			continue
 		}
 		var dirs []Dir
@@ -344,7 +343,7 @@ func (g *Game) wanderMonsters(moved *Monster) {
 		if len(dirs) == 0 {
 			continue
 		}
-		g.stepMonster(m, dirs[rand.IntN(len(dirs))])
+		g.stepMonster(m, dirs[g.rng.IntN(len(dirs))])
 		g.hear(m.X, m.Y, "ljud_varelse", "", "dim")
 	}
 }

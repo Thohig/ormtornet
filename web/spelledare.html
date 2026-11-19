@@ -329,17 +329,22 @@ $("closeTower").onclick = async () => {
   }
 };
 
+// seedText: vandringens frö, för att kunna spela upp samma torn igen (-fro).
+function seedText(v) {
+  return v.seed ? " Frö " + v.seed + "." : "";
+}
+
 function statusText(v) {
   const here = v.players.filter((p) => p.online);
   const humans = here.filter((p) => !p.bot);
   const ready = humans.filter((p) => p.ready);
   if (v.phase === "spel") {
-    return "Vandringen pågår. Runda " + v.round + ", " + v.sun + " av " + v.sunMax + " rundor kvar till solnedgången.";
+    return "Vandringen pågår. Runda " + v.round + ", " + v.sun + " av " + v.sunMax + " rundor kvar till solnedgången." + seedText(v);
   }
   if (v.phase === "klassval") {
     return "Vandrarna väljer klass. Vandringen börjar när alla har valt eller tiden är slut. Starta nu börjar den direkt.";
   }
-  const prefix = v.phase === "slut" ? "Vandringen är slut. " : "";
+  const prefix = v.phase === "slut" ? "Vandringen är slut." + seedText(v) + " " : "";
   if (v.settings.spelledarlage) {
     return prefix + here.length + " vandrare vid portarna. Du startar vandringen med Starta nu.";
   }

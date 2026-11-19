@@ -6,7 +6,6 @@ package main
 // fredade, och varje runda med strid gör ormen lite oroligare.
 
 import (
-	"math/rand/v2"
 	"strconv"
 )
 
@@ -236,7 +235,7 @@ func (g *Game) fightStirsSerpent(active []*Player) {
 	for _, c := range g.data.Ormen.Kort {
 		if c.Vaknar {
 			g.deck = append(g.deck, c.ID)
-			i, j := len(g.deck)-1, rand.IntN(len(g.deck))
+			i, j := len(g.deck)-1, g.rng.IntN(len(g.deck))
 			g.deck[i], g.deck[j] = g.deck[j], g.deck[i]
 			break
 		}

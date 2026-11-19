@@ -270,7 +270,7 @@ func mergeData(d, part *Data) {
 }
 
 // weighted väljer en nyckel efter vikt.
-func weighted(weights map[string]int) string {
+func weighted(rng *rand.Rand, weights map[string]int) string {
 	keys := make([]string, 0, len(weights))
 	total := 0
 	for k, w := range weights {
@@ -283,7 +283,7 @@ func weighted(weights map[string]int) string {
 		return ""
 	}
 	sort.Strings(keys)
-	n := rand.IntN(total)
+	n := rng.IntN(total)
 	for _, k := range keys {
 		n -= weights[k]
 		if n < 0 {
@@ -293,12 +293,12 @@ func weighted(weights map[string]int) string {
 	return keys[len(keys)-1]
 }
 
-func (d *Data) randomTrap() *Trap {
+func (d *Data) randomTrap(rng *rand.Rand) *Trap {
 	w := map[string]int{}
 	for _, t := range d.Fallor {
 		w[t.ID] = t.Vikt
 	}
-	return d.trap(weighted(w))
+	return d.trap(weighted(rng, w))
 }
 
 func (d *Data) trap(id string) *Trap {

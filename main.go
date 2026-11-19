@@ -30,6 +30,7 @@ func main() {
 	turn := flag.Duration("turtid", time.Duration(defaultSettings.Turtid)*time.Second, "längsta tid att välja drag per runda")
 	minPlayers := flag.Int("min", defaultSettings.Min, "minsta antal spelare för att börja, datorspelare inräknade")
 	bots := flag.Int("ai", defaultSettings.AI, "antal datorstyrda vandrare (0-7, eller 8 i spelledarläget)")
+	seed := flag.Uint64("fro", 0, "frö för första vandringen; samma frö och samma drag ger samma torn (0 = slumpat)")
 	difficulty := flag.String("svarighet", "", "svårighet: latt, normal, svar eller mardrom (förvalen står i data/svarighet.json)")
 	reveal := flag.Bool("avslojande", defaultSettings.Avslojande, "låt tornet avslöja sin hemlighet (false för den som redan känner till den)")
 	sight := flag.String("synlighet", defaultSettings.Synlighet, "vilka vandrare och rum man ser: egen (bara dem man möter och egna rum), moten (bara dem man möter) eller alla")
@@ -71,6 +72,7 @@ func main() {
 		}
 	})
 	cfg := settings.config()
+	cfg.Seed = *seed
 
 	data, src, err := loadData(*dataPath)
 	if err != nil {

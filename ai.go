@@ -6,6 +6,7 @@ package main
 
 import (
 	"math/rand/v2"
+	"slices"
 	"strconv"
 	"time"
 )
@@ -28,9 +29,9 @@ func (b *botBrain) saw(monsterType, choice string) {
 // counter väljer det drag som slår varelsens troligaste val. Utgångsläget är
 // det en människa kan gissa ur varelsens beskrivning (vanorna); sedan väger
 // det den själv har sett i strid tyngre.
-func (b *botBrain) counter(t *MonsterType) string {
+func (b *botBrain) counter(rng *rand.Rand, t *MonsterType) string {
 	if t == nil {
-		return []string{actAttack, actParry, actDodge}[rand.IntN(3)]
+		return []string{actAttack, actParry, actDodge}[rng.IntN(3)]
 	}
 	weights := map[string]int{}
 	for k, n := range t.Vanor {
@@ -42,7 +43,7 @@ func (b *botBrain) counter(t *MonsterType) string {
 	// Välj det val varelsen oftast gör, med lite slump vid lika.
 	likely, best := "", -1
 	for _, k := range []string{actAttack, actParry, actDodge} {
-		if w := weights[k]; w > best || (w == best && rand.IntN(2) == 0) {
+		if w := weights[k]; w > best || (w == best && rng.IntN(2) == 0) {
 			likely, best = k, w
 		}
 	}
@@ -168,14 +169,30 @@ type botMap struct {
 	monsters map[pos]monsterView
 	dist     map[pos]int
 	first    map[pos]Dir // första steget på vägen dit
+	rng      *rand.Rand
+}
+
+// places ger rummen i m i en fast ordning, så att samma frö ger samma val.
+func places[V any](m map[pos]V) []pos {
+	out := make([]pos, 0, len(m))
+	for p := range m {
+		out = append(out, p)
+	}
+	slices.SortFunc(out, func(a, b pos) int {
+		if a.y != b.y {
+			return a.y - b.y
+		}
+		return a.x - b.x
+	})
+	return out
 }
 
 // explore räknar ut avstånd från start genom kända rum. Okända rum och rum
 // med varelser får ett avstånd men vägen fortsätter inte genom dem.
-func explore(st *stateMsg, start pos) *botMap {
+func explore(rng *rand.Rand, st *stateMsg, start pos) *botMap {
 	bm := &botMap{
 		rooms: map[pos]roomView{}, monsters: map[pos]monsterView{},
-		dist: map[pos]int{start: 0}, first: map[pos]Dir{},
+		dist: map[pos]int{start: 0}, first: map[pos]Dir{}, rng: rng,
 	}
 	for _, r := range st.Rooms {
 		bm.rooms[pos{r.X, r.Y}] = r
@@ -220,7 +237,8 @@ func explore(st *stateMsg, start pos) *botMap {
 // toExit ger första steget och antalet rundor ut ur tornet, eller -1.
 func (bm *botMap) toExit(start pos) (Dir, int) {
 	best, step := -1, Dir(0)
-	for p, r := range bm.rooms {
+	for _, p := range places(bm.rooms) {
+		r := bm.rooms[p]
 		if r.Exit < 0 {
 			continue
 		}
@@ -248,12 +266,13 @@ func (bm *botMap) toExit(start pos) (Dir, int) {
 // Kostnaden är vägens längd plus extra(rummet).
 func (bm *botMap) toward(want func(pos) bool, extra func(pos) int) (Dir, bool) {
 	best, step, found := 0, Dir(0), false
-	for p, d := range bm.dist {
+	for _, p := range places(bm.dist) {
+		d := bm.dist[p]
 		if d == 0 || !want(p) {
 			continue
 		}
 		cost := d + extra(p)
-		if !found || cost < best || (cost == best && rand.IntN(2) == 0) {
+		if !found || cost < best || (cost == best && bm.rng.IntN(2) == 0) {
 			best, step, found = cost, bm.first[p], true
 		}
 	}
@@ -271,7 +290,7 @@ func (g *Game) botDecide(p *Player) (string, int) {
 	st := g.stateFor(p)
 	pers := p.bot.pers
 	here := pos{p.X, p.Y}
-	bm := explore(&st, here)
+	bm := explore(g.rng, &st, here)
 	room, known := bm.rooms[here]
 	exitDir, exitDist := bm.toExit(here)
 
@@ -290,11 +309,11 @@ func (g *Game) botDecide(p *Player) (string, int) {
 					}
 				}
 				if len(doors) > 0 {
-					return g.botFlee(p, doors[rand.IntN(len(doors))]), 0
+					return g.botFlee(p, doors[g.rng.IntN(len(doors))]), 0
 				}
 			}
 		}
-		c := p.bot.counter(typ)
+		c := p.bot.counter(g.rng, typ)
 		if c == actDodge && g.is(p, "kartritare") {
 			c = actParry // kartritaren vet att undanmanövern aldrig lyckas
 		}
@@ -302,9 +321,9 @@ func (g *Game) botDecide(p *Player) (string, int) {
 	}
 
 	// Strid mot en annan vandrare: ibland, beroende på hur stridslysten den är.
-	if foe := g.botFoe(p); foe != nil && rand.Float64() < pers.Stridslust {
+	if foe := g.botFoe(p); foe != nil && g.rng.Float64() < pers.Stridslust {
 		a := actAttack
-		if r := rand.Float64(); r > 0.8 {
+		if r := g.rng.Float64(); r > 0.8 {
 			a = actDodge
 		} else if r > 0.6 {
 			a = actParry
@@ -345,7 +364,7 @@ func (g *Game) botDecide(p *Player) (string, int) {
 		if st.HP <= g.data.Ormen.Skada {
 			chance = 0
 		}
-		if rand.Float64() < chance || (p.Treasure == 0 && st.HP > g.data.Ormen.Skada) {
+		if g.rng.Float64() < chance || (p.Treasure == 0 && st.HP > g.data.Ormen.Skada) {
 			return actTake, 0
 		}
 		if exitDist >= 0 {
@@ -355,7 +374,7 @@ func (g *Game) botDecide(p *Player) (string, int) {
 
 	// Leta ibland igenom rummet om det finns tid.
 	plenty := exitDist < 0 || st.Sun > exitDist+pers.Marginal+6
-	if known && room.K == "rum" && !room.S && plenty && rand.Float64() < pers.SokChans {
+	if known && room.K == "rum" && !room.S && plenty && g.rng.Float64() < pers.SokChans {
 		return actSearch, 0
 	}
 
@@ -384,7 +403,7 @@ func (g *Game) botDecide(p *Player) (string, int) {
 			}
 		}
 		if len(doors) > 0 {
-			return dirLetter[doors[rand.IntN(len(doors))]], 0
+			return dirLetter[doors[g.rng.IntN(len(doors))]], 0
 		}
 	}
 	return actWait, 0
@@ -433,7 +452,7 @@ func (g *Game) botControl() (string, int) {
 				continue
 			}
 			gain := now - near(m.X+dirDX[d], m.Y+dirDY[d])
-			if gain > bestGain || (gain == bestGain && gain > 0 && rand.IntN(2) == 0) {
+			if gain > bestGain || (gain == bestGain && gain > 0 && g.rng.IntN(2) == 0) {
 				bestGain, bestID, bestDir = gain, m.ID, d
 			}
 		}

@@ -612,14 +612,18 @@ func TestEpilogue(t *testing.T) {
 
 // simulate spelar en hel omgång med en människa som bara väntar och tre
 // datorspelare. Timrar används inte; testet driver rundorna själv.
-func simulate(t *testing.T, sun int) (*Game, *Player) {
+func simulate(t *testing.T, sun int, seed ...uint64) (*Game, *Player) {
 	t.Helper()
 	d, _, err := loadData("data")
 	if err != nil {
 		t.Fatal(err)
 	}
 	d.AI.BetanketidMs = []int{3600000, 3600000} // timrarna ska aldrig hinna gå
-	g := NewGame(d, Config{Reveal: true, SunMax: sun, TurnTime: time.Hour, MinPlayers: 2})
+	cfg := Config{Reveal: true, SunMax: sun, TurnTime: time.Hour, MinPlayers: 2}
+	if len(seed) > 0 {
+		cfg.Seed = seed[0]
+	}
+	g := NewGame(d, cfg)
 	if n := g.AddBots(3); n != 3 {
 		t.Fatalf("lade till %d datorspelare", n)
 	}

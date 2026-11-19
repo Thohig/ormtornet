@@ -6,6 +6,17 @@ eller leder tornet.
 
 ## 2026-11-19
 
+### Frö för varje vandring
+
+- Varje vandring har ett frö som bestämmer slumpen: rummen, dörrarna,
+  fällorna, varelserna, striderna, ormkorten och AI-spelarnas val. Fröet
+  står i terminalen när vandringen börjar och på värdsidan under Vid
+  porten.
+- Med `-fro 1234` får den första vandringen det fröet. Gör vandrarna samma
+  drag blir tornet detsamma, rum för rum, så att en konstig vandring kan
+  spelas upp igen. Nästa vandring får ett nytt frö.
+- Texterna väljs fortfarande fritt, så samma frö kan ge andra ord.
+
 ### Kontroll av datafilerna
 
 - Tornet kontrollerar `data/` när det startar. Ett felstavat fält, en

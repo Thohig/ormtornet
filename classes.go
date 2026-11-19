@@ -5,7 +5,6 @@ package main
 // klass gör, styrt av dess id, och hur man väljer klass efter lobbyn.
 
 import (
-	"math/rand/v2"
 	"slices"
 	"strconv"
 	"time"
@@ -230,7 +229,7 @@ func (g *Game) botChooseClass(p *Player) {
 	if len(free) == 0 {
 		return
 	}
-	pick := free[rand.IntN(len(free))]
+	pick := free[g.rng.IntN(len(free))]
 	if p.bot != nil && p.bot.pers != nil {
 		for _, want := range p.bot.pers.Klasser {
 			if slices.Contains(free, want) {
@@ -260,7 +259,7 @@ func (g *Game) ensureClasses() {
 		if p.bot == nil {
 			g.logTo(p, g.data.Text("klass_slump"), "info")
 		}
-		g.chooseClass(p, free[rand.IntN(len(free))])
+		g.chooseClass(p, free[g.rng.IntN(len(free))])
 	}
 	g.botsChoose()
 }

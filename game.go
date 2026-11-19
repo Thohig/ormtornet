@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"log"
 	"math/rand/v2"
 	"sort"
 	"strconv"
@@ -56,6 +57,7 @@ type Config struct {
 	TurnTime     time.Duration
 	MinPlayers   int
 	Difficulty   string // id för ett förval i data/svarighet.json, tomt för standard
+	Seed         uint64 // frö för första vandringen, 0 för ett slumpat
 }
 
 type Dir int
@@ -270,6 +272,8 @@ type Game struct {
 	monsters      []*Monster
 	nextMonsterID int
 	controller    int          // id för den döda spelare som styr varelserna
+	rng           *rand.Rand   // tornets slump; samma frö ger samma torn
+	seed          uint64       // fröet för den pågående vandringen
 	pendingMove   *monsterMove // varelsens drag för rundan
 
 	usedClues map[string]bool // ledtrådar som redan har delats ut
@@ -298,7 +302,31 @@ func NewGame(d *Data, cfg Config) *Game {
 	g.rooms = newGrid[Room](g.size)
 	g.sunMax = g.scaledSun()
 	g.sun = g.sunMax
+	if cfg.Seed != 0 {
+		g.reseed(cfg.Seed) // också portarna i lobbyn följer fröet
+	} else {
+		g.reseed(rand.Uint64())
+	}
 	return g
+}
+
+// reseed ger tornet en ny slump med fröet seed.
+func (g *Game) reseed(seed uint64) {
+	g.seed = seed
+	g.rng = rand.New(rand.NewPCG(seed, seed^0x9e3779b97f4a7c15))
+}
+
+// seedWandering väljer fröet när en vandring börjar: det från -fro för den
+// första vandringen, annars ett slumpat. Samma frö och samma drag ger samma
+// rum, fällor, varelser och utfall.
+func (g *Game) seedWandering() {
+	seed := g.cfg.Seed
+	g.cfg.Seed = 0
+	if seed == 0 {
+		seed = rand.Uint64() % 1000000000
+	}
+	g.reseed(seed)
+	log.Printf("Vandringen börjar. Frö: %d (starta med -fro %d för samma torn)", seed, seed)
 }
 
 func (g *Game) inBounds(x, y int) bool { return x >= 0 && y >= 0 && x < g.size && y < g.size }
@@ -352,7 +380,7 @@ func (g *Game) build(x, y int, spawn bool) *Room {
 		return r
 	}
 	r.Kind = "rum"
-	r.TypeID = g.data.Rumstyper[rand.IntN(len(g.data.Rumstyper))].ID
+	r.TypeID = g.data.Rumstyper[g.rng.IntN(len(g.data.Rumstyper))].ID
 	var undecided []Dir
 	open := 0
 	for d := North; d <= West; d++ {
@@ -367,7 +395,7 @@ func (g *Game) build(x, y int, spawn bool) *Room {
 			r.Doors[d] = fd[d.Opp()]
 		} else {
 			undecided = append(undecided, d)
-			r.Doors[d] = rand.Float64() < doorChance
+			r.Doors[d] = g.rng.Float64() < doorChance
 		}
 		if r.Doors[d] {
 			open++
@@ -375,7 +403,7 @@ func (g *Game) build(x, y int, spawn bool) *Room {
 	}
 	// Minst två öppningar om det går, så att gångarna sällan blir återvändsgränder.
 	for open < 2 && len(undecided) > 0 {
-		i := rand.IntN(len(undecided))
+		i := g.rng.IntN(len(undecided))
 		if d := undecided[i]; !r.Doors[d] {
 			r.Doors[d] = true
 			open++
@@ -383,8 +411,8 @@ func (g *Game) build(x, y int, spawn bool) *Room {
 		undecided = append(undecided[:i], undecided[i+1:]...)
 	}
 	// Händelse: en varelse, en fälla eller ingenting.
-	if !(spawn && g.spawnMonster(x, y)) && rand.Float64() < g.data.Regler.Handelsechans {
-		if t := g.data.randomTrap(); t != nil {
+	if !(spawn && g.spawnMonster(x, y)) && g.rng.Float64() < g.data.Regler.Handelsechans {
+		if t := g.data.randomTrap(g.rng); t != nil {
 			r.Event = t.ID
 		}
 	}
@@ -982,7 +1010,7 @@ func (g *Game) drawCorners() {
 	if !g.hidesOthers() {
 		return
 	}
-	order := rand.Perm(len(g.corners()))
+	order := g.rng.Perm(len(g.corners()))
 	i := 0
 	for _, p := range g.players {
 		if p == nil {
@@ -1000,6 +1028,7 @@ func (g *Game) drawCorners() {
 
 func (g *Game) startGame() {
 	g.paused, g.awaiting = false, false
+	g.seedWandering()
 	// De som lämnade förra vandringen och inte kom tillbaka är inte med längre.
 	if g.dropAbsent() > 0 {
 		g.syncBots(true) // AI-spelare kan ta de lediga platserna
@@ -1201,7 +1230,7 @@ func (g *Game) resolve() {
 			active = append(active, p)
 		}
 	}
-	rand.Shuffle(len(active), func(i, j int) { active[i], active[j] = active[j], active[i] })
+	g.rng.Shuffle(len(active), func(i, j int) { active[i], active[j] = active[j], active[i] })
 	g.resolveFights(active)
 	for _, p := range active {
 		if p.Status == statusIn {
@@ -1438,11 +1467,11 @@ func (g *Game) move(p *Player, d Dir, depth int) {
 			target.Event = ""
 			t := g.data.trap(ev)
 			switch {
-			case t != nil && g.is(p, "sparfinnare") && rand.Float64() < g.classVal(p, "se_falla", 0):
+			case t != nil && g.is(p, "sparfinnare") && g.rng.Float64() < g.classVal(p, "se_falla", 0):
 				// Spårfinnaren ser fällan i tid. Tecknet visar att den finns.
 				target.Mark = t.Tecken
 				g.logTo(p, g.data.Text("klass_sparfinnare_falla", "falla", lowerFirst(t.Namn)), "info")
-			case t != nil && p.initiated && rand.Float64() < g.data.Avslojande.Invigd.Falla:
+			case t != nil && p.initiated && g.rng.Float64() < g.data.Avslojande.Invigd.Falla:
 				// Den invigde känner igen fällan för vad den är.
 				target.Mark = t.Tecken
 				g.logTo(p, g.data.Text("invigd_falla", "falla", lowerFirst(t.Namn)), "rost")

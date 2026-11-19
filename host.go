@@ -41,8 +41,9 @@ type hostView struct {
 	Reveal     bool         `json:"reveal"`
 	Players    []hostPlayer `json:"players"`
 	Settings   Settings     `json:"settings"`
-	Bots       int          `json:"bots"` // datorspelare som är med just nu
-	Size       int          `json:"size"` // tornets storlek i rum
+	Bots       int          `json:"bots"`           // datorspelare som är med just nu
+	Size       int          `json:"size"`           // tornets storlek i rum
+	Seed       uint64       `json:"seed,omitempty"` // vandringens frö, under och efter vandringen
 
 	Svarigheter []difficultyView `json:"svarigheter"` // förvalen att välja bland
 }
@@ -63,6 +64,9 @@ func (g *Game) HostView(visible bool) hostView {
 		MaxPlayers: maxPlayers, Reveal: g.cfg.Reveal, Players: []hostPlayer{},
 		Settings: settingsFrom(g.cfg), Bots: g.botCount(), Size: g.size,
 		Svarigheter: g.base.difficulties(),
+	}
+	if g.phase == phasePlay || g.phase == phaseEnd {
+		v.Seed = g.seed
 	}
 	for _, p := range g.players {
 		if p == nil {

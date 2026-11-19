@@ -6,7 +6,6 @@ package main
 // varandra för att förstå hela bilden.
 
 import (
-	"math/rand/v2"
 	"strconv"
 )
 
@@ -107,7 +106,7 @@ func (g *Game) dealCluesTo(pool map[string][]string, kind, class string, want fu
 			free = append(free, i)
 		}
 	}
-	rand.Shuffle(len(free), func(i, j int) { free[i], free[j] = free[j], free[i] })
+	g.rng.Shuffle(len(free), func(i, j int) { free[i], free[j] = free[j], free[i] })
 	for n, p := range receivers {
 		i := free[n%len(free)]
 		g.usedClues[key(i)] = true
@@ -136,7 +135,7 @@ func (g *Game) explainAll(p *Player) {
 	if len(lines) == 0 {
 		return
 	}
-	rand.Shuffle(len(lines), func(i, j int) { lines[i], lines[j] = lines[j], lines[i] })
+	g.rng.Shuffle(len(lines), func(i, j int) { lines[i], lines[j] = lines[j], lines[i] })
 	g.logTo(p, g.data.Avslojande.ForklaringRubrik, "dim")
 	for _, l := range lines {
 		g.logTo(p, l, "syn")

@@ -65,6 +65,7 @@ Flaggor:
 - `-ai 2` antal datorstyrda vandrare (0–7, eller 8 i spelledarläget)
 - `-svarighet normal` svårighet: `latt`, `normal`, `svar` eller `mardrom`
 - `-klasser=false` vandrarna väljer ingen klass
+- `-fro 0` frö för den första vandringen. Varje vandring skriver sitt frö i terminalen och på värdsidan. Startar du med samma frö och vandrarna gör samma drag blir tornet detsamma, rum för rum, så att en konstig vandring kan spelas upp igen. `0` ger ett slumpat frö
 - `-storlek 0` tornets storlek i rum: `9`, `11` eller `13`, eller `0` för automatisk (efter antalet vandrare). Ett torn blir aldrig för litet för alla
 - `-synlighet egen` vilka vandrare och rum man ser: `egen` (andra vandrare bara i samma rum, och bara egna rum på kartan), `moten` (andra vandrare bara i samma rum) eller `alla`
 - `-avslojande=false` stänger av avslöjandet, för spelare som redan känner till tornets hemlighet
@@ -654,6 +655,7 @@ Beskrivningarna för rummen ligger under nivåerna `"1"` till `"4"`.
 - `secret.go` viskningen och den invigde
 - `ai.go` datorstyrda vandrare
 - `data.go` läser in datafilerna
+- `validate.go` kontrollerar datafilerna när tornet startar
 - `ws.go` en liten websocket-implementation utan beroenden
 - `web/` klienten: HTML, CSS och JavaScript utan ramverk
   - `index.html` och `app.js` spelarsidan: introt, namnrutan, klassvalet

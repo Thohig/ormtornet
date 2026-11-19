@@ -4,7 +4,6 @@ package main
 // här står bara vad varje fälla gör.
 
 import (
-	"math/rand/v2"
 	"strconv"
 )
 
@@ -115,7 +114,7 @@ func (g *Game) trigger(p *Player, t *Trap, depth int) {
 			}
 		}
 		if len(doors) > 0 && depth < 2 {
-			g.move(p, doors[rand.IntN(len(doors))], depth+1)
+			g.move(p, doors[g.rng.IntN(len(doors))], depth+1)
 		}
 	case "klocka":
 		g.sun -= max(1, t.Sol)
@@ -145,7 +144,7 @@ func (g *Game) leaveCellar(p *Player) {
 			}
 		}
 	}
-	s := spots[rand.IntN(len(spots))]
+	s := spots[g.rng.IntN(len(spots))]
 	p.X, p.Y = s[0], s[1]
 	room := g.reveal(p.X, p.Y)
 	room.Event = "" // ingen ny fälla direkt efter källaren
@@ -168,14 +167,14 @@ func (g *Game) search(p *Player) {
 	}
 	room.Searched = true
 	p.stats.searched++
-	outcome := weighted(g.data.Sok.Vikter)
-	if outcome == "inget" && rand.Float64() < g.classVal(p, "foremal_i_stallet", 0) {
+	outcome := weighted(g.rng, g.data.Sok.Vikter)
+	if outcome == "inget" && g.rng.Float64() < g.classVal(p, "foremal_i_stallet", 0) {
 		outcome = "foremal" // tjuven hittar oftare något
 	}
 	switch outcome {
 	case "skatt":
 		lo, hi := g.data.Regler.SokSkattMin, g.data.Regler.SokSkattMax
-		n := lo + rand.IntN(max(1, hi-lo+1))
+		n := lo + g.rng.IntN(max(1, hi-lo+1))
 		n = max(1, int(float64(n)*g.classVal(p, "sok_guld", 1)))
 		p.Treasure += n
 		g.soundTo(p, "skatt")
@@ -201,7 +200,7 @@ func (g *Game) search(p *Player) {
 		g.findItem(p)
 	case "falla":
 		g.logTo(p, g.data.SearchText("falla"), "varn")
-		g.trigger(p, g.data.randomTrap(), 0)
+		g.trigger(p, g.data.randomTrap(g.rng), 0)
 	default:
 		// Kartritaren hittar alltid en hemlig gång om det går att göra en.
 		if g.is(p, "kartritare") {
@@ -234,7 +233,7 @@ func (g *Game) secretPassage(x, y int) (Dir, bool) {
 	if len(cand) == 0 {
 		return 0, false
 	}
-	d := cand[rand.IntN(len(cand))]
+	d := cand[g.rng.IntN(len(cand))]
 	room.Doors[d] = true
 	if n := &g.rooms[y+dirDY[d]][x+dirDX[d]]; n.Revealed {
 		n.Doors[d.Opp()] = true

@@ -5,7 +5,6 @@ package main
 // kvar, desto större är risken att ormen vaknar.
 
 import (
-	"math/rand/v2"
 	"strconv"
 )
 
@@ -61,7 +60,7 @@ func (g *Game) buildDeck() {
 			g.deck = append(g.deck, c.ID)
 		}
 	}
-	rand.Shuffle(len(g.deck), func(i, j int) { g.deck[i], g.deck[j] = g.deck[j], g.deck[i] })
+	g.rng.Shuffle(len(g.deck), func(i, j int) { g.deck[i], g.deck[j] = g.deck[j], g.deck[i] })
 }
 
 // sleepLevel säger hur djupt ormen sover: 0 djupt, 1 oroligt, 2 nära att vakna.
@@ -112,10 +111,10 @@ func (g *Game) take(p *Player) {
 	if len(g.deck) == 0 {
 		g.buildDeck()
 	}
-	i := rand.IntN(len(g.deck))
+	i := g.rng.IntN(len(g.deck))
 	i = g.flute(p, i)
 	// Ormen känner den som vet: ibland drar den invigde ett vakna-kort.
-	if p.initiated && rand.Float64() < g.data.Avslojande.Invigd.Vacker {
+	if p.initiated && g.rng.Float64() < g.data.Avslojande.Invigd.Vacker {
 		for j, id := range g.deck {
 			if c := g.data.card(id); c != nil && c.Vaknar {
 				i = j
@@ -148,7 +147,7 @@ func (g *Game) take(p *Player) {
 	}
 
 	o := &g.data.Ormen
-	n := o.SkattMin + rand.IntN(max(1, o.SkattMax-o.SkattMin+1))
+	n := o.SkattMin + g.rng.IntN(max(1, o.SkattMax-o.SkattMin+1))
 	n = int(float64(n) * g.classVal(p, "kammar_guld", 1))
 	p.Treasure += n
 	p.stats.takes++
@@ -206,7 +205,7 @@ func (g *Game) wakeSerpent() {
 		}
 		if len(doors) > 0 {
 			p.Stuck = 0
-			g.move(p, doors[rand.IntN(len(doors))], 2)
+			g.move(p, doors[g.rng.IntN(len(doors))], 2)
 		}
 	}
 	g.wakes++

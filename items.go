@@ -65,7 +65,7 @@ func (d *Data) maxItems() int {
 }
 
 // randomItem drar ett föremål efter vikterna, eller "" om det inte finns några.
-func (d *Data) randomItem() string {
+func (d *Data) randomItem(rng *rand.Rand) string {
 	w := map[string]int{}
 	for _, t := range d.Foremal.Lista {
 		if t.Vikt > 0 {
@@ -75,7 +75,7 @@ func (d *Data) randomItem() string {
 	if len(w) == 0 {
 		return ""
 	}
-	return weighted(w)
+	return weighted(rng, w)
 }
 
 // has ger föremålet id i vandrarens väska, eller nil.
@@ -114,7 +114,7 @@ func (g *Game) give(p *Player, id string) bool {
 // findItem: vandraren hittar ett föremål när den söker. Är väskan full blir
 // föremålet kvar i rummet, åt den som kommer efter.
 func (g *Game) findItem(p *Player) {
-	id := g.data.randomItem()
+	id := g.data.randomItem(g.rng)
 	t := g.data.itemType(id)
 	if t == nil {
 		g.soundTo(p, "inget")
@@ -408,7 +408,7 @@ func (g *Game) flute(p *Player, i int) int {
 	if c := g.data.card(g.deck[i]); c == nil || !c.Vaknar || !g.useItem(p, "flojt") {
 		return i
 	}
-	return rand.IntN(len(g.deck))
+	return g.rng.IntN(len(g.deck))
 }
 
 // readLetter: ett brev från en tidigare vandrare läses direkt. Texten följer
