@@ -787,10 +787,12 @@ function checkRoundCard() {
 $("roundcard").addEventListener("click", hideRoundCard);
 
 // Teckenförklaringen uppe till vänster på kartan: de tecken som står i
-// rummen just nu. Texterna kommer från tecken_* i data/texter.json, och
-// fällor och varelser förklaras med sina namn. Den går att fälla ihop.
+// rummen just nu, under varandra. Betydelsen syns när musen är över ett
+// tecken, eller efter ett tryck på det, som med tecknen till höger. Texterna
+// kommer från tecken_* i data/texter.json, och fällor och varelser förklaras
+// med sina namn. Den går att fälla ihop.
 let signTexts = {};
-let legendOpen = !(window.matchMedia && matchMedia("(max-width: 700px)").matches);
+let legendOpen = true;
 try {
   const saved = localStorage.getItem("ormtornet-tecken");
   if (saved) legendOpen = saved === "1";
@@ -801,20 +803,19 @@ function renderLegend(list) {
   list.forEach((e) => {
     const text = e.name || signTexts[e.key.split(":")[0]];
     if (!text) return;
-    const row = document.createElement("div");
-    row.className = "sign";
     const g = document.createElement("span");
-    g.className = "glyph";
+    g.className = "sign glyph";
     g.textContent = e.glyph;
     g.style.color = e.color;
-    const w = document.createElement("span");
-    w.className = "what";
-    w.textContent = text;
-    row.append(g, w);
-    box.appendChild(row);
+    g.dataset.tip = text;
+    g.dataset.slot = "tecken:" + e.key;
+    g.tabIndex = 0;
+    g.setAttribute("aria-label", text);
+    box.appendChild(g);
   });
   $("legend").hidden = box.childElementCount === 0;
   showLegendOpen();
+  if (tipKey.startsWith("tecken:")) restoreTip();
 }
 function showLegendOpen() {
   $("legendList").hidden = !legendOpen;
@@ -838,6 +839,13 @@ function showTip(el) {
   const w = tip.offsetWidth;
   // Under tecknet, inom fönstret. Tecknen på kartan står till höger, så
   // förklaringen slutar där tecknet slutar; prickarna börjar där de börjar.
+  // Teckenförklaringen står till vänster, så där hamnar förklaringen
+  // bredvid tecknet.
+  if (el.closest("#legend")) {
+    tip.style.top = r.top - 4 + "px";
+    tip.style.left = Math.min(window.innerWidth - w - 4, r.right + 8) + "px";
+    return;
+  }
   const left = el.closest("#crew") ? r.left : r.right - w;
   tip.style.top = r.bottom + 6 + "px";
   tip.style.left = Math.max(4, Math.min(window.innerWidth - w - 4, left)) + "px";
@@ -847,7 +855,7 @@ function hideTip() {
   tipKey = "";
 }
 // Tecknen på kartan och prickarna i översta raden har samma förklaringar.
-for (const id of ["hud", "crew"]) {
+for (const id of ["hud", "crew", "legend"]) {
   const area = $(id);
   area.addEventListener("mouseover", (e) => {
     if (touch) return; // på en pekskärm är det trycket som räknas
@@ -871,19 +879,21 @@ for (const id of ["hud", "crew"]) {
     const el = e.target.closest("[data-tip]:not(button)");
     if (!el) return;
     e.stopPropagation();
-    if (!$("tip").hidden && tipKey === keyOf(el)) hideTip();
+    // Med en mus visas den redan när musen är över tecknet, så där
+    // visar ett klick den bara.
+    if (touch && !$("tip").hidden && tipKey === keyOf(el)) hideTip();
     else showTip(el);
   });
 }
 // Ett tryck någon annanstans döljer förklaringen.
 document.addEventListener("click", (e) => {
-  if (touch && tipKey && !e.target.closest("#hud, #crew")) hideTip();
+  if (tipKey && !e.target.closest("#hud, #crew, #legend")) hideTip();
 });
 
 // restoreTip visar förklaringen igen efter att läget har ritats om.
 function restoreTip() {
   if (!tipKey) return;
-  const el = [...document.querySelectorAll("#hud [data-tip], #crew [data-tip]")].find((x) => keyOf(x) === tipKey);
+  const el = [...document.querySelectorAll("#hud [data-tip], #crew [data-tip], #legend [data-tip]")].find((x) => keyOf(x) === tipKey);
   if (el) showTip(el);
   else hideTip();
 }

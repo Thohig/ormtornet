@@ -6,6 +6,16 @@ eller leder tornet.
 
 ## 2026-11-19
 
+### Teckenförklaringen visar bara tecknen
+
+- Teckenförklaringen uppe till vänster på kartan visar bara tecknen,
+  under varandra, så att den skymmer mindre av kartan.
+- Vad ett tecken betyder syns när musen är över det, eller efter ett
+  klick eller tryck på det, som med tecknen uppe till höger. Ett tryck
+  till, eller ett tryck någon annanstans, döljer förklaringen.
+- Den är utfälld från början även på en telefon. Den som har fällt ihop
+  den har den fortfarande hopfälld.
+
 ### Hela tornet på engelska
 
 - Med Språk: English på värdsidan är allt på engelska: spelarsidan,

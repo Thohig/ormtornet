@@ -392,11 +392,18 @@ body[data-niva="4"] #crt::after { animation: throb 0.95s infinite; }
 #legendBtn:hover, #legendBtn:focus-visible { color: var(--hi); outline: none; }
 #legendBtn::after { content: " ▾"; }
 #legendBtn[aria-expanded="false"]::after { content: " ▸"; }
-#legendList { margin-top: 3px; }
+#legendList { display: flex; flex-direction: column; align-items: flex-start; margin-top: 3px; }
 #legendList[hidden] { display: none; }
-.sign { display: flex; gap: 6px; line-height: 1.35; }
-.sign .glyph { flex: 0 0 1.2em; text-align: center; font-weight: bold; }
-.sign .what { color: var(--fg); }
+.sign {
+  min-width: 1.4em;
+  padding: 1px 0;
+  font-size: 15px;
+  font-weight: bold;
+  line-height: 1.35;
+  text-align: center;
+  cursor: pointer;
+}
+.sign:focus-visible { outline: 1px solid var(--chalkline); outline-offset: 1px; }
 /* Zoomen nere till höger på kartan. */
 #zoom {
   position: absolute;
