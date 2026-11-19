@@ -57,6 +57,7 @@ type Config struct {
 	TurnTime     time.Duration
 	MinPlayers   int
 	Difficulty   string // id för ett förval i data/svarighet.json, tomt för standard
+	Lang         string // språket: "sv" eller "en" (se lang.go)
 	Seed         uint64 // frö för första vandringen, 0 för ett slumpat
 }
 

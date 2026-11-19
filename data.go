@@ -14,7 +14,7 @@ import (
 	"strings"
 )
 
-//go:embed data/*.json
+//go:embed data/*.json data/en/*.json
 var embeddedData embed.FS
 
 // Trap är en fälla. Vad den gör styrs av id:t i koden; siffror och texter
@@ -154,20 +154,50 @@ type IntroData struct {
 // Filerna i datamappen. Alla läses in i samma struktur; "texter" slås ihop.
 var dataFiles = []string{"texter.json", "fallor.json", "ormen.json", "monster.json", "avslojande.json", "ai.json", "svarighet.json", "klasser.json", "foremal.json"}
 
-// loadData läser filerna i mappen dir. Saknas en fil används den inbyggda kopian.
+// loadData läser filerna i mappen dir på svenska. Saknas en fil används den
+// inbyggda kopian.
 func loadData(dir string) (*Data, string, error) {
+	return loadDataLang(dir, langSv)
+}
+
+// readDataFile läser den svenska datafilen name ur dir, eller den inbyggda
+// kopian om den saknas.
+func readDataFile(dir, name string) ([]byte, string, error) {
+	path := filepath.Join(dir, name)
+	raw, err := os.ReadFile(path)
+	if errors.Is(err, os.ErrNotExist) {
+		raw, err = embeddedData.ReadFile("data/" + name)
+		path = name + " (inbyggd)"
+	}
+	return raw, path, err
+}
+
+// loadDataLang läser datafilerna och lägger översättningen till lang över
+// dem (se lang.go). Text som inte är översatt står kvar på svenska.
+func loadDataLang(dir, lang string) (*Data, string, error) {
 	d := &Data{Texter: map[string][]string{}}
 	var sources []string
 	for _, name := range dataFiles {
-		path := filepath.Join(dir, name)
-		raw, err := os.ReadFile(path)
-		src := path
-		if errors.Is(err, os.ErrNotExist) {
-			raw, err = embeddedData.ReadFile("data/" + name)
-			src = name + " (inbyggd)"
-		}
+		raw, src, err := readDataFile(dir, name)
 		if err != nil {
 			return nil, "", err
+		}
+		tr, trSrc, err := readTranslation(dir, langOrDefault(lang), name)
+		if err != nil {
+			return nil, "", err
+		}
+		if tr != nil {
+			rep, err := checkTranslation(raw, tr)
+			if err == nil && len(rep.problems) > 0 {
+				err = errors.New(strings.Join(rep.problems, "; "))
+			}
+			if err == nil {
+				raw, err = translateJSON(raw, tr)
+			}
+			if err != nil {
+				return nil, "", fmt.Errorf("%s: %w", trSrc, err)
+			}
+			src += " + " + trSrc
 		}
 		var part Data
 		if err := decodeStrict(raw, &part); err != nil {

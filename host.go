@@ -160,9 +160,9 @@ func (g *Game) Close() {
 
 // hostHooks är det värdsidan behöver från resten av programmet.
 type hostHooks struct {
-	Close func()                // stänger tornet
-	Save  func(Settings) error  // sparar inställningarna till nästa gång
-	Load  func() (*Data, error) // läser och kontrollerar datafilerna
+	Close func()                           // stänger tornet
+	Save  func(Settings) error             // sparar inställningarna till nästa gång
+	Load  func(lang string) (*Data, error) // läser och kontrollerar datafilerna på språket lang
 }
 
 // hostAction kräver förutom att förfrågan kommer från den här datorn ett
@@ -212,7 +212,7 @@ func addHostRoutes(mux *http.ServeMux, web fs.FS, game *Game, addrs hostAddrs, h
 			writeJSON(w, http.StatusNotImplemented, map[string]string{"fel": "Innehållet kan inte läsas om här."})
 			return
 		}
-		d, err := hooks.Load()
+		d, err := hooks.Load(game.Settings().Sprak)
 		if err != nil {
 			writeJSON(w, http.StatusUnprocessableEntity, map[string]string{"fel": "Innehållet lästes inte in, tornet behåller det gamla. " + err.Error()})
 			return
@@ -229,9 +229,31 @@ func addHostRoutes(mux *http.ServeMux, web fs.FS, game *Game, addrs hostAddrs, h
 			writeJSON(w, http.StatusBadRequest, map[string]string{"fel": "Kunde inte läsa inställningarna."})
 			return
 		}
+		lang := game.Settings().Sprak
 		got, err := game.ApplySettings(s)
 		if err != nil {
 			writeJSON(w, http.StatusConflict, map[string]any{"fel": "Inställningarna kan ändras när omgången är slut.", "settings": got})
+			return
+		}
+		// Ett nytt språk betyder nya texter. De gäller som när innehållet
+		// läses om: genast i lobbyn, annars från nästa torn.
+		if got.Sprak != lang && hooks.Load != nil {
+			d, err := hooks.Load(got.Sprak)
+			if err != nil {
+				writeJSON(w, http.StatusOK, map[string]any{"settings": got, "varning": "Språket kunde inte läsas in, tornet behåller det gamla. " + err.Error()})
+				return
+			}
+			text := "Sparat. Språket gäller nu, och tornet är byggt på nytt."
+			if !game.ReloadData(d) {
+				text = "Sparat. Språket gäller från nästa torn."
+			}
+			if hooks.Save != nil {
+				if err := hooks.Save(got); err != nil {
+					writeJSON(w, http.StatusOK, map[string]any{"settings": got, "varning": "Gäller, men kunde inte sparas till nästa gång: " + err.Error()})
+					return
+				}
+			}
+			writeJSON(w, http.StatusOK, map[string]any{"settings": got, "text": text})
 			return
 		}
 		if hooks.Save != nil {

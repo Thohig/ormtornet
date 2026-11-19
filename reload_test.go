@@ -67,7 +67,7 @@ func TestReloadRoute(t *testing.T) {
 		return strings.Replace(s, `"vandra_chans"`, `"vandar_chans"`, 1)
 	})
 	mux := http.NewServeMux()
-	addHostRoutes(mux, nil, g, hostAddrs{}, hostHooks{Close: func() {}, Load: func() (*Data, error) {
+	addHostRoutes(mux, nil, g, hostAddrs{}, hostHooks{Close: func() {}, Load: func(string) (*Data, error) {
 		d, _, err := loadData(dir)
 		return d, err
 	}})

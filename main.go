@@ -43,6 +43,7 @@ func main() {
 	abandoned := flag.Duration("autostopp-max", 12*time.Hour, "stäng tornet när ingen har gjort något så här länge, även om flikar står öppna (0 = aldrig)")
 	simulate := flag.Int("simulera", 0, "spela så många vandringar med bara AI-spelare (-ai, förval 4) och skriv hur det gick, utan att öppna tornet")
 	check := flag.Bool("kontrollera", false, "kontrollera datafilerna och avsluta")
+	lang := flag.String("sprak", defaultSettings.Sprak, "språket i spelet och på värdsidan: sv eller en (texter som inte är översatta visas på svenska)")
 	flag.Parse()
 
 	// Spelledarens sparade inställningar gäller, utom det som anges med
@@ -71,17 +72,24 @@ func main() {
 			settings.Klasser = *classes
 		case "storlek":
 			settings.Storlek = *size
+		case "sprak":
+			settings.Sprak = *lang
 		}
 	})
 	cfg := settings.config()
 	cfg.Seed = *seed
 
-	data, src, err := loadData(*dataPath)
+	data, src, err := loadDataLang(*dataPath, cfg.Lang)
 	if err != nil {
 		log.Fatalf("kunde inte läsa datafilerna: %v", err)
 	}
 	if *check {
 		fmt.Println("Datafilerna är i ordning:", src)
+		for _, l := range languages[1:] {
+			if err := printTranslationStatus(*dataPath, l); err != nil {
+				log.Fatalf("översättningen till %s: %v", l, err)
+			}
+		}
 		return
 	}
 	if *simulate > 0 {
@@ -159,8 +167,8 @@ func main() {
 	addHostRoutes(mux, sub, game, addrs, hostHooks{
 		Close: closeTower,
 		Save:  func(s Settings) error { return saveSettings(*settingsPath, s) },
-		Load: func() (*Data, error) {
-			d, _, err := loadData(*dataPath)
+		Load: func(lang string) (*Data, error) {
+			d, _, err := loadDataLang(*dataPath, lang)
 			return d, err
 		},
 	})

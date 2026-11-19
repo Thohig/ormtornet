@@ -65,6 +65,7 @@ Flaggor:
 - `-ai 2` antal datorstyrda vandrare (0–7, eller 8 i spelledarläget)
 - `-svarighet normal` svårighet: `latt`, `normal`, `svar` eller `mardrom`
 - `-klasser=false` vandrarna väljer ingen klass
+- `-sprak en` språket i spelet och på värdsidan: `sv` eller `en`. Det som inte är översatt visas på svenska (se Språk nedan)
 - `-simulera 500` spelar 500 vandringar med bara AI-spelare och skriver hur det gick, utan att öppna tornet (se Simulera nedan)
 - `-kontrollera` kontrollerar datafilerna och avslutar, utan att öppna tornet
 - `-fro 0` frö för den första vandringen. Varje vandring skriver sitt frö i terminalen och på värdsidan. Startar du med samma frö och vandrarna gör samma drag blir tornet detsamma, rum för rum, så att en konstig vandring kan spelas upp igen. `0` ger ett slumpat frö
@@ -101,7 +102,7 @@ människa kommit in en och en halv minut efter att sidan öppnades fälls
 Kommer någon inte in? ut av sig själv.
 
 Under Inför nästa vandring väljer spelledaren det här. Svårighet,
-AI-spelare, Solnedgång, Turtid och Spelledarläge syns direkt. Resten ligger
+AI-spelare, Solnedgång, Turtid, Spelledarläge och Språk syns direkt. Resten ligger
 under Fler inställningar, som visar de nuvarande valen i korthet tills man
 fäller ut den.
 
@@ -119,6 +120,7 @@ fäller ut den.
 | Tornets storlek | automatisk, 9, 11 eller 13 rum | automatisk |
 | Klasser | på eller av | på |
 | Spelledarläge | på eller av | av |
+| Språk | svenska eller English | svenska |
 
 Under Vid porten står hur stort tornet blir och hur många rundor solen
 har. AI-spelare kommer och går direkt i lobbyn, och tornet byggs om i
@@ -655,6 +657,29 @@ Fält som börjar med `_` är kommentarer och får stå var som helst.
 - `avslojande.json` nivågränser, ledtrådar, texter vid nivåbyte, nya
   förklaringar till fällorna och epilogen. Rumsbeskrivningarna för varje
   nivå (`"1"` till `"4"`) ligger i `texter.json`.
+- `en/` översättningarna till engelska (se Språk nedan)
+
+### Språk
+
+Tornet kan visas på svenska eller engelska. Spelledaren väljer under Inför
+nästa vandring på värdsidan, eller med `-sprak en`. Bytet gäller genast i
+lobbyn, där tornet byggs om, och annars från nästa torn.
+
+De svenska filerna är grunden. Översättningen ligger i `data/en/` med samma
+filnamn och innehåller bara texter. Siffror och val står bara i de svenska
+filerna, så att en ändring av balansen görs på ett ställe. Listor som
+klasser, varelser, fällor och svårigheter kopplas ihop med sina id:n:
+
+```json
+{ "klasser": [ { "id": "kartritare", "namn": "The Mapmaker" } ] }
+```
+
+Det som inte är översatt visas på svenska. Tornet vägrar starta på
+engelska om översättningen har ett fält som inte finns på svenska, ett id
+som inte finns, ett tal, eller en platshållare som `{namn}` som den
+svenska texten inte har. `-kontrollera` skriver hur många texter i varje
+fil som är översatta. Spelarsidans och värdsidans egna texter är ännu
+inte översatta; se [docs/engelska.md](docs/engelska.md).
 
 ### Svårighet
 
@@ -708,6 +733,7 @@ Beskrivningarna för rummen ligger under nivåerna `"1"` till `"4"`.
 - `validate.go` kontrollerar datafilerna när tornet startar
 - `reload.go` läser om datafilerna från värdsidan
 - `simulate.go` simulerar vandringar med bara AI-spelare (`-simulera`)
+- `lang.go` språken: översättningarna i `data/en/` läggs över de svenska texterna
 - `ws.go` en liten websocket-implementation utan beroenden
 - `web/` klienten: HTML, CSS och JavaScript utan ramverk
   - `index.html` och `app.js` spelarsidan: introt, namnrutan, klassvalet

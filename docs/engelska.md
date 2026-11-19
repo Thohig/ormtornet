@@ -6,7 +6,10 @@ värdsidan och spelets texter.
 
 ## Läget
 
-Inget är byggt. Steg 1 är nästa steg.
+Steg 1 är byggt: inställningen Språk på värdsidan, `-sprak`, inläsningen
+av `data/en/` och kontrollen. Svårigheternas namn och beskrivningar är
+översatta (`data/en/svarighet.json`), så att bytet syns. Steg 2 är nästa
+steg.
 
 ## Beslut
 

@@ -1,0 +1,154 @@
+package main
+
+import (
+	"encoding/json"
+	"net/http"
+	"net/http/httptest"
+	"os"
+	"path/filepath"
+	"strings"
+	"testing"
+)
+
+// withTranslation ger en datamapp med de svenska filerna och en engelsk fil.
+func withTranslation(t *testing.T, name, content string) string {
+	t.Helper()
+	dir := dataWith(t, "", func(s string) string { return s })
+	if err := os.MkdirAll(filepath.Join(dir, langEn), 0o755); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(dir, langEn, name), []byte(content), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	return dir
+}
+
+func TestDataLoadsInEveryLanguage(t *testing.T) {
+	for _, lang := range languages {
+		if _, _, err := loadDataLang("data", lang); err != nil {
+			t.Fatalf("%s: %v", lang, err)
+		}
+	}
+}
+
+// En översättning byter texterna men inte siffrorna, och det som inte är
+// översatt står kvar på svenska.
+func TestTranslationKeepsNumbers(t *testing.T) {
+	dir := withTranslation(t, "klasser.json", `{"klasser": [
+		{"id": "kartritare", "namn": "The Mapmaker", "styrka": "Sees {inget} through doors."}
+	]}`)
+	if _, _, err := loadDataLang(dir, langEn); err == nil || !strings.Contains(err.Error(), "{inget}") {
+		t.Fatalf("en okänd platshållare ska ge fel, fick %v", err)
+	}
+	dir = withTranslation(t, "klasser.json", `{"klasser": [
+		{"id": "kartritare", "namn": "The Mapmaker", "beskrivning": "Has drawn maps."}
+	]}`)
+	sv, _, err := loadDataLang(dir, langSv)
+	if err != nil {
+		t.Fatal(err)
+	}
+	en, src, err := loadDataLang(dir, langEn)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !strings.Contains(src, filepath.Join(langEn, "klasser.json")) {
+		t.Fatalf("källorna nämner inte översättningen: %s", src)
+	}
+	a, b := sv.class("kartritare"), en.class("kartritare")
+	if b.Namn != "The Mapmaker" || b.Beskrivning != "Has drawn maps." {
+		t.Fatalf("inte översatt: %+v", b)
+	}
+	if b.Styrka != a.Styrka || b.Liv != a.Liv || b.Drycker != a.Drycker || len(b.Varden) != len(a.Varden) {
+		t.Fatalf("det som inte är översatt ska vara som på svenska: %+v", b)
+	}
+	if en.class("legoknekt").Namn != sv.class("legoknekt").Namn {
+		t.Fatal("en klass som inte är översatt ska stå kvar på svenska")
+	}
+}
+
+func TestTranslationOnlyTexts(t *testing.T) {
+	for _, c := range []struct{ name, content, want string }{
+		{"klasser.json", `{"klasser": [{"id": "kartritare", "liv": 2}]}`, "bara innehålla texter"},
+		{"klasser.json", `{"klasser": [{"id": "trollkarl", "namn": "Wizard"}]}`, "trollkarl"},
+		{"klasser.json", `{"klasser": [{"id": "kartritare", "nam": "Mapmaker"}]}`, "nam"},
+		{"svarighet.json", `{"svarighet": {"standard": "svar"}}`, "översätts inte"},
+		{"ai.json", `{"ai": {"personligheter": [{"id": "djarv", "klasser": ["thief"]}]}}`, "översätts inte"},
+	} {
+		dir := withTranslation(t, c.name, c.content)
+		if _, _, err := loadDataLang(dir, langEn); err == nil || !strings.Contains(err.Error(), c.want) {
+			t.Errorf("%s: ville ha ett fel om %q, fick %v", c.content, c.want, err)
+		}
+	}
+}
+
+// Svenska läser aldrig översättningarna, även om de är trasiga.
+func TestSwedishIgnoresTranslations(t *testing.T) {
+	dir := withTranslation(t, "klasser.json", `{"klasser": [{"id": "kartritare", "liv": 2}]}`)
+	if _, _, err := loadDataLang(dir, langSv); err != nil {
+		t.Fatal(err)
+	}
+}
+
+func TestTranslationStatus(t *testing.T) {
+	status, err := translationStatus("data", langEn)
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, s := range status {
+		if s.Done > s.Texts {
+			t.Errorf("%s: %d av %d", s.File, s.Done, s.Texts)
+		}
+		if s.File == "svarighet.json" && (s.Texts == 0 || s.Done != s.Texts) {
+			t.Errorf("svårigheterna ska vara översatta: %d av %d", s.Done, s.Texts)
+		}
+	}
+}
+
+// Byter spelledaren språk på värdsidan läses texterna in på nytt.
+func TestSettingsChangeLanguage(t *testing.T) {
+	g := testGame(t)
+	var asked string
+	var saved Settings
+	mux := http.NewServeMux()
+	addHostRoutes(mux, nil, g, hostAddrs{}, hostHooks{
+		Close: func() {},
+		Save:  func(s Settings) error { saved = s; return nil },
+		Load: func(lang string) (*Data, error) {
+			asked = lang
+			d, _, err := loadDataLang("data", lang)
+			return d, err
+		},
+	})
+	post := func(body string) map[string]any {
+		r := httptest.NewRequest("POST", "/spelledare/installningar", strings.NewReader(body))
+		r.RemoteAddr = "127.0.0.1:5000"
+		r.Header.Set("X-Ormtornet", "spelledare")
+		w := httptest.NewRecorder()
+		mux.ServeHTTP(w, r)
+		var out map[string]any
+		json.NewDecoder(w.Body).Decode(&out)
+		if w.Code != http.StatusOK {
+			t.Fatalf("kod %d: %v", w.Code, out)
+		}
+		return out
+	}
+	out := post(`{"ai":0,"min":2,"sol":40,"turtid":30,"avslojande":true,"sprak":"en","svarighet":"latt"}`)
+	if asked != langEn || saved.Sprak != langEn || g.Settings().Sprak != langEn {
+		t.Fatalf("frågade efter %q, sparade %q", asked, saved.Sprak)
+	}
+	if out["text"] == nil {
+		t.Fatalf("svaret säger inte att språket gäller: %v", out)
+	}
+	if s := g.base.difficulty("latt"); s == nil || s.Namn != "Easy" {
+		t.Fatalf("svårigheten heter %+v", s)
+	}
+	asked = ""
+	post(`{"ai":0,"min":2,"sol":40,"turtid":30,"avslojande":true,"sprak":"en"}`)
+	if asked != "" {
+		t.Fatal("texterna lästes om fast språket var detsamma")
+	}
+	post(`{"ai":0,"min":2,"sol":40,"turtid":30,"avslojande":true,"sprak":"xx"}`)
+	if g.Settings().Sprak != langSv || g.base.difficulty("latt").Namn != "Lätt" {
+		t.Fatal("ett okänt språk ska bli svenska")
+	}
+}

@@ -88,7 +88,7 @@ Skriv dit när ett steg är klart.
   föremålen och viskningen till tornet. Allt är byggt; avsnittet Inte
   byggt säger vad som återstår.
 - [docs/engelska.md](docs/engelska.md): engelska som språk, valt på
-  värdsidan. Planen är bestämd men inget är byggt; bygg ett steg i taget.
+  värdsidan. Planen är bestämd och steg 1 är byggt; bygg ett steg i taget.
 - [docs/synlighet.md](docs/synlighet.md): att vandrarna bara ser varandra
   när de möts, och på sikt bara sin egen karta. Alla tre stegen är
   byggda.

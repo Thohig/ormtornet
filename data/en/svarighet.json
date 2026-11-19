@@ -1,0 +1,27 @@
+{
+  "_om": "Engelsk översättning av svarighet.json. Bara texter; siffrorna står i den svenska filen. Nivåerna kopplas ihop med sina id:n.",
+  "svarighet": {
+    "nivaer": [
+      {
+        "id": "latt",
+        "namn": "Easy",
+        "beskrivning": "8 lives, fewer traps and creatures, the serpent sleeps deeper and bites softer"
+      },
+      {
+        "id": "normal",
+        "namn": "Normal",
+        "beskrivning": "as in the data files"
+      },
+      {
+        "id": "svar",
+        "namn": "Hard",
+        "beskrivning": "5 lives, more traps and creatures, the serpent wakes more easily"
+      },
+      {
+        "id": "mardrom",
+        "namn": "Nightmare",
+        "beskrivning": "4 lives, traps and creatures everywhere, the serpent sleeps lightly and bites hard"
+      }
+    ]
+  }
+}

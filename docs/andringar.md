@@ -6,6 +6,17 @@ eller leder tornet.
 
 ## 2026-11-19
 
+### Språk: svenska eller engelska
+
+- Värdsidan har en ny inställning, Språk, under Inför nästa vandring, och
+  tornet har flaggan `-sprak en`. Bytet gäller genast i lobbyn och annars
+  från nästa torn.
+- Engelskan läses från `data/en/`, med bara texter. Det som inte är
+  översatt visas på svenska. Än så länge är bara svårigheternas namn
+  översatta (Easy, Normal, Hard, Nightmare); resten kommer i nästa steg
+  enligt [engelska.md](engelska.md).
+- `-kontrollera` skriver hur många texter som är översatta.
+
 ### Kartritaren och örtkvinnan
 
 - Kartritaren börjar med en dryck.

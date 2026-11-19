@@ -308,6 +308,13 @@
       </select>
       <span class="note">då kan ingen spela från den här datorn</span>
 
+      <label for="sSprak">Språk</label>
+      <select id="sSprak" name="sprak">
+        <option value="sv">svenska</option>
+        <option value="en">English</option>
+      </select>
+      <span class="note">i spelet och här; det som inte är översatt står på svenska</span>
+
       <details id="moreSettings">
         <summary>Fler inställningar<span class="note" id="moreNote"></span></summary>
         <div class="grid">
@@ -934,7 +941,8 @@ function renderSettings(v) {
   if (saving || form.contains(document.activeElement)) return;
   const sv = $("sSv");
   const levels = v.svarigheter || [];
-  if (sv.options.length !== levels.length) {
+  // Byggs om när namnen ändras, till exempel när språket byts.
+  if ([...sv.options].map((o) => o.text).join("|") !== levels.map((l) => l.namn).join("|")) {
     sv.innerHTML = "";
     levels.forEach((l) => sv.append(new Option(l.namn, l.id)));
   }
@@ -964,6 +972,7 @@ function renderSettings(v) {
   $("sGM").value = s.spelledarlage ? "1" : "0";
   $("sKlass").value = s.klasser ? "1" : "0";
   $("sStorlek").value = String(s.storlek || 0);
+  $("sSprak").value = s.sprak || "sv";
 }
 
 function post(path, body) {
@@ -997,6 +1006,7 @@ $("settings").addEventListener("change", async () => {
     klasser: $("sKlass").value === "1",
     storlek: +$("sStorlek").value,
     svarighet: $("sSv").value,
+    sprak: $("sSprak").value,
   };
   saving = true;
   try {
@@ -1004,7 +1014,7 @@ $("settings").addEventListener("change", async () => {
     const data = await r.json().catch(() => ({}));
     if (!r.ok) say(data.fel || "Kunde inte ändra inställningarna.", true);
     else if (data.varning) say(data.varning, true);
-    else say("Sparat.");
+    else say(data.text || "Sparat.");
   } catch {
     say("Tornet svarar inte.", true);
   }
