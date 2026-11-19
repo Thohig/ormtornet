@@ -1469,6 +1469,8 @@ const KEYS = {
   ArrowUp: "N", ArrowRight: "E", ArrowDown: "S", ArrowLeft: "W",
   " ": "vanta", t: "ta", T: "ta", s: "sok", S: "sok", d: "drick", D: "drick",
   a: "anfall", A: "anfall", p: "parera", P: "parera", u: "undan", U: "undan",
+  // E (evade) är undanmanövern på engelska; båda bokstäverna fungerar på båda språken.
+  e: "undan", E: "undan",
 };
 document.addEventListener("keydown", (e) => {
   if (e.metaKey || e.ctrlKey || e.altKey) return;

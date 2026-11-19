@@ -6,6 +6,7 @@ import (
 	"net/http/httptest"
 	"os"
 	"path/filepath"
+	"regexp"
 	"strings"
 	"testing"
 )
@@ -150,5 +151,53 @@ func TestSettingsChangeLanguage(t *testing.T) {
 	post(`{"ai":0,"min":2,"sol":40,"turtid":30,"avslojande":true,"sprak":"xx"}`)
 	if g.Settings().Sprak != langSv || g.base.difficulty("latt").Namn != "Lätt" {
 		t.Fatal("ett okänt språk ska bli svenska")
+	}
+}
+
+// Varje textnyckel som sidorna och koden använder finns i datafilerna, på
+// svenska och, när översättningen är klar, på engelska. Nycklar som byggs
+// ihop i koden fångas inte här.
+func TestPageTextKeysExist(t *testing.T) {
+	sv, _, err := loadDataLang("data", langSv)
+	if err != nil {
+		t.Fatal(err)
+	}
+	re := regexp.MustCompile(`(?:\bt\(|data-t(?:-html|-title|-placeholder|-aria)?=)"([a-z0-9_]+)"`)
+	for file, texts := range map[string]map[string]string{
+		"web/index.html": sv.Spelarsidan, "web/app.js": sv.Spelarsidan,
+		"web/spelledare.html": sv.Vardsidan,
+	} {
+		raw, err := os.ReadFile(file)
+		if err != nil {
+			t.Fatal(err)
+		}
+		for _, m := range re.FindAllStringSubmatch(string(raw), -1) {
+			if m[1] == "nyckel" || strings.HasSuffix(m[1], "_") {
+				continue // ett exempel i en kommentar, eller början på en nyckel som byggs ihop
+			}
+			if _, ok := texts[m[1]]; !ok {
+				t.Errorf("%s använder %q, som inte finns i datafilerna", file, m[1])
+			}
+		}
+	}
+	goRe := regexp.MustCompile(`(?:HostText|hostErr|gmNote)\("([a-z0-9_]+)"|"(server_[a-z0-9_]+)"`)
+	files, _ := filepath.Glob("*.go")
+	for _, file := range files {
+		if strings.HasSuffix(file, "_test.go") {
+			continue
+		}
+		raw, _ := os.ReadFile(file)
+		for _, m := range goRe.FindAllStringSubmatch(string(raw), -1) {
+			key := m[1] + m[2]
+			if _, ok := sv.Vardsidan[key]; !ok {
+				t.Errorf("%s använder %q, som inte finns i vardsidan.json", file, key)
+			}
+		}
+	}
+	mapRaw, _ := os.ReadFile("web/map.js")
+	for _, m := range regexp.MustCompile(`name: "(zoom_[a-z]+)"`).FindAllStringSubmatch(string(mapRaw), -1) {
+		if _, ok := sv.Spelarsidan[m[1]]; !ok {
+			t.Errorf("web/map.js använder %q, som inte finns i spelarsidan.json", m[1])
+		}
 	}
 }
