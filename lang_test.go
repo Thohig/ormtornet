@@ -166,6 +166,7 @@ func TestPageTextKeysExist(t *testing.T) {
 	for file, texts := range map[string]map[string]string{
 		"web/index.html": sv.Spelarsidan, "web/app.js": sv.Spelarsidan,
 		"web/spelledare.html": sv.Vardsidan,
+		"web/bord.html":       sv.Vardsidan, "web/bord.js": sv.Vardsidan,
 	} {
 		raw, err := os.ReadFile(file)
 		if err != nil {

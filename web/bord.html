@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title data-t="bord_sidtitel"></title>
+<link rel="icon" href="/ikon.svg" type="image/svg+xml">
+<link rel="icon" href="/ikon.png" type="image/png" sizes="180x180">
+<link rel="apple-touch-icon" href="/ikon.png">
+<link rel="stylesheet" href="/style.css">
+<link rel="stylesheet" href="/spelledare.css">
+<style>
+  #host { max-width: 1100px; }
+  #off { color: var(--hi); margin-top: 24px; }
+  #gmTop { color: var(--fg); }
+  #gmTop .warn { color: var(--warn); }
+  #gmMapBox { position: relative; height: min(70vh, 640px); margin: 8px 0; }
+  /* Kartan till vänster och ingreppen till höger när skärmen är bred. */
+  #gmCols { display: grid; grid-template-columns: minmax(0, 1fr) minmax(300px, 38%); gap: 0 24px; align-items: start; }
+  #gmCtl .gmrow { margin: 6px 0 10px; }
+  #gmCtl .gmlabel { flex: 0 0 100%; min-width: 0; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; }
+  #gmCtl select { max-width: 100%; }
+  #gmPlace select { flex: 1 1 12ch; min-width: 0; }
+  #gmVoiceTo { flex: 0 1 auto; }
+  @media (max-width: 860px) {
+  #gmCols { display: block; }
+  #gmCtl .gmlabel { flex: 0 0 auto; min-width: 13ch; font-size: inherit; letter-spacing: 0; text-transform: none; }
+  }
+  #gmMap { position: absolute; left: 0; top: 0; }
+  .tablewrap { overflow-x: auto; }
+  #gmPlayers { border-collapse: collapse; width: 100%; font-size: 13px; }
+  #gmPlayers th { text-align: left; font-weight: normal; color: var(--fg); padding: 4px 10px 4px 0; }
+  #gmPlayers td { padding: 4px 10px 4px 0; vertical-align: top; }
+  #gmPlayers .cond { color: var(--warn); }
+  #gmPlayers .follow { background: none; border: 0; padding: 0; font: inherit; text-align: left; cursor: pointer; text-shadow: inherit; }
+  #gmPlayers .follow:hover, #gmPlayers .follow.on { text-decoration: underline; }
+  #gmFollow { color: var(--info); min-height: 1.2em; }
+  #gmPlayers .dead { opacity: 0.55; }
+  .gmrow { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px; margin: 8px 0; }
+  .gmlabel { color: var(--fg); min-width: 13ch; }
+  .gmrow select, .gmrow input {
+  background: var(--bg); color: var(--hi); border: 1px solid var(--dim); font: inherit; font-size: 13px; padding: 2px 6px;
+  }
+  .gmrow input { flex: 1 1 24ch; min-width: 16ch; }
+  .gmrow select:focus-visible, .gmrow input:focus-visible { outline: none; border-color: var(--fg); }
+  #gmMsg { min-height: 1.2em; color: var(--info); }
+  #gmMsg.err { color: var(--warn); }
+  #gmPlayers .give { white-space: nowrap; }
+  #gmPlayers .give button { margin: 0 2px 2px 0; }
+  #gmLog .gm { color: #e3b8f0; }
+  #gmLog .rost { color: #e3b8f0; }
+  #gmLog { max-height: 60vh; overflow-y: auto; font-size: 13px; line-height: 1.4; border-top: 1px solid var(--faint); padding-top: 6px; }
+  #gmLog div { margin: 2px 0; }
+  #gmLog .roundhead {
+  display: block; width: 100%; margin: 6px 0 2px; padding: 3px 0 2px;
+  border: 0; border-top: 1px solid var(--faint); background: none;
+  color: var(--fg); font: inherit; font-size: 11px; letter-spacing: 0.12em;
+  text-align: left; cursor: pointer;
+  }
+  #gmLog .round:first-child .roundhead { border-top: 0; margin-top: 0; }
+  #gmLog .roundhead:hover { color: var(--hi); }
+  #gmLog .who { color: var(--fg); }
+  #gmLog .varn { color: var(--warn); }
+  #gmLog .info { color: var(--info); }
+  #gmLog .syn { color: var(--hi); }
+  #gmLog .dim { color: var(--fg); }
+</style>
+</head>
+<body>
+<div id="crt">
+  <main id="host">
+    <h1 data-t="bord_rubrik"></h1>
+    <p class="dimtext"><span data-t="bord_om"></span> <a href="/spelledare" target="ormtornet-vard" data-t="bord_till_vardsidan"></a></p>
+
+    <div id="bar">
+      <span id="barPhase">…</span>
+      <span id="barWho"></span>
+      <span id="barBtns"><button class="btn main small" id="barMain" type="button" hidden></button></span>
+    </div>
+
+    <p id="off" hidden data-t="bord_av"></p>
+
+    <section id="gm" hidden>
+      <p id="gmTop"></p>
+      <div id="gmCols">
+      <div id="gmMapCol">
+        <div id="gmMapBox"><canvas id="gmMap"></canvas></div>
+        <p id="gmFollow"></p>
+        <p class="dimtext" data-t="gm_karta_hjalp"></p>
+      </div>
+      <div id="gmCtl">
+      <div class="gmrow">
+        <span class="gmlabel" data-t="gm_tid"></span>
+        <button class="btn small" type="button" id="gmPause" data-gm="paus" data-t="pausa"></button>
+        <button class="btn small" type="button" data-gm="mer_tid" data-t="gm_mer_tid"></button>
+        <button class="btn small" type="button" data-gm="avgor" data-t="gm_avgor"></button>
+        <button class="btn small" type="button" data-gm="sol" data-antal="-1" data-t="gm_sol_minus_1"></button>
+        <button class="btn small" type="button" data-gm="sol" data-antal="-5" data-t="gm_sol_minus_5"></button>
+        <button class="btn small" type="button" data-gm="sol" data-antal="1" data-t="gm_sol_plus_1"></button>
+      </div>
+      <div class="gmrow">
+        <span class="gmlabel" data-t="gm_ormen"></span>
+        <button class="btn small" type="button" data-gm="vack" data-t="gm_vack"></button>
+        <button class="btn small" type="button" data-gm="lugna" data-t="gm_lugna"></button>
+      </div>
+      <div class="gmrow" id="gmReveal">
+        <span class="gmlabel" data-t="gm_avslojandet"></span>
+        <button class="btn small" type="button" id="gmLevelUp" data-gm="niva_upp" data-t="gm_niva_upp"></button>
+        <button class="btn small" type="button" id="gmHold" data-gm="niva_hall" data-t="gm_niva_hall"></button>
+      </div>
+      <form class="gmrow" id="gmVoice" autocomplete="off">
+        <span class="gmlabel" data-t="gm_rost"></span>
+        <select id="gmVoiceTo"></select>
+        <input id="gmVoiceText" maxlength="200" data-t-placeholder="gm_rost_exempel">
+        <button class="btn small" type="submit" data-t="gm_sag"></button>
+      </form>
+      <form class="gmrow" id="gmPlace" autocomplete="off">
+        <span class="gmlabel" data-t="gm_i_rum"></span>
+        <select id="gmRoom"></select>
+        <select id="gmWhat"></select>
+        <button class="btn small" type="submit" data-t="gm_lagg_dit"></button>
+      </form>
+      <p id="gmMsg"></p>
+      </div>
+      </div>
+      <div class="tablewrap">
+        <table id="gmPlayers">
+          <thead><tr><th data-t="kol_vandrare"></th><th data-t="kol_var"></th><th data-t="kol_liv"></th><th data-t="kol_skatt"></th><th data-t="kol_drycker"></th><th data-t="kol_tillstand"></th><th data-t="kol_drag"></th><th data-t="kol_ge"></th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <details id="gmLogBox" open>
+        <summary><h2 data-t="logg"></h2></summary>
+        <div class="gmrow">
+          <span class="gmlabel" data-t="logg_visa"></span>
+          <select id="gmLogWho"></select>
+        </div>
+        <div id="gmLog"></div>
+      </details>
+    </section>
+  </main>
+</div>
+<script src="/texter/vardsidan.js"></script>
+<script src="/texter.js"></script>
+<script src="/map.js"></script>
+<script src="/bord.js"></script>
+</body>
+</html>

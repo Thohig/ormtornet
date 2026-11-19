@@ -29,8 +29,17 @@ Byggt (README beskriver hur det fungerar):
   spelledaren kan släppa pausen med Fortsätt.
 - Läs om innehållet i `data/` utan omstart, med felen på värdsidan om
   filerna inte går ihop. Vandringens frö visas under Vid porten.
+- Spelledarbordet på `/spelledare/bord`: översikten och ingreppen på en
+  egen sida, med en knapp dit från värdsidans rad.
 
-På gång: inget just nu.
+På gång: spelledarbordet, steg 2 och 3.
+
+- Steg 2: lobbyn och slutet på spelledarbordet (vilka som står vid porten
+  och deras klasser, krönikan och resultatet), att slå på spelledarläget
+  därifrån, och att introt på tornets dator leder dit när spelledarläget
+  är på.
+- Steg 3: värdsidan städas så att avsnitten inte längre byter plats, och
+  dokumentationen ses över.
 
 Inte byggt, och inte planerat just nu:
 

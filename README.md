@@ -91,12 +91,12 @@ och vad man kan göra om någon inte kommer in.
 Överst står en rad som följer med när sidan rullar: lobbyn, klassvalet,
 rundan och solen, eller att vandringen är slut, hur många människor och
 AI-spelare som är här och vilka som är borta. Där ligger också knappen som
-behövs just nu: Starta nu före vandringen och Pausa eller Fortsätt under
-vandringen i spelledarläget.
+behövs just nu: Starta nu före vandringen. I spelledarläget finns där
+också knappen Spelledarbordet (se nedan).
 
 Avsnitten byter plats efter fasen, så att det som behövs just nu står
 först. I lobbyn och klassvalet kommer Bjud in och Vid porten först. Under
-vandringen kommer översikten först, och Bjud in krymper till adressen och
+vandringen kommer Vid porten först, och Bjud in krymper till adressen och
 en knapp som kopierar den. När vandringen är slut kommer Inför nästa
 vandring först. Längst ner ligger Kommer någon inte in? och Läs om
 innehållet, hopfällda, och en liten knapp som stänger tornet. Har ingen
@@ -151,27 +151,38 @@ tillbaka innan vandringen är slut är inte med i nästa.
 
 Är ingen människa ansluten alls, till exempel när nätet försvinner för
 alla, väntar tornet: rundan står pausad tills någon kommer tillbaka, så att
-solen inte hinner gå ner medan AI:n spelar ensam. I spelledarläget syns
-det i översikten, och spelledaren kan släppa pausen med Fortsätt. En
+solen inte hinner gå ner medan AI:n spelar ensam. Raden säger att rundan
+är pausad, och i spelledarläget kan spelledaren släppa pausen med Fortsätt
+på spelledarbordet. En
 vandring med bara AI-spelare går som vanligt.
 
 Med "Spelledarläge: på" leder spelledaren tornet utan att spela. Ingen kan
 då ansluta som vandrare från spelledarens dator, och spelarna får veta att
 tornet har en spelledare. Spelledaren startar vandringen med Starta nu, även
-när alla vandrare är AI-spelare. Sidan visar då en översikt: hela tornet så
+när alla vandrare är AI-spelare.
+
+### Spelledarbordet
+
+Spelledaren leder vandringen på en egen sida, spelledarbordet på
+`http://localhost:8080/spelledare/bord`, som knappen Spelledarbordet på
+värdsidans rad öppnar. Den visas bara på tornets dator, som värdsidan.
+Inbjudan och inställningarna ligger kvar på värdsidan. Med spelledarläget av
+säger spelledarbordet bara det.
+
+Överst står samma rad som på värdsidan, med Starta nu före vandringen och
+Pausa eller Fortsätt under den. Sidan visar en översikt: hela tornet så
 långt det har vuxit fram, med fällor som väntar och alla varelser, varje
 vandrares plats, klass, liv, skatt, drycker, föremål, tillstånd och valda
 drag, vad var och en har viskat till tornet och vem som är invigd, hur djupt
 ormen sover och risken att den vaknar vid nästa näve, avslöjandets nivå och
-allt vandrarna har fått läsa. Vandrarnas logg är hopfälld tills man klickar
-på den. Där står den senaste rundan överst, de två senaste rundorna är
+allt vandrarna har fått läsa. Vandrarnas logg står längst ner. Där står den senaste rundan överst, de två senaste rundorna är
 öppna och de äldre fällda ihop, och loggen kan visa en vandrare i taget.
 
 På en bred skärm står kartan till vänster och ingreppen till höger, med
 tabellen över vandrarna under dem. Ett klick på en vandrares namn i
 tabellen låter kartan följa den vandraren, fem rum åt gången, och ett
-klick till visar hela tornet igen. I spelledarläget kan spelledaren också
-göra ingrepp under en vandring, och varje ingrepp skrivs i loggen:
+klick till visar hela tornet igen. Spelledaren kan också göra ingrepp
+under en vandring, och varje ingrepp skrivs i loggen:
 
 - **Tid:** pausa och fortsätta, ge rundan 30 sekunder till, avgöra rundan
   direkt, och flytta solen fram eller tillbaka (den går aldrig ner av ett
@@ -189,7 +200,7 @@ göra ingrepp under en vandring, och varje ingrepp skrivs i loggen:
 - **Den invigde:** inviga en vandrare, som om den hade viskat hemligheten,
   eller ta tillbaka det (bara med avslöjandet på).
 
-Utan spelledarläge visar sidan inga skatter, positioner eller drag, så spelledaren kan spela med i
+Utan spelledarläge visar värdsidan inga skatter, positioner eller drag, så spelledaren kan spela med i
 en annan flik ("Gå in själv", som leder till introt och sedan namnrutan). Andra datorer i nätverket kommer inte åt sidan.
 
 ## Spela
@@ -761,6 +772,8 @@ Beskrivningarna för rummen ligger under nivåerna `"1"` till `"4"`.
   - `index.html` och `app.js` spelarsidan: introt, namnrutan, klassvalet
     och spelet
   - `spelledare.html` värdsidan
+  - `bord.html` och `bord.js` spelledarbordet
+  - `spelledare.css` det som värdsidan och spelledarbordet har gemensamt
   - `map.js` ritar kartan som krita på en skiffertavla: väggarna är
     handritade streck, vandrarna prickar i sin färg (den egna med en ring)
     och varelser och märken tecken. Kartan visar bara det kända och

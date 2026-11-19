@@ -1,0 +1,59 @@
+/* Det som värdsidan (spelledare.html) och spelledarbordet (bord.html) har
+   gemensamt: sidans ram, rubrikerna, knapparna och raden överst. */
+html, body { overflow: auto; }
+#crt { min-height: 100%; height: auto; }
+#host {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 28px 20px 48px;
+}
+#host h1 {
+  font-size: 14px;
+  font-weight: normal;
+  letter-spacing: 0.4em;
+  color: var(--fg);
+  margin: 0 0 4px;
+}
+#host h2 {
+  font-size: 11px;
+  font-weight: normal;
+  letter-spacing: 0.3em;
+  color: var(--fg);
+  margin: 34px 0 10px;
+  text-transform: uppercase;
+}
+#host p { margin: 6px 0; line-height: 1.45; }
+.dimtext { color: var(--fg); }
+.dimtext a { color: var(--hi); }
+.btn {
+  background: none;
+  border: 1px solid var(--dim);
+  color: var(--fg);
+  font: inherit;
+  padding: 7px 14px;
+  cursor: pointer;
+  text-decoration: none;
+  text-shadow: inherit;
+}
+.btn:hover, .btn:focus-visible { color: var(--hi); border-color: var(--fg); outline: none; }
+.btn.main { border-color: var(--fg); color: var(--hi); }
+.btn:disabled { opacity: 0.4; cursor: default; }
+.btn.small { padding: 1px 8px; font-size: 12px; }
+#host summary { cursor: pointer; list-style: none; }
+#host summary::-webkit-details-marker { display: none; }
+#host summary h2 { display: inline-block; }
+#host summary h2::before { content: "▸ "; }
+#host details[open] > summary h2::before { content: "▾ "; }
+#host summary:hover h2 { color: var(--hi); }
+/* Raden överst: fasen, vilka som är här och knapparna som behövs nu. */
+#bar {
+  position: sticky; top: 0; z-index: 3;
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 18px;
+  margin: 14px -20px 0; padding: 8px 20px;
+  background: var(--bg); border-bottom: 1px solid var(--faint);
+}
+#barPhase { color: var(--hi); }
+#barWho { color: var(--fg); flex: 1 1 auto; }
+#barWho .away { color: var(--warn); }
+#barBtns { margin-left: auto; display: flex; gap: 8px; }
+code { color: var(--hi); font: inherit; }

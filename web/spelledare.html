@@ -8,31 +8,8 @@
 <link rel="icon" href="ikon.png" type="image/png" sizes="180x180">
 <link rel="apple-touch-icon" href="ikon.png">
 <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="spelledare.css">
 <style>
-  html, body { overflow: auto; }
-  #crt { min-height: 100%; height: auto; }
-  #host {
-    max-width: 760px;
-    margin: 0 auto;
-    padding: 28px 20px 48px;
-  }
-  #host h1 {
-    font-size: 14px;
-    font-weight: normal;
-    letter-spacing: 0.4em;
-    color: var(--fg);
-    margin: 0 0 4px;
-  }
-  #host h2 {
-    font-size: 11px;
-    font-weight: normal;
-    letter-spacing: 0.3em;
-    color: var(--fg);
-    margin: 34px 0 10px;
-    text-transform: uppercase;
-  }
-  #host p { margin: 6px 0; line-height: 1.45; }
-  .dimtext { color: var(--fg); }
   #addr {
     font-size: clamp(14px, 2.6vw, 24px);
     color: var(--hi);
@@ -43,19 +20,6 @@
   #ips { color: var(--fg); }
   #ips span { color: var(--fg); }
   .buttons { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 14px; }
-  .btn {
-    background: none;
-    border: 1px solid var(--dim);
-    color: var(--fg);
-    font: inherit;
-    padding: 7px 14px;
-    cursor: pointer;
-    text-decoration: none;
-    text-shadow: inherit;
-  }
-  .btn:hover, .btn:focus-visible { color: var(--hi); border-color: var(--fg); outline: none; }
-  .btn.main { border-color: var(--fg); color: var(--hi); }
-  .btn:disabled { opacity: 0.4; cursor: default; }
   #copied { color: var(--info); min-height: 1.2em; }
   #status { color: var(--hi); }
   #status.dead { color: var(--warn); }
@@ -68,7 +32,6 @@
   #slots .tag.away { color: var(--warn); }
   #slots .tag.ai { color: var(--info); }
   #slots li { align-items: baseline; }
-  .btn.small { padding: 1px 8px; font-size: 12px; }
   #settings, #settings .grid { display: grid; grid-template-columns: 20ch auto 1fr; gap: 8px 12px; align-items: baseline; }
   #moreSettings { grid-column: 1 / -1; margin-top: 4px; }
   #moreSettings summary { color: var(--fg); cursor: pointer; list-style: none; margin-bottom: 8px; }
@@ -94,82 +57,12 @@
   #reloadMsg { white-space: pre-wrap; }
   #reloadMsg.err { color: var(--warn); }
   #startHint { color: var(--fg); }
-  body.gm #host { max-width: 1100px; }
-  #gmTop { color: var(--fg); }
-  #gmTop .warn { color: var(--warn); }
-  #gmMapBox { position: relative; height: min(70vh, 640px); margin: 8px 0; }
-  /* Kartan till vänster och ingreppen till höger när skärmen är bred. */
-  #gmCols { display: grid; grid-template-columns: minmax(0, 1fr) minmax(300px, 38%); gap: 0 24px; align-items: start; }
-  #gmCtl .gmrow { margin: 6px 0 10px; }
-  #gmCtl .gmlabel { flex: 0 0 100%; min-width: 0; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; }
-  #gmCtl select { max-width: 100%; }
-  #gmPlace select { flex: 1 1 12ch; min-width: 0; }
-  #gmVoiceTo { flex: 0 1 auto; }
-  @media (max-width: 860px) {
-    #gmCols { display: block; }
-    #gmCtl .gmlabel { flex: 0 0 auto; min-width: 13ch; font-size: inherit; letter-spacing: 0; text-transform: none; }
-  }
-  #gmMap { position: absolute; left: 0; top: 0; }
-  .tablewrap { overflow-x: auto; }
-  #gmPlayers { border-collapse: collapse; width: 100%; font-size: 13px; }
-  #gmPlayers th { text-align: left; font-weight: normal; color: var(--fg); padding: 4px 10px 4px 0; }
-  #gmPlayers td { padding: 4px 10px 4px 0; vertical-align: top; }
-  #gmPlayers .cond { color: var(--warn); }
-  #gmPlayers .follow { background: none; border: 0; padding: 0; font: inherit; text-align: left; cursor: pointer; text-shadow: inherit; }
-  #gmPlayers .follow:hover, #gmPlayers .follow.on { text-decoration: underline; }
-  #gmFollow { color: var(--info); min-height: 1.2em; }
-  #gmPlayers .dead { opacity: 0.55; }
-  .gmrow { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px; margin: 8px 0; }
-  .gmlabel { color: var(--fg); min-width: 13ch; }
-  .gmrow select, .gmrow input {
-    background: var(--bg); color: var(--hi); border: 1px solid var(--dim); font: inherit; font-size: 13px; padding: 2px 6px;
-  }
-  .gmrow input { flex: 1 1 24ch; min-width: 16ch; }
-  .gmrow select:focus-visible, .gmrow input:focus-visible { outline: none; border-color: var(--fg); }
-  #gmMsg { min-height: 1.2em; color: var(--info); }
-  #gmMsg.err { color: var(--warn); }
-  #gmPlayers .give { white-space: nowrap; }
-  #gmPlayers .give button { margin: 0 2px 2px 0; }
-  #gmLog .gm { color: #e3b8f0; }
-  #gmLog .rost { color: #e3b8f0; }
-  #gmLog { max-height: 340px; overflow-y: auto; font-size: 13px; line-height: 1.4; border-top: 1px solid var(--faint); padding-top: 6px; }
-  #gmLog div { margin: 2px 0; }
-  #gmLog .roundhead {
-    display: block; width: 100%; margin: 6px 0 2px; padding: 3px 0 2px;
-    border: 0; border-top: 1px solid var(--faint); background: none;
-    color: var(--fg); font: inherit; font-size: 11px; letter-spacing: 0.12em;
-    text-align: left; cursor: pointer;
-  }
-  #gmLog .round:first-child .roundhead { border-top: 0; margin-top: 0; }
-  #gmLog .roundhead:hover { color: var(--hi); }
-  #host summary { cursor: pointer; list-style: none; }
-  #host summary::-webkit-details-marker { display: none; }
-  #host summary h2 { display: inline-block; }
-  #host summary h2::before { content: "▸ "; }
-  #host details[open] > summary h2::before { content: "▾ "; }
-  #host summary:hover h2 { color: var(--hi); }
-  #gmLog .who { color: var(--fg); }
-  #gmLog .varn { color: var(--warn); }
-  #gmLog .info { color: var(--info); }
-  #gmLog .syn { color: var(--hi); }
-  #gmLog .dim { color: var(--fg); }
-  #bar {
-    position: sticky; top: 0; z-index: 3;
-    display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 18px;
-    margin: 14px -20px 0; padding: 8px 20px;
-    background: var(--bg); border-bottom: 1px solid var(--faint);
-  }
-  #barPhase { color: var(--hi); }
-  #barWho { color: var(--fg); flex: 1 1 auto; }
-  #barWho .away { color: var(--warn); }
-  #barMain { margin-left: auto; }
   /* Avsnitten byter plats efter fasen: det som behövs nu står först. */
   #host { display: flex; flex-direction: column; }
   #host > section { order: 5; }
   #host > #foot { order: 9; }
   body.fas-lobby #invite, body.fas-klassval #invite { order: 1; }
   body.fas-lobby #port, body.fas-klassval #port { order: 2; }
-  body.fas-spel #gm { order: 1; }
   body.fas-spel #port { order: 2; }
   body.fas-spel #invite { order: 3; }
   body.fas-slut #next { order: 1; }
@@ -183,7 +76,6 @@
   #reloadMsg:empty { display: none; }
   #help li { margin: 6px 0; line-height: 1.45; }
   #help { padding-left: 1.4em; margin: 0; }
-  code { color: var(--hi); font: inherit; }
 </style>
 </head>
 <body>
@@ -195,7 +87,10 @@
     <div id="bar">
       <span id="barPhase">…</span>
       <span id="barWho"></span>
-      <button class="btn main small" id="barMain" type="button" hidden></button>
+      <span id="barBtns">
+        <a class="btn main small" id="barBoard" href="/spelledare/bord" target="ormtornet-bord" data-t="rad_bord" hidden></a>
+        <button class="btn main small" id="barMain" type="button" hidden></button>
+      </span>
     </div>
 
     <section id="invite">
@@ -220,66 +115,6 @@
       <button class="btn" id="startNow" type="button" data-t="starta_nu"></button>
     </div>
     <p id="startHint" data-t="start_hint"></p>
-    </section>
-
-    <section id="gm" hidden>
-      <h2 data-t="oversikt"></h2>
-      <p id="gmTop"></p>
-      <div id="gmCols">
-      <div id="gmMapCol">
-        <div id="gmMapBox"><canvas id="gmMap"></canvas></div>
-        <p id="gmFollow"></p>
-        <p class="dimtext" data-t="gm_karta_hjalp"></p>
-      </div>
-      <div id="gmCtl">
-      <div class="gmrow">
-        <span class="gmlabel" data-t="gm_tid"></span>
-        <button class="btn small" type="button" id="gmPause" data-gm="paus" data-t="pausa"></button>
-        <button class="btn small" type="button" data-gm="mer_tid" data-t="gm_mer_tid"></button>
-        <button class="btn small" type="button" data-gm="avgor" data-t="gm_avgor"></button>
-        <button class="btn small" type="button" data-gm="sol" data-antal="-1" data-t="gm_sol_minus_1"></button>
-        <button class="btn small" type="button" data-gm="sol" data-antal="-5" data-t="gm_sol_minus_5"></button>
-        <button class="btn small" type="button" data-gm="sol" data-antal="1" data-t="gm_sol_plus_1"></button>
-      </div>
-      <div class="gmrow">
-        <span class="gmlabel" data-t="gm_ormen"></span>
-        <button class="btn small" type="button" data-gm="vack" data-t="gm_vack"></button>
-        <button class="btn small" type="button" data-gm="lugna" data-t="gm_lugna"></button>
-      </div>
-      <div class="gmrow" id="gmReveal">
-        <span class="gmlabel" data-t="gm_avslojandet"></span>
-        <button class="btn small" type="button" id="gmLevelUp" data-gm="niva_upp" data-t="gm_niva_upp"></button>
-        <button class="btn small" type="button" id="gmHold" data-gm="niva_hall" data-t="gm_niva_hall"></button>
-      </div>
-      <form class="gmrow" id="gmVoice" autocomplete="off">
-        <span class="gmlabel" data-t="gm_rost"></span>
-        <select id="gmVoiceTo"></select>
-        <input id="gmVoiceText" maxlength="200" data-t-placeholder="gm_rost_exempel">
-        <button class="btn small" type="submit" data-t="gm_sag"></button>
-      </form>
-      <form class="gmrow" id="gmPlace" autocomplete="off">
-        <span class="gmlabel" data-t="gm_i_rum"></span>
-        <select id="gmRoom"></select>
-        <select id="gmWhat"></select>
-        <button class="btn small" type="submit" data-t="gm_lagg_dit"></button>
-      </form>
-      <p id="gmMsg"></p>
-      </div>
-      </div>
-      <div class="tablewrap">
-        <table id="gmPlayers">
-          <thead><tr><th data-t="kol_vandrare"></th><th data-t="kol_var"></th><th data-t="kol_liv"></th><th data-t="kol_skatt"></th><th data-t="kol_drycker"></th><th data-t="kol_tillstand"></th><th data-t="kol_drag"></th><th data-t="kol_ge"></th></tr></thead>
-          <tbody></tbody>
-        </table>
-      </div>
-      <details id="gmLogBox">
-        <summary><h2 data-t="logg"></h2></summary>
-        <div class="gmrow">
-          <span class="gmlabel" data-t="logg_visa"></span>
-          <select id="gmLogWho"></select>
-        </div>
-        <div id="gmLog"></div>
-      </details>
     </section>
 
     <section id="next">
@@ -410,7 +245,6 @@
 const $ = (id) => document.getElementById(id);
 const COLORS = MapView.PLAYER_COLORS;
 let view = null;
-let lastGM = null; // den senaste översikten, för att rita om när språket byts
 const openedAt = Date.now();
 let helpShown = false;
 let closed = false;
@@ -556,19 +390,17 @@ function render(v) {
     $("helpBox").open = true;
   }
 
-  document.body.classList.toggle("gm", gm);
   $("joinSelf").hidden = gm;
-  $("gm").hidden = !gm;
 }
 
 // Raden överst: fasen, vilka som är här och knappen som behövs just nu,
-// Starta nu före vandringen och Pausa eller Fortsätt i spelledarläget.
-let paused = false;
+// Starta nu före vandringen. I spelledarläget leder en knapp till
+// spelledarbordet, där spelledaren pausar och gör ingrepp.
 
 function renderBar(v, canStart) {
   const phase = { lobby: t("rad_lobby"), klassval: t("rad_klassval"), slut: t("rad_slut") }[v.phase] ||
     t("rad_runda", { runda: v.round, sol: v.sun, max: v.sunMax });
-  $("barPhase").textContent = paused && v.phase === "spel" ? t("rad_pausad", { fas: phase }) : phase;
+  $("barPhase").textContent = v.paused && v.phase === "spel" ? t("rad_pausad", { fas: phase }) : phase;
   const who = $("barWho");
   who.textContent = "";
   const here = v.players.filter((p) => p.online);
@@ -587,348 +419,13 @@ function renderBar(v, canStart) {
     b.textContent = t("starta_nu");
     b.dataset.act = "starta";
     b.disabled = !canStart;
-  } else if (v.settings.spelledarlage) {
-    b.hidden = false;
-    b.textContent = paused ? t("fortsatt") : t("pausa");
-    b.dataset.act = paused ? "fortsatt" : "paus";
-    b.disabled = false;
   } else {
     b.hidden = true;
   }
+  $("barBoard").hidden = !v.settings.spelledarlage;
 }
 
-$("barMain").onclick = () => {
-  const act = $("barMain").dataset.act;
-  if (act === "starta") $("startNow").click();
-  else intervene({ typ: act });
-};
-
-// Översikten i spelledarläget: hela tornet, alla vandrare, ormen och loggen.
-let mapReady = false;
-let mapSize = 0;
-const chosenItem = {}; // föremålet spelledaren har valt att ge, per vandrare
-let following = 0; // vandraren kartan följer, eller 0 för hela tornet
-
-$("gmPlayers").addEventListener("click", (ev) => {
-  const b = ev.target.closest("button[data-follow]");
-  if (!b) return;
-  const id = +b.dataset.follow;
-  following = following === id ? 0 : id;
-  MapView.follow(following);
-  $("gmFollow").textContent = following ? t("folj_text", { namn: b.textContent.replace(/^◉ /, "") }) : "";
-});
-
-// whoText: vandrarens namn i tabellen, med AI, dator och klass.
-function whoText(p) {
-  let s = p.ai ? t("namn_ai", { namn: p.name }) : p.bot ? t("namn_dator", { namn: p.name }) : p.name;
-  if (p.klass) s = t("namn_klass", { vem: s, klass: p.klass });
-  return s;
-}
-
-// serpentText: ormens rad i översikten.
-function serpentText(s) {
-  const key = !s.wakes ? "top_ormen" : s.wakes === 1 ? "top_ormen_vaknat_en" : "top_ormen_vaknat";
-  return t(key, { somn: t("somn_" + s.sleep), sov: s.sleepCards, vakna: s.wakeCards, ganger: s.wakes, risk: s.risk });
-}
-
-function renderGM(o) {
-  lastGM = o;
-  const top = $("gmTop");
-  top.textContent = "";
-  const m = o.map;
-  const parts = [];
-  if (m.phase === "spel") parts.push(t("top_runda", { runda: m.round, sol: m.sun, max: m.sunMax }));
-  parts.push(serpentText(o.serpent));
-  if (m.reveal) {
-    const key = !o.held ? "top_niva" : o.sunLevel > o.level ? "top_niva_halls_sol" : "top_niva_halls";
-    parts.push(t(key, { niva: o.level, solniva: o.sunLevel, ledtradar: o.clues }));
-  }
-  parts.push(t(o.traps === 1 ? "top_falla" : "top_fallor", { antal: o.traps }));
-  top.textContent = parts.join(" · ");
-
-  if (!mapReady || mapSize !== m.size) {
-    MapView.setup($("gmMap"), m.size);
-    if (!mapReady && window.ResizeObserver) new ResizeObserver(() => MapView.resize()).observe($("gmMapBox"));
-    mapReady = true;
-    mapSize = m.size;
-  }
-  MapView.draw(m);
-
-  const tb = $("gmPlayers").querySelector("tbody");
-  tb.textContent = "";
-  o.players.forEach((p) => {
-    const tr = document.createElement("tr");
-    if (p.status !== "inne") tr.className = "dead";
-    const cond = [];
-    if (p.cellar) cond.push(t("till_kallaren", { antal: p.cellar }));
-    if (p.stuck) cond.push(t("till_fast", { antal: p.stuck }));
-    if (p.poison) cond.push(t("till_gift", { antal: p.poison }));
-    if (p.dark) cond.push(t("till_morker", { antal: p.dark }));
-    if (!p.online) cond.push(t("borta"));
-    if (p.foremal && p.foremal.length) cond.push(p.foremal.join(", "));
-    if (p.invigd) cond.push(t("till_invigd"));
-    else if (p.viskning) cond.push(t("till_viskade", { text: p.viskning }));
-    const who = whoText(p);
-    const where = { ute: t("ute"), forlorad: t("forlorad"), dod: t("dod") }[p.status] || p.room || "";
-    const action = p.action || (m.phase === "spel" && p.status === "inne" ? t("drag_valjer") : "");
-    const cells = [who, where, p.hp + "/" + (p.maxHp || o.maxHp), t("guld", { antal: p.treasure }), p.potions, cond.join(", "), action];
-    cells.forEach((c, i) => {
-      const td = document.createElement("td");
-      td.textContent = c;
-      if (i === 0) {
-        // Ett klick på namnet låter kartan följa vandraren.
-        td.textContent = "";
-        const b = document.createElement("button");
-        b.type = "button";
-        b.className = "follow" + (following === p.id ? " on" : "");
-        b.dataset.follow = String(p.id);
-        b.title = following === p.id ? t("folj_hela") : t("folj_titel", { namn: p.name });
-        b.textContent = (following === p.id ? "◉ " : "") + c;
-        b.style.color = COLORS[p.slot];
-        td.append(b);
-      }
-      if (i === 5 && c) td.className = "cond";
-      tr.append(td);
-    });
-    // Följer kartan vandraren skrivs raden under kartan på nytt, så att den
-    // får nya texter när språket byts.
-    if (following === p.id) $("gmFollow").textContent = t("folj_text", { namn: who });
-    const give = document.createElement("td");
-    give.className = "give";
-    if (m.phase === "spel" && p.status === "inne") {
-      [["liv", -1, "ge_liv_minus"], ["liv", 1, "ge_liv_plus"], ["guld", -10, "ge_guld_minus"], ["guld", 10, "ge_guld_plus"], ["dryck", -1, "ge_dryck_minus"], ["dryck", 1, "ge_dryck_plus"]]
-        .forEach(([typ, n, key]) => {
-          const b = document.createElement("button");
-          b.type = "button";
-          b.className = "btn small";
-          b.dataset.gm = typ;
-          b.dataset.antal = String(n);
-          b.dataset.spelare = String(p.id);
-          b.textContent = t(key);
-          give.append(b);
-        });
-      // Inviga, eller ta tillbaka, och ge ett föremål.
-      if (m.reveal) {
-        const inv = document.createElement("button");
-        inv.type = "button";
-        inv.className = "btn small";
-        inv.dataset.gm = "invig";
-        inv.dataset.spelare = String(p.id);
-        inv.textContent = p.invigd ? t("ge_glom_invigd") : t("ge_inviga");
-        give.append(inv);
-      }
-      // Översikten ritas om hela tiden: kom ihåg vilket föremål som är valt.
-      const sel = document.createElement("select");
-      (o.foremal || []).forEach((it) => sel.append(new Option(it.namn, it.id)));
-      if (chosenItem[p.id]) sel.value = chosenItem[p.id];
-      sel.addEventListener("change", () => (chosenItem[p.id] = sel.value));
-      const gb = document.createElement("button");
-      gb.type = "button";
-      gb.className = "btn small";
-      gb.dataset.gm = "foremal";
-      gb.dataset.spelare = String(p.id);
-      gb.dataset.fromSelect = "1";
-      gb.textContent = t("ge_foremal");
-      give.append(sel, gb);
-    }
-    tr.append(give);
-    tb.append(tr);
-  });
-
-  renderLog(o);
-}
-
-// Vandrarnas logg: en grupp per runda, den senaste överst, och inom
-// rundan raderna i den ordning de hände. De två senaste rundorna står
-// öppna; spelledaren kan fälla upp och ihop de andra själv.
-const logOpen = {}; // runda -> öppen eller stängd, när spelledaren har klickat
-let logKey = "";
-
-function renderLog(o) {
-  const who = $("gmLogWho");
-  fillSelect(who, [{ label: t("logg_alla"), value: "" }].concat(o.players.map((p) => ({ label: p.name, value: p.name }))));
-  const entries = o.log.filter((e) => !who.value || e.to.includes(who.value));
-  const key = JSON.stringify([entries.length, entries.length && entries[entries.length - 1].text, who.value, logOpen, UI.sprak]);
-  if (key === logKey) return;
-  logKey = key;
-  const rounds = new Map();
-  entries.forEach((e) => {
-    if (!rounds.has(e.round)) rounds.set(e.round, []);
-    rounds.get(e.round).push(e);
-  });
-  const order = [...rounds.keys()].sort((a, b) => b - a);
-  const box = $("gmLog");
-  const st = box.scrollTop;
-  const before = box.scrollHeight;
-  box.textContent = "";
-  if (!order.length) {
-    const d = document.createElement("div");
-    d.className = "dim";
-    d.textContent = t("logg_tom");
-    box.append(d);
-  }
-  order.forEach((round, i) => {
-    const list = rounds.get(round);
-    const open = round in logOpen ? logOpen[round] : i < 2;
-    const sec = document.createElement("section");
-    sec.className = "round";
-    const head = document.createElement("button");
-    head.type = "button";
-    head.className = "roundhead";
-    let label = round ? t("logg_runda", { runda: round }) : t("logg_fore");
-    if (!open) label += " · " + t(list.length === 1 ? "logg_rad" : "logg_rader", { antal: list.length });
-    head.textContent = (open ? "▾ " : "▸ ") + label;
-    head.addEventListener("click", () => {
-      logOpen[round] = !open;
-      renderLog(o);
-    });
-    sec.append(head);
-    if (open) {
-      list.forEach((e) => {
-        const d = document.createElement("div");
-        const w = document.createElement("span");
-        w.className = "who";
-        w.textContent = e.to.join(", ") + ": ";
-        const line = document.createElement("span");
-        if (e.c) line.className = e.c;
-        line.textContent = e.text;
-        d.append(w, line);
-        sec.append(d);
-      });
-    }
-    box.append(sec);
-  });
-  if (st > 6) box.scrollTop = st + (box.scrollHeight - before);
-}
-
-// Ingreppen. Listorna byggs bara om när innehållet ändras, så att ett val
-// inte hoppar medan spelledaren håller på.
-function fillSelect(sel, options) {
-  const key = JSON.stringify(options);
-  if (sel.dataset.key === key) return;
-  const keep = sel.value;
-  sel.textContent = "";
-  options.forEach((o) => {
-    if (o.group) {
-      const g = document.createElement("optgroup");
-      g.label = o.group;
-      o.items.forEach((it) => g.append(new Option(it.label, it.value)));
-      sel.append(g);
-    } else {
-      sel.append(new Option(o.label, o.value));
-    }
-  });
-  sel.dataset.key = key;
-  if ([...sel.options].some((x) => x.value === keep)) sel.value = keep;
-}
-
-// roomLabel: rummet i listan I ett rum, med fälla och varelse.
-function roomLabel(r) {
-  const parts = [t("rum_namn", { namn: r.name, x: r.x, y: r.y })];
-  if (r.trap) parts.push(t("rum_falla"));
-  if (r.monster) parts.push(t("rum_varelse"));
-  return parts.join(" · ");
-}
-
-function renderControls(o) {
-  const playing = o.map.phase === "spel";
-  document.querySelectorAll("#gm .gmrow button[data-gm]").forEach((b) => (b.disabled = !playing));
-  $("gmPlace").querySelector("button").disabled = !playing || !o.rooms.length;
-  paused = !!o.paused;
-  const pause = $("gmPause");
-  pause.dataset.gm = o.paused ? "fortsatt" : "paus";
-  pause.dataset.t = o.paused ? "fortsatt" : "pausa";
-  pause.textContent = t(pause.dataset.t);
-  $("gmReveal").hidden = !o.map.reveal;
-  $("gmLevelUp").disabled = !playing || o.level >= 4;
-  const hold = $("gmHold");
-  hold.dataset.gm = o.held ? "niva_slapp" : "niva_hall";
-  hold.dataset.t = o.held ? "gm_niva_slapp" : "gm_niva_hall";
-  hold.textContent = t(hold.dataset.t);
-  if (playing) {
-    const left = o.paused ? t("top_pausad", { sek: o.timeLeft }) : t("top_tid", { sek: o.timeLeft });
-    $("gmTop").textContent += " · " + left;
-  }
-  fillSelect($("gmVoiceTo"), [{ label: t("rost_alla"), value: "0" }].concat(o.players.map((p) => ({ label: t("rost_till", { namn: p.name }), value: String(p.id) }))));
-  fillSelect($("gmRoom"), o.rooms.length
-    ? o.rooms.map((r) => ({ label: roomLabel(r), value: r.x + "," + r.y }))
-    : [{ label: t("rum_inga"), value: "" }]);
-  fillSelect($("gmWhat"), [
-    { group: t("grupp_falla"), items: o.trapTypes.map((x) => ({ label: x.namn, value: "falla:" + x.id })) },
-    { group: t("grupp_varelse"), items: o.monsterTypes.map((x) => ({ label: x.namn, value: "varelse:" + x.id })) },
-  ]);
-}
-
-function gmSay(text, isErr) {
-  const el = $("gmMsg");
-  el.textContent = text;
-  el.classList.toggle("err", !!isErr);
-}
-
-async function intervene(req) {
-  try {
-    const r = await post("/spelledare/ingrepp", req);
-    if (!r.ok) {
-      const data = await r.json().catch(() => ({}));
-      gmSay(data.fel || t("ingrepp_fel"), true);
-      return false;
-    }
-    gmSay("");
-    return true;
-  } catch {
-    gmSay(t("svarar_inte"), true);
-    return false;
-  }
-}
-
-$("gm").addEventListener("click", (ev) => {
-  const b = ev.target.closest("button[data-gm]");
-  if (!b) return;
-  const req = { typ: b.dataset.gm };
-  if (b.dataset.antal) req.antal = +b.dataset.antal;
-  if (b.dataset.spelare) req.spelare = +b.dataset.spelare;
-  if (b.dataset.fromSelect) req.id = b.parentElement.querySelector("select").value;
-  if (req.typ === "niva_upp" && !confirm(t("fraga_niva_upp"))) return;
-  if (req.typ === "vack" && !confirm(t("fraga_vack"))) return;
-  intervene(req);
-});
-
-$("gmVoice").addEventListener("submit", async (ev) => {
-  ev.preventDefault();
-  const text = $("gmVoiceText").value.trim();
-  if (!text) {
-    gmSay(t("rost_tom"), true);
-    return;
-  }
-  if (await intervene({ typ: "rost", spelare: +$("gmVoiceTo").value, text })) {
-    $("gmVoiceText").value = "";
-    gmSay(t("rost_klar"));
-  }
-});
-
-$("gmPlace").addEventListener("submit", async (ev) => {
-  ev.preventDefault();
-  const [x, y] = $("gmRoom").value.split(",").map(Number);
-  const [typ, id] = $("gmWhat").value.split(":");
-  if (await intervene({ typ, x, y, id })) gmSay(t("klart"));
-});
-
-async function pollGM() {
-  if (closed) return;
-  if (view && view.settings.spelledarlage) {
-    try {
-      const r = await fetch("/spelledare/oversikt" + seenParam(), { cache: "no-store" });
-      if (r.ok) {
-        const o = await r.json();
-        if (await refreshTexts("vardsidan", o.sprak)) redraw();
-        renderGM(o);
-        renderControls(o);
-      }
-    } catch {}
-  }
-  setTimeout(pollGM, 1000);
-}
-pollGM();
+$("barMain").onclick = () => $("startNow").click();
 
 // Inställningarna. Formuläret skrivs inte över medan spelledaren håller på
 // med det, eller medan en ändring är på väg till servern.
@@ -1035,12 +532,7 @@ function renderSettings(v) {
 // applyTexts har redan fyllt i det som står i HTML:en.
 function redraw() {
   optionTexts();
-  logKey = "";
   if (view) render(view);
-  if (lastGM) {
-    renderGM(lastGM);
-    renderControls(lastGM);
-  }
 }
 
 function post(path, body) {

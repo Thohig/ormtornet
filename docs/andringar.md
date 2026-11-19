@@ -6,6 +6,19 @@ eller leder tornet.
 
 ## 2026-11-19
 
+### Spelledarbordet
+
+- Översikten och ingreppen i spelledarläget har flyttat från värdsidan
+  till en egen sida, spelledarbordet, på `/spelledare/bord`. Värdsidan
+  har kvar inbjudan, porten och inställningarna.
+- Värdsidans rad har knappen Spelledarbordet när spelledarläget är på.
+  Pausa och Fortsätt finns nu på spelledarbordets rad.
+- Spelledarbordet har en egen rad med fasen, vilka som är här, och Starta
+  nu före vandringen eller Pausa och Fortsätt under den. Kartan är större
+  och loggen står utfälld.
+- Värdsidans rad säger när rundan är pausad, även utan spelledarläge.
+- Med spelledarläget av säger spelledarbordet bara det och var det slås på.
+
 ### Automatisk solnedgång och turtid
 
 - Solnedgång och Turtid har flyttat till Fler inställningar på

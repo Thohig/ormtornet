@@ -25,11 +25,14 @@ Så här skiljer vi på sakerna när användaren ger instruktioner:
   allt och kan göra ingrepp (`gm.go`, `ingrepp.go`).
 - **värdsidan**: sidan på `/spelledare` på tornets dator (`host.go`,
   `web/spelledare.html`). Överst står **raden** med fasen och knappen
-  som behövs just nu. Avsnitten heter Bjud in, Vid porten, Översikt,
-  Vandrarnas logg, Inför nästa vandring, Kommer någon inte in?, Läs om
-  innehållet och Stäng tornet, och byter plats efter fasen.
-- **översikten**: den del av värdsidan som bara syns i spelledarläget, med
-  ingreppen, kartan och tabellen över vandrarna.
+  som behövs just nu. Avsnitten heter Bjud in, Vid porten, Inför nästa
+  vandring, Kommer någon inte in?, Läs om innehållet och Stäng tornet, och
+  byter plats efter fasen.
+- **spelledarbordet**: sidan på `/spelledare/bord` på tornets dator
+  (`web/bord.html`, `web/bord.js`), där spelledaren leder vandringen i
+  spelledarläget. Värdsidans rad har en knapp dit.
+- **översikten**: det spelledarbordet visar, med ingreppen, kartan,
+  tabellen över vandrarna och loggen.
 - **ingrepp**: det spelledaren gör under en vandring: tid, ormen,
   avslöjandet, tornets röst och rum.
 - **spelarsidan**: sidan på `/` som spelarna öppnar, med vyerna introt,

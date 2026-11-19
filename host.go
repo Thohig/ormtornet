@@ -43,9 +43,10 @@ type hostView struct {
 	Reveal     bool         `json:"reveal"`
 	Players    []hostPlayer `json:"players"`
 	Settings   Settings     `json:"settings"`
-	Bots       int          `json:"bots"`           // datorspelare som är med just nu
-	Size       int          `json:"size"`           // tornets storlek i rum
-	Seed       uint64       `json:"seed,omitempty"` // vandringens frö, under och efter vandringen
+	Bots       int          `json:"bots"`             // datorspelare som är med just nu
+	Size       int          `json:"size"`             // tornets storlek i rum
+	Seed       uint64       `json:"seed,omitempty"`   // vandringens frö, under och efter vandringen
+	Paused     bool         `json:"paused,omitempty"` // rundan är pausad
 
 	Svarigheter []difficultyView `json:"svarigheter"` // förvalen att välja bland
 	Sprak       string           `json:"sprak"`       // texternas språk; byts det hämtar sidan nya texter
@@ -67,6 +68,7 @@ func (g *Game) HostView(visible bool) hostView {
 		MaxPlayers: maxPlayers, Reveal: g.cfg.Reveal, Players: []hostPlayer{},
 		Settings: settingsFrom(g.cfg), Bots: g.botCount(), Size: g.size,
 		Svarigheter: g.base.difficulties(), Sprak: g.base.Lang,
+		Paused: g.paused,
 	}
 	if g.phase == phasePlay || g.phase == phaseEnd {
 		v.Seed = g.seed
@@ -303,6 +305,10 @@ func addHostRoutes(mux *http.ServeMux, web fs.FS, game *Game, addrs hostAddrs, h
 	mux.HandleFunc("GET /texter/vardsidan.json", localOnly(pageTexts("vardsidan")))
 	mux.HandleFunc("GET /spelledare", localOnly(func(w http.ResponseWriter, r *http.Request) {
 		http.ServeFileFS(w, r, web, "spelledare.html")
+	}))
+	// Spelledarbordet: där spelledaren leder vandringen i spelledarläget.
+	mux.HandleFunc("GET /spelledare/bord", localOnly(func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFileFS(w, r, web, "bord.html")
 	}))
 	mux.HandleFunc("POST /spelledare/ingrepp", hostAction(func(w http.ResponseWriter, r *http.Request) {
 		var req gmRequest
