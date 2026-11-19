@@ -56,20 +56,13 @@
   #reloadMsg { white-space: pre-wrap; }
   #reloadMsg.err { color: var(--warn); }
   #startHint { color: var(--fg); }
-  /* Avsnitten byter plats efter fasen: det som behövs nu står först. */
-  #host { display: flex; flex-direction: column; }
-  #host > section { order: 5; }
-  #host > #foot { order: 9; }
-  body.fas-lobby #invite, body.fas-klassval #invite { order: 1; }
-  body.fas-lobby #port, body.fas-klassval #port { order: 2; }
-  body.fas-spel #port { order: 2; }
-  body.fas-spel #invite { order: 3; }
-  body.fas-slut #next { order: 1; }
-  body.fas-slut #port { order: 2; }
-  /* Under vandringen räcker adressen och en knapp för den som kommer sent. */
-  body.fas-spel #invite .full, body.fas-spel #copyInvite, body.fas-spel #joinSelf { display: none; }
-  body.fas-spel #addr { font-size: 15px; }
-  body.fas-spel #invite .buttons { margin-top: 6px; }
+  /* Avsnitten står alltid i samma ordning. Under och efter vandringen
+     krymper Bjud in till adressen och en knapp för den som kommer sent, så
+     att Vid porten och Inför nästa vandring kommer upp. */
+  body.fas-spel #invite .full, body.fas-spel #copyInvite, body.fas-spel #joinSelf,
+  body.fas-slut #invite .full, body.fas-slut #copyInvite { display: none; }
+  body.fas-spel #addr, body.fas-slut #addr { font-size: 15px; }
+  body.fas-spel #invite .buttons, body.fas-slut #invite .buttons { margin-top: 6px; }
   #foot { margin-top: 20px; }
   #foot h2 { margin-top: 18px; }
   #reloadMsg:empty { display: none; }

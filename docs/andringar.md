@@ -25,6 +25,9 @@ eller leder tornet.
   och krönikan över vandringen.
 - Introt på tornets dator leder till spelledarbordet när spelledarläget är
   på, och annars till värdsidan som förut.
+- Värdsidans avsnitt byter inte längre plats efter fasen. De står alltid i
+  ordningen Bjud in, Vid porten och Inför nästa vandring. Under och efter
+  vandringen krymper Bjud in till adressen, så att resten kommer upp.
 
 ### Automatisk solnedgång och turtid
 

@@ -27,10 +27,13 @@ Så här skiljer vi på sakerna när användaren ger instruktioner:
   `web/spelledare.html`). Överst står **raden** med fasen och knappen
   som behövs just nu. Avsnitten heter Bjud in, Vid porten, Inför nästa
   vandring, Kommer någon inte in?, Läs om innehållet och Stäng tornet, och
-  byter plats efter fasen.
+  står alltid i den ordningen.
 - **spelledarbordet**: sidan på `/spelledare/bord` på tornets dator
   (`web/bord.html`, `web/bord.js`), där spelledaren leder vandringen i
-  spelledarläget. Värdsidans rad har en knapp dit.
+  spelledarläget. Värdsidans rad har en knapp dit, och introt på tornets
+  dator leder dit när spelledarläget är på. Överst står samma slags rad
+  som på värdsidan; avsnitten är Vid porten (lobbyn och klassvalet),
+  Vandringen är slut (slutet) och översikten.
 - **översikten**: det spelledarbordet visar, med ingreppen, kartan,
   tabellen över vandrarna och loggen.
 - **ingrepp**: det spelledaren gör under en vandring: tid, ormen,

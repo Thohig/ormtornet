@@ -20,7 +20,7 @@ spelet. De andra öppnar en adress i webbläsaren.
 
 Skriptet bygger spelet, öppnar introt i webbläsaren och håller datorn vaken
 så länge tornet är öppet. På datorn som kör tornet leder introt till
-värdsidan. Flaggor skickas vidare, till exempel `./starta.sh -ai 2`.
+värdsidan, eller till spelledarbordet när spelledarläget är på. Flaggor skickas vidare, till exempel `./starta.sh -ai 2`.
 Är tornet redan igång öppnas bara introt.
 
 Det går också att starta direkt med `go run .`.
@@ -33,8 +33,8 @@ Det går också att starta direkt med `go run .`.
 
 skapar `~/Projekt/Ormtornet.app` med tornets ikon (ange en annan mapp som
 argument om du vill). Dubbelklick på appen bygger spelet från den här mappen,
-startar tornet i bakgrunden och öppnar introt, som leder till spelledarens
-sida. Inget terminalfönster behövs. Loggen hamnar i `/tmp/ormtornet.log`.
+startar tornet i bakgrunden och öppnar introt, som leder till värdsidan
+eller spelledarbordet. Inget terminalfönster behövs. Loggen hamnar i `/tmp/ormtornet.log`.
 Appen behöver bara skapas om när den här mappen flyttas.
 
 Servern lyssnar på `0.0.0.0:8080` och skriver ut adressen spelarna ska
@@ -74,7 +74,7 @@ Flaggor:
 - `-storlek 0` tornets storlek i rum: `9`, `11` eller `13`, eller `0` för automatisk (efter antalet vandrare). Ett torn blir aldrig för litet för alla
 - `-synlighet egen` vilka vandrare och rum man ser: `egen` (andra vandrare bara i samma rum, och bara egna rum på kartan), `moten` (andra vandrare bara i samma rum) eller `alla`
 - `-avslojande=false` stänger av avslöjandet, för spelare som redan känner till tornets hemlighet
-- `-oppna` öppnar introt i webbläsaren när servern har startat; på den här datorn leder det till värdsidan
+- `-oppna` öppnar introt i webbläsaren när servern har startat; på den här datorn leder det till värdsidan, eller till spelledarbordet i spelledarläget
 - `-vaken` håller datorn vaken så länge servern är igång
 - `-autostopp 10m` stänger tornet när ingen spelare är ansluten och ingen sida har synts på tornets dator så länge (`0` = aldrig)
 - `-autostopp-max 12h` stänger tornet när ingen har gjort något så länge, även om flikar står öppna (`0` = aldrig)
@@ -94,11 +94,9 @@ AI-spelare som är här och vilka som är borta. Där ligger också knappen som
 behövs just nu: Starta nu före vandringen. I spelledarläget finns där
 också knappen Spelledarbordet (se nedan).
 
-Avsnitten byter plats efter fasen, så att det som behövs just nu står
-först. I lobbyn och klassvalet kommer Bjud in och Vid porten först. Under
-vandringen kommer Vid porten först, och Bjud in krymper till adressen och
-en knapp som kopierar den. När vandringen är slut kommer Inför nästa
-vandring först. Längst ner ligger Kommer någon inte in? och Läs om
+Avsnitten står alltid i samma ordning: Bjud in, Vid porten och Inför
+nästa vandring. Under och efter vandringen krymper Bjud in till adressen
+och en knapp som kopierar den, så att resten kommer upp. Längst ner ligger Kommer någon inte in? och Läs om
 innehållet, hopfällda, och en liten knapp som stänger tornet. Har ingen
 människa kommit in en och en halv minut efter att sidan öppnades fälls
 Kommer någon inte in? ut av sig själv.
@@ -370,7 +368,7 @@ fällorna har `andra_dolt`. Ekofällan visar som förut var den drabbade är.
 Att någon går ut eller dör får alla veta.
 
 Den döda spelaren som styr varelserna ser alla vandrare. Spelledaren ser
-allt i översikten, och när vandringen är slut syns alla igen.
+allt i översikten på spelledarbordet, och när vandringen är slut syns alla igen.
 
 Varje vandrare har sin egen karta. Den visar bara rum du själv har gått
 igenom, med fällornas tecken och varelserna i dem. Rummen finns ändå bara en gång i tornet: en fälla slår bara till för
