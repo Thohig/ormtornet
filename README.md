@@ -154,8 +154,9 @@ allt vandrarna har fått läsa. Vandrarnas logg är hopfälld tills man klickar
 på den. Där står den senaste rundan överst, de två senaste rundorna är
 öppna och de äldre fällda ihop, och loggen kan visa en vandrare i taget.
 
-I spelledarläget kan spelledaren också göra ingrepp under en vandring, och
-varje ingrepp skrivs i loggen:
+På en bred skärm står kartan till vänster och ingreppen till höger, med
+tabellen över vandrarna under dem. I spelledarläget kan spelledaren också
+göra ingrepp under en vandring, och varje ingrepp skrivs i loggen:
 
 - **Tid:** pausa och fortsätta, ge rundan 30 sekunder till, avgöra rundan
   direkt, och flytta solen fram eller tillbaka (den går aldrig ner av ett

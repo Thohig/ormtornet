@@ -6,6 +6,12 @@ eller leder tornet.
 
 ## 2026-11-19
 
+### Översikten i två kolumner
+
+- På en bred skärm står kartan till vänster och ingreppen till höger i
+  översikten, med tabellen över vandrarna under. På en smal skärm står
+  de under varandra som förut.
+
 ### Fler inställningar
 
 - Under Inför nästa vandring syns Svårighet, AI-spelare, Solnedgång,

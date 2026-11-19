@@ -98,6 +98,17 @@
   #gmTop { color: var(--fg); }
   #gmTop .warn { color: var(--warn); }
   #gmMapBox { position: relative; height: min(70vh, 640px); margin: 8px 0; }
+  /* Kartan till vänster och ingreppen till höger när skärmen är bred. */
+  #gmCols { display: grid; grid-template-columns: minmax(0, 1fr) minmax(300px, 38%); gap: 0 24px; align-items: start; }
+  #gmCtl .gmrow { margin: 6px 0 10px; }
+  #gmCtl .gmlabel { flex: 0 0 100%; min-width: 0; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; }
+  #gmCtl select { max-width: 100%; }
+  #gmPlace select { flex: 1 1 12ch; min-width: 0; }
+  #gmVoiceTo { flex: 0 1 auto; }
+  @media (max-width: 860px) {
+    #gmCols { display: block; }
+    #gmCtl .gmlabel { flex: 0 0 auto; min-width: 13ch; font-size: inherit; letter-spacing: 0; text-transform: none; }
+  }
   #gmMap { position: absolute; left: 0; top: 0; }
   .tablewrap { overflow-x: auto; }
   #gmPlayers { border-collapse: collapse; width: 100%; font-size: 13px; }
@@ -211,6 +222,12 @@
     <section id="gm" hidden>
       <h2>Översikt</h2>
       <p id="gmTop"></p>
+      <div id="gmCols">
+      <div id="gmMapCol">
+        <div id="gmMapBox"><canvas id="gmMap"></canvas></div>
+        <p class="dimtext">Fällor som väntar visas med sitt tecken. Tornet växer fram när någon går in i ett nytt rum, så rum som ingen har varit i finns inte än.</p>
+      </div>
+      <div id="gmCtl">
       <div class="gmrow">
         <span class="gmlabel">Tid</span>
         <button class="btn small" type="button" id="gmPause" data-gm="paus">Pausa</button>
@@ -243,8 +260,8 @@
         <button class="btn small" type="submit">Lägg dit</button>
       </form>
       <p id="gmMsg"></p>
-      <div id="gmMapBox"><canvas id="gmMap"></canvas></div>
-      <p class="dimtext">Fällor som väntar visas med sitt tecken. Tornet växer fram när någon går in i ett nytt rum, så rum som ingen har varit i finns inte än.</p>
+      </div>
+      </div>
       <div class="tablewrap">
         <table id="gmPlayers">
           <thead><tr><th>Vandrare</th><th>Var</th><th>Liv</th><th>Skatt</th><th>Drycker</th><th>Tillstånd</th><th>Drag</th><th>Ge eller ta</th></tr></thead>
@@ -602,6 +619,7 @@ function renderGM(o) {
 
   if (!mapReady || mapSize !== m.size) {
     MapView.setup($("gmMap"), m.size);
+    if (!mapReady && window.ResizeObserver) new ResizeObserver(() => MapView.resize()).observe($("gmMapBox"));
     mapReady = true;
     mapSize = m.size;
   }
