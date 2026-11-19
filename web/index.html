@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Ormtornet</title>
+<title data-t="sidans_titel"></title>
 <link rel="icon" href="ikon.svg" type="image/svg+xml">
 <link rel="icon" href="ikon.png" type="image/png" sizes="180x180">
 <link rel="apple-touch-icon" href="ikon.png">
@@ -15,8 +15,8 @@
     <canvas id="rain" aria-hidden="true"></canvas>
     <div id="flash" aria-hidden="true"></div>
     <div id="intro">
-      <h1 id="introTitle">ORMTORNET</h1>
-      <svg id="scene" viewBox="0 0 680 300" role="img" aria-label="Tornet i solnedgången">
+      <h1 id="introTitle" data-t="intro_rubrik"></h1>
+      <svg id="scene" viewBox="0 0 680 300" role="img" data-t-aria="intro_bild">
         <defs>
           <clipPath id="horizon"><rect x="0" y="0" width="680" height="240"/></clipPath>
           <filter id="cloudblur" x="-20%" y="-50%" width="140%" height="200%"><feGaussianBlur stdDeviation="9"/></filter>
@@ -65,19 +65,19 @@
         </g>
       </svg>
       <p id="rumor"></p>
-      <button id="enter" class="waiting" type="button">Gå in i tornet</button>
+      <button id="enter" class="waiting" type="button" data-t="intro_ga_in"></button>
       <p id="listen"></p>
     </div>
   </section>
 
   <section id="namescreen" class="screen">
     <form id="nameform" autocomplete="off">
-      <label for="name">Vad heter du, vandrare?</label>
+      <label for="name" data-t="namn_fraga"></label>
       <input id="name" maxlength="16" spellcheck="false">
-      <div class="hint keys">tryck enter · esc går tillbaka</div>
+      <div class="hint keys" data-t="namn_tips"></div>
       <div class="touchonly">
-        <button type="button" id="back">Tillbaka</button>
-        <button type="submit">Gå in</button>
+        <button type="button" id="back" data-t="namn_tillbaka"></button>
+        <button type="submit" data-t="namn_ga_in"></button>
       </div>
       <div id="nameerr"></div>
     </form>
@@ -85,8 +85,8 @@
 
   <section id="classscreen" class="screen">
     <div id="choose">
-      <h1>Vem är du?</h1>
-      <p id="chooseLead">Tornet lägger fram sina kort. Välj ett innan tiden är slut, annars väljer tornet åt dig.</p>
+      <h1 data-t="klassval_rubrik"></h1>
+      <p id="chooseLead" data-t="klassval_inledning"></p>
       <div id="cards" role="list"></div>
       <p id="chooseStatus"></p>
     </div>
@@ -94,9 +94,9 @@
 
   <section id="game" class="screen">
     <header id="top">
-      <span class="title">ORMTORNET</span>
+      <span class="title" data-t="topp_titel"></span>
       <span id="solmatare"></span>
-      <span id="crew" aria-label="Vandrarna"></span>
+      <span id="crew" data-t-aria="topp_vandrarna"></span>
       <span id="turn"></span>
       <span id="conn"></span>
     </header>
@@ -112,36 +112,36 @@
         </div>
         <div id="hud">
           <div class="hudrow">
-            <div id="status" aria-label="Du"></div>
-            <button type="button" id="helpBtn" class="keys" aria-label="Styrning" aria-expanded="false">?</button>
+            <div id="status" data-t-aria="tecken_du"></div>
+            <button type="button" id="helpBtn" class="keys" data-t-aria="hjalp_knapp" aria-expanded="false">?</button>
           </div>
-          <div id="bag" aria-label="Föremål"></div>
+          <div id="bag" data-t-aria="tecken_foremal"></div>
         </div>
         <div id="helpbox" class="keys" hidden>
-          <h2>Styrning</h2>
+          <h2 data-t="hjalp_rubrik"></h2>
           <div id="help">
-            <div><b>Pilar</b>gå</div>
-            <div><b>Mellanslag</b>vänta</div>
-            <div><b>T</b>ta skatt</div>
-            <div><b>S</b>sök i rummet</div>
-            <div><b>D</b>drick en dryck</div>
-            <div><b>A</b>anfall</div>
-            <div><b>P</b>parera</div>
-            <div><b>U</b>undanmanöver</div>
-            <div><b>Tab</b>byt mål</div>
-            <div><b>1–3</b>använd föremål</div>
-            <div><b>V</b>viska till tornet</div>
-            <div><b>+ −</b>zooma kartan</div>
-            <div><b>M</b>allt du känner till</div>
-            <div><b>Enter</b>redo</div>
-            <div><b>?</b>visa och dölj styrningen</div>
+            <div data-t-html="hjalp_ga"></div>
+            <div data-t-html="hjalp_vanta"></div>
+            <div data-t-html="hjalp_ta"></div>
+            <div data-t-html="hjalp_sok"></div>
+            <div data-t-html="hjalp_drick"></div>
+            <div data-t-html="hjalp_anfall"></div>
+            <div data-t-html="hjalp_parera"></div>
+            <div data-t-html="hjalp_undan"></div>
+            <div data-t-html="hjalp_byt"></div>
+            <div data-t-html="hjalp_foremal"></div>
+            <div data-t-html="hjalp_viska"></div>
+            <div data-t-html="hjalp_zoom"></div>
+            <div data-t-html="hjalp_allt"></div>
+            <div data-t-html="hjalp_redo"></div>
+            <div data-t-html="hjalp_visa"></div>
           </div>
-          <p class="hint">Håll musen över tecknen uppe till höger för att se vad de betyder.</p>
+          <p class="hint" data-t="hjalp_tips"></p>
         </div>
-        <div id="zoom" aria-label="Zoom">
-          <button type="button" id="zoomOut" aria-label="Längre ut">−</button>
-          <button type="button" id="zoomName" title="Växla till allt du känner till (M)"></button>
-          <button type="button" id="zoomIn" aria-label="Närmare">+</button>
+        <div id="zoom" data-t-aria="zoom_rad">
+          <button type="button" id="zoomOut" data-t-aria="zoom_ut">−</button>
+          <button type="button" id="zoomName" data-t-title="zoom_vaxla"></button>
+          <button type="button" id="zoomIn" data-t-aria="zoom_in">+</button>
         </div>
         <div id="roundcard" hidden aria-live="polite"></div>
         <pre id="overlay" hidden></pre>
@@ -149,43 +149,43 @@
       <aside id="side">
         <div class="block" id="playersBlock">
           <div class="panel">
-            <h2>Vandrare</h2>
+            <h2 data-t="panel_vandrare"></h2>
             <ul id="players"></ul>
           </div>
         </div>
         <div class="block">
           <div class="panel">
-            <h2>Nu</h2>
+            <h2 data-t="panel_nu"></h2>
             <div id="me"></div>
             <form id="whisper" autocomplete="off" hidden>
-              <input id="whisperText" maxlength="80" spellcheck="false" placeholder="viska till tornet" aria-label="Viska till tornet">
-              <div class="hint">enter viskar · esc ångrar</div>
+              <input id="whisperText" maxlength="80" spellcheck="false" data-t-placeholder="viska_ruta" data-t-aria="viska_ruta_namn">
+              <div class="hint" data-t="viska_tips"></div>
             </form>
           </div>
         </div>
-        <div id="pad" class="touchonly" aria-label="Styrning">
+        <div id="pad" class="touchonly" data-t-aria="knappar">
           <div class="dirs">
-            <button type="button" data-key="ArrowUp" class="n" aria-label="Gå norrut">↑</button>
-            <button type="button" data-key="ArrowLeft" class="w" aria-label="Gå västerut">←</button>
-            <button type="button" data-key=" " class="c" aria-label="Vänta">·</button>
-            <button type="button" data-key="ArrowRight" class="e" aria-label="Gå österut">→</button>
-            <button type="button" data-key="ArrowDown" class="s" aria-label="Gå söderut">↓</button>
+            <button type="button" data-key="ArrowUp" class="n" data-t-aria="knapp_norrut">↑</button>
+            <button type="button" data-key="ArrowLeft" class="w" data-t-aria="knapp_vasterut">←</button>
+            <button type="button" data-key=" " class="c" data-t-aria="knapp_vanta">·</button>
+            <button type="button" data-key="ArrowRight" class="e" data-t-aria="knapp_osterut">→</button>
+            <button type="button" data-key="ArrowDown" class="s" data-t-aria="knapp_soderut">↓</button>
           </div>
           <div class="acts">
-            <button type="button" data-key="t">Ta</button>
-            <button type="button" data-key="s">Sök</button>
-            <button type="button" data-key="d">Drick</button>
-            <button type="button" data-key="a">Anfall</button>
-            <button type="button" data-key="p">Parera</button>
-            <button type="button" data-key="u">Undan</button>
-            <button type="button" data-key="Tab">Byt</button>
-            <button type="button" data-key="v" id="padWhisper" hidden>Viska</button>
-            <button type="button" data-key="Enter" id="padEnter" class="wide">Redo</button>
+            <button type="button" data-key="t" data-t="knapp_ta"></button>
+            <button type="button" data-key="s" data-t="knapp_sok"></button>
+            <button type="button" data-key="d" data-t="knapp_drick"></button>
+            <button type="button" data-key="a" data-t="knapp_anfall"></button>
+            <button type="button" data-key="p" data-t="knapp_parera"></button>
+            <button type="button" data-key="u" data-t="knapp_undan"></button>
+            <button type="button" data-key="Tab" data-t="knapp_byt"></button>
+            <button type="button" data-key="v" id="padWhisper" hidden data-t="knapp_viska"></button>
+            <button type="button" data-key="Enter" id="padEnter" class="wide" data-t="knapp_redo"></button>
           </div>
         </div>
         <div id="logwrap">
           <div id="log" aria-live="polite"></div>
-          <button type="button" id="logNew" hidden>↑ nya rader</button>
+          <button type="button" id="logNew" hidden data-t="logg_nya"></button>
         </div>
       </aside>
     </div>

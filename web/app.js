@@ -540,10 +540,10 @@ function renderSide() {
     li.appendChild(document.createTextNode(p.name + (p.id === state.you ? " (du)" : p.ai ? " (AI)" : p.bot ? " (dator)" : "") + (p.klass ? ", " + p.klass : "")));
     const tag = playerTag(p);
     if (tag) {
-      const t = document.createElement("span");
-      t.className = "tag";
-      t.textContent = " " + tag;
-      li.appendChild(t);
+      const tg = document.createElement("span");
+      tg.className = "tag";
+      tg.textContent = " " + tag;
+      li.appendChild(tg);
     }
     if (p.id === state.you) li.classList.add("me");
     if (!p.online) li.classList.add("off");
