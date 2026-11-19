@@ -10,7 +10,7 @@ let joined = false;
 let mapReady = false;
 let mapSize = 0; // tornets storlek när kartan ritades upp
 let towerClosed = false; // spelledaren har stängt tornet, eller den här datorn leder det
-let closedText = "tornet är stängt";
+let closedKey = "anslutning_stangt";
 let hostingHere = false; // spelledarläget slogs på och den här datorn leder tornet
 
 function show(id) {
@@ -106,7 +106,7 @@ const Log = (() => {
     if (folded) {
       const rooms = [...g.querySelectorAll(".lines > .rubrik")].map((d) => d.textContent.replace(/\.$/, ""));
       if (rooms.length) text += " · " + rooms.join(", ");
-      text += " · " + lines.length + (lines.length === 1 ? " rad" : " rader");
+      text += " · " + t(lines.length === 1 ? "logg_rader_en" : "logg_rader_flera", { n: lines.length });
     }
     head.textContent = text;
     head.setAttribute("aria-expanded", String(!folded));
@@ -234,7 +234,12 @@ const Log = (() => {
     });
   }
 
-  return { push, init };
+  // relabel skriver om gruppernas rubriker, när språket har bytts.
+  function relabel() {
+    box().querySelectorAll(".round").forEach(summarize);
+  }
+
+  return { push, init, relabel };
 })();
 Log.init();
 
@@ -261,10 +266,10 @@ function connect() {
   ws.onclose = () => {
     if (!joined) return;
     if (towerClosed) {
-      $("conn").textContent = closedText;
+      $("conn").textContent = t(closedKey);
       return;
     }
-    $("conn").textContent = "förbindelsen bröts, försöker igen";
+    $("conn").textContent = t("anslutning_bruten");
     setTimeout(connect, 2000);
   };
 }
@@ -275,6 +280,7 @@ function handle(msg) {
       if (state && state.phase !== msg.phase && msg.phase === "spel") lastTick = -1;
       state = msg;
       state.receivedAt = performance.now();
+      if (msg.sprak && msg.sprak !== UI.sprak) changeLanguage(msg.sprak, true);
       trackSeen(state);
       if (!joined) {
         joined = true;
@@ -311,15 +317,15 @@ function handle(msg) {
       // Spelledarläget slogs på, och den här datorn leder tornet.
       towerClosed = true;
       hostingHere = true;
-      closedText = "du leder tornet";
-      $("conn").textContent = closedText;
+      closedKey = "anslutning_leder";
+      $("conn").textContent = t(closedKey);
       Log.push(msg.text, "varn");
       if (ws) ws.close();
       showHosting(msg.text);
       break;
     case "stangt":
       towerClosed = true;
-      $("conn").textContent = "tornet är stängt";
+      $("conn").textContent = t("anslutning_stangt");
       Sound.stop();
       break;
     case "vaknar":
@@ -340,19 +346,51 @@ function handle(msg) {
   }
 }
 
+// Byte av språk: spelledaren har valt ett annat språk, och servern säger
+// det i läget och i svaret från /intro. Sidan hämtar de nya texterna och
+// ritar om det den själv har skrivit, utan att laddas om. Teckenförklaringen
+// kommer från /intro och hämtas igen när det behövs.
+async function changeLanguage(lang, againIntro) {
+  if (!(await refreshTexts("spelarsidan", lang))) return;
+  Log.relabel();
+  if (zoomKey) $("zoomName").textContent = t(zoomKey);
+  const head = document.querySelector("#roundcard .cardhead");
+  if (head) head.textContent = t("rundkort_rubrik", { runda: head.dataset.round });
+  if (state && !hostingHere) {
+    renderSide();
+    renderTop();
+    renderOverlay();
+    renderChoose();
+    restoreTip();
+  }
+  if (!againIntro) return;
+  try {
+    const info = await (await fetch("/intro", { cache: "no-store" })).json();
+    signTexts = info.tecken || {};
+    $("legendBtn").textContent = signTexts.rubrik || "";
+    MapView.setLegend(renderLegend);
+    if (state && mapReady) MapView.draw(state);
+  } catch {}
+}
+
 const ACTION_WORDS = {
-  N: "gå norrut", E: "gå österut", S: "gå söderut", W: "gå västerut",
-  vanta: "vänta", ta: "ta skatt", sok: "sök i rummet", drick: "drick",
-  anfall: "anfall", parera: "parera", undan: "undanmanöver",
+  N: "drag_norrut", E: "drag_osterut", S: "drag_soderut", W: "drag_vasterut",
+  vanta: "drag_vanta", ta: "drag_ta", sok: "drag_sok", drick: "drag_drick",
+  anfall: "drag_anfall", parera: "drag_parera", undan: "drag_undan",
 };
 function actionWord(a) {
   if (/^f\d/.test(a)) {
     const it = (state.foremal || [])[+a[1] - 1];
-    return "använd " + (it ? it.namn.toLowerCase() : "föremål") + (a[2] ? " " + DIR_WORDS[a[2]] : "");
+    const foremal = it ? it.namn.toLowerCase() : t("drag_foremal");
+    if (a[2]) return t("drag_anvand_riktning", { foremal, riktning: dirWord(a[2]) });
+    return t("drag_anvand", { foremal });
   }
-  return ACTION_WORDS[a] || a;
+  return ACTION_WORDS[a] ? t(ACTION_WORDS[a]) : a;
 }
-const DIR_WORDS = { N: "norrut", E: "österut", S: "söderut", W: "västerut" };
+const DIR_WORDS = { N: "riktning_norrut", E: "riktning_osterut", S: "riktning_soderut", W: "riktning_vasterut" };
+function dirWord(d) {
+  return DIR_WORDS[d] ? t(DIR_WORDS[d]) : undefined;
+}
 
 // Strid mot andra vandrare: Tab väljer vem när flera står i rummet.
 let selectedFoe = 0;
@@ -440,19 +478,20 @@ function seenTag(p) {
   if (state.phase !== "spel" || !hidesOthers(state) || p.id === state.you) return "";
   if (p.status !== "inne" || !p.hidden) return "";
   const s = lastSeen[p.id];
-  return s ? "sågs runda " + s.round : "inte sedd";
+  return s ? t("vandrare_sags", { runda: s.round }) : t("vandrare_inte_sedd");
 }
 
 function playerTag(p) {
-  if (!p.online) return "borta";
-  if (p.status === "ute") return "ute";
-  if (p.status === "forlorad") return "förlorad";
-  if (p.status === "dod") return state.phase === "spel" && p.chosen ? "död, klar" : "död";
+  if (!p.online) return t("vandrare_borta");
+  if (p.status === "ute") return t("vandrare_ute");
+  if (p.status === "forlorad") return t("vandrare_forlorad");
+  if (p.status === "dod") return t(state.phase === "spel" && p.chosen ? "vandrare_dod_klar" : "vandrare_dod");
   if (state.phase === "spel") {
     const seen = seenTag(p);
-    return (p.chosen ? "klar" : "väljer") + (seen ? ", " + seen : "");
+    const lage = t(p.chosen ? "vandrare_klar" : "vandrare_valjer");
+    return seen ? t("vandrare_lage_sedd", { lage, sedd: seen }) : lage;
   }
-  return p.ready ? "redo" : "";
+  return p.ready ? t("vandrare_redo") : "";
 }
 
 // Klassvalet har en egen skärm mellan lobbyn och vandringen. Kartan ritas
@@ -491,12 +530,12 @@ function renderChoose() {
     add("cname", (c.tecken ? c.tecken + " " : "") + c.namn);
     add("desc", c.beskrivning);
     const stats = [];
-    if (c.liv) stats.push((c.liv > 0 ? "+" : "−") + Math.abs(c.liv) + " liv");
-    if (c.drycker) stats.push(c.drycker + (c.drycker === 1 ? " dryck" : " drycker") + " från början");
+    if (c.liv) stats.push(t(c.liv > 0 ? "klasskort_liv_mer" : "klasskort_liv_mindre", { n: Math.abs(c.liv) }));
+    if (c.drycker) stats.push(t(c.drycker === 1 ? "klasskort_dryck_en" : "klasskort_dryck_flera", { n: c.drycker }));
     if (stats.length) add("stats", stats.join(" · "));
-    add("good", "+ " + c.styrka);
-    add("bad", "− " + c.svaghet);
-    add("owner", c.din ? "ditt kort" : c.tagen ? "tagen av " + c.tagen : "");
+    add("good", t("klasskort_styrka", { styrka: c.styrka }));
+    add("bad", t("klasskort_svaghet", { svaghet: c.svaghet }));
+    add("owner", c.din ? t("klasskort_ditt") : c.tagen ? t("klasskort_tagen", { namn: c.tagen }) : "");
     b.addEventListener("click", () => chooseCard(i));
     box.appendChild(b);
   });
@@ -516,17 +555,20 @@ function updateChooseStatus() {
   const secs = Math.ceil(remainingMs() / 1000);
   const mine = (state.erbjudande || []).find((c) => c.din);
   const waiting = state.players.filter((p) => p.online && !p.klass && p.id !== state.you).map((p) => p.name);
-  let text = mine ? "Du är " + mine.namn.toLowerCase() + ". " : touch ? "Tryck på ett kort. " : "Tryck 1–" + state.erbjudande.length + " eller klicka på ett kort. ";
-  if (mine && waiting.length) text += "Väntar på " + waiting.join(", ") + ". ";
-  el.textContent = text;
+  const parts = [];
+  if (mine) parts.push(t("klassval_du_ar", { klass: mine.namn.toLowerCase() }));
+  else if (touch) parts.push(t("klassval_tryck_kort"));
+  else parts.push(t("klassval_tryck_siffra", { antal: state.erbjudande.length }));
+  if (mine && waiting.length) parts.push(t("klassval_vantar", { namn: waiting.join(", ") }));
+  el.textContent = parts.join(" ") + " ";
   const s = document.createElement("span");
   s.className = "secs" + (secs <= 5 ? " urgent" : "");
-  s.textContent = secs + " s";
+  s.textContent = t("klassval_sekunder", { s: secs });
   el.appendChild(s);
 }
 
 function renderSide() {
-  setEnterLabel(state.phase === "slut" ? "Nytt torn" : "Redo");
+  setEnterLabel(t(state.phase === "slut" ? "knapp_nytt_torn" : "knapp_redo"));
   // Under vandringen står vandrarna som prickar i översta raden.
   $("playersBlock").hidden = state.phase === "spel";
   const ul = $("players");
@@ -537,7 +579,8 @@ function renderSide() {
     mark.textContent = "@ ";
     mark.style.color = MapView.PLAYER_COLORS[p.slot];
     li.appendChild(mark);
-    li.appendChild(document.createTextNode(p.name + (p.id === state.you ? " (du)" : p.ai ? " (AI)" : p.bot ? " (dator)" : "") + (p.klass ? ", " + p.klass : "")));
+    const who = playerName(p, "vandrare_namn_ai");
+    li.appendChild(document.createTextNode(p.klass ? t("vandrare_med_klass", { vem: who, klass: p.klass }) : who));
     const tag = playerTag(p);
     if (tag) {
       const tg = document.createElement("span");
@@ -552,8 +595,8 @@ function renderSide() {
   const me = myPlayer();
   const room = me && state.rooms.find((r) => r.x === me.x && r.y === me.y);
   let here = me && me.status === "inne" && room ? room.name : "";
-  if (state.cellar > 0) here = "Källarvalven";
-  else if (state.dark > 0 && room) here = "Mörker";
+  if (state.cellar > 0) here = t("rum_kallarvalven");
+  else if (state.dark > 0 && room) here = t("rum_morker");
   $("roomname").textContent = here;
   renderHud(me);
   renderNow(me);
@@ -587,28 +630,28 @@ function renderHud(me) {
     box.appendChild(d);
   };
   const c = state.klass;
-  if (c) icon(c.tecken || c.namn[0], "", c.namn + "\n" + c.beskrivning + "\n+ " + c.styrka + "\n− " + c.svaghet, "klass");
+  if (c) icon(c.tecken || c.namn[0], "", t("tecken_klass", { namn: c.namn, beskrivning: c.beskrivning, styrka: c.styrka, svaghet: c.svaghet }), "klass");
   if (me.status === "dod") {
-    icon("✕", "", "Du är död.", "warn");
+    icon("✕", "", t("tecken_dod"), "warn");
   } else {
     const low = state.hp <= Math.max(1, Math.floor(state.maxHp / 3));
-    icon("♥", state.hp + "/" + state.maxHp, "Liv: " + state.hp + " av " + state.maxHp + ". Vid noll är du död.", low ? "warn" : "hp");
+    icon("♥", state.hp + "/" + state.maxHp, t("tecken_liv", { liv: state.hp, max: state.maxHp }), low ? "warn" : "hp");
   }
-  icon("¤", String(me.treasure), "Skatt: " + me.treasure + " guld. Den räknas bara om du bär ut den genom en port.", "gold");
+  icon("¤", String(me.treasure), t("tecken_skatt", { guld: me.treasure }), "gold");
   if (state.potions > 0) {
-    icon("⚱", String(state.potions), (state.potions === 1 ? "En dryck. " : state.potions + " drycker. ") +
-      (touch ? "Tryck Drick" : "Tryck D") + " för att dricka en. Den ger tillbaka liv och tar bort gift.", "");
+    const tryck = pressWord("knapp_drick", "D");
+    icon("⚱", String(state.potions), state.potions === 1 ? t("tecken_dryck_en", { tryck }) : t("tecken_dryck_flera", { n: state.potions, tryck }), "");
   }
   if (me.status === "inne") {
-    if (state.cellar > 0) icon("▼", "", "I källarvalven. Ingen ser var du är, och du kommer upp någon annanstans.", "warn");
-    if (state.stuck > 0) icon("⛓", String(state.stuck), "Fast i " + state.stuck + (state.stuck === 1 ? " runda" : " rundor") + ". Du kan inte gå härifrån.", "warn");
-    if (state.poison > 0) icon("☠", "", "Förgiftad. Du tappar liv varje runda tills giftet går ur. En dryck tar bort det.", "warn");
-    if (state.dark > 0) icon("◐", "", "Lyktan är släckt. Du ser bara rummet du står i.", "warn");
+    if (state.cellar > 0) icon("▼", "", t("tecken_kallare"), "warn");
+    if (state.stuck > 0) icon("⛓", String(state.stuck), t(state.stuck === 1 ? "tecken_fast_en" : "tecken_fast_flera", { n: state.stuck }), "warn");
+    if (state.poison > 0) icon("☠", "", t("tecken_gift"), "warn");
+    if (state.dark > 0) icon("◐", "", t("tecken_morker"), "warn");
   }
   if (state.kompass) icon("✧", "", state.kompass, "");
   if (state.hjartslag) icon("♡", "", state.hjartslag, "");
-  if (state.invigd) icon("❝", "", "Tornet har hört dig.", "rost");
-  if (state.kanViska) icon("V", "", (touch ? "Tryck Viska" : "Tryck V") + " för att viska till tornet.", "rost");
+  if (state.invigd) icon("❝", "", t("tecken_invigd"), "rost");
+  if (state.kanViska) icon("V", "", t("tecken_viska", { tryck: pressWord("knapp_viska", "V") }), "rost");
   const pw = $("padWhisper");
   if (pw) pw.hidden = !state.kanViska;
 
@@ -618,7 +661,7 @@ function renderHud(me) {
     b.type = "button";
     b.className = "hudicon item" + (it.aktiv ? " active" : "") + (aimSlot === i ? " aiming" : "");
     b.textContent = (it.aktiv && !touch ? i + 1 + " " : "") + it.namn + (it.kvar > 1 ? " ×" + it.kvar : "");
-    b.dataset.tip = it.beskrivning + (it.aktiv ? (touch ? "" : " Tryck " + (i + 1) + " för att använda det.") : "");
+    b.dataset.tip = it.beskrivning + (it.aktiv && !touch ? " " + t("tecken_anvand", { tryck: t("tryck_tangent", { tangent: i + 1 }) }) : "");
     if (it.aktiv) b.addEventListener("click", () => useItemSlot(i));
     bag.appendChild(b);
   });
@@ -642,51 +685,52 @@ function renderNow(me) {
   };
   if (!me) return;
   if (aimSlot !== null && state.foremal && state.foremal[aimSlot]) {
-    line(state.foremal[aimSlot].namn + ": åt vilket håll? (pilarna" + (touch ? "" : ", esc ångrar") + ")", "plan");
+    line(t(touch ? "nu_sikta_peka" : "nu_sikta", { foremal: state.foremal[aimSlot].namn }), "plan");
   }
-  if (me.status === "dod" && !state.controller) line("Du är död", "cond");
+  if (me.status === "dod" && !state.controller) line(t("nu_dod"), "cond");
   if (me.status === "inne") {
     if (state.sleep >= 0 && state.sleepText) line(state.sleepText, state.sleep >= 2 ? "cond" : "sleep");
     const foe = (state.monsters || []).find((m) => m.x === me.x && m.y === me.y);
     if (foe && state.cellar === 0) {
-      line("Strid: " + foe.name, "foe");
-      box.appendChild(meter("foehp", "Dess liv", foe.hp, foe.maxHp));
-      if (!touch) line("A anfall · P parera · U undan", "dimline");
+      line(t("nu_strid", { namn: foe.name }), "foe");
+      box.appendChild(meter("foehp", t("nu_dess_liv"), foe.hp, foe.maxHp));
+      if (!touch) line(t("nu_strid_tangenter"), "dimline");
     }
     const others = foe || state.cellar > 0 ? [] : foesHere();
     if (others.length) {
-      const names = others.map((p) => p.name).join(" och ");
+      const names = others.map((p) => p.name).join(" " + t("nu_och") + " ");
       const f = currentFoe();
       if (state.pvp === "ja") {
-        line("Strid: " + f.name + (others.length > 1 ? " (" + keyName("Tab") + " byter)" : ""), "foe");
-        if (!touch) line("A anfall · P parera · U undan", "dimline");
+        if (others.length > 1) line(t("nu_strid_byt", { namn: f.name, tangent: keyName("Tab") }), "foe");
+        else line(t("nu_strid", { namn: f.name }), "foe");
+        if (!touch) line(t("nu_strid_tangenter"), "dimline");
       } else {
-        line("Här står också " + names, "dimline");
-        if (state.pvp === "fredat") line("Porten är fredad", "dimline");
-        if (state.pvp === "for_tidigt") line("Ingen strid förrän solen sjunkit halvvägs", "dimline");
+        line(t("nu_har_star", { namn: names }), "dimline");
+        if (state.pvp === "fredat") line(t("nu_fredad"), "dimline");
+        if (state.pvp === "for_tidigt") line(t("nu_for_tidigt"), "dimline");
       }
     }
   }
   if (state.controller) {
-    line("Du styr tornets varelser", "cond");
+    line(t("nu_styr"), "cond");
     const m = controlledMonster();
     if (m) {
-      line("Vald: " + m.name + " (" + keyName("Tab") + " byter)", "foe");
+      line(t("nu_vald", { namn: m.name, tangent: keyName("Tab") }), "foe");
       const a = state.action;
-      if (a && a[0] === "m") line("Drag: " + a.replace(/^m\d+/, "").split("").map((d) => DIR_WORDS[d]).join(""), "plan");
-      else if (a === "vanta") line("Drag: vila", "plan");
-      else line("Välj ett drag", "plan");
+      if (a && a[0] === "m") line(t("nu_drag", { drag: a.replace(/^m\d+/, "").split("").map(dirWord).join("") }), "plan");
+      else if (a === "vanta") line(t("nu_drag", { drag: t("drag_vila") }), "plan");
+      else line(t("nu_valj_ett"), "plan");
     } else {
-      line("Inga varelser att styra", "dimline");
+      line(t("nu_inga_varelser"), "dimline");
     }
     return;
   }
   if (state.phase === "spel" && me.status === "inne") {
-    line(state.action ? "Drag: " + actionWord(state.action) : "Välj ditt drag", "plan");
+    line(state.action ? t("nu_drag", { drag: actionWord(state.action) }) : t("nu_valj_ditt"), "plan");
   } else if (state.phase === "lobby") {
-    line(me.ready ? "Du är redo. Väntar på de andra" : "Tryck " + keyName("Enter") + " när du är redo", "plan");
+    line(me.ready ? t("nu_redo") : t("nu_tryck_redo", { tryck: pressWord("knapp_redo", "Enter") }), "plan");
   } else if (state.phase === "slut") {
-    line(me.ready ? "Väntar på de andra" : touch ? "Tryck Nytt torn" : "Enter: nytt torn", "plan");
+    line(me.ready ? t("nu_vantar") : newTowerWord(), "plan");
   }
 }
 
@@ -700,12 +744,13 @@ function showRoundCard(msg) {
   const lines = msg.lines || [];
   if (!lines.length) return;
   const short = lines.filter((l) => l.kort).map((l) => l.kort);
-  if (short.length) Log.push("Runda " + msg.round + ": " + short.join(", ") + ".", "sam");
+  if (short.length) Log.push(t("rundkort_logg", { runda: msg.round, rader: short.join(", ") }), "sam");
   const card = $("roundcard");
   card.innerHTML = "";
   const h = document.createElement("div");
   h.className = "cardhead";
-  h.textContent = "Runda " + msg.round;
+  h.dataset.round = msg.round;
+  h.textContent = t("rundkort_rubrik", { runda: msg.round });
   card.appendChild(h);
   lines.forEach((l) => {
     const d = document.createElement("div");
@@ -872,9 +917,27 @@ function firstHelp() {
 
 // Namnet på en tangent så som spelaren ser den: tangenten på en dator,
 // knappen på en pekskärm.
-const TOUCH_NAMES = { Tab: "Byt", Enter: "Redo" };
+const TOUCH_NAMES = { Tab: "knapp_byt", Enter: "knapp_redo" };
 function keyName(k) {
-  return touch ? TOUCH_NAMES[k] || k : k;
+  return touch && TOUCH_NAMES[k] ? t(TOUCH_NAMES[k]) : k;
+}
+
+// pressWord säger "Tryck" och knappen på en pekskärm, och annars tangenten.
+function pressWord(button, key) {
+  return touch ? t("tryck_knapp", { knapp: t(button) }) : t("tryck_tangent", { tangent: key });
+}
+
+// newTowerWord säger hur man går vidare till ett nytt torn i slutet.
+function newTowerWord() {
+  return touch ? t("tryck_knapp", { knapp: t("knapp_nytt_torn") }) : t("slut_nytt_torn");
+}
+
+// playerName ger vandrarens namn och om det är du, en AI eller datorn.
+function playerName(p, aiKey) {
+  if (p.id === state.you) return t("vandrare_namn_du", { namn: p.name });
+  if (p.ai) return t(aiKey, { namn: p.name });
+  if (p.bot) return t("vandrare_namn_dator", { namn: p.name });
+  return p.name;
 }
 
 // Pekknappen för Enter heter olika saker beroende på vad den gör.
@@ -884,7 +947,7 @@ function setEnterLabel(text) {
 }
 
 function hpMeter(hp, maxHp) {
-  return meter("hp", "Liv", hp, maxHp);
+  return meter("hp", t("matare_liv"), hp, maxHp);
 }
 
 function myPlayer() {
@@ -897,7 +960,7 @@ function renderTop() {
   const el = $("solmatare");
   el.innerHTML = "";
   const filled = Math.max(0, Math.round((state.sun / state.sunMax) * SUN_WIDTH));
-  const m = meter("sun", "Sol", filled, SUN_WIDTH, String(state.sun));
+  const m = meter("sun", t("topp_sol"), filled, SUN_WIDTH, String(state.sun));
   if (state.sun <= 3) m.classList.add("last");
   else if (state.sun <= state.sunMax / 4) m.classList.add("low");
   el.appendChild(m);
@@ -923,9 +986,9 @@ function renderCrew() {
     else glyph = (state.phase === "spel" ? p.chosen : p.ready) ? "●" : "○";
     d.textContent = glyph;
     d.style.color = MapView.PLAYER_COLORS[p.slot];
-    const who = p.name + (p.id === state.you ? " (du)" : p.ai ? " (AI spelar)" : p.bot ? " (dator)" : "");
+    const who = playerName(p, "vandrare_namn_ai_spelar");
     const tag = playerTag(p);
-    d.dataset.tip = who + (p.klass ? ", " + p.klass : "") + (tag ? "\n" + tag : "");
+    d.dataset.tip = (p.klass ? t("vandrare_med_klass", { vem: who, klass: p.klass }) : who) + (tag ? "\n" + tag : "");
     d.setAttribute("aria-label", d.dataset.tip);
     box.appendChild(d);
   });
@@ -942,27 +1005,28 @@ function updateTimer() {
   if (!state) return;
   if (state.phase === "lobby") {
     const n = state.players.filter((p) => p.online).length;
-    el.textContent = (n < state.minPlayers ? "väntar på vandrare" : "väntar på att alla är redo") + " · tornet " + state.size + " × " + state.size;
+    const lage = t(n < state.minPlayers ? "topp_vantar_vandrare" : "topp_vantar_redo");
+    el.textContent = t("topp_lobby", { lage, storlek: state.size });
     el.classList.remove("urgent");
     return;
   }
   if (state.phase === "klassval") {
-    el.textContent = "klassval";
+    el.textContent = t("topp_klassval");
     updateChooseStatus();
     return;
   }
   if (state.phase === "slut") {
-    el.textContent = state.sun > 0 ? "vandringen är slut" : "solen har gått ner";
+    el.textContent = t(state.sun > 0 ? "topp_slut" : "topp_solen_nere");
     el.classList.remove("urgent");
     return;
   }
   if (state.paused) {
-    el.textContent = "runda " + state.round + "  pausad";
+    el.textContent = t("topp_pausad", { runda: state.round });
     el.classList.remove("urgent");
     return;
   }
   const secs = Math.ceil(remainingMs() / 1000);
-  el.textContent = "runda " + state.round + "  " + String(secs).padStart(2, " ") + " s";
+  el.textContent = t("topp_runda", { runda: state.round, sekunder: String(secs).padStart(2, " ") });
   const urgent = secs <= 5;
   el.classList.toggle("urgent", urgent);
   const me = myPlayer();
@@ -994,7 +1058,7 @@ function frame(lines, width) {
 function showHosting(text) {
   const el = $("overlay");
   const words = text.split(" ");
-  const lines = [{ text: "DU LEDER TORNET" }, { text: "" }];
+  const lines = [{ text: t("leder_rubrik") }, { text: "" }];
   let row = "";
   words.forEach((w) => {
     if ((row + " " + w).trim().length > 30) {
@@ -1005,8 +1069,8 @@ function showHosting(text) {
     }
   });
   if (row) lines.push({ text: row });
-  lines.push({ text: "" }, { text: touch ? "Tryck Tillbaka" : "Enter: tillbaka till början" });
-  setEnterLabel("Tillbaka");
+  lines.push({ text: "" }, { text: touch ? t("tryck_knapp", { knapp: t("knapp_tillbaka") }) : t("leder_tillbaka") });
+  setEnterLabel(t("knapp_tillbaka"));
   el.innerHTML = "";
   frame(lines, 32).forEach((l) => {
     const d = document.createElement("div");
@@ -1028,7 +1092,7 @@ function backToStart() {
   state = null;
   towerClosed = false;
   hostingHere = false;
-  closedText = "tornet är stängt";
+  closedKey = "anslutning_stangt";
   $("conn").textContent = "";
   $("overlay").hidden = true;
   $("log").textContent = "";
@@ -1039,7 +1103,7 @@ function backToStart() {
 }
 
 function endTitle() {
-  return state.sun > 0 ? "VANDRINGEN ÄR SLUT" : "SOLEN HAR GÅTT NER";
+  return t(state.sun > 0 ? "slut_rubrik" : "slut_rubrik_solen");
 }
 
 function renderOverlay() {
@@ -1051,15 +1115,15 @@ function renderOverlay() {
   const lines = [{ text: endTitle() }, { text: "" }];
   state.results.forEach((r, i) => {
     let what;
-    if (r.status === "ute") what = r.treasure > 0 ? r.treasure + " guld" : "tomhänt";
-    else if (r.status === "dod") what = "död";
-    else what = "förlorad";
+    if (r.status === "ute") what = r.treasure > 0 ? t("slut_guld", { n: r.treasure }) : t("slut_tomhant");
+    else if (r.status === "dod") what = t("slut_dod");
+    else what = t("slut_forlorad");
     const name = (r.winner ? "*" : " ") + (r.ai ? "~" : " ") + r.name;
     const row = name.padEnd(20, " ") + what.padStart(10, " ");
     lines.push({ text: row, cls: r.winner ? "win" : r.status !== "ute" ? "lost" : "" });
   });
-  if (state.results.some((r) => r.ai)) lines.push({ text: "" }, { text: "~ AI spelade en del av vandringen" });
-  lines.push({ text: "" }, { text: touch ? "Tryck Nytt torn" : "Enter: nytt torn" });
+  if (state.results.some((r) => r.ai)) lines.push({ text: "" }, { text: t("slut_ai") });
+  lines.push({ text: "" }, { text: newTowerWord() });
   el.innerHTML = "";
   frame(lines, 32).forEach((l) => {
     const d = document.createElement("div");
@@ -1245,6 +1309,7 @@ const Intro = (() => {
   fetch("/intro" + (document.visibilityState === "visible" ? "?synlig" : ""), { cache: "no-store" })
     .then((r) => r.json())
     .then((info) => {
+      if (info.sprak && info.sprak !== UI.sprak) changeLanguage(info.sprak, false);
       reveal = !!info.avslojande;
       if (!reveal) $("intro").classList.add("invigd");
       toHostPage = info.vard && !wantsToPlay;
@@ -1330,8 +1395,10 @@ const Intro = (() => {
 // Zoomen: knapparna i kartans hörn, scrollhjulet och två fingrar väljer hur
 // nära kartan går. + och − på tangentbordet, och M för allt man känner till,
 // går genom pressKey.
+let zoomKey = ""; // nyckeln till zoomnivåns namn
 MapView.setZoomListener((name, n) => {
-  $("zoomName").textContent = name;
+  zoomKey = name;
+  $("zoomName").textContent = t(name);
   $("zoomIn").disabled = n === 0;
   $("zoomOut").disabled = n === 3;
 });
@@ -1391,7 +1458,7 @@ $("nameform").addEventListener("submit", (e) => {
   e.preventDefault();
   myName = $("name").value.trim();
   if (!myName) {
-    $("nameerr").textContent = "Tornet vill veta vad du heter.";
+    $("nameerr").textContent = t("namn_saknas");
     return;
   }
   $("nameerr").textContent = "";

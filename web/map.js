@@ -69,15 +69,16 @@ const MapView = (() => {
   // med lika många rum åt varje håll. Vid tornets kanter stannar rutan, så
   // att det inte blir tomt utanför tornet. Vandraren väljer själv hur nära
   // kartan går, eller att den visar allt man känner till. Spelledaren, som
-  // inte är någon vandrare, ser hela tornet.
+  // inte är någon vandrare, ser hela tornet. Nivåernas namn är nycklar till
+  // spelarsidans texter.
   const MIN_SPAN = 3; // så nära går kartan som mest, i rum
   const ZOOM_MS = 1100; // en ny nivå: en lång, mjuk zoom
   const PAN_MS = 400; // samma nivå i ett nytt rum: kartan glider snabbt efter
   const LEVELS = [
-    { name: "Nära", span: 3 },
-    { name: "Mellan", span: 5 },
-    { name: "Långt", span: 9 },
-    { name: "Allt", span: 0 },
+    { name: "zoom_nara", span: 3 },
+    { name: "zoom_mellan", span: 5 },
+    { name: "zoom_langt", span: 9 },
+    { name: "zoom_allt", span: 0 },
   ];
   const ALL = LEVELS.length - 1;
   const ZOOM_KEY = "ormtornet.zoom";
