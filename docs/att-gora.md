@@ -16,8 +16,11 @@ En riktig kväll behövs för att se:
 - Klasserna: är någon för stark eller för svag? Tjuven var svagast med
   AI-spelare.
 - Viskningen: gissar någon rätt, och känns fördelen lagom?
-- Åtta spelare med telefoner och datorer: zoomen på kartan, utsnittet och
-  knappen för allt man känner till.
+- Kartan (2026-11-19): är Mellan på datorn och Nära på telefonen bra
+  förval? Går det att zooma med två fingrar på en riktig telefon (bara
+  provat med hjul, tangenter och knappar)? Hittar man M och knapparna
+  nere till höger? Hamnar pilarna vid kanten under teckenförklaringen
+  eller tecknen i kartans övre hörn?
 - Klassvalet: räcker 30 sekunder för att läsa korten, och går de att läsa
   på en telefon?
 - Kartritaren som ser in i grannrummen: för stark nu när alla andra bara
@@ -37,8 +40,8 @@ En riktig kväll behövs för att se:
 - Tecknen på kartan (2026-11-19): går de att förstå, och skymmer de
   kartan när den har vuxit?
 - Loggen (2026-11-19): är takten lagom, ungefär tre rader i sekunden?
-  Hittar man knappen "↓ nya rader", och är det bra att äldre rundor
-  fälls ihop?
+  Hittar man knappen "↑ nya rader", och är det bra att den senaste
+  rundan står överst och äldre rundor fälls ihop?
 - Kortet efter rundan (2026-11-19): säger det det viktiga, är sju sekunder
   lagom, och skymmer det något på kartan?
 - Prickarna och namnen i färg (2026-11-19): syns vem som väljer? Den vita
