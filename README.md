@@ -253,13 +253,14 @@ spelarsidan (`/`), med tre vyer i tur och ordning:
      vänster på kartan står rummets namn, och under det
      teckenförklaringen: de tecken som står i rummen just nu, som
      vandrarna, varelserna och fällorna, kammaren, portarna, krita och
-     okända rum. Tecknen står under varandra, och vad de betyder (med
+     okända rum. En port som har slutit sig står som ett rött block. Tecknen står under varandra, och vad de betyder (med
      fällornas och varelsernas namn) syns när musen är över ett tecken
      eller efter ett tryck på det. Den fälls ihop med ett klick på
      rubriken, och texterna står under `tecken_*` i `data/texter.json`. Uppe till höger står statusen
      som tecken: klassens tecken, liv, skatt, drycker,
-     tillstånd som fast, gift och mörker, kompassen, dunket och viskningen,
-     och under dem föremålen. Håll musen över ett tecken, eller tryck på
+     tillstånd som fast, gift och mörker, kompassen, dunket, viskningen och
+     `⁂` med de tecken i väggarna som vandraren har hittat, och under dem
+     föremålen. Håll musen över ett tecken, eller tryck på
      det på en pekskärm, så står det vad det betyder. Styrningen ligger
      bakom **?** (eller tangenten `?` eller `H`) och visas en gång första
      vandringen. Panelen Nu visar det valda draget, striden, ormen i
