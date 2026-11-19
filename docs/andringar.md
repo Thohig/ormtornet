@@ -6,6 +6,14 @@ eller leder tornet.
 
 ## 2026-11-19
 
+### Teckenförklaringen går att läsa
+
+- Teckenförklaringen ligger över skärmens svepande linjer och mörka
+  kanter, så att hörnet där den står inte längre gör texten suddig och
+  mörk.
+- Texten är lite större, står i den vanliga textfärgen i stället för
+  den grå kritfärgen, och bakgrunden är mörkare.
+
 ### Ingen dämpad text
 
 - Teckenförklaringen på kartan är inte längre dämpad. Den syns med full
