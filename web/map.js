@@ -71,7 +71,8 @@ const MapView = (() => {
   // kartan går, eller att den visar allt man känner till. Spelledaren, som
   // inte är någon vandrare, ser hela tornet.
   const MIN_SPAN = 3; // så nära går kartan som mest, i rum
-  const ZOOM_MS = 1100;
+  const ZOOM_MS = 1100; // en ny nivå: en lång, mjuk zoom
+  const PAN_MS = 400; // samma nivå i ett nytt rum: kartan glider snabbt efter
   const LEVELS = [
     { name: "Nära", span: 3 },
     { name: "Mellan", span: 5 },
@@ -87,7 +88,7 @@ const MapView = (() => {
   let boxW = 0, boxH = 0, ox = 0, oy = 0;
   // view är rutan som syns, i rum: x, y, bredd och höjd. Den glider mot
   // target när kartan växer.
-  let view = null, from = null, target = null, zoomAt = 0, zooming = false;
+  let view = null, from = null, target = null, zoomAt = 0, zoomMs = ZOOM_MS, zooming = false;
   // grid och colr: tecknen. wall: väggceller (true), wallc: en färg som
   // tar över kritans, för ekot. Golv, kammare och vandrare samlas i listor.
   let grid, colr, wall, wallc, floors, rings, figures;
@@ -238,7 +239,8 @@ const MapView = (() => {
   }
 
   // aim sätter rutan kartan ska visa. En ny ruta nås med en mjuk zoom från
-  // den som syns just nu; första gången hoppar kartan direkt dit.
+  // den som syns just nu, eller glider snabbt dit om bara platsen har bytts;
+  // första gången hoppar kartan direkt dit.
   function aim(t, now) {
     if (!view) {
       view = target = t;
@@ -247,6 +249,7 @@ const MapView = (() => {
     }
     if (same(t, target)) return;
     from = current(now);
+    zoomMs = Math.abs(t.w - from.w) < 0.01 && Math.abs(t.h - from.h) < 0.01 ? PAN_MS : ZOOM_MS;
     target = t;
     zoomAt = now;
     if (!zooming) {
@@ -263,7 +266,7 @@ const MapView = (() => {
 
   function current(now) {
     if (zoomAt === -Infinity) return target;
-    const f = Math.min(1, (now - zoomAt) / ZOOM_MS);
+    const f = Math.min(1, (now - zoomAt) / zoomMs);
     if (f >= 1) {
       zoomAt = -Infinity;
       return target;

@@ -6,6 +6,11 @@ eller leder tornet.
 
 ## 2026-11-19
 
+### Kartan följer snabbare
+
+- När du går till ett nytt rum glider kartan efter på 0,4 sekunder. Den
+  långa, mjuka zoomen blir kvar när du byter nivå.
+
 ### Zooma kartan
 
 - Kartan har fyra nivåer: Nära (3 × 3 rum), Mellan (5 × 5), Långt (9 × 9)
