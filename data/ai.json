@@ -1,6 +1,6 @@
 {
   "ai": {
-    "_om": "Datorstyrda vandrare. Personligheterna turas om: den första datorspelaren får den första personligheten, nästa den andra och så vidare. Namnen väljs i tur och ordning.",
+    "_om": "Datorstyrda vandrare. Personligheterna turas om: den första datorspelaren får den första personligheten, nästa den andra och så vidare. Namnen väljs i tur och ordning. ga_hem_vid_liv och drick_vid_liv gäller för liven i fallor.json och räknas om efter vandrarens egna liv, så att de passar både klasser och svårigheter.",
     "namn": ["Ingrid", "Sigge", "Ylva", "Tore", "Märta", "Gösta", "Hedvig", "Folke", "Sigrid", "Alrik"],
 
     "personligheter": [

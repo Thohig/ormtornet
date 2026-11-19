@@ -26,3 +26,21 @@ func TestLostBotHeadsForPorts(t *testing.T) {
 		t.Fatalf("utan skatt och med gott om tid gick den %q, ville ha E mot kammaren", a)
 	}
 }
+
+// Livsgränserna följer vandrarens maxliv, så att en försiktig AI-spelare med
+// få liv inte vänder redan i porten.
+func TestBotLifeLimitFollowsMaxHP(t *testing.T) {
+	g := testGame(t)
+	base := g.base.Regler.Liv
+	for _, c := range []struct{ limit, maxHP, want int }{
+		{3, base, 3},
+		{3, base * 2, 6},
+		{3, base / 2, 2},
+		{2, base / 2, 1},
+		{3, 0, 3},
+	} {
+		if got := g.botLifeLimit(c.limit, c.maxHP); got != c.want {
+			t.Errorf("gräns %d med %d liv gav %d, ville ha %d", c.limit, c.maxHP, got, c.want)
+		}
+	}
+}

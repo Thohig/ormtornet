@@ -6,6 +6,15 @@ eller leder tornet.
 
 ## 2026-11-19
 
+### AI-spelarnas livsgränser följer deras liv
+
+- Hur lite liv en AI-spelare går hem eller dricker vid räknas nu om efter
+  dess egna liv. Förut gällde samma antal oavsett klass och svårighet, så
+  att en försiktig örtkvinna på Mardröm, med 3 liv, vände redan i porten.
+- På Mardröm kommer nu en tredjedel ut med skatt i stället för en
+  fjärdedel, men fler dör, omkring 44 %. Mardröm är därmed den farligaste
+  svårigheten även för AI-spelarna.
+
 ### AI-spelarna hittar ut när de är vilse
 
 - En AI-spelare som har tappat vägen ut, till exempel efter ett fall genom

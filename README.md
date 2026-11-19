@@ -443,6 +443,9 @@ de som "(dator)".
 - Har de tappat vägen ut, till exempel efter ett fall genom golvet, letar
   de sig mot portarna i stället för mot mitten när de bär skatt eller
   solen börjar sjunka.
+- Hur lite liv de går hem eller dricker vid står i `data/ai.json` för
+  liven i datafilerna och räknas om efter vandrarens egna liv, så att en
+  försiktig vandrare med få liv på Mardröm inte vänder redan i porten.
 - I strid gissar de varelsens vanor utifrån dess beskrivning och lär sig av
   det de ser. De flyr när nästa slag kan döda dem.
 - Det finns två personligheter som turas om: en djärv och en försiktig.

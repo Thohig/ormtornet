@@ -396,9 +396,9 @@ type Personality struct {
 	TaVidSomn   []float64 `json:"ta_vid_somn"`    // chans att ta skatt per sömnnivå
 	SokChans    float64   `json:"sok_chans"`      // chans att söka igenom ett rum
 	FlyMarginal int       `json:"fly_marginal"`   // flyr när ett slag till (plus så här mycket) kan döda
-	GaHemVidLiv int       `json:"ga_hem_vid_liv"` // går mot porten vid så här lite liv
+	GaHemVidLiv int       `json:"ga_hem_vid_liv"` // går mot porten vid så här lite liv, räknat på liven i datafilerna
 	Klasser     []string  `json:"klasser"`        // klasserna personligheten helst väljer, i tur och ordning
-	DrickVidLiv int       `json:"drick_vid_liv"`  // dricker vid så här lite liv
+	DrickVidLiv int       `json:"drick_vid_liv"`  // dricker vid så här lite liv, räknat på samma sätt
 	Stridslust  float64   `json:"stridslust"`     // chans att slåss med en vandrare i samma rum
 }
 

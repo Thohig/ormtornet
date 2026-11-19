@@ -331,7 +331,7 @@ func (g *Game) botDecide(p *Player) (string, int) {
 		return a, -foe.ID
 	}
 
-	if st.HP <= pers.DrickVidLiv && st.Potions > 0 {
+	if st.HP <= g.botLifeLimit(pers.DrickVidLiv, st.MaxHP) && st.Potions > 0 {
 		return actDrink, 0
 	}
 
@@ -350,7 +350,7 @@ func (g *Game) botDecide(p *Player) (string, int) {
 
 	// Gå ut i tid, när väskan är full nog eller när livet tryter.
 	mustLeave := exitDist >= 0 && st.Sun <= exitDist+pers.Marginal
-	hurt := st.HP <= pers.GaHemVidLiv
+	hurt := st.HP <= g.botLifeLimit(pers.GaHemVidLiv, st.MaxHP)
 	if exitDist >= 0 && (mustLeave || p.Treasure >= pers.SkattMal || hurt) {
 		return dirLetter[exitDir], 0
 	}
@@ -416,6 +416,17 @@ func (g *Game) botDecide(p *Player) (string, int) {
 		}
 	}
 	return actWait, 0
+}
+
+// botLifeLimit räknar om en livsgräns ur ai.json, som gäller för liven i
+// datafilerna, till vandrarens maxliv. Med 4 liv på Mardröm går den
+// försiktiga hem vid 2 liv i stället för 3, och med 8 på Lätt vid 4.
+func (g *Game) botLifeLimit(limit, maxHP int) int {
+	base := g.base.Regler.Liv
+	if base <= 0 || maxHP <= 0 {
+		return limit
+	}
+	return (limit*maxHP + base/2) / base
 }
 
 // botTowardPorts ger första steget mot det okända rum som ligger närmast
