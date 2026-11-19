@@ -84,6 +84,7 @@ const MapView = (() => {
   let level = loadLevel();
   let before = level === ALL ? 1 : level; // nivån som M går tillbaka till
   let onZoom = null;
+  let followId = 0; // spelledaren kan låta kartan följa en vandrare
   let towerSize = 0;
   let boxW = 0, boxH = 0, ox = 0, oy = 0;
   // view är rutan som syns, i rum: x, y, bredd och höjd. Den glider mot
@@ -165,7 +166,11 @@ const MapView = (() => {
   // wanted räknar ut rutan kartan ska visa: allt man känner till, med lite
   // luft omkring, och aldrig närmare än MIN_SPAN rum.
   function wanted(state) {
-    if (!state.you) return { x: 0, y: 0, w: towerSize, h: towerSize };
+    if (!state.you) {
+      // Spelledaren: hela tornet, eller rutan runt vandraren den följer.
+      const p = focus(state);
+      return p ? around(p, spanNow(state)) : { x: 0, y: 0, w: towerSize, h: towerSize };
+    }
     let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
     const take = (x, y) => {
       if (x < 0 || y < 0) return;
@@ -182,14 +187,31 @@ const MapView = (() => {
     if (x0 === Infinity) return { x: 0, y: 0, w: towerSize, h: towerSize };
     const all = grow({ x: x0, y: y0, w: x1 - x0, h: y1 - y0 }, MIN_SPAN);
     const me = focus(state);
-    if (level === ALL || !me) return all;
-    return around(me, LEVELS[level].span);
+    const n = spanNow(state);
+    if (!n || !me) return all;
+    return around(me, n);
   }
 
-  // focus ger vandraren kartan följer: den egna, så länge den är inne.
+  // focus ger vandraren kartan följer: den egna, så länge den är inne, eller
+  // den spelledaren har valt.
   function focus(state) {
-    const me = state.players.find((p) => p.id === state.you);
-    return me && me.status === "inne" && me.x >= 0 ? me : null;
+    const id = state.you || followId;
+    const p = id && state.players.find((q) => q.id === id);
+    return p && p.status === "inne" && !p.hidden && p.x >= 0 ? p : null;
+  }
+
+  // spanNow ger hur många rum utsnittet visar, eller 0 för allt. Spelledaren
+  // följer en vandrare på nivån Mellan.
+  function spanNow(state) {
+    if (!state.you) return followId ? LEVELS[1].span : 0;
+    return LEVELS[level].span;
+  }
+
+  // follow låter spelledarens karta följa vandraren med id, eller visa hela
+  // tornet igen med 0.
+  function follow(id) {
+    followId = id || 0;
+    if (lastState) draw(lastState);
   }
 
   // loadLevel ger nivån som valdes senast på den här enheten, annars Nära
@@ -503,7 +525,7 @@ const MapView = (() => {
     // Det som får en pil vid kanten om det ligger utanför rutan: portarna och
     // kammaren man känner till, och vandrarna man ser just nu.
     beyond = [];
-    if (f && level !== ALL) {
+    if (f && spanNow(state)) {
       const at = (x, y, glyph, color) => beyond.push({ x: x * RW + RW / 2 - 0.5, y: y * RH + RH / 2 - 0.5, glyph, color });
       state.rooms.forEach((r) => {
         if (r.exit >= 0) at(r.x, r.y, "˄", COLORS.exit);
@@ -743,5 +765,5 @@ const MapView = (() => {
     wokeAt = performance.now();
   }
 
-  return { setup, draw, resize, ping, wake, zoom, toggleWhole, setZoomListener, setLegend, PLAYER_COLORS };
+  return { setup, draw, resize, ping, wake, zoom, toggleWhole, setZoomListener, follow, setLegend, PLAYER_COLORS };
 })();

@@ -115,6 +115,9 @@
   #gmPlayers th { text-align: left; font-weight: normal; color: var(--fg); padding: 4px 10px 4px 0; }
   #gmPlayers td { padding: 4px 10px 4px 0; vertical-align: top; }
   #gmPlayers .cond { color: var(--warn); }
+  #gmPlayers .follow { background: none; border: 0; padding: 0; font: inherit; text-align: left; cursor: pointer; text-shadow: inherit; }
+  #gmPlayers .follow:hover, #gmPlayers .follow.on { text-decoration: underline; }
+  #gmFollow { color: var(--info); min-height: 1.2em; }
   #gmPlayers .dead { opacity: 0.55; }
   .gmrow { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px; margin: 8px 0; }
   .gmlabel { color: var(--fg); min-width: 13ch; }
@@ -225,7 +228,8 @@
       <div id="gmCols">
       <div id="gmMapCol">
         <div id="gmMapBox"><canvas id="gmMap"></canvas></div>
-        <p class="dimtext">Fällor som väntar visas med sitt tecken. Tornet växer fram när någon går in i ett nytt rum, så rum som ingen har varit i finns inte än.</p>
+        <p id="gmFollow"></p>
+        <p class="dimtext">Klicka på en vandrares namn i tabellen för att låta kartan följa den. Fällor som väntar visas med sitt tecken. Tornet växer fram när någon går in i ett nytt rum, så rum som ingen har varit i finns inte än.</p>
       </div>
       <div id="gmCtl">
       <div class="gmrow">
@@ -598,6 +602,16 @@ $("barMain").onclick = () => {
 let mapReady = false;
 let mapSize = 0;
 const chosenItem = {}; // föremålet spelledaren har valt att ge, per vandrare
+let following = 0; // vandraren kartan följer, eller 0 för hela tornet
+
+$("gmPlayers").addEventListener("click", (ev) => {
+  const b = ev.target.closest("button[data-follow]");
+  if (!b) return;
+  const id = +b.dataset.follow;
+  following = following === id ? 0 : id;
+  MapView.follow(following);
+  $("gmFollow").textContent = following ? "Kartan följer " + b.textContent.replace(/^◉ /, "") + ". Klicka på namnet igen för hela tornet." : "";
+});
 const SLEEP_WORDS = ["sover djupt", "sover oroligt", "är nära att vakna"];
 
 function renderGM(o) {
@@ -645,7 +659,18 @@ function renderGM(o) {
     cells.forEach((c, i) => {
       const td = document.createElement("td");
       td.textContent = c;
-      if (i === 0) td.style.color = COLORS[p.slot];
+      if (i === 0) {
+        // Ett klick på namnet låter kartan följa vandraren.
+        td.textContent = "";
+        const b = document.createElement("button");
+        b.type = "button";
+        b.className = "follow" + (following === p.id ? " on" : "");
+        b.dataset.follow = String(p.id);
+        b.title = following === p.id ? "Visa hela tornet igen" : "Låt kartan följa " + p.name;
+        b.textContent = (following === p.id ? "◉ " : "") + c;
+        b.style.color = COLORS[p.slot];
+        td.append(b);
+      }
       if (i === 5 && c) td.className = "cond";
       tr.append(td);
     });

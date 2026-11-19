@@ -6,6 +6,12 @@ eller leder tornet.
 
 ## 2026-11-19
 
+### Spelledaren följer en vandrare
+
+- I översikten låter ett klick på en vandrares namn i tabellen kartan
+  följa den vandraren, med 5 × 5 rum, ramen runt rummet och pilarna vid
+  kanten. Ett klick till visar hela tornet igen.
+
 ### Pilar vid kartans kant
 
 - Ligger en port eller kammaren du känner till, eller en vandrare du ser,

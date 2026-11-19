@@ -155,7 +155,9 @@ på den. Där står den senaste rundan överst, de två senaste rundorna är
 öppna och de äldre fällda ihop, och loggen kan visa en vandrare i taget.
 
 På en bred skärm står kartan till vänster och ingreppen till höger, med
-tabellen över vandrarna under dem. I spelledarläget kan spelledaren också
+tabellen över vandrarna under dem. Ett klick på en vandrares namn i
+tabellen låter kartan följa den vandraren, fem rum åt gången, och ett
+klick till visar hela tornet igen. I spelledarläget kan spelledaren också
 göra ingrepp under en vandring, och varje ingrepp skrivs i loggen:
 
 - **Tid:** pausa och fortsätta, ge rundan 30 sekunder till, avgöra rundan
