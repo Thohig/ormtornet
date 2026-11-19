@@ -6,6 +6,14 @@ eller leder tornet.
 
 ## 2026-11-19
 
+### Automatiska kontroller på GitHub
+
+- Vid varje push kör GitHub formateringen, `go vet`, testerna med
+  race-detektorn, kontrollen av datafilerna och en kontroll av
+  JavaScript-filerna (`.github/workflows/kontroll.yml`).
+- `./ormtornet -kontrollera` kontrollerar datafilerna och avslutar, utan
+  att öppna tornet.
+
 ### Frö för varje vandring
 
 - Varje vandring har ett frö som bestämmer slumpen: rummen, dörrarna,

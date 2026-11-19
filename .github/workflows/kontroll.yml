@@ -1,0 +1,46 @@
+# Kontrollerar tornet vid varje push och pull request: formatering, go vet,
+# testerna med race-detektorn (bland dem kontrollen av datafilerna) och att
+# JavaScript-filerna går att läsa.
+name: Kontroll
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  kontroll:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+
+      - name: Formatering
+        run: |
+          fel=$(gofmt -l .)
+          if [ -n "$fel" ]; then
+            echo "Kör gofmt -w på:"
+            echo "$fel"
+            exit 1
+          fi
+
+      - name: go vet
+        run: go vet ./...
+
+      - name: Tester
+        run: go test -race ./...
+
+      - name: Bygg
+        run: go build -o ormtornet .
+
+      - name: Datafilerna
+        run: ./ormtornet -kontrollera
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: JavaScript
+        run: for f in web/*.js; do node --check "$f"; done

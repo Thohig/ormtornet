@@ -41,6 +41,7 @@ func main() {
 	awake := flag.Bool("vaken", false, "håll datorn vaken så länge servern är igång")
 	autostop := flag.Duration("autostopp", 10*time.Minute, "stäng tornet när ingen spelare är ansluten och ingen sida har synts på den här datorn så här länge (0 = aldrig)")
 	abandoned := flag.Duration("autostopp-max", 12*time.Hour, "stäng tornet när ingen har gjort något så här länge, även om flikar står öppna (0 = aldrig)")
+	check := flag.Bool("kontrollera", false, "kontrollera datafilerna och avsluta")
 	flag.Parse()
 
 	// Spelledarens sparade inställningar gäller, utom det som anges med
@@ -77,6 +78,10 @@ func main() {
 	data, src, err := loadData(*dataPath)
 	if err != nil {
 		log.Fatalf("kunde inte läsa datafilerna: %v", err)
+	}
+	if *check {
+		fmt.Println("Datafilerna är i ordning:", src)
+		return
 	}
 	if cfg.Difficulty != "" && data.difficultyID(cfg.Difficulty) != cfg.Difficulty {
 		fmt.Printf("Svårigheten %q finns inte i svarighet.json. Använder standard.\n", cfg.Difficulty)
