@@ -38,6 +38,14 @@
   #moreSettings summary::before { content: "▸ "; }
   #moreSettings[open] summary::before { content: "▾ "; }
   #moreSettings summary:hover { color: var(--hi); }
+  #settingsHelp summary { color: var(--fg); cursor: pointer; list-style: none; }
+  #settingsHelp summary::-webkit-details-marker { display: none; }
+  #settingsHelp summary::before { content: "▸ "; }
+  #settingsHelp[open] summary::before { content: "▾ "; }
+  #settingsHelp summary:hover { color: var(--hi); }
+  #settingsHelp dl { margin: 8px 0 0; }
+  #settingsHelp dt { color: var(--hi); margin-top: 10px; }
+  #settingsHelp dd { margin: 2px 0 0; color: var(--fg); line-height: 1.45; max-width: 70ch; }
   #moreSettings summary .note { margin-left: 1ch; }
   #settings label { color: var(--fg); }
   #settings .note { color: var(--fg); font-size: 12px; }
@@ -212,6 +220,41 @@
     </form>
     <p id="saved"></p>
     <p class="dimtext" id="settingsHint" data-t="inst_hint"></p>
+    <details id="settingsHelp">
+      <summary><span data-t="forkl_rubrik"></span></summary>
+      <dl>
+        <dt data-t="inst_svarighet"></dt>
+        <dd data-t="forkl_svarighet"></dd>
+        <dt data-t="inst_ai"></dt>
+        <dd data-t="forkl_ai"></dd>
+        <dt data-t="inst_spelledarlage"></dt>
+        <dd data-t="forkl_spelledarlage"></dd>
+        <dt data-t="sprak"></dt>
+        <dd data-t="forkl_sprak"></dd>
+        <dt data-t="inst_min"></dt>
+        <dd data-t="forkl_min"></dd>
+        <dt data-t="inst_avslojande"></dt>
+        <dd data-t="forkl_avslojande"></dd>
+        <dt data-t="inst_invigning"></dt>
+        <dd data-t="forkl_invigning"></dd>
+        <dt data-t="inst_forandras"></dt>
+        <dd data-t="forkl_forandras"></dd>
+        <dt data-t="inst_franvaro"></dt>
+        <dd data-t="forkl_franvaro"></dd>
+        <dt data-t="inst_strid"></dt>
+        <dd data-t="forkl_strid"></dd>
+        <dt data-t="inst_synlighet"></dt>
+        <dd data-t="forkl_synlighet"></dd>
+        <dt data-t="inst_storlek"></dt>
+        <dd data-t="forkl_storlek"></dd>
+        <dt data-t="inst_sol"></dt>
+        <dd data-t="forkl_sol"></dd>
+        <dt data-t="inst_turtid"></dt>
+        <dd data-t="forkl_turtid"></dd>
+        <dt data-t="inst_klasser"></dt>
+        <dd data-t="forkl_klasser"></dd>
+      </dl>
+    </details>
     </section>
 
     <section id="foot">

@@ -6,6 +6,14 @@ eller leder tornet.
 
 ## 2026-11-19
 
+### Förklaringar till inställningarna
+
+- Under Inför nästa vandring på värdsidan finns "Vad inställningarna gör",
+  hopfälld, med några meningar om varje inställning, på svenska och
+  engelska. Förklaringarna avslöjar inte tornets hemlighet.
+- Efter en viskning syns det direkt om vandraren blev invigd, utan att
+  vänta på rundan.
+
 ### Spelledarbordet visar namnet, varslen och portarna
 
 - Översikten visar ormens namn, om tornets nåd har kommit och hur många

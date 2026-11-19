@@ -107,6 +107,8 @@ Under Inför nästa vandring väljer spelledaren det här. Svårighet,
 AI-spelare, Spelledarläge och Språk syns direkt. Resten ligger under Fler
 inställningar, som visar de nuvarande valen i korthet tills man fäller ut
 den. Solnedgång och Turtid står där bara när de inte är automatiska.
+Under formuläret förklarar "Vad inställningarna gör", hopfälld, varje
+inställning med några meningar (`forkl_*` i `vardsidan.json`).
 
 | Inställning | Val | Förval |
 |---|---|---|
