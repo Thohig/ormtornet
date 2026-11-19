@@ -100,7 +100,10 @@ innehållet, hopfällda, och en liten knapp som stänger tornet. Har ingen
 människa kommit in en och en halv minut efter att sidan öppnades fälls
 Kommer någon inte in? ut av sig själv.
 
-Under Inför nästa vandring väljer spelledaren:
+Under Inför nästa vandring väljer spelledaren det här. Svårighet,
+AI-spelare, Solnedgång, Turtid och Spelledarläge syns direkt. Resten ligger
+under Fler inställningar, som visar de nuvarande valen i korthet tills man
+fäller ut den.
 
 | Inställning | Val | Förval |
 |---|---|---|

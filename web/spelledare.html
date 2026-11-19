@@ -69,7 +69,14 @@
   #slots .tag.ai { color: var(--info); }
   #slots li { align-items: baseline; }
   .btn.small { padding: 1px 8px; font-size: 12px; }
-  #settings { display: grid; grid-template-columns: 20ch auto 1fr; gap: 8px 12px; align-items: baseline; }
+  #settings, #settings .grid { display: grid; grid-template-columns: 20ch auto 1fr; gap: 8px 12px; align-items: baseline; }
+  #moreSettings { grid-column: 1 / -1; margin-top: 4px; }
+  #moreSettings summary { color: var(--dim); cursor: pointer; list-style: none; margin-bottom: 8px; }
+  #moreSettings summary::-webkit-details-marker { display: none; }
+  #moreSettings summary::before { content: "▸ "; }
+  #moreSettings[open] summary::before { content: "▾ "; }
+  #moreSettings summary:hover { color: var(--fg); }
+  #moreSettings summary .note { margin-left: 1ch; }
   #settings label { color: var(--dim); }
   #settings .note { color: var(--dim); font-size: 12px; }
   #settings select {
@@ -257,17 +264,13 @@
     <section id="next">
     <h2>Inför nästa vandring</h2>
     <form id="settings" autocomplete="off">
-      <label for="sAI">AI-spelare</label>
-      <select id="sAI" name="ai"><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option></select>
-      <span class="note" id="aiNote"></span>
-
-      <label for="sMin">Minst antal vandrare</label>
-      <select id="sMin" name="min"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option></select>
-      <span class="note">AI-spelare räknas med</span>
-
       <label for="sSv">Svårighet</label>
       <select id="sSv" name="svarighet"></select>
       <span class="note" id="svNote"></span>
+
+      <label for="sAI">AI-spelare</label>
+      <select id="sAI" name="ai"><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option></select>
+      <span class="note" id="aiNote"></span>
 
       <label for="sSol">Solnedgång</label>
       <select id="sSol" name="sol"></select>
@@ -277,57 +280,66 @@
       <select id="sTur" name="turtid"></select>
       <span class="note">sekunder per runda</span>
 
-      <label for="sRev">Avslöjandet</label>
-      <select id="sRev" name="avslojande"><option value="1">på</option><option value="0">av</option></select>
-      <span class="note">tornets hemlighet</span>
-
-      <label for="sFr">Frånvarande vandrare</label>
-      <select id="sFr" name="franvaro">
-        <option value="0">står still</option>
-        <option value="1">AI tar över efter 1 runda</option>
-        <option value="2">AI tar över efter 2 rundor</option>
-        <option value="3">AI tar över efter 3 rundor</option>
-      </select>
-      <span class="note">när någon lämnar under vandringen</span>
-
-      <label for="sStrid">Strid mellan vandrare</label>
-      <select id="sStrid" name="strid">
-        <option value="pa">på</option>
-        <option value="halva">efter halva tiden</option>
-        <option value="av">av</option>
-      </select>
-      <span class="note">portrummen är alltid fredade</span>
-
-      <label for="sSyn">Vandrarna syns</label>
-      <select id="sSyn" name="synlighet">
-        <option value="egen">bara när de möts, egen karta</option>
-        <option value="moten">bara när de möts</option>
-        <option value="alla">alltid, för alla</option>
-      </select>
-      <span class="note">egen karta: bara rum man själv har gått igenom</span>
-
-      <label for="sStorlek">Tornets storlek</label>
-      <select id="sStorlek" name="storlek">
-        <option value="0">automatisk</option>
-        <option value="9">9 × 9 rum</option>
-        <option value="11">11 × 11 rum</option>
-        <option value="13">13 × 13 rum</option>
-      </select>
-      <span class="note">automatisk: 9 för upp till fyra, 11 för sex, 13 för åtta</span>
-
-      <label for="sKlass">Klasser</label>
-      <select id="sKlass" name="klasser">
-        <option value="1">på, vandrarna väljer en av två</option>
-        <option value="0">av, alla är vanliga vandrare</option>
-      </select>
-      <span class="note">styrkor och svagheter, se klasser.json</span>
-
       <label for="sGM">Spelledarläge</label>
       <select id="sGM" name="spelledarlage">
         <option value="0">av, jag spelar själv</option>
         <option value="1">på, jag leder och ser allt</option>
       </select>
       <span class="note">då kan ingen spela från den här datorn</span>
+
+      <details id="moreSettings">
+        <summary>Fler inställningar<span class="note" id="moreNote"></span></summary>
+        <div class="grid">
+          <label for="sMin">Minst antal vandrare</label>
+          <select id="sMin" name="min"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option></select>
+          <span class="note">AI-spelare räknas med</span>
+
+          <label for="sRev">Avslöjandet</label>
+          <select id="sRev" name="avslojande"><option value="1">på</option><option value="0">av</option></select>
+          <span class="note">tornets hemlighet</span>
+
+          <label for="sFr">Frånvarande vandrare</label>
+          <select id="sFr" name="franvaro">
+            <option value="0">står still</option>
+            <option value="1">AI tar över efter 1 runda</option>
+            <option value="2">AI tar över efter 2 rundor</option>
+            <option value="3">AI tar över efter 3 rundor</option>
+          </select>
+          <span class="note">när någon lämnar under vandringen</span>
+
+          <label for="sStrid">Strid mellan vandrare</label>
+          <select id="sStrid" name="strid">
+            <option value="pa">på</option>
+            <option value="halva">efter halva tiden</option>
+            <option value="av">av</option>
+          </select>
+          <span class="note">portrummen är alltid fredade</span>
+
+          <label for="sSyn">Vandrarna syns</label>
+          <select id="sSyn" name="synlighet">
+            <option value="egen">bara när de möts, egen karta</option>
+            <option value="moten">bara när de möts</option>
+            <option value="alla">alltid, för alla</option>
+          </select>
+          <span class="note">egen karta: bara rum man själv har gått igenom</span>
+
+          <label for="sStorlek">Tornets storlek</label>
+          <select id="sStorlek" name="storlek">
+            <option value="0">automatisk</option>
+            <option value="9">9 × 9 rum</option>
+            <option value="11">11 × 11 rum</option>
+            <option value="13">13 × 13 rum</option>
+          </select>
+          <span class="note">automatisk: 9 för upp till fyra, 11 för sex, 13 för åtta</span>
+
+          <label for="sKlass">Klasser</label>
+          <select id="sKlass" name="klasser">
+            <option value="1">på, vandrarna väljer en av två</option>
+            <option value="0">av, alla är vanliga vandrare</option>
+          </select>
+          <span class="note">styrkor och svagheter, se klasser.json</span>
+        </div>
+      </details>
     </form>
     <p id="saved"></p>
     <p class="dimtext" id="settingsHint">Sparas till nästa gång. AI-spelare kommer och går direkt, resten gäller från nästa omgång.</p>
@@ -866,6 +878,16 @@ function renderSettings(v) {
   $("aiNote").textContent = s.ai > v.bots && !playing
     ? v.bots + " får plats just nu, resten kliver in om någon går"
     : "";
+  // De hopfällda inställningarna i korthet, så att de syns utan att fällas ut.
+  $("moreNote").textContent = [
+    "minst " + s.min,
+    "avslöjandet " + (s.avslojande ? "på" : "av"),
+    s.franvaro ? "AI tar över efter " + s.franvaro : "frånvarande står still",
+    "strid " + ({ pa: "på", halva: "efter halva tiden", av: "av" }[s.strid] || s.strid),
+    "syns " + ({ egen: "när de möts, egen karta", moten: "när de möts", alla: "alltid" }[s.synlighet] || s.synlighet),
+    s.storlek ? s.storlek + " × " + s.storlek + " rum" : "storlek automatisk",
+    "klasser " + (s.klasser ? "på" : "av"),
+  ].join(" · ");
   if (saving || form.contains(document.activeElement)) return;
   const sv = $("sSv");
   const levels = v.svarigheter || [];

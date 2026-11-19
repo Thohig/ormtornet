@@ -6,6 +6,16 @@ eller leder tornet.
 
 ## 2026-11-19
 
+### Fler inställningar
+
+- Under Inför nästa vandring syns Svårighet, AI-spelare, Solnedgång,
+  Turtid och Spelledarläge direkt.
+- Minst antal, Avslöjandet, Frånvarande vandrare, Strid, Vandrarna syns,
+  Tornets storlek och Klasser ligger under Fler inställningar. Raden visar
+  de nuvarande valen i korthet.
+- Inställningarna är låsta under vandringen som förut, så det behövs
+  ingen märkning av vad som gäller från nästa omgång.
+
 ### Värdsidan följer fasen
 
 - Avsnitten på värdsidan byter plats efter fasen. I lobbyn och
