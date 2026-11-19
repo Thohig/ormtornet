@@ -74,7 +74,7 @@ func main() {
 
 	data, src, err := loadData(*dataPath)
 	if err != nil {
-		log.Fatalf("kunde inte läsa texterna: %v", err)
+		log.Fatalf("kunde inte läsa datafilerna: %v", err)
 	}
 	if cfg.Difficulty != "" && data.difficultyID(cfg.Difficulty) != cfg.Difficulty {
 		fmt.Printf("Svårigheten %q finns inte i svarighet.json. Använder standard.\n", cfg.Difficulty)

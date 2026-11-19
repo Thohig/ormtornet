@@ -587,6 +587,12 @@ Allt innehåll ligger i mappen `data/`. Filerna läses när servern startar,
 så starta om servern efter en ändring. Det gäller också filerna i `web/`:
 de byggs in i programmet.
 
+Tornet kontrollerar filerna när det startar och vägrar starta om något är
+fel. Felet står i terminalen med filen och fältet, till exempel ett
+felstavat fält, en chans som inte ligger mellan 0 och 1, ett id som finns
+två gånger eller en klass i `ai.json` som inte finns i `klasser.json`.
+Fält som börjar med `_` är kommentarer och får stå var som helst.
+
 - `texter.json` rum, beskrivningar, allmänna texter och introts väntetid
 - `fallor.json` regler (liv, chans för händelse, drycker, hur länge spåren syns), fällor och sökresultat
 - `ormen.json` ormkorten, skatten i kammaren och vad som händer när ormen vaknar

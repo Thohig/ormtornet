@@ -6,6 +6,17 @@ eller leder tornet.
 
 ## 2026-11-19
 
+### Kontroll av datafilerna
+
+- Tornet kontrollerar `data/` när det startar. Ett felstavat fält, en
+  chans utanför 0–1, ett id som finns två gånger, en vana som inte är
+  anfall, parera eller undan, eller en klass i `ai.json` som inte finns
+  stoppar starten med ett meddelande som säger fil och fält. Förut
+  ignorerades ett felstavat fält tyst.
+- Fält som börjar med `_` är kommentarer, som förut.
+- Ett test kontrollerar att alla texter som koden använder finns i
+  `data/`, så att ingen `[nyckel]` dyker upp i spelet.
+
 ### Varelserna vandrar
 
 - Varelserna står inte längre still i rummet där de dök upp. I början av

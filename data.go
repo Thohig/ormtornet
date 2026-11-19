@@ -5,7 +5,6 @@ package main
 
 import (
 	"embed"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"math/rand/v2"
@@ -171,7 +170,7 @@ func loadData(dir string) (*Data, string, error) {
 			return nil, "", err
 		}
 		var part Data
-		if err := json.Unmarshal(raw, &part); err != nil {
+		if err := decodeStrict(raw, &part); err != nil {
 			return nil, "", fmt.Errorf("%s: %w", src, err)
 		}
 		texts := part.Texter
@@ -205,6 +204,9 @@ func loadData(dir string) (*Data, string, error) {
 	}
 	if len(d.Ormen.Kort) == 0 || len(d.Ormen.Somn) == 0 {
 		return nil, "", fmt.Errorf("ormen.json: kort och sömntexter saknas")
+	}
+	if problems := d.validate(); len(problems) > 0 {
+		return nil, "", fmt.Errorf("fel i datafilerna:\n  %s", strings.Join(problems, "\n  "))
 	}
 	return d, strings.Join(sources, ", "), nil
 }
