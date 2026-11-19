@@ -6,6 +6,16 @@ eller leder tornet.
 
 ## 2026-11-19
 
+### Byte vid dödande och tornets nåd (spoilervarning)
+
+- Med ormens namn får den som dödar en annan vandrare de delar av namnet
+  som offret hade och dödaren saknade.
+- Tornets nåd: när alla människor som är kvar inne är invigda tas hälften
+  av vakna-korten i leken bort (`nad_andel`, minst ett), en gång per
+  vandring. Nåden gäller också när leken byggs om efter att ormen har
+  vaknat.
+- Krönikan berättar om bytet och nåden, och nämner de invigda som kom ut.
+
 ### Invigningen med ormens namn (spoilervarning)
 
 - Ny inställning under Fler inställningar på värdsidan: Invigningen, med

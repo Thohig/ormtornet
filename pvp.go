@@ -214,6 +214,7 @@ func (g *Game) hit(a, b *Player, gold int) {
 		g.logTo(a, g.data.Text("pvp_traff_tom", "namn", b.Name), "syn")
 	}
 	if killing {
+		g.takeNameParts(a, b)
 		g.logTo(b, g.data.Text("pvp_dodad", "namn", a.Name), "varn")
 	} else if gold > 0 {
 		g.logTo(b, g.data.Text("pvp_bytt", "namn", a.Name, "guld", strconv.Itoa(gold), "skada", strconv.Itoa(pvpSkada)), "varn")

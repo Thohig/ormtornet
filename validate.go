@@ -204,6 +204,7 @@ func (d *Data) validate() []string {
 			bad("avslojande.json", "svar_med_namn: %q saknar {namn}", s)
 		}
 	}
+	chance("avslojande.json", "nad_andel", a.NadAndel)
 	if len(a.EpilogNamn) == 0 {
 		bad("avslojande.json", "epilog_namn: inga texter")
 	}

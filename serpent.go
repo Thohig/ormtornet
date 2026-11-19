@@ -41,6 +41,14 @@ func (g *Game) buildDeck() {
 		}
 		counts[most]--
 	}
+	// Tornets nåd håller i hela vandringen: färre vakna-kort också i en ny lek.
+	for left, i := g.mercy, 0; left > 0 && i < len(o.Kort); i++ {
+		if o.Kort[i].Vaknar {
+			n := min(left, counts[i])
+			counts[i] -= n
+			left -= n
+		}
+	}
 	// Fler vandrare tömmer leken fortare: lägg till sovkort för var och en
 	// över fyra, så att risken växer i samma takt som med fyra.
 	if extra := o.SovkortPerVandrare * max(0, g.vandrare()-4); extra > 0 {

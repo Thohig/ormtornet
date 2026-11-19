@@ -476,6 +476,7 @@ type Reveal struct {
 	Delar       map[string][]string `json:"delar"`         // texterna när en del delas ut, per nivå
 	SvarMedNamn []string            `json:"svar_med_namn"` // mallar med {namn} som räknas som svar
 	EpilogNamn  []string            `json:"epilog_namn"`   // epilogen säger namnet
+	NadAndel    float64             `json:"nad_andel"`     // andelen vakna-kort som tornets nåd tar bort
 }
 
 // Initiate är fördelarna och svagheten för den som har viskat hemligheten.

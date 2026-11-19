@@ -225,6 +225,70 @@ func (g *Game) Whisper(c *Client, text string) {
 	g.logTo(p, g.data.Text("invigd"), "rost")
 	g.logOthers(p, g.data.Text("invigd_andra"), "dim")
 	g.chronicle("kronika_invigd", "namn", p.Name, "runda", strconv.Itoa(g.round))
+	g.checkMercy()
+}
+
+// takeNameParts: den som dödar en vandrare hittar de delar av namnet som
+// offret hade och dödaren saknade.
+func (g *Game) takeNameParts(killer, victim *Player) {
+	if !g.usesName() || killer.bot != nil {
+		return
+	}
+	var got []string
+	for i := range 3 {
+		if victim.parts[i] && !killer.parts[i] {
+			killer.parts[i] = true
+			got = append(got, strings.ToUpper(g.serpentName[i]))
+		}
+	}
+	if len(got) == 0 {
+		return
+	}
+	g.logTo(killer, g.data.Text("namndel_byte", "offer", victim.Name, "delar", strings.Join(got, ", ")), "rost")
+	g.chronicle("kronika_namndel", "namn", killer.Name, "offer", victim.Name)
+}
+
+// checkMercy ger tornets nåd när alla människor som är kvar inne är
+// invigda: en andel av vakna-korten tas bort, en gång per vandring.
+func (g *Game) checkMercy() {
+	if !g.usesName() || g.mercyGiven || g.phase != phasePlay {
+		return
+	}
+	var inside []*Player
+	for _, p := range g.players {
+		if p != nil && p.bot == nil && p.Status == statusIn {
+			if !p.initiated {
+				return
+			}
+			inside = append(inside, p)
+		}
+	}
+	if len(inside) == 0 {
+		return
+	}
+	wake := 0
+	for _, id := range g.deck {
+		if c := g.data.card(id); c != nil && c.Vaknar {
+			wake++
+		}
+	}
+	n := max(1, int(float64(wake)*g.data.Avslojande.NadAndel))
+	removed := 0
+	for i := 0; i < len(g.deck) && removed < n; {
+		if c := g.data.card(g.deck[i]); c != nil && c.Vaknar {
+			g.deck = append(g.deck[:i], g.deck[i+1:]...)
+			removed++
+			continue
+		}
+		i++
+	}
+	g.mercyGiven = true
+	g.mercy = n
+	for _, p := range inside {
+		g.logTo(p, g.data.Text("nad"), "rost")
+		g.soundTo(p, "rost")
+	}
+	g.chronicle("kronika_nad")
 }
 
 func (g *Game) anyInitiatedInside() bool {

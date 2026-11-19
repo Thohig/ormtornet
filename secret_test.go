@@ -250,3 +250,64 @@ func TestNameWhisper(t *testing.T) {
 		t.Fatalf("namnet skrivs %q", g.serpentNameText())
 	}
 }
+
+func TestKillTakesNameParts(t *testing.T) {
+	g, cs := nameGame(t, 2)
+	a, b := cs[0].player, cs[1].player
+	a.parts = [3]bool{true, false, false}
+	b.parts = [3]bool{false, true, true}
+	g.takeNameParts(a, b)
+	if a.parts != [3]bool{true, true, true} {
+		t.Fatalf("dödaren fick %v", a.parts)
+	}
+	// Med fasta svar finns inga delar att ta.
+	g2, cs2 := nameGame(t, 2)
+	g2.cfg.Initiation = initAnswers
+	c, d := cs2[0].player, cs2[1].player
+	d.parts = [3]bool{true, true, true}
+	g2.takeNameParts(c, d)
+	if c.partCount() != 0 {
+		t.Fatal("delar med fasta svar")
+	}
+}
+
+func countWake(g *Game) int {
+	n := 0
+	for _, id := range g.deck {
+		if c := g.data.card(id); c != nil && c.Vaknar {
+			n++
+		}
+	}
+	return n
+}
+
+func TestMercyWhenAllInsideKnow(t *testing.T) {
+	g, cs := nameGame(t, 2)
+	a, b := cs[0].player, cs[1].player
+	before := countWake(g)
+	if before < 2 {
+		t.Fatalf("leken har %d vakna-kort", before)
+	}
+	a.initiated = true
+	g.checkMercy()
+	if g.mercyGiven {
+		t.Fatal("nåd när bara en av två var invigd")
+	}
+	// Den som inte vet går ut: då är alla som är kvar inne invigda.
+	b.Status = statusOut
+	g.checkMercy()
+	if !g.mercyGiven || countWake(g) != before-max(1, before/2) {
+		t.Fatalf("nåden: given %v, %d vakna-kort av %d", g.mercyGiven, countWake(g), before)
+	}
+	// Nåden håller när leken byggs om.
+	g.buildDeck()
+	if countWake(g) != before-g.mercy {
+		t.Fatalf("efter ombyggnaden %d vakna-kort, ville ha %d", countWake(g), before-g.mercy)
+	}
+	// Bara en gång per vandring.
+	n := countWake(g)
+	g.checkMercy()
+	if countWake(g) != n {
+		t.Fatal("nåden kom två gånger")
+	}
+}

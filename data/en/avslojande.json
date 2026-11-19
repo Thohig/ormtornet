@@ -225,6 +225,21 @@
     ],
     "kronika_invigd": [
       "{namn} whispered something to the tower, and the tower heard."
+    ],
+    "namndel_byte": [
+      "In {offer}'s hand lies a stone with carved signs: {delar}."
+    ],
+    "nad": [
+      "The tower sighs. Something in the walls relaxes, and the beat grows slower."
+    ],
+    "kronika_namndel": [
+      "{namn} took the signs from {offer}'s hand."
+    ],
+    "kronika_nad": [
+      "Everyone left in the tower knew. The serpent sank into deeper sleep."
+    ],
+    "kronika_invigda_ute": [
+      "Those who knew and got out: {namn}."
     ]
   }
 }

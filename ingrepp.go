@@ -372,6 +372,7 @@ func (g *Game) gmInitiate(id int) error {
 	if p.initiated {
 		g.logTo(p, g.data.Text("invigd"), "rost")
 		g.gmNote("server_not_invigde", "namn", p.Name)
+		g.checkMercy()
 	} else {
 		g.gmNote("server_not_avinvigde", "namn", p.Name)
 	}

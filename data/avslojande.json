@@ -8,6 +8,8 @@
     "viska_fran_niva": 2,
     "_om_invigd": "Fördelarna och svagheten för den invigde: extra guld när hen kommer ut, chansen att kliva förbi en fälla, hur mycket oftare varelserna anfaller och chansen att en näve väcker ormen.",
     "invigd": { "guld": 0.25, "falla": 0.5, "extra_anfall": 1, "vacker": 0.15 },
+    "_om_nad": "Tornets nåd, med ormens namn: när alla människor som är kvar inne är invigda tas den här andelen av vakna-korten i leken bort (avrundat nedåt, minst ett), en gång per vandring. Nåden gäller också när leken byggs om.",
+    "nad_andel": 0.5,
     "svar": [
       "tornet är ormen",
       "ormen är tornet",
@@ -211,6 +213,21 @@
     ],
     "kronika_invigd": [
       "{namn} viskade något till tornet, och tornet hörde."
+    ],
+    "namndel_byte": [
+      "I {offer}s hand ligger en sten med ristade tecken: {delar}."
+    ],
+    "nad": [
+      "Tornet suckar. Något i väggarna slappnar av, och dunket blir långsammare."
+    ],
+    "kronika_namndel": [
+      "{namn} tog tecknen ur {offer}s hand."
+    ],
+    "kronika_nad": [
+      "Alla som var kvar i tornet visste. Ormen sjönk i djupare sömn."
+    ],
+    "kronika_invigda_ute": [
+      "De som visste och kom ut: {namn}."
     ]
   }
 }

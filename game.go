@@ -327,6 +327,8 @@ type Game struct {
 	levelHeld bool // spelledaren håller kvar avslöjandets nivå
 
 	serpentName []string // ormens namn i tre delar, med invigningen "ormens namn"
+	mercy       int      // vakna-kort som tornets nåd har tagit bort, också när leken byggs om
+	mercyGiven  bool     // tornets nåd har kommit i den här vandringen
 }
 
 func NewGame(d *Data, cfg Config) *Game {
@@ -1084,6 +1086,7 @@ func (g *Game) startGame() {
 	g.turn = g.turnTime() // ligger fast under vandringen
 	g.round = 1
 	g.wakes = 0
+	g.mercy, g.mercyGiven = 0, false
 	g.buildDeck()
 	g.controller = 0
 	g.pendingMove = nil
@@ -1289,6 +1292,7 @@ func (g *Game) resolve() {
 			g.meetIfNew(p)
 		}
 	}
+	g.checkMercy()
 
 	g.sun--
 	if g.sun < 0 {

@@ -4,7 +4,10 @@ package main
 // slut. Under vandringen skrivs händelserna ner här. Texterna står i
 // data/texter.json under kronika_*.
 
-import "strconv"
+import (
+	"strconv"
+	"strings"
+)
 
 // chronEvent är en händelse i krönikan, redan skriven som text.
 type chronEvent struct {
@@ -69,6 +72,16 @@ func (g *Game) chronicleLines() []chronLine {
 	lines := []chronLine{{g.data.Text("kronika_rubrik"), "rubrik"}}
 	for _, e := range g.chron {
 		lines = append(lines, chronLine{g.data.Text("kronika_rad", "runda", strconv.Itoa(e.round), "text", e.text), ""})
+	}
+	// De invigda som kom ut lyfts fram, bredvid den som vann på guld.
+	var knew []string
+	for _, p := range g.players {
+		if p != nil && p.initiated && p.Status == statusOut {
+			knew = append(knew, p.Name)
+		}
+	}
+	if len(knew) > 0 {
+		lines = append(lines, chronLine{g.data.Text("kronika_invigda_ute", "namn", strings.Join(knew, ", ")), "rost"})
 	}
 	for _, p := range g.players {
 		if p == nil {
