@@ -142,6 +142,24 @@
   #barWho { color: var(--dim); flex: 1 1 auto; }
   #barWho .away { color: var(--warn); }
   #barMain { margin-left: auto; }
+  /* Avsnitten byter plats efter fasen: det som behövs nu står först. */
+  #host { display: flex; flex-direction: column; }
+  #host > section { order: 5; }
+  #host > #foot { order: 9; }
+  body.fas-lobby #invite, body.fas-klassval #invite { order: 1; }
+  body.fas-lobby #port, body.fas-klassval #port { order: 2; }
+  body.fas-spel #gm { order: 1; }
+  body.fas-spel #port { order: 2; }
+  body.fas-spel #invite { order: 3; }
+  body.fas-slut #next { order: 1; }
+  body.fas-slut #port { order: 2; }
+  /* Under vandringen räcker adressen och en knapp för den som kommer sent. */
+  body.fas-spel #invite .full, body.fas-spel #copyInvite, body.fas-spel #joinSelf { display: none; }
+  body.fas-spel #addr { font-size: 15px; }
+  body.fas-spel #invite .buttons { margin-top: 6px; }
+  #foot { margin-top: 20px; }
+  #foot h2 { margin-top: 18px; }
+  #reloadMsg:empty { display: none; }
   #help li { margin: 6px 0; line-height: 1.45; }
   #help { padding-left: 1.4em; margin: 0; }
   code { color: var(--hi); font: inherit; }
@@ -159,17 +177,20 @@
       <button class="btn main small" id="barMain" type="button" hidden></button>
     </div>
 
+    <section id="invite">
     <h2>Bjud in</h2>
-    <p>Alla som ska spela öppnar Safari eller Chrome på samma wifi som du och går till:</p>
+    <p class="full">Alla som ska spela öppnar Safari eller Chrome på samma wifi som du och går till:</p>
     <div id="addr">…</div>
-    <p id="ips"></p>
+    <p id="ips" class="full"></p>
     <div class="buttons">
       <button class="btn main" id="copyInvite" type="button">Kopiera inbjudan</button>
       <button class="btn" id="copyAddr" type="button">Kopiera adressen</button>
       <a class="btn" id="joinSelf" href="/?spela" target="_blank" rel="noopener">Gå in själv</a>
     </div>
     <p id="copied"></p>
+    </section>
 
+    <section id="port">
     <h2>Vid porten</h2>
     <p id="status">…</p>
     <ul id="slots"></ul>
@@ -178,6 +199,7 @@
       <button class="btn" id="startNow" type="button">Starta nu</button>
     </div>
     <p id="startHint">Börjar vandringen även om inte alla har tryckt Enter.</p>
+    </section>
 
     <section id="gm" hidden>
       <h2>Översikt</h2>
@@ -232,6 +254,7 @@
       </details>
     </section>
 
+    <section id="next">
     <h2>Inför nästa vandring</h2>
     <form id="settings" autocomplete="off">
       <label for="sAI">AI-spelare</label>
@@ -308,19 +331,11 @@
     </form>
     <p id="saved"></p>
     <p class="dimtext" id="settingsHint">Sparas till nästa gång. AI-spelare kommer och går direkt, resten gäller från nästa omgång.</p>
-    <p>
-      <button class="btn" id="reload" type="button">Läs om innehållet</button>
-      <span class="note">rum, fällor, varelser och texter i data/, utan att starta om tornet</span>
-    </p>
-    <p id="reloadMsg"></p>
+    </section>
 
-    <h2>Stäng tornet</h2>
-    <p>Stäng tornet här eller med Ctrl+C i terminalen. Spelarna får ett meddelande om att tornet stänger, och datorn får somna igen.</p>
-    <div class="buttons">
-      <button class="btn" id="closeTower" type="button">Stäng tornet</button>
-    </div>
-
-    <h2>Kommer någon inte in?</h2>
+    <section id="foot">
+    <details id="helpBox">
+    <summary><h2>Kommer någon inte in?</h2></summary>
     <ul id="help">
       <li>Kontrollera att alla är på samma wifi. Gästnät hindrar ofta datorer från att nå varandra.</li>
       <li>Fungerar inte namnet med <code>.local</code>, prova adressen med siffror.</li>
@@ -328,6 +343,23 @@
         Det går att ändra under Systeminställningar → Nätverk → Brandvägg.</li>
       <li>Den som tappar anslutningen går tillbaka till adressen och skriver samma namn igen.</li>
     </ul>
+    </details>
+
+    <details id="reloadBox">
+    <summary><h2>Läs om innehållet</h2></summary>
+    <p>
+      <button class="btn" id="reload" type="button">Läs om innehållet</button>
+      <span class="note">rum, fällor, varelser och texter i data/, utan att starta om tornet</span>
+    </p>
+    <p id="reloadMsg"></p>
+    </details>
+
+    <h2>Stäng tornet</h2>
+    <p class="dimtext">
+      <button class="btn small" id="closeTower" type="button">Stäng tornet</button>
+      eller tryck Ctrl+C i terminalen. Spelarna får ett meddelande om att tornet stänger, och datorn får somna igen.
+    </p>
+    </section>
   </main>
 </div>
 <script src="map.js"></script>
@@ -336,6 +368,8 @@
 const $ = (id) => document.getElementById(id);
 const COLORS = MapView.PLAYER_COLORS;
 let view = null;
+const openedAt = Date.now();
+let helpShown = false;
 let closed = false;
 
 function inviteText(v) {
@@ -476,6 +510,13 @@ function render(v) {
       : "Börjar vandringen även om inte alla har tryckt Enter eller ni är färre än minsta antalet.";
 
   renderBar(v, canStart);
+  for (const f of ["lobby", "klassval", "spel", "slut"]) document.body.classList.toggle("fas-" + f, v.phase === f);
+  // Kommer ingen människa in en stund efter att sidan öppnades fälls hjälpen
+  // ut av sig själv, en gång.
+  if (v.phase === "lobby" && humans === 0 && !helpShown && Date.now() - openedAt > 90000) {
+    helpShown = true;
+    $("helpBox").open = true;
+  }
 
   document.body.classList.toggle("gm", gm);
   $("joinSelf").hidden = gm;

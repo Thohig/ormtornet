@@ -22,9 +22,10 @@ Så här skiljer vi på sakerna när användaren ger instruktioner:
 - **spelledarläget**: inställningen där spelledaren inte spelar själv, ser
   allt och kan göra ingrepp (`gm.go`, `ingrepp.go`).
 - **värdsidan**: sidan på `/spelledare` på tornets dator (`host.go`,
-  `web/spelledare.html`). Avsnitten heter Bjud in, Vid porten, Översikt,
-  Vandrarnas logg, Inför nästa vandring, Stäng tornet och Kommer någon
-  inte in?
+  `web/spelledare.html`). Överst står **raden** med fasen och knappen
+  som behövs just nu. Avsnitten heter Bjud in, Vid porten, Översikt,
+  Vandrarnas logg, Inför nästa vandring, Kommer någon inte in?, Läs om
+  innehållet och Stäng tornet, och byter plats efter fasen.
 - **översikten**: den del av värdsidan som bara syns i spelledarläget, med
   ingreppen, kartan och tabellen över vandrarna.
 - **ingrepp**: det spelledaren gör under en vandring: tid, ormen,

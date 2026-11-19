@@ -6,6 +6,16 @@ eller leder tornet.
 
 ## 2026-11-19
 
+### Värdsidan följer fasen
+
+- Avsnitten på värdsidan byter plats efter fasen. I lobbyn och
+  klassvalet kommer Bjud in och Vid porten först, under vandringen
+  översikten och när vandringen är slut Inför nästa vandring.
+- Under vandringen krymper Bjud in till adressen och Kopiera adressen.
+- Kommer någon inte in? och Läs om innehållet ligger hopfällda längst ner,
+  och Stäng tornet är en liten knapp under dem. Hjälpen fälls ut av sig
+  själv om ingen människa har kommit in efter en och en halv minut.
+
 ### En rad överst på värdsidan
 
 - Överst på värdsidan står en rad som följer med när sidan rullar: fasen,

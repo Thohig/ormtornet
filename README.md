@@ -91,6 +91,15 @@ AI-spelare som är här och vilka som är borta. Där ligger också knappen som
 behövs just nu: Starta nu före vandringen och Pausa eller Fortsätt under
 vandringen i spelledarläget.
 
+Avsnitten byter plats efter fasen, så att det som behövs just nu står
+först. I lobbyn och klassvalet kommer Bjud in och Vid porten först. Under
+vandringen kommer översikten först, och Bjud in krymper till adressen och
+en knapp som kopierar den. När vandringen är slut kommer Inför nästa
+vandring först. Längst ner ligger Kommer någon inte in? och Läs om
+innehållet, hopfällda, och en liten knapp som stänger tornet. Har ingen
+människa kommit in en och en halv minut efter att sidan öppnades fälls
+Kommer någon inte in? ut av sig själv.
+
 Under Inför nästa vandring väljer spelledaren:
 
 | Inställning | Val | Förval |
@@ -597,8 +606,8 @@ ingen blir invigd.
 ## Ändra innehåll
 
 Allt innehåll ligger i mappen `data/`. Filerna läses när servern startar.
-Efter en ändring räcker det att trycka "Läs om innehållet" under Inför
-nästa vandring på värdsidan. I lobbyn gäller det nya genast och tornet
+Efter en ändring räcker det att fälla ut "Läs om innehållet" längst ner
+på värdsidan och trycka på knappen. I lobbyn gäller det nya genast och tornet
 byggs på nytt; under och efter en vandring gäller det från nästa torn. Är
 något fel i filerna står det under knappen, och tornet behåller det gamla.
 Filerna i `web/` byggs in i programmet, så efter en ändring där behöver
