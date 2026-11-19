@@ -397,7 +397,6 @@ body[data-niva="4"] #crt::after { animation: throb 0.95s infinite; }
 #roomname {
   color: var(--chalk);
   letter-spacing: 0.08em;
-  opacity: 0.75;
   pointer-events: none;
 }
 #roomname:not(:empty)::before { content: "▸ "; }
@@ -424,15 +423,14 @@ body[data-niva="4"] #crt::after { animation: throb 0.95s infinite; }
   color: var(--chalk);
   font: inherit;
   text-shadow: inherit;
-  opacity: 0.6;
   cursor: default;
-  transition: opacity 0.2s, border-color 0.2s;
+  transition: border-color 0.2s;
 }
-.hudicon:hover, .hudicon:focus-visible { opacity: 1; border-color: var(--chalkline); outline: none; }
+.hudicon:hover, .hudicon:focus-visible { border-color: var(--chalkline); outline: none; }
 .hudicon .glyph { font-size: 15px; }
 .hudicon.hp .glyph { color: #e07a6a; }
 .hudicon.gold { color: #ffd36b; }
-.hudicon.warn { color: var(--warn); opacity: 0.9; }
+.hudicon.warn { color: var(--warn); }
 .hudicon.rost { color: #e3b8f0; }
 .hudicon.klass .glyph { color: var(--hi); }
 #bag .item { font-size: 12px; }
@@ -446,10 +444,9 @@ body[data-niva="4"] #crt::after { animation: throb 0.95s infinite; }
   background: rgba(21, 23, 26, 0.55);
   color: var(--chalk);
   font: inherit;
-  opacity: 0.6;
   cursor: pointer;
 }
-#helpBtn:hover, #helpBtn[aria-expanded="true"] { opacity: 1; color: var(--hi); }
+#helpBtn:hover, #helpBtn[aria-expanded="true"] { color: var(--hi); }
 body.touch #helpBtn { display: none; }
 #tip {
   position: fixed;
@@ -723,7 +720,6 @@ body.touch #side { overflow-y: auto; }
   #logwrap { margin-top: 8px; grid-column: 1 / -1; }
   #log { height: 14em; flex: 0 0 auto; }
   #hud { max-width: 85%; }
-  .hudicon { opacity: 0.8; }
   body.touch #game.active { padding-bottom: calc(170px + env(safe-area-inset-bottom)); }
   body.touch #pad {
     position: fixed;

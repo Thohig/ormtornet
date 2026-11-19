@@ -6,11 +6,13 @@ eller leder tornet.
 
 ## 2026-11-19
 
-### Tydligare teckenförklaring
+### Ingen dämpad text
 
 - Teckenförklaringen på kartan är inte längre dämpad. Den syns med full
   styrka hela tiden, och rubriken "Tecken" står i samma ljusa färg som
   förklaringarna.
+- Tecknen uppe till höger på kartan, frågetecknet och rummets namn syns
+  också med full styrka hela tiden.
 
 ### Översikten i två kolumner
 
