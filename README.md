@@ -311,10 +311,13 @@ listan över vandrare står "sågs runda 12" eller "inte sedd". Tecknet
 försvinner när du ser vandraren igen, eller när den har gått ut eller dött.
 
 Från början känner du bara rummet du börjar i, och kartan växer därifrån.
-Kartan följer rummet du står i: det står i mitten, med två rum åt varje
-håll (ett på en smal skärm), och vid tornets kanter stannar rutan inom
-tornet. Ett tryck på kartan visar allt du känner till, och ett tryck till
-går tillbaka. De andras portar är okända tills någon går in i
+Kartan följer rummet du står i: det står i mitten, och vid tornets kanter
+stannar rutan inom tornet. Hur nära kartan går väljer du själv: Nära
+(3 × 3 rum), Mellan (5 × 5), Långt (9 × 9) eller Allt du känner till. Byt
+med + och −, med scrollhjulet, med två fingrar på en pekskärm eller med
+knapparna nere till höger på kartan. M, eller ett klick på nivåns namn,
+växlar mellan din nivå och Allt. En smal skärm börjar på Nära och en
+större på Mellan, och sidan kommer ihåg ditt val på den enheten. De andras portar är okända tills någon går in i
 dem. Med egen karta ser du bara rum du själv har gått igenom; med de andra
 valen syns alla rum som någon har gått in i. Vem som börjar vid vilken port lottas när vandringen börjar,
 och var och en får bara veta sin egen. Ordningen i listan och färgen säger

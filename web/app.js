@@ -1327,9 +1327,48 @@ const Intro = (() => {
   };
 })();
 
-// Ett tryck på kartan växlar mellan utsnittet runt vandraren och allt den
-// känner till.
-$("map").addEventListener("click", () => MapView.toggleWhole());
+// Zoomen: knapparna i kartans hörn, scrollhjulet och två fingrar väljer hur
+// nära kartan går. + och − på tangentbordet, och M för allt man känner till,
+// går genom pressKey.
+MapView.setZoomListener((name, n) => {
+  $("zoomName").textContent = name;
+  $("zoomIn").disabled = n === 0;
+  $("zoomOut").disabled = n === 3;
+});
+$("zoomIn").addEventListener("click", () => MapView.zoom(-1));
+$("zoomOut").addEventListener("click", () => MapView.zoom(1));
+$("zoomName").addEventListener("click", () => MapView.toggleWhole());
+{
+  // Ett hjul ger många små steg; ett steg i taget räcker.
+  let wheelAt = 0;
+  $("mapbox").addEventListener("wheel", (e) => {
+    if (!state || state.phase !== "spel" || Math.abs(e.deltaY) < 1) return;
+    e.preventDefault();
+    const now = performance.now();
+    if (now - wheelAt < 250) return;
+    wheelAt = now;
+    MapView.zoom(e.deltaY > 0 ? 1 : -1);
+  }, { passive: false });
+  // Två fingrar: isär går närmare, ihop går längre ut.
+  let pinch = 0;
+  const dist = (t) => Math.hypot(t[0].clientX - t[1].clientX, t[0].clientY - t[1].clientY);
+  $("map").addEventListener("touchstart", (e) => {
+    if (e.touches.length === 2) pinch = dist(e.touches);
+  }, { passive: true });
+  $("map").addEventListener("touchmove", (e) => {
+    if (e.touches.length !== 2 || !pinch) return;
+    e.preventDefault();
+    const d = dist(e.touches);
+    if (d > pinch * 1.35) {
+      MapView.zoom(-1);
+      pinch = d;
+    } else if (d < pinch / 1.35) {
+      MapView.zoom(1);
+      pinch = d;
+    }
+  }, { passive: false });
+  $("map").addEventListener("touchend", () => (pinch = 0));
+}
 
 $("enter").addEventListener("click", (e) => {
   e.stopPropagation();
@@ -1426,6 +1465,20 @@ function pressKey(key) {
   if (key === "Escape" && !$("helpbox").hidden) {
     toggleHelp(false);
     return true;
+  }
+  if (state && state.phase === "spel") {
+    if (key === "+" || key === "=") {
+      MapView.zoom(-1);
+      return true;
+    }
+    if (key === "-") {
+      MapView.zoom(1);
+      return true;
+    }
+    if (key === "m" || key === "M") {
+      MapView.toggleWhole();
+      return true;
+    }
   }
   if (aimSlot !== null) {
     // Ett föremål som pekar åt ett håll: nästa pil väljer riktningen.

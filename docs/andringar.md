@@ -6,13 +6,23 @@ eller leder tornet.
 
 ## 2026-11-19
 
+### Zooma kartan
+
+- Kartan har fyra nivåer: Nära (3 × 3 rum), Mellan (5 × 5), Långt (9 × 9)
+  och Allt du känner till. Byt med + och −, scrollhjulet, två fingrar
+  eller knapparna nere till höger på kartan.
+- M, eller ett klick på nivåns namn, växlar mellan din nivå och Allt.
+  Ett tryck på själva kartan gör inget längre, så att den inte byts av
+  misstag.
+- En smal skärm börjar på Nära och en större på Mellan. Valet sparas på
+  enheten.
+
 ### Kartan följer ditt rum
 
 - Kartan har alltid rummet du står i i mitten, med två rum åt varje håll
   (ett på en smal skärm). Förut visade den allt du kände till och följde
   dig bara när tornet blev för stort för skärmen.
 - Vid tornets kanter stannar rutan inom tornet.
-- Ett tryck på kartan visar fortfarande allt du känner till.
 
 ### Teckenförklaringen går att läsa
 

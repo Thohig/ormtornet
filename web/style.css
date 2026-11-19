@@ -397,6 +397,31 @@ body[data-niva="4"] #crt::after { animation: throb 0.95s infinite; }
 .sign { display: flex; gap: 6px; line-height: 1.35; }
 .sign .glyph { flex: 0 0 1.2em; text-align: center; font-weight: bold; }
 .sign .what { color: var(--fg); }
+/* Zoomen nere till höger på kartan. */
+#zoom {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  z-index: 12;
+  display: flex;
+  gap: 4px;
+  font-size: 13px;
+}
+#zoom button {
+  min-width: 28px;
+  height: 28px;
+  padding: 0 8px;
+  border: 1px solid var(--chalkline);
+  border-radius: 4px;
+  background: rgba(21, 23, 26, 0.88);
+  color: var(--fg);
+  font: inherit;
+  cursor: pointer;
+}
+#zoom button:hover:not(:disabled), #zoom button:focus-visible { color: var(--hi); border-color: var(--fg); outline: none; }
+#zoom button:disabled { opacity: 0.4; cursor: default; }
+#zoomName { min-width: 8ch; }
+#map { touch-action: pan-x pan-y; }
 #roomname {
   color: var(--chalk);
   letter-spacing: 0.08em;

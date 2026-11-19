@@ -67,13 +67,23 @@ const MapView = (() => {
   let canvas, ctx, cols, rows, cellW, cellH, fontPx;
   // Utsnittet: kartan följer det rum vandraren står i, som står i mitten
   // med lika många rum åt varje håll. Vid tornets kanter stannar rutan, så
-  // att det inte blir tomt utanför tornet. Ett tryck på kartan visar allt
-  // man känner till. Spelledaren, som inte är någon vandrare, ser hela
-  // tornet.
+  // att det inte blir tomt utanför tornet. Vandraren väljer själv hur nära
+  // kartan går, eller att den visar allt man känner till. Spelledaren, som
+  // inte är någon vandrare, ser hela tornet.
   const MIN_SPAN = 3; // så nära går kartan som mest, i rum
   const ZOOM_MS = 1100;
+  const LEVELS = [
+    { name: "Nära", span: 3 },
+    { name: "Mellan", span: 5 },
+    { name: "Långt", span: 9 },
+    { name: "Allt", span: 0 },
+  ];
+  const ALL = LEVELS.length - 1;
+  const ZOOM_KEY = "ormtornet.zoom";
+  let level = loadLevel();
+  let before = level === ALL ? 1 : level; // nivån som M går tillbaka till
+  let onZoom = null;
   let towerSize = 0;
-  let wantWhole = false; // den som spelar vill se allt den känner till
   let boxW = 0, boxH = 0, ox = 0, oy = 0;
   // view är rutan som syns, i rum: x, y, bredd och höjd. Den glider mot
   // target när kartan växer.
@@ -169,14 +179,45 @@ const MapView = (() => {
     if (x0 === Infinity) return { x: 0, y: 0, w: towerSize, h: towerSize };
     const all = grow({ x: x0, y: y0, w: x1 - x0, h: y1 - y0 }, MIN_SPAN);
     const me = state.players.find((p) => p.id === state.you);
-    if (wantWhole || !me || me.status !== "inne" || me.x < 0) return all;
-    return around(me, span());
+    if (level === ALL || !me || me.status !== "inne" || me.x < 0) return all;
+    return around(me, LEVELS[level].span);
   }
 
-  // span är hur många rum utsnittet visar åt varje håll: färre på en smal
-  // skärm, så att tecknen går att läsa.
-  function span() {
-    return window.matchMedia("(max-width: 700px)").matches ? 3 : 5;
+  // loadLevel ger nivån som valdes senast på den här enheten, annars Nära
+  // på en smal skärm och Mellan på en större, så att tecknen går att läsa.
+  function loadLevel() {
+    try {
+      const n = parseInt(localStorage.getItem(ZOOM_KEY), 10);
+      if (n >= 0 && n < LEVELS.length) return n;
+    } catch {}
+    return window.matchMedia("(max-width: 700px)").matches ? 0 : 1;
+  }
+
+  function setLevel(n) {
+    n = Math.max(0, Math.min(ALL, n));
+    if (n !== ALL) before = n;
+    if (n === level) return;
+    level = n;
+    try {
+      localStorage.setItem(ZOOM_KEY, String(level));
+    } catch {}
+    if (onZoom) onZoom(LEVELS[level].name, level);
+    if (lastState) draw(lastState);
+  }
+
+  // zoom går närmare (d < 0) eller längre ut (d > 0) ett steg.
+  function zoom(d) {
+    setLevel(level + d);
+  }
+
+  // toggleWhole växlar mellan den valda nivån och allt man känner till.
+  function toggleWhole() {
+    setLevel(level === ALL ? before : ALL);
+  }
+
+  function setZoomListener(fn) {
+    onZoom = fn;
+    fn(LEVELS[level].name, level);
   }
 
   // around ger en ruta på n × n rum med rummet där p står i mitten. Vid
@@ -617,16 +658,9 @@ const MapView = (() => {
     }
   }
 
-  // toggleWhole växlar mellan utsnittet runt vandraren och allt den
-  // känner till, när det är för mycket för att läsa på en gång.
-  function toggleWhole() {
-    wantWhole = !wantWhole;
-    if (lastState) draw(lastState);
-  }
-
   function wake() {
     wokeAt = performance.now();
   }
 
-  return { setup, draw, resize, ping, wake, toggleWhole, setLegend, PLAYER_COLORS };
+  return { setup, draw, resize, ping, wake, zoom, toggleWhole, setZoomListener, setLegend, PLAYER_COLORS };
 })();
