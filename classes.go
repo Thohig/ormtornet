@@ -118,9 +118,10 @@ func (g *Game) freeClasses(p *Player) []string {
 }
 
 // Klassvalet: när alla är redo i lobbyn lägger tornet fram ett kort för
-// varje klass. Var och en väljer ett kort som ingen annan har tagit. Den som
-// inte har valt när tiden är slut får ett av de lediga korten, och vandringen
-// börjar när alla har en klass.
+// varje klass. Var och en väljer ett kort som ingen annan har tagit.
+// Människorna väljer först; AI-spelarna tar sina kort när alla människor har
+// valt. Den som inte har valt när tiden är slut får ett av de lediga korten,
+// och vandringen börjar när alla har en klass.
 func (g *Game) startChoosing() {
 	g.phase = phaseChoose
 	g.resetClasses()
@@ -145,9 +146,7 @@ func (g *Game) startChoosing() {
 		if p == nil {
 			continue
 		}
-		if p.bot != nil {
-			g.botChooseClass(p)
-		} else if p.client != nil {
+		if p.bot == nil && p.client != nil {
 			g.logTo(p, g.data.Text("klass_val"), "info")
 		}
 	}
@@ -163,6 +162,7 @@ func (g *Game) checkChosen() bool {
 	if g.phase != phaseChoose {
 		return false
 	}
+	g.botsChoose()
 	for _, p := range g.players {
 		if p != nil && p.present() && p.classID == "" && g.cfg.Classes {
 			return false
@@ -205,6 +205,21 @@ func (g *Game) chooseClass(p *Player, id string) bool {
 	return true
 }
 
+// botsChoose låter AI-spelarna välja klass när alla människor som är med
+// har valt, så att människorna får välja först.
+func (g *Game) botsChoose() {
+	for _, p := range g.players {
+		if p != nil && p.bot == nil && p.client != nil && p.classID == "" {
+			return
+		}
+	}
+	for _, p := range g.players {
+		if p != nil && p.bot != nil {
+			g.botChooseClass(p)
+		}
+	}
+}
+
 // botChooseClass: AI-spelaren väljer den lediga klass dess personlighet
 // helst vill ha, annars någon av de lediga.
 func (g *Game) botChooseClass(p *Player) {
@@ -228,13 +243,14 @@ func (g *Game) botChooseClass(p *Player) {
 }
 
 // ensureClasses ger alla som inte har valt en klass när vandringen börjar
-// ett av de lediga korten.
+// ett av de lediga korten. Människorna får sina först, sedan väljer
+// AI-spelarna bland det som är kvar.
 func (g *Game) ensureClasses() {
 	if !g.cfg.Classes {
 		return
 	}
 	for _, p := range g.players {
-		if p == nil || p.classID != "" {
+		if p == nil || p.classID != "" || p.bot != nil {
 			continue
 		}
 		free := g.freeClasses(p)
@@ -246,6 +262,7 @@ func (g *Game) ensureClasses() {
 		}
 		g.chooseClass(p, free[rand.IntN(len(free))])
 	}
+	g.botsChoose()
 }
 
 // resetClasses tar bort allas klasser inför ett nytt klassval.

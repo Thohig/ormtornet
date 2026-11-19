@@ -20,7 +20,8 @@ README beskriver klasserna under "Klasser". Besluten:
 - Klassen gäller en vandring. Nytt torn leder till lobbyn och sedan till
   ett nytt klassval.
 - Klassen syns i listan över vandrare, även när man inte ser varandra.
-- AI-spelarna väljer efter personlighet (`klasser` i `data/ai.json`).
+- AI-spelarna väljer efter personlighet (`klasser` i `data/ai.json`),
+  men först när alla människor har valt (ändrat 2026-11-19).
 - Klassens liv läggs till svårighetens liv, så att Mardröm förblir hårdare.
 - "Klasser: på / av" på värdsidan, med `-klasser`. Förval: på.
 

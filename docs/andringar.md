@@ -6,6 +6,13 @@ eller leder tornet.
 
 ## 2026-11-19
 
+### Människorna väljer klass först
+
+- I klassvalet väntar AI-spelarna tills alla människor har valt. Den som
+  spelar mot bara AI-spelare kan alltså ta vilken klass som helst, och
+  AI-spelarna tar sedan det de helst vill ha av det som är kvar.
+- Om tiden tar slut får människorna sina slumpade kort före AI-spelarna.
+
 ### Teckenförklaring på kartan
 
 - Uppe till vänster på kartan, under rummets namn, står nu vad tecknen i

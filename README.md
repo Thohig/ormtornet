@@ -349,7 +349,8 @@ tagit går inte att välja. Vandringen börjar när alla har valt, eller när
 tiden är slut (`klassval_sekunder` i `data/klasser.json`, förval 30). Den
 som inte har valt får då ett slumpat ledigt kort. Klassen står i listan
 över vandrare, och i spelledarens översikt. AI-spelarna väljer efter sin
-personlighet. Klassen gäller en vandring: efter Nytt torn väljer alla
+personlighet, men först när alla människor har valt, så att människorna
+får de klasser de vill ha. Klassen gäller en vandring: efter Nytt torn väljer alla
 igen.
 
 | Klass | Styrka | Svaghet |

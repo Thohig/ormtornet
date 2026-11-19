@@ -100,6 +100,8 @@ func TestClassesOff(t *testing.T) {
 	}
 }
 
+// AI-spelaren väntar tills människan har valt och tar sedan den lediga
+// klass den helst vill ha.
 func TestBotPicksPreferredClass(t *testing.T) {
 	g := testGame(t)
 	g.cfg.Classes = true
@@ -113,11 +115,42 @@ func TestBotPicksPreferredClass(t *testing.T) {
 			bot = p
 		}
 	}
-	if bot == nil || bot.classID == "" {
-		t.Fatal("AI-spelaren valde ingen klass")
+	if bot == nil {
+		t.Fatal("ingen AI-spelare")
 	}
-	if want := bot.bot.pers.Klasser; len(want) > 0 && bot.classID != want[0] {
-		t.Fatalf("AI-spelaren valde %q, inte %q", bot.classID, want[0])
+	if bot.classID != "" {
+		t.Fatalf("AI-spelaren valde %q före människan", bot.classID)
+	}
+	want := bot.bot.pers.Klasser
+	if len(want) < 2 {
+		t.Skip("personligheten har för få önskade klasser")
+	}
+	// Alva tar AI-spelarens favorit, så den får nöja sig med nästa.
+	g.ChooseClass(a, want[0])
+	if a.player.classID != want[0] {
+		t.Fatalf("Alva fick %q, inte %q", a.player.classID, want[0])
+	}
+	if bot.classID != want[1] {
+		t.Fatalf("AI-spelaren valde %q, inte %q", bot.classID, want[1])
+	}
+	if g.phase != phasePlay {
+		t.Fatalf("fasen är %q efter att alla valt", g.phase)
+	}
+}
+
+// När tiden tar slut får människan sitt kort före AI-spelarna.
+func TestBotWaitsWhenTimeRunsOut(t *testing.T) {
+	g := testGame(t)
+	g.cfg.Classes = true
+	g.AddBots(2)
+	a := testClient()
+	g.Join(a, "Alva")
+	g.Ready(a)
+	g.startGame()
+	for _, p := range g.players {
+		if p != nil && p.classID == "" {
+			t.Fatalf("%s fick ingen klass", p.Name)
+		}
 	}
 }
 
