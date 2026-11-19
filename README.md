@@ -319,7 +319,10 @@ knapparna. Hur nära kartan går väljer du själv: Nära
 med + och −, med scrollhjulet, med två fingrar på en pekskärm eller med
 knapparna nere till höger på kartan. M, eller ett klick på nivåns namn,
 växlar mellan din nivå och Allt. En smal skärm börjar på Nära och en
-större på Mellan, och sidan kommer ihåg ditt val på den enheten. De andras portar är okända tills någon går in i
+större på Mellan, och sidan kommer ihåg ditt val på den enheten. Ligger
+en port eller kammaren du känner till, eller en vandrare du ser, utanför
+rutan pekar en liten pil vid kanten åt det hållet, med samma tecken som
+på kartan. De andras portar är okända tills någon går in i
 dem. Med egen karta ser du bara rum du själv har gått igenom; med de andra
 valen syns alla rum som någon har gått in i. Vem som börjar vid vilken port lottas när vandringen börjar,
 och var och en får bara veta sin egen. Ordningen i listan och färgen säger

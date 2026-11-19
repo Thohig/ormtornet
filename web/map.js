@@ -93,6 +93,7 @@ const MapView = (() => {
   // tar över kritans, för ekot. Golv, kammare och vandrare samlas i listor.
   let grid, colr, wall, wallc, floors, rings, figures;
   let here = null; // rummet vandraren står i, som ritas ljusare med en ram
+  let beyond = []; // det kända som kan hamna utanför rutan: portar, kammaren, vandrare
 
   function hash(x, y) {
     let h = (x * 374761393 + y * 668265263) | 0;
@@ -499,6 +500,20 @@ const MapView = (() => {
     const f = focus(state);
     here = f ? { x0: f.x * RW, y0: f.y * RH, color: PLAYER_COLORS[f.slot] || "#ffffff" } : null;
 
+    // Det som får en pil vid kanten om det ligger utanför rutan: portarna och
+    // kammaren man känner till, och vandrarna man ser just nu.
+    beyond = [];
+    if (f && level !== ALL) {
+      const at = (x, y, glyph, color) => beyond.push({ x: x * RW + RW / 2 - 0.5, y: y * RH + RH / 2 - 0.5, glyph, color });
+      state.rooms.forEach((r) => {
+        if (r.exit >= 0) at(r.x, r.y, "˄", COLORS.exit);
+        if (r.k === "kammare") at(r.x, r.y, "¤", COLORS.gold);
+      });
+      state.players.forEach((p) => {
+        if (p.id !== f.id && p.status === "inne" && !p.hidden && p.x >= 0) at(p.x, p.y, "●", PLAYER_COLORS[p.slot] || "#ffffff");
+      });
+    }
+
     aim(wanted(state), nowMs);
     place(nowMs);
     paint();
@@ -686,6 +701,42 @@ const MapView = (() => {
         ctx.fillText(ch, cx, cy);
       }
     }
+    edgeArrows(W, H);
+  }
+
+  // edgeArrows ritar en liten pil vid kanten för det som ligger utanför
+  // rutan, åt det håll det ligger, med samma tecken som på kartan.
+  function edgeArrows(W, H) {
+    const m = 16;
+    const mx = W / 2, my = H / 2;
+    const seen = [];
+    ctx.font = "bold 13px Menlo, Monaco, monospace";
+    beyond.forEach((b) => {
+      const [tx, ty] = px(b.x, b.y, false);
+      if (tx >= 0 && tx <= W && ty >= 0 && ty <= H) return;
+      // Där linjen från mitten mot målet når kanten.
+      const dx = tx - mx, dy = ty - my;
+      const k = Math.min((mx - m) / Math.abs(dx || 1e-6), (my - m) / Math.abs(dy || 1e-6));
+      const ex = mx + dx * k, ey = my + dy * k;
+      // Flera mål åt samma håll får en pil.
+      const key = b.glyph + b.color;
+      if (seen.some((s) => s.key === key && Math.hypot(s.x - ex, s.y - ey) < 22)) return;
+      seen.push({ key, x: ex, y: ey });
+      const a = Math.atan2(dy, dx);
+      ctx.save();
+      ctx.translate(ex, ey);
+      ctx.rotate(a);
+      ctx.beginPath();
+      ctx.moveTo(7, 0);
+      ctx.lineTo(-3, -5);
+      ctx.lineTo(-3, 5);
+      ctx.closePath();
+      ctx.fillStyle = b.color;
+      ctx.fill();
+      ctx.restore();
+      ctx.fillStyle = b.color;
+      ctx.fillText(b.glyph, ex - Math.cos(a) * 14, ey - Math.sin(a) * 14);
+    });
   }
 
   function wake() {

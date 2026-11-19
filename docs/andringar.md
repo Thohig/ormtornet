@@ -6,6 +6,13 @@ eller leder tornet.
 
 ## 2026-11-19
 
+### Pilar vid kartans kant
+
+- Ligger en port eller kammaren du känner till, eller en vandrare du ser,
+  utanför det som syns på kartan pekar en liten pil vid kanten åt det
+  hållet, med samma tecken och färg som på kartan. Pilarna visar bara
+  det du redan känner till.
+
 ### Ditt rum syns tydligt
 
 - Rummet du står i har ljusare golv och en tunn ram i din färg. Inget
