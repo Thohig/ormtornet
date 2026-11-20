@@ -278,6 +278,8 @@ function handle(msg) {
   switch (msg.t) {
     case "state":
       if (state && state.phase !== msg.phase && msg.phase === "spel") lastTick = -1;
+      // Styrningen hör till vandringen och ska inte ligga över slutkortet.
+      if (state && state.phase === "spel" && msg.phase !== "spel") toggleHelp(false);
       state = msg;
       state.receivedAt = performance.now();
       if (msg.sprak && msg.sprak !== UI.sprak) changeLanguage(msg.sprak, true);

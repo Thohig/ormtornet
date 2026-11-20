@@ -6,6 +6,12 @@ eller leder tornet.
 
 ## 2026-11-20
 
+### Styrningen stängs när vandringen är slut
+
+- Styrningen, som visas av sig själv första vandringen, stängs när
+  vandringen tar slut, så att den inte ligger över slutkortet. ? visar den
+  igen.
+
 ### Porten frågar innan du går ut tomhänt
 
 - Den som går mot en öppen port utan att bära något guld får först en
