@@ -759,3 +759,35 @@ func TestBotControlsMonstersWhenDead(t *testing.T) {
 		t.Fatalf("varelsen skulle gå mot Alva, fick %q %d", a, id)
 	}
 }
+
+// Den enda som inte är redo laddar om sidan i lobbyn. Vandringen ska inte
+// starta utan hen medan hen är på väg tillbaka, men väl om hen inte kommer.
+func TestReloadInLobbyWaits(t *testing.T) {
+	g := testGame(t)
+	g.leaveWait = 50 * time.Millisecond
+	// Servern håller låset när den tar emot något; timern tar det själv.
+	locked := func(f func()) { g.mu.Lock(); defer g.mu.Unlock(); f() }
+	phase := func() (ph string) { locked(func() { ph = g.phase }); return }
+	a, b, c, b2 := testClient(), testClient(), testClient(), testClient()
+	locked(func() {
+		g.Join(a, "Alva")
+		g.Join(b, "Bo")
+		g.Join(c, "Cia")
+		g.Ready(a)
+		g.Ready(c)
+		g.Leave(b)
+	})
+	if ph := phase(); ph != phaseLobby {
+		t.Fatalf("fasen är %q: vandringen började medan Bo laddade om", ph)
+	}
+	locked(func() { g.Join(b2, "Bo") })
+	time.Sleep(100 * time.Millisecond)
+	if ph := phase(); ph != phaseLobby || b2.player == nil {
+		t.Fatalf("fasen är %q: vandringen började fast Bo kom tillbaka", ph)
+	}
+	locked(func() { g.Leave(b2) }) // Bo går och kommer inte tillbaka
+	time.Sleep(100 * time.Millisecond)
+	if phase() == phaseLobby {
+		t.Fatal("vandringen startade inte när Bo inte kom tillbaka")
+	}
+}

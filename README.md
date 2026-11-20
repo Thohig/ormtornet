@@ -615,6 +615,8 @@ Om du laddar om sidan och skriver samma namn igen får du tillbaka din vandrare.
 Det gäller också under klassvalet: tornet väntar på dig tills tiden är slut,
 och är du inte tillbaka då följer du med som frånvarande och kan komma in
 under vandringen.
+I lobbyn startar vandringen inte förrän tio sekunder efter att någon har
+gått, så att den som laddar om sidan hinner tillbaka.
 
 ## Avslöjandet (spoilervarning)
 

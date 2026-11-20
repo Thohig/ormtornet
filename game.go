@@ -294,6 +294,7 @@ type Game struct {
 	level    int
 
 	phase     string
+	leaveWait time.Duration // hur länge lobbyn väntar på den som har gått innan vandringen kan starta
 	sun       int
 	round     int
 	deadline  time.Time
@@ -340,7 +341,7 @@ type Game struct {
 
 func NewGame(d *Data, cfg Config) *Game {
 	cfg.Difficulty = d.difficultyID(cfg.Difficulty)
-	g := &Game{base: d, data: d.withDifficulty(cfg.Difficulty), cfg: cfg, level: 1, phase: phaseLobby, sun: cfg.SunMax, usedClues: map[string]bool{}, lastActive: time.Now(), lastReal: time.Now()}
+	g := &Game{base: d, data: d.withDifficulty(cfg.Difficulty), cfg: cfg, level: 1, phase: phaseLobby, sun: cfg.SunMax, usedClues: map[string]bool{}, lastActive: time.Now(), lastReal: time.Now(), leaveWait: leaveWait}
 	g.size = g.towerSize()
 	g.rooms = newGrid[Room](g.size)
 	g.sunMax = g.scaledSun()
@@ -942,16 +943,38 @@ func (g *Game) Leave(c *Client) {
 		}
 	} else if g.phase != phasePlay {
 		// I lobbyn och slutet lämnar man sin plats helt, och en datorspelare
-		// kan ta den om spelledaren vill ha fler.
+		// kan ta den om spelledaren vill ha fler. Vandringen startar inte
+		// genast även om alla som är kvar är redo: den som laddar om sidan
+		// ska hinna tillbaka.
 		g.players[p.Slot] = nil
 		g.fitTower(nil)
 		g.syncBots(true)
-		g.checkStart()
+		g.startAfterLeave()
 	} else if g.allChosen() && !g.paused {
 		g.resolve()
 		return
 	}
 	g.broadcastState()
+}
+
+// leaveWait är hur länge lobbyn och slutet väntar på den som har gått innan
+// vandringen kan starta utan hen.
+const leaveWait = 10 * time.Second
+
+// startAfterLeave startar vandringen när leaveWait har gått, om alla som är
+// kvar då är redo och ingen vandring har börjat.
+func (g *Game) startAfterLeave() {
+	if g.leaveWait <= 0 {
+		g.checkStart()
+		return
+	}
+	time.AfterFunc(g.leaveWait, func() {
+		g.mu.Lock()
+		defer g.mu.Unlock()
+		if g.phase == phaseLobby || g.phase == phaseEnd {
+			g.checkStart()
+		}
+	})
 }
 
 // Ready markerar att spelaren vill börja (eller spela igen).

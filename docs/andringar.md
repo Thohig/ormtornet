@@ -6,6 +6,14 @@ eller leder tornet.
 
 ## 2026-11-20
 
+### Ladda om sidan i lobbyn
+
+- Om alla andra var redo och den enda som inte var redo laddade om sidan,
+  började vandringen genast utan hen. Med klasserna av kom hen inte in
+  igen förrän solen hade gått ner. Nu väntar lobbyn tio sekunder efter
+  att någon har gått innan vandringen kan starta. Starta nu på värdsidan
+  startar som förut direkt.
+
 ### Ladda om sidan under klassvalet
 
 - Den som laddade om sidan eller tappade anslutningen under klassvalet
