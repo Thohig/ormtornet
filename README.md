@@ -612,6 +612,9 @@ Namn, texter, hur ofta de dyker upp och hur länge de håller står i
 `sok` → `vikter` → `foremal` i `fallor.json`.
 
 Om du laddar om sidan och skriver samma namn igen får du tillbaka din vandrare.
+Det gäller också under klassvalet: tornet väntar på dig tills tiden är slut,
+och är du inte tillbaka då följer du med som frånvarande och kan komma in
+under vandringen.
 
 ## Avslöjandet (spoilervarning)
 

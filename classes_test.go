@@ -337,3 +337,46 @@ func TestNewTowerOffersNewClasses(t *testing.T) {
 		t.Fatal("nästa vandring startade inte efter klassvalet")
 	}
 }
+
+// Den som laddar om sidan under klassvalet behåller sin plats, och
+// vandringen väntar på hen fast de andra redan har valt.
+func TestReloadDuringClassChoosing(t *testing.T) {
+	g, a, b := classGame(t)
+	g.Ready(a)
+	g.Ready(b)
+	g.ChooseClass(a, "tjuv")
+	pb := b.player
+	g.Leave(b)
+	if g.phase != phaseChoose {
+		t.Fatalf("fasen är %q: vandringen började utan Bo", g.phase)
+	}
+	b2 := testClient()
+	g.Join(b2, "Bo")
+	if b2.player != pb {
+		t.Fatal("Bo fick inte tillbaka sin plats")
+	}
+	g.ChooseClass(b2, "pilgrim")
+	if g.phase != phasePlay || pb.classID != "pilgrim" {
+		t.Fatalf("fasen är %q, Bo har %q", g.phase, pb.classID)
+	}
+}
+
+// Är hen fortfarande borta när tiden är slut följer hen med som frånvarande
+// och kan komma in igen under vandringen.
+func TestAbsentWhenClassChoosingEnds(t *testing.T) {
+	g, a, b := classGame(t)
+	g.Ready(a)
+	g.Ready(b)
+	g.ChooseClass(a, "tjuv")
+	pb := b.player
+	g.Leave(b)
+	g.startGame() // tiden är slut
+	if g.players[pb.Slot] != pb || pb.classID == "" || pb.awayRound != 1 {
+		t.Fatalf("Bo är inte med som frånvarande: klass %q, borta sedan runda %d", pb.classID, pb.awayRound)
+	}
+	b2 := testClient()
+	g.Join(b2, "Bo")
+	if b2.player != pb || pb.awayRound != 0 {
+		t.Fatal("Bo kom inte tillbaka in i vandringen")
+	}
+}

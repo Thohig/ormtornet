@@ -6,6 +6,17 @@ eller leder tornet.
 
 ## 2026-11-20
 
+### Ladda om sidan under klassvalet
+
+- Den som laddade om sidan eller tappade anslutningen under klassvalet
+  åkte ut, och hade de andra redan valt började vandringen direkt utan
+  hen. Nu behåller man sin plats: klassvalet väntar tills hen är tillbaka
+  eller tiden är slut.
+- Är hen fortfarande borta när tiden är slut får hen ett ledigt kort och
+  följer med som frånvarande, som om hen hade gått mitt i vandringen. Med
+  samma namn kommer hen in igen, och annars tar AI:n över efter så många
+  rundor som "Frånvarande vandrare" säger.
+
 ### Ormtornet.app i ~/Projekt/Lokalt
 
 - `./skapa-app.sh` skapar nu appen i `~/Projekt/Lokalt` i stället för

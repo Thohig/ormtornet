@@ -932,8 +932,16 @@ func (g *Game) Leave(c *Client) {
 	}
 	g.logOthers(p, g.data.Text("lamnar", "namn", p.Name), "dim")
 	g.checkAwait()
-	if g.phase != phasePlay {
-		// Utanför spelet lämnar man sin plats helt, och en datorspelare
+	if g.phase == phaseChoose {
+		// Under klassvalet behåller man sin plats, som under vandringen, så
+		// att den som laddar om sidan kommer tillbaka. Klassvalet väntar på
+		// hen tills tiden är slut; sedan följer hen med som frånvarande.
+		// AI-spelarna kan behöva välja nu när hen inte längre väljer.
+		if g.checkChosen() {
+			return
+		}
+	} else if g.phase != phasePlay {
+		// I lobbyn och slutet lämnar man sin plats helt, och en datorspelare
 		// kan ta den om spelledaren vill ha fler.
 		g.players[p.Slot] = nil
 		g.fitTower(nil)
@@ -998,6 +1006,12 @@ func (g *Game) checkStart() bool {
 // begin går från lobbyn till klassvalet, eller direkt in i vandringen när
 // klasserna är avstängda.
 func (g *Game) begin() {
+	// De som lämnade förra vandringen och inte kom tillbaka är inte med längre.
+	// Det görs här och inte när vandringen startar, så att den som tappar
+	// anslutningen under klassvalet får behålla sin plats.
+	if g.dropAbsent() > 0 {
+		g.syncBots(true) // AI-spelare kan ta de lediga platserna
+	}
 	if g.cfg.Classes && len(g.data.Klasser) > 0 {
 		g.startChoosing()
 		return
@@ -1086,10 +1100,6 @@ func (g *Game) drawCorners() {
 func (g *Game) startGame() {
 	g.paused, g.awaiting = false, false
 	g.seedWandering()
-	// De som lämnade förra vandringen och inte kom tillbaka är inte med längre.
-	if g.dropAbsent() > 0 {
-		g.syncBots(true) // AI-spelare kan ta de lediga platserna
-	}
 	g.ensureClasses()
 	if g.towerSize() != g.size {
 		g.newTower() // fler eller färre vandrare än när tornet byggdes
@@ -1119,6 +1129,9 @@ func (g *Game) startGame() {
 			p.HP = g.maxHP(p) // svårigheten kan ha ändrats sedan tornet byggdes
 			p.Potions = g.startPotions(p)
 			p.awayRound = 0
+			if p.bot == nil && p.client == nil {
+				p.awayRound = 1 // lämnade under klassvalet: borta från första rundan
+			}
 			p.aiPlayed = false
 		}
 	}

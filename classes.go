@@ -155,15 +155,16 @@ func (g *Game) startChoosing() {
 	}
 }
 
-// checkChosen startar vandringen när alla som är med har valt klass.
-// Svarar true om den startade.
+// checkChosen startar vandringen när alla som är med har valt klass, också
+// den som har tappat anslutningen under klassvalet: hen väntar tornet på
+// tills tiden är slut. Svarar true om den startade.
 func (g *Game) checkChosen() bool {
 	if g.phase != phaseChoose {
 		return false
 	}
 	g.botsChoose()
 	for _, p := range g.players {
-		if p != nil && p.present() && p.classID == "" && g.cfg.Classes {
+		if p != nil && p.classID == "" && g.cfg.Classes {
 			return false
 		}
 	}
