@@ -250,6 +250,7 @@ type Player struct {
 
 	awayRound int  // rundan då människan lämnade mitt i vandringen, 0 om den är här
 	takenOver bool // en AI-spelare styr vandraren medan människan är borta
+	exitAsked int  // rundan då porten frågade om vandraren ville ut tomhänt
 	aiPlayed  bool // AI:n har styrt vandraren någon gång under vandringen
 
 	target int    // vandraren som ett stridsval den här rundan riktas mot
@@ -1151,7 +1152,7 @@ func (g *Game) startGame() {
 			p.Action = ""
 			p.HP = g.maxHP(p) // svårigheten kan ha ändrats sedan tornet byggdes
 			p.Potions = g.startPotions(p)
-			p.awayRound = 0
+			p.awayRound, p.exitAsked = 0, 0
 			if p.bot == nil && p.client == nil {
 				p.awayRound = 1 // lämnade under klassvalet: borta från första rundan
 			}
@@ -1279,6 +1280,9 @@ func (g *Game) actPlayer(p *Player, a string, monsterID int) {
 			}
 		}
 	case "N", "E", "S", "W", actWait:
+		if g.askEmptyExit(p, room, a) {
+			return
+		}
 	case actTake:
 		if room.Kind != "kammare" {
 			g.logTo(p, g.data.Text("ingen_skatt_har"), "dim")
@@ -1310,6 +1314,22 @@ func (g *Game) actPlayer(p *Player, a string, monsterID int) {
 		return
 	}
 	g.broadcastState()
+}
+
+// askEmptyExit: en människa som går mot en öppen port utan guld får först en
+// fråga, så att ingen råkar gå ut tomhänt med ett enda tryck. Går hen samma
+// runda mot porten igen går hen ut. Svarar true när draget blev en fråga.
+func (g *Game) askEmptyExit(p *Player, room *Room, a string) bool {
+	d, ok := dirCodes[a]
+	if !ok || p.bot != nil || p.Stuck > 0 || !room.HasExit || room.Exit != d || room.Shut {
+		return false
+	}
+	if p.Treasure+g.itemGold(p) > 0 || p.exitAsked == g.round {
+		return false
+	}
+	p.exitAsked = g.round
+	g.logTo(p, g.data.Text("port_tomhant"), "varn")
+	return true
 }
 
 // resolve utför alla drag på en gång och låter solen sjunka.

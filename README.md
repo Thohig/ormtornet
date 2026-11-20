@@ -334,7 +334,8 @@ Gå ut genom en port för att lämna tornet: en i varje hörn, och i ett torn
 på 11 × 11 eller mer även en mitt på varje sida. Vilken port som helst
 duger. Den som kommer
 ut med skatt räknas, och den med mest skatt vinner. Den som är kvar inne när
-solen har gått ner är förlorad.
+solen har gått ner är förlorad. Bär du inget guld frågar porten först:
+gå samma håll en gång till samma runda om du vill ut tomhänt.
 
 Andras skatt och val av drag syns inte förrän spelet är slut.
 

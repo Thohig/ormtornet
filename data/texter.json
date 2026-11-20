@@ -419,6 +419,9 @@
       "Du kliver ut i kvällsljuset med {skatt} guld. Bakom dig suckar porten.",
       "Du är ute. {skatt} guld tynger i väskan, och luften är kall och ren."
     ],
+    "port_tomhant": [
+      "Porten är här, men du bär inget guld. Gå samma håll igen om du vill ut tomhänt."
+    ],
     "ut_utan_skatt": [
       "Du kliver ut tomhänt. Du lever, men ingen kommer att sjunga om dig.",
       "Ute igen, utan ett enda mynt. Tornet släppte dig, men det gav dig ingenting."

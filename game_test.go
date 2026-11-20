@@ -791,3 +791,43 @@ func TestReloadInLobbyWaits(t *testing.T) {
 		t.Fatal("vandringen startade inte när Bo inte kom tillbaka")
 	}
 }
+
+// Ett tryck mot porten utan guld är en fråga; det andra går ut. Med guld
+// går man ut direkt.
+func TestEmptyExitAsksFirst(t *testing.T) {
+	g := testGame(t)
+	a, b := testClient(), testClient()
+	g.Join(a, "Alva")
+	g.Join(b, "Bo")
+	g.Ready(a)
+	g.Ready(b)
+	pa, pb := a.player, b.player
+	exit := func(p *Player) string {
+		r := g.rooms[p.Y][p.X]
+		if !r.HasExit {
+			t.Fatalf("%s står inte vid en port", p.Name)
+		}
+		for code, d := range dirCodes {
+			if d == r.Exit {
+				return code
+			}
+		}
+		return ""
+	}
+	g.Act(a, exit(pa), 0)
+	if pa.Action != "" {
+		t.Fatalf("Alva valde %q utan att porten frågade", pa.Action)
+	}
+	g.Act(a, exit(pa), 0)
+	if pa.Action != exit(pa) {
+		t.Fatal("det andra trycket gick inte ut")
+	}
+	pb.Treasure = 5
+	g.Act(b, exit(pb), 0)
+	if g.phase == phasePlay && pb.Status != statusOut {
+		t.Fatal("Bo med guld kom inte ut på ett tryck")
+	}
+	if pa.Status != statusOut {
+		t.Fatal("Alva gick inte ut efter två tryck")
+	}
+}
