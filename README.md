@@ -31,7 +31,7 @@ Det går också att starta direkt med `go run .`.
 ./skapa-app.sh
 ```
 
-skapar `~/Projekt/Ormtornet.app` med tornets ikon (ange en annan mapp som
+skapar `~/Projekt/Lokalt/Ormtornet.app` med tornets ikon (ange en annan mapp som
 argument om du vill). Dubbelklick på appen bygger spelet från den här mappen,
 startar tornet i bakgrunden och öppnar introt, som leder till värdsidan
 eller spelledarbordet. Inget terminalfönster behövs. Loggen hamnar i `/tmp/ormtornet.log`.
