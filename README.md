@@ -263,7 +263,7 @@ spelarsidan (`/`), med tre vyer i tur och ordning:
      föremålen. Håll musen över ett tecken, eller tryck på
      det på en pekskärm, så står det vad det betyder. Styrningen ligger
      bakom **?** (eller tangenten `?` eller `H`) och visas en gång första
-     vandringen. Panelen Nu visar det valda draget, striden, ormen i
+     vandringen, tills den tar slut. Panelen Nu visar det valda draget, striden, ormen i
      kammaren och vad som väntar, och viskningen skrivs i en egen ruta där.
      Ingen text på spelskärmen är dämpad; bara det som inte går att
      använda, som frånkopplade vandrare och tagna kort, är utgråat.
