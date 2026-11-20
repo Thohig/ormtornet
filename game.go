@@ -250,7 +250,7 @@ type Player struct {
 
 	awayRound int  // rundan då människan lämnade mitt i vandringen, 0 om den är här
 	takenOver bool // en AI-spelare styr vandraren medan människan är borta
-	exitAsked int  // rundan då porten frågade om vandraren ville ut tomhänt
+	exitAsked int  // rundan då porten frågade om vandraren ville ut tomhänt, 0 om den inte har frågat
 	aiPlayed  bool // AI:n har styrt vandraren någon gång under vandringen
 
 	target int    // vandraren som ett stridsval den här rundan riktas mot
@@ -1317,14 +1317,15 @@ func (g *Game) actPlayer(p *Player, a string, monsterID int) {
 }
 
 // askEmptyExit: en människa som går mot en öppen port utan guld får först en
-// fråga, så att ingen råkar gå ut tomhänt med ett enda tryck. Går hen samma
-// runda mot porten igen går hen ut. Svarar true när draget blev en fråga.
+// fråga, så att ingen råkar gå ut tomhänt med ett enda tryck. Går hen mot
+// porten igen samma eller nästa runda går hen ut. Svarar true när draget blev en fråga.
 func (g *Game) askEmptyExit(p *Player, room *Room, a string) bool {
 	d, ok := dirCodes[a]
 	if !ok || p.bot != nil || p.Stuck > 0 || !room.HasExit || room.Exit != d || room.Shut {
 		return false
 	}
-	if p.Treasure+g.itemGold(p) > 0 || p.exitAsked == g.round {
+	// Frågan gäller också nästa runda, om rundan hann ta slut före svaret.
+	if p.Treasure+g.itemGold(p) > 0 || (p.exitAsked > 0 && g.round-p.exitAsked <= 1) {
 		return false
 	}
 	p.exitAsked = g.round

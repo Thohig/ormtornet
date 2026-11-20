@@ -15,7 +15,7 @@ eller leder tornet.
 ### Porten frågar innan du går ut tomhänt
 
 - Den som går mot en öppen port utan att bära något guld får först en
-  fråga i loggen. Går hen samma håll en gång till samma runda går hen ut.
+  fråga i loggen. Går hen samma håll en gång till, samma eller nästa runda, går hen ut.
   Förut räckte ett tryck, så att man kunde råka lämna tornet redan i första
   rundan. Med guld går man ut direkt, och AI-spelarna frågas inte.
 

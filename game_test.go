@@ -818,9 +818,10 @@ func TestEmptyExitAsksFirst(t *testing.T) {
 	if pa.Action != "" {
 		t.Fatalf("Alva valde %q utan att porten frågade", pa.Action)
 	}
+	g.round++ // rundan hann ta slut innan Alva svarade
 	g.Act(a, exit(pa), 0)
 	if pa.Action != exit(pa) {
-		t.Fatal("det andra trycket gick inte ut")
+		t.Fatal("det andra trycket, i nästa runda, gick inte ut")
 	}
 	pb.Treasure = 5
 	g.Act(b, exit(pb), 0)
