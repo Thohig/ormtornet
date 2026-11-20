@@ -6,6 +6,16 @@ eller leder tornet.
 
 ## 2026-11-20
 
+### Värdsidan: klasserna, AI-spelarna och spelledarläget
+
+- Valet för klasserna heter nu "på, vandrarna väljer klass", och
+  förklaringen säger att klassvalet har ett kort för varje klass, inte två.
+- När spelledarläget slås på eller av får AI-spelare valet 8, eller
+  förlorar det, direkt. Förut syntes det först när man klickade någon
+  annanstans. Justerar tornet ett val visas det genast.
+- Förklaringen bredvid Spelledarläge följer valet. Med "av" står det att du
+  spelar själv.
+
 ### Ladda om sidan i lobbyn
 
 - Om alla andra var redo och den enda som inte var redo laddade om sidan,

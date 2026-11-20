@@ -133,7 +133,7 @@
         <option value="0" data-t="val_spelledarlage_av"></option>
         <option value="1" data-t="val_spelledarlage_pa"></option>
       </select>
-      <span class="note" data-t="not_spelledarlage"></span>
+      <span class="note" id="gmNote"></span>
 
       <label for="sSprak" data-t="sprak"></label>
       <select id="sSprak" name="sprak">
@@ -530,6 +530,7 @@ function renderSettings(v) {
   form.querySelectorAll("select").forEach((el) => (el.disabled = playing));
   $("settingsHint").textContent = playing ? t("inst_hint_spel") : t("inst_hint");
   $("aiNote").textContent = s.ai > v.bots && !playing ? t("not_ai", { antal: v.bots }) : "";
+  $("gmNote").textContent = s.spelledarlage ? t("not_spelledarlage") : t("not_spelledarlage_av");
   // Invigningen hör till avslöjandet och går inte att välja utan det.
   $("sInv").disabled = playing || !s.avslojande;
   $("invNote").textContent = s.avslojande ? t("not_invigning") : t("not_kraver_avslojande");
@@ -558,15 +559,28 @@ function renderSettings(v) {
   sv.value = s.svarighet;
   const level = levels.find((l) => l.id === s.svarighet);
   $("svNote").textContent = level ? level.beskrivning : "";
+  fillForm(s);
+}
+
+// aiChoices ger AI-spelare valet 8 i spelledarläget, där alla åtta kan vara
+// AI-spelare. Annars är det högst sju.
+function aiChoices(gm) {
+  const aiSel = $("sAI");
+  const all = [...aiSel.options].find((o) => o.value === "8");
+  if (gm && !all) aiSel.append(new Option("8", "8"));
+  if (!gm && all) {
+    if (aiSel.value === "8") aiSel.value = "7"; // annars hoppar listan till 0
+    all.remove();
+  }
+}
+
+// fillForm fyller i formuläret med inställningarna s, som de gäller på tornet.
+function fillForm(s) {
   fillOptions($("sSol"), [20, 30, 40, 50, 60, 80], s.sol);
   fillOptions($("sTur"), [15, 30, 45, 60], s.turtid);
-  // Fyra AI-spelare går bara i spelledarläget, när ingen människa behöver plats.
-  const aiSel = $("sAI");
-  // I spelledarläget kan alla åtta vara AI-spelare, annars högst sju.
-  const all = [...aiSel.options].find((o) => o.value === "8");
-  if (s.spelledarlage && !all) aiSel.append(new Option("8", "8"));
-  if (!s.spelledarlage && all) all.remove();
-  aiSel.value = String(s.ai);
+  aiChoices(s.spelledarlage);
+  $("sAI").value = String(s.ai);
+  $("gmNote").textContent = s.spelledarlage ? t("not_spelledarlage") : t("not_spelledarlage_av");
   $("sMin").value = String(s.min);
   $("sSol").value = String(s.sol);
   $("sTur").value = String(s.turtid);
@@ -611,6 +625,7 @@ function say(text, isErr) {
 }
 
 $("settings").addEventListener("change", async () => {
+  aiChoices($("sGM").value === "1"); // syns direkt, innan tornet har svarat
   const s = {
     ai: +$("sAI").value,
     min: +$("sMin").value,
@@ -635,6 +650,9 @@ $("settings").addEventListener("change", async () => {
     if (!r.ok) say(data.fel || t("inst_fel"), true);
     else if (data.varning) say(data.varning, true);
     else say(data.text || t("sparat"));
+    // Tornet kan ha justerat ett val, till exempel 8 AI-spelare till 7 utan
+    // spelledarläge. Visa det genast, även om formuläret har fokus.
+    if (data.settings) fillForm(data.settings);
   } catch {
     say(t("svarar_inte"), true);
   }
