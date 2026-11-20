@@ -4,6 +4,15 @@ Det som har ändrats i spelet, nyast först. README beskriver hur allt
 fungerar. Här står vad som är nytt och vad det betyder för den som spelar
 eller leder tornet.
 
+## 2026-11-20
+
+### Ormtornet.app i ~/Projekt/Lokalt
+
+- `./skapa-app.sh` skapar nu appen i `~/Projekt/Lokalt` i stället för
+  `~/Projekt`. En annan mapp kan fortfarande anges som argument.
+- En app som redan finns kan flyttas fritt, eftersom den bygger spelet från
+  repots mapp. Den behöver bara skapas om när repot flyttas.
+
 ## 2026-11-19
 
 ### Förklaringar till inställningarna
