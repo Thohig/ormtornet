@@ -40,6 +40,8 @@
   #gmCtl .gmlabel { flex: 0 0 auto; min-width: 13ch; font-size: inherit; letter-spacing: 0; text-transform: none; }
   }
   #gmMap { position: absolute; left: 0; top: 0; }
+  #gmMapBox .isokarta { position: absolute; left: 0; top: 0; }
+  #gmMap[hidden], #gmMapBox .isokarta[hidden] { display: none; }
   .tablewrap { overflow-x: auto; }
   #gmPlayers { border-collapse: collapse; width: 100%; font-size: 13px; }
   #gmPlayers th { text-align: left; font-weight: normal; color: var(--fg); padding: 4px 10px 4px 0; }
@@ -174,6 +176,7 @@
 </div>
 <script src="/texter/vardsidan.js"></script>
 <script src="/texter.js"></script>
+<script src="/iso/iso.js"></script>
 <script src="/map.js"></script>
 <script src="/bord.js"></script>
 </body>

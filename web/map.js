@@ -4,7 +4,9 @@
 // rätt även om typsnittet hämtar dem från ett annat teckensnitt.
 "use strict";
 
-const MapView = (() => {
+// FlatMap är den platta kartan. MapView längst ner väljer mellan den och
+// kartan snett ovanifrån (web/iso/iso.js).
+const FlatMap = (() => {
   const RW = 7; // celler per rum på bredden (inklusive en vägg)
   const RH = 4; // celler per rum på höjden (inklusive en vägg)
 
@@ -41,6 +43,9 @@ const MapView = (() => {
 
   let lvl = 1;
   let reveal = false;
+  // quiet: kartan snett ovanifrån visas. Den platta räknar då fortfarande ut
+  // utsnittet och teckenförklaringen, men ritar ingenting.
+  let quiet = false;
   let nowMs = 0;
 
   function pulse(x, y) {
@@ -543,7 +548,7 @@ const MapView = (() => {
 
     aim(wanted(state), nowMs);
     place(nowMs);
-    paint();
+    if (!quiet) paint();
     tellLegend();
   }
 
@@ -770,5 +775,100 @@ const MapView = (() => {
     wokeAt = performance.now();
   }
 
-  return { setup, draw, resize, ping, wake, zoom, toggleWhole, setZoomListener, follow, setLegend, PLAYER_COLORS };
+  // viewAt ger rutan som syns vid tiden now, i rum, utan att ändra något.
+  function viewAt(now) {
+    if (!target) return null;
+    if (zoomAt === -Infinity) return target;
+    const f = Math.min(1, (now - zoomAt) / zoomMs);
+    const e = f < 0.5 ? 2 * f * f : 1 - (-2 * f + 2) ** 2 / 2;
+    const v = {};
+    ["x", "y", "w", "h"].forEach((k) => (v[k] = from[k] + (target[k] - from[k]) * e));
+    return v;
+  }
+
+  // focusRoom ger rummet kartan följer, eller null.
+  function focusRoom() {
+    const p = lastState && focus(lastState);
+    return p ? { x: p.x, y: p.y } : null;
+  }
+
+  function setQuiet(q) {
+    quiet = q;
+    canvas.hidden = q;
+    if (!q) resize();
+  }
+
+  return { setup, draw, resize, ping, wake, zoom, toggleWhole, setZoomListener, follow, setLegend, viewAt, focusRoom, setQuiet, PLAYER_COLORS };
+})();
+
+// MapView är kartan som sidorna använder. Med inställningen Kartan satt till
+// "snett" ritar kartan snett ovanifrån (IsoKarta, byggd från klient/) på en
+// egen canvas bredvid den platta; där WebGL saknas visas den platta ändå.
+const MapView = (() => {
+  let el = null;
+  let iso = null;
+  let useIso = false;
+  let size = 0;
+  let canIso = null; // om webbläsaren kan rita kartan snett ovanifrån
+
+  function wantIso(state) {
+    if (!state || state.karta !== "snett" || !window.IsoKarta) return false;
+    if (canIso === null) canIso = IsoKarta.stods();
+    return canIso;
+  }
+
+  function isoMap() {
+    if (!iso) {
+      const c = document.createElement("canvas");
+      c.className = "isokarta";
+      c.hidden = true;
+      el.after(c);
+      iso = IsoKarta.skapa(c, {
+        utsnitt: () => FlatMap.viewAt(performance.now()),
+        fokus: FlatMap.focusRoom,
+        farger: FlatMap.PLAYER_COLORS,
+      });
+      if (size) iso.storlek(size);
+    }
+    return iso;
+  }
+
+  function setup(canvas, n) {
+    el = canvas;
+    size = n;
+    FlatMap.setup(canvas, n);
+    if (iso) iso.storlek(n);
+  }
+
+  function draw(state, t) {
+    const want = wantIso(state);
+    if (want !== useIso) {
+      useIso = want;
+      FlatMap.setQuiet(want);
+      isoMap().visa(want);
+    }
+    FlatMap.draw(state, t);
+    if (useIso) iso.visaTillstand(state);
+  }
+
+  function resize() {
+    FlatMap.resize();
+    if (iso && useIso) iso.anpassa();
+  }
+
+  function ping(x, y, slot) {
+    FlatMap.ping(x, y, slot);
+    if (iso) iso.eko(x, y, slot);
+  }
+
+  function wake() {
+    FlatMap.wake();
+    if (iso) iso.vakna();
+  }
+
+  return {
+    setup, draw, resize, ping, wake,
+    zoom: FlatMap.zoom, toggleWhole: FlatMap.toggleWhole, setZoomListener: FlatMap.setZoomListener,
+    follow: FlatMap.follow, setLegend: FlatMap.setLegend, PLAYER_COLORS: FlatMap.PLAYER_COLORS,
+  };
 })();

@@ -30,6 +30,30 @@
         "egen"
       ],
       "port": 8091
+    },
+    {
+      "name": "ormtornet-snett",
+      "runtimeExecutable": "go",
+      "runtimeArgs": [
+        "run",
+        ".",
+        "-addr",
+        "127.0.0.1:8092",
+        "-installningar",
+        "",
+        "-min",
+        "1",
+        "-ai",
+        "2",
+        "-turtid",
+        "60s",
+        "-karta",
+        "snett",
+        "-synlighet",
+        "alla",
+        "-klasser=false"
+      ],
+      "port": 8092
     }
   ]
 }

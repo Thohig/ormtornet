@@ -192,6 +192,13 @@
           </select>
           <span class="note" data-t="not_synlighet"></span>
 
+          <label for="sKarta" data-t="inst_karta"></label>
+          <select id="sKarta" name="karta">
+            <option value="platt" data-t="val_karta_platt"></option>
+            <option value="snett" data-t="val_karta_snett"></option>
+          </select>
+          <span class="note" data-t="not_karta"></span>
+
           <label for="sStorlek" data-t="inst_storlek"></label>
           <select id="sStorlek" name="storlek">
             <option value="0" data-t="val_storlek_auto"></option>
@@ -245,6 +252,8 @@
         <dd data-t="forkl_strid"></dd>
         <dt data-t="inst_synlighet"></dt>
         <dd data-t="forkl_synlighet"></dd>
+        <dt data-t="inst_karta"></dt>
+        <dd data-t="forkl_karta"></dd>
         <dt data-t="inst_storlek"></dt>
         <dd data-t="forkl_storlek"></dd>
         <dt data-t="inst_sol"></dt>
@@ -514,6 +523,7 @@ function moreText(s) {
     s.franvaro ? t("kort_franvaro", { antal: s.franvaro }) : t("kort_franvaro_star"),
     strid ? t(strid) : t("kort_strid", { strid: s.strid }),
     syn ? t(syn) : t("kort_syn", { syn: s.synlighet }),
+    s.karta === "snett" ? t("kort_karta_snett") : "",
     s.storlek ? t("storlek_rum", { storlek: s.storlek }) : t("kort_storlek_auto"),
     s.sol ? t("kort_sol", { rundor: s.sol }) : "",
     s.turtid ? t("kort_turtid", { sekunder: s.turtid }) : "",
@@ -594,6 +604,7 @@ function fillForm(s) {
   fr.value = String(s.franvaro);
   $("sStrid").value = s.strid;
   $("sSyn").value = s.synlighet;
+  $("sKarta").value = s.karta || "platt";
   $("sGM").value = s.spelledarlage ? "1" : "0";
   $("sKlass").value = s.klasser ? "1" : "0";
   $("sStorlek").value = String(s.storlek || 0);
@@ -637,6 +648,7 @@ $("settings").addEventListener("change", async () => {
     franvaro: +$("sFr").value,
     strid: $("sStrid").value,
     synlighet: $("sSyn").value,
+    karta: $("sKarta").value,
     spelledarlage: $("sGM").value === "1",
     klasser: $("sKlass").value === "1",
     storlek: +$("sStorlek").value,

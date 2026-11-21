@@ -6,6 +6,20 @@ eller leder tornet.
 
 ## 2026-11-21
 
+### Kartan snett ovanifrån, första versionen
+
+- Värdsidan har ett nytt val under Inför nästa vandring: **Kartan**, rakt
+  ovanifrån i krita eller snett ovanifrån i 3D (flaggan `-karta`). Förval
+  är rakt ovanifrån.
+- Snett ovanifrån visar tornet med golv, låga väggar, dörrar och portar,
+  och kammaren med sin ring och sitt guld. Vandrarna är små figurer i sin
+  färg och varelserna står som sina tecken. Kameran följer rummet man står
+  i, och zoomen fungerar som förut. Norr pekar upp åt höger.
+- Spelledarbordet visar samma karta.
+- En enhet som inte kan rita 3D (WebGL) visar den platta kartan.
+- Det här är steg 2 av 4 i [isometrisk.md](isometrisk.md). Klassernas
+  figurer, rörelsen mellan rummen och avslöjandets utseende kommer sedan.
+
 ### Grunden för kartan snett ovanifrån
 
 - Kartan ska kunna visas snett ovanifrån i 3D, ritad med Three.js. Planen

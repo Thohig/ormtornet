@@ -1436,10 +1436,10 @@ $("zoomName").addEventListener("click", () => MapView.toggleWhole());
   // Två fingrar: isär går närmare, ihop går längre ut.
   let pinch = 0;
   const dist = (t) => Math.hypot(t[0].clientX - t[1].clientX, t[0].clientY - t[1].clientY);
-  $("map").addEventListener("touchstart", (e) => {
+  $("mapbox").addEventListener("touchstart", (e) => {
     if (e.touches.length === 2) pinch = dist(e.touches);
   }, { passive: true });
-  $("map").addEventListener("touchmove", (e) => {
+  $("mapbox").addEventListener("touchmove", (e) => {
     if (e.touches.length !== 2 || !pinch) return;
     e.preventDefault();
     const d = dist(e.touches);
@@ -1451,7 +1451,7 @@ $("zoomName").addEventListener("click", () => MapView.toggleWhole());
       pinch = d;
     }
   }, { passive: false });
-  $("map").addEventListener("touchend", () => (pinch = 0));
+  $("mapbox").addEventListener("touchend", () => (pinch = 0));
 }
 
 $("enter").addEventListener("click", (e) => {

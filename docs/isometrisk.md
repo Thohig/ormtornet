@@ -1,8 +1,8 @@
 # Förslag: Tornet snett ovanifrån
 
 Status: förslaget skrevs 2026-11-21. Skisserna visade två alternativ,
-platta kritfigurer (A) och 3D-modeller (B). Användaren valde B. Steg 1 är
-byggt.
+platta kritfigurer (A) och 3D-modeller (B). Användaren valde B. Steg 1 och
+2 är byggda.
 
 Kartan ritas i dag med Canvas 2D i `web/map.js`, rakt ovanifrån, med tecken
 i ett rutnät. Förslaget är en ny karta i isometrisk vy, ritad med Three.js
@@ -56,9 +56,30 @@ Vandrarna och varelserna blir enkla 3D-modeller med ljus och skuggor.
 2. Den isometriska kartan: golv, väggar, dörrar, portar, kammaren och
    kritan på golvet, med enkla figurer för vandrarna och varelserna och
    samma gränssnitt som `MapView`. Valet platt eller snett ovanifrån på
-   värdsidan.
+   värdsidan. **Byggt.**
 3. Modellerna: vandrarna med klassernas föremål, varelserna, guldet, och
    rörelsen mellan rummen. Ekot och de dolda vandrarnas ringar.
 4. Avslöjandet: nivåerna 2–4, ormens ögon och munnarna.
 
 Efter varje steg görs en commit, och användaren provar innan nästa steg.
+
+## Så är steg 2 byggt
+
+- Inställningen Kartan (`karta` i inställningarna, `-karta`) är `platt`
+  eller `snett`, med `platt` som förval tills kartan är klar. Den följer
+  med tillståndet som `karta`, både till spelarna och spelledarbordet.
+- `MapView` i `web/map.js` väljer kartan. Den platta (`FlatMap`) räknar
+  alltid ut utsnittet, zoomen och teckenförklaringen, men ritar inget när
+  kartan snett ovanifrån visas. Den kartan (`klient/src/karta.ts`) ritar
+  på en egen canvas bredvid och läser utsnittet och rummet den följer från
+  den platta.
+- Kameran står över rummet kartan följer och glider efter när vandraren
+  byter rum. Utsnittet är en romb på skärmen, och hörnen skärs av så att
+  rummen närmast blir större. Utan någon att följa visas hela utsnittet.
+- Vandrarna är en kropp och ett huvud i sin färg, den egna med en ring som
+  pulserar. Varelserna står som sitt tecken. Fällornas märken, kritpilarna,
+  föremålen och de döda (x) står i krita på golvet, och draget är en pil
+  vid dörren som blinkar. Ekot färgar rummets golv.
+- Kvar till senare steg: pilarna vid kanten för det som ligger utanför
+  utsnittet, och avslöjandets utseende (väggarna andas inte än, och
+  portarna på nivå 4 är vanliga portar).

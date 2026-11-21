@@ -27,6 +27,7 @@ type Settings struct {
 	Sprak      string `json:"sprak"`         // språket i spelet och på värdsidan: "sv" eller "en"
 	Invigning  string `json:"invigning"`     // invigningen: "namn" (ormens namn) eller "svar" (fasta svar)
 	Forandras  bool   `json:"forandras"`     // tornet förändras med avslöjandets nivåer
+	Karta      string `json:"karta"`         // hur kartan ritas: "platt" (rakt ovanifrån) eller "snett" (snett ovanifrån i 3D)
 }
 
 const (
@@ -35,7 +36,14 @@ const (
 	sightOwn  = "egen"  // som "moten", och var och en ser bara rum den själv har varit i
 )
 
-var defaultSettings = Settings{AI: 0, Min: 2, Sol: 0, Turtid: 0, Avslojande: true, Franvaro: 2, Strid: pvpOn, Synlighet: sightOwn, Klasser: true, Sprak: langSv, Invigning: initName, Forandras: true}
+// Kartans utseende. Snett ovanifrån ritas med WebGL (web/iso/iso.js, byggd
+// från klient/); där WebGL saknas visas den platta kartan ändå.
+const (
+	mapFlat = "platt"
+	mapIso  = "snett"
+)
+
+var defaultSettings = Settings{AI: 0, Min: 2, Sol: 0, Turtid: 0, Avslojande: true, Franvaro: 2, Strid: pvpOn, Synlighet: sightOwn, Klasser: true, Sprak: langSv, Invigning: initName, Forandras: true, Karta: mapFlat}
 
 var errPlaying = errors.New("inställningarna kan ändras när omgången är slut")
 
@@ -69,16 +77,27 @@ func (s Settings) normalize() Settings {
 	if s.Invigning != initAnswers {
 		s.Invigning = initName
 	}
+	if s.Karta != mapIso {
+		s.Karta = mapFlat
+	}
 	return s
 }
 
 func (s Settings) config() Config {
 	s = s.normalize()
-	return Config{Difficulty: s.Svarighet, AI: s.AI, AbsentRounds: s.Franvaro, PvP: s.Strid, Sight: s.Synlighet, Classes: s.Klasser, Size: s.Storlek, GMMode: s.Spelledare, MinPlayers: s.Min, SunMax: s.Sol, TurnTime: time.Duration(s.Turtid) * time.Second, Reveal: s.Avslojande, Lang: s.Sprak, Initiation: s.Invigning, Change: s.Forandras}
+	return Config{Difficulty: s.Svarighet, AI: s.AI, AbsentRounds: s.Franvaro, PvP: s.Strid, Sight: s.Synlighet, Classes: s.Klasser, Size: s.Storlek, GMMode: s.Spelledare, MinPlayers: s.Min, SunMax: s.Sol, TurnTime: time.Duration(s.Turtid) * time.Second, Reveal: s.Avslojande, Lang: s.Sprak, Initiation: s.Invigning, Change: s.Forandras, Map: s.Karta}
 }
 
 func settingsFrom(cfg Config) Settings {
-	return Settings{Svarighet: cfg.Difficulty, AI: cfg.AI, Franvaro: cfg.AbsentRounds, Strid: cfg.PvP, Synlighet: cfg.Sight, Klasser: cfg.Classes, Storlek: cfg.Size, Spelledare: cfg.GMMode, Min: cfg.MinPlayers, Sol: cfg.SunMax, Turtid: int(cfg.TurnTime / time.Second), Avslojande: cfg.Reveal, Sprak: langOrDefault(cfg.Lang), Invigning: cfg.Initiation, Forandras: cfg.Change}
+	return Settings{Svarighet: cfg.Difficulty, AI: cfg.AI, Franvaro: cfg.AbsentRounds, Strid: cfg.PvP, Synlighet: cfg.Sight, Klasser: cfg.Classes, Storlek: cfg.Size, Spelledare: cfg.GMMode, Min: cfg.MinPlayers, Sol: cfg.SunMax, Turtid: int(cfg.TurnTime / time.Second), Avslojande: cfg.Reveal, Sprak: langOrDefault(cfg.Lang), Invigning: cfg.Initiation, Forandras: cfg.Change, Karta: mapOrDefault(cfg.Map)}
+}
+
+// mapOrDefault ger kartans utseende, platt när inget är valt.
+func mapOrDefault(m string) string {
+	if m == mapIso {
+		return mapIso
+	}
+	return mapFlat
 }
 
 // defaultSettingsPath ger ~/Library/Application Support/Ormtornet/installningar.json.

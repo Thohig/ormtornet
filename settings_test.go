@@ -115,7 +115,7 @@ func TestSettingsSaveAndLoad(t *testing.T) {
 	if err != nil || s != defaultSettings {
 		t.Fatalf("utan fil: %+v %v", s, err)
 	}
-	want := Settings{AI: 2, Min: 3, Sol: 60, Turtid: 15, Avslojande: false, Franvaro: 1, Strid: pvpHalf, Synlighet: sightAll, Sprak: langEn, Invigning: initAnswers}
+	want := Settings{AI: 2, Min: 3, Sol: 60, Turtid: 15, Avslojande: false, Franvaro: 1, Strid: pvpHalf, Synlighet: sightAll, Sprak: langEn, Invigning: initAnswers, Karta: mapIso}
 	if err := saveSettings(path, want); err != nil {
 		t.Fatal(err)
 	}

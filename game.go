@@ -56,6 +56,7 @@ type Config struct {
 	Reveal       bool   // false stänger av avslöjandet
 	Initiation   string // invigningen: "namn" (ormens namn) eller "svar" (fasta svar, också när tomt)
 	Change       bool   // tornet förändras med avslöjandets nivåer
+	Map          string // hur kartan ritas: "platt" eller "snett"
 	SunMax       int
 	TurnTime     time.Duration
 	MinPlayers   int
@@ -549,6 +550,7 @@ type stateMsg struct {
 	Paused     bool          `json:"paused,omitempty"`
 	SleepText  string        `json:"sleepText,omitempty"`
 	Sight      string        `json:"sight"` // "alla", "moten" eller "egen"
+	Map        string        `json:"karta"` // "platt" eller "snett"
 	Class      *classView    `json:"klass,omitempty"`
 	Items      []itemView    `json:"foremal,omitempty"`
 	Compass    string        `json:"kompass,omitempty"`
@@ -652,7 +654,7 @@ func (g *Game) stateFor(me *Player) stateMsg {
 	st := stateMsg{
 		T: "state", Sprak: g.base.Lang, You: me.ID, Size: g.size, Level: g.level, Reveal: g.cfg.Reveal,
 		Phase: g.phase, Sun: g.sun, SunMax: g.sunMax, Round: g.round,
-		MinPlayers: g.cfg.MinPlayers, Action: me.Action, Sight: g.cfg.Sight,
+		MinPlayers: g.cfg.MinPlayers, Action: me.Action, Sight: g.cfg.Sight, Map: mapOrDefault(g.cfg.Map),
 		HP: me.HP, MaxHP: g.maxHP(me), Potions: me.Potions,
 		Stuck: me.Stuck, Cellar: me.Cellar, Poison: me.Poison, Dark: me.Dark,
 	}

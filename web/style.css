@@ -428,7 +428,16 @@ body[data-niva="4"] #crt::after { animation: throb 0.95s infinite; }
 #zoom button:hover:not(:disabled), #zoom button:focus-visible { color: var(--hi); border-color: var(--fg); outline: none; }
 #zoom button:disabled { opacity: 0.4; cursor: default; }
 #zoomName { min-width: 8ch; }
-#map { touch-action: pan-x pan-y; }
+#map, .isokarta { touch-action: pan-x pan-y; }
+/* Kartan snett ovanifrån (web/iso/iso.js) ligger på samma plats som den platta. */
+.isokarta {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: block;
+  border-radius: 6px;
+}
+#map[hidden], .isokarta[hidden] { display: none; }
 #roomname {
   color: var(--chalk);
   letter-spacing: 0.08em;

@@ -76,6 +76,7 @@ Flaggor:
 - `-avslojande=false` stänger av avslöjandet: ingen berättelse, inga varsel, ingen invigning och inget tornet som förändras
 - `-invigning namn` invigningen: `namn` (ormens namn, nytt för varje vandring) eller `svar` (fasta svar)
 - `-forandras=false` tornet förändras inte med avslöjandets nivåer
+- `-karta snett` kartan ritas snett ovanifrån i 3D (kräver WebGL; en enhet utan visar den platta). Förval är `platt`, kritkartan rakt ovanifrån. Se [docs/isometrisk.md](docs/isometrisk.md)
 - `-oppna` öppnar introt i webbläsaren när servern har startat; på den här datorn leder det till värdsidan, eller till spelledarbordet i spelledarläget
 - `-vaken` håller datorn vaken så länge servern är igång
 - `-autostopp 10m` stänger tornet när ingen spelare är ansluten och ingen sida har synts på tornets dator så länge (`0` = aldrig)
@@ -121,6 +122,7 @@ inställning med några meningar (`forkl_*` i `vardsidan.json`).
 | Frånvarande vandrare | AI tar över efter 1–3 rundor, eller står still | 2 rundor |
 | Strid mellan vandrare | på, efter halva tiden, av | på |
 | Vandrarna syns | bara när de möts med egen karta, bara när de möts, alltid | egen karta |
+| Kartan | rakt ovanifrån i krita, eller snett ovanifrån i 3D | rakt ovanifrån |
 | Tornets storlek | automatisk, 9, 11 eller 13 rum | automatisk |
 | Solnedgång | automatisk, eller 20–80 rundor | automatisk |
 | Turtid | automatisk, eller 15–60 sekunder per runda | automatisk |
@@ -848,7 +850,9 @@ Beskrivningarna för rummen ligger under nivåerna `"1"` till `"4"`.
   - `audio.js` allt ljud, skapat med Web Audio API, även stormen i introt
   - `style.css` utseendet
   - `iso/iso.js` kartan snett ovanifrån, byggd från `klient/` (rör den inte
-    för hand)
+    för hand). `map.js` väljer kartan efter inställningen Kartan; den
+    platta räknar alltid ut utsnittet och teckenförklaringen, och kartan
+    snett ovanifrån läser utsnittet därifrån
 - `klient/` kartan snett ovanifrån i TypeScript med Three.js, byggd med Vite
   (se [docs/isometrisk.md](docs/isometrisk.md)). Det byggda skriptet
   `web/iso/iso.js` checkas in, så att spelet byggs utan Node. Efter en
