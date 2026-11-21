@@ -194,8 +194,8 @@
 
           <label for="sKarta" data-t="inst_karta"></label>
           <select id="sKarta" name="karta">
-            <option value="platt" data-t="val_karta_platt"></option>
             <option value="snett" data-t="val_karta_snett"></option>
+            <option value="platt" data-t="val_karta_platt"></option>
           </select>
           <span class="note" data-t="not_karta"></span>
 
@@ -523,7 +523,7 @@ function moreText(s) {
     s.franvaro ? t("kort_franvaro", { antal: s.franvaro }) : t("kort_franvaro_star"),
     strid ? t(strid) : t("kort_strid", { strid: s.strid }),
     syn ? t(syn) : t("kort_syn", { syn: s.synlighet }),
-    s.karta === "snett" ? t("kort_karta_snett") : "",
+    s.karta === "platt" ? t("kort_karta_platt") : "",
     s.storlek ? t("storlek_rum", { storlek: s.storlek }) : t("kort_storlek_auto"),
     s.sol ? t("kort_sol", { rundor: s.sol }) : "",
     s.turtid ? t("kort_turtid", { sekunder: s.turtid }) : "",
@@ -604,7 +604,7 @@ function fillForm(s) {
   fr.value = String(s.franvaro);
   $("sStrid").value = s.strid;
   $("sSyn").value = s.synlighet;
-  $("sKarta").value = s.karta || "platt";
+  $("sKarta").value = s.karta || "snett";
   $("sGM").value = s.spelledarlage ? "1" : "0";
   $("sKlass").value = s.klasser ? "1" : "0";
   $("sStorlek").value = String(s.storlek || 0);

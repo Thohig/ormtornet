@@ -45,7 +45,7 @@ func main() {
 	check := flag.Bool("kontrollera", false, "kontrollera datafilerna och avsluta")
 	initiation := flag.String("invigning", defaultSettings.Invigning, "invigningen: namn (ormens namn, nytt för varje vandring) eller svar (fasta svar)")
 	change := flag.Bool("forandras", defaultSettings.Forandras, "tornet förändras med avslöjandets nivåer: fler fällor från nivå 3, portarna stängs på nivå 4")
-	mapLook := flag.String("karta", defaultSettings.Karta, "hur kartan ritas: platt (rakt ovanifrån, i krita) eller snett (snett ovanifrån i 3D, kräver WebGL)")
+	mapLook := flag.String("karta", defaultSettings.Karta, "hur kartan ritas: snett (snett ovanifrån i 3D, kräver WebGL) eller platt (rakt ovanifrån, i krita)")
 	lang := flag.String("sprak", defaultSettings.Sprak, "språket i spelet och på värdsidan: sv eller en (texter som inte är översatta visas på svenska)")
 	flag.Parse()
 

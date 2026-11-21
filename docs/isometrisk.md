@@ -2,7 +2,7 @@
 
 Status: förslaget skrevs 2026-11-21. Skisserna visade två alternativ,
 platta kritfigurer (A) och 3D-modeller (B). Användaren valde B. Alla fyra
-stegen är byggda. Kartan är fortfarande platt som förval.
+stegen är byggda, och kartan snett ovanifrån är förval sedan 2026-11-21.
 
 Kartan ritas i dag med Canvas 2D i `web/map.js`, rakt ovanifrån, med tecken
 i ett rutnät. Förslaget är en ny karta i isometrisk vy, ritad med Three.js
@@ -66,7 +66,8 @@ Efter varje steg görs en commit, och användaren provar innan nästa steg.
 ## Så är steg 2 byggt
 
 - Inställningen Kartan (`karta` i inställningarna, `-karta`) är `platt`
-  eller `snett`, med `platt` som förval tills kartan är klar. Den följer
+  eller `snett`. Först var `platt` förval; när alla stegen var byggda blev
+  det `snett`. Den följer
   med tillståndet som `karta`, både till spelarna och spelledarbordet.
 - `MapView` i `web/map.js` väljer kartan. Den platta (`FlatMap`) räknar
   alltid ut utsnittet, zoomen och teckenförklaringen, men ritar inget när
@@ -122,5 +123,4 @@ Efter varje steg görs en commit, och användaren provar innan nästa steg.
 ## Inte byggt
 
 - Pilarna vid kanten för portar, kammaren och vandrare utanför utsnittet.
-- Att kartan snett ovanifrån blir förval.
 - Modellerna i `data/`, så att de kan ändras utan att bygga om.

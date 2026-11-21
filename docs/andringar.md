@@ -6,6 +6,14 @@ eller leder tornet.
 
 ## 2026-11-21
 
+### Kartan snett ovanifrån är förval
+
+- Kartan visas nu snett ovanifrån i 3D om inget annat är valt. Den platta
+  kritkartan finns kvar: välj Kartan: rakt ovanifrån på värdsidan, eller
+  starta med `-karta platt`. En enhet utan WebGL visar den platta kartan.
+- Har du sparat inställningar efter att valet Kartan kom, med Kartan på
+  rakt ovanifrån, gäller det valet tills du ändrar det.
+
 ### Kartan snett ovanifrån: avslöjandet
 
 - Tornet snett ovanifrån förändras nu med avslöjandets nivåer, som den
@@ -13,8 +21,7 @@ eller leder tornet.
   och revben syns genom golvet på nivå 3, och på nivå 4 är väggarna kött
   och portarna munnar som tuggar.
 - När ormen vaknar lyser dess ögon över guldet.
-- Det var sista steget i [isometrisk.md](isometrisk.md). Kartan är
-  fortfarande platt som förval; välj Kartan: snett ovanifrån på värdsidan.
+- Det var sista steget i [isometrisk.md](isometrisk.md).
 
 ### Kartan snett ovanifrån: figurerna
 

@@ -115,7 +115,7 @@ func TestSettingsSaveAndLoad(t *testing.T) {
 	if err != nil || s != defaultSettings {
 		t.Fatalf("utan fil: %+v %v", s, err)
 	}
-	want := Settings{AI: 2, Min: 3, Sol: 60, Turtid: 15, Avslojande: false, Franvaro: 1, Strid: pvpHalf, Synlighet: sightAll, Sprak: langEn, Invigning: initAnswers, Karta: mapIso}
+	want := Settings{AI: 2, Min: 3, Sol: 60, Turtid: 15, Avslojande: false, Franvaro: 1, Strid: pvpHalf, Synlighet: sightAll, Sprak: langEn, Invigning: initAnswers, Karta: mapFlat}
 	if err := saveSettings(path, want); err != nil {
 		t.Fatal(err)
 	}
@@ -168,5 +168,21 @@ func TestAutoSunAndTurn(t *testing.T) {
 	}
 	if v := g.HostView(false); v.SunMax != 50 || v.TurnSecs != 30 {
 		t.Fatalf("värdsidan: sol %d, turtid %d", v.SunMax, v.TurnSecs)
+	}
+}
+
+// Kartan snett ovanifrån är förval, också för sparade inställningar från
+// före valet och för okända värden. Bara "platt" ger den platta kartan.
+func TestMapDefault(t *testing.T) {
+	if defaultSettings.Karta != mapIso {
+		t.Fatalf("förval %q", defaultSettings.Karta)
+	}
+	for in, want := range map[string]string{"": mapIso, "snett": mapIso, "platt": mapFlat, "rund": mapIso} {
+		if got := (Settings{Karta: in}).normalize().Karta; got != want {
+			t.Errorf("normalize(%q) = %q, vill ha %q", in, got, want)
+		}
+		if got := mapOrDefault(in); got != want {
+			t.Errorf("mapOrDefault(%q) = %q, vill ha %q", in, got, want)
+		}
 	}
 }

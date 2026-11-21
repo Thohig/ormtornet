@@ -36,14 +36,15 @@ const (
 	sightOwn  = "egen"  // som "moten", och var och en ser bara rum den själv har varit i
 )
 
-// Kartans utseende. Snett ovanifrån ritas med WebGL (web/iso/iso.js, byggd
-// från klient/); där WebGL saknas visas den platta kartan ändå.
+// Kartans utseende. Snett ovanifrån är förval och ritas med WebGL
+// (web/iso/iso.js, byggd från klient/); där WebGL saknas visas den platta
+// kartan ändå.
 const (
 	mapFlat = "platt"
 	mapIso  = "snett"
 )
 
-var defaultSettings = Settings{AI: 0, Min: 2, Sol: 0, Turtid: 0, Avslojande: true, Franvaro: 2, Strid: pvpOn, Synlighet: sightOwn, Klasser: true, Sprak: langSv, Invigning: initName, Forandras: true, Karta: mapFlat}
+var defaultSettings = Settings{AI: 0, Min: 2, Sol: 0, Turtid: 0, Avslojande: true, Franvaro: 2, Strid: pvpOn, Synlighet: sightOwn, Klasser: true, Sprak: langSv, Invigning: initName, Forandras: true, Karta: mapIso}
 
 var errPlaying = errors.New("inställningarna kan ändras när omgången är slut")
 
@@ -77,8 +78,8 @@ func (s Settings) normalize() Settings {
 	if s.Invigning != initAnswers {
 		s.Invigning = initName
 	}
-	if s.Karta != mapIso {
-		s.Karta = mapFlat
+	if s.Karta != mapFlat {
+		s.Karta = mapIso
 	}
 	return s
 }
@@ -92,12 +93,12 @@ func settingsFrom(cfg Config) Settings {
 	return Settings{Svarighet: cfg.Difficulty, AI: cfg.AI, Franvaro: cfg.AbsentRounds, Strid: cfg.PvP, Synlighet: cfg.Sight, Klasser: cfg.Classes, Storlek: cfg.Size, Spelledare: cfg.GMMode, Min: cfg.MinPlayers, Sol: cfg.SunMax, Turtid: int(cfg.TurnTime / time.Second), Avslojande: cfg.Reveal, Sprak: langOrDefault(cfg.Lang), Invigning: cfg.Initiation, Forandras: cfg.Change, Karta: mapOrDefault(cfg.Map)}
 }
 
-// mapOrDefault ger kartans utseende, platt när inget är valt.
+// mapOrDefault ger kartans utseende, snett ovanifrån när inget är valt.
 func mapOrDefault(m string) string {
-	if m == mapIso {
-		return mapIso
+	if m == mapFlat {
+		return mapFlat
 	}
-	return mapFlat
+	return mapIso
 }
 
 // defaultSettingsPath ger ~/Library/Application Support/Ormtornet/installningar.json.
