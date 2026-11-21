@@ -6,6 +6,14 @@ eller leder tornet.
 
 ## 2026-11-21
 
+### Sidorna heter Ormtornet från början
+
+- Sidornas titel står nu som "Ormtornet" redan i HTML:en. Förut var den
+  tom tills texterna hade laddats. När man delar länken visar
+  förhandsvisningen därför Ormtornet i stället för adressen, och fliken har
+  ett namn medan sidan laddar. Sedan byts titeln som förut mot den på
+  tornets språk.
+
 ### Tornet håller i en dold flik
 
 - Steg 4 i [github-pages.md](github-pages.md). På GitHub Pages körs tornet
