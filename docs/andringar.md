@@ -6,6 +6,19 @@ eller leder tornet.
 
 ## 2026-11-21
 
+### Egen karta är det enda läget
+
+- Inställningen "Vandrarna syns" och flaggan `-synlighet` är borttagna.
+  Vandrarna ser alltid bara varandra när de står i samma rum, och var och
+  en har sin egen karta med de rum hen själv har gått igenom. Det var
+  förvalet förut.
+- Portarna lottas alltid, och spåren och ljuden från grannrummen finns
+  alltid.
+- Under "Vad inställningarna gör" på värdsidan står en kort förklaring av
+  hur vandrarna ser varandra.
+- En sparad inställningsfil med `synlighet` läses som förut; valet
+  ignoreras.
+
 ### Värdsidan och spelledarbordet
 
 - Under vandringen visar Vid porten bara raden om vandringen och

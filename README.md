@@ -72,7 +72,6 @@ Flaggor:
 - `-kontrollera` kontrollerar datafilerna och avslutar, utan att öppna tornet
 - `-fro 0` frö för den första vandringen. Varje vandring skriver sitt frö i terminalen och på värdsidan. Startar du med samma frö och vandrarna gör samma drag blir tornet detsamma, rum för rum, så att en konstig vandring kan spelas upp igen. `0` ger ett slumpat frö
 - `-storlek 0` tornets storlek i rum: `9`, `11` eller `13`, eller `0` för automatisk (efter antalet vandrare). Ett torn blir aldrig för litet för alla
-- `-synlighet egen` vilka vandrare och rum man ser: `egen` (andra vandrare bara i samma rum, och bara egna rum på kartan), `moten` (andra vandrare bara i samma rum) eller `alla`
 - `-avslojande=false` stänger av avslöjandet: ingen berättelse, inga varsel, ingen invigning och inget tornet som förändras
 - `-invigning namn` invigningen: `namn` (ormens namn, nytt för varje vandring) eller `svar` (fasta svar)
 - `-forandras=false` tornet förändras inte med avslöjandets nivåer
@@ -121,7 +120,6 @@ inställning med några meningar (`forkl_*` i `vardsidan.json`).
 | Tornet förändras | på eller av (kräver avslöjandet) | på |
 | Frånvarande vandrare | AI tar över efter 1–3 rundor, eller står still | 2 rundor |
 | Strid mellan vandrare | på, efter halva tiden, av | på |
-| Vandrarna syns | bara när de möts med egen karta, bara när de möts, alltid | egen karta |
 | Kartan | snett ovanifrån i 3D, eller rakt ovanifrån i krita | snett ovanifrån |
 | Tornets storlek | automatisk, 9, 11 eller 13 rum | automatisk |
 | Solnedgång | automatisk, eller 20–80 rundor | automatisk |
@@ -366,8 +364,8 @@ de andra vilket rum man står i.
 
 ### Vem ser vem
 
-Som standard ser du bara dig själv och rum du själv har gått igenom på
-kartan. De andra vandrarna syns bara när ni står i samma rum, redan i
+Du ser bara dig själv och rum du själv har gått igenom på kartan. Det är
+spelets enda läge. De andra vandrarna syns bara när ni står i samma rum, redan i
 lobbyn. Där du senast såg någon står en svag ring i dess färg, och i
 listan över vandrare står "sågs runda 12" eller "inte sedd". Tecknet
 försvinner när du ser vandraren igen, eller när den har gått ut eller dött.
@@ -384,14 +382,12 @@ växlar mellan din nivå och Allt. En smal skärm börjar på Nära och en
 större på Mellan, och sidan kommer ihåg ditt val på den enheten. Ligger
 en port eller kammaren du känner till, eller en vandrare du ser, utanför
 rutan pekar en liten pil vid kanten åt det hållet, med samma tecken som
-på kartan. De andras portar är okända tills någon går in i
-dem. Med egen karta ser du bara rum du själv har gått igenom; med de andra
-valen syns alla rum som någon har gått in i. Vem som börjar vid vilken port lottas när vandringen börjar,
+på kartan. De andras portar är okända tills du själv går in
+i dem (kartritaren ser alla rum som någon har gått in i). Vem som börjar vid vilken port lottas när vandringen börjar,
 och var och en får bara veta sin egen. Ordningen i listan och färgen säger
 inget om porten, och när någon kommer till tornet står det inte vid vilken
 port. Står du i ett grannrum till en port när någon går ut hör du porten
-gnissla. Med "alltid, för alla" börjar var och en vid porten som hör till
-dess plats i listan, som förut.
+gnissla.
 
 Tornet berättar fortfarande när någon faller ner i källaren eller kommer
 upp, eller när en fälla slår till, men bara i vilken del av tornet och
@@ -424,14 +420,9 @@ rum. Vill ni veta hur tornet ser ut får ni berätta för varandra. När vandrin
 Texterna står i `data/texter.json` under `spar`, `spar_ut` och `ljud_*`,
 och texterna utan port under `ansluter_dolt`, `valkommen_dolt` och
 `start_port` (i `ai.json` under `ansluter_dolt` och `lamnar_dolt`).
-Med "alltid, för alla" finns inga spår och inga ljud från grannrummen.
 
-Med "Vandrarna syns: bara när de möts" på värdsidan, eller
-`-synlighet moten`, är kartan gemensam igen: rum som någon upptäcker syns
-för alla, och tornet berättar i vilken del någon har hittat ett nytt rum.
-
-Med "Vandrarna syns: alltid, för alla" på värdsidan, eller `-synlighet alla`,
-syns alla på kartan som förut.
+Förut gick det att välja att alla syns hela tiden, eller att kartan är
+gemensam. De valen är borttagna; se [docs/synlighet.md](docs/synlighet.md).
 
 När vandringen är slut står krönikan på en egen skärm, under resultaten och
 epilogen. Först kommer det
@@ -917,7 +908,7 @@ Det tar under en sekund. Utskriften säger hur många som kom ut med och
 utan skatt, dog eller blev kvar i mörkret, hur mycket skatt de bar, vad de
 dog av, hur ofta ormen vaknade och hur det gick för varje klass.
 Inställningarna är desamma som när tornet öppnas (`-sol`, `-storlek`,
-`-synlighet`, `-klasser` och de sparade). Vandringarna får frön i följd
+`-klasser` och de sparade). Vandringarna får frön i följd
 från `-fro`, så samma kommando ger samma resultat, och en enskild vandring
 kan köras om med `-simulera 1 -fro` och dess frö.
 

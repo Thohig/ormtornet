@@ -377,14 +377,6 @@
       "The evening light stings your eyes. Not yet. The tower has more to give.",
       "You look out over the slope below. Then you turn back in."
     ],
-    "nytt_rum_andra": [
-      "Stone scrapes on stone in the {region} part of the tower. {namn} has found a new room.",
-      "A dull rumble from the {region} part of the tower. {namn} has opened a new way."
-    ],
-    "nytt_rum_andra_dolt": [
-      "Stone scrapes on stone in the {region} part of the tower. Someone has found a new room.",
-      "A dull rumble from the {region} part of the tower. Someone has opened a new way."
-    ],
     "kant_rum": [
       "{rum}."
     ],
@@ -479,9 +471,6 @@
     "ljud_drick": [
       "In the room to the {riktning} a cork is pulled from a bottle. Someone is drinking.",
       "Through the wall to the {riktning} you hear a few quick gulps."
-    ],
-    "synlighet_moten": [
-      "The tower is large and dark. You see the other wanderers only when you stand in the same room."
     ],
     "synlighet_egen": [
       "The tower is large and dark. You see the other wanderers only when you stand in the same room, and your map shows only the rooms you have passed through yourself. Tell one another what you have seen."

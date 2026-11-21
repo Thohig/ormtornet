@@ -331,9 +331,6 @@ func (g *Game) wakeCardsLeft() int {
 // shareMap: kartritaren ger sin karta till den hen möter. Med egen karta
 // får den andra alla rum som någon har hittat.
 func (g *Game) shareMap(p *Player, foes []*Player) {
-	if g.cfg.Sight != sightOwn {
-		return
-	}
 	for _, o := range foes {
 		if !g.is(o, "kartritare") || g.is(p, "kartritare") {
 			continue

@@ -1,6 +1,8 @@
 package main
 
 import (
+	"os"
+	"path/filepath"
 	"strings"
 	"testing"
 )
@@ -16,7 +18,6 @@ func viewOf(st stateMsg, p *Player) playerView {
 
 func TestSightMeetHidesOthers(t *testing.T) {
 	g, a, b := startTwo(t)
-	g.cfg.Sight = sightMeet
 	pa, pb := a.player, b.player
 	putInRoom(g, pa, 2, 3)
 	putInRoom(g, pb, 5, 3)
@@ -34,18 +35,10 @@ func TestSightMeetHidesOthers(t *testing.T) {
 	if v := viewOf(g.stateFor(pa), pb); v.Hidden || v.X != 2 || v.Y != 3 {
 		t.Fatalf("Bo syns inte i samma rum: %+v", v)
 	}
-
-	// Med "alla" syns alla som förut.
-	putInRoom(g, pb, 5, 3)
-	g.cfg.Sight = sightAll
-	if v := viewOf(g.stateFor(pa), pb); v.Hidden || v.X != 5 {
-		t.Fatalf("Bo syns inte med synligheten alla: %+v", v)
-	}
 }
 
 func TestSightMeetDeadAndEnd(t *testing.T) {
 	g, a, b := startTwo(t)
-	g.cfg.Sight = sightMeet
 	pa, pb := a.player, b.player
 	putInRoom(g, pa, 2, 3)
 	putInRoom(g, pb, 5, 3)
@@ -65,7 +58,6 @@ func TestSightMeetDeadAndEnd(t *testing.T) {
 
 func TestSightMeetVagueTexts(t *testing.T) {
 	g, a, b := startTwo(t)
-	g.cfg.Sight = sightMeet
 	putInRoom(g, a.player, 4, 3)
 	putInRoom(g, b.player, 1, 1)
 	g.rooms[3][5] = Room{}
@@ -78,15 +70,19 @@ func TestSightMeetVagueTexts(t *testing.T) {
 	}
 }
 
-func TestSightSetting(t *testing.T) {
-	if s := (Settings{}).normalize(); s.Synlighet != sightOwn {
-		t.Fatalf("standard %q", s.Synlighet)
+// En sparad inställningsfil från när synligheten gick att välja läses som
+// förut; valet ignoreras.
+func TestOldSightSettingIgnored(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "installningar.json")
+	if err := os.WriteFile(path, []byte(`{"ai": 3, "synlighet": "alla"}`), 0o644); err != nil {
+		t.Fatal(err)
 	}
-	if c := (Settings{Synlighet: sightAll}).config(); c.Sight != sightAll {
-		t.Fatalf("config %q", c.Sight)
+	s, err := loadSettings(path)
+	if err != nil {
+		t.Fatal(err)
 	}
-	if s := settingsFrom(Config{Sight: sightAll}); s.Synlighet != sightAll {
-		t.Fatalf("settingsFrom %q", s.Synlighet)
+	if s.AI != 3 {
+		t.Fatalf("inställningarna lästes inte: %+v", s)
 	}
 }
 
@@ -101,7 +97,6 @@ func hasRoom(st stateMsg, x, y int) bool {
 
 func TestSightOwnMap(t *testing.T) {
 	g, a, b := startTwo(t)
-	g.cfg.Sight = sightOwn
 	pa, pb := a.player, b.player
 	putInRoom(g, pa, 4, 3)
 	putInRoom(g, pb, 1, 1)
@@ -125,12 +120,12 @@ func TestSightOwnMap(t *testing.T) {
 		}
 	}
 	// Bo ser sin egen startport.
-	cn := g.corners()[pb.Slot]
+	cn := g.corners()[pb.Corner]
 	if !hasRoom(g.stateFor(pb), cn.x, cn.y) {
 		t.Fatal("Bo ser inte sin egen port")
 	}
 	// Men inte Alvas port, där han aldrig har varit.
-	if ca := g.corners()[pa.Slot]; hasRoom(g.stateFor(pb), ca.x, ca.y) {
+	if ca := g.corners()[pa.Corner]; hasRoom(g.stateFor(pb), ca.x, ca.y) {
 		t.Fatal("Bo ser en annans port")
 	}
 
@@ -157,7 +152,6 @@ func TestSightOwnMap(t *testing.T) {
 
 func TestSightOwnDead(t *testing.T) {
 	g, a, b := startTwo(t)
-	g.cfg.Sight = sightOwn
 	pa, pb := a.player, b.player
 	putInRoom(g, pb, 6, 6)
 	pa.Status = statusDead
@@ -168,7 +162,6 @@ func TestSightOwnDead(t *testing.T) {
 
 func TestTrail(t *testing.T) {
 	g, a, b := startTwo(t)
-	g.cfg.Sight = sightOwn
 	g.data.Regler.SparRundor = 3
 	pa, pb := a.player, b.player
 	putInRoom(g, pa, 4, 4)
@@ -199,21 +192,10 @@ func TestTrail(t *testing.T) {
 	if containsPart(logs(b), "spår") {
 		t.Fatal("Bo såg gamla spår")
 	}
-
-	// Med synligheten alla finns inga spår.
-	g.cfg.Sight = sightAll
-	g.round -= 10
-	pb.X, pb.Y = 5, 4
-	logs(b)
-	g.move(pb, West, 0)
-	if containsPart(logs(b), "spår") {
-		t.Fatal("spår fast alla syns")
-	}
 }
 
 func TestNoiseThroughWall(t *testing.T) {
 	g, a, b := startTwo(t)
-	g.cfg.Sight = sightOwn
 	pa, pb := a.player, b.player
 	putInRoom(g, pa, 4, 4)
 	putInRoom(g, pb, 4, 3) // norr om Alva
@@ -257,7 +239,6 @@ func containsPart(list []string, part string) bool {
 func hiddenGame(t *testing.T) (*Game, *Client, *Client, []string) {
 	t.Helper()
 	g := testGame(t)
-	g.cfg.Sight = sightOwn
 	a, b := testClient(), testClient()
 	g.Join(a, "Alva")
 	g.Join(b, "Bo")
@@ -272,7 +253,6 @@ func hiddenGame(t *testing.T) (*Game, *Client, *Client, []string) {
 
 func TestLobbyHidesOthers(t *testing.T) {
 	g := testGame(t)
-	g.cfg.Sight = sightOwn
 	a, b := testClient(), testClient()
 	g.Join(a, "Alva")
 	g.Join(b, "Bo")
@@ -286,11 +266,6 @@ func TestLobbyHidesOthers(t *testing.T) {
 		if hasRoom(st, cn.x, cn.y) != mine {
 			t.Fatalf("porten i %d,%d: syns %v, borde %v", cn.x, cn.y, !mine, mine)
 		}
-	}
-	// Med synligheten alla syns Bo som förut.
-	g.cfg.Sight = sightAll
-	if v := viewOf(g.stateFor(a.player), b.player); v.Hidden {
-		t.Fatal("Bo syns inte med synligheten alla")
 	}
 }
 
@@ -351,7 +326,6 @@ func TestPortSound(t *testing.T) {
 // Spelledarens översikt får inte krascha med egen karta.
 func TestGMViewWithOwnMap(t *testing.T) {
 	g, _, _ := startTwo(t)
-	g.cfg.Sight = sightOwn
 	g.cfg.GMMode = true
 	g.monsters = append(g.monsters, &Monster{ID: 7, Type: g.data.Monster.Typer[0].ID, X: 4, Y: 4, HP: 1})
 	g.reveal(4, 4)
@@ -364,25 +338,23 @@ func TestGMViewWithOwnMap(t *testing.T) {
 // Från början känner var och en bara sitt eget startrum, oavsett
 // synligheten. En annans port blir känd när någon går in i den.
 func TestOnlyOwnPortAtStart(t *testing.T) {
-	for _, sight := range []string{sightAll, sightMeet, sightOwn} {
-		g, a, b := startTwo(t)
-		g.cfg.Sight = sight
-		pa, pb := a.player, b.player
-		ports := 0
-		for _, cn := range g.corners() {
-			if hasRoom(g.stateFor(pa), cn.x, cn.y) {
-				ports++
-			}
+	g, a, b := startTwo(t)
+	pa, pb := a.player, b.player
+	ports := 0
+	for _, cn := range g.corners() {
+		if hasRoom(g.stateFor(pa), cn.x, cn.y) {
+			ports++
 		}
-		if ports != 1 || !hasRoom(g.stateFor(pa), pa.X, pa.Y) {
-			t.Fatalf("%s: Alva ser %d portar från början", sight, ports)
-		}
-		if hasRoom(g.stateFor(pa), pb.X, pb.Y) {
-			t.Fatalf("%s: Alva ser Bos port", sight)
-		}
-		g.rooms[pb.Y][pb.X].Walked = true
-		if want := sight != sightOwn; hasRoom(g.stateFor(pa), pb.X, pb.Y) != want {
-			t.Fatalf("%s: Bos port efter att någon gått in där", sight)
-		}
+	}
+	if ports != 1 || !hasRoom(g.stateFor(pa), pa.X, pa.Y) {
+		t.Fatalf("Alva ser %d portar från början", ports)
+	}
+	if hasRoom(g.stateFor(pa), pb.X, pb.Y) {
+		t.Fatal("Alva ser Bos port")
+	}
+	// Bara den som själv går in i en annans port ser den på sin karta.
+	g.rooms[pb.Y][pb.X].Walked = true
+	if hasRoom(g.stateFor(pa), pb.X, pb.Y) {
+		t.Fatal("Alva ser Bos port fast hon inte har varit där")
 	}
 }

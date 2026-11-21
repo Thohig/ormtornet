@@ -212,7 +212,6 @@ func TestThiefLootAndPilgrimPeace(t *testing.T) {
 
 func TestKartritareSeesAll(t *testing.T) {
 	g, pa, pb := withClass(t, "kartritare")
-	g.cfg.Sight = sightOwn
 	putInRoom(g, pb, 6, 6)
 	if !hasRoom(g.stateFor(pa), 6, 6) {
 		t.Fatal("kartritaren ser inte rummet")
@@ -230,20 +229,19 @@ func TestKartritareSeesAll(t *testing.T) {
 // Kartritaren ser genom dörrarna in i grannrummen, men de räknas inte som
 // hittade: ingen annan ser dem, och fällan där väntar på den som går in.
 func TestKartritarePeeks(t *testing.T) {
-	for _, sight := range []string{sightOwn, sightAll} {
+	{
 		g, pa, pb := withClass(t, "kartritare")
-		g.cfg.Sight = sight
 		r := putInRoom(g, pa, 4, 4)
 		r.Doors = [4]bool{false, true, false, false}
 		g.noteRoom(pa)
 		if !hasRoom(g.stateFor(pa), 5, 4) {
-			t.Fatalf("%s: kartritaren ser inte in i rummet åt öster", sight)
+			t.Fatal("kartritaren ser inte in i rummet åt öster")
 		}
 		if hasRoom(g.stateFor(pa), 3, 4) {
-			t.Fatalf("%s: kartritaren ser genom väggen", sight)
+			t.Fatal("kartritaren ser genom väggen")
 		}
 		if hasRoom(g.stateFor(pb), 5, 4) {
-			t.Fatalf("%s: Bo ser rummet kartritaren bara tittade in i", sight)
+			t.Fatal("Bo ser rummet kartritaren bara tittade in i")
 		}
 		n := &g.rooms[4][5]
 		n.Kind, n.Event = "rum", g.data.Fallor[0].ID
@@ -252,17 +250,16 @@ func TestKartritarePeeks(t *testing.T) {
 		pb.HP = 50
 		g.move(pb, East, 0)
 		if n.Event != "" {
-			t.Fatalf("%s: fällan gick inte av för Bo", sight)
+			t.Fatal("fällan gick inte av för Bo")
 		}
 		if !hasRoom(g.stateFor(pa), 5, 4) {
-			t.Fatalf("%s: rummet försvann från kartritarens karta", sight)
+			t.Fatal("rummet försvann från kartritarens karta")
 		}
 	}
 }
 
 func TestLanternSeenFromNextRoom(t *testing.T) {
 	g, pa, pb := withClass(t, "lyktbarare")
-	g.cfg.Sight = sightOwn
 	putInRoom(g, pa, 4, 3)
 	putInRoom(g, pb, 5, 3)
 	if v := viewOf(g.stateFor(pb), pa); v.Hidden {
@@ -290,7 +287,6 @@ func TestOrmtjusareLessDamage(t *testing.T) {
 
 func TestSparfinnareNamesTrail(t *testing.T) {
 	g, pa, pb := withClass(t, "sparfinnare")
-	g.cfg.Sight = sightOwn
 	putInRoom(g, pa, 4, 4)
 	g.rooms[4][4].trail = trail{by: pb.ID, round: g.round, dir: West}
 	b := pa.client

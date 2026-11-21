@@ -189,14 +189,6 @@
           </select>
           <span class="note" data-t="not_strid"></span>
 
-          <label for="sSyn" data-t="inst_synlighet"></label>
-          <select id="sSyn" name="synlighet">
-            <option value="egen" data-t="val_syn_egen"></option>
-            <option value="moten" data-t="val_syn_moten"></option>
-            <option value="alla" data-t="val_syn_alla"></option>
-          </select>
-          <span class="note" data-t="not_synlighet"></span>
-
           <label for="sKarta" data-t="inst_karta"></label>
           <select id="sKarta" name="karta">
             <option value="snett" data-t="val_karta_snett"></option>
@@ -234,6 +226,7 @@
     <p class="dimtext" id="settingsHint" data-t="inst_hint"></p>
     <details id="settingsHelp">
       <summary><span data-t="forkl_rubrik"></span></summary>
+      <p data-t="forkl_spelet"></p>
       <dl>
         <dt data-t="inst_svarighet"></dt>
         <dd data-t="forkl_svarighet"></dd>
@@ -255,8 +248,6 @@
         <dd data-t="forkl_franvaro"></dd>
         <dt data-t="inst_strid"></dt>
         <dd data-t="forkl_strid"></dd>
-        <dt data-t="inst_synlighet"></dt>
-        <dd data-t="forkl_synlighet"></dd>
         <dt data-t="inst_karta"></dt>
         <dd data-t="forkl_karta"></dd>
         <dt data-t="inst_storlek"></dt>
@@ -520,7 +511,6 @@ optionTexts();
 // moreText: de hopfällda inställningarna i korthet.
 function moreText(s) {
   const strid = { pa: "kort_strid_pa", halva: "kort_strid_halva", av: "kort_strid_av" }[s.strid];
-  const syn = { egen: "kort_syn_egen", moten: "kort_syn_moten", alla: "kort_syn_alla" }[s.synlighet];
   return [
     t("kort_min", { antal: s.min }),
     t(s.avslojande ? "kort_avslojande_pa" : "kort_avslojande_av"),
@@ -528,7 +518,6 @@ function moreText(s) {
     s.avslojande && !s.forandras ? t("kort_forandras_av") : "",
     s.franvaro ? t("kort_franvaro", { antal: s.franvaro }) : t("kort_franvaro_star"),
     strid ? t(strid) : t("kort_strid", { strid: s.strid }),
-    syn ? t(syn) : t("kort_syn", { syn: s.synlighet }),
     s.karta === "platt" ? t("kort_karta_platt") : "",
     s.storlek ? t("storlek_rum", { storlek: s.storlek }) : t("kort_storlek_auto"),
     s.sol ? t("kort_sol", { rundor: s.sol }) : "",
@@ -614,7 +603,6 @@ function fillForm(s) {
   }
   fr.value = String(s.franvaro);
   $("sStrid").value = s.strid;
-  $("sSyn").value = s.synlighet;
   $("sKarta").value = s.karta || "snett";
   $("sGM").value = s.spelledarlage ? "1" : "0";
   $("sKlass").value = s.klasser ? "1" : "0";
@@ -658,7 +646,6 @@ $("settings").addEventListener("change", async () => {
     forandras: $("sFor").value === "1",
     franvaro: +$("sFr").value,
     strid: $("sStrid").value,
-    synlighet: $("sSyn").value,
     karta: $("sKarta").value,
     spelledarlage: $("sGM").value === "1",
     klasser: $("sKlass").value === "1",

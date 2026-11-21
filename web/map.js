@@ -186,9 +186,9 @@ const FlatMap = (() => {
       y1 = Math.max(y1, y + 1);
     };
     state.rooms.forEach((r) => take(r.x, r.y));
-    // De andra vandrarna räknas bara med när alla syns hela tiden.
+    // Bara den egna vandraren räknas med; de andra syns inte på avstånd.
     state.players.forEach((p) => {
-      if (p.id === state.you || (state.sight === "alla" && !p.hidden && p.status !== "ute")) take(p.x, p.y);
+      if (p.id === state.you) take(p.x, p.y);
     });
     if (x0 === Infinity) return { x: 0, y: 0, w: towerSize, h: towerSize };
     const all = grow({ x: x0, y: y0, w: x1 - x0, h: y1 - y0 }, MIN_SPAN);

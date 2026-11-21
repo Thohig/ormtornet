@@ -60,7 +60,7 @@ func (g *Game) trigger(p *Player, t *Trap, depth int) {
 	g.logTo(p, t.Namn+"!", "varn")
 	g.logTo(p, pick(t.Texter), "")
 	others := t.Andra
-	if g.hidesOthers() && len(t.AndraDolt) > 0 {
+	if len(t.AndraDolt) > 0 {
 		others = t.AndraDolt
 	}
 	general := ""

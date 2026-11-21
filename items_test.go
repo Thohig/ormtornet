@@ -219,7 +219,6 @@ func TestFluteRedraws(t *testing.T) {
 func TestCursedItems(t *testing.T) {
 	g, a, b := startTwo(t)
 	p, o := a.player, b.player
-	g.cfg.Sight = sightOwn
 
 	// Pärlan: varje näve lägger ett vakna-kort i leken. Värd 40 guld ute.
 	g.give(p, "svart_parla")

@@ -64,9 +64,10 @@ Så här skiljer vi på sakerna när användaren ger instruktioner:
   `data/spelarsidan.json` och `data/vardsidan.json`. HTML:en har nycklar
   (`data-t`), skripten använder `t()` (`web/texter.js`), och Go-koden
   `HostText`, `hostErr` och `gmNote` med nycklar som börjar med `server_`.
-- **synligheten**: inställningen "Vandrarna syns" (`-synlighet`), med
-  valen `egen` (egen karta, förval), `moten` och `alla`. Spåren och ljuden
-  från grannrummen hör till den (`sounds.go`). Se
+- **synligheten**: att vandrarna bara ser varandra när de står i samma rum
+  och var och en har sin egen karta med de rum hen själv har gått igenom.
+  Det är spelets enda läge; det går inte att välja något annat. Spåren och
+  ljuden från grannrummen hör till den (`sounds.go`). Se
   [docs/synlighet.md](docs/synlighet.md).
 - **stormen**: introts moln, regn, blixtar, åska och musik.
 - **krönikan** (skärmen): vyn `chronscreen` på spelarsidan (`renderChron` i
@@ -126,8 +127,8 @@ Skriv dit när ett steg är klart.
   byte vid dödande, tornets nåd, varslen och tornet som förändras. Allt är
   byggt.
 - [docs/synlighet.md](docs/synlighet.md): att vandrarna bara ser varandra
-  när de möts, och på sikt bara sin egen karta. Alla tre stegen är
-  byggda.
+  när de möts, och bara sin egen karta. Allt är byggt, och egen karta är
+  sedan 2026-11-21 det enda läget.
 - [docs/isometrisk.md](docs/isometrisk.md): kartan snett ovanifrån med
   Three.js och 3D-modeller, i TypeScript i `klient/` och byggd med Vite
   till `web/iso/iso.js`. Bygg om och checka in skriptet efter en ändring i

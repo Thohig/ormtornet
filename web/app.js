@@ -438,14 +438,11 @@ function meter(cls, label, value, maxValue, num) {
   return d;
 }
 
-// Med synligheten "moten" eller "egen" syns andra vandrare bara i samma rum. Klienten
-// minns var och när den såg var och en senast, så att kartan kan visa det.
+// Andra vandrare syns bara i samma rum. Klienten minns var och när den såg
+// var och en senast, så att kartan kan visa det.
 let lastSeen = {};
-function hidesOthers(st) {
-  return st.sight === "moten" || st.sight === "egen";
-}
 function trackSeen(st) {
-  if (st.phase !== "spel" || !hidesOthers(st)) {
+  if (st.phase !== "spel") {
     lastSeen = {};
   } else {
     st.players.forEach((p) => {
@@ -458,7 +455,7 @@ function trackSeen(st) {
 }
 
 function seenTag(p) {
-  if (state.phase !== "spel" || !hidesOthers(state) || p.id === state.you) return "";
+  if (state.phase !== "spel" || p.id === state.you) return "";
   if (p.status !== "inne" || !p.hidden) return "";
   const s = lastSeen[p.id];
   return s ? t("vandrare_sags", { runda: s.round }) : t("vandrare_inte_sedd");

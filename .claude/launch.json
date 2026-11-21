@@ -25,9 +25,7 @@
         "-ai",
         "2",
         "-turtid",
-        "8s",
-        "-synlighet",
-        "egen"
+        "8s"
       ],
       "port": 8091
     },
@@ -46,9 +44,7 @@
         "-ai",
         "2",
         "-turtid",
-        "60s",
-        "-synlighet",
-        "alla"
+        "60s"
       ],
       "port": 8092
     },

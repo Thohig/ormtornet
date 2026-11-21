@@ -57,13 +57,13 @@ func TestSizeChangeInLobby(t *testing.T) {
 // går utanför tornet.
 func TestBotsPlayEverySize(t *testing.T) {
 	for _, size := range []int{9, 11, 13} {
-		for _, sight := range []string{sightAll, sightOwn} {
+		{
 			d, _, err := loadData("data")
 			if err != nil {
 				t.Fatal(err)
 			}
 			d.AI.BetanketidMs = []int{3600000, 3600000}
-			g := NewGame(d, Config{Reveal: true, SunMax: 40, TurnTime: time.Hour, MinPlayers: 1, GMMode: true, AI: 8, Sight: sight, PvP: pvpOn, Classes: true, Size: size})
+			g := NewGame(d, Config{Reveal: true, SunMax: 40, TurnTime: time.Hour, MinPlayers: 1, GMMode: true, AI: 8, PvP: pvpOn, Classes: true, Size: size})
 			g.AddBots(8)
 			g.startGame()
 			for g.phase == phasePlay && g.round < 200 {

@@ -51,7 +51,6 @@ type Config struct {
 	AI           int    // önskat antal datorspelare
 	AbsentRounds int    // rundor innan AI tar över en frånvarande vandrare, 0 = aldrig
 	PvP          string // strid mellan vandrare: "av", "pa" eller "halva"
-	Sight        string // vilka vandrare och rum man ser: "alla", "moten" eller "egen"
 	Classes      bool   // vandrarna väljer klass
 	Size         int    // tornets storlek i rum, 0 för automatisk
 	GMMode       bool   // spelledarläge: spelledaren spelar inte och ser allt
@@ -248,7 +247,7 @@ type Player struct {
 	Treasure   int
 	Status     string
 	Seen       map[string]bool // fällor och varelser spelaren har mött
-	known      [][]bool        // rum vandraren själv har varit i, för synligheten "egen"
+	known      [][]bool        // rum vandraren själv har varit i, det enda den ser på kartan
 	bot        *botBrain       // satt för datorstyrda vandrare
 
 	awayRound int  // rundan då människan lämnade mitt i vandringen, 0 om den är här
@@ -604,7 +603,6 @@ type stateMsg struct {
 	PvP        string        `json:"pvp"` // om det går att strida mot andra vandrare här
 	Paused     bool          `json:"paused,omitempty"`
 	SleepText  string        `json:"sleepText,omitempty"`
-	Sight      string        `json:"sight"` // "alla", "moten" eller "egen"
 	Map        string        `json:"karta"` // "platt" eller "snett"
 	Class      *classView    `json:"klass,omitempty"`
 	Items      []itemView    `json:"foremal,omitempty"`
@@ -681,26 +679,20 @@ func (g *Game) soundAll(s string) {
 	}
 }
 
-// sees är sant om me får veta var o är. Med synligheten "moten" syns andra
-// vandrare bara i samma rum. Den döda spelaren som styr varelserna ser alla,
-// annars kan den inte jaga, och när vandringen är slut syns alla igen.
+// sees är sant om me får veta var o är. Andra vandrare syns bara i samma rum
+// (och nära lyktbäraren), och när vandringen är slut syns alla igen.
 func (g *Game) sees(me, o *Player) bool {
-	if g.cfg.Sight == sightAll || g.cfg.Sight == "" || g.phase == phaseEnd || g.nearLantern(me, o) {
+	if g.phase == phaseEnd || g.nearLantern(me, o) {
 		return true
 	}
 	return me.Status == statusIn && o.Status == statusIn && me.Cellar == 0 &&
 		o.X == me.X && o.Y == me.Y
 }
 
-// hidesOthers är sant när vandrarna inte ser var de andra är.
-func (g *Game) hidesOthers() bool {
-	return g.cfg.Sight == sightMeet || g.cfg.Sight == sightOwn
-}
-
-// hiddenText väljer den vaga varianten av en text (nyckeln med "_dolt")
-// när vandrarna inte ser varandra, om den finns i datafilerna.
+// hiddenText väljer den vaga varianten av en text (nyckeln med "_dolt"),
+// som inte säger var den andra är, om den finns i datafilerna.
 func (g *Game) hiddenText(key string, vars ...string) string {
-	if g.hidesOthers() && len(g.data.Texter[key+"_dolt"]) > 0 {
+	if len(g.data.Texter[key+"_dolt"]) > 0 {
 		key += "_dolt"
 	}
 	return g.data.Text(key, vars...)
@@ -713,7 +705,7 @@ func (g *Game) stateFor(me *Player) stateMsg {
 	st := stateMsg{
 		T: "state", Sprak: g.base.Lang, You: me.ID, Size: g.size, Level: g.level, Reveal: g.cfg.Reveal,
 		Phase: g.phase, Sun: g.sun, SunMax: g.sunMax, Round: g.round,
-		MinPlayers: g.cfg.MinPlayers, Action: me.Action, Sight: g.cfg.Sight, Map: mapOrDefault(g.cfg.Map),
+		MinPlayers: g.cfg.MinPlayers, Action: me.Action, Map: mapOrDefault(g.cfg.Map),
 		HP: me.HP, MaxHP: g.maxHP(me), Potions: me.Potions, MaxItems: g.data.maxItems(),
 		Stuck: me.Stuck, Cellar: me.Cellar, Poison: me.Poison, Dark: me.Dark,
 	}
@@ -877,10 +869,9 @@ func (g *Game) noteRoom(p *Player) {
 	}
 }
 
-// knowsRoom är sant om me ser rummet på sin karta. Med synligheten "egen"
-// ser man bara rum man själv har varit i, och av portarna bara den man kom
-// in genom; kartan växer därifrån. Med de andra synligheterna, och för
-// kartritaren, syns alla rum som någon har gått in i. Rum som någon bara
+// knowsRoom är sant om me ser rummet på sin karta. Man ser bara rum man
+// själv har varit i, och av portarna bara den man kom in genom; kartan
+// växer därifrån. Kartritaren ser alla rum som någon har gått in i. Rum som någon bara
 // har sett in i, och de andras portar, är okända tills någon går in i dem: från början känner var och en bara
 // sitt eget startrum. Den döda spelaren som styr varelserna ser hela
 // tornet, och när vandringen är slut syns allt.
@@ -898,7 +889,7 @@ func (g *Game) knowsRoom(me *Player, x, y int) bool {
 	if !r.Walked {
 		return false // en annans port, eller ett rum som någon bara har sett in i
 	}
-	return g.cfg.Sight != sightOwn || g.is(me, "kartritare")
+	return g.is(me, "kartritare") // kartritaren ser alla rum som någon har hittat
 }
 
 func (g *Game) Join(c *Client, rawName string) {
@@ -1175,13 +1166,9 @@ func (g *Game) revealPorts() {
 	}
 }
 
-// drawCorners lottar vid vilken port var och en börjar när vandrarna inte
-// ser varandra, så att ordningen i listan och färgen inte avslöjar något.
-// Var och en får veta sin egen port.
+// drawCorners lottar vid vilken port var och en börjar, så att ordningen i
+// listan och färgen inte avslöjar något. Var och en får veta sin egen port.
 func (g *Game) drawCorners() {
-	if !g.hidesOthers() {
-		return
-	}
 	order := g.rng.Perm(len(g.corners()))
 	i := 0
 	for _, p := range g.players {
@@ -1239,12 +1226,7 @@ func (g *Game) startGame() {
 	if s := g.data.difficulty(g.cfg.Difficulty); s != nil {
 		g.logAll(g.data.Text("svarighet", "namn", s.Namn, "liv", strconv.Itoa(g.data.Regler.Liv)), "dim")
 	}
-	switch g.cfg.Sight {
-	case sightMeet:
-		g.logAll(g.data.Text("synlighet_moten"), "dim")
-	case sightOwn:
-		g.logAll(g.data.Text("synlighet_egen"), "dim")
-	}
+	g.logAll(g.data.Text("synlighet_egen"), "dim")
 	g.revealPorts()
 	g.drawCorners()
 	for _, p := range g.players {
@@ -1660,10 +1642,6 @@ func (g *Game) move(p *Player, d Dir, depth int) {
 			g.logTo(p, name+".", "rubrik")
 			g.logTo(p, g.describe(p, target, nx, ny), "")
 		}
-		if g.cfg.Sight != sightOwn {
-			g.logOthers(p, g.hiddenText("nytt_rum_andra",
-				"namn", p.Name, "region", g.data.region(nx, ny, g.size)), "info")
-		}
 		if target.Event != "" {
 			ev := target.Event
 			target.Event = ""
@@ -1746,10 +1724,10 @@ func (g *Game) serve(conn *wsConn, local bool) {
 	conn.Close()
 }
 
-// aiTexts väljer de vaga texterna om datorspelare när vandrarna inte ser
-// varandra, om de finns.
+// aiTexts väljer de vaga texterna om datorspelare, som inte säger vid vilken
+// port de kom, om de finns.
 func (g *Game) aiTexts(list, hidden []string) []string {
-	if g.hidesOthers() && len(hidden) > 0 {
+	if len(hidden) > 0 {
 		return hidden
 	}
 	return list
@@ -1780,12 +1758,7 @@ func (g *Game) fitTower(p *Player) {
 	}
 }
 
-// newRoomSound spelar ljudet för ett nytt rum. Med synligheten "egen" hör
-// bara den som gick in det, annars hela tornet.
+// newRoomSound spelar ljudet för ett nytt rum, bara för den som gick in.
 func (g *Game) newRoomSound(p *Player) {
-	if g.cfg.Sight == sightOwn {
-		g.soundTo(p, "nyttrum")
-		return
-	}
-	g.soundAll("nyttrum")
+	g.soundTo(p, "nyttrum")
 }

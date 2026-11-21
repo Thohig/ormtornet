@@ -381,14 +381,6 @@
       "Kvällsljuset skär i ögonen. Inte än. Tornet har mer att ge.",
       "Du ser ut över backen nedanför. Sedan vänder du tillbaka in."
     ],
-    "nytt_rum_andra": [
-      "Sten skrapar mot sten i tornets {region} del. {namn} har hittat ett nytt rum.",
-      "Ett dovt mullrande från tornets {region} del. {namn} har öppnat en ny väg."
-    ],
-    "nytt_rum_andra_dolt": [
-      "Sten skrapar mot sten i tornets {region} del. Någon har hittat ett nytt rum.",
-      "Ett dovt mullrande från tornets {region} del. Någon har öppnat en ny väg."
-    ],
     "kant_rum": [
       "{rum}."
     ],
@@ -483,9 +475,6 @@
     "ljud_drick": [
       "I rummet åt {riktning} dras en kork ur en flaska. Någon dricker.",
       "Genom väggen åt {riktning} hörs några snabba klunkar."
-    ],
-    "synlighet_moten": [
-      "Tornet är stort och mörkt. Du ser de andra vandrarna bara när ni står i samma rum."
     ],
     "synlighet_egen": [
       "Tornet är stort och mörkt. Du ser de andra vandrarna bara när ni står i samma rum, och din karta visar bara rum du själv har gått igenom. Berätta för varandra vad ni har sett."

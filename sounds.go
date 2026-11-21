@@ -6,15 +6,15 @@ package main
 
 import "slices"
 
-// hear låter de andra vandrarna höra något som händer i rummet (x, y). Med
-// dold synlighet hör den som står i ett grannrum texten key med riktningen
+// hear låter de andra vandrarna höra något som händer i rummet (x, y). Den
+// som står i ett grannrum hör texten key med riktningen
 // dit. Alla andra får general, om den inte är tom.
 func (g *Game) hear(x, y int, key, general, class string, skip ...*Player) {
 	for _, o := range g.players {
 		if o == nil || slices.Contains(skip, o) {
 			continue
 		}
-		if d, ok := g.nextTo(o, x, y); ok && g.hidesOthers() && !g.is(o, "sparfinnare") {
+		if d, ok := g.nextTo(o, x, y); ok && !g.is(o, "sparfinnare") {
 			g.logTo(o, g.data.Text(key, "riktning", g.data.Riktningar[d]), class)
 		} else if general != "" {
 			g.logTo(o, general, class)
@@ -37,7 +37,7 @@ func (g *Game) nextTo(o *Player, x, y int) (Dir, bool) {
 
 // noticeTrail berättar för p om färska spår i rummet den just kom in i.
 func (g *Game) noticeTrail(p *Player) {
-	if !g.hidesOthers() || p.Status != statusIn || p.Cellar > 0 || p.Dark > 0 {
+	if p.Status != statusIn || p.Cellar > 0 || p.Dark > 0 {
 		return
 	}
 	room := &g.rooms[p.Y][p.X]

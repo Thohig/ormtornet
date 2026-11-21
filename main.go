@@ -33,7 +33,6 @@ func main() {
 	seed := flag.Uint64("fro", 0, "frö för första vandringen; samma frö och samma drag ger samma torn (0 = slumpat)")
 	difficulty := flag.String("svarighet", "", "svårighet: latt, normal, svar eller mardrom (förvalen står i data/svarighet.json)")
 	reveal := flag.Bool("avslojande", defaultSettings.Avslojande, "låt tornet avslöja sin hemlighet (false för den som redan känner till den)")
-	sight := flag.String("synlighet", defaultSettings.Synlighet, "vilka vandrare och rum man ser: egen (bara dem man möter och egna rum), moten (bara dem man möter) eller alla")
 	classes := flag.Bool("klasser", defaultSettings.Klasser, "vandrarna väljer klass i lobbyn (false för att spela utan klasser)")
 	size := flag.Int("storlek", defaultSettings.Storlek, "tornets storlek i rum: 9, 11 eller 13 (0 = automatisk)")
 	settingsPath := flag.String("installningar", defaultSettingsPath(), "fil där spelledarens inställningar sparas (tom för att inte spara)")
@@ -69,8 +68,6 @@ func main() {
 			settings.Avslojande = *reveal
 		case "svarighet":
 			settings.Svarighet = *difficulty
-		case "synlighet":
-			settings.Synlighet = *sight
 		case "klasser":
 			settings.Klasser = *classes
 		case "storlek":
