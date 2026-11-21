@@ -574,7 +574,7 @@
     "pvp_traffad": ["{namn} träffar dig. Du förlorar {skada} liv."],
     "pvp_dodad": ["{namn} hugger ned dig och tömmer din packning."],
     "pvp_borta": ["Den du ville slåss mot står inte längre här."],
-    "pvp_tornet_kanner": ["Golvet rycker till under er, som om något har vaknat till.", "Väggarna drar sig samman en aning, och släpper sedan."],
+    "pvp_tornet_kanner": ["Golvet rycker till, som om något har vaknat.", "Väggarna drar sig samman en aning, och släpper sedan."],
     "pvp_fredat": ["Porten är fredad. Här lyfter ingen vapen mot en annan vandrare."],
     "pvp_for_tidigt": ["Solen står ännu högt. Ingen strid mellan vandrare förrän den har sjunkit halvvägs."],
     "pack_tung": ["{namn} är här. {namn} går tungt, som om packningen vore full."],

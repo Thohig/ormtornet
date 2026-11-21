@@ -5,7 +5,8 @@
     "dryck_helar": 2,
     "sok_skatt_min": 5,
     "sok_skatt_max": 30,
-    "spar_rundor": 3
+    "spar_rundor": 3,
+    "trygg_vid_porten": true
   },
 
   "fallor": [

@@ -834,3 +834,41 @@ func TestWallRejectedAtOnce(t *testing.T) {
 		t.Fatalf("i mörkret ska man kunna pröva väggen, drag %q", p.Action)
 	}
 }
+
+// Grannrum har aldrig samma rumstyp, typerna används jämnt, och rummen
+// bredvid en port har ingen fälla.
+func TestRoomTypesAndSafePorts(t *testing.T) {
+	g, _, _ := startTwo(t)
+	g.data.Regler.Handelsechans = 1
+	for y := range g.size {
+		for x := range g.size {
+			g.reveal(x, y)
+		}
+	}
+	count := map[string]int{}
+	for y := range g.size {
+		for x := range g.size {
+			r := &g.rooms[y][x]
+			if r.Kind != "rum" {
+				continue
+			}
+			count[r.TypeID]++
+			if x+1 < g.size && g.rooms[y][x+1].TypeID == r.TypeID {
+				t.Fatalf("två %s bredvid varandra vid %d,%d", r.TypeID, x, y)
+			}
+			if y+1 < g.size && g.rooms[y+1][x].TypeID == r.TypeID {
+				t.Fatalf("två %s ovanför varandra vid %d,%d", r.TypeID, x, y)
+			}
+			if g.nextToPort(x, y) && r.Event != "" {
+				t.Fatalf("fälla %s bredvid porten vid %d,%d", r.Event, x, y)
+			}
+		}
+	}
+	lo, hi := 1000, 0
+	for _, n := range count {
+		lo, hi = min(lo, n), max(hi, n)
+	}
+	if len(count) != len(g.data.Rumstyper) || hi-lo > 2 {
+		t.Fatalf("ojämnt fördelade rumstyper: %v", count)
+	}
+}

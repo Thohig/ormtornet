@@ -430,7 +430,7 @@ func (g *Game) build(x, y int, spawn bool) *Room {
 		return r
 	}
 	r.Kind = "rum"
-	r.TypeID = g.data.Rumstyper[g.rng.IntN(len(g.data.Rumstyper))].ID
+	r.TypeID = g.roomTypeFor(x, y)
 	var undecided []Dir
 	open := 0
 	for d := North; d <= West; d++ {
@@ -466,12 +466,61 @@ func (g *Game) build(x, y int, spawn bool) *Room {
 		g.fulfilOmen(r, x, y)
 		return r
 	}
-	if !(spawn && g.spawnMonster(x, y)) && g.rng.Float64() < g.data.Regler.Handelsechans {
+	if !(spawn && g.spawnMonster(x, y)) && !(g.data.Regler.TryggVidPorten && g.nextToPort(x, y)) &&
+		g.rng.Float64() < g.data.Regler.Handelsechans {
 		if t := g.randomTrap(); t != nil {
 			r.Event = t.ID
 		}
 	}
 	return r
+}
+
+// roomTypeFor väljer rumstyp åt ett nytt rum: en av de typer som har
+// använts minst hittills i tornet, och aldrig samma som ett grannrum, så att
+// vandrarna kan säga till varandra vilket rum de står i.
+func (g *Game) roomTypeFor(x, y int) string {
+	types := g.data.Rumstyper
+	used := map[string]int{}
+	for yy := range g.size {
+		for xx := range g.size {
+			if r := &g.rooms[yy][xx]; r.Revealed && r.Kind == "rum" {
+				used[r.TypeID]++
+			}
+		}
+	}
+	near := map[string]bool{}
+	for d := North; d <= West; d++ {
+		if nx, ny := x+dirDX[d], y+dirDY[d]; g.inBounds(nx, ny) && g.rooms[ny][nx].Revealed {
+			near[g.rooms[ny][nx].TypeID] = true
+		}
+	}
+	var pick []string
+	least := -1
+	for _, t := range types {
+		if near[t.ID] {
+			continue
+		}
+		switch n := used[t.ID]; {
+		case least < 0 || n < least:
+			least, pick = n, []string{t.ID}
+		case n == least:
+			pick = append(pick, t.ID)
+		}
+	}
+	if len(pick) == 0 { // färre typer än grannar
+		return types[g.rng.IntN(len(types))].ID
+	}
+	return pick[g.rng.IntN(len(pick))]
+}
+
+// nextToPort: rummet ligger bredvid en port.
+func (g *Game) nextToPort(x, y int) bool {
+	for _, c := range g.corners() {
+		if abs(c.x-x)+abs(c.y-y) == 1 {
+			return true
+		}
+	}
+	return false
 }
 
 func (g *Game) roomName(r *Room) string {

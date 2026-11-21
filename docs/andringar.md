@@ -6,6 +6,19 @@ eller leder tornet.
 
 ## 2026-11-21
 
+### Tornets rum
+
+- Rummen bredvid en port har aldrig en fälla, så att ingen förlorar liv
+  redan på första steget in. Med AI-spelare kommer några procentenheter
+  fler ut med skatt på alla svårigheter (se `docs/att-gora.md`).
+- Två rum bredvid varandra har aldrig samma namn, och rumstyperna används
+  så jämnt som möjligt. Det blir lättare att berätta för de andra var man
+  är.
+- Kartritaren säger bara att kartan delas när den andra får nya rum, inte
+  varje runda de står tillsammans.
+- Golvet "gungar till under er" heter nu "gungar till", eftersom det också
+  sägs till den som är ensam.
+
 ### Bättre på telefonen
 
 - Introt fyller hela skärmen och står i mitten, så att ett tryck var som

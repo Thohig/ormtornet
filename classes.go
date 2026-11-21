@@ -338,12 +338,19 @@ func (g *Game) shareMap(p *Player, foes []*Player) {
 		if !g.is(o, "kartritare") || g.is(p, "kartritare") {
 			continue
 		}
+		fresh := 0
 		for y := range g.size {
 			for x := range g.size {
-				if g.knowsRoom(o, x, y) {
+				if g.knowsRoom(o, x, y) && !g.knowsRoom(p, x, y) {
 					p.known[y][x] = true
+					fresh++
 				}
 			}
+		}
+		// Bara när kartan ger något nytt, så att det inte upprepas varje
+		// runda som de står tillsammans.
+		if fresh == 0 {
+			continue
 		}
 		g.logTo(p, g.data.Text("klass_kartritare_karta", "namn", o.Name), "info")
 		g.logTo(o, g.data.Text("klass_kartritare_ger", "namn", p.Name), "dim")

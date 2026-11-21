@@ -358,6 +358,12 @@ gå samma håll en gång till, samma eller nästa runda, om du vill ut tomhänt.
 
 Andras skatt och val av drag syns inte förrän spelet är slut.
 
+Rummen bredvid en port har aldrig en fälla (`trygg_vid_porten` i
+`data/fallor.json`), så att ingen förlorar liv på första steget in. Varelser
+kan finnas där som förut. Två rum bredvid varandra har aldrig samma namn,
+och rumstyperna används så jämnt som möjligt, så att det går att säga till
+de andra vilket rum man står i.
+
 ### Vem ser vem
 
 Som standard ser du bara dig själv och rum du själv har gått igenom på

@@ -48,6 +48,9 @@ type Rules struct {
 	SokSkattMin   int     `json:"sok_skatt_min"`
 	SokSkattMax   int     `json:"sok_skatt_max"`
 	SparRundor    int     `json:"spar_rundor"` // hur många rundor spåren efter en vandrare syns
+	// TryggVidPorten: rummen bredvid en port har aldrig en fälla, så att
+	// ingen förlorar liv redan på första steget in.
+	TryggVidPorten bool `json:"trygg_vid_porten"`
 }
 
 type Search struct {

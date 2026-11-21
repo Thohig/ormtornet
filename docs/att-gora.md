@@ -68,6 +68,11 @@ En riktig kväll behövs för att se:
   Mardröm, döda 10, 24, 26 och 50 %. Fler varelser på Svår
   (`varelsechans` 0,32) gav ingen mätbar skillnad; det som avgör är
   antalet liv.
+- Rummen bredvid porterna utan fällor (2026-11-21, 4000 vandringar per
+  svårighet, 4 AI-spelare): ut med skatt 74, 59, 50 och 36 % på Lätt,
+  Normal, Svår och Mardröm (förut 73, 56, 47 och 33 %), döda 9, 20, 22 och
+  44 % (förut 9, 21, 23 och 44 %). Fällor som slog till per vandrare 2,1
+  i stället för 2,5. Känns början lagom med människor?
 
 - Göra Normal mildare om den är för hård, i `data/svarighet.json` (färre
   fällor eller ett liv till). Uppdatera då tabellen i README.
