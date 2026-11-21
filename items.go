@@ -12,6 +12,7 @@ import (
 type ItemType struct {
 	ID           string   `json:"id"`
 	Namn         string   `json:"namn"`
+	Tecken       string   `json:"tecken"` // står framför namnet i väskan
 	Kort         string   `json:"kort"` // med liten bokstav, för texterna
 	Beskrivning  string   `json:"beskrivning"`
 	Vikt         int      `json:"vikt"`
@@ -41,6 +42,8 @@ type Item struct {
 }
 
 type itemView struct {
+	ID          string `json:"id"`
+	Tecken      string `json:"tecken,omitempty"`
 	Namn        string `json:"namn"`
 	Beskrivning string `json:"beskrivning"`
 	Kvar        int    `json:"kvar,omitempty"`
@@ -260,7 +263,7 @@ func (g *Game) itemViews(p *Player) []itemView {
 	var out []itemView
 	for _, it := range p.items {
 		if t := g.data.itemType(it.ID); t != nil {
-			out = append(out, itemView{Namn: t.Namn, Beskrivning: t.Beskrivning, Kvar: it.uses, Aktiv: t.Aktiv, Riktning: t.Riktning})
+			out = append(out, itemView{ID: t.ID, Tecken: t.Tecken, Namn: t.Namn, Beskrivning: t.Beskrivning, Kvar: it.uses, Aktiv: t.Aktiv, Riktning: t.Riktning})
 		}
 	}
 	return out

@@ -262,7 +262,7 @@ spelarsidan (`/`), med tre vyer i tur och ordning:
      som tecken: klassens tecken, liv, skatt, drycker,
      tillstånd som fast, gift och mörker, kompassen, dunket, viskningen och
      `⁂` med de tecken i väggarna som vandraren har hittat, och under dem
-     föremålen. Håll musen över ett tecken, eller tryck på
+     väskan med föremålen och de tomma platserna. Håll musen över ett tecken, eller tryck på
      det på en pekskärm, så står det vad det betyder. Styrningen ligger
      bakom **?** (eller tangenten `?` eller `H`) och visas en gång första
      vandringen, tills den tar slut. Panelen Nu visar det valda draget, striden, ormen i
@@ -567,7 +567,11 @@ dryck (D) ger tillbaka 2 liv och tar bort gift.
 
 ### Föremål
 
-Man bär högst tre föremål, och de står under DU i panelen. Hittar man ett
+Man bär högst tre föremål (`max_bara` i `data/foremal.json`). De står i
+väskan uppe till höger på kartan, under tecknen: en plats för varje
+föremål man kan bära, med föremålets tecken och namn, och under vandringen
+en svag prick för varje tom plats. Föremål som används med 1–3 har sin
+siffra framför sig, och ett nytt föremål lyser en stund. Hittar man ett
 när väskan är full blir det kvar i rummet, och den som kommer in där
 härnäst tar det. Den som dör tappar sina föremål i rummet. Föremålen följer
 inte med till nästa torn. Krönikan berättar vem som hittade vad.

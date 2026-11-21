@@ -86,6 +86,7 @@
     "tecken_viska": "{tryck} för att viska till tornet.",
     "tecken_namndelar": "Tecken du har hittat i väggarna. Prickarna är de du saknar.",
     "tecken_anvand": "{tryck} för att använda det.",
+    "tecken_tom_plats": "En tom plats i väskan. Du kan bära {max} föremål.",
     "tryck_tangent": "Tryck {tangent}",
     "tryck_knapp": "Tryck {knapp}",
 

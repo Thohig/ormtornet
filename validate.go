@@ -121,6 +121,9 @@ func (d *Data) validate() []string {
 	ids = nil
 	for _, it := range d.Foremal.Lista {
 		ids = append(ids, it.ID)
+		if it.Tecken == "" && !it.Brev {
+			bad("foremal.json", "föremålet %q saknar tecken (det står framför namnet i väskan)", it.ID)
+		}
 	}
 	unique("foremal.json", "föremålet", ids)
 

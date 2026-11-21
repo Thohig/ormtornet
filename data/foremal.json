@@ -5,6 +5,7 @@
     "lista": [
       {
         "id": "rep",
+        "tecken": "➰",
         "namn": "Rep med kroken kvar",
         "kort": "repet",
         "beskrivning": "Faller du ner i källarvalven klättrar du upp direkt.",
@@ -16,6 +17,7 @@
       },
       {
         "id": "amulett",
+        "tecken": "◈",
         "namn": "Fjällamuletten",
         "kort": "fjällamuletten",
         "beskrivning": "Nästa fälla slår inte till.",
@@ -27,6 +29,7 @@
       },
       {
         "id": "veke",
+        "tecken": "✺",
         "namn": "Extra veke",
         "kort": "veken",
         "beskrivning": "Lyktan tål ett mörker.",
@@ -38,6 +41,7 @@
       },
       {
         "id": "skold",
+        "tecken": "⛉",
         "namn": "Bucklig sköld",
         "kort": "skölden",
         "beskrivning": "Varelser gör en skada mindre. Går sönder efter tre träffar.",
@@ -52,6 +56,7 @@
       },
       {
         "id": "vaska",
+        "tecken": "⊍",
         "namn": "Väskan med dubbel botten",
         "kort": "väskan",
         "beskrivning": "Hälften av det du förlorar när ormen vaknar, eller när någon river åt sig guld, är gömt i den dubbla botten.",
@@ -63,6 +68,7 @@
       },
       {
         "id": "kompass",
+        "tecken": "⊕",
         "namn": "Kompass utan nord",
         "kort": "kompassen",
         "beskrivning": "Nålen pekar mot närmaste port.",
@@ -72,6 +78,7 @@
       },
       {
         "id": "rokpulver",
+        "tecken": "☁",
         "namn": "Rökpulver",
         "kort": "rökpulvret",
         "beskrivning": "Fly ur en strid utan att varelsen hinner slå. Välj håll med pilarna.",
@@ -85,6 +92,7 @@
       },
       {
         "id": "spegel",
+        "tecken": "◪",
         "namn": "Spegelskärva",
         "kort": "spegelskärvan",
         "beskrivning": "Titta in i rummet bakom en dörr. Tre gånger.",
@@ -101,6 +109,7 @@
       },
       {
         "id": "kastkniv",
+        "tecken": "†",
         "namn": "Kastkniv",
         "kort": "kastkniven",
         "beskrivning": "Kasta den genom en dörr mot en varelse i nästa rum.",
@@ -114,6 +123,7 @@
       },
       {
         "id": "krita",
+        "tecken": "✎",
         "namn": "Krita",
         "kort": "kritan",
         "beskrivning": "Rita en pil på golvet. Alla som kommer in ser den, men inte vem som ritade. Fem gånger.",
@@ -130,6 +140,7 @@
       },
       {
         "id": "flojt",
+        "tecken": "♪",
         "namn": "Sövande flöjt",
         "kort": "flöjten",
         "beskrivning": "Drar du ett kort som väcker ormen får du dra om, en gång.",
@@ -141,6 +152,7 @@
       },
       {
         "id": "timglas",
+        "tecken": "⧗",
         "namn": "Timglas av ben",
         "kort": "timglaset",
         "beskrivning": "Vänd det, och solen står still en runda för alla.",
@@ -153,6 +165,7 @@
       },
       {
         "id": "svart_parla",
+        "tecken": "⚬",
         "namn": "Den svarta pärlan",
         "kort": "pärlan",
         "beskrivning": "Stor som ett duvägg och värd 40 guld när du kommer ut.",
@@ -165,6 +178,7 @@
       },
       {
         "id": "mynt_hal",
+        "tecken": "⊙",
         "namn": "Myntet med hål",
         "kort": "myntet",
         "beskrivning": "Ett tungt guldmynt med ett hål i mitten. Värt 25 guld när du kommer ut.",
@@ -177,6 +191,7 @@
       },
       {
         "id": "rostkrona",
+        "tecken": "♛",
         "namn": "Kronan av rost",
         "kort": "kronan",
         "beskrivning": "En liten krona som någon har tappat. Värd 30 guld när du kommer ut.",
@@ -189,6 +204,7 @@
       },
       {
         "id": "brev",
+        "tecken": "✉",
         "namn": "Ett brev",
         "kort": "brevet",
         "beskrivning": "Från någon som var här förut.",

@@ -659,17 +659,62 @@ function renderHud(me) {
   const pw = $("padWhisper");
   if (pw) pw.hidden = !state.kanViska;
 
-  (state.foremal || []).forEach((it, i) => {
-    const b = document.createElement("button");
+  // Väskan: en plats för varje föremål man kan bära, med föremålets tecken
+  // och namn. Under vandringen står de tomma platserna som en prick, så att
+  // man ser hur mycket det finns plats för. Ett nytt föremål lyser en stund.
+  const items = state.foremal || [];
+  const walking = state.phase === "spel" && me.status === "inne";
+  const slots = walking ? Math.max(items.length, state.maxForemal || 3) : items.length;
+  const now = performance.now();
+  for (let i = 0; i < slots; i++) {
+    const it = items[i];
+    const id = it ? it.id : "";
+    if (bagIds[i] !== id) {
+      if (id && bagIds[i] !== undefined) bagNewAt[i] = now;
+      bagIds[i] = id;
+    }
+    const b = document.createElement(it && it.aktiv ? "button" : "span");
     b.dataset.slot = "f" + i;
-    b.type = "button";
-    b.className = "hudicon item" + (it.aktiv ? " active" : "") + (aimSlot === i ? " aiming" : "");
-    b.textContent = (it.aktiv && !touch ? i + 1 + " " : "") + it.namn + (it.kvar > 1 ? " ×" + it.kvar : "");
+    if (!it) {
+      b.className = "hudicon item empty";
+      b.textContent = "·";
+      b.tabIndex = 0;
+      b.dataset.tip = t("tecken_tom_plats", { max: state.maxForemal || 3 });
+      b.setAttribute("aria-label", b.dataset.tip);
+      bag.appendChild(b);
+      continue;
+    }
+    if (it.aktiv) b.type = "button";
+    else b.tabIndex = 0;
+    const fresh = now - (bagNewAt[i] || -Infinity);
+    b.className = "hudicon item" + (it.aktiv ? " active" : "") + (aimSlot === i ? " aiming" : "") + (fresh < BAG_NEW_MS ? " fresh" : "");
+    if (fresh < BAG_NEW_MS) b.style.animationDelay = -fresh + "ms";
+    if (it.aktiv && !touch) {
+      const n = document.createElement("span");
+      n.className = "num";
+      n.textContent = String(i + 1);
+      b.appendChild(n);
+    }
+    if (it.tecken) {
+      const g = document.createElement("span");
+      g.className = "glyph";
+      g.textContent = it.tecken;
+      b.appendChild(g);
+    }
+    b.appendChild(document.createTextNode(it.namn + (it.kvar > 1 ? " ×" + it.kvar : "")));
     b.dataset.tip = it.beskrivning + (it.aktiv && !touch ? " " + t("tecken_anvand", { tryck: t("tryck_tangent", { tangent: i + 1 }) }) : "");
+    b.setAttribute("aria-label", it.namn + ". " + b.dataset.tip);
     if (it.aktiv) b.addEventListener("click", () => useItemSlot(i));
     bag.appendChild(b);
-  });
+  }
+  if (!walking && !items.length) bagIds.length = 0;
 }
+
+// Vilket föremål som låg på varje plats i väskan förra gången, och när ett
+// nytt kom dit, så att det nya kan lysa en stund.
+const BAG_NEW_MS = 2600;
+const bagIds = [];
+const bagNewAt = [];
 
 // Ett tecken känns igen på sitt glyftecken, eller på platsen i väskan.
 let tipKey = "";

@@ -6,6 +6,15 @@ eller leder tornet.
 
 ## 2026-11-21
 
+### Väskan syns tydligare
+
+- Föremålen står i väskan under tecknen uppe till höger, nu med ett eget
+  tecken framför namnet (`tecken` i `data/foremal.json`) och lite större.
+- Under vandringen står en svag prick för varje tom plats, så att man ser
+  att man kan bära tre.
+- Ett föremål man just har hittat lyser en stund.
+- Förbannade föremål ser ut som de andra.
+
 ### Kartan snett ovanifrån är förval
 
 - Kartan visas nu snett ovanifrån i 3D om inget annat är valt. Den platta

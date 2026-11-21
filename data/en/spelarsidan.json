@@ -78,6 +78,7 @@
     "tecken_viska": "{tryck} to whisper to the tower.",
     "tecken_namndelar": "Signs you have found in the walls. The dots are the ones you are missing.",
     "tecken_anvand": "{tryck} to use it.",
+    "tecken_tom_plats": "An empty place in your bag. You can carry {max} items.",
     "tryck_tangent": "Press {tangent}",
     "tryck_knapp": "Tap {knapp}",
 
