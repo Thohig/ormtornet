@@ -851,6 +851,8 @@ Beskrivningarna för rummen ligger under nivåerna `"1"` till `"4"`.
 - `validate.go` kontrollerar datafilerna när tornet startar
 - `reload.go` läser om datafilerna från värdsidan
 - `simulate.go` simulerar vandringar med bara AI-spelare (`-simulera`)
+- `verktyg/provspelare.mjs` en robot som provspelar som människa över
+  websocketen och samlar alla texter (se Provspela med robotar)
 - `lang.go` språken: översättningarna i `data/en/` läggs över de svenska texterna
 - `web/texter.js` sidornas texter: `t()`, `applyTexts()` och språkbytet
 - `ws.go` en liten websocket-implementation utan beroenden
@@ -918,3 +920,28 @@ av varje personlighet. Tabellen Personligheterna visar hur det gick för
 den djärva och den försiktiga. Tabellen Klasserna har längst till höger
 en kolumn per personlighet med andelen som kom ut med skatt. I riktiga
 vandringar väljer AI-spelarna fortfarande efter sin personlighet.
+
+### Provspela med robotar
+
+Simuleringen spelar inne i Go-koden. För att prova det en människa möter,
+med anslutningen, lobbyn, klassvalet, slutet och alla texter, finns en
+robot som ansluter som en människa över websocketen:
+
+```bash
+go run . -addr 127.0.0.1:8096 -installningar "" -min 4 -ai 2 -turtid 15s
+```
+
+och i en annan terminal, en robot per spelare:
+
+```bash
+node verktyg/provspelare.mjs 8096 Alva 10 provlogg.txt & node verktyg/provspelare.mjs 8096 Bertil 10 provlogg.txt & wait
+```
+
+Varje robot spelar tio vandringar och skriver allt den får i loggen till
+`provlogg.txt`, med namnet först på varje rad. Rader som ser trasiga ut
+märks med `<<< MISSTÄNKT`, och resultatet av varje vandring står på en
+rad som börjar med `RESULTAT`. `-min` ska räkna med både robotarna och
+AI-spelarna, så att alla hinner ansluta innan vandringen börjar.
+Spelledarläget ska vara av, eftersom det stänger ute anslutningar från
+tornets egen dator. Kräver Node 22 eller senare. Provspelet 2026-11-21
+beskrivs i [docs/provspel-2026-11-21.md](docs/provspel-2026-11-21.md).

@@ -10,8 +10,8 @@ Byggt (README beskriver hur det fungerar):
 - Värdsidan på `/spelledare`, bara från tornets egen dator.
 - Inställningar som ändras utan omstart: AI-spelare, minsta antal, sol,
   turtid, avslöjandet, strid mellan vandrare, frånvarande vandrare,
-  vandrarna syns, tornets storlek, klasser och spelledarläget. De sparas
-  till nästa gång.
+  tornets storlek, klasser och spelledarläget. De sparas till nästa gång.
+  ("Vandrarna syns" togs bort 2026-11-21: egen karta är det enda läget.)
 - Starta nu, Stäng tornet, och inbjudan att kopiera till en gruppchatt.
 - Översikten i spelledarläget: hela tornet, vandrarna, varelserna, hur djupt
   ormen sover, avslöjandets nivå och allt vandrarna har läst.
@@ -29,7 +29,8 @@ Byggt (README beskriver hur det fungerar):
   spelledaren kan släppa pausen med Fortsätt.
 - Läs om innehållet i `data/` utan omstart, med felen på värdsidan om
   filerna inte går ihop. Vandringens frö visas under Vid porten.
-- Värdsidans avsnitt står alltid i samma ordning.
+- Värdsidans avsnitt står alltid i samma ordning. Under vandringen visar
+  Vid porten bara raden om vandringen och vandrarna (2026-11-21).
 - Spelledarbordet på `/spelledare/bord`: översikten och ingreppen på en
   egen sida, med en knapp dit från värdsidans rad. Där står också porten
   före vandringen, resultatet och krönikan efter den, och en knapp som

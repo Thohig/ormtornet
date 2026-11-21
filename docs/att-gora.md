@@ -1,6 +1,7 @@
 # Att göra och idéer
 
-Status: samlat 2026-11-18. Inget här är bestämt. Användaren väljer vad som
+Status: samlat 2026-11-18, kompletterat efter provspelet 2026-11-21 (se
+[provspel-2026-11-21.md](provspel-2026-11-21.md)). Inget här är bestämt. Användaren väljer vad som
 byggs, och förslag tas fram innan något byggs.
 
 ## Att göra
@@ -26,8 +27,9 @@ En riktig kväll behövs för att se:
   provat med hjul, tangenter och knappar)? Hittar man M och knapparna
   nere till höger? Hamnar pilarna vid kanten under teckenförklaringen
   eller tecknen i kartans övre hörn?
-- Klassvalet: räcker 30 sekunder för att läsa korten, och går de att läsa
-  på en telefon?
+- Klassvalet: räcker 30 sekunder för att läsa korten? På en telefon står
+  korten sedan 2026-11-21 två och två utan den kursiva beskrivningen, med
+  nedräkningen fast överst. Går de att läsa på en riktig telefon?
 - Kartritaren som ser in i grannrummen: för stark nu när alla andra bara
   börjar med sitt eget rum?
 - Stormen i introt: hur musiken och åskan låter. Den är inte avlyssnad.
@@ -52,6 +54,18 @@ En riktig kväll behövs för att se:
 - Prickarna och namnen i färg (2026-11-19): syns vem som väljer? Den vita
   färgen (plats 8) syns knappt bland den vanliga texten i loggen. Hjälper tecknen i loggens marginal, eller
   blir de brus?
+
+- Från provspelet 2026-11-21, bara provat i en emulerad telefon och med
+  robotar:
+  - Pilarna vid dörrarna går att trycka på på en pekskärm. Hittar man det,
+    och träffar man dem med fingret?
+  - Ett steg mot en vägg avvisas direkt. Märks det, eller tror man att
+    tryckningen inte gick fram?
+  - Viska har en fast, osynlig plats bland knapparna tills den behövs.
+    Undrar någon över luckan?
+  - Tjuven tog 173 guld på fem nävar i en vandring. Är hen för stark i
+    kammaren?
+  - Väck ormen på spelledarbordet är inte provat.
 
 - Engelskan (2026-11-19): är tonen rätt, särskilt i introt, ledtrådarna
   och avslöjandet? Är det bättre med "the Silent Chapel" än "The Silent
@@ -79,6 +93,19 @@ En riktig kväll behövs för att se:
 - AI-spelarna når sällan kammaren (13–23 % i simuleringarna) och söker
   nästan aldrig, så vandringar med bara AI-spelare blir tama. De kan bli
   modigare, söka oftare och följa vägar som andra redan har gått.
+
+### Småsaker från provspelet
+
+Sett 2026-11-21 men inte ändrat:
+
+- Rundans rad med `≡` står inte alltid sist i rundan i loggen; ledtrådar
+  och ljud som kommer efter sammanfattningen hamnar under den.
+- "Solen har vandrat halva vägen" kan sägas vid 19 handsbredder kvar när
+  klockan har skyndat på solen.
+- I mörker visar kartan snett ovanifrån fortfarande pilarna vid dörrarna.
+- De vaga `_dolt`-texterna och originalen finns båda kvar i `data/`. Sedan
+  egen karta är det enda läget kan de slås ihop, så att varje text finns
+  en gång.
 
 ### Städning
 

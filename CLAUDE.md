@@ -129,6 +129,10 @@ Skriv dit när ett steg är klart.
 - [docs/synlighet.md](docs/synlighet.md): att vandrarna bara ser varandra
   när de möts, och bara sin egen karta. Allt är byggt, och egen karta är
   sedan 2026-11-21 det enda läget.
+- [docs/provspel-2026-11-21.md](docs/provspel-2026-11-21.md): provspelet
+  2026-11-21, vad som hittades och byggdes, och vad som inte är provat.
+  Robotarna som provspelar finns i `verktyg/provspelare.mjs` (README,
+  Provspela med robotar).
 - [docs/isometrisk.md](docs/isometrisk.md): kartan snett ovanifrån med
   Three.js och 3D-modeller, i TypeScript i `klient/` och byggd med Vite
   till `web/iso/iso.js`. Bygg om och checka in skriptet efter en ändring i

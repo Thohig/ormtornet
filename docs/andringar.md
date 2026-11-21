@@ -6,6 +6,16 @@ eller leder tornet.
 
 ## 2026-11-21
 
+### Provspelet dokumenterat
+
+- [provspel-2026-11-21.md](provspel-2026-11-21.md) beskriver provspelet:
+  hur det gick till, de 16 punkterna, vad som byggdes och vad som inte är
+  provat. Småsakerna som inte ändrades står i
+  [att-gora.md](att-gora.md).
+- Robotarna som provspelar som människor finns nu i
+  `verktyg/provspelare.mjs`, beskrivna i README under Provspela med
+  robotar.
+
 ### Egen karta är det enda läget
 
 - Inställningen "Vandrarna syns" och flaggan `-synlighet` är borttagna.
