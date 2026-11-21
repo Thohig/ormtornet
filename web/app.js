@@ -1468,7 +1468,7 @@ const Intro = (() => {
       if (!reveal) $("intro").classList.add("invigd");
       toHostPage = info.vard && !wantsToPlay;
       hostPage = info.leder ? "/spelledare/bord" : "/spelledare";
-      $("listen").textContent = info.ljud || "";
+      $("listen").textContent = (touch && info.ljudTryck) || info.ljud || "";
       signTexts = info.tecken || {};
       $("legendBtn").textContent = signTexts.rubrik || "";
       MapView.setLegend(renderLegend); // texterna kom efter kartan
@@ -1774,6 +1774,15 @@ $("pad").addEventListener("click", (e) => {
   if (!b) return;
   pressKey(b.dataset.key);
 });
+
+// Tecknen vid dörrarna på kartan snett ovanifrån går att trycka på, på en
+// pekskärm (se .isotangenter i style.css).
+document.addEventListener("click", (e) => {
+  const s = e.target.closest && e.target.closest(".isotangenter span[data-key]");
+  if (!s || !touch) return;
+  e.stopPropagation();
+  pressKey(s.dataset.key);
+}, true);
 
 // Pekskärm: knapparna visas från början på en telefon, och annars så fort
 // någon rör vid skärmen.

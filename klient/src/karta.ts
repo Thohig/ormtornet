@@ -254,11 +254,18 @@ export class IsoKarta {
     this.kant.hidden = true;
     this.tangenter = document.createElement("div");
     this.tangenter.className = "isotangenter";
-    this.tangenter.setAttribute("aria-hidden", "true");
+    this.tangenter.setAttribute("aria-hidden", "true"); // pekknapparna har samma val med namn
     this.tangenter.hidden = true;
-    ["↑", "→", "↓", "←"].forEach((pil) => {
+    // Pilen ritas av stilen: tangentbordets pil (data-pil), eller på en
+    // pekskärm samma snedställda pil som knapparna (data-pek). data-key är
+    // tangenten, så att ett tryck på tecknet går åt det hållet.
+    const pek = ["↗", "↘", "↙", "↖"];
+    const tangent = ["ArrowUp", "ArrowRight", "ArrowDown", "ArrowLeft"];
+    ["↑", "→", "↓", "←"].forEach((pil, d) => {
       const t = document.createElement("span");
-      t.textContent = pil;
+      t.dataset.pil = pil;
+      t.dataset.pek = pek[d];
+      t.dataset.key = tangent[d];
       t.hidden = true;
       this.tangenter.appendChild(t);
       this.tangent.push(t);

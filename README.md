@@ -339,9 +339,14 @@ och går den trögt slår den av skuggorna och ritar med lägre upplösning.
 En iPhone, iPad eller Android-telefon i samma nätverk kan vara med. Öppna
 samma adress i Safari eller Chrome. På en pekskärm visas knappar i stället
 för tangenterna: pilarna och `·` (vänta), och Ta, Sök, Drick, Anfall,
-Parera, Undan, Byt (som Tab) och Redo (som Enter, och Nytt torn när
-vandringen är slut). På en smal skärm ligger knapparna fast längst ner och
-sidan rullar. Står telefonen på ljudlöst hörs inget ljud.
+Parera, Undan, Byt (som Tab), Viska och Redo (som Enter, och Nytt torn när
+vandringen är slut). Viska har en fast plats och syns när den går att
+använda, och Redo syns bara i lobbyn och i slutet, så att knapparna inte
+flyttar sig under vandringen. På kartan snett ovanifrån går det också att
+trycka på pilarna vid dörrarna. På en smal skärm ligger knapparna fast
+längst ner och sidan rullar. Introt fyller skärmen, så ett tryck var som
+helst räknas. I klassvalet står korten två och två och nedräkningen fast
+överst. Står telefonen på ljudlöst hörs inget ljud.
 
 Solen sjunker en handsbredd per runda och visas som en mätare överst.
 Gå ut genom en port för att lämna tornet: en i varje hörn, och i ett torn

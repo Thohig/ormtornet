@@ -478,6 +478,18 @@ body[data-niva="4"] #crt::after { animation: throb 0.95s infinite; }
   border-bottom-width: 2px;
   border-radius: 4px;
 }
+.isotangenter span::before { content: attr(data-pil); }
+/* På en pekskärm har tecknen samma pilar som knapparna och går att trycka på. */
+body.touch .isotangenter span::before { content: attr(data-pek); }
+body.touch .isotangenter span {
+  pointer-events: auto;
+  cursor: pointer;
+  min-width: 28px;
+  padding: 5px 6px;
+  font-size: 15px;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
 .isotangenter span.vald { background: rgba(21, 23, 26, 0.9); box-shadow: 0 0 8px currentColor; }
 .isokompass[hidden], .isokant[hidden], .isokant > div[hidden], .isotangenter[hidden], .isotangenter span[hidden] { display: none; }
 
@@ -485,6 +497,11 @@ body[data-niva="4"] #crt::after { animation: throb 0.95s infinite; }
   color: var(--chalk);
   letter-spacing: 0.08em;
   pointer-events: none;
+  /* Ett långt namn kortas med … i stället för att krocka med tecknen. */
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 #roomname:not(:empty)::before { content: "▸ "; }
 #hud {
@@ -806,6 +823,9 @@ body.touch #side { overflow-y: auto; }
 @media (max-width: 700px) {
   html, body { overflow-x: hidden; overflow-y: auto; }
   #crt { height: auto; min-height: 100%; }
+  /* Introt och namnrutan fyller skärmen och står i mitten, så att ett tryck
+     var som helst räknas. */
+  #start.active, #namescreen.active { min-height: 100vh; min-height: 100svh; }
   #game.active { display: block; height: auto; padding: 8px 12px; }
   #top { flex-wrap: wrap; gap: 2px 12px; }
   #top .title { display: none; }
@@ -822,7 +842,7 @@ body.touch #side { overflow-y: auto; }
   #side h2 { margin: 0 0 4px; }
   #logwrap { margin-top: 8px; grid-column: 1 / -1; }
   #log { height: 14em; flex: 0 0 auto; }
-  #hud { max-width: 85%; }
+  #hud { max-width: 58%; }
   body.touch #game.active { padding-bottom: calc(170px + env(safe-area-inset-bottom)); }
   body.touch #pad {
     position: fixed;
@@ -884,7 +904,16 @@ body.touch #side { overflow-y: auto; }
   letter-spacing: 0.3em;
 }
 #chooseLead, #chooseStatus { color: var(--fg); margin: 0 0 18px; }
-#chooseStatus { margin: 18px 0 0; min-height: 1.4em; }
+/* Nedräkningen står ovanför korten och följer med när man rullar. */
+#chooseStatus {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  margin: 0 0 14px;
+  padding: 8px 0;
+  min-height: 1.4em;
+  background: var(--bg);
+}
 #chooseStatus .secs { color: var(--hi); }
 #chooseStatus .secs.urgent { color: var(--warn); }
 #cards {
@@ -930,9 +959,28 @@ body.touch #side { overflow-y: auto; }
 .card.mine .owner { color: var(--hi); }
 body.touch .card .num { display: none; }
 @media (max-width: 700px) {
+  /* Telefon: korten två och två, utan den kursiva beskrivningen, och
+     nedräkningen fast överst på skärmen. */
   #classscreen.active { display: block; height: auto; }
-  #cards { grid-template-columns: 1fr; }
-  .card { min-height: 0; }
+  #choose { padding: 52px 10px 20px; }
+  #choose h1 { font-size: 18px; letter-spacing: 0.2em; }
+  #chooseLead { font-size: 13px; margin-bottom: 10px; }
+  #chooseStatus {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    margin: 0;
+    padding: 10px 12px;
+    font-size: 13px;
+    border-bottom: 1px solid var(--faint);
+  }
+  #cards { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .card { min-height: 0; gap: 6px; padding: 10px 9px 12px; border-radius: 8px; }
+  .card:hover:not(:disabled), .card:focus-visible { transform: none; }
+  .card .cname { font-size: 14px; padding-right: 0; }
+  .card .desc { display: none; }
+  .card .stats, .card .good, .card .bad { font-size: 12px; line-height: 1.35; }
 }
 #me .plan:first-child { margin-top: 0; padding-top: 0; border-top: none; }
 

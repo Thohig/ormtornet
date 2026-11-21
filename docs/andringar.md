@@ -6,6 +6,21 @@ eller leder tornet.
 
 ## 2026-11-21
 
+### Bättre på telefonen
+
+- Introt fyller hela skärmen och står i mitten, så att ett tryck var som
+  helst startar stormen eller går in. På en pekskärm står det "tryck för
+  att höra stormen".
+- Pilarna vid dörrarna på kartan snett ovanifrån är desamma som
+  knapparnas (↗ ↘ ↙ ↖) på en pekskärm, och ett tryck på en pil går åt det
+  hållet.
+- Klassvalets nedräkning står ovanför korten och följer med när man
+  rullar. På en telefon står den fast överst, korten står två och två och
+  den kursiva beskrivningen är borta, så att alla kort ryms på ungefär en
+  och en halv skärm.
+- Ett långt rumsnamn kortas med … i stället för att krocka med tecknen
+  uppe till höger.
+
 ### Spelskärmen säger mer
 
 - Ett steg mot en vägg avvisas direkt med väggens text, som ett rum som
