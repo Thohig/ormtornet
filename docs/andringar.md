@@ -6,6 +6,12 @@ eller leder tornet.
 
 ## 2026-11-21
 
+### Teckenförklaringen visar modellerna
+
+- Med kartan snett ovanifrån visar teckenförklaringen uppe till vänster en
+  liten bild av vandrarna, varelserna, kammaren och portarna, så som de
+  ser ut på kartan. Fällornas märken och kritan har kvar sina tecken.
+
 ### Föremålen syns på figuren
 
 - På kartan snett ovanifrån bär den egna figuren sina föremål: repet och

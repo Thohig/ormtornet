@@ -132,6 +132,11 @@ Efter varje steg görs en commit, och användaren provar innan nästa steg.
   `klient/src/modeller.ts`). Andras väskor är hemliga och syns inte, men
   spelledarbordet visar föremålen på alla (`foremalIds` i spelledarens
   karta). Förbannade föremål ser ut som andra.
+- Teckenförklaringen med bilder: med kartan snett ovanifrån står en liten
+  bild av modellen i stället för tecknet för vandrarna, varelserna,
+  kammaren och portarna (`bild` i `klient/src/karta.ts`, `legendImage` i
+  `web/map.js`). Det som står i krita på golvet, som fällor och pilar,
+  har kvar sitt tecken. Bilderna ritas en gång och sparas.
 
 ## Inte byggt
 

@@ -810,6 +810,7 @@ const MapView = (() => {
   let useIso = false;
   let size = 0;
   let canIso = null; // om webbläsaren kan rita kartan snett ovanifrån
+  let legendFn = null;
 
   function wantIso(state) {
     if (!state || state.karta !== "snett" || !window.IsoKarta) return false;
@@ -846,9 +847,23 @@ const MapView = (() => {
       useIso = want;
       FlatMap.setQuiet(want);
       isoMap().visa(want);
+      if (legendFn) FlatMap.setLegend(legendFn); // förklaringen ritas om, med eller utan bilder
     }
-    FlatMap.draw(state, t);
+    // Kartan snett ovanifrån först, så att den vet vilka varelser som finns
+    // när teckenförklaringen frågar efter bilder.
     if (useIso) iso.visaTillstand(state);
+    FlatMap.draw(state, t);
+  }
+
+  function setLegend(fn) {
+    legendFn = fn;
+    FlatMap.setLegend(fn);
+  }
+
+  // legendImage ger en bild av modellen för ett tecken i teckenförklaringen
+  // när kartan visas snett ovanifrån, annars null.
+  function legendImage(e) {
+    return useIso && iso ? iso.bild(e.key, e.glyph, e.color) : null;
   }
 
   function resize() {
@@ -869,6 +884,6 @@ const MapView = (() => {
   return {
     setup, draw, resize, ping, wake,
     zoom: FlatMap.zoom, toggleWhole: FlatMap.toggleWhole, setZoomListener: FlatMap.setZoomListener,
-    follow: FlatMap.follow, setLegend: FlatMap.setLegend, PLAYER_COLORS: FlatMap.PLAYER_COLORS,
+    follow: FlatMap.follow, setLegend, legendImage, PLAYER_COLORS: FlatMap.PLAYER_COLORS,
   };
 })();

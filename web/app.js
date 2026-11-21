@@ -854,7 +854,15 @@ function renderLegend(list) {
     if (!text) return;
     const g = document.createElement("span");
     g.className = "sign glyph";
-    g.textContent = e.glyph;
+    // Snett ovanifrån står modellen i stället för tecknet, där den finns.
+    const img = MapView.legendImage(e);
+    if (img) {
+      const i = document.createElement("img");
+      i.src = img;
+      i.alt = "";
+      g.classList.add("model");
+      g.appendChild(i);
+    } else g.textContent = e.glyph;
     g.style.color = e.color;
     g.dataset.tip = text;
     g.dataset.slot = "tecken:" + e.key;

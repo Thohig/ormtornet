@@ -363,7 +363,7 @@ function yngel(): Figur {
 // Fjällvakten: en gestalt i rustning av fjäll, med en sköld framför sig.
 function fjallvakt(): Figur {
   const g = new THREE.Group();
-  const fjall = lam(0x4f6e66), mork = lam(0x2f403c), metall = lam(METALL);
+  const fjall = lam(0x62897f), mork = lam(0x3f5651), metall = lam(METALL);
   const ben = [-0.14, 0.14].map((x) => {
     const b = del(hangande("vaktben", 0.1, 0.09, 0.55), mork, x, 0.55, 0);
     g.add(b);

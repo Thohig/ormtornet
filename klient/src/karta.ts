@@ -124,6 +124,46 @@ function kompassSvg(): string {
 </svg>`;
 }
 
+// guldhog är kammarens hög av mynt, med mitten i origo.
+function guldhog(): THREE.Mesh {
+  const mynt: THREE.BufferGeometry[] = [];
+  let s = 3;
+  const rnd = () => ((s = (s * 16807) % 2147483647) / 2147483647);
+  for (let lager = 0; lager < 5; lager++) {
+    const rad = 0.9 - lager * 0.17;
+    for (let i = 0; i < 12 - lager * 2; i++) {
+      const a = rnd() * Math.PI * 2, d = rnd() * rad;
+      const g = new THREE.CylinderGeometry(0.16, 0.16, 0.05, 10);
+      g.rotateX((rnd() - 0.5) * 0.6);
+      g.rotateZ((rnd() - 0.5) * 0.6);
+      g.translate(Math.cos(a) * d, 0.03 + lager * 0.08 + rnd() * 0.03, Math.sin(a) * d);
+      mynt.push(g);
+    }
+  }
+  const hog = new THREE.Mesh(mergeGeometries(mynt), new THREE.MeshLambertMaterial({ color: 0xe8b84a, emissive: 0x2a1c00 }));
+  mynt.forEach((g) => g.dispose());
+  hog.castShadow = true;
+  return hog;
+}
+
+// portbage är en port för teckenförklaringen: två stolpar och en
+// överliggare, med en mur om den har slutit sig och kött på nivå 4.
+function portbage(stangd: boolean, kott: boolean): THREE.Group {
+  const g = new THREE.Group();
+  const mat = new THREE.MeshLambertMaterial({ color: kott ? PORT_KOTT : FARG.port });
+  const lada = (w: number, h: number, d: number, x: number, y: number, m: THREE.Material = mat) => {
+    const o = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), m);
+    o.position.set(x, y, 0);
+    g.add(o);
+  };
+  lada(VT * 1.5, 1.4, VT * 1.5, -LUCKA / 2, 0.7);
+  lada(VT * 1.5, 1.4, VT * 1.5, LUCKA / 2, 0.7);
+  lada(LUCKA + VT * 1.5, 0.3, VT * 1.6, 0, 1.5);
+  if (stangd) lada(LUCKA, 1.36, VT, 0, 0.68, new THREE.MeshLambertMaterial({ color: FARG.stangd }));
+  g.rotation.y = Math.PI / 4; // vänd mot kameran
+  return g;
+}
+
 export class IsoKarta {
   private renderer: THREE.WebGLRenderer;
   private scene = new THREE.Scene();
@@ -502,25 +542,82 @@ float puls() {
     }
     this.guldljus.position.set(cx, 1.6, cz);
 
-    const mynt: THREE.BufferGeometry[] = [];
-    let s = 3;
-    const rnd = () => ((s = (s * 16807) % 2147483647) / 2147483647);
-    for (let lager = 0; lager < 5; lager++) {
-      const rad = 0.9 - lager * 0.17;
-      for (let i = 0; i < 12 - lager * 2; i++) {
-        const a = rnd() * Math.PI * 2, d = rnd() * rad;
-        const g = new THREE.CylinderGeometry(0.16, 0.16, 0.05, 10);
-        g.rotateX((rnd() - 0.5) * 0.6);
-        g.rotateZ((rnd() - 0.5) * 0.6);
-        g.translate(cx + Math.cos(a) * d, 0.03 + lager * 0.08 + rnd() * 0.03, cz + Math.sin(a) * d);
-        mynt.push(g);
-      }
-    }
-    const hog = new THREE.Mesh(mergeGeometries(mynt), new THREE.MeshLambertMaterial({ color: 0xe8b84a, emissive: 0x2a1c00 }));
-    mynt.forEach((g) => g.dispose());
+    const hog = guldhog();
+    hog.position.set(cx, 0, cz);
     hog.userData.egen = true;
-    hog.castShadow = true;
     this.torn.add(hog);
+  }
+
+  // ---- Teckenförklaringen ----
+
+  private typer = new Map<string, string>(); // varelsernas tecken → id
+  private bilder = new Map<string, string | null>();
+  private bildScen: THREE.Scene | null = null;
+  private bildMal: THREE.WebGLRenderTarget | null = null;
+
+  // bild ger en liten bild av modellen för ett tecken i teckenförklaringen,
+  // som en data-URL, eller null där tecknet själv står på kartan (krita på
+  // golvet och liknande). Bilderna ritas en gång och sparas.
+  bild(nyckel: string, glyph: string, farg: string): string | null {
+    const slag = nyckel.split(":")[0];
+    let gor: (() => THREE.Object3D | null) | null = null;
+    if (slag === "du" || slag === "vandrare" || slag === "borta") gor = () => M.vandrare("", farg).grupp;
+    else if (slag === "varelse") {
+      const typ = this.typer.get(glyph);
+      if (!typ) return null;
+      gor = () => M.varelse(typ)?.grupp || null;
+    } else if (slag === "kammare") gor = () => guldhog();
+    else if (slag === "port" || slag === "port_stangd") gor = () => portbage(slag === "port_stangd" || (this.niva() === 4 && this.state?.phase === "slut"), this.niva() === 4);
+    if (!gor) return null;
+    const k = slag + "|" + glyph + "|" + farg + "|" + (slag.startsWith("port") ? this.niva() : "");
+    if (this.bilder.has(k)) return this.bilder.get(k)!;
+    const o = gor();
+    const url = o ? this.ritaBild(o) : null;
+    this.bilder.set(k, url);
+    return url;
+  }
+
+  private ritaBild(o: THREE.Object3D): string {
+    const N = 96;
+    if (!this.bildScen) {
+      this.bildScen = new THREE.Scene();
+      this.bildScen.add(new THREE.HemisphereLight(0xdfe4ee, 0x2a2c30, 1.6));
+      const sol = new THREE.DirectionalLight(0xfff0dc, 2.0);
+      sol.position.set(-4, 8, 6);
+      this.bildScen.add(sol);
+      this.bildMal = new THREE.WebGLRenderTarget(N, N, { samples: 4 });
+      this.bildMal.texture.colorSpace = THREE.SRGBColorSpace;
+    }
+    const scen = this.bildScen;
+    scen.add(o);
+    const box = new THREE.Box3().setFromObject(o);
+    const mitt = box.getCenter(new THREE.Vector3());
+    const storlek = box.getSize(new THREE.Vector3());
+    const h = Math.max(storlek.x, storlek.y, storlek.z) * 0.62;
+    const cam = new THREE.OrthographicCamera(-h, h, h, -h, 0.1, 100);
+    cam.position.copy(mitt).addScaledVector(FRAN, 20);
+    cam.lookAt(mitt);
+    const r = this.renderer;
+    const forra = r.getRenderTarget();
+    const farg = r.getClearColor(new THREE.Color());
+    const alfa = r.getClearAlpha();
+    r.setClearColor(0x000000, 0);
+    r.setRenderTarget(this.bildMal);
+    r.clear();
+    r.render(scen, cam);
+    const px = new Uint8Array(N * N * 4);
+    r.readRenderTargetPixels(this.bildMal!, 0, 0, N, N, px);
+    r.setRenderTarget(forra);
+    r.setClearColor(farg, alfa);
+    scen.remove(o);
+    // Bilden ligger upp och ner i målet.
+    const c = document.createElement("canvas");
+    c.width = c.height = N;
+    const ctx = c.getContext("2d")!;
+    const im = ctx.createImageData(N, N);
+    for (let y = 0; y < N; y++) im.data.set(px.subarray((N - 1 - y) * N * 4, (N - y) * N * 4), y * N * 4);
+    ctx.putImageData(im, 0, 0);
+    return c.toDataURL();
   }
 
   // ---- Det som rör sig ----
@@ -595,6 +692,7 @@ float puls() {
     (state.monsters || []).forEach((m) => {
       const [x, z] = plats(m.x, m.y, Math.floor(RW / 2) + 1, Math.floor(RH / 2));
       const typ = m.typ || "";
+      if (typ) this.typer.set(m.glyph, typ);
       this.flytta("m" + m.id, "m" + typ + m.glyph, () => M.varelse(typ) || this.tecknad(m.glyph), m.x, m.y, x, z);
       sedda.add("m" + m.id);
     });
