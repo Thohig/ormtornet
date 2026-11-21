@@ -868,7 +868,7 @@ Beskrivningarna för rummen ligger under nivåerna `"1"` till `"4"`.
   - `bord.html` och `bord.js` spelledarbordet
   - `spelledare.css` det som värdsidan och spelledarbordet har gemensamt
   - `torn.html` och `torn.js` skalet: tornets flik när spelet kommer från
-    GitHub Pages
+    GitHub Pages, och `torn-arbetare.js` workern som kör tornet i den
   - `natet.js` vägen till tornet från GitHub Pages, i samma webbläsare
     eller över WebRTC från länken; gör ingenting när sidorna kommer från
     tornets program
@@ -931,6 +931,10 @@ verktyg/bygg-sida.sh
 ```bash
 python3 -m http.server 8000 -d sida
 ```
+
+Tornet självt går i en Web Worker (`web/torn-arbetare.js`), så att det
+inte saktas ner när fliken ligger i bakgrunden; skalet för bara vidare
+meddelandena.
 
 Öppna `http://localhost:8000/`. Introt märker att inget torn är öppet och
 öppnar skalet, som visar introt och sedan värdsidan. "Gå in själv" på

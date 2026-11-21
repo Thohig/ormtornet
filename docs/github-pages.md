@@ -1,6 +1,6 @@
 # Förslag: Ormtornet på GitHub Pages
 
-Status: förslag, skrivet 2026-11-21. Steg 0–3 är byggda.
+Status: förslag, skrivet 2026-11-21. Steg 0–4 är byggda.
 
 Målet är att man ska kunna spela Ormtornet från en länk, utan att
 installera något och även när vandrarna sitter på olika nät. Tornet som
@@ -154,6 +154,16 @@ Varje steg är en commit, och sedan provar användaren.
    tillbaka till sin vandrare (`takeover.go`), tydliga texter när något
    inte går, varning om att hålla tornets flik öppen, och åtgärden mot
    bakgrundsfliken om steg 1 visade att den behövs.
+   Byggt: tornet körs i en Web Worker (`web/torn-arbetare.js`), eftersom
+   "Gå in själv" lägger tornets flik i bakgrunden, där Chrome efter fem
+   minuter kör timers en gång i minuten när ingen WebRTC är igång. Pulsen
+   till sidorna kommer också från workern. Inställningarna sparas i
+   skalets `localStorage` genom workern. Värdsidan säger på Pages att
+   tornets flik ska hållas öppen och att en dator är bäst, och Kommer någon
+   inte in? har egna råd för länken. Den som laddar om eller öppnar länken
+   igen och skriver samma namn får tillbaka sin vandrare; det fanns redan
+   och är provat över WebRTC. Bakgrundsfliken är inte provad, eftersom
+   webbläsarpanelen håller alla flikar synliga.
 5. **Provspel över internet.** Spelledaren hemma, spelare på mobil och
    andra nät. Utifrån det: TURN som inställning eller inte.
 

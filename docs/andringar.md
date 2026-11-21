@@ -6,6 +6,18 @@ eller leder tornet.
 
 ## 2026-11-21
 
+### Tornet håller i en dold flik
+
+- Steg 4 i [github-pages.md](github-pages.md). På GitHub Pages körs tornet
+  nu i en Web Worker (`web/torn-arbetare.js`). Webbläsare saktar ner flikar
+  som inte syns, och tornets flik hamnar i bakgrunden så fort spelledaren
+  går in själv. I workern ska tiden, robotarna och pulsen gå som vanligt.
+- Värdsidan på Pages säger att tornets flik ska hållas öppen och att en
+  dator är bäst. Kommer någon inte in? har råd för länken, för nät som
+  stoppar anslutningen och för den som tappar den.
+- Den som tappar anslutningen öppnar länken igen och skriver samma namn,
+  och får tillbaka sin vandrare.
+
 ### Spela från en länk
 
 - Steg 3 i [github-pages.md](github-pages.md). När tornet körs på GitHub

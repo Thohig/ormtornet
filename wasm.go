@@ -3,8 +3,11 @@
 package main
 
 // Tornet i webbläsaren (docs/github-pages.md). Samma spel som programmet i
-// main.go, men utan nätverk och filer: skalet web/torn.html laddar
-// torn.wasm, och sidorna i webbläsaren når tornet genom skalet.
+// main.go, men utan nätverk och filer: skalet web/torn.html startar
+// web/torn-arbetare.js, en Web Worker som laddar torn.wasm, och sidorna i
+// webbläsaren når tornet genom skalet. Det som står nedan om skalet görs av
+// workern, som för det vidare. Inställningarna i localStorage sparas i
+// skalets localStorage genom workern.
 //
 // Go ger skalet det globala objektet Tornet:
 //

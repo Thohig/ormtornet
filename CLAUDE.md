@@ -116,7 +116,7 @@ Skriv dit när ett steg är klart.
   gång och vad som inte är planerat. Fråga vilka delar som ska byggas innan
   du börjar på något som inte står under På gång.
 - [docs/github-pages.md](docs/github-pages.md): att spela från en länk på
-  GitHub Pages, med tornet i spelledarens webbläsare och WebRTC. Steg 0–3
+  GitHub Pages, med tornet i spelledarens webbläsare och WebRTC. Steg 0–4
   är byggda. Fråga innan du börjar på nästa steg.
 - [docs/fler-spelare.md](docs/fler-spelare.md): klasser, tornets storlek
   och upp till 8 spelare. Allt är byggt.

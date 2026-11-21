@@ -85,8 +85,11 @@
   #foot { margin-top: 20px; }
   #foot h2 { margin-top: 18px; }
   #reloadMsg:empty { display: none; }
-  #help li { margin: 6px 0; line-height: 1.45; }
-  #help { padding-left: 1.4em; margin: 0; }
+  #help li, #helpPages li { margin: 6px 0; line-height: 1.45; }
+  #help, #helpPages { padding-left: 1.4em; margin: 0; }
+  #help[hidden], #helpPages[hidden] { display: none; }
+  #tabWarn { color: var(--warn); }
+  #tabWarn[hidden] { display: none; }
 </style>
 </head>
 <body>
@@ -94,6 +97,7 @@
   <main id="host">
     <h1 data-t="rubrik"></h1>
     <p class="dimtext" data-t="bara_din_dator"></p>
+    <p id="tabWarn" data-t="sida_flik" hidden></p>
 
     <div id="bar">
       <span id="barPhase">…</span>
@@ -278,6 +282,13 @@
       <li data-t="hjalp_macos"></li>
       <li data-t="hjalp_tappar"></li>
     </ul>
+    <!-- På GitHub Pages: spelarna kommer med länken över WebRTC. -->
+    <ul id="helpPages" hidden>
+      <li data-t="hjalp_sida_lanken"></li>
+      <li data-t="hjalp_sida_natet"></li>
+      <li data-t="hjalp_sida_fliken"></li>
+      <li data-t="hjalp_sida_tappar"></li>
+    </ul>
     </details>
 
     <details id="reloadBox">
@@ -318,6 +329,9 @@ if (onPages) {
   document.body.classList.add("sida");
   document.querySelector('[data-t="bjud_in_text"]').dataset.t = "bjud_in_text_sida";
   $("copyAddr").dataset.t = "kopiera_lanken";
+  $("tabWarn").hidden = false;
+  $("help").hidden = true;
+  $("helpPages").hidden = false;
   applyTexts();
   const s = document.createElement("script");
   s.src = "rtc/rtc.js";
