@@ -1,6 +1,9 @@
-# Förslag: Ormtornet på GitHub Pages
+# Ormtornet på GitHub Pages
 
-Status: förslag, skrivet 2026-11-21. Steg 0–4 är byggda.
+Status: skrivet som förslag 2026-11-21. Steg 0–4 är byggda och
+publicerade på <https://thohig.github.io/ormtornet/>. Kvar är steg 5, ett
+provspel över internet. README beskriver under Spela från en länk hur det
+används.
 
 Målet är att man ska kunna spela Ormtornet från en länk, utan att
 installera något och även när vandrarna sitter på olika nät. Tornet som
@@ -40,7 +43,9 @@ tornets adress på nätet.
 Om fliken byter sida stängs tornet. Därför är tornets flik en skalsida
 (`web/torn.html`) som kör `torn.wasm` och visar värdsidan, spelledarbordet
 eller den egna spelarsidan i en ram (`iframe`). Ramen kan byta sida fritt;
-skalet och tornet ligger kvar. Ramen pratar med skalet med `postMessage`.
+skalet och tornet ligger kvar. Ramen och andra flikar i samma webbläsare
+pratar med skalet över en `BroadcastChannel`. Själva tornet går i en Web
+Worker (`web/torn-arbetare.js`), som skalet för meddelandena vidare till.
 
 Spelledaren kan spela själv i samma flik, eller öppna länken i en annan
 flik eller på telefonen som vilken spelare som helst.
@@ -72,24 +77,31 @@ flik eller på telefonen som vilken spelare som helst.
 
 ### Webben
 
-- **Ett lager för transporten** (`web/natet.js`, byggt från `klient/` med
-  Vite tillsammans med Trystero). Det ger spelarsidan något som ser ut som
-  en WebSocket och en `fetch`, men som går över WebRTC till tornet, eller
-  med `postMessage` till skalet när sidan ligger i tornets flik.
-- **`web/app.js`, `web/bord.js` och `web/texter.js`** använder lagret när
-  sidan kommer från Pages, och `/ws` och `fetch` som i dag när den kommer
-  från Go-programmet. Resten av skripten märker ingen skillnad.
+- **Ett lager för transporten** (`web/natet.js`). Det byter ut `fetch`
+  och `WebSocket` för tornets adresser, så att de går över WebRTC till
+  tornet när sidan kommer från länken, eller över en `BroadcastChannel`
+  till skalet i spelledarens egen webbläsare. När sidan kommer från
+  Go-programmet gör det ingenting, och resten av skripten märker ingen
+  skillnad.
+- **WebRTC** (`web/rtc/rtc.js`, byggt från `klient/src/rtc.ts` med Vite
+  tillsammans med Trystero och en QR-kodsgenerator). Det laddas bara av
+  skalet, av värdsidan för QR-koden och av spelarsidan när länken har en
+  rumskod.
 - **Värdsidan** får under Bjud in länken och QR-koden med rumskoden i
   stället för tornets adress på nätet.
-- **Nya texter**, till exempel "Kom inte fram till tornet. Prova ett annat
-  nät." och "Håll den här fliken öppen, annars stängs tornet.", läggs i
+- **Nya texter** för länken, för när tornet inte hittas, varningen om att
+  hålla tornets flik öppen och råden under Kommer någon inte in? ligger i
   `data/spelarsidan.json` och `data/vardsidan.json` och i `data/en/`.
 
 ### Publiceringen
 
-En GitHub Action bygger `torn.wasm` (`GOOS=js GOARCH=wasm`), kopierar
-`wasm_exec.js` från Go, bygger `klient/` och publicerar `web/` på Pages vid
-varje push till huvudgrenen.
+GitHub Action `Sida` (`.github/workflows/sida.yml`) kör testerna och
+`verktyg/bygg-sida.sh`, som skriver sidorna (`go run . -sida`), bygger
+`torn.wasm` (`GOOS=js GOARCH=wasm`) och kopierar `wasm_exec.js` från Go.
+Resultatet publiceras på Pages vid varje push till `main`. Skripten från
+`klient/` är incheckade, så Action behöver inte Node. Sidornas filer får
+ett versionsnummer (`?v=` och början av commiten), eftersom Pages låter
+webbläsaren spara filerna i tio minuter.
 
 ## Kostnad, konton och integritet
 
@@ -110,14 +122,14 @@ varje push till huvudgrenen.
 ## Risker att prova tidigt
 
 - **Fliken i bakgrunden.** Webbläsare saktar ner timers i flikar som inte
-  syns. Tornets tid och robotarna behöver gå jämnt. Prova i steg 1; hjälper
-  det inte att fliken har aktiva WebRTC-anslutningar kan tornet köras i en
-  Web Worker eller fliken hålla skärmen vaken (Wake Lock).
+  syns. Tornets tid och robotarna behöver gå jämnt. Löst i steg 4 genom att
+  köra tornet i en Web Worker, men inte provat med en dold flik i mer än
+  fem minuter.
 - **Telefonen som torn.** En låst skärm kan stoppa tornet. Värdsidan ska
   säga att en dator är bäst.
 - **Nät som blockerar.** Ungefär var tionde anslutning över internet kan
   behöva TURN, oftast på mobilnät eller nät på jobb och skolor.
-- **Storleken.** `torn.wasm` blir några MB, mindre med gzip. Bara
+- **Storleken.** `torn.wasm` är ungefär 9 MB, mindre med gzip. Bara
   spelledaren laddar ner den.
 
 ## Stegen
@@ -167,13 +179,19 @@ Varje steg är en commit, och sedan provar användaren.
    versionsnummer (`?v=`) på sidornas filer i bygget (`sida.go`), eftersom
    Pages låter webbläsaren spara filerna i tio minuter.
 5. **Provspel över internet.** Spelledaren hemma, spelare på mobil och
-   andra nät. Utifrån det: TURN som inställning eller inte.
+   andra nät. Utifrån det: TURN som inställning eller inte. Se också efter
+   att tornets flik håller när den har legat i bakgrunden mer än fem
+   minuter, och att den som tappar anslutningen kommer tillbaka.
 
-README får ett avsnitt "Spela från en länk" och `docs/andringar.md` en
-rad efter varje steg.
+README har avsnittet "Spela från en länk", och `docs/andringar.md` en
+rad för varje steg.
 
 ## Inte med i förslaget
 
 - En egen server för signaleringen eller för spelet.
-- Att spelarna ansluter till varandra; alla ansluter bara till tornet.
+- Att spelarna pratar med varandra; alla pratar bara med tornet.
+  Trystero kopplar ändå ihop alla i rummet med varandra, men spelarsidan
+  lyssnar bara på tornets flik. Med åtta spelare blir det många
+  anslutningar; märks det i provspelet kan tornet få en egen roll i
+  rummet.
 - Att spara en vandring och fortsätta senare.

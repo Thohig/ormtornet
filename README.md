@@ -1,6 +1,7 @@
 # Ormtornet
 
-En dungeon crawler för 2–8 spelare i webbläsaren, på ett lokalt nätverk.
+En dungeon crawler för 2–8 spelare i webbläsaren, på ett lokalt nätverk
+eller från en länk på GitHub Pages (se Spela från en länk).
 Mitt i ett torn på 9x9 rum (11x11 för fem eller sex, 13x13 för sju eller
 åtta) sägs en jättelik orm sova kring en skatt.
 Ta så mycket du vågar och kom ut innan solen går ner.
@@ -31,8 +32,10 @@ Det går också att starta direkt med `go run .`.
 ./skapa-app.sh
 ```
 
-skapar `~/Projekt/Lokalt/Ormtornet.app` med tornets ikon (ange en annan mapp som
-argument om du vill). Dubbelklick på appen bygger spelet från den här mappen,
+skapar `~/Projekt/Lokalt/Ormtornet.app` med tornets ikon. Mappen skapas om
+den saknas; ange en annan mapp som argument om du vill, till exempel
+`./skapa-app.sh ~/Applications`. Ikonen ritas av `verktyg/appikon`, så
+appen går att ta bort och skapa igen när som helst. Dubbelklick på appen bygger spelet från den här mappen,
 startar tornet i bakgrunden och öppnar introt, som leder till värdsidan
 eller spelledarbordet. Inget terminalfönster behövs. Loggen hamnar i `/tmp/ormtornet.log`.
 Appen behöver bara skapas om när den här mappen flyttas.
@@ -82,6 +85,31 @@ Flaggor:
 - `-autostopp 10m` stänger tornet när ingen spelare är ansluten och ingen sida har synts på tornets dator så länge (`0` = aldrig)
 - `-autostopp-max 12h` stänger tornet när ingen har gjort något så länge, även om flikar står öppna (`0` = aldrig)
 - `-installningar fil` var spelledarens inställningar sparas (standard `~/Library/Application Support/Ormtornet/installningar.json`, tom för att inte spara)
+
+### Spela från en länk
+
+Utan Go och utan att vara på samma wifi: spelledaren öppnar
+<https://thohig.github.io/ormtornet/> i Chrome eller Safari på en dator.
+Tornet körs då i den fliken, med samma spel som programmet. Värdsidan
+visas i samma flik och har under Bjud in en länk och en QR-kod. Spelarna
+öppnar länken eller läser QR-koden, var de än är, och ansluter direkt till
+spelledarens webbläsare. Den som har länken kommer in, så ge den bara
+till dem som ska spela.
+
+- Tornets flik måste vara öppen hela vandringen. Stängs den eller laddas
+  den om stängs tornet. Fliken får ligga i bakgrunden, till exempel när
+  spelledaren går in själv med "Gå in själv".
+- En dator är bäst. På en telefon kan tornet stanna när skärmen släcks.
+- Den som tappar anslutningen öppnar länken igen och skriver samma namn.
+- Vissa nät stoppar anslutningen, oftast mobilnät och nät på jobb och
+  skolor. Det finns ingen reläserver (TURN) än; prova då ett annat nät.
+- Spelarna kan se spelledarens publika IP-adress, som i ett videosamtal.
+- Inställningarna sparas i spelledarens webbläsare. Läs om innehållet
+  läser bara det innehåll som följde med bygget; ändringar i `data/` kommer
+  ut när de pushas till `main`.
+
+Hur det är byggt står under Tornet i webbläsaren och i
+[docs/github-pages.md](docs/github-pages.md).
 
 ### Värdsidan
 
@@ -861,6 +889,9 @@ Beskrivningarna för rummen ligger under nivåerna `"1"` till `"4"`.
   webbläsaren)
 - `sida.go` skriver sidorna för GitHub Pages (`-sida`)
 - `verktyg/bygg-sida.sh` bygger allt för GitHub Pages till `sida/`
+- `.github/workflows/kontroll.yml` kontrollerar formateringen, testerna och
+  skripten vid varje push, och `sida.yml` publicerar på GitHub Pages vid
+  varje push till `main`
 - `web/` klienten: HTML, CSS och JavaScript utan ramverk
   - `index.html` och `app.js` spelarsidan: introt, namnrutan, klassvalet
     och spelet

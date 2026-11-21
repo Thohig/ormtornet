@@ -18,6 +18,10 @@ Byggt (README beskriver hur det fungerar):
 - Ingrepp: tid, tornets röst, fällor och varelser, väcka och lugna ormen,
   liv, guld och drycker, och AI tar över en frånvarande vandrare.
 - `Ormtornet.app` via `./skapa-app.sh`. Den bygger från repot och kräver Go.
+- Värdsidan på GitHub Pages (2026-11-21, [github-pages.md](github-pages.md)):
+  den visas i tornets flik, skalet, och har under Bjud in en länk och en
+  QR-kod i stället för adressen på samma wifi, en varning om att hålla
+  fliken öppen och egna råd under Kommer någon inte in?.
 - Pekkontroller, så att telefoner och surfplattor kan spela.
 - Krönikan: en sammanfattning efter varje omgång.
 - Förval för svårighet: Lätt, Normal, Svår och Mardröm.

@@ -67,6 +67,12 @@ En riktig kväll behövs för att se:
     kammaren?
   - Väck ormen på spelledarbordet är inte provat.
 
+- Spela från en länk (2026-11-21, [github-pages.md](github-pages.md),
+  steg 5): kommer alla in från mobilnät och andra nät, eller behövs TURN?
+  Håller tornets flik när den har legat i bakgrunden mer än fem minuter?
+  Kommer den som tappar anslutningen tillbaka? Går QR-koden att läsa från
+  skärmen, och hur lång tid tar det att ladda tornet (9 MB)?
+
 - Engelskan (2026-11-19): är tonen rätt, särskilt i introt, ledtrådarna
   och avslöjandet? Är det bättre med "the Silent Chapel" än "The Silent
   Chapel" mitt i meningar? Får alla knappar och etiketter plats på en
@@ -109,8 +115,12 @@ Sett 2026-11-21 men inte ändrat:
 
 ### Städning
 
-- Grenen `claude/vibrant-fermat-berckf` på GitHub har inga committar som
-  inte redan finns i `main`, och kan tas bort.
+- Grenarna `claude/awesome-babbage-ekl3oh`, `claude/ecstatic-dijkstra-w5bt1o`,
+  `claude/exciting-mayer-jcrxup`, `claude/relaxed-ritchie-ow2ciq` och
+  `claude/vibrant-fermat-berckf` på GitHub har inga committar som inte
+  redan finns i `main` (2026-11-21), och kan tas bort.
+- Repot är publikt sedan 2026-11-21 men har ingen `LICENSE`. Bestäm om
+  spelet ska ha en licens.
 
 ## Kvar från förslagen
 

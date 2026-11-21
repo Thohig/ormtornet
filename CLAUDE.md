@@ -1,6 +1,7 @@
 # Ormtornet
 
-En dungeon crawler för 2–8 spelare i webbläsaren på ett lokalt nätverk.
+En dungeon crawler för 2–8 spelare i webbläsaren, på ett lokalt nätverk
+eller från en länk på GitHub Pages (<https://thohig.github.io/ormtornet/>).
 README beskriver spelet, flaggorna och filerna.
 
 ## Arbetssätt
@@ -27,7 +28,16 @@ Så här skiljer vi på sakerna när användaren ger instruktioner:
   `web/spelledare.html`). Överst står **raden** med fasen och knappen
   som behövs just nu. Avsnitten heter Bjud in, Vid porten, Inför nästa
   vandring, Kommer någon inte in?, Läs om innehållet och Stäng tornet, och
-  står alltid i den ordningen.
+  står alltid i den ordningen. På Pages visas den i skalet och har länken,
+  QR-koden och en varning om att hålla tornets flik öppen.
+- **skalet**: tornets flik när spelet kommer från GitHub Pages
+  (`web/torn.html`, `web/torn.js`). Det kör tornet i en Web Worker
+  (`web/torn-arbetare.js`, `wasm.go`) och visar värdsidan, spelledarbordet
+  eller spelarsidan i en ram.
+- **länken**: adressen med rumskod och nyckel
+  (`#torn=<kod>&nyckel=<nyckel>`) som spelarna öppnar för att ansluta till
+  skalet över WebRTC (`web/natet.js`, `web/rtc/rtc.js` från
+  `klient/src/rtc.ts`).
 - **spelledarbordet**: sidan på `/spelledare/bord` på tornets dator
   (`web/bord.html`, `web/bord.js`), där spelledaren leder vandringen i
   spelledarläget. Värdsidans rad har en knapp dit, och introt på tornets
@@ -117,7 +127,9 @@ Skriv dit när ett steg är klart.
   du börjar på något som inte står under På gång.
 - [docs/github-pages.md](docs/github-pages.md): att spela från en länk på
   GitHub Pages, med tornet i spelledarens webbläsare och WebRTC. Steg 0–4
-  är byggda. Fråga innan du börjar på nästa steg.
+  är byggda och publiceras vid varje push till `main`. Kvar är steg 5, ett
+  provspel över internet, och kanske TURN efter det. Fråga innan du börjar
+  på nästa steg.
 - [docs/fler-spelare.md](docs/fler-spelare.md): klasser, tornets storlek
   och upp till 8 spelare. Allt är byggt.
 - [docs/foremal-och-hemligheten.md](docs/foremal-och-hemligheten.md):
