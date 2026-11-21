@@ -15,6 +15,18 @@ if ! command -v go >/dev/null 2>&1; then
 	exit 1
 fi
 
+# Kartan snett ovanifrån (klient/) byggs om när källkoden är nyare än det
+# incheckade skriptet web/iso/iso.js. Det kräver Node; annars används det
+# incheckade skriptet som det är.
+if [ -n "$(find klient/src klient/package.json klient/vite.config.ts -newer web/iso/iso.js 2>/dev/null)" ]; then
+	if command -v npm >/dev/null 2>&1 && [ -d klient/node_modules ]; then
+		echo "Bygger kartan ..."
+		npm run --silent --prefix klient bygg
+	else
+		echo "klient/ har ändrats men byggs inte om: kör npm install i klient/ (kräver Node)."
+	fi
+fi
+
 echo "Bygger tornet ..."
 go build -o ormtornet .
 exec ./ormtornet -oppna -vaken "$@"

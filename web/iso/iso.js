@@ -1,0 +1,1 @@
+var IsoKarta=(function(e){Object.defineProperty(e,Symbol.toStringTag,{value:`Module`});var t=`187`;function n(){try{let e=document.createElement(`canvas`);return!!(e.getContext(`webgl2`)||e.getContext(`webgl`))}catch{return!1}}return e.stods=n,e.three=t,e})({});

@@ -4,6 +4,18 @@ Det som har ändrats i spelet, nyast först. README beskriver hur allt
 fungerar. Här står vad som är nytt och vad det betyder för den som spelar
 eller leder tornet.
 
+## 2026-11-21
+
+### Grunden för kartan snett ovanifrån
+
+- Kartan ska kunna visas snett ovanifrån i 3D, ritad med Three.js. Planen
+  står i [isometrisk.md](isometrisk.md). Det här första steget lägger bara
+  grunden: TypeScript och Vite i `klient/`, som bygger `web/iso/iso.js`.
+  Ingenting ändras på skärmen ännu.
+- Spelet byggs som förut utan Node. Den som ändrar i `klient/` behöver
+  Node och kör `npm install` där en gång; sedan bygger `starta.sh` om
+  kartan av sig själv.
+
 ## 2026-11-20
 
 ### Styrningen stängs när vandringen är slut

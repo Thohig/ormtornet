@@ -847,6 +847,19 @@ Beskrivningarna för rummen ligger under nivåerna `"1"` till `"4"`.
     av dem
   - `audio.js` allt ljud, skapat med Web Audio API, även stormen i introt
   - `style.css` utseendet
+  - `iso/iso.js` kartan snett ovanifrån, byggd från `klient/` (rör den inte
+    för hand)
+- `klient/` kartan snett ovanifrån i TypeScript med Three.js, byggd med Vite
+  (se [docs/isometrisk.md](docs/isometrisk.md)). Det byggda skriptet
+  `web/iso/iso.js` checkas in, så att spelet byggs utan Node. Efter en
+  ändring i `klient/src/`:
+
+  ```bash
+  cd klient && npm install && npm run bygg
+  ```
+
+  `starta.sh` bygger om skriptet av sig själv när källkoden är nyare och
+  Node finns.
 
 ## Testa lokalt
 

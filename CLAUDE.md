@@ -120,3 +120,7 @@ Skriv dit när ett steg är klart.
 - [docs/synlighet.md](docs/synlighet.md): att vandrarna bara ser varandra
   när de möts, och på sikt bara sin egen karta. Alla tre stegen är
   byggda.
+- [docs/isometrisk.md](docs/isometrisk.md): kartan snett ovanifrån med
+  Three.js och 3D-modeller, i TypeScript i `klient/` och byggd med Vite
+  till `web/iso/iso.js`. Bygg om och checka in skriptet efter en ändring i
+  `klient/src/`. Avsnittet Stegen säger vad som är byggt.
