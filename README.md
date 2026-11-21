@@ -931,6 +931,12 @@ länge tornet ska vara det.
 Inställningarna sparas i webbläsaren. Läs om innehållet läser bara det
 inbyggda innehållet, eftersom det inte finns någon `data/` att läsa.
 
+Vid varje push till `main` bygger GitHub Action `Sida`
+(`.github/workflows/sida.yml`) samma sak och publicerar den på GitHub
+Pages, på `https://<namn>.github.io/ormtornet/`. Det kräver att repot är
+publikt och att Pages är påslaget i repots inställningar (Settings, Pages,
+Source: GitHub Actions).
+
 ### Simulera
 
 För att se hur siffrorna i `data/` verkar kan tornet spela många

@@ -6,6 +6,18 @@ eller leder tornet.
 
 ## 2026-11-21
 
+### Tornet på GitHub Pages
+
+- Steg 2 i [github-pages.md](github-pages.md). GitHub Action `Sida`
+  (`.github/workflows/sida.yml`) kör testerna, bygger sidan med
+  `verktyg/bygg-sida.sh` och publicerar den på GitHub Pages vid varje push
+  till `main`. Det går också att starta den för hand under Actions.
+- Sidan fungerar under en undermapp som `/ormtornet/`, som den hamnar på
+  Pages. Det är provat lokalt.
+- Repot måste vara publikt och Pages påslaget med GitHub Actions som källa
+  innan något publiceras. Spelare på andra datorer kan inte ansluta än;
+  det är steg 3.
+
 ### Tornet i webbläsaren
 
 - Steg 1 i [github-pages.md](github-pages.md). Tornet kan byggas till

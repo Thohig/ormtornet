@@ -1,0 +1,56 @@
+# Bygger Ormtornet som en sida och publicerar den på GitHub Pages vid varje
+# push till main (docs/github-pages.md). Bygget är verktyg/bygg-sida.sh:
+# sidorna i web/, sidornas texter, tornet som WebAssembly och wasm_exec.js.
+#
+# Pages måste vara påslaget i repots inställningar med källan
+# "GitHub Actions", och repot måste vara publikt (eller ha en betald plan).
+name: Sida
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# En publicering i taget; en ny push väntar i stället för att avbryta den
+# som redan pågår.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  bygg:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-go@v7
+        with:
+          go-version-file: go.mod
+          cache: false # inga beroenden att cacha
+
+      - name: Tester
+        run: go test ./...
+
+      - name: Bygg sidan
+        run: verktyg/bygg-sida.sh sida
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: sida
+
+  publicera:
+    needs: bygg
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.publicera.outputs.page_url }}
+    steps:
+      - id: publicera
+        uses: actions/deploy-pages@v4

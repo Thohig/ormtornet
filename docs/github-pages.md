@@ -1,6 +1,6 @@
 # Förslag: Ormtornet på GitHub Pages
 
-Status: förslag, skrivet 2026-11-21. Steg 0 och 1 är byggda.
+Status: förslag, skrivet 2026-11-21. Steg 0–2 är byggda.
 
 Målet är att man ska kunna spela Ormtornet från en länk, utan att
 installera något och även när vandrarna sitter på olika nät. Tornet som
@@ -134,6 +134,10 @@ Varje steg är en commit, och sedan provar användaren.
    i samma webbläsare via `BroadcastChannel`. Go-testerna ska gå som förut.
 2. **Publicering på Pages.** GitHub Action och inställningen för Pages.
    Efter steget går steg 1 att prova på riktiga adressen.
+   Byggt: `.github/workflows/sida.yml` kör testerna och
+   `verktyg/bygg-sida.sh` och publicerar vid push till `main`. Användaren
+   gör repot publikt och väljer GitHub Actions som källa under Settings,
+   Pages.
 3. **WebRTC.** Trystero, rumskoden och lösenordet, länken och QR-koden på
    värdsidan, och att spelarsidan ansluter från länken.
 4. **Det som gör det hållbart.** Spelare som tappar anslutningen kommer
