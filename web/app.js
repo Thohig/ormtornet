@@ -814,20 +814,25 @@ function renderNow(me) {
   if (aimSlot !== null && state.foremal && state.foremal[aimSlot]) {
     line(t(touch ? "nu_sikta_peka" : "nu_sikta", { foremal: state.foremal[aimSlot].namn }), "plan");
   }
-  if (me.status === "dod") {
-    line(t("nu_dod"), "cond");
-    if (wantsChron()) {
-      const b = document.createElement("button");
-      b.type = "button";
-      b.className = "chronBack";
-      b.textContent = t("vandring_visa");
-      b.addEventListener("click", showChron);
-      box.appendChild(b);
-    }
+  if (me.status === "dod" && state.phase === "spel") line(t("nu_dod"), "cond");
+  // Tillbaka till krönikans skärm: för den som har dött, och för alla i
+  // slutet när de har gått till kartan.
+  if (wantsChron()) {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "chronBack";
+    b.textContent = t(state.phase === "slut" ? "kronika_visa" : "vandring_visa");
+    b.addEventListener("click", showChron);
+    box.appendChild(b);
   }
   if (me.status === "inne") {
     if (state.sleep >= 0 && state.sleepText) line(state.sleepText, state.sleep >= 2 ? "cond" : "sleep");
+    if (state.stuck > 0) line(state.stuck === 1 ? t("nu_fast_en") : t("nu_fast", { n: state.stuck }), "cond");
     const foe = (state.monsters || []).find((m) => m.x === me.x && m.y === me.y);
+    const here = (state.rooms || []).find((r) => r.x === me.x && r.y === me.y);
+    if (!foe && state.cellar === 0 && here && here.k === "kammare" && state.phase === "spel") {
+      line(t("nu_kammare", { tryck: pressWord("knapp_ta", "T") }), "dimline");
+    }
     if (foe && state.cellar === 0) {
       line(t("nu_strid", { namn: foe.name }), "foe");
       box.appendChild(meter("foehp", t("nu_dess_liv"), foe.hp, foe.maxHp));
@@ -850,6 +855,8 @@ function renderNow(me) {
   }
   if (state.phase === "spel" && me.status === "inne") {
     line(state.action ? t("nu_drag", { drag: actionWord(state.action) }) : t("nu_valj_ditt"), "plan");
+  } else if (state.phase === "spel" && me.status === "ute") {
+    line(me.treasure > 0 ? t("nu_ute", { guld: me.treasure }) : t("nu_ute_tom"), "plan");
   } else if (state.phase === "lobby") {
     line(me.ready ? t("nu_redo") : t("nu_tryck_redo", { tryck: pressWord("knapp_redo", "Enter") }), "plan");
   } else if (state.phase === "slut") {

@@ -6,6 +6,19 @@ eller leder tornet.
 
 ## 2026-11-21
 
+### Spelskärmen säger mer
+
+- Ett steg mot en vägg avvisas direkt med väggens text, som ett rum som
+  redan är genomsökt, och kostar inte rundan. I mörker, där man inte ser
+  dörrarna, får man pröva sig fram som förut.
+- Panelen Nu säger hur många rundor till man sitter fast, att T tar skatt i
+  kammaren, och, för den som har gått ut, hur mycket guld hen bar ut medan
+  de andra är kvar.
+- I slutet har panelen Nu knappen Visa krönikan, så att alla kommer
+  tillbaka till krönikans skärm efter Visa kartan.
+- Kartritarens svaghet heter nu "Inga snabba fötter": det är bara
+  undanmanövern som aldrig lyckas. Hen kan slåss som alla andra.
+
 ### Rättat efter provspelet
 
 - Den som ansluter medan slutskärmen visas står inte längre i resultatet

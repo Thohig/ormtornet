@@ -31,7 +31,7 @@
       "kort": "the Mapmaker",
       "beskrivning": "Has drawn maps of caves, mines and cloisters. No one has drawn the tower. Yet.",
       "styrka": "Sees through doors into the rooms next door. Sees every room anyone has found, and gives their map to whoever they meet. Always finds something when searching, if a secret passage can be made. Gets three extra marks from the chalk. Starts with one potion.",
-      "svaghet": "Cannot fight: when they choose an evasive move, the opponent always hits."
+      "svaghet": "No quick feet: the evasive move never works, and then the opponent always hits."
     },
     {
       "id": "ormtjusare",

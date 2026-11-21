@@ -1302,6 +1302,14 @@ func (g *Game) actPlayer(p *Player, a string, monsterID int) {
 			}
 		}
 	case "N", "E", "S", "W", actWait:
+		// Mot en vägg: avvisas direkt, som ett rum som redan är genomsökt,
+		// så att ett feltryck inte kostar rundan. I mörkret ser man inte
+		// dörrarna och får pröva sig fram som förut.
+		if d, ok := dirCodes[a]; ok && p.Dark == 0 && !(room.HasExit && room.Exit == d) && !room.Doors[d] {
+			g.soundTo(p, "vagg")
+			g.logTo(p, g.data.Text("vagg", "riktning", g.data.Riktningar[d]), "dim")
+			return
+		}
 		if g.askEmptyExit(p, room, a) {
 			return
 		}

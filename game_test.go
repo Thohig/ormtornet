@@ -806,3 +806,31 @@ func TestJoinAfterEnd(t *testing.T) {
 		t.Fatalf("fas %s, status %s", g.phase, p.Status)
 	}
 }
+
+// Ett steg mot en vägg avvisas direkt och kostar inte rundan, utom i mörker.
+func TestWallRejectedAtOnce(t *testing.T) {
+	g, a, _ := startTwo(t)
+	p := a.player
+	room := &g.rooms[p.Y][p.X]
+	wall := Dir(-1)
+	for d := North; d <= West; d++ {
+		if !room.Doors[d] && !(room.HasExit && room.Exit == d) {
+			wall = d
+			break
+		}
+	}
+	if wall < 0 {
+		t.Skip("rummet har ingen vägg")
+	}
+	code := "NESW"[wall : wall+1]
+	round := g.round
+	g.Act(a, code, 0)
+	if p.Action != "" || g.round != round {
+		t.Fatalf("draget mot väggen godtogs: %q, runda %d", p.Action, g.round)
+	}
+	p.Dark = 2
+	g.Act(a, code, 0)
+	if p.Action != code {
+		t.Fatalf("i mörkret ska man kunna pröva väggen, drag %q", p.Action)
+	}
+}

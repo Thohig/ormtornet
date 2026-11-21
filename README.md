@@ -267,7 +267,9 @@ den som dör och för alla i slutet (se slutet nedan och Strider):
      det på en pekskärm, så står det vad det betyder. Styrningen ligger
      bakom **?** (eller tangenten `?` eller `H`) och visas en gång första
      vandringen, tills den tar slut. Panelen Nu visar det valda draget, striden, ormen i
-     kammaren och vad som väntar, och viskningen skrivs i en egen ruta där.
+     kammaren (och att T tar skatt), hur länge man sitter fast och vad som
+     väntar, och viskningen skrivs i en egen ruta där. Den som har gått ut
+     ser där hur mycket guld hen bar ut medan de andra är kvar.
      Ingen text på spelskärmen är dämpad; bara det som inte går att
      använda, som frånkopplade vandrare och tagna kort, är utgråat.
      I loggen säger ett tecken i marginalen vad slags rad det är (`!` fara,
@@ -289,7 +291,8 @@ den som dör och för alla i slutet (se slutet nedan och Strider):
      står i `data/texter.json` under `sam_`,
    - **slutet**: en egen skärm med resultaten, epilogen, krönikan över hela
      vandringen och den egna vandringen runda för runda. Visa kartan går
-     till kartan med resultatrutan och loggen, där epilogen också står.
+     till kartan med resultatrutan och loggen, där epilogen också står, och
+     Visa krönikan i panelen Nu går tillbaka.
      Enter (Nytt torn) leder tillbaka till lobbyn när alla
      har tryckt, med ett nytt torn. Därefter kommer ett nytt klassval.
      Utan klasser börjar nästa vandring direkt efter lobbyn. Starta nu på
@@ -308,7 +311,9 @@ stället för namnrutan. Den som vill spela där öppnar `/?spela` eller trycker
 
 Spelet går i rundor. Alla väljer sitt drag samtidigt, och när alla har valt
 (eller turtiden tar slut) utförs alla drag på en gång. Du kan ändra dig tills
-dess. Den som inte hinner välja blir stående.
+dess. Den som inte hinner välja blir stående. Ett steg mot en vägg avvisas
+direkt, så att ett feltryck inte kostar rundan; i mörker får man pröva sig
+fram.
 
 | Tangent    | Drag                              |
 |------------|-----------------------------------|
