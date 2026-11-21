@@ -1,34 +1,67 @@
-// Bygger klient/src till ett enda skript, web/iso/iso.js, som laddas som de
-// andra skripten i web/ och nås genom den globala IsoKarta. Go bäddar in det
-// med resten av web/, så det byggda skriptet checkas in.
+// Bygger klient/src till två skript som laddas som de andra skripten i web/:
+//
+//   vite build              src/main.ts till web/iso/iso.js (IsoKarta)
+//   vite build --mode rtc   src/rtc.ts till web/rtc/rtc.js (TornetRTC)
+//
+// Go bäddar in dem med resten av web/, så de byggda skripten checkas in.
 import { readFileSync } from "node:fs";
 import { defineConfig } from "vite";
 
-// Three.js licens (MIT) ska följa med i det byggda skriptet. Minifieringen
-// tar bort licenskommentarerna, så den läggs först i skriptet.
-const threeLicense = readFileSync("node_modules/three/LICENSE", "utf8").trim();
-const banner = "/*! Innehåller three.js (https://threejs.org).\n\n" + threeLicense + "\n*/";
+// Licenserna för det som byggs in ska följa med i skriptet. Minifieringen
+// tar bort licenskommentarerna, så de läggs först i skriptet.
+// licens är en fil, eller rader ur källkoden när paketet saknar en.
+function banner(paket: { namn: string; url: string; licens: string; rader?: number }[]): string {
+  return paket
+    .map((p) => {
+      let text = readFileSync(p.licens, "utf8");
+      if (p.rader) text = text.split("\n").slice(0, p.rader).map((r) => r.replace(/^\/\/ ?/, "")).join("\n");
+      return "/*! Innehåller " + p.namn + " (" + p.url + ").\n\n" + text.trim() + "\n*/";
+    })
+    .join("\n");
+}
 
-export default defineConfig({
-  plugins: [
-    {
-      name: "three-licens",
-      generateBundle(_, bundle) {
-        for (const chunk of Object.values(bundle)) {
-          if (chunk.type === "chunk") chunk.code = banner + "\n" + chunk.code;
-        }
+const skript = {
+  iso: {
+    entry: "src/main.ts",
+    name: "IsoKarta",
+    banner: [{ namn: "three.js", url: "https://threejs.org", licens: "node_modules/three/LICENSE" }],
+  },
+  rtc: {
+    entry: "src/rtc.ts",
+    name: "TornetRTC",
+    banner: [
+      { namn: "Trystero", url: "https://github.com/dmotz/trystero", licens: "node_modules/@trystero-p2p/core/LICENSE" },
+      { namn: "noble-secp256k1", url: "https://github.com/paulmillr/noble-secp256k1", licens: "node_modules/@noble/secp256k1/LICENSE" },
+      { namn: "QR Code Generator", url: "https://github.com/kazuhikoarase/qrcode-generator", licens: "node_modules/qrcode-generator/dist/qrcode.mjs", rader: 15 },
+    ],
+  },
+};
+
+export default defineConfig(({ mode }) => {
+  const s = mode === "rtc" ? skript.rtc : skript.iso;
+  const namn = mode === "rtc" ? "rtc" : "iso";
+  const text = banner(s.banner);
+  return {
+    plugins: [
+      {
+        name: "licenser",
+        generateBundle(_, bundle) {
+          for (const chunk of Object.values(bundle)) {
+            if (chunk.type === "chunk") chunk.code = text + "\n" + chunk.code;
+          }
+        },
+      },
+    ],
+    build: {
+      outDir: "../web/" + namn,
+      emptyOutDir: true,
+      target: "es2020",
+      lib: {
+        entry: s.entry,
+        name: s.name,
+        formats: ["iife"],
+        fileName: () => namn + ".js",
       },
     },
-  ],
-  build: {
-    outDir: "../web/iso",
-    emptyOutDir: true,
-    target: "es2020",
-    lib: {
-      entry: "src/main.ts",
-      name: "IsoKarta",
-      formats: ["iife"],
-      fileName: () => "iso.js",
-    },
-  },
+  };
 });

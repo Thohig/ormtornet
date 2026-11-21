@@ -228,6 +228,9 @@
 
     "_anslutning": "Förbindelsen, längst till höger i översta raden.",
     "anslutning_bruten": "förbindelsen bröts, försöker igen",
+    "natet_letar": "Letar efter tornet …",
+    "natet_hittar_inte": "Hittar inte tornet. Kontrollera att länken är hel och att spelledaren har tornet öppet.",
+    "natet_fel": "Kunde inte ladda det som behövs för att nå tornet. Ladda om sidan.",
     "anslutning_stangt": "tornet är stängt",
     "anslutning_leder": "du leder tornet"
   }

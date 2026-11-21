@@ -116,8 +116,8 @@ Skriv dit när ett steg är klart.
   gång och vad som inte är planerat. Fråga vilka delar som ska byggas innan
   du börjar på något som inte står under På gång.
 - [docs/github-pages.md](docs/github-pages.md): att spela från en länk på
-  GitHub Pages, med tornet i spelledarens webbläsare och WebRTC. Steg 0
-  och 1 är byggda. Fråga innan du börjar på nästa steg.
+  GitHub Pages, med tornet i spelledarens webbläsare och WebRTC. Steg 0–3
+  är byggda. Fråga innan du börjar på nästa steg.
 - [docs/fler-spelare.md](docs/fler-spelare.md): klasser, tornets storlek
   och upp till 8 spelare. Allt är byggt.
 - [docs/foremal-och-hemligheten.md](docs/foremal-och-hemligheten.md):
@@ -138,5 +138,5 @@ Skriv dit när ett steg är klart.
   Provspela med robotar).
 - [docs/isometrisk.md](docs/isometrisk.md): kartan snett ovanifrån med
   Three.js och 3D-modeller, i TypeScript i `klient/` och byggd med Vite
-  till `web/iso/iso.js`. Bygg om och checka in skriptet efter en ändring i
-  `klient/src/`. Avsnittet Stegen säger vad som är byggt.
+  till `web/iso/iso.js` (och WebRTC till `web/rtc/rtc.js`). Bygg om och
+  checka in skripten efter en ändring i `klient/src/`. Avsnittet Stegen säger vad som är byggt.

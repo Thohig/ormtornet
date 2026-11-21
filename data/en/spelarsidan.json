@@ -209,6 +209,9 @@
     "logg_rader_flera": "{n} lines",
 
     "anslutning_bruten": "connection lost, trying again",
+    "natet_letar": "Looking for the tower …",
+    "natet_hittar_inte": "Cannot find the tower. Check that the link is complete and that the Keeper has the tower open.",
+    "natet_fel": "Could not load what is needed to reach the tower. Reload the page.",
     "anslutning_stangt": "the tower is closed",
     "anslutning_leder": "you are the Keeper"
   }

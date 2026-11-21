@@ -1,15 +1,32 @@
 // Skalet: tornets flik när spelet kommer från GitHub Pages
 // (docs/github-pages.md). Det kör tornet, torn.wasm som är byggt av samma
-// Go-kod som programmet, och för vidare det som sidorna i webbläsaren
-// skickar över kanalen (web/natet.js) till tornet och tillbaka.
+// Go-kod som programmet, och för vidare det som sidorna skickar
+// (web/natet.js) till tornet och tillbaka: från sidorna i den här
+// webbläsaren över en BroadcastChannel, och från spelarna som kommer med
+// länken över WebRTC (web/rtc/rtc.js) i ett rum med en egen rumskod.
 "use strict";
 
 (() => {
   const $ = (id) => document.getElementById(id);
   const base = new URL(".", location.href).pathname;
   const channel = new BroadcastChannel("ormtornet:" + base);
-  const conns = new Map(); // anslutningar: id -> { fran, seen }
+  const conns = new Map(); // anslutningar: id -> { fran, svara }
   const heard = new Map(); // sidor: fran -> senast hörd
+  let room = null; // rummet för spelarna som kommer med länken
+
+  // Rumskoden och nyckeln i länken. De gäller så länge fliken är öppen,
+  // också om den laddas om, men ett nytt torn får en ny länk.
+  const link = (() => {
+    try {
+      const saved = JSON.parse(sessionStorage.getItem("ormtornet-rum") || "null");
+      if (saved && saved.kod && saved.nyckel) return saved;
+    } catch {}
+    const made = { kod: TornetRTC.slump(20), nyckel: TornetRTC.slump(20) };
+    try {
+      sessionStorage.setItem("ormtornet-rum", JSON.stringify(made));
+    } catch {}
+    return made;
+  })();
   let ready = false;
   let closed = false;
 
@@ -29,22 +46,29 @@
     ev.returnValue = "";
   }
   window.addEventListener("beforeunload", warnOnLeave);
-  window.addEventListener("pagehide", () => channel.postMessage({ typ: "borta" }));
+  window.addEventListener("pagehide", () => {
+    channel.postMessage({ typ: "borta" });
+    if (room) {
+      room.skicka({ typ: "borta" });
+      room.lamna();
+    }
+  });
 
   // Det som Go anropar (wasm.go).
   window.tornetSkickar = (id, text) => {
     const c = conns.get(id);
-    if (c) channel.postMessage({ typ: "fran", till: c.fran, conn: id, data: text });
+    if (c) c.svara({ typ: "fran", till: c.fran, conn: id, data: text });
   };
   window.tornetKopplarNer = (id) => {
     const c = conns.get(id);
     if (!c) return;
     conns.delete(id);
-    channel.postMessage({ typ: "stangd", till: c.fran, conn: id });
+    c.svara({ typ: "stangd", till: c.fran, conn: id });
   };
   window.tornetStangt = () => {
     closed = true;
     channel.postMessage({ typ: "borta" });
+    if (room) room.skicka({ typ: "borta" });
     show("skal_stangt", null, true);
   };
   window.tornetFel = (msg) => {
@@ -54,6 +78,7 @@
   window.tornetRedo = () => {
     ready = true;
     channel.postMessage({ typ: "har" });
+    openRoom();
     // Skalets egna texter på tornets språk.
     Tornet.fraga("GET", "/texter/vardsidan.json", {}, "", (status, _type, body) => {
       if (status !== 200) return;
@@ -61,7 +86,7 @@
         window.UI = JSON.parse(body);
         applyTexts();
       } catch {}
-    });
+    }, true);
     const frame = $("sida");
     frame.src = "./" + location.search;
     frame.hidden = false;
@@ -76,39 +101,62 @@
     } catch {}
   }, 1000);
 
-  channel.onmessage = (ev) => {
-    const m = ev.data;
+  // handle tar emot ett meddelande från en sida. svara skickar tillbaka till
+  // den. lokal är sant för sidorna i den här webbläsaren, som är
+  // spelledarens, som på tornets dator.
+  function handle(m, svara, lokal) {
     if (!ready || closed || !m || typeof m !== "object" || !m.fran) return;
     heard.set(m.fran, Date.now());
+    const mine = (id) => {
+      const c = conns.get(id);
+      return c && c.fran === m.fran;
+    };
     switch (m.typ) {
       case "finns":
-        channel.postMessage({ typ: "har" });
+        svara({ typ: "har" });
         break;
       case "fraga":
         Tornet.fraga(String(m.metod), String(m.vag), m.huvud || {}, String(m.kropp || ""), (status, type, body) =>
-          channel.postMessage({ typ: "svar", till: m.fran, id: m.id, status, innehall: type, kropp: body }));
+          svara({ typ: "svar", till: m.fran, id: m.id, status, innehall: type, kropp: body }), lokal);
         break;
       case "oppna":
-        conns.set(m.conn, { fran: m.fran });
-        // Allt i den här webbläsaren är spelledarens: lokalt, som på
-        // tornets dator.
-        if (Tornet.anslut(String(m.conn), true)) channel.postMessage({ typ: "oppen", till: m.fran, conn: m.conn });
+        if (conns.has(m.conn) && !mine(m.conn)) return;
+        conns.set(m.conn, { fran: m.fran, svara });
+        if (Tornet.anslut(String(m.conn), lokal)) svara({ typ: "oppen", till: m.fran, conn: m.conn });
         else window.tornetKopplarNer(m.conn);
         break;
       case "till":
-        if (conns.has(m.conn)) Tornet.taEmot(String(m.conn), String(m.data));
+        if (mine(m.conn)) Tornet.taEmot(String(m.conn), String(m.data));
         break;
       case "stang":
-        if (conns.has(m.conn)) Tornet.kopplaNer(String(m.conn));
+        if (mine(m.conn)) Tornet.kopplaNer(String(m.conn));
         break;
     }
-  };
+  }
+
+  channel.onmessage = (ev) => handle(ev.data, (svar) => channel.postMessage(svar), true);
+
+  // Spelarna som kommer med länken. Varje vandrare i rummet räknas som en
+  // egen sida, vad sidan än säger om sig själv, och är aldrig lokal.
+  function openRoom() {
+    room = TornetRTC.rum(link.kod, link.nyckel);
+    room.vidMeddelande((m, peer) => {
+      if (!m || typeof m !== "object") return;
+      m.fran = peer;
+      handle(m, (svar) => room.skicka(svar, peer), false);
+    });
+    room.vidNy((peer) => ready && !closed && room.skicka({ typ: "har" }, peer));
+    room.vidBorta((peer) => {
+      for (const [id, c] of conns) if (c.fran === peer) Tornet.kopplaNer(id);
+    });
+  }
 
   // Säg då och då att tornet lever, och släpp anslutningar från sidor som
   // inte har hörts av på länge (fliken stängdes utan att säga till).
   setInterval(() => {
     if (!ready || closed) return;
     channel.postMessage({ typ: "lever" });
+    if (room) room.skicka({ typ: "lever" });
     const now = Date.now();
     for (const [id, c] of conns) {
       if (now - (heard.get(c.fran) || 0) > 120000) Tornet.kopplaNer(id);
@@ -126,7 +174,8 @@
         const bytes = await (await fetch("torn.wasm")).arrayBuffer();
         result = await WebAssembly.instantiate(bytes, go.importObject);
       }
-      window.ORMTORNET_ADRESS = new URL(".", location.href).href;
+      // Adressen på värdsidan är länken med rumskoden.
+      window.ORMTORNET_ADRESS = new URL(".", location.href).href + "#torn=" + link.kod + "&nyckel=" + link.nyckel;
       go.run(result.instance);
     } catch (err) {
       window.tornetFel(String((err && err.message) || err));

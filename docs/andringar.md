@@ -6,6 +6,20 @@ eller leder tornet.
 
 ## 2026-11-21
 
+### Spela från en länk
+
+- Steg 3 i [github-pages.md](github-pages.md). När tornet körs på GitHub
+  Pages visar värdsidan under Bjud in en länk med rumskod och nyckel, och
+  en QR-kod för telefonerna. Den som öppnar länken ansluter till tornets
+  flik över WebRTC, var hen än är. Texterna under Bjud in och i inbjudan
+  talar om länken i stället för samma wifi.
+- Spelaren ser "Letar efter tornet …" medan sidan söker, och ett besked om
+  tornet inte går att hitta.
+- Det som kommer över WebRTC räknas aldrig som spelledaren: värdsidan och
+  spelledarbordet går inte att nå därifrån.
+- Kvar är steg 4, det som gör det hållbart, och steg 5, ett provspel över
+  internet. Det är inte provat mellan olika nät än.
+
 ### Tornet på GitHub Pages
 
 - Steg 2 i [github-pages.md](github-pages.md). GitHub Action `Sida`

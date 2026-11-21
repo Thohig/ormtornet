@@ -8,9 +8,13 @@ package main
 //
 // Go ger skalet det globala objektet Tornet:
 //
-//	Tornet.fraga(metod, vag, huvud, kropp, klar)  en förfrågan som /intro
+//	Tornet.fraga(metod, vag, huvud, kropp, klar, lokal)
+//	                                              en förfrågan som /intro
 //	                                              eller /spelledare/status;
-//	                                              klar(status, typ, kropp)
+//	                                              klar(status, typ, kropp).
+//	                                              lokal är sant när den
+//	                                              kommer från spelledarens
+//	                                              egen webbläsare
 //	Tornet.anslut(id, lokal)                      en spelarsida ansluter
 //	Tornet.taEmot(id, text)                       spelarsidan skickar
 //	Tornet.kopplaNer(id)                          spelarsidan är borta
@@ -81,6 +85,7 @@ func main() {
 			return nil
 		}
 		method, path, body, done := args[0].String(), args[1].String(), args[3].String(), args[4]
+		local := len(args) > 5 && args[5].Truthy()
 		header := http.Header{}
 		if h := args[2]; h.Type() == js.TypeObject {
 			keys := js.Global().Get("Object").Call("keys", h)
@@ -94,7 +99,7 @@ func main() {
 				done.Invoke(503, "text/plain", "")
 				return
 			}
-			status, ctype, out := serveRequest(mux, method, path, header, body)
+			status, ctype, out := serveRequest(mux, method, path, header, body, local)
 			done.Invoke(status, ctype, out)
 		}()
 		return nil
@@ -151,15 +156,19 @@ func main() {
 }
 
 // serveRequest låter mux svara på en förfrågan från en sida i webbläsaren.
-// Förfrågningarna kommer från spelledarens egen webbläsare och räknas därför
-// som från tornets dator (isLocal).
-func serveRequest(mux *http.ServeMux, method, path string, header http.Header, body string) (int, string, string) {
+// Förfrågningar från spelledarens egen webbläsare (local) räknas som från
+// tornets dator (isLocal). De som kommer över WebRTC från spelarna får en
+// adress som inte är det.
+func serveRequest(mux *http.ServeMux, method, path string, header http.Header, body string, local bool) (int, string, string) {
 	r, err := http.NewRequest(method, "http://tornet"+path, strings.NewReader(body))
 	if err != nil {
 		return http.StatusBadRequest, "text/plain", err.Error()
 	}
 	r.Header = header
-	r.RemoteAddr = "127.0.0.1:1"
+	r.RemoteAddr = "192.0.2.1:1" // en adress som bara finns i exempel (RFC 5737)
+	if local {
+		r.RemoteAddr = "127.0.0.1:1"
+	}
 	w := &memResponse{header: http.Header{}, status: http.StatusOK}
 	mux.ServeHTTP(w, r)
 	return w.status, w.header.Get("Content-Type"), w.body.String()

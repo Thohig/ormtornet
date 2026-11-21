@@ -869,8 +869,11 @@ Beskrivningarna för rummen ligger under nivåerna `"1"` till `"4"`.
   - `spelledare.css` det som värdsidan och spelledarbordet har gemensamt
   - `torn.html` och `torn.js` skalet: tornets flik när spelet kommer från
     GitHub Pages
-  - `natet.js` vägen till tornet från GitHub Pages; gör ingenting när
-    sidorna kommer från tornets program
+  - `natet.js` vägen till tornet från GitHub Pages, i samma webbläsare
+    eller över WebRTC från länken; gör ingenting när sidorna kommer från
+    tornets program
+  - `rtc/rtc.js` WebRTC med Trystero och QR-koden, byggt från `klient/`
+    (rör den inte för hand)
   - `map.js` ritar kartan som krita på en skiffertavla: väggarna är
     handritade streck, vandrarna prickar i sin färg (den egna med en ring)
     och varelser och märken tecken. Kartan visar bara det kända och
@@ -883,9 +886,10 @@ Beskrivningarna för rummen ligger under nivåerna `"1"` till `"4"`.
     för hand). `map.js` väljer kartan efter inställningen Kartan; den
     platta räknar alltid ut utsnittet och teckenförklaringen, och kartan
     snett ovanifrån läser utsnittet därifrån
-- `klient/` kartan snett ovanifrån i TypeScript med Three.js, byggd med Vite
-  (se [docs/isometrisk.md](docs/isometrisk.md)). Det byggda skriptet
-  `web/iso/iso.js` checkas in, så att spelet byggs utan Node. Efter en
+- `klient/` kartan snett ovanifrån i TypeScript med Three.js (se
+  [docs/isometrisk.md](docs/isometrisk.md)) och WebRTC för GitHub Pages
+  (`src/rtc.ts`), byggda med Vite. De byggda skripten `web/iso/iso.js` och
+  `web/rtc/rtc.js` checkas in, så att spelet byggs utan Node. Efter en
   ändring i `klient/src/`:
 
   ```bash
@@ -910,10 +914,15 @@ go test ./...
 
 Spelet ska kunna spelas från en länk på GitHub Pages
 ([docs/github-pages.md](docs/github-pages.md)). Då körs tornet i
-spelledarens webbläsare, i en flik som heter skalet (`web/torn.html`), och
-sidorna i samma webbläsare når det över en `BroadcastChannel`
-(`web/natet.js`). Hittills går det bara att spela i en och samma
-webbläsare, med andra flikar och robotar.
+spelledarens webbläsare, i en flik som heter skalet (`web/torn.html`).
+Sidorna i samma webbläsare når det över en `BroadcastChannel`
+(`web/natet.js`). Spelarna kommer med en länk med en rumskod och en nyckel,
+`…/ormtornet/#torn=<kod>&nyckel=<nyckel>`, som värdsidan visar under Bjud
+in tillsammans med en QR-kod. Deras webbläsare hittar tornets flik genom
+publika Nostr-reläer och ansluter sedan direkt med WebRTC
+(`web/rtc/rtc.js`, Trystero). Nyckeln krypterar utbytet, och den som har
+länken kommer in. Länken är densamma så länge tornets flik är öppen, också
+om den laddas om.
 
 ```bash
 verktyg/bygg-sida.sh
@@ -925,8 +934,9 @@ python3 -m http.server 8000 -d sida
 
 Öppna `http://localhost:8000/`. Introt märker att inget torn är öppet och
 öppnar skalet, som visar introt och sedan värdsidan. "Gå in själv" på
-värdsidan öppnar spelarsidan i en ny flik. Skalets flik måste vara öppen så
-länge tornet ska vara det.
+värdsidan öppnar spelarsidan i en ny flik. Länken under Bjud in går också
+att öppna i en annan webbläsare; den ansluter över WebRTC. Skalets flik
+måste vara öppen så länge tornet ska vara det.
 
 Inställningarna sparas i webbläsaren. Läs om innehållet läser bara det
 inbyggda innehållet, eftersom det inte finns någon `data/` att läsa.

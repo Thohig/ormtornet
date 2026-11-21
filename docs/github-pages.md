@@ -1,6 +1,6 @@
 # Förslag: Ormtornet på GitHub Pages
 
-Status: förslag, skrivet 2026-11-21. Steg 0–2 är byggda.
+Status: förslag, skrivet 2026-11-21. Steg 0–3 är byggda.
 
 Målet är att man ska kunna spela Ormtornet från en länk, utan att
 installera något och även när vandrarna sitter på olika nät. Tornet som
@@ -140,6 +140,16 @@ Varje steg är en commit, och sedan provar användaren.
    Pages.
 3. **WebRTC.** Trystero, rumskoden och lösenordet, länken och QR-koden på
    värdsidan, och att spelarsidan ansluter från länken.
+   Byggt: `klient/src/rtc.ts` byggs till `web/rtc/rtc.js` (Trystero 0.27
+   med Nostr, och en QR-kodsgenerator). Skalet går in i rummet med en
+   rumskod och en nyckel på 20 tecken var, sparade i `sessionStorage`, och
+   `web/natet.js` går in från länken. Förfrågningar som kommer över WebRTC
+   räknas inte som spelledarens (`Tornet.fraga` har ett sjätte argument,
+   `lokal`). Spelaren ser "Letar efter tornet …" efter tre sekunder och ett
+   besked efter 30 om tornet inte hittas. Provat lokalt med två flikar,
+   varav den ena över WebRTC: lobbyn, klassvalet, en runda, att
+   spelledarens sidor svarar 403 och att fel nyckel inte kommer in. Inte
+   provat mellan olika nät.
 4. **Det som gör det hållbart.** Spelare som tappar anslutningen kommer
    tillbaka till sin vandrare (`takeover.go`), tydliga texter när något
    inte går, varning om att hålla tornets flik öppen, och åtgärden mot
