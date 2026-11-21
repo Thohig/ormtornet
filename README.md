@@ -823,6 +823,20 @@ Sidorna hämtar sina texter från `/texter/spelarsidan.js` och
 (`data-t="nyckel"`), och skripten skriver texter med `t("nyckel")`. Byts
 språket hämtar öppna sidor de nya texterna utan att laddas om.
 
+Undantaget är sidornas titel. Den står som "Ormtornet" redan i HTML:en,
+så att en delad länk visar namnet och fliken har ett namn medan sidan
+laddar. Sedan byts den mot titeln på tornets språk:
+
+| Sida | Svenska | Engelska |
+|---|---|---|
+| Spelarsidan | Ormtornet | The Serpent Tower |
+| Skalet på Pages, innan tornet har startat | Ormtornet – tornet | The Serpent Tower – the tower |
+| Värdsidan | Ormtornet – värd | The Serpent Tower – Keeper |
+| Spelledarbordet | Ormtornet – spelledarbordet | The Serpent Tower – Keeper's table |
+
+Titlarna är `sidans_titel` i `data/spelarsidan.json` och `skal_sidtitel`,
+`sidtitel` och `bord_sidtitel` i `data/vardsidan.json`.
+
 På engelska heter undanmanövern E (evade). U fungerar också, på båda
 språken. En viskning till tornet räknas på båda språken.
 

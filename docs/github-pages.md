@@ -47,6 +47,11 @@ skalet och tornet ligger kvar. Ramen och andra flikar i samma webbläsare
 pratar med skalet över en `BroadcastChannel`. Själva tornet går i en Web
 Worker (`web/torn-arbetare.js`), som skalet för meddelandena vidare till.
 
+Skalets flik heter först "Ormtornet – tornet". När tornet har startat tar
+fliken varje sekund titeln från sidan i ramen, till exempel "Ormtornet" på
+introt och "Ormtornet – värd" på värdsidan, så att den går att känna igen
+bland flikarna. När tornet är stängt står den senaste titeln kvar.
+
 Spelledaren kan spela själv i samma flik, eller öppna länken i en annan
 flik eller på telefonen som vilken spelare som helst.
 
