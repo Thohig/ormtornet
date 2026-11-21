@@ -6,6 +6,13 @@ eller leder tornet.
 
 ## 2026-11-21
 
+### Tillbaka från spelledarbordet
+
+- Spelledarbordet har en knapp Värdsidan i raden överst. Värdsidan och
+  spelledarbordet byter nu sida i samma flik. Förut öppnade länkarna en
+  egen flik. På Pages hamnade den utanför tornets flik, och den som kom
+  till bordet från introt fick en ny flik i stället för att komma tillbaka.
+
 ### Stäng tornet på Pages
 
 - På GitHub Pages säger texten vid Stäng tornet inte längre att man kan

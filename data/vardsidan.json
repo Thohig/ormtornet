@@ -12,6 +12,7 @@
     "bord_till_vardsidan": "värdsidan",
     "bord_av": "Spelledarläget är av. Slå på det under Inför nästa vandring på värdsidan, så syns hela tornet här.",
     "rad_bord": "Spelledarbordet",
+    "rad_vardsidan": "Värdsidan",
     "bord_av_not": "Spelledaren spelar då inte själv, ser hela tornet och kan göra ingrepp. Den som spelar från den här datorn tas ut ur tornet.",
     "bord_sla_pa": "Slå på spelledarläget",
     "bord_sla_pa_spel": "Det går när vandringen är slut.",

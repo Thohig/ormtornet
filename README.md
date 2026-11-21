@@ -204,7 +204,9 @@ dator leder hit när spelledarläget är på. Med spelledarläget av säger
 spelledarbordet det och har en knapp som slår på det mellan vandringarna.
 
 Överst står samma rad som på värdsidan, med Starta nu före vandringen och
-Pausa eller Fortsätt under den. I lobbyn och klassvalet står vilka som har
+Pausa eller Fortsätt under den, och en knapp tillbaka till värdsidan.
+Värdsidan och spelledarbordet byter sida i samma flik, och i skalet på
+Pages i samma ram. I lobbyn och klassvalet står vilka som har
 kommit till porten, om de är redo och vilken klass de har valt. När
 vandringen är slut står hur det gick för var och en och krönikan över
 vandringen. Sidan visar också en översikt: hela tornet så

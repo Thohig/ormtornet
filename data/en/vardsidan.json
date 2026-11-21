@@ -11,6 +11,7 @@
     "bord_till_vardsidan": "the keeper page",
     "bord_av": "Keeper mode is off. Turn it on under Before the next wandering on the keeper page, and the whole tower shows here.",
     "rad_bord": "Keeper's table",
+    "rad_vardsidan": "Keeper page",
     "bord_av_not": "The keeper then does not play, sees the whole tower and can intervene. Anyone playing from this computer is taken out of the tower.",
     "bord_sla_pa": "Turn on keeper mode",
     "bord_sla_pa_spel": "This can be done when the wandering is over.",
