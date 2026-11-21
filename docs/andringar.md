@@ -6,6 +6,12 @@ eller leder tornet.
 
 ## 2026-11-21
 
+### Three.js licens följer med kartan
+
+- Kartan snett ovanifrån (`web/iso/iso.js`) börjar nu med three.js
+  licens (MIT), som licensen kräver. Bygget i `klient/` lägger dit den.
+  Steg 0 i [github-pages.md](github-pages.md).
+
 ### Provspelet dokumenterat
 
 - [provspel-2026-11-21.md](provspel-2026-11-21.md) beskriver provspelet:
