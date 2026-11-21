@@ -6,6 +6,13 @@ eller leder tornet.
 
 ## 2026-11-21
 
+### Kartan snett ovanifrån: kompassen och pilarna vid kanten
+
+- Nere till vänster på kartan snett ovanifrån står en kompass, ett N med en
+  pil åt det håll norr ligger. Piltangenten upp går dit.
+- Portar, kammaren och vandrare som ligger utanför bilden får en pil vid
+  kanten med sitt tecken, som på den platta kartan.
+
 ### Väskan syns tydligare
 
 - Föremålen står i väskan under tecknen uppe till höger, nu med ett eget

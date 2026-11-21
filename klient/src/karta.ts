@@ -100,6 +100,30 @@ interface Aktor {
   ring?: THREE.Mesh; // den egna vandrarens ring
 }
 
+// kompassSvg ritar ett N med en pil åt det håll norr ligger på skärmen,
+// räknat från kamerans vinkel.
+function kompassSvg(): string {
+  const cam = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.1, 10);
+  cam.position.copy(FRAN);
+  cam.lookAt(0, 0, 0);
+  cam.updateMatrixWorld();
+  const a = new THREE.Vector3(0, 0, 0).project(cam);
+  const b = new THREE.Vector3(0, 0, -1).project(cam);
+  const vx = b.x - a.x, vy = b.y - a.y;
+  const l = Math.hypot(vx, vy);
+  const ux = vx / l, uy = -vy / l; // på skärmen, y nedåt
+  const c = 22;
+  const tx = c + ux * 6, ty = c + uy * 6, fx = c - ux * 13, fy = c - uy * 13;
+  const px = -uy, py = ux; // vinkelrätt, för pilens hullingar
+  const h1x = tx - ux * 5 + px * 4, h1y = ty - uy * 5 + py * 4, h2x = tx - ux * 5 - px * 4, h2y = ty - uy * 5 - py * 4;
+  const f = (n: number) => n.toFixed(1);
+  return `<svg viewBox="0 0 44 44" width="44" height="44">
+<circle cx="${c}" cy="${c}" r="19" fill="none" stroke="currentColor" stroke-opacity="0.25"/>
+<path d="M${f(fx)} ${f(fy)}L${f(tx)} ${f(ty)}M${f(h1x)} ${f(h1y)}L${f(tx)} ${f(ty)}L${f(h2x)} ${f(h2y)}" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="${f(c + ux * 13)}" y="${f(c + uy * 13 + 4)}" font-size="11" text-anchor="middle" fill="currentColor">N</text>
+</svg>`;
+}
+
 export class IsoKarta {
   private renderer: THREE.WebGLRenderer;
   private scene = new THREE.Scene();
@@ -138,6 +162,9 @@ export class IsoKarta {
   private plan = new Map<number, THREE.PlaneGeometry>();
   private canvas: HTMLCanvasElement;
   private val: Val;
+  private kompass: HTMLDivElement; // N och en pil i hörnet nere till vänster
+  private kant: HTMLDivElement; // pilarna vid kanten för det som ligger utanför
+  private kantPilar: HTMLDivElement[] = [];
 
   constructor(canvas: HTMLCanvasElement, val: Val) {
     this.canvas = canvas;
@@ -154,6 +181,17 @@ export class IsoKarta {
     this.sol.shadow.bias = -0.0006;
     this.scene.add(this.sol, this.sol.target, this.torn, this.rorligt, this.ekon, this.figurer);
 
+    this.kompass = document.createElement("div");
+    this.kompass.className = "isokompass";
+    this.kompass.setAttribute("aria-hidden", "true");
+    this.kompass.hidden = true;
+    this.kompass.innerHTML = kompassSvg();
+    this.kant = document.createElement("div");
+    this.kant.className = "isokant";
+    this.kant.setAttribute("aria-hidden", "true");
+    this.kant.hidden = true;
+    canvas.after(this.kompass, this.kant);
+
     new ResizeObserver(() => this.anpassa()).observe(canvas.parentElement!);
     const loop = (t: number) => {
       this.rita(t);
@@ -166,6 +204,8 @@ export class IsoKarta {
   visa(pa: boolean): void {
     this.aktiv = pa;
     this.canvas.hidden = !pa;
+    this.kompass.hidden = !pa;
+    this.kant.hidden = !pa;
     if (pa) this.anpassa();
   }
 
@@ -780,5 +820,61 @@ float puls() {
     });
 
     this.renderer.render(this.scene, this.cam);
+    this.ritaKanten(!!f);
+  }
+
+  // ritaKanten sätter en liten pil vid kanten för det som ligger utanför
+  // bilden, åt det håll det ligger, med samma tecken som på den platta
+  // kartan: portarna och kammaren man känner till, och vandrarna man ser.
+  // Som på den platta kartan bara när kartan följer någon.
+  private ritaKanten(foljer: boolean): void {
+    const mal: { x: number; z: number; tecken: string; farg: string }[] = [];
+    const s = this.state;
+    if (foljer && s) {
+      s.rooms.forEach((r) => {
+        const x = r.x * S + S / 2, z = r.y * S + S / 2;
+        if (r.exit >= 0 && !r.stangd) mal.push({ x, z, tecken: "˄", farg: FARG.port });
+        if (r.k === "kammare") mal.push({ x, z, tecken: "¤", farg: FARG.guld });
+      });
+      const f = this.val.fokus();
+      s.players.forEach((p) => {
+        if (p.status !== "inne" || p.hidden || p.x < 0 || p.id === s.you) return;
+        if (f && p.x === f.x && p.y === f.y) return;
+        mal.push({ x: p.x * S + S / 2, z: p.y * S + S / 2, tecken: "●", farg: this.val.farger[p.slot] || "#ffffff" });
+      });
+    }
+    const W = this.bredd, H = this.hojd, m = 16, mx = W / 2, my = H / 2;
+    const sedda: { nyckel: string; x: number; y: number }[] = [];
+    const v = new THREE.Vector3();
+    let n = 0;
+    mal.forEach((q) => {
+      v.set(q.x, 0.3, q.z).project(this.cam);
+      const tx = ((v.x + 1) / 2) * W, ty = ((1 - v.y) / 2) * H;
+      if (tx >= 0 && tx <= W && ty >= 0 && ty <= H) return;
+      const dx = tx - mx, dy = ty - my;
+      const k = Math.min((mx - m) / Math.abs(dx || 1e-6), (my - m) / Math.abs(dy || 1e-6));
+      const ex = mx + dx * k, ey = my + dy * k;
+      const nyckel = q.tecken + q.farg;
+      if (sedda.some((o) => o.nyckel === nyckel && Math.hypot(o.x - ex, o.y - ey) < 22)) return;
+      sedda.push({ nyckel, x: ex, y: ey });
+      let el = this.kantPilar[n];
+      if (!el) {
+        el = document.createElement("div");
+        el.innerHTML = '<span class="spets"></span><span class="tecken"></span>';
+        this.kant.appendChild(el);
+        this.kantPilar.push(el);
+      }
+      el.hidden = false;
+      const a = Math.atan2(dy, dx);
+      el.style.left = ex + "px";
+      el.style.top = ey + "px";
+      el.style.color = q.farg;
+      const spets = el.firstChild as HTMLElement, tecken = el.lastChild as HTMLElement;
+      spets.style.transform = "translate(-50%, -50%) rotate(" + a + "rad)";
+      tecken.textContent = q.tecken;
+      tecken.style.transform = "translate(calc(-50% + " + -Math.cos(a) * 14 + "px), calc(-50% + " + -Math.sin(a) * 14 + "px))";
+      n++;
+    });
+    for (let i = n; i < this.kantPilar.length; i++) this.kantPilar[i].hidden = true;
   }
 }

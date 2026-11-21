@@ -81,8 +81,8 @@ Efter varje steg görs en commit, och användaren provar innan nästa steg.
   pulserar. Varelserna står som sitt tecken. Fällornas märken, kritpilarna,
   föremålen och de döda (x) står i krita på golvet, och draget är en pil
   vid dörren som blinkar. Ekot färgar rummets golv.
-- Pilarna vid kanten för det som ligger utanför utsnittet finns inte på
-  kartan snett ovanifrån (se Inte byggt nedan).
+- Kompassen nere till vänster och pilarna vid kanten kom senare (se
+  Efter stegen nedan).
 
 ## Så är steg 3 byggt
 
@@ -120,7 +120,14 @@ Efter varje steg görs en commit, och användaren provar innan nästa steg.
 - När ormen vaknar lyser två ögon över guldet och guldet glöder, medan
   kritringen blinkar som förut.
 
+## Efter stegen
+
+- Kompassen: ett N med en pil nere till vänster på kartan, åt det håll
+  norr ligger på skärmen. Riktningen räknas ut från kamerans vinkel.
+- Pilarna vid kanten: portarna och kammaren man känner till, och vandrarna
+  man ser, får en pil vid kanten med sitt tecken när de ligger utanför
+  bilden. Som på den platta kartan bara när kartan följer någon.
+
 ## Inte byggt
 
-- Pilarna vid kanten för portar, kammaren och vandrare utanför utsnittet.
 - Modellerna i `data/`, så att de kan ändras utan att bygga om.

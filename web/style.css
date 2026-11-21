@@ -438,6 +438,32 @@ body[data-niva="4"] #crt::after { animation: throb 0.95s infinite; }
   border-radius: 6px;
 }
 #map[hidden], .isokarta[hidden] { display: none; }
+/* Kartan snett ovanifrån: kompassen nere till vänster och pilarna vid
+   kanten för det som ligger utanför bilden (klient/src/karta.ts). */
+.isokompass {
+  position: absolute;
+  left: 8px;
+  bottom: 8px;
+  color: var(--chalk, #e8e4d8);
+  opacity: 0.75;
+  pointer-events: none;
+  z-index: 2;
+  font: 11px Menlo, Monaco, monospace;
+}
+.isokompass svg { display: block; }
+.isokant { position: absolute; inset: 0; pointer-events: none; z-index: 2; overflow: hidden; }
+.isokant > div { position: absolute; width: 0; height: 0; }
+.isokant .spets {
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-left: 10px solid currentColor;
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+}
+.isokant .tecken { position: absolute; font: bold 13px Menlo, Monaco, monospace; }
+.isokompass[hidden], .isokant[hidden], .isokant > div[hidden] { display: none; }
+
 #roomname {
   color: var(--chalk);
   letter-spacing: 0.08em;
