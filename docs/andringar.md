@@ -6,6 +6,21 @@ eller leder tornet.
 
 ## 2026-11-21
 
+### Rättat efter provspelet
+
+- Den som ansluter medan slutskärmen visas står inte längre i resultatet
+  som förlorad. Hen väntar på nästa torn ("väntar på nästa torn" i listan)
+  och är med när alla trycker Nytt torn.
+- När en varelse träffar dig följer texten det du valde: den parerar ditt
+  anfall, glider runt din parering eller hinner före din undanmanöver.
+  Förut kunde det stå "Du hinner inte undan" fast du anföll.
+- På en pekskärm har Viska en fast plats bland knapparna och är osynlig
+  tills den går att använda, så att Ta inte byter plats med Anfall när den
+  dyker upp. Redo syns bara i lobbyn och i slutet.
+- Värdsidan byter svårighetens förklaring direkt när språket byts, och
+  Normal förklaras med liv, fällor och ormen i stället för "som i
+  datafilerna".
+
 ### Krönikan på egen skärm när vandringen är slut
 
 - När vandringen är slut får alla en egen skärm: resultaten, epilogen,

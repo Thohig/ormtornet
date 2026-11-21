@@ -208,7 +208,13 @@ func (g *Game) duel(p *Player, m *Monster, a string) {
 		g.soundTo(p, "hugg")
 		g.logTo(p, g.data.MonsterText("du_traffar", g.monsterVars(m)...), "syn")
 	case monsterHits:
-		g.logTo(p, g.data.MonsterText("monster_traffar", g.monsterVars(m, "skada", strconv.Itoa(t.Skada))...), "varn")
+		// Texten följer det du valde, så att den inte säger att du vek undan
+		// när du anföll.
+		key := "monster_traffar_" + a
+		if len(g.data.Monster.Texter[key]) == 0 {
+			key = "monster_traffar"
+		}
+		g.logTo(p, g.data.MonsterText(key, g.monsterVars(m, "skada", strconv.Itoa(t.Skada))...), "varn")
 	default:
 		g.soundTo(p, choiceSound(a))
 		g.logTo(p, g.data.MonsterText("inget", g.monsterVars(m)...), "dim")

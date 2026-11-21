@@ -48,6 +48,7 @@
     "vandrare_med_klass": "{vem}, {klass}",
     "vandrare_borta": "away",
     "vandrare_ute": "out",
+    "vandrare_ny": "waiting for the next tower",
     "vandrare_forlorad": "lost",
     "vandrare_dod": "dead",
     "vandrare_dod_klar": "dead, done",

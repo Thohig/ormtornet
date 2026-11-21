@@ -73,8 +73,19 @@
         "Your blow lands."
       ],
       "monster_traffar": [
-        "{Monster} hits you. You lose {skada} of your lives.",
-        "You are too slow and lose {skada} of your lives."
+        "{Monster} hits you. You lose {skada} of your lives."
+      ],
+      "monster_traffar_anfall": [
+        "{Monster} catches your blow and strikes back. You lose {skada} of your lives.",
+        "Your blow glances off {monster}, which strikes back. You lose {skada} of your lives."
+      ],
+      "monster_traffar_parera": [
+        "{Monster} slips around your parry. You lose {skada} of your lives.",
+        "You wait for a blow, but {monster} comes from the side. You lose {skada} of your lives."
+      ],
+      "monster_traffar_undan": [
+        "You are too slow to get away. You lose {skada} of your lives.",
+        "{Monster} hits you in mid-step. You lose {skada} of your lives."
       ],
       "bada_traffar": [
         "You strike each other at once. You lose {skada} of your lives."

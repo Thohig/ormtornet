@@ -467,6 +467,7 @@ function seenTag(p) {
 function playerTag(p) {
   if (!p.online) return t("vandrare_borta");
   if (p.status === "ute") return t("vandrare_ute");
+  if (p.status === "ny") return t("vandrare_ny");
   if (p.status === "forlorad") return t("vandrare_forlorad");
   if (p.status === "dod") return t(state.phase === "spel" && p.chosen ? "vandrare_dod_klar" : "vandrare_dod");
   if (state.phase === "spel") {
@@ -724,8 +725,17 @@ function renderHud(me) {
   if (state.kanViska) icon("V", "", t("tecken_viska", { tryck: pressWord("knapp_viska", "V") }), "rost");
   // Delarna av ormens namn som vandraren har fått, med prickar för resten.
   if (state.namndelar) icon("⁂", state.namndelar.map((p) => p || "·").join(" "), t("tecken_namndelar"), "rost");
+  // Viska har en fast plats bland knapparna under vandringen och är osynlig
+  // tills den går att använda, så att inga andra knappar flyttar sig när den
+  // dyker upp. Redo behövs bara i lobbyn och i slutet och tar då platsen.
+  const playing = state.phase === "spel";
   const pw = $("padWhisper");
-  if (pw) pw.hidden = !state.kanViska;
+  if (pw) {
+    pw.hidden = !playing;
+    pw.classList.toggle("off", !state.kanViska);
+  }
+  const pe = $("padEnter");
+  if (pe) pe.hidden = playing;
 
   // Väskan: en plats för varje föremål man kan bära, med föremålets tecken
   // och namn. Under vandringen står de tomma platserna som en prick, så att

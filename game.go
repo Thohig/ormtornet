@@ -36,6 +36,7 @@ const (
 	statusOut  = "ute"
 	statusLost = "forlorad"
 	statusDead = "dod"
+	statusNew  = "ny" // kom till tornet när vandringen redan var slut; med i nästa
 )
 
 // Drag en spelare kan välja under en runda.
@@ -743,7 +744,7 @@ func (g *Game) stateFor(me *Player) stateMsg {
 	if g.phase == phaseEnd {
 		st.Results = g.results()
 	}
-	if (g.phase == phasePlay && me.Status == statusDead) || g.phase == phaseEnd {
+	if (g.phase == phasePlay && me.Status == statusDead) || (g.phase == phaseEnd && me.Status != statusNew) {
 		st.Journey = g.journeyOf(me)
 	}
 	if g.phase == phaseEnd {
@@ -765,7 +766,7 @@ func (g *Game) broadcastState() {
 func (g *Game) results() []resultView {
 	var res []resultView
 	for _, p := range g.players {
-		if p == nil {
+		if p == nil || p.Status == statusNew {
 			continue
 		}
 		res = append(res, resultView{Name: p.Name, Slot: p.Slot, Treasure: p.Treasure, Status: p.Status, AI: p.aiPlayed})
@@ -917,6 +918,16 @@ func (g *Game) Join(c *Client, rawName string) {
 	g.players[slot] = p
 	c.player = p
 	g.fitTower(p)
+	if g.phase == phaseEnd {
+		// Vandringen är redan slut: den nya väntar på nästa torn och står
+		// inte i resultatet eller krönikan.
+		p.Status = statusNew
+		g.broadcastState()
+		g.soundAll("ansluter")
+		g.logTo(p, g.data.Text("sen_ankomst", "namn", name), "syn")
+		g.logOthers(p, g.hiddenText("ansluter", "namn", name, "horn", g.data.Horn[slot]), "info")
+		return
+	}
 	horn := g.data.Horn[slot]
 	if g.phase == phaseChoose {
 		g.logTo(p, g.data.Text("klass_val"), "info")

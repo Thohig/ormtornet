@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"strings"
 	"testing"
 	"time"
 )
@@ -765,5 +766,43 @@ func TestEmptyExitAsksFirst(t *testing.T) {
 	}
 	if pa.Status != statusOut {
 		t.Fatal("Alva gick inte ut efter två tryck")
+	}
+}
+
+// Den som kommer när vandringen redan är slut väntar på nästa torn och står
+// inte i resultatet, krönikans siffror eller på krönikans skärm.
+func TestJoinAfterEnd(t *testing.T) {
+	g, _, _ := startTwo(t)
+	g.endGame()
+	c := testClient()
+	g.Join(c, "Sen")
+	p := c.player
+	if p == nil || p.Status != statusNew {
+		t.Fatalf("status %v", p)
+	}
+	for _, r := range g.results() {
+		if r.Name == "Sen" {
+			t.Fatal("den sena står i resultatet")
+		}
+	}
+	for _, l := range g.chronicleLines() {
+		if strings.Contains(l.Text, "Sen") {
+			t.Fatalf("den sena står i krönikan: %q", l.Text)
+		}
+	}
+	if st := g.stateFor(p); st.Journey != nil {
+		t.Fatal("den sena ska inte ha någon egen vandring")
+	}
+	if l := logs(c); !contains(l, g.data.Text("sen_ankomst", "namn", "Sen")) {
+		t.Fatalf("saknar texten om sen ankomst: %v", l)
+	}
+	// Med i nästa torn.
+	for _, q := range g.players {
+		if q != nil && q.client != nil {
+			g.Ready(q.client)
+		}
+	}
+	if g.phase == phaseEnd || p.Status != statusIn {
+		t.Fatalf("fas %s, status %s", g.phase, p.Status)
 	}
 }

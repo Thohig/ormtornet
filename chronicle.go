@@ -87,7 +87,7 @@ func (g *Game) chronicleLines() []chronLine {
 		lines = append(lines, chronLine{g.data.Text("kronika_invigda_ute", "namn", strings.Join(knew, ", ")), "rost"})
 	}
 	for _, p := range g.players {
-		if p != nil {
+		if p != nil && p.Status != statusNew {
 			lines = append(lines, chronLine{g.statsLine(p), "dim"})
 		}
 	}

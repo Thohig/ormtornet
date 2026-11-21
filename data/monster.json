@@ -117,8 +117,19 @@
         "Ditt slag tar."
       ],
       "monster_traffar": [
-        "{Monster} träffar dig. Du förlorar {skada} liv.",
-        "Du hinner inte undan. {skada} liv."
+        "{Monster} träffar dig. Du förlorar {skada} liv."
+      ],
+      "monster_traffar_anfall": [
+        "{Monster} fångar ditt slag och slår tillbaka. Du förlorar {skada} liv.",
+        "Ditt slag studsar mot {monster}, som slår tillbaka. Du förlorar {skada} liv."
+      ],
+      "monster_traffar_parera": [
+        "{Monster} glider runt din parering. Du förlorar {skada} liv.",
+        "Du väntar på ett slag, men {monster} kommer från sidan. Du förlorar {skada} liv."
+      ],
+      "monster_traffar_undan": [
+        "Du hinner inte undan. Du förlorar {skada} liv.",
+        "{Monster} träffar dig mitt i steget. Du förlorar {skada} liv."
       ],
       "bada_traffar": [
         "Ni träffar varandra samtidigt. Du förlorar {skada} liv."

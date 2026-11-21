@@ -392,6 +392,9 @@
     "kant_rum": [
       "{rum}."
     ],
+    "sen_ankomst": [
+      "{namn}, vandringen har just tagit slut. Du är med när nästa torn reser sig. Tryck Enter när du är redo (på en pekskärm: Nytt torn)."
+    ],
     "lobby": [
       "Tryck Enter när du är redo (på en pekskärm: Redo). Vandringen börjar när alla är redo och ni är minst {min}."
     ],

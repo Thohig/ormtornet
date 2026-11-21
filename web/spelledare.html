@@ -558,17 +558,22 @@ function renderSettings(v) {
     : playing
       ? t("not_turtid_auto_spel", { sekunder: v.turnSecs })
       : t("not_turtid_auto", { sekunder: v.turnSecs });
-  if (saving || form.contains(document.activeElement)) return;
+  const busy = saving || form.contains(document.activeElement);
   const sv = $("sSv");
   const levels = v.svarigheter || [];
-  // Byggs om när namnen ändras, till exempel när språket byts.
+  // Byggs om när namnen ändras, till exempel när språket byts. Det görs
+  // även när formuläret har fokus (språkvalet har det just då), men valet
+  // står kvar.
   if ([...sv.options].map((o) => o.text).join("|") !== levels.map((l) => l.namn).join("|")) {
+    const keep = sv.value || s.svarighet;
     sv.innerHTML = "";
     levels.forEach((l) => sv.append(new Option(l.namn, l.id)));
+    sv.value = keep;
   }
-  sv.value = s.svarighet;
-  const level = levels.find((l) => l.id === s.svarighet);
+  if (!busy) sv.value = s.svarighet;
+  const level = levels.find((l) => l.id === sv.value);
   $("svNote").textContent = level ? level.beskrivning : "";
+  if (busy) return;
   fillForm(s);
 }
 

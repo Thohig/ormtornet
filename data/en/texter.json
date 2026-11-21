@@ -388,6 +388,9 @@
     "kant_rum": [
       "{rum}."
     ],
+    "sen_ankomst": [
+      "{namn}, the wandering has just ended. You will be part of it when the next tower rises. Press Enter when you are ready (on a touch screen: New tower)."
+    ],
     "lobby": [
       "Press Enter when you are ready (on a touch screen: Ready). The wandering begins when all are ready and there are at least {min} of you."
     ],
