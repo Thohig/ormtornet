@@ -17,6 +17,12 @@ eller leder tornet.
   stoppar anslutningen och för den som tappar den.
 - Den som tappar anslutningen öppnar länken igen och skriver samma namn,
   och får tillbaka sin vandrare.
+- Bygget för Pages sätter ett versionsnummer på skripten, stilarna och
+  bilderna (`?v=` och början av commiten), och skripten laddar workern,
+  `torn.wasm` och `rtc.js` med samma nummer. Pages låter webbläsaren spara
+  filerna i tio minuter, och utan numret kunde en ny version blandas med
+  en gammal. Sidorna själva (`.html`) kan fortfarande vara upp till tio
+  minuter gamla, men då hämtar de sin egen version av resten.
 
 ### Spela från en länk
 

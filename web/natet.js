@@ -69,7 +69,10 @@ window.Natet = (() => {
     };
     // rtc.js laddas bara när länken behöver det.
     const s = document.createElement("script");
-    s.src = new URL("rtc/rtc.js", script).href;
+    // Med samma versionsnummer som det här skriptet (sida.go).
+    const u = new URL("rtc/rtc.js", script);
+    u.search = new URL(script).search;
+    s.src = u.href;
     s.onload = start;
     s.onerror = () => status("natet_fel");
     document.head.appendChild(s);

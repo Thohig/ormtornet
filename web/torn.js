@@ -225,7 +225,7 @@
       if (v !== null) saved["ormtornet-installningar"] = v;
     } catch {}
     try {
-      worker = new Worker("torn-arbetare.js");
+      worker = new Worker("torn-arbetare.js" + window.ORMTORNET_V);
     } catch (err) {
       failed(String((err && err.message) || err));
       return;

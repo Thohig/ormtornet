@@ -334,7 +334,7 @@ if (onPages) {
   $("helpPages").hidden = false;
   applyTexts();
   const s = document.createElement("script");
-  s.src = "rtc/rtc.js";
+  s.src = "rtc/rtc.js" + window.ORMTORNET_V;
   s.onload = () => view && showQR(view.addrs.name);
   document.head.appendChild(s);
 }

@@ -11,7 +11,10 @@
 // spara och puls.
 "use strict";
 
-importScripts("wasm_exec.js");
+// Samma versionsnummer som skalet gav workern (sida.go).
+const v = self.location.search;
+
+importScripts("wasm_exec.js" + v);
 
 const post = (m) => self.postMessage(m);
 
@@ -42,10 +45,10 @@ async function start(m) {
     const go = new Go();
     let result;
     try {
-      result = await WebAssembly.instantiateStreaming(fetch("torn.wasm"), go.importObject);
+      result = await WebAssembly.instantiateStreaming(fetch("torn.wasm" + v), go.importObject);
     } catch {
       // Servern anger inte application/wasm: läs filen i stället.
-      const bytes = await (await fetch("torn.wasm")).arrayBuffer();
+      const bytes = await (await fetch("torn.wasm" + v)).arrayBuffer();
       result = await WebAssembly.instantiate(bytes, go.importObject);
     }
     go.run(result.instance);

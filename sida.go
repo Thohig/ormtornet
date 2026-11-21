@@ -7,6 +7,11 @@ package main
 // att visa sidorna utan tornets program: bord.html där sidorna länkar till
 // den, och sidornas texter som färdiga skript. Tornet själv, torn.wasm och
 // wasm_exec.js, läggs dit av verktyg/bygg-sida.sh.
+//
+// GitHub Pages låter webbläsaren spara filerna en stund. För att en ny
+// version ska slå igenom på en gång får sidornas skript, stilar och bilder
+// ett versionsnummer i adressen (?v=...), och skripten hämtar det de själva
+// laddar med samma nummer (ORMTORNET_V i web/texter.js).
 
 import (
 	"encoding/json"
@@ -14,6 +19,10 @@ import (
 	"io/fs"
 	"os"
 	"path/filepath"
+	"regexp"
+	"strconv"
+	"strings"
+	"time"
 )
 
 func writeSite(dir string, data *Data) error {
@@ -46,7 +55,38 @@ func writeSite(dir string, data *Data) error {
 			return err
 		}
 	}
-	return nil
+	return versionPages(dir, siteVersion())
+}
+
+// siteVersion är versionsnumret för bygget: början av commiten på GitHub
+// (GITHUB_SHA), annars tiden.
+func siteVersion() string {
+	if sha := os.Getenv("GITHUB_SHA"); len(sha) >= 8 {
+		return sha[:8]
+	}
+	return strconv.FormatInt(time.Now().Unix(), 36)
+}
+
+// localRef är en relativ adress till ett skript, en stil eller en bild.
+var localRef = regexp.MustCompile(`((?:src|href)=")([^"?#:]+\.(?:js|css|png|svg))"`)
+
+// withVersion lägger till versionsnumret på sidans egna filer.
+func withVersion(html, version string) string {
+	return localRef.ReplaceAllString(html, `${1}${2}?v=`+version+`"`)
+}
+
+// versionPages ger alla sidor i mappen versionsnumret.
+func versionPages(dir, version string) error {
+	return filepath.WalkDir(dir, func(path string, d fs.DirEntry, err error) error {
+		if err != nil || d.IsDir() || !strings.HasSuffix(path, ".html") {
+			return err
+		}
+		b, err := os.ReadFile(path)
+		if err != nil {
+			return err
+		}
+		return os.WriteFile(path, []byte(withVersion(string(b), version)), 0o644)
+	})
 }
 
 func writeFile(path string, b []byte) error {

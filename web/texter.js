@@ -6,6 +6,11 @@
 
 window.UI = window.UI || { sprak: "sv", texter: {} };
 
+// Versionsnumret i adressen när sidorna kommer från GitHub Pages ("?v=...",
+// se sida.go), så att det skripten själva laddar kommer från samma version.
+// Tomt från tornets program.
+window.ORMTORNET_V = document.currentScript ? new URL(document.currentScript.src).search : "";
+
 // t ger texten med nyckeln key, med {namn} och liknande ifyllda från vars.
 function t(key, vars) {
   let s = UI.texter[key];

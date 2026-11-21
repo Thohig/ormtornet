@@ -934,7 +934,9 @@ python3 -m http.server 8000 -d sida
 
 Tornet självt går i en Web Worker (`web/torn-arbetare.js`), så att det
 inte saktas ner när fliken ligger i bakgrunden; skalet för bara vidare
-meddelandena.
+meddelandena. Bygget sätter ett versionsnummer (`?v=`) på sidornas skript,
+stilar och bilder, så att en ny version slår igenom på en gång trots att
+Pages låter webbläsaren spara filerna en stund.
 
 Öppna `http://localhost:8000/`. Introt märker att inget torn är öppet och
 öppnar skalet, som visar introt och sedan värdsidan. "Gå in själv" på

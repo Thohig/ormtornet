@@ -163,7 +163,9 @@ Varje steg är en commit, och sedan provar användaren.
    inte in? har egna råd för länken. Den som laddar om eller öppnar länken
    igen och skriver samma namn får tillbaka sin vandrare; det fanns redan
    och är provat över WebRTC. Bakgrundsfliken är inte provad, eftersom
-   webbläsarpanelen håller alla flikar synliga.
+   webbläsarpanelen håller alla flikar synliga. Efteråt: ett
+   versionsnummer (`?v=`) på sidornas filer i bygget (`sida.go`), eftersom
+   Pages låter webbläsaren spara filerna i tio minuter.
 5. **Provspel över internet.** Spelledaren hemma, spelare på mobil och
    andra nät. Utifrån det: TURN som inställning eller inte.
 
