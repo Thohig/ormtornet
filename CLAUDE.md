@@ -39,7 +39,7 @@ Så här skiljer vi på sakerna när användaren ger instruktioner:
 - **ingrepp**: det spelledaren gör under en vandring: tid, ormen,
   avslöjandet, tornets röst och rum.
 - **spelarsidan**: sidan på `/` som spelarna öppnar, med vyerna introt,
-  namnrutan, klassvalet och spelet. Spelet har faserna lobbyn,
+  namnrutan, klassvalet, spelet och krönikan. Spelet har faserna lobbyn,
   klassvalet, vandringen och slutet (`lobby`, `klassval`, `spel`, `slut`). README beskriver under "Vad en spelare ser"
   vad en spelare möter.
 - **spelskärmen**: vyn spelet på spelarsidan. Delarna heter:
@@ -69,6 +69,14 @@ Så här skiljer vi på sakerna när användaren ger instruktioner:
   från grannrummen hör till den (`sounds.go`). Se
   [docs/synlighet.md](docs/synlighet.md).
 - **stormen**: introts moln, regn, blixtar, åska och musik.
+- **krönikan** (skärmen): vyn `chronscreen` på spelarsidan (`renderChron` i
+  `web/app.js`). Den som dör ser **Din vandring**, rundans kort runda för
+  runda (`vandring` i tillståndet, `journeyOf` i `chronicle.go`), och i
+  slutet ser alla resultaten, epilogen, hela krönikan och sin vandring.
+- **tangenterna vid dörrarna**: piltangenterna som står vid dörrarna i ens
+  rum på kartan snett ovanifrån (`ritaTangenter` i `klient/src/karta.ts`).
+- **väskan**: föremålen under tecknen, med en plats för varje föremål man
+  kan bära (`tecken` i `data/foremal.json`).
 - **klassvalet**: skärmen efter lobbyn med ett spelkort för varje klass
   och en tidsgräns (`klassval_sekunder` i `data/klasser.json`).
 - **klasser**: det vandrarna väljer i klassvalet (`classes.go`,

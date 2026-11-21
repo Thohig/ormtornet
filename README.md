@@ -232,7 +232,8 @@ en annan flik ("Gå in själv", som leder till introt och sedan namnrutan). Andr
 ### Vad en spelare ser
 
 En spelare som ansluter från en annan dator eller telefon ser bara
-spelarsidan (`/`), med tre vyer i tur och ordning:
+spelarsidan (`/`), med tre vyer i tur och ordning, och krönikans skärm för
+den som dör och för alla i slutet (se slutet nedan och Strider):
 
 1. **Introt**: tornet i stormen, ryktena och, efter en stund, "Gå in i
    tornet". Hela övergången in genom porten visas bara första gången i
