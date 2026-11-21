@@ -106,6 +106,7 @@
     "zoom_ut": "Further out",
     "zoom_in": "Closer",
     "zoom_vaxla": "Switch to all you know of (M)",
+    "karta_utan_webgl": "The map cannot be drawn here, because this browser lacks WebGL. The log and the Now panel work as usual.",
     "zoom_nara": "Near",
     "zoom_mellan": "Middle",
     "zoom_langt": "Far",

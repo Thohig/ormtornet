@@ -23,7 +23,6 @@ export interface Vandrare {
   status: string; // "inne", "ute", "forlorad" eller "dod"
   hidden: boolean;
   klassId?: string; // klassens id i klasser.json
-  foremalIds?: string[]; // föremålen, bara på spelledarens karta
   klassModell?: Modell; // modell i klasser.json
 }
 
@@ -45,13 +44,12 @@ export interface Varelse {
 }
 
 export interface Tillstand {
-  you: number; // 0 för spelledaren
+  you: number; // den egna vandrarens id
   size: number;
   level: number;
   reveal: boolean;
   phase: string;
   action?: string;
-  karta?: string;
   rooms: Rum[];
   foremal?: { id: string }[]; // den egna väskan
   players: Vandrare[];
@@ -60,7 +58,7 @@ export interface Tillstand {
 }
 
 // Utsnittet som kartan visar, i rum: x och y är hörnet uppe till vänster
-// (nordväst), w och h bredden och höjden. Den platta kartan räknar ut det.
+// (nordväst), w och h bredden och höjden. web/map.js räknar ut det.
 export interface Utsnitt {
   x: number;
   y: number;

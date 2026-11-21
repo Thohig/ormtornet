@@ -47,10 +47,6 @@ const (
 	actDrink  = "drick"
 )
 
-// mapIso säger till sidorna att rita kartan snett ovanifrån, den enda
-// kartan. Där WebGL saknas visas den platta ändå.
-const mapIso = "snett"
-
 type Config struct {
 	AI           int    // önskat antal datorspelare
 	AbsentRounds int    // rundor innan AI tar över en frånvarande vandrare, 0 = aldrig
@@ -592,7 +588,6 @@ type stateMsg struct {
 	PvP        string        `json:"pvp"` // om det går att strida mot andra vandrare här
 	Paused     bool          `json:"paused,omitempty"`
 	SleepText  string        `json:"sleepText,omitempty"`
-	Map        string        `json:"karta"` // alltid "snett": kartan snett ovanifrån
 	Class      *classView    `json:"klass,omitempty"`
 	Items      []itemView    `json:"foremal,omitempty"`
 	MaxItems   int           `json:"maxForemal,omitempty"` // så många föremål man kan bära
@@ -693,7 +688,7 @@ func (g *Game) stateFor(me *Player) stateMsg {
 	st := stateMsg{
 		T: "state", Sprak: g.base.Lang, You: me.ID, Size: g.size, Level: g.level, Reveal: g.cfg.Reveal,
 		Phase: g.phase, Sun: g.sun, SunMax: g.sunMax, Round: g.round,
-		MinPlayers: g.cfg.MinPlayers, Action: me.Action, Map: mapIso,
+		MinPlayers: g.cfg.MinPlayers, Action: me.Action,
 		HP: me.HP, MaxHP: g.maxHP(me), Potions: me.Potions, MaxItems: g.data.maxItems(),
 		Stuck: me.Stuck, Cellar: me.Cellar, Poison: me.Poison, Dark: me.Dark,
 	}

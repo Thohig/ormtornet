@@ -3,6 +3,11 @@
 Status: förslaget skrevs 2026-11-21. Skisserna visade två alternativ,
 platta kritfigurer (A) och 3D-modeller (B). Användaren valde B. Alla fyra
 stegen är byggda, och kartan snett ovanifrån är förval sedan 2026-11-21.
+Sedan 2026-11-22 är den den enda kartan: den platta kartan i krita och
+inställningen Kartan är borttagna. `web/map.js` räknar bara ut utsnittet,
+zoomen och teckenförklaringen, och där WebGL saknas visar spelarsidan en
+text i stället för kartan. Resten av dokumentet beskriver hur det var när
+den platta kartan fanns kvar.
 
 Kartan ritas i dag med Canvas 2D i `web/map.js`, rakt ovanifrån, med tecken
 i ett rutnät. Förslaget är en ny karta i isometrisk vy, ritad med Three.js
@@ -65,8 +70,8 @@ Efter varje steg görs en commit, och användaren provar innan nästa steg.
 
 ## Så är steg 2 byggt
 
-Sedan 2026-11-22 finns inställningen Kartan inte längre: kartan ritas
-alltid snett ovanifrån, och den platta visas bara där WebGL saknas.
+Sedan 2026-11-22 finns inställningen Kartan och den platta kartan inte
+längre.
 
 - Inställningen Kartan (`karta` i inställningarna, `-karta`) är `platt`
   eller `snett`. Först var `platt` förval; när alla stegen var byggda blev

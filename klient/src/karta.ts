@@ -1,8 +1,7 @@
 // Kartan snett ovanifrån. Tornet byggs av golv, låga väggar och portar, och
 // vandrarna är små figurer i sin färg. Kameran är ortografisk och vrids
 // aldrig: norr pekar upp åt höger. Utsnittet, zoomen och teckenförklaringen
-// räknas ut av den platta kartan (web/map.js), som den här kartan läser
-// utsnittet från, så att de två alltid visar samma rum.
+// räknas ut i web/map.js, som den här kartan läser utsnittet från.
 import * as THREE from "three";
 import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils.js";
 import * as K from "./krita";
@@ -15,7 +14,8 @@ const VH = 0.7; // väggarnas höjd
 const VT = 0.26; // väggarnas tjocklek
 const LUCKA = 1.9; // dörrarnas bredd
 
-// Den platta kartans celler, för vandrarnas platser i rummet.
+// Ett rum delas i celler, 7 på bredden och 4 på höjden, för vandrarnas
+// platser i rummet. Cellerna kommer från den platta kartan som fanns förut.
 const RW = 7;
 const RH = 4;
 const SLOTS = [[2, 1], [5, 1], [2, 3], [5, 3], [1, 2], [6, 2], [3, 1], [4, 3]];
@@ -35,7 +35,7 @@ const FARG = {
 };
 const RING = ["#c9a24f", "#c9a24f", "#c9a24f", "#c98a5a", "#c4483a"]; // per nivå
 
-// Avslöjandet: tornets utseende följer nivån, som på den platta kartan. På
+// Avslöjandet: tornets utseende följer nivån. På
 // nivå 2 andas kritan, på nivå 3 syns revbenen och hjärtslagen, på nivå 4
 // är det kött och tänder. vagg och hi är väggens färg i vila och i slaget,
 // golv golvets ton, period hur länge ett andetag eller hjärtslag tar och
@@ -84,7 +84,7 @@ const LUTNING = FRAN.y; // hur mycket golvet trycks ihop på höjden
 const SOL = new THREE.Vector3(-10, 22, -4);
 
 // plats ger punkten i världen för cellen (cx, cy) i rummet (rx, ry), med
-// den platta kartans celler: 1–6 på bredden och 1–3 på höjden.
+// rummets celler: 1–6 på bredden och 1–3 på höjden.
 function plats(rx: number, ry: number, cx: number, cy: number): [number, number] {
   return [rx * S + S * (0.1 + (0.8 * (cx - 0.5)) / (RW - 1)), ry * S + S * (0.1 + (0.8 * (cy - 0.5)) / (RH - 1))];
 }
@@ -283,7 +283,7 @@ export class IsoKarta {
     requestAnimationFrame(loop);
   }
 
-  // visa slår på eller av kartan. Den platta kartan visas när den här är av.
+  // visa slår på eller av kartan.
   visa(pa: boolean): void {
     this.aktiv = pa;
     this.canvas.hidden = !pa;
@@ -698,7 +698,7 @@ float puls() {
       }
     });
 
-    // Rummet vandraren står i, eller den spelledaren följer: ljusare golv
+    // Rummet vandraren står i: ljusare golv
     // och en ram i vandrarens färg.
     const jag = state.players.find((p) => p.id === state.you);
     if (jag && jag.status === "inne" && !jag.hidden && jag.x >= 0) {
@@ -725,9 +725,8 @@ float puls() {
       if (dod) this.golvkrita(g, K.tecken("x"), "tx", FARG.forlorad, 0.9, x, z);
       const farg = p.online && !dod ? this.val.farger[p.slot] || "#ffffff" : FARG.borta;
       const klass = p.klassId || "";
-      // Föremålen syns på den egna figuren, och på spelledarens karta på
-      // allas. Andras väskor är hemliga för vandrarna.
-      const foremal = p.id === state.you ? (state.foremal || []).map((f) => f.id) : p.foremalIds || [];
+      // Föremålen syns bara på den egna figuren. Andras väskor är hemliga.
+      const foremal = p.id === state.you ? (state.foremal || []).map((f) => f.id) : [];
       const km = p.klassModell || {};
       const a = this.flytta(
         "v" + p.id,
@@ -1030,9 +1029,9 @@ float puls() {
   }
 
   // ritaKanten sätter en liten pil vid kanten för det som ligger utanför
-  // bilden, åt det håll det ligger, med samma tecken som på den platta
-  // kartan: portarna och kammaren man känner till, och vandrarna man ser.
-  // Som på den platta kartan bara när kartan följer någon.
+  // bilden, åt det håll det ligger, med samma tecken som i
+  // teckenförklaringen: portarna och kammaren man känner till, och
+  // vandrarna man ser. Bara när kartan följer någon.
   private ritaKanten(foljer: boolean): void {
     const mal: { x: number; z: number; tecken: string; farg: string }[] = [];
     const s = this.state;

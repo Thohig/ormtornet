@@ -319,15 +319,16 @@ body[data-niva="4"] #crt::after { animation: throb 0.95s infinite; }
   min-width: 0;
   min-height: 0;
 }
-/* Kartan är krita på en skiffertavla. */
+/* Kartan snett ovanifrån (web/iso/iso.js). */
 #map {
   position: absolute;
   left: 0;
   top: 0;
   display: block;
   border-radius: 6px;
-  filter: drop-shadow(0 0 1px rgba(230, 228, 220, 0.25));
 }
+/* Där WebGL saknas står en text i stället för kartan. */
+#mapNone { max-width: 36ch; margin: 0 16px; text-align: center; color: var(--fg); line-height: 1.5; }
 
 #overlay {
   position: absolute;
@@ -430,16 +431,8 @@ body[data-niva="4"] #crt::after { animation: throb 0.95s infinite; }
 #zoom button:hover:not(:disabled), #zoom button:focus-visible { color: var(--hi); border-color: var(--fg); outline: none; }
 #zoom button:disabled { opacity: 0.4; cursor: default; }
 #zoomName { min-width: 8ch; }
-#map, .isokarta { touch-action: pan-x pan-y; }
-/* Kartan snett ovanifrån (web/iso/iso.js) ligger på samma plats som den platta. */
-.isokarta {
-  position: absolute;
-  left: 0;
-  top: 0;
-  display: block;
-  border-radius: 6px;
-}
-#map[hidden], .isokarta[hidden] { display: none; }
+#map { touch-action: pan-x pan-y; }
+#map[hidden], #mapNone[hidden] { display: none; }
 /* Kartan snett ovanifrån: kompassen nere till vänster och pilarna vid
    kanten för det som ligger utanför bilden (klient/src/karta.ts). */
 .isokompass {

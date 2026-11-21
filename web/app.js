@@ -1502,8 +1502,7 @@ const Intro = (() => {
 // padArrows visar pilarna på pekskärmens knappar åt det håll figuren går.
 // Snett ovanifrån pekar norr upp åt höger, så pilarna blir sneda.
 function padArrows() {
-  const iso = MapView.isIso();
-  const glyphs = iso ? { n: "↗", e: "↘", s: "↙", w: "↖" } : { n: "↑", e: "→", s: "↓", w: "←" };
+  const glyphs = { n: "↗", e: "↘", s: "↙", w: "↖" };
   Object.entries(glyphs).forEach(([c, ch]) => {
     const b = document.querySelector("#pad .dirs ." + c);
     if (b && b.textContent !== ch) b.textContent = ch;

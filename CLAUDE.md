@@ -139,7 +139,7 @@ Skriv dit när ett steg är klart.
   2026-11-21, vad som hittades och byggdes, och vad som inte är provat.
   Robotarna som provspelar finns i `verktyg/provspelare.mjs` (README,
   Provspela med robotar).
-- [docs/isometrisk.md](docs/isometrisk.md): kartan snett ovanifrån med
-  Three.js och 3D-modeller, i TypeScript i `klient/` och byggd med Vite
+- [docs/isometrisk.md](docs/isometrisk.md): kartan snett ovanifrån, den
+  enda kartan sedan 2026-11-22, med Three.js och 3D-modeller, i TypeScript i `klient/` och byggd med Vite
   till `web/iso/iso.js` (och WebRTC till `web/rtc/rtc.js`). Bygg om och
   checka in skripten efter en ändring i `klient/src/`. Avsnittet Stegen säger vad som är byggt.

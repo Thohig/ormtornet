@@ -6,6 +6,16 @@ eller leder tornet.
 
 ## 2026-11-22
 
+### Bara kartan snett ovanifrån
+
+- Kartan i krita rakt ovanifrån är borttagen. Kartan snett ovanifrån i
+  3D är den enda.
+- På en enhet utan WebGL står nu en text där kartan skulle vara: att
+  kartan inte kan ritas där, och att loggen och panelen Nu fungerar som
+  vanligt. Förut visades kritkartan.
+- Pilarna på pekskärmens knappar är alltid sneda, som kartan.
+- `web/map.js` räknar bara ut utsnittet, zoomen och teckenförklaringen.
+
 ### Spelledarläget är borttaget
 
 - Spelledarläget finns inte längre, och inte heller spelledarbordet med

@@ -150,7 +150,7 @@ rundan avgörs så fort alla har valt, och ett högre tak låter bara alla
 vänta längre på den som dröjer. Vandrarna väljer alltid klass, de kan
 alltid slåss med varandra utom i portrummen, och vandringen börjar av sig
 själv när minst två är redo, AI-spelare inräknade. Kartan ritas snett
-ovanifrån i 3D; en enhet utan WebGL visar den platta kartan.
+ovanifrån i 3D; en enhet utan WebGL visar en text i stället för kartan.
 
 Under Vid porten står hur stort tornet blir och hur många rundor solen
 har. AI-spelare kommer och går direkt i lobbyn, och tornet byggs om i
@@ -843,21 +843,17 @@ Beskrivningarna för rummen ligger under nivåerna `"1"` till `"4"`.
     tornets program
   - `rtc/rtc.js` WebRTC med Trystero och QR-koden, byggt från `klient/`
     (rör den inte för hand)
-  - `map.js` ritar kartan som krita på en skiffertavla: väggarna är
-    handritade streck, vandrarna prickar i sin färg (den egna med en ring)
-    och varelser och märken tecken. Kartan visar bara det kända och
-    följer rummet vandraren står i. Den antecknar
-    också vilka tecken den ritar, och spelarsidan gör teckenförklaringen
-    av dem
+  - `map.js` räknar ut kartans utsnitt och zoom, så att kartan följer
+    rummet vandraren står i, och vilka tecken som står i
+    teckenförklaringen. Den skapar kartan snett ovanifrån, eller visar en
+    text där WebGL saknas
   - `audio.js` allt ljud, skapat med Web Audio API, även stormen i introt
   - `style.css` utseendet
   - `ikon.svg`, `ikon.png`, `ikon-32.png` och `favicon.ico` tornets ikon
     i flikarna och på hemskärmen. De små ritas av `verktyg/appikon`
     (`icon_32x32.png`), eftersom Safari inte använder SVG:n
   - `iso/iso.js` kartan snett ovanifrån, byggd från `klient/` (rör den inte
-    för hand). `map.js` väljer kartan efter inställningen Kartan; den
-    platta räknar alltid ut utsnittet och teckenförklaringen, och kartan
-    snett ovanifrån läser utsnittet därifrån
+    för hand). Den läser utsnittet från `map.js`
 - `klient/` kartan snett ovanifrån i TypeScript med Three.js (se
   [docs/isometrisk.md](docs/isometrisk.md)) och WebRTC för GitHub Pages
   (`src/rtc.ts`), byggda med Vite. De byggda skripten `web/iso/iso.js` och
