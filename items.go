@@ -269,6 +269,15 @@ func (g *Game) itemViews(p *Player) []itemView {
 	return out
 }
 
+// itemIDs är id för vandrarens föremål, för figuren på spelledarens karta.
+func (g *Game) itemIDs(p *Player) []string {
+	var out []string
+	for _, it := range p.items {
+		out = append(out, it.ID)
+	}
+	return out
+}
+
 // itemNames är vandrarens föremål för spelledarens översikt.
 func (g *Game) itemNames(p *Player) []string {
 	var out []string

@@ -176,7 +176,7 @@ func (g *Game) GMView(visible bool) gmView {
 		}
 		pv := playerView{ID: p.ID, Name: p.Name, Slot: p.Slot, X: p.X, Y: p.Y, Online: p.present(),
 			Bot: p.bot != nil, Status: p.Status, Ready: p.Ready, Chosen: p.Action != "", Treasure: p.Treasure, AI: p.takenOver,
-			ClassID: g.classID(p)}
+			ClassID: g.classID(p), ItemIDs: g.itemIDs(p)}
 		if p.Cellar > 0 {
 			pv.Hidden = true
 		}

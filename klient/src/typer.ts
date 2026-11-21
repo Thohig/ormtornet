@@ -23,6 +23,7 @@ export interface Vandrare {
   status: string; // "inne", "ute", "forlorad" eller "dod"
   hidden: boolean;
   klassId?: string; // klassens id i klasser.json
+  foremalIds?: string[]; // föremålen, bara på spelledarens karta
 }
 
 export interface Varelse {
@@ -44,6 +45,7 @@ export interface Tillstand {
   controller?: boolean;
   karta?: string;
   rooms: Rum[];
+  foremal?: { id: string }[]; // den egna väskan
   players: Vandrare[];
   monsters?: Varelse[];
   lastSeen?: Record<string, { x: number; y: number; slot: number }>;

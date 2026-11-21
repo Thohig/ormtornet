@@ -482,21 +482,22 @@ func (g *Game) describe(p *Player, r *Room, x, y int) string {
 // Meddelanden till klienten.
 
 type playerView struct {
-	ID       int    `json:"id"`
-	Name     string `json:"name"`
-	Slot     int    `json:"slot"`
-	X        int    `json:"x"`
-	Y        int    `json:"y"`
-	Online   bool   `json:"online"`
-	Status   string `json:"status"`
-	Ready    bool   `json:"ready"`
-	Chosen   bool   `json:"chosen"`
-	Treasure int    `json:"treasure"` // -1 om spelaren inte får veta
-	Bot      bool   `json:"bot"`
-	Hidden   bool   `json:"hidden"`            // positionen är okänd för den som tittar
-	AI       bool   `json:"ai"`                // en AI-spelare styr medan människan är borta
-	Class    string `json:"klass,omitempty"`   // klassen med liten bokstav
-	ClassID  string `json:"klassId,omitempty"` // klassens id, för figuren på kartan snett ovanifrån
+	ID       int      `json:"id"`
+	Name     string   `json:"name"`
+	Slot     int      `json:"slot"`
+	X        int      `json:"x"`
+	Y        int      `json:"y"`
+	Online   bool     `json:"online"`
+	Status   string   `json:"status"`
+	Ready    bool     `json:"ready"`
+	Chosen   bool     `json:"chosen"`
+	Treasure int      `json:"treasure"` // -1 om spelaren inte får veta
+	Bot      bool     `json:"bot"`
+	Hidden   bool     `json:"hidden"`               // positionen är okänd för den som tittar
+	AI       bool     `json:"ai"`                   // en AI-spelare styr medan människan är borta
+	Class    string   `json:"klass,omitempty"`      // klassen med liten bokstav
+	ClassID  string   `json:"klassId,omitempty"`    // klassens id, för figuren på kartan snett ovanifrån
+	ItemIDs  []string `json:"foremalIds,omitempty"` // föremålen, bara för spelledaren (andras väskor är hemliga)
 }
 
 type roomView struct {

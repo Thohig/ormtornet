@@ -6,6 +6,14 @@ eller leder tornet.
 
 ## 2026-11-21
 
+### Föremålen syns på figuren
+
+- På kartan snett ovanifrån bär den egna figuren sina föremål: repet och
+  väskan vid höften, amuletten och pärlan på bröstet, skölden på ryggen och
+  kronan av rost på huvudet, och så vidare.
+- Andras föremål syns inte, eftersom väskorna är hemliga. På
+  spelledarbordet syns allas.
+
 ### Kartan snett ovanifrån: kompassen och pilarna vid kanten
 
 - Nere till vänster på kartan snett ovanifrån står en kompass, ett N med en

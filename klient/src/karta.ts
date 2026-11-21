@@ -584,7 +584,10 @@ float puls() {
       if (dod) this.golvkrita(g, K.tecken("x"), "tx", FARG.forlorad, 0.9, x, z);
       const farg = p.online && !dod ? this.val.farger[p.slot] || "#ffffff" : FARG.borta;
       const klass = p.klassId || "";
-      const a = this.flytta("v" + p.id, klass + farg, () => M.vandrare(klass, farg), p.x, p.y, x, z);
+      // Föremålen syns på den egna figuren, och på spelledarens karta på
+      // allas. Andras väskor är hemliga för vandrarna.
+      const foremal = p.id === state.you ? (state.foremal || []).map((f) => f.id) : p.foremalIds || [];
+      const a = this.flytta("v" + p.id, klass + farg + "|" + foremal.join(","), () => M.vandrare(klass, farg, foremal), p.x, p.y, x, z);
       a.dod = dod;
       this.egenRing(a, p.id === state.you && !dod ? farg : "");
       sedda.add("v" + p.id);

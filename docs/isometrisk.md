@@ -127,6 +127,11 @@ Efter varje steg görs en commit, och användaren provar innan nästa steg.
 - Pilarna vid kanten: portarna och kammaren man känner till, och vandrarna
   man ser, får en pil vid kanten med sitt tecken när de ligger utanför
   bilden. Som på den platta kartan bara när kartan följer någon.
+- Föremålen på figuren: det vandraren bär syns på den egna figuren,
+  vid bältet, på bröstet, på ryggen eller på huvudet (`fastPa` i
+  `klient/src/modeller.ts`). Andras väskor är hemliga och syns inte, men
+  spelledarbordet visar föremålen på alla (`foremalIds` i spelledarens
+  karta). Förbannade föremål ser ut som andra.
 
 ## Inte byggt
 

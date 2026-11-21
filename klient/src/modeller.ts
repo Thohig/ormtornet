@@ -85,7 +85,7 @@ const TRA = 0x6b4f2e;
 const METALL = 0x9a9a92;
 const PERGAMENT = 0xe9dcc0;
 
-export function vandrare(klass: string, farg: string): Figur {
+export function vandrare(klass: string, farg: string, foremal: string[] = []): Figur {
   const g = new THREE.Group();
   const tyg = lam(farg);
   const huva = lam(morkare(farg, 0.5));
@@ -198,6 +198,7 @@ export function vandrare(klass: string, farg: string): Figur {
     default:
       luva(huva);
   }
+  foremal.forEach((id) => fastPa(kropp, id));
 
   return {
     grupp: g,
@@ -210,6 +211,79 @@ export function vandrare(klass: string, farg: string): Figur {
       kropp.position.y = gar ? Math.abs(s) * 0.04 : Math.sin(t / 700) * 0.01;
     },
   };
+}
+
+// fastPa sätter ett föremål vandraren bär på kroppen: vid bältet, på bröstet,
+// på ryggen eller på huvudet. Kroppen tittar mot +z; midjan är vid y 0,6.
+// Föremål utan egen form syns inte.
+function fastPa(kropp: THREE.Group, id: string): void {
+  const satt = (o: THREE.Object3D, x: number, y: number, z: number, rx = 0, ry = 0, rz = 0) => {
+    o.position.set(x, y, z);
+    o.rotation.set(rx, ry, rz);
+    kropp.add(o);
+  };
+  switch (id) {
+    case "rep":
+      satt(del(geo("repring", () => new THREE.TorusGeometry(0.1, 0.03, 4, 10)), lam(0x9a7a4a)), -0.27, 0.6, 0.06, 0, Math.PI / 2, 0);
+      break;
+    case "amulett":
+      satt(del(geo("amulett", () => new THREE.OctahedronGeometry(0.06, 0)), lam(0x5fb0a0, { emissive: 0x0a2a24 })), 0, 1.0, 0.21);
+      break;
+    case "veke":
+      satt(del(geo("veke", () => new THREE.CylinderGeometry(0.02, 0.02, 0.16, 5)), lam(0xf0ead8)), 0.16, 0.6, 0.25, 0, 0, 0.4);
+      break;
+    case "skold":
+      satt(del(geo("ryggsköld", () => new THREE.CylinderGeometry(0.24, 0.24, 0.05, 8)), lam(0x6a5030)), 0, 0.86, -0.3, Math.PI / 2, 0, 0);
+      break;
+    case "vaska":
+      satt(del(geo("väska", () => new THREE.BoxGeometry(0.12, 0.18, 0.2)), lam(0x7a5a34)), 0.3, 0.56, 0);
+      break;
+    case "kompass":
+      satt(del(geo("kompass", () => new THREE.CylinderGeometry(0.06, 0.06, 0.025, 10)), lam(0xc9a24f)), 0, 0.62, 0.27, Math.PI / 2, 0, 0);
+      break;
+    case "rokpulver":
+      satt(del(geo("pung", () => new THREE.IcosahedronGeometry(0.07, 0)), lam(0x8a8a8a)), -0.24, 0.55, 0.14);
+      break;
+    case "spegel":
+      satt(del(geo("skärva", () => new THREE.TetrahedronGeometry(0.07, 0)), lam(0xd8e6f2, { emissive: 0x1a2630 })), 0.2, 0.66, 0.22);
+      break;
+    case "kastkniv":
+      satt(del(geo("kniv", () => new THREE.BoxGeometry(0.03, 0.2, 0.04)), lam(METALL)), -0.12, 0.6, 0.27, 0, 0, 0.5);
+      break;
+    case "krita":
+      satt(del(geo("kritbit", () => new THREE.BoxGeometry(0.04, 0.09, 0.04)), lam(0xf4f2ea)), 0.08, 0.6, 0.28);
+      break;
+    case "flojt":
+      satt(del(geo("flöjt", () => new THREE.CylinderGeometry(0.025, 0.025, 0.36, 6)), lam(TRA)), 0.08, 0.95, -0.27, 0, 0, 0.8);
+      break;
+    case "timglas": {
+      const g = new THREE.Group();
+      const ben = lam(0xe8e0cc);
+      const kon = geo("timglaskon", () => new THREE.ConeGeometry(0.05, 0.07, 6));
+      const ovre = del(kon, ben, 0, 0.035, 0);
+      ovre.rotation.x = Math.PI;
+      g.add(ovre, del(kon, ben, 0, -0.035, 0));
+      satt(g, -0.28, 0.62, 0.06);
+      break;
+    }
+    case "svart_parla":
+      satt(del(geo("pärla", () => new THREE.SphereGeometry(0.055, 10, 8)), lam(0x15151a)), 0.1, 1.0, 0.2);
+      break;
+    case "mynt_hal":
+      satt(del(geo("myntring", () => new THREE.TorusGeometry(0.05, 0.02, 4, 10)), lam(0xe8b84a)), -0.1, 0.98, 0.22);
+      break;
+    case "rostkrona": {
+      const g = new THREE.Group();
+      const rost = lam(0xa0522d);
+      g.add(del(geo("kronring", () => new THREE.CylinderGeometry(0.15, 0.16, 0.08, 8, 1, true)), rost));
+      for (let i = 0; i < 5; i++) {
+        const a = (i / 5) * Math.PI * 2;
+        g.add(del(geo("kronudd", () => new THREE.ConeGeometry(0.03, 0.08, 4)), rost, Math.sin(a) * 0.15, 0.08, Math.cos(a) * 0.15));
+      }
+      satt(g, 0, 1.36, 0);
+      break;
+    }
+  }
 }
 
 // ---- Varelserna ----
