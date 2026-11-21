@@ -21,6 +21,7 @@ type Class struct {
 	Liv         int                `json:"liv"` // läggs till svårighetens antal liv
 	Drycker     int                `json:"drycker"`
 	Varden      map[string]float64 `json:"varden"`
+	Modell      *ModelLook         `json:"modell,omitempty"` // färgen på det klassen bär och storleken, på kartan snett ovanifrån
 }
 
 // classView är det klienten får veta om en klass.
@@ -298,6 +299,14 @@ func (g *Game) classLabel(p *Player) string {
 		return c.Kort
 	}
 	return ""
+}
+
+// classModel ger färgen och storleken på vandrarens figur, eller nil.
+func (g *Game) classModel(p *Player) *ModelLook {
+	if c := g.classOf(p); c != nil {
+		return c.Modell
+	}
+	return nil
 }
 
 // classID ger id för vandrarens klass, eller tomt.

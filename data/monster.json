@@ -10,6 +10,7 @@
       "undan": "gör en undanmanöver"
     },
 
+    "_om_modell": "modell är varelsen på kartan snett ovanifrån: farg är kroppens färg som #rrggbb och storlek hur stor den är (0,5–2, 1 är vanlig storlek). Formen står i klient/src/modeller.ts, och en varelse utan form där visas med sitt tecken.",
     "typer": [
       {
         "id": "krypare",
@@ -19,6 +20,7 @@
         "skada": 1,
         "guld": 10,
         "tecken": "k",
+        "modell": { "farg": "#d8d0bf", "storlek": 1 },
         "vandrar": 0.35,
         "vanor": { "anfall": 1, "parera": 1, "undan": 3 },
         "dyker_upp": [
@@ -37,6 +39,7 @@
         "skada": 1,
         "guld": 15,
         "tecken": "s",
+        "modell": { "farg": "#6d8040", "storlek": 1 },
         "vandrar": 0.3,
         "vanor": { "anfall": 3, "parera": 1, "undan": 1 },
         "dyker_upp": [
@@ -55,6 +58,7 @@
         "skada": 2,
         "guld": 30,
         "tecken": "V",
+        "modell": { "farg": "#62897f", "storlek": 1 },
         "vandrar": 0.15,
         "vanor": { "anfall": 1, "parera": 3, "undan": 1 },
         "dyker_upp": [
@@ -73,6 +77,7 @@
         "skada": 2,
         "guld": 20,
         "tecken": "g",
+        "modell": { "farg": "#8ac77f", "storlek": 1 },
         "vandrar": 0.4,
         "vanor": { "anfall": 2, "parera": 1, "undan": 2 },
         "dyker_upp": [
@@ -91,6 +96,7 @@
         "skada": 2,
         "guld": 40,
         "tecken": "B",
+        "modell": { "farg": "#e8e0cc", "storlek": 1 },
         "vandrar": 0.05,
         "vanor": { "anfall": 2, "parera": 2, "undan": 1 },
         "dyker_upp": [

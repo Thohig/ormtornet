@@ -13,7 +13,7 @@ type ItemType struct {
 	ID           string   `json:"id"`
 	Namn         string   `json:"namn"`
 	Tecken       string   `json:"tecken"` // står framför namnet i väskan
-	Kort         string   `json:"kort"` // med liten bokstav, för texterna
+	Kort         string   `json:"kort"`   // med liten bokstav, för texterna
 	Beskrivning  string   `json:"beskrivning"`
 	Vikt         int      `json:"vikt"`
 	Anvandningar int      `json:"anvandningar"` // 0 = verkar hela vandringen

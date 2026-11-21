@@ -24,6 +24,14 @@ export interface Vandrare {
   hidden: boolean;
   klassId?: string; // klassens id i klasser.json
   foremalIds?: string[]; // föremålen, bara på spelledarens karta
+  klassModell?: Modell; // modell i klasser.json
+}
+
+// Modell är färgen och storleken på en modell, från modell i klasser.json
+// och monster.json.
+export interface Modell {
+  farg?: string;
+  storlek?: number;
 }
 
 export interface Varelse {
@@ -31,6 +39,7 @@ export interface Varelse {
   name: string;
   glyph: string;
   typ?: string; // varelsens id i monster.json
+  modell?: Modell;
   x: number;
   y: number;
 }

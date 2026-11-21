@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"regexp"
 	"sort"
 	"strings"
 )
@@ -76,6 +77,9 @@ func lineAt(raw []byte, offset int64) int {
 
 // validate letar efter hänvisningar som inte går ihop och värden utanför
 // det tillåtna. Den ger en rad för varje problem.
+// hexColor är en färg som #rrggbb.
+var hexColor = regexp.MustCompile(`^#[0-9a-fA-F]{6}$`)
+
 func (d *Data) validate() []string {
 	var out []string
 	bad := func(file, format string, args ...any) {
@@ -112,9 +116,24 @@ func (d *Data) validate() []string {
 	unique("fallor.json", "fällan", ids)
 	chance("fallor.json", "handelsechans", d.Regler.Handelsechans)
 
+	// Modellerna på kartan snett ovanifrån: en färg som #rrggbb och en
+	// storlek som går att se.
+	model := func(file, what, id string, m *ModelLook) {
+		if m == nil {
+			return
+		}
+		if m.Farg != "" && !hexColor.MatchString(m.Farg) {
+			bad(file, "%s %q: modell.farg ska skrivas som #rrggbb, inte %q", what, id, m.Farg)
+		}
+		if m.Storlek != 0 && (m.Storlek < 0.5 || m.Storlek > 2) {
+			bad(file, "%s %q: modell.storlek ska vara mellan 0,5 och 2, inte %v", what, id, m.Storlek)
+		}
+	}
+
 	ids = nil
 	for _, c := range d.Klasser {
 		ids = append(ids, c.ID)
+		model("klasser.json", "klassen", c.ID, c.Modell)
 	}
 	classes := unique("klasser.json", "klassen", ids)
 
@@ -138,6 +157,7 @@ func (d *Data) validate() []string {
 	chance("monster.json", "vandra_chans", m.VandraChans)
 	ids = nil
 	for _, t := range m.Typer {
+		model("monster.json", "varelsen", t.ID, t.Modell)
 		ids = append(ids, t.ID)
 		if t.Vandrar != nil {
 			chance("monster.json", t.ID+": vandrar", *t.Vandrar)

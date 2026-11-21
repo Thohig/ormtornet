@@ -36,8 +36,8 @@ function lam(farg: THREE.ColorRepresentation, extra: { emissive?: number; opacit
   return m;
 }
 
-function lysande(farg: number): THREE.Material {
-  const k = "lys" + farg;
+function lysande(farg: THREE.ColorRepresentation): THREE.Material {
+  const k = "lys" + new THREE.Color(farg).getHexString();
   let m = material.get(k);
   if (!m) {
     m = new THREE.MeshBasicMaterial({ color: farg });
@@ -85,7 +85,10 @@ const TRA = 0x6b4f2e;
 const METALL = 0x9a9a92;
 const PERGAMENT = 0xe9dcc0;
 
-export function vandrare(klass: string, farg: string, foremal: string[] = []): Figur {
+// vandrare bygger en vandrare i färgen farg. klassFarg är färgen på det
+// klassen bär (modell.farg i klasser.json), annars klassens egen.
+export function vandrare(klass: string, farg: string, foremal: string[] = [], klassFarg?: string): Figur {
+  const kf = (egen: THREE.ColorRepresentation): THREE.ColorRepresentation => klassFarg || egen;
   const g = new THREE.Group();
   const tyg = lam(farg);
   const huva = lam(morkare(farg, 0.5));
@@ -114,7 +117,7 @@ export function vandrare(klass: string, farg: string, foremal: string[] = []): F
   let fram = 0; // hur långt fram armen med föremålet hålls
 
   // Huvudbonaden.
-  const hatt = (brattet: number, farg: number) => {
+  const hatt = (brattet: number, farg: THREE.ColorRepresentation) => {
     kropp.add(del(geo("brätte" + brattet, () => new THREE.CylinderGeometry(brattet, brattet, 0.03, 10)), lam(farg), 0, 1.33, 0));
     kropp.add(del(geo("kulle", () => new THREE.CylinderGeometry(0.13, 0.17, 0.18, 8)), lam(farg), 0, 1.43, 0));
   };
@@ -138,7 +141,7 @@ export function vandrare(klass: string, farg: string, foremal: string[] = []): F
     case "legoknekt": {
       kropp.add(del(geo("hjälm", () => new THREE.SphereGeometry(0.19, 8, 5, 0, Math.PI * 2, 0, Math.PI / 2)), lam(METALL), 0, 1.24, 0));
       kropp.add(del(geo("näsa", () => new THREE.BoxGeometry(0.03, 0.12, 0.03)), lam(METALL), 0, 1.2, 0.17));
-      const skold = del(geo("sköld", () => new THREE.CylinderGeometry(0.26, 0.26, 0.05, 8)), lam(0x7a5a32), -0.34, 0.82, 0.05);
+      const skold = del(geo("sköld", () => new THREE.CylinderGeometry(0.26, 0.26, 0.05, 8)), lam(kf(0x7a5a32)), -0.34, 0.82, 0.05);
       skold.rotation.z = Math.PI / 2;
       kropp.add(skold);
       kropp.add(del(geo("buckla", () => new THREE.IcosahedronGeometry(0.06, 0)), lam(METALL), -0.38, 0.82, 0.05));
@@ -147,7 +150,7 @@ export function vandrare(klass: string, farg: string, foremal: string[] = []): F
       break;
     }
     case "tjuv": {
-      luva(lam(0x2a2a30));
+      luva(lam(kf(0x2a2a30)));
       kropp.add(del(geo("säck", () => new THREE.IcosahedronGeometry(0.17, 0)), lam(0x6a5434), 0, 0.92, -0.28));
       const dolk = del(geo("dolk", () => new THREE.BoxGeometry(0.03, 0.22, 0.05)), lam(METALL), 0, -0.52, 0.06);
       bar.add(dolk);
@@ -155,12 +158,12 @@ export function vandrare(klass: string, farg: string, foremal: string[] = []): F
     }
     case "ortkvinna":
       luva(huva);
-      stav(1.35, del(geo("blomma", () => new THREE.IcosahedronGeometry(0.08, 0)), lam(0xe070b0)));
+      stav(1.35, del(geo("blomma", () => new THREE.IcosahedronGeometry(0.08, 0)), lam(kf(0xe070b0))));
       kropp.add(del(geo("korg", () => new THREE.CylinderGeometry(0.13, 0.1, 0.14, 8)), lam(0x8a6a3a), -0.32, 0.62, 0.08));
       break;
     case "kartritare": {
       luva(huva);
-      const rulle = del(geo("rulle", () => new THREE.CylinderGeometry(0.055, 0.055, 0.44, 8)), lam(PERGAMENT), 0, -0.46, 0.08);
+      const rulle = del(geo("rulle", () => new THREE.CylinderGeometry(0.055, 0.055, 0.44, 8)), lam(kf(PERGAMENT)), 0, -0.46, 0.08);
       rulle.rotation.z = Math.PI / 2;
       bar.add(rulle);
       fram = -0.6;
@@ -168,7 +171,7 @@ export function vandrare(klass: string, farg: string, foremal: string[] = []): F
     }
     case "ormtjusare": {
       luva(huva);
-      const orm = del(geo("ormen", () => new THREE.TorusGeometry(0.18, 0.045, 5, 12)), lam(0x6d8040), 0, 1.04, 0);
+      const orm = del(geo("ormen", () => new THREE.TorusGeometry(0.18, 0.045, 5, 12)), lam(kf(0x6d8040)), 0, 1.04, 0);
       orm.rotation.x = Math.PI / 2;
       kropp.add(orm);
       const flojt = del(geo("flöjt", () => new THREE.CylinderGeometry(0.025, 0.025, 0.36, 6)), lam(TRA), 0, -0.48, 0.1);
@@ -178,7 +181,7 @@ export function vandrare(klass: string, farg: string, foremal: string[] = []): F
       break;
     }
     case "sparfinnare":
-      hatt(0.3, 0x6a4a2a);
+      hatt(0.3, kf(0x6a4a2a));
       stav(1.0);
       break;
     case "lyktbarare": {
@@ -186,13 +189,13 @@ export function vandrare(klass: string, farg: string, foremal: string[] = []): F
       const lykta = new THREE.Group();
       lykta.position.set(0, -0.6, 0.06);
       lykta.add(del(geo("lyktram", () => new THREE.BoxGeometry(0.15, 0.2, 0.15)), lam(0x3a3530)));
-      lykta.add(new THREE.Mesh(geo("lågan", () => new THREE.BoxGeometry(0.11, 0.15, 0.16)), lysande(0xffd36b)));
+      lykta.add(new THREE.Mesh(geo("lågan", () => new THREE.BoxGeometry(0.11, 0.15, 0.16)), lysande(kf(0xffd36b))));
       bar.add(lykta);
       fram = -0.25;
       break;
     }
     case "pilgrim":
-      hatt(0.38, 0x3a3530);
+      hatt(0.38, kf(0x3a3530));
       stav(1.6, del(geo("kalebass", () => new THREE.IcosahedronGeometry(0.09, 0)), lam(0x9a6a3a)));
       break;
     default:
@@ -288,26 +291,28 @@ function fastPa(kropp: THREE.Group, id: string): void {
 
 // ---- Varelserna ----
 
-export function varelse(typ: string): Figur | null {
+// varelse bygger varelsen typ, i färgen farg (modell.farg i monster.json)
+// eller sin egen.
+export function varelse(typ: string, farg?: string): Figur | null {
   switch (typ) {
     case "krypare":
-      return krypare();
+      return krypare(farg);
     case "yngel":
-      return yngel();
+      return yngel(farg);
     case "fjallvakt":
-      return fjallvakt();
+      return fjallvakt(farg);
     case "gallgast":
-      return gallgast();
+      return gallgast(farg);
     case "benvaktare":
-      return benvaktare();
+      return benvaktare(farg);
   }
   return null;
 }
 
 // Blekkryparen: något blekt och mångbent, utan ögon.
-function krypare(): Figur {
+function krypare(farg?: string): Figur {
   const g = new THREE.Group();
-  const blek = lam(0xd8d0bf);
+  const blek = lam(farg || 0xd8d0bf);
   const kropp = del(geo("kryparkropp", () => new THREE.SphereGeometry(0.5, 10, 6)), blek, 0, 0.26, 0);
   kropp.scale.set(0.75, 0.38, 1);
   g.add(kropp);
@@ -333,9 +338,9 @@ function krypare(): Figur {
 }
 
 // Ormynglet: långt som en man, rest ur dammet.
-function yngel(): Figur {
+function yngel(farg?: string): Figur {
   const g = new THREE.Group();
-  const fjall = lam(0x6d8040);
+  const fjall = lam(farg || 0x6d8040);
   const kurva = new THREE.CatmullRomCurve3(
     [[0, 0.09, -0.75], [0.38, 0.09, -0.38], [0, 0.1, 0], [-0.32, 0.12, 0.25], [-0.12, 0.45, 0.42], [0.04, 0.85, 0.32], [0.1, 1.06, 0.16]].map(
       ([x, y, z]) => new THREE.Vector3(x, y, z),
@@ -361,9 +366,10 @@ function yngel(): Figur {
 }
 
 // Fjällvakten: en gestalt i rustning av fjäll, med en sköld framför sig.
-function fjallvakt(): Figur {
+function fjallvakt(farg?: string): Figur {
   const g = new THREE.Group();
-  const fjall = lam(0x62897f), mork = lam(0x3f5651), metall = lam(METALL);
+  const bas = new THREE.Color(farg || 0x62897f);
+  const fjall = lam(bas), mork = lam(bas.clone().multiplyScalar(0.64)), metall = lam(METALL);
   const ben = [-0.14, 0.14].map((x) => {
     const b = del(hangande("vaktben", 0.1, 0.09, 0.55), mork, x, 0.55, 0);
     g.add(b);
@@ -402,11 +408,11 @@ function fjallvakt(): Figur {
 }
 
 // Gallgasten: en grönaktig skepnad i trasor, som glider fram.
-function gallgast(): Figur {
+function gallgast(farg?: string): Figur {
   const g = new THREE.Group();
   const kropp = new THREE.Group();
   g.add(kropp);
-  const dimma = lam(0x8ac77f, { opacity: 0.72, emissive: 0x1a3a18 });
+  const dimma = lam(farg || 0x8ac77f, { opacity: 0.72, emissive: 0x1a3a18 });
   kropp.add(del(geo("gastkåpa", () => new THREE.ConeGeometry(0.42, 1.25, 9, 1, true)), dimma, 0, 0.72, 0));
   kropp.add(del(geo("gasthuvud", () => new THREE.IcosahedronGeometry(0.18, 1)), dimma, 0, 1.45, 0));
   [-1, 1].forEach((s) => kropp.add(new THREE.Mesh(geo("gastöga", () => new THREE.SphereGeometry(0.035, 6, 4)), lysande(0xd8ffb0)).translateX(s * 0.07).translateY(1.47).translateZ(0.15)));
@@ -433,9 +439,9 @@ function gallgast(): Figur {
 }
 
 // Benväktaren: byggd av böjda, vita ben, som revben från samma djur.
-function benvaktare(): Figur {
+function benvaktare(farg?: string): Figur {
   const g = new THREE.Group();
-  const ben = lam(0xe8e0cc);
+  const ben = lam(farg || 0xe8e0cc);
   const kropp = new THREE.Group();
   g.add(kropp);
   for (let i = 0; i < 8; i++) kropp.add(del(geo("kota", () => new THREE.IcosahedronGeometry(0.065, 0)), ben, 0, 0.55 + i * 0.12, -0.08));

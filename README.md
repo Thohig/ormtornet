@@ -744,11 +744,11 @@ Fält som börjar med `_` är kommentarer och får stå var som helst.
 - `texter.json` rum, beskrivningar, allmänna texter och introts väntetid
 - `fallor.json` regler (liv, chans för händelse, drycker, hur länge spåren syns), fällor och sökresultat
 - `ormen.json` ormkorten, skatten i kammaren och vad som händer när ormen vaknar
-- `monster.json` varelserna (liv, skada, guld, vanor, hur ofta de vandrar, texter) och striderna
+- `monster.json` varelserna (liv, skada, guld, vanor, hur ofta de vandrar, texter, och modellens färg och storlek på kartan snett ovanifrån) och striderna
 - `ai.json` datorspelarnas namn, personligheter och betänketid
 - `svarighet.json` förvalen för svårighet (se nedan)
-- `klasser.json` klasserna: namn, styrka, svaghet, liv, drycker, siffror och texter
-- `foremal.json` föremålen: namn, beskrivning, hur ofta, hur länge och texter
+- `klasser.json` klasserna: namn, styrka, svaghet, liv, drycker, siffror och texter, och figurens färg och storlek på kartan snett ovanifrån
+- `foremal.json` föremålen: tecken i väskan, namn, beskrivning, hur ofta, hur länge och texter
 - `avslojande.json` nivågränser, ledtrådar, texter vid nivåbyte, nya
   förklaringar till fällorna, epilogen, svaren, ormens namn och texterna
   för delarna, tornets nåd, varslen och hur tornet förändras. Rumsbeskrivningarna för varje

@@ -17,6 +17,14 @@ import (
 //go:embed data/*.json data/en/*.json
 var embeddedData embed.FS
 
+// ModelLook är färgen och storleken på en modell på kartan snett ovanifrån
+// (klient/src/modeller.ts). Formen står i koden; utan modell används
+// modellens egen färg och storlek.
+type ModelLook struct {
+	Farg    string  `json:"farg,omitempty"`    // "#rrggbb": varelsens kropp, eller det klassen bär
+	Storlek float64 `json:"storlek,omitempty"` // 1 är modellens egen storlek
+}
+
 // Trap är en fälla. Vad den gör styrs av id:t i koden; siffror och texter
 // kommer från datafilen.
 type Trap struct {
@@ -81,6 +89,7 @@ type MonsterType struct {
 	Skada    int            `json:"skada"`
 	Guld     int            `json:"guld"`
 	Tecken   string         `json:"tecken"`
+	Modell   *ModelLook     `json:"modell,omitempty"` // färg och storlek på kartan snett ovanifrån
 	Vanor    map[string]int `json:"vanor"`
 	Vandrar  *float64       `json:"vandrar,omitempty"` // egen chans att vandra, annars vandra_chans
 	DykerUpp []string       `json:"dyker_upp"`

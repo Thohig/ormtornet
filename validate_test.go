@@ -48,6 +48,9 @@ func TestDataCheckFindsMistakes(t *testing.T) {
 		{"ai.json", `"legoknekt"`, `"legoknekten"`, `klassen "legoknekten" finns inte`},
 		{"monster.json", `"liv": 2,`, `"liv": "två",`, "har fel sorts värde"},
 		{"monster.json", `"chans": 0.2,`, `"chans": 0.2`, "rad 4"},
+		{"monster.json", `"farg": "#d8d0bf"`, `"farg": "blek"`, `modell.farg ska skrivas som #rrggbb`},
+		{"klasser.json", `"farg": "#7a5a32", "storlek": 1`, `"farg": "#7a5a32", "storlek": 5`, `modell.storlek ska vara mellan 0,5 och 2`},
+		{"foremal.json", `"tecken": "➰",`, ``, `föremålet "rep" saknar tecken`},
 	}
 	for _, c := range cases {
 		dir := dataWith(t, c.file, func(s string) string {

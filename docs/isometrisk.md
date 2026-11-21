@@ -143,7 +143,15 @@ Efter varje steg görs en commit, och användaren provar innan nästa steg.
   och ritar med en pixel per punkt. Enheter med högst två kärnor eller 2 GB
   minne börjar så. `?kvalitet=lag` i adressen tvingar fram det. Zoomen Nära
   går lite närmare än förut.
+- Modellerna i `data/`: varje klass i `klasser.json` och varelse i
+  `monster.json` har `modell` med `farg` (#rrggbb) och `storlek` (0,5–2).
+  För en varelse är färgen kroppens, för en klass färgen på det klassen
+  bär. Formerna står i koden. Ändringar gäller efter Läs om innehållet,
+  eftersom färgen och storleken följer med tillståndet. Kontrollen säger
+  till om en färg eller storlek är fel.
 
 ## Inte byggt
 
-- Modellerna i `data/`, så att de kan ändras utan att bygga om.
+- Formerna i `data/`: modellernas delar står i `klient/src/modeller.ts`.
+  En ny klass eller varelse får en vanlig figur eller sitt tecken tills
+  någon bygger en form åt den där.

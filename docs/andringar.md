@@ -6,6 +6,15 @@ eller leder tornet.
 
 ## 2026-11-21
 
+### Modellernas färg och storlek i data/
+
+- Varje klass i `klasser.json` och varelse i `monster.json` har `modell`
+  med `farg` och `storlek`, för figuren på kartan snett ovanifrån. Ändra
+  till exempel Blekkryparens färg eller gör Fjällvakten större, och tryck
+  på Läs om innehållet på värdsidan.
+- Kontrollen säger till om en färg inte är skriven som #rrggbb eller om en
+  storlek inte ligger mellan 0,5 och 2.
+
 ### Kartan snett ovanifrån på telefoner
 
 - På en telefon eller surfplatta ritar kartan högst 30 bilder i sekunden,

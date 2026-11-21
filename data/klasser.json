@@ -1,10 +1,12 @@
 {
+  "_om_modell": "modell är figuren på kartan snett ovanifrån: farg är färgen på det klassen bär (skölden, huvan, blomman, kartrullen, ormen, hatten, lyktans låga) som #rrggbb, och storlek hur stor figuren är (0,5–2, 1 är vanlig storlek). Formen står i klient/src/modeller.ts.",
   "klassval_sekunder": 30,
 
   "klasser": [
     {
       "id": "legoknekt",
       "tecken": "⛨",
+      "modell": { "farg": "#7a5a32", "storlek": 1 },
       "namn": "Legoknekten",
       "kort": "legoknekten",
       "beskrivning": "Har slagits för den som betalar i tjugo år. Bär en bucklig sköld och litar inte på någon.",
@@ -17,6 +19,7 @@
     {
       "id": "tjuv",
       "tecken": "⚷",
+      "modell": { "farg": "#2a2a30", "storlek": 1 },
       "namn": "Tjuven",
       "kort": "tjuven",
       "beskrivning": "Lätta fingrar och lätta steg. Har tagit sig in i fler hus än hen har gått ut ur.",
@@ -29,6 +32,7 @@
     {
       "id": "ortkvinna",
       "tecken": "⚘",
+      "modell": { "farg": "#e070b0", "storlek": 1 },
       "namn": "Örtkvinnan",
       "kort": "örtkvinnan",
       "beskrivning": "Kokar drycker av det som växer i diken. Vet vad som läker och vad som dödar.",
@@ -41,6 +45,7 @@
     {
       "id": "kartritare",
       "tecken": "⌖",
+      "modell": { "farg": "#e9dcc0", "storlek": 1 },
       "namn": "Kartritaren",
       "kort": "kartritaren",
       "beskrivning": "Har ritat kartor över grottor, gruvor och kloster. Ingen har ritat tornet. Än.",
@@ -53,6 +58,7 @@
     {
       "id": "ormtjusare",
       "tecken": "∿",
+      "modell": { "farg": "#6d8040", "storlek": 1 },
       "namn": "Ormtjusaren",
       "kort": "ormtjusaren",
       "beskrivning": "Har spelat för huggormar på marknader och aldrig blivit biten. Nästan aldrig.",
@@ -65,6 +71,7 @@
     {
       "id": "sparfinnare",
       "tecken": "⁂",
+      "modell": { "farg": "#6a4a2a", "storlek": 1 },
       "namn": "Spårfinnaren",
       "kort": "spårfinnaren",
       "beskrivning": "Läser marken som andra läser böcker. Ser var någon har gått, och när.",
@@ -77,6 +84,7 @@
     {
       "id": "lyktbarare",
       "tecken": "☼",
+      "modell": { "farg": "#ffd36b", "storlek": 1 },
       "namn": "Lyktbäraren",
       "kort": "lyktbäraren",
       "beskrivning": "Bär en lykta som aldrig har slocknat. Ingen vet vad den brinner på.",
@@ -89,6 +97,7 @@
     {
       "id": "pilgrim",
       "tecken": "⚲",
+      "modell": { "farg": "#3a3530", "storlek": 1 },
       "namn": "Pilgrimen",
       "kort": "pilgrimen",
       "beskrivning": "Har gått hela vägen för att se tornet med egna ögon. Tror att det har något att berätta.",

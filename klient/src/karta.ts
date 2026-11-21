@@ -133,6 +133,12 @@ function kompassSvg(): string {
 </svg>`;
 }
 
+// skala gör figuren storlek gånger större (modell.storlek i datafilerna).
+function skala(f: Figur, storlek?: number): Figur {
+  if (storlek && storlek > 0) f.grupp.scale.setScalar(storlek);
+  return f;
+}
+
 // guldhog är kammarens hög av mynt, med mitten i origo.
 function guldhog(): THREE.Mesh {
   const mynt: THREE.BufferGeometry[] = [];
@@ -565,7 +571,7 @@ float puls() {
 
   // ---- Teckenförklaringen ----
 
-  private typer = new Map<string, string>(); // varelsernas tecken → id
+  private typer = new Map<string, { typ: string; farg?: string; storlek?: number }>(); // varelsernas tecken → id och modell
   private bilder = new Map<string, string | null>();
   private bildScen: THREE.Scene | null = null;
   private bildMal: THREE.WebGLRenderTarget | null = null;
@@ -578,13 +584,14 @@ float puls() {
     let gor: (() => THREE.Object3D | null) | null = null;
     if (slag === "du" || slag === "vandrare" || slag === "borta") gor = () => M.vandrare("", farg).grupp;
     else if (slag === "varelse") {
-      const typ = this.typer.get(glyph);
-      if (!typ) return null;
-      gor = () => M.varelse(typ)?.grupp || null;
+      const v = this.typer.get(glyph);
+      if (!v) return null;
+      gor = () => M.varelse(v.typ, v.farg)?.grupp || null;
     } else if (slag === "kammare") gor = () => guldhog();
     else if (slag === "port" || slag === "port_stangd") gor = () => portbage(slag === "port_stangd" || (this.niva() === 4 && this.state?.phase === "slut"), this.niva() === 4);
     if (!gor) return null;
-    const k = slag + "|" + glyph + "|" + farg + "|" + (slag.startsWith("port") ? this.niva() : "");
+    const v = this.typer.get(glyph);
+    const k = slag + "|" + glyph + "|" + farg + "|" + (slag.startsWith("port") ? this.niva() : "") + "|" + (slag === "varelse" && v ? v.farg || "" : "");
     if (this.bilder.has(k)) return this.bilder.get(k)!;
     const o = gor();
     const url = o ? this.ritaBild(o) : null;
@@ -699,7 +706,13 @@ float puls() {
       // Föremålen syns på den egna figuren, och på spelledarens karta på
       // allas. Andras väskor är hemliga för vandrarna.
       const foremal = p.id === state.you ? (state.foremal || []).map((f) => f.id) : p.foremalIds || [];
-      const a = this.flytta("v" + p.id, klass + farg + "|" + foremal.join(","), () => M.vandrare(klass, farg, foremal), p.x, p.y, x, z);
+      const km = p.klassModell || {};
+      const a = this.flytta(
+        "v" + p.id,
+        klass + farg + "|" + foremal.join(",") + "|" + (km.farg || "") + "|" + (km.storlek || 1),
+        () => skala(M.vandrare(klass, farg, foremal, km.farg), km.storlek),
+        p.x, p.y, x, z,
+      );
       a.dod = dod;
       this.egenRing(a, p.id === state.you && !dod ? farg : "");
       sedda.add("v" + p.id);
@@ -707,8 +720,14 @@ float puls() {
     (state.monsters || []).forEach((m) => {
       const [x, z] = plats(m.x, m.y, Math.floor(RW / 2) + 1, Math.floor(RH / 2));
       const typ = m.typ || "";
-      if (typ) this.typer.set(m.glyph, typ);
-      this.flytta("m" + m.id, "m" + typ + m.glyph, () => M.varelse(typ) || this.tecknad(m.glyph), m.x, m.y, x, z);
+      const mm = m.modell || {};
+      if (typ) this.typer.set(m.glyph, { typ, farg: mm.farg, storlek: mm.storlek });
+      this.flytta(
+        "m" + m.id,
+        "m" + typ + m.glyph + "|" + (mm.farg || "") + "|" + (mm.storlek || 1),
+        () => skala(M.varelse(typ, mm.farg) || this.tecknad(m.glyph), mm.storlek),
+        m.x, m.y, x, z,
+      );
       sedda.add("m" + m.id);
     });
     this.aktorer.forEach((a, id) => {
