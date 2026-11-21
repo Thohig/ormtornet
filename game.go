@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"log"
 	"math/rand/v2"
+	"slices"
 	"sort"
 	"strconv"
 	"strings"
@@ -267,6 +268,7 @@ type Player struct {
 	stats    chronStats     // det krönikan räknar
 	journal  []journeyRound // rundans kort, runda för runda, för krönikan på egen skärm
 	death    string         // hur vandraren dog, för krönikan på egen skärm
+	epilog   []chronLine    // epilogens rader för just den här vandraren
 	hurtKind string         // vad som skadade vandraren senast, för krönikan
 	hurtWhat string         // namnet på fällan, varelsen eller vandraren
 }
@@ -326,7 +328,8 @@ type Game struct {
 	pauseLeft time.Duration // tid som var kvar när rundan pausades
 	awaiting  bool          // pausen är tornets egen: ingen människa är ansluten
 
-	chron []chronEvent // krönikan över vandringen
+	chron  []chronEvent // krönikan över vandringen
+	epilog []chronLine  // epilogen som alla fick, för krönikan på egen skärm
 
 	graceUsed bool // porten har redan väntat på de invigda
 
@@ -567,6 +570,7 @@ type stateMsg struct {
 	Results    []resultView  `json:"results,omitempty"`
 	Journey    *journeyView  `json:"vandring,omitempty"` // den egna vandringen, för den som har dött och för alla i slutet
 	Chronicle  []chronLine   `json:"kronika,omitempty"`  // hela krönikan, när vandringen är slut
+	Epilogue   []chronLine   `json:"epilog,omitempty"`   // epilogen, när vandringen är slut
 }
 
 type logMsg struct {
@@ -741,6 +745,10 @@ func (g *Game) stateFor(me *Player) stateMsg {
 	}
 	if (g.phase == phasePlay && me.Status == statusDead) || g.phase == phaseEnd {
 		st.Journey = g.journeyOf(me)
+	}
+	if g.phase == phaseEnd {
+		st.Chronicle = g.chronicleLines()
+		st.Epilogue = append(slices.Clone(g.epilog), me.epilog...)
 	}
 	return st
 }
@@ -1453,7 +1461,6 @@ func (g *Game) endGame() {
 	} else {
 		g.logAll(g.data.Text("ingen_vinnare"), "varn")
 	}
-	g.tellChronicle()
 	g.epilogue()
 	g.logAll(g.data.Text("spela_igen"), "dim")
 	g.soundAll("slut")

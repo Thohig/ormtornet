@@ -6,6 +6,15 @@ eller leder tornet.
 
 ## 2026-11-21
 
+### Krönikan på egen skärm när vandringen är slut
+
+- När vandringen är slut får alla en egen skärm: resultaten, epilogen,
+  krönikan över hela vandringen och sin egen vandring runda för runda.
+  Den som dog under vandringen ser sin skärm växa till hela omgången.
+- Krönikan står inte längre i loggen. Visa kartan går till kartan med
+  resultatrutan och loggen, och Nytt torn (Enter) leder till lobbyn som
+  förut.
+
 ### Din vandring: en egen skärm för den som dör
 
 - Den som dör ser nu sin egen vandring på en egen skärm: det som hände en

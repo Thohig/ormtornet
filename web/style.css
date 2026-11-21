@@ -970,3 +970,22 @@ body.touch .card .num { display: none; }
 }
 #chronButtons button:hover, #chronButtons button:focus-visible, .chronBack:hover, .chronBack:focus-visible { color: var(--hi); border-color: var(--hi); outline: none; }
 .chronBack { margin-top: 6px; font-size: 13px; }
+#chronResults, #chronEpilog, #chronAll { margin: 0 0 18px; display: grid; gap: 4px; }
+#chronResults { text-align: center; font-size: 15px; }
+#chronResults .win { color: var(--hi); }
+#chronResults .lost { color: var(--warn); }
+#chronEpilog { color: #e3b8f0; font-style: italic; }
+#chronEpilog .varn { color: var(--warn); }
+#chronEpilog .info { color: var(--fg); }
+#chronAll h2, #chron h2 {
+  margin: 6px 0 6px;
+  font-size: 12px;
+  font-weight: normal;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--hi);
+}
+#chronAll .dim { color: var(--chalk); font-size: 13px; }
+#chronAll .rost { color: #e3b8f0; }
+#chronResults[hidden], #chronEpilog[hidden], #chronAll[hidden], #chronOwn[hidden], #chronNext[hidden] { display: none; }
+#chronNext:disabled { opacity: 0.6; cursor: default; }

@@ -157,24 +157,34 @@ func (g *Game) epilogue() {
 	}
 	g.level = 4
 	a := &g.data.Avslojande
-	g.logAll(pick(a.Epilog), "syn")
+	// Epilogen skrivs i loggen och sparas, så att den också står på
+	// krönikans skärm (epilog i tillståndet).
+	all := func(text, class string) {
+		g.logAll(text, class)
+		g.epilog = append(g.epilog, chronLine{text, class})
+	}
+	to := func(p *Player, text, class string) {
+		g.logTo(p, text, class)
+		p.epilog = append(p.epilog, chronLine{text, class})
+	}
+	all(pick(a.Epilog), "syn")
 	if g.usesName() && len(a.EpilogNamn) > 0 {
-		g.logAll(strings.ReplaceAll(pick(a.EpilogNamn), "{namn}", g.serpentNameText()), "syn")
+		all(strings.ReplaceAll(pick(a.EpilogNamn), "{namn}", g.serpentNameText()), "syn")
 	}
 	for _, p := range g.players {
 		if p == nil {
 			continue
 		}
 		if p.initiated {
-			g.logTo(p, pick(a.EpilogInvigd), "rost")
+			to(p, pick(a.EpilogInvigd), "rost")
 		}
 		switch p.Status {
 		case statusOut:
-			g.logTo(p, pick(a.EpilogUte), "info")
+			to(p, pick(a.EpilogUte), "info")
 		case statusLost:
-			g.logTo(p, pick(a.EpilogForlorad), "varn")
+			to(p, pick(a.EpilogForlorad), "varn")
 		case statusDead:
-			g.logTo(p, pick(a.EpilogDod), "varn")
+			to(p, pick(a.EpilogDod), "varn")
 		}
 	}
 }

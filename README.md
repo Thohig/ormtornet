@@ -286,8 +286,10 @@ spelarsidan (`/`), med tre vyer i tur och ordning:
      sekunder eller vid ett klick, och en kort rad med `≡` står kvar i
      loggen, till exempel "Runda 12: österut, −1 liv, +10 guld". Texterna
      står i `data/texter.json` under `sam_`,
-   - **slutet**: resultatrutan över kartan, och i loggen vinnaren, krönikan
-     och epilogen. Enter (Nytt torn) leder tillbaka till lobbyn när alla
+   - **slutet**: en egen skärm med resultaten, epilogen, krönikan över hela
+     vandringen och den egna vandringen runda för runda. Visa kartan går
+     till kartan med resultatrutan och loggen, där epilogen också står.
+     Enter (Nytt torn) leder tillbaka till lobbyn när alla
      har tryckt, med ett nytt torn. Därefter kommer ett nytt klassval.
      Utan klasser börjar nästa vandring direkt efter lobbyn. Starta nu på
      värdsidan går från lobbyn till klassvalet, och under klassvalet
@@ -414,12 +416,14 @@ för alla, och tornet berättar i vilken del någon har hittat ett nytt rum.
 Med "Vandrarna syns: alltid, för alla" på värdsidan, eller `-synlighet alla`,
 syns alla på kartan som förut.
 
-När vandringen är slut berättar tornet krönikan i loggen. Först kommer det
+När vandringen är slut står krönikan på en egen skärm, under resultaten och
+epilogen. Först kommer det
 som hände, runda för runda: vem som gick ut och med hur mycket, vem som dog
 och av vad, vem som fällde vilken varelse och när ormen vaknade. Sedan kommer
 en rad för varje vandrare med hur många nävar den tog ur kammaren och hur
 mycket guld de gav, och hur många fällor, fällda varelser och sökta rum den
-fick. Texterna står i `data/texter.json` under `kronika_*`.
+fick. Texterna står i `data/texter.json` under `kronika_*`. Under krönikan
+står den egna vandringen, samma som den som dör ser under vandringen.
 
 ### Klasser
 

@@ -53,11 +53,12 @@ func (g *Game) chronicleDeath(p *Player) {
 // resetChronicle börjar en ny krönika inför en vandring.
 func (g *Game) resetChronicle() {
 	g.chron = nil
+	g.epilog = nil
 	for _, p := range g.players {
 		if p != nil {
 			p.stats = chronStats{}
 			p.hurt("", "")
-			p.journal, p.death = nil, ""
+			p.journal, p.death, p.epilog = nil, "", nil
 		}
 	}
 }
@@ -141,11 +142,4 @@ func (g *Game) journeyOf(me *Player) *journeyView {
 		}
 	}
 	return v
-}
-
-// tellChronicle berättar krönikan för alla.
-func (g *Game) tellChronicle() {
-	for _, l := range g.chronicleLines() {
-		g.logAll(l.Text, l.Class)
-	}
 }

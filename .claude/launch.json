@@ -51,6 +51,27 @@
         "alla"
       ],
       "port": 8092
+    },
+    {
+      "name": "ormtornet-kort",
+      "runtimeExecutable": "go",
+      "runtimeArgs": [
+        "run",
+        ".",
+        "-addr",
+        "127.0.0.1:8094",
+        "-installningar",
+        "",
+        "-min",
+        "1",
+        "-ai",
+        "2",
+        "-turtid",
+        "60s",
+        "-sol",
+        "4"
+      ],
+      "port": 8094
     }
   ]
 }

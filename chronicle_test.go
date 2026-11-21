@@ -31,7 +31,11 @@ func TestChronicle(t *testing.T) {
 		t.Fatalf("fas %s", g.phase)
 	}
 
-	all := strings.Join(logs(a), "\n")
+	var rows []string
+	for _, l := range g.stateFor(pa).Chronicle {
+		rows = append(rows, l.Text)
+	}
+	all := strings.Join(rows, "\n")
 	gold := pa.Treasure
 	for _, want := range []string{
 		"Krönikan över vandringen",
@@ -44,9 +48,12 @@ func TestChronicle(t *testing.T) {
 			t.Errorf("krönikan saknar %q:\n%s", want, all)
 		}
 	}
-	// Krönikan kommer före epilogen.
-	if strings.Index(all, "Krönikan") > strings.Index(all, g.data.Text("spela_igen")) {
-		t.Error("krönikan kom efter slutet")
+	// Krönikan står på skärmen, inte i loggen, och epilogen följer med.
+	if strings.Contains(strings.Join(logs(a), "\n"), "Krönikan över vandringen") {
+		t.Error("krönikan står i loggen")
+	}
+	if st := g.stateFor(pa); st.Journey == nil || (g.cfg.Reveal && len(st.Epilogue) == 0) {
+		t.Error("slutet saknar den egna vandringen eller epilogen")
 	}
 
 	// En ny vandring börjar med en tom krönika.

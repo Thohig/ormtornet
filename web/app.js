@@ -482,7 +482,7 @@ function playerTag(p) {
 // den är dold.
 function showPhase() {
   const chron = wantsChron();
-  if (chron && !chronWas) chronMap = false; // en ny anledning att visa krönikan
+  if (chron && chron !== chronWas) chronMap = false; // en ny anledning att visa krönikan
   chronWas = chron;
   renderChron();
   const want = state.phase === "klassval" ? "classscreen" : chron && !chronMap ? "chronscreen" : "game";
@@ -495,18 +495,50 @@ function showPhase() {
 // kort runda för runda, hur hen dog och sina siffror, men inget om var de
 // andra är. Knappen Visa kartan går tillbaka till spelet, och Din vandring
 // i panelen Nu hit igen.
+// När vandringen är slut får alla skärmen, med resultaten, epilogen, hela
+// krönikan och sin egen vandring under.
 let chronMap = false; // kartan visas i stället för krönikan
-let chronWas = false;
+let chronWas = "";
 function wantsChron() {
   const me = myPlayer();
-  return !!(state && state.vandring && state.phase === "spel" && me && me.status === "dod");
+  if (!state || !state.vandring || !me) return "";
+  if (state.phase === "slut") return "slut";
+  return state.phase === "spel" && me.status === "dod" ? "dod" : "";
 }
 function renderChron() {
   const v = state && state.vandring;
   if (!v) return;
-  $("chronTitle").textContent = t("vandring_rubrik");
-  $("chronLead").textContent = v.dod || "";
-  $("chronStatus").textContent = state.phase === "spel" ? t("vandring_pagar", { runda: state.round, sol: state.sun, inne: v.inne, ute: v.ute }) : "";
+  const end = state.phase === "slut";
+  const rows = (id, list) => {
+    const box = $(id);
+    box.innerHTML = "";
+    (list || []).forEach((l) => {
+      const d = document.createElement("div");
+      d.textContent = l.text;
+      if (l.c) d.className = l.c;
+      box.appendChild(d);
+    });
+    box.hidden = !box.childElementCount;
+  };
+  $("chronTitle").textContent = end ? endTitle() : t("vandring_rubrik");
+  $("chronLead").textContent = end ? "" : v.dod || "";
+  $("chronStatus").textContent = end ? "" : t("vandring_pagar", { runda: state.round, sol: state.sun, inne: v.inne, ute: v.ute });
+  // Resultaten: vem som kom ut med hur mycket, vinnaren först.
+  rows("chronResults", end ? (state.results || []).map((r) => ({ text: (r.winner ? "★ " : "") + r.name + (r.ai ? " ~" : "") + " · " + resultWord(r), c: r.winner ? "win" : r.status !== "ute" ? "lost" : "" })) : []);
+  rows("chronEpilog", end ? state.epilog : []);
+  rows("chronAll", end ? (state.kronika || []).filter((l) => l.c !== "rubrik").map((l) => ({ text: l.text, c: l.c })) : []);
+  if (end && state.kronika && state.kronika[0]) {
+    const h = document.createElement("h2");
+    h.textContent = state.kronika[0].text;
+    $("chronAll").prepend(h);
+  }
+  $("chronOwn").textContent = end ? t("vandring_rubrik") : "";
+  $("chronOwn").hidden = !end;
+  const next = $("chronNext");
+  const me = myPlayer();
+  next.hidden = !end;
+  next.textContent = me && me.ready ? t("nu_vantar") : t("knapp_nytt_torn");
+  next.disabled = !!(me && me.ready);
   const box = $("chronRounds");
   box.innerHTML = "";
   if (!v.rundor.length) {
@@ -529,9 +561,10 @@ function renderChron() {
     });
     box.appendChild(d);
   });
-  $("chronStats").textContent = v.siffror;
-  $("chronWait").textContent = state.phase === "spel" ? t("vandring_vantar") : "";
+  $("chronStats").textContent = end ? "" : v.siffror;
+  $("chronWait").textContent = end ? (touch ? "" : t("slut_nytt_torn")) : t("vandring_vantar");
 }
+$("chronNext").addEventListener("click", () => send({ t: "ready" }));
 $("chronMap").addEventListener("click", () => {
   chronMap = true;
   showPhase();
@@ -1200,6 +1233,13 @@ function backToStart() {
   $("enter").focus();
 }
 
+// resultWord säger hur det gick för en vandrare: guldet, tomhänt, död eller förlorad.
+function resultWord(r) {
+  if (r.status === "ute") return r.treasure > 0 ? t("slut_guld", { n: r.treasure }) : t("slut_tomhant");
+  if (r.status === "dod") return t("slut_dod");
+  return t("slut_forlorad");
+}
+
 function endTitle() {
   return t(state.sun > 0 ? "slut_rubrik" : "slut_rubrik_solen");
 }
@@ -1212,10 +1252,7 @@ function renderOverlay() {
   }
   const lines = [{ text: endTitle() }, { text: "" }];
   state.results.forEach((r, i) => {
-    let what;
-    if (r.status === "ute") what = r.treasure > 0 ? t("slut_guld", { n: r.treasure }) : t("slut_tomhant");
-    else if (r.status === "dod") what = t("slut_dod");
-    else what = t("slut_forlorad");
+    const what = resultWord(r);
     const name = (r.winner ? "*" : " ") + (r.ai ? "~" : " ") + r.name;
     const row = name.padEnd(20, " ") + what.padStart(10, " ");
     lines.push({ text: row, cls: r.winner ? "win" : r.status !== "ute" ? "lost" : "" });
