@@ -76,15 +76,6 @@ func TestPvPRules(t *testing.T) {
 	if try() {
 		t.Fatal("anföll fast strid var avstängd")
 	}
-	g.cfg.PvP = pvpHalf
-	g.sun = g.cfg.SunMax
-	if try() {
-		t.Fatal("anföll innan solen sjunkit halvvägs")
-	}
-	g.sun = g.cfg.SunMax / 2
-	if !try() {
-		t.Fatal("kunde inte anfalla när solen sjunkit halvvägs")
-	}
 	g.cfg.PvP = pvpOn
 	g.rooms[alva.Y][alva.X].Kind = "ingang"
 	if try() {

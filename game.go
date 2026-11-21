@@ -47,17 +47,17 @@ const (
 	actDrink  = "drick"
 )
 
+// mapIso säger till sidorna att rita kartan snett ovanifrån, den enda
+// kartan. Där WebGL saknas visas den platta ändå.
+const mapIso = "snett"
+
 type Config struct {
 	AI           int    // önskat antal datorspelare
 	AbsentRounds int    // rundor innan AI tar över en frånvarande vandrare, 0 = aldrig
-	PvP          string // strid mellan vandrare: "av", "pa" eller "halva"
-	Classes      bool   // vandrarna väljer klass
-	Size         int    // tornets storlek i rum, 0 för automatisk
+	PvP          string // strid mellan vandrare: "pa", eller "av" (tomt) i testerna
+	Classes      bool   // vandrarna väljer klass; alltid i spelet, av i de flesta testerna
 	GMMode       bool   // spelledarläge: spelledaren spelar inte och ser allt
 	Reveal       bool   // false stänger av avslöjandet
-	Initiation   string // invigningen: "namn" (ormens namn) eller "svar" (fasta svar, också när tomt)
-	Change       bool   // tornet förändras med avslöjandets nivåer
-	Map          string // hur kartan ritas: "platt" eller "snett"
 	SunMax       int
 	TurnTime     time.Duration
 	MinPlayers   int
@@ -149,9 +149,6 @@ func (g *Game) towerSize() int {
 		need = 13
 	case n > 4:
 		need = 11
-	}
-	if s := g.cfg.Size; s >= need && s%2 == 1 {
-		return s
 	}
 	return need
 }
@@ -603,7 +600,7 @@ type stateMsg struct {
 	PvP        string        `json:"pvp"` // om det går att strida mot andra vandrare här
 	Paused     bool          `json:"paused,omitempty"`
 	SleepText  string        `json:"sleepText,omitempty"`
-	Map        string        `json:"karta"` // "platt" eller "snett"
+	Map        string        `json:"karta"` // alltid "snett": kartan snett ovanifrån
 	Class      *classView    `json:"klass,omitempty"`
 	Items      []itemView    `json:"foremal,omitempty"`
 	MaxItems   int           `json:"maxForemal,omitempty"` // så många föremål man kan bära
@@ -705,7 +702,7 @@ func (g *Game) stateFor(me *Player) stateMsg {
 	st := stateMsg{
 		T: "state", Sprak: g.base.Lang, You: me.ID, Size: g.size, Level: g.level, Reveal: g.cfg.Reveal,
 		Phase: g.phase, Sun: g.sun, SunMax: g.sunMax, Round: g.round,
-		MinPlayers: g.cfg.MinPlayers, Action: me.Action, Map: mapOrDefault(g.cfg.Map),
+		MinPlayers: g.cfg.MinPlayers, Action: me.Action, Map: mapIso,
 		HP: me.HP, MaxHP: g.maxHP(me), Potions: me.Potions, MaxItems: g.data.maxItems(),
 		Stuck: me.Stuck, Cellar: me.Cellar, Poison: me.Poison, Dark: me.Dark,
 	}
@@ -1140,7 +1137,13 @@ func (g *Game) toLobby() {
 
 // newTower bygger ett nytt torn och ställer alla vid sina portar.
 func (g *Game) newTower() {
-	g.size = g.towerSize()
+	g.buildTower(g.towerSize())
+}
+
+// buildTower bygger ett torn med size × size rum. Storleken följer annars
+// antalet vandrare (towerSize); testerna väljer den själva.
+func (g *Game) buildTower(size int) {
+	g.size = size
 	g.rooms = newGrid[Room](g.size)
 	g.sunMax = g.scaledSun()
 	if g.phase != phasePlay {
@@ -1323,9 +1326,6 @@ func (g *Game) actPlayer(p *Player, a string, monsterID int) {
 				p.target = g.pickFoe(p, -monsterID).ID
 			case pvpPeace:
 				g.logTo(p, g.data.Text("pvp_fredat"), "dim")
-				return
-			case pvpTooEarly:
-				g.logTo(p, g.data.Text("pvp_for_tidigt"), "dim")
 				return
 			default:
 				g.logTo(p, g.data.MonsterText("inget_monster_har"), "dim")

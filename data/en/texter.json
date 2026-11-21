@@ -561,7 +561,6 @@
     "pvp_borta": ["The one you meant to fight is no longer here."],
     "pvp_tornet_kanner": ["The floor jerks beneath you, as if something has stirred awake.", "The walls draw together a little, and then let go."],
     "pvp_fredat": ["The gate is sanctuary. Here no one raises a weapon against another wanderer."],
-    "pvp_for_tidigt": ["The sun still stands high. No fighting between wanderers until it has sunk halfway."],
     "pack_tung": ["{namn} is here. {namn} walks heavily, as if their pack were full."],
     "pack_lite": ["{namn} is here. Something clinks in their pack."],
     "pack_tom": ["{namn} is here. Their pack hangs empty."],

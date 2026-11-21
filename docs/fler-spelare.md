@@ -9,6 +9,10 @@ ordning. Varje steg byggs, committas och provas innan nästa.
 | 2 | Tornets storlek blir rörlig i koden, fortfarande högst 4 vandrare | byggt |
 | 3 | Upp till 8 vandrare och automatisk skalning | byggt |
 
+Sedan 2026-11-22 går tornets storlek, solen och klasserna inte att välja
+på värdsidan: storleken och solen är alltid automatiska, och klasserna är
+alltid med.
+
 ## Steg 1: klasser (byggt)
 
 README beskriver klasserna under "Klasser". Besluten:

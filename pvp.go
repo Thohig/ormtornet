@@ -11,9 +11,8 @@ import (
 
 // Lägen för strid mellan vandrare.
 const (
-	pvpOff  = "av"
-	pvpOn   = "pa"
-	pvpHalf = "halva" // först när solen har sjunkit halvvägs
+	pvpOff = "av" // bara i testerna
+	pvpOn  = "pa"
 )
 
 // Vad en vandrare får veta om strid i rummet den står i.
@@ -21,7 +20,6 @@ const (
 	pvpNone     = ""       // ingen annan vandrare här
 	pvpYes      = "ja"     // det går att strida
 	pvpPeace    = "fredat" // portrummet är fredat
-	pvpTooEarly = "for_tidigt"
 	pvpDisabled = "av"
 )
 
@@ -49,8 +47,6 @@ func (g *Game) pvpStatus(p *Player) string {
 		return pvpDisabled
 	case g.rooms[p.Y][p.X].Kind == "ingang":
 		return pvpPeace
-	case g.cfg.PvP == pvpHalf && g.sun > g.sunMax/2:
-		return pvpTooEarly
 	}
 	return pvpYes
 }
@@ -282,11 +278,8 @@ func (g *Game) meetIfNew(p *Player) {
 	for _, o := range foes {
 		g.logTo(p, g.packHint(o), "info")
 	}
-	switch g.pvpStatus(p) {
-	case pvpPeace:
+	if g.pvpStatus(p) == pvpPeace {
 		g.logTo(p, g.data.Text("pvp_fredat"), "dim")
-	case pvpTooEarly:
-		g.logTo(p, g.data.Text("pvp_for_tidigt"), "dim")
 	}
 }
 

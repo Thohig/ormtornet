@@ -565,7 +565,6 @@
     "pvp_borta": ["Den du ville slåss mot står inte längre här."],
     "pvp_tornet_kanner": ["Golvet rycker till, som om något har vaknat.", "Väggarna drar sig samman en aning, och släpper sedan."],
     "pvp_fredat": ["Porten är fredad. Här lyfter ingen vapen mot en annan vandrare."],
-    "pvp_for_tidigt": ["Solen står ännu högt. Ingen strid mellan vandrare förrän den har sjunkit halvvägs."],
     "pack_tung": ["{namn} är här. {namn} går tungt, som om packningen vore full."],
     "pack_lite": ["{namn} är här. Något klirrar i packningen."],
     "pack_tom": ["{namn} är här. Packningen hänger tom."],

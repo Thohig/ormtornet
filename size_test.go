@@ -8,8 +8,7 @@ import (
 func TestTowerSizes(t *testing.T) {
 	for _, size := range []int{9, 11, 13} {
 		g := testGame(t)
-		g.cfg.Size = size
-		g.newTower()
+		g.buildTower(size)
 		if g.size != size || len(g.rooms) != size || len(g.rooms[0]) != size {
 			t.Fatalf("tornet är %d, ville ha %d", g.size, size)
 		}
@@ -32,15 +31,12 @@ func TestTowerSizes(t *testing.T) {
 	}
 }
 
+// När fler kommer till lobbyn växer tornet, och alla står vid sina portar.
 func TestSizeChangeInLobby(t *testing.T) {
 	g := testGame(t)
 	a := testClient()
 	g.Join(a, "Alva")
-	s := settingsFrom(g.cfg)
-	s.Storlek = 13
-	if _, err := g.ApplySettings(s); err != nil {
-		t.Fatal(err)
-	}
+	g.AddBots(6)
 	if g.size != 13 {
 		t.Fatalf("tornet är %d", g.size)
 	}
@@ -53,18 +49,21 @@ func TestSizeChangeInLobby(t *testing.T) {
 	}
 }
 
-// En hel vandring med fyra AI-spelare i varje storlek, för att se att inget
-// går utanför tornet.
+// En hel vandring med AI-spelare i varje storlek, för att se att inget går
+// utanför tornet. Storleken följer antalet vandrare.
 func TestBotsPlayEverySize(t *testing.T) {
-	for _, size := range []int{9, 11, 13} {
+	for size, bots := range map[int]int{9: 4, 11: 6, 13: 8} {
 		{
 			d, _, err := loadData("data")
 			if err != nil {
 				t.Fatal(err)
 			}
 			d.AI.BetanketidMs = []int{3600000, 3600000}
-			g := NewGame(d, Config{Reveal: true, SunMax: 40, TurnTime: time.Hour, MinPlayers: 1, GMMode: true, AI: 8, PvP: pvpOn, Classes: true, Size: size})
-			g.AddBots(8)
+			g := NewGame(d, Config{Reveal: true, SunMax: 40, TurnTime: time.Hour, MinPlayers: 1, GMMode: true, AI: 8, PvP: pvpOn, Classes: true})
+			g.AddBots(bots)
+			if g.size != size {
+				t.Fatalf("%d vandrare: tornet %d, ville ha %d", bots, g.size, size)
+			}
 			g.startGame()
 			for g.phase == phasePlay && g.round < 200 {
 				r := g.round
@@ -130,20 +129,5 @@ func TestAutoSizeAndPorts(t *testing.T) {
 	}
 	if g.deckSleep != 13+2*4 {
 		t.Fatalf("%d sovkort med åtta vandrare", g.deckSleep)
-	}
-}
-
-func TestManualSizeNeverTooSmall(t *testing.T) {
-	g := testGame(t)
-	g.cfg.GMMode = true
-	g.cfg.Size = 9
-	g.AddBots(6)
-	if g.size != 11 {
-		t.Fatalf("tornet är %d för sex vandrare", g.size)
-	}
-	g.cfg.Size = 13
-	g.newTower()
-	if g.size != 13 {
-		t.Fatalf("spelledaren valde 13, fick %d", g.size)
 	}
 }

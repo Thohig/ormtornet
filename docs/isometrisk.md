@@ -65,6 +65,9 @@ Efter varje steg görs en commit, och användaren provar innan nästa steg.
 
 ## Så är steg 2 byggt
 
+Sedan 2026-11-22 finns inställningen Kartan inte längre: kartan ritas
+alltid snett ovanifrån, och den platta visas bara där WebGL saknas.
+
 - Inställningen Kartan (`karta` i inställningarna, `-karta`) är `platt`
   eller `snett`. Först var `platt` förval; när alla stegen var byggda blev
   det `snett`. Den följer

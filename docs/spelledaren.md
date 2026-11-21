@@ -8,10 +8,12 @@ läget nedan. Resten av dokumentet är det ursprungliga förslaget.
 Byggt (README beskriver hur det fungerar):
 
 - Värdsidan på `/spelledare`, bara från tornets egen dator.
-- Inställningar som ändras utan omstart: AI-spelare, minsta antal, sol,
-  turtid, avslöjandet, strid mellan vandrare, frånvarande vandrare,
-  tornets storlek, klasser och spelledarläget. De sparas till nästa gång.
-  ("Vandrarna syns" togs bort 2026-11-21: egen karta är det enda läget.)
+- Inställningar som ändras utan omstart: svårighet, AI-spelare,
+  spelledarläget, språket, avslöjandet och frånvarande vandrare. De sparas
+  till nästa gång. ("Vandrarna syns" togs bort 2026-11-21: egen karta är
+  det enda läget. Minsta antal, sol, turtid, strid mellan vandrare, tornets
+  storlek, klasser, invigningen, tornet förändras och kartan togs bort
+  2026-11-22: de bestäms automatiskt eller gäller alltid.)
 - Starta nu, Stäng tornet, och inbjudan att kopiera till en gruppchatt.
 - Översikten i spelledarläget: hela tornet, vandrarna, varelserna, hur djupt
   ormen sover, avslöjandets nivå och allt vandrarna har läst.

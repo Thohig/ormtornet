@@ -28,15 +28,13 @@ var webFS embed.FS
 func main() {
 	addr := flag.String("addr", "0.0.0.0:8080", "adress och port att lyssna på")
 	dataPath := flag.String("data", "data", "mapp med rum, fällor och texter")
-	sun := flag.Int("sol", defaultSettings.Sol, "antal rundor innan solen går ner (0 = automatiskt: 40, 50 eller 60 efter tornets storlek)")
-	turn := flag.Duration("turtid", time.Duration(defaultSettings.Turtid)*time.Second, "längsta tid att välja drag per runda (0 = automatiskt: 30–40 sekunder efter antalet människor)")
-	minPlayers := flag.Int("min", defaultSettings.Min, "minsta antal spelare för att börja, datorspelare inräknade")
+	sun := flag.Int("sol", 0, "antal rundor innan solen går ner (0 = automatiskt: 40, 50 eller 60 efter tornets storlek)")
+	turn := flag.Duration("turtid", 0, "längsta tid att välja drag per runda (0 = automatiskt: 30–40 sekunder efter antalet människor)")
+	minPlayers := flag.Int("min", defaultMin, "minsta antal spelare för att börja, datorspelare inräknade (för att prova; förval 2)")
 	bots := flag.Int("ai", defaultSettings.AI, "antal datorstyrda vandrare (0-7, eller 8 i spelledarläget)")
 	seed := flag.Uint64("fro", 0, "frö för första vandringen; samma frö och samma drag ger samma torn (0 = slumpat)")
 	difficulty := flag.String("svarighet", "", "svårighet: latt, normal, svar eller mardrom (förvalen står i data/svarighet.json)")
 	reveal := flag.Bool("avslojande", defaultSettings.Avslojande, "låt tornet avslöja sin hemlighet (false för den som redan känner till den)")
-	classes := flag.Bool("klasser", defaultSettings.Klasser, "vandrarna väljer klass i lobbyn (false för att spela utan klasser)")
-	size := flag.Int("storlek", defaultSettings.Storlek, "tornets storlek i rum: 9, 11 eller 13 (0 = automatisk)")
 	settingsPath := flag.String("installningar", defaultSettingsPath(), "fil där spelledarens inställningar sparas (tom för att inte spara)")
 	openPage := flag.Bool("oppna", false, "öppna introt i webbläsaren när servern har startat; det leder till värdsidan")
 	awake := flag.Bool("vaken", false, "håll datorn vaken så länge servern är igång")
@@ -45,47 +43,38 @@ func main() {
 	simulate := flag.Int("simulera", 0, "spela så många vandringar med bara AI-spelare (-ai, förval 4) och skriv hur det gick, utan att öppna tornet")
 	check := flag.Bool("kontrollera", false, "kontrollera datafilerna och avsluta")
 	site := flag.String("sida", "", "skriv sidorna för GitHub Pages till mappen och avsluta (verktyg/bygg-sida.sh lägger till tornet)")
-	initiation := flag.String("invigning", defaultSettings.Invigning, "invigningen: namn (ormens namn, nytt för varje vandring) eller svar (fasta svar)")
-	change := flag.Bool("forandras", defaultSettings.Forandras, "tornet förändras med avslöjandets nivåer: fler fällor från nivå 3, portarna stängs på nivå 4")
-	mapLook := flag.String("karta", defaultSettings.Karta, "hur kartan ritas: snett (snett ovanifrån i 3D, kräver WebGL) eller platt (rakt ovanifrån, i krita)")
 	lang := flag.String("sprak", defaultSettings.Sprak, "språket i spelet och på värdsidan: sv eller en (texter som inte är översatta visas på svenska)")
 	flag.Parse()
 
 	// Spelledarens sparade inställningar gäller, utom det som anges med
-	// flaggor: de gäller bara den här gången.
+	// flaggor: de gäller bara den här gången. Solen, turtiden och minsta
+	// antalet är inga inställningar; flaggorna finns för den som provar.
 	settings, err := loadSettings(*settingsPath)
 	if err != nil {
 		fmt.Printf("Kunde inte läsa sparade inställningar (%v). Använder standard.\n", err)
 	}
+	cfg := newConfig()
 	flag.Visit(func(f *flag.Flag) {
 		switch f.Name {
 		case "sol":
-			settings.Sol = *sun
+			cfg.SunMax = *sun
 		case "turtid":
-			settings.Turtid = int(turn.Round(time.Second) / time.Second)
+			if t := turn.Round(time.Second); t > 0 {
+				cfg.TurnTime = max(3*time.Second, min(10*time.Minute, t))
+			}
 		case "min":
-			settings.Min = *minPlayers
+			cfg.MinPlayers = max(1, min(maxPlayers, *minPlayers))
 		case "ai":
 			settings.AI = *bots
 		case "avslojande":
 			settings.Avslojande = *reveal
 		case "svarighet":
 			settings.Svarighet = *difficulty
-		case "klasser":
-			settings.Klasser = *classes
-		case "storlek":
-			settings.Storlek = *size
 		case "sprak":
 			settings.Sprak = *lang
-		case "invigning":
-			settings.Invigning = *initiation
-		case "forandras":
-			settings.Forandras = *change
-		case "karta":
-			settings.Karta = *mapLook
 		}
 	})
-	cfg := settings.config()
+	cfg = settings.applyTo(cfg)
 	cfg.Seed = *seed
 
 	data, src, err := loadDataLang(*dataPath, cfg.Lang)

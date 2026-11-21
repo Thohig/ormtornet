@@ -42,7 +42,7 @@ const settingsKey = "ormtornet-installningar"
 
 func main() {
 	settings := loadSettingsJS()
-	cfg := settings.config()
+	cfg := settings.applyTo(newConfig())
 	data, _, err := loadDataLang("", cfg.Lang)
 	if err != nil {
 		js.Global().Call("tornetFel", err.Error())

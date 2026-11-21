@@ -18,6 +18,10 @@ spela roll för vad vandrarna gör, även andra kvällen.
 
 ## Inställningarna
 
+Sedan 2026-11-22 finns de två raderna inte längre: med avslöjandet på
+gäller alltid invigningen med ormens namn och tornet som förändras, och
+fasta svar är borttaget. Så här var det byggt:
+
 Under Fler inställningar, efter Avslöjandet:
 
 | Rad | Val | Förval |

@@ -39,24 +39,21 @@ func whisperMatches(whisper string, answers []string) bool {
 	return false
 }
 
-// Invigningen: med "ormens namn" (initName) räcker inte de fasta svaren.
-// Varje vandring har ett eget namn i tre delar, som delas ut till
-// människorna i tornet, och viskningen ska innehålla namnet.
-const (
-	initName    = "namn"
-	initAnswers = "svar"
-)
+// Invigningen: de fasta svaren räcker inte. Varje vandring har ett eget
+// namn i tre delar, ormens namn, som delas ut till människorna i tornet,
+// och viskningen ska innehålla namnet. Saknar datafilerna namn räcker
+// svaren.
 
 // usesName är sant när invigningen kräver ormens namn i den här vandringen.
 func (g *Game) usesName() bool {
-	return g.cfg.Reveal && g.cfg.Initiation == initName && len(g.serpentName) == 3
+	return g.cfg.Reveal && len(g.serpentName) == 3
 }
 
 // pickSerpentName lottar ormens namn när en vandring börjar.
 func (g *Game) pickSerpentName() {
 	g.serpentName = nil
 	names := g.data.Avslojande.Namn
-	if !g.cfg.Reveal || g.cfg.Initiation != initName || len(names) == 0 {
+	if !g.cfg.Reveal || len(names) == 0 {
 		return
 	}
 	g.serpentName = names[g.rng.IntN(len(names))]

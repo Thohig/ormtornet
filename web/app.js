@@ -846,7 +846,6 @@ function renderNow(me) {
       } else {
         line(t("nu_har_star", { namn: names }), "dimline");
         if (state.pvp === "fredat") line(t("nu_fredad"), "dimline");
-        if (state.pvp === "for_tidigt") line(t("nu_for_tidigt"), "dimline");
       }
     }
   }

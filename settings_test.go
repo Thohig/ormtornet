@@ -3,9 +3,11 @@ package main
 import (
 	"net/http"
 	"net/http/httptest"
+	"os"
 	"path/filepath"
 	"strings"
 	"testing"
+	"time"
 )
 
 func countBots(g *Game) int {
@@ -16,16 +18,21 @@ func countBots(g *Game) int {
 
 func TestSettingsAddAndRemoveBots(t *testing.T) {
 	g := testGame(t)
-	if _, err := g.ApplySettings(Settings{AI: 3, Min: 2, Sol: 30, Turtid: 45, Avslojande: false}); err != nil {
+	if _, err := g.ApplySettings(Settings{AI: 3, Avslojande: false}); err != nil {
 		t.Fatal(err)
 	}
 	if n := countBots(g); n != 3 {
 		t.Fatalf("%d datorspelare, ville ha 3", n)
 	}
-	if g.cfg.SunMax != 30 || g.sun != 30 || g.cfg.TurnTime.Seconds() != 45 || g.cfg.Reveal {
-		t.Errorf("inställningarna slog inte igenom: %+v sol %d", g.cfg, g.sun)
+	if g.cfg.Reveal {
+		t.Errorf("inställningarna slog inte igenom: %+v", g.cfg)
 	}
-	g.ApplySettings(Settings{AI: 1, Min: 2, Sol: 30, Turtid: 45})
+	// Solen, turtiden och minsta antalet är inga inställningar: det som
+	// flaggorna har gett är kvar.
+	if g.cfg.SunMax != 10 || g.cfg.TurnTime != time.Hour || g.cfg.MinPlayers != 2 {
+		t.Errorf("solen, turtiden eller minsta antalet ändrades: %+v", g.cfg)
+	}
+	g.ApplySettings(Settings{AI: 1})
 	if n := countBots(g); n != 1 {
 		t.Fatalf("%d datorspelare, ville ha 1", n)
 	}
@@ -33,15 +40,15 @@ func TestSettingsAddAndRemoveBots(t *testing.T) {
 
 func TestAllBotsOnlyInGMMode(t *testing.T) {
 	g := testGame(t)
-	got, _ := g.ApplySettings(Settings{AI: 8, Min: 2, Sol: 20, Turtid: 30})
+	got, _ := g.ApplySettings(Settings{AI: 8})
 	if got.AI != 7 {
 		t.Fatalf("utan spelledarläge: %d AI-spelare, ville ha högst 7", got.AI)
 	}
-	got, _ = g.ApplySettings(Settings{AI: 8, Min: 2, Sol: 20, Turtid: 30, Spelledare: true})
+	got, _ = g.ApplySettings(Settings{AI: 8, Spelledare: true})
 	if got.AI != 8 || countBots(g) != 8 {
 		t.Fatalf("i spelledarläget: %d inställt, %d vid portarna, ville ha 8", got.AI, countBots(g))
 	}
-	got, _ = g.ApplySettings(Settings{AI: 8, Min: 2, Sol: 20, Turtid: 30})
+	got, _ = g.ApplySettings(Settings{AI: 8})
 	if got.AI != 7 || countBots(g) != 7 {
 		t.Fatalf("när spelledarläget slogs av: %d inställt, %d vid portarna, ville ha 7", got.AI, countBots(g))
 	}
@@ -49,8 +56,8 @@ func TestAllBotsOnlyInGMMode(t *testing.T) {
 
 func TestSettingsClamped(t *testing.T) {
 	g := testGame(t)
-	got, _ := g.ApplySettings(Settings{AI: 9, Min: 0, Sol: 1, Turtid: 1})
-	if got.AI != 7 || got.Min != 1 || got.Sol != 4 || got.Turtid != 3 {
+	got, _ := g.ApplySettings(Settings{AI: 9, Franvaro: 20})
+	if got.AI != 7 || got.Franvaro != 10 {
 		t.Fatalf("%+v", got)
 	}
 }
@@ -65,7 +72,7 @@ func TestSettingsLockedDuringPlay(t *testing.T) {
 	if g.phase != phasePlay {
 		t.Fatal("spelet startade inte")
 	}
-	if _, err := g.ApplySettings(Settings{AI: 2, Min: 2, Sol: 20, Turtid: 30}); err != errPlaying {
+	if _, err := g.ApplySettings(Settings{AI: 2}); err != errPlaying {
 		t.Fatalf("fel: %v", err)
 	}
 	if countBots(g) != 0 || g.cfg.SunMax != 10 {
@@ -75,7 +82,7 @@ func TestSettingsLockedDuringPlay(t *testing.T) {
 
 func TestBotStepsAsideForHuman(t *testing.T) {
 	g := testGame(t)
-	g.ApplySettings(Settings{AI: 7, Min: 2, Sol: 10, Turtid: 30, Avslojande: true})
+	g.ApplySettings(Settings{AI: 7, Avslojande: true})
 	a, b := testClient(), testClient()
 	g.Join(a, "Alva")
 	if a.player == nil || countBots(g) != 7 {
@@ -115,12 +122,20 @@ func TestSettingsSaveAndLoad(t *testing.T) {
 	if err != nil || s != defaultSettings {
 		t.Fatalf("utan fil: %+v %v", s, err)
 	}
-	want := Settings{AI: 2, Min: 3, Sol: 60, Turtid: 15, Avslojande: false, Franvaro: 1, Strid: pvpHalf, Sprak: langEn, Invigning: initAnswers, Karta: mapFlat}
+	want := Settings{AI: 2, Avslojande: false, Franvaro: 1, Sprak: langEn}
 	if err := saveSettings(path, want); err != nil {
 		t.Fatal(err)
 	}
 	if s, err = loadSettings(path); err != nil || s != want {
 		t.Fatalf("fick %+v %v", s, err)
+	}
+	// En fil från förr, med inställningar som inte finns längre, går att läsa.
+	old := `{"ai": 1, "min": 3, "sol": 20, "turtid": 15, "strid": "halva", "klasser": false, "storlek": 13, "invigning": "svar", "forandras": false, "karta": "platt", "avslojande": true}`
+	if err := os.WriteFile(path, []byte(old), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	if s, err = loadSettings(path); err != nil || s.AI != 1 || !s.Avslojande {
+		t.Fatalf("gammal fil: %+v %v", s, err)
 	}
 }
 
@@ -130,12 +145,12 @@ func TestSettingsEndpointSaves(t *testing.T) {
 	mux := http.NewServeMux()
 	addHostRoutes(mux, nil, g, hostAddrs{}, hostHooks{Close: func() {}, Save: func(s Settings) error { saved = s; return nil }})
 
-	r := httptest.NewRequest("POST", "/spelledare/installningar", strings.NewReader(`{"ai":2,"min":2,"sol":20,"turtid":30,"avslojande":true}`))
+	r := httptest.NewRequest("POST", "/spelledare/installningar", strings.NewReader(`{"ai":2,"avslojande":true}`))
 	r.RemoteAddr = "127.0.0.1:5000"
 	r.Header.Set("X-Ormtornet", "spelledare")
 	w := httptest.NewRecorder()
 	mux.ServeHTTP(w, r)
-	if w.Code != http.StatusOK || saved.AI != 2 || saved.Sol != 20 {
+	if w.Code != http.StatusOK || saved.AI != 2 || !saved.Avslojande {
 		t.Fatalf("kod %d, sparat %+v", w.Code, saved)
 	}
 	if n := countBots(g); n != 2 {
@@ -155,34 +170,17 @@ func TestAutoSunAndTurn(t *testing.T) {
 		}
 	}
 
-	// Ett eget val gäller som det står, också i ett större torn.
+	// Solen följer tornets storlek.
 	g := testGame(t)
-	g.ApplySettings(Settings{Min: 2, Sol: 30, Turtid: 20, Storlek: 13})
-	if g.size != 13 || g.sunMax != 30 || g.turnTime().Seconds() != 20 {
-		t.Fatalf("eget val: torn %d, sol %d, turtid %v", g.size, g.sunMax, g.turnTime())
-	}
-	// Automatiskt följer solen storleken.
-	got, _ := g.ApplySettings(Settings{Min: 2, Storlek: 11})
-	if got.Sol != 0 || got.Turtid != 0 || g.sunMax != 50 || g.sun != 50 {
-		t.Fatalf("automatiskt: %+v, sol %d av %d", got, g.sun, g.sunMax)
+	g.cfg.SunMax = 0
+	g.cfg.TurnTime = 0
+	g.cfg.GMMode = true
+	g.cfg.MinPlayers = 1
+	g.AddBots(6)
+	if g.size != 11 || g.sunMax != 50 || g.sun != 50 {
+		t.Fatalf("automatiskt: torn %d, sol %d av %d", g.size, g.sun, g.sunMax)
 	}
 	if v := g.HostView(false); v.SunMax != 50 || v.TurnSecs != 30 {
 		t.Fatalf("värdsidan: sol %d, turtid %d", v.SunMax, v.TurnSecs)
-	}
-}
-
-// Kartan snett ovanifrån är förval, också för sparade inställningar från
-// före valet och för okända värden. Bara "platt" ger den platta kartan.
-func TestMapDefault(t *testing.T) {
-	if defaultSettings.Karta != mapIso {
-		t.Fatalf("förval %q", defaultSettings.Karta)
-	}
-	for in, want := range map[string]string{"": mapIso, "snett": mapIso, "platt": mapFlat, "rund": mapIso} {
-		if got := (Settings{Karta: in}).normalize().Karta; got != want {
-			t.Errorf("normalize(%q) = %q, vill ha %q", in, got, want)
-		}
-		if got := mapOrDefault(in); got != want {
-			t.Errorf("mapOrDefault(%q) = %q, vill ha %q", in, got, want)
-		}
 	}
 }

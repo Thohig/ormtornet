@@ -141,7 +141,7 @@ func (g *Game) GMView(visible bool) gmView {
 	m := stateMsg{
 		T: "state", You: 0, Size: g.size, Level: g.level, Reveal: g.cfg.Reveal,
 		Phase: g.phase, Sun: g.sun, SunMax: g.sunMax, Round: g.round,
-		Sleep: -1, Map: mapOrDefault(g.cfg.Map),
+		Sleep: -1, Map: mapIso,
 	}
 	v := gmView{MaxHP: g.data.Regler.Liv, Level: g.level, Clues: len(g.usedClues), Players: []gmPlayer{}}
 	for y := range g.size {

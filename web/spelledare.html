@@ -40,13 +40,7 @@
   #slots .tag.away { color: var(--warn); }
   #slots .tag.ai { color: var(--info); }
   #slots li { align-items: baseline; }
-  #settings, #settings .grid { display: grid; grid-template-columns: 20ch auto 1fr; gap: 8px 12px; align-items: baseline; }
-  #moreSettings { grid-column: 1 / -1; margin-top: 4px; }
-  #moreSettings summary { color: var(--fg); cursor: pointer; list-style: none; margin-bottom: 8px; }
-  #moreSettings summary::-webkit-details-marker { display: none; }
-  #moreSettings summary::before { content: "▸ "; }
-  #moreSettings[open] summary::before { content: "▾ "; }
-  #moreSettings summary:hover { color: var(--hi); }
+  #settings { display: grid; grid-template-columns: 20ch auto 1fr; gap: 8px 12px; align-items: baseline; }
   #settingsHelp summary { color: var(--fg); cursor: pointer; list-style: none; }
   #settingsHelp summary::-webkit-details-marker { display: none; }
   #settingsHelp summary::before { content: "▸ "; }
@@ -55,7 +49,6 @@
   #settingsHelp dl { margin: 8px 0 0; }
   #settingsHelp dt { color: var(--hi); margin-top: 10px; }
   #settingsHelp dd { margin: 2px 0 0; color: var(--fg); line-height: 1.45; max-width: 70ch; }
-  #moreSettings summary .note { margin-left: 1ch; }
   #settings label { color: var(--fg); }
   #settings .note { color: var(--fg); font-size: 12px; }
   #settings select {
@@ -160,80 +153,18 @@
       </select>
       <span class="note" data-t="sprak_not"></span>
 
-      <details id="moreSettings">
-        <summary><span data-t="fler_installningar"></span><span class="note" id="moreNote"></span></summary>
-        <div class="grid">
-          <label for="sMin" data-t="inst_min"></label>
-          <select id="sMin" name="min"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option></select>
-          <span class="note" data-t="not_min"></span>
+      <label for="sRev" data-t="inst_avslojande"></label>
+      <select id="sRev" name="avslojande"><option value="1" data-t="val_pa"></option><option value="0" data-t="val_av"></option></select>
+      <span class="note" data-t="not_avslojande"></span>
 
-          <label for="sRev" data-t="inst_avslojande"></label>
-          <select id="sRev" name="avslojande"><option value="1" data-t="val_pa"></option><option value="0" data-t="val_av"></option></select>
-          <span class="note" data-t="not_avslojande"></span>
-
-          <label for="sInv" data-t="inst_invigning"></label>
-          <select id="sInv" name="invigning">
-            <option value="namn" data-t="val_invigning_namn"></option>
-            <option value="svar" data-t="val_invigning_svar"></option>
-          </select>
-          <span class="note" id="invNote"></span>
-
-          <label for="sFor" data-t="inst_forandras"></label>
-          <select id="sFor" name="forandras">
-            <option value="1" data-t="val_pa"></option>
-            <option value="0" data-t="val_av"></option>
-          </select>
-          <span class="note" id="forNote"></span>
-
-          <label for="sFr" data-t="inst_franvaro"></label>
-          <select id="sFr" name="franvaro">
-            <option value="0" data-t="val_franvaro_star"></option>
-            <option value="1" data-t="val_franvaro_1"></option>
-            <option value="2"></option>
-            <option value="3"></option>
-          </select>
-          <span class="note" data-t="not_franvaro"></span>
-
-          <label for="sStrid" data-t="inst_strid"></label>
-          <select id="sStrid" name="strid">
-            <option value="pa" data-t="val_pa"></option>
-            <option value="halva" data-t="val_strid_halva"></option>
-            <option value="av" data-t="val_av"></option>
-          </select>
-          <span class="note" data-t="not_strid"></span>
-
-          <label for="sKarta" data-t="inst_karta"></label>
-          <select id="sKarta" name="karta">
-            <option value="snett" data-t="val_karta_snett"></option>
-            <option value="platt" data-t="val_karta_platt"></option>
-          </select>
-          <span class="note" data-t="not_karta"></span>
-
-          <label for="sStorlek" data-t="inst_storlek"></label>
-          <select id="sStorlek" name="storlek">
-            <option value="0" data-t="val_storlek_auto"></option>
-            <option value="9"></option>
-            <option value="11"></option>
-            <option value="13"></option>
-          </select>
-          <span class="note" data-t="not_storlek"></span>
-
-          <label for="sSol" data-t="inst_sol"></label>
-          <select id="sSol" name="sol"></select>
-          <span class="note" id="solNote"></span>
-
-          <label for="sTur" data-t="inst_turtid"></label>
-          <select id="sTur" name="turtid"></select>
-          <span class="note" id="turNote"></span>
-
-          <label for="sKlass" data-t="inst_klasser"></label>
-          <select id="sKlass" name="klasser">
-            <option value="1" data-t="val_klasser_pa"></option>
-            <option value="0" data-t="val_klasser_av"></option>
-          </select>
-          <span class="note" data-t="not_klasser"></span>
-        </div>
-      </details>
+      <label for="sFr" data-t="inst_franvaro"></label>
+      <select id="sFr" name="franvaro">
+        <option value="0" data-t="val_franvaro_star"></option>
+        <option value="1" data-t="val_franvaro_1"></option>
+        <option value="2"></option>
+        <option value="3"></option>
+      </select>
+      <span class="note" data-t="not_franvaro"></span>
     </form>
     <p id="saved"></p>
     <p class="dimtext" id="settingsHint" data-t="inst_hint"></p>
@@ -249,28 +180,10 @@
         <dd data-t="forkl_spelledarlage"></dd>
         <dt data-t="sprak"></dt>
         <dd data-t="forkl_sprak"></dd>
-        <dt data-t="inst_min"></dt>
-        <dd data-t="forkl_min"></dd>
         <dt data-t="inst_avslojande"></dt>
         <dd data-t="forkl_avslojande"></dd>
-        <dt data-t="inst_invigning"></dt>
-        <dd data-t="forkl_invigning"></dd>
-        <dt data-t="inst_forandras"></dt>
-        <dd data-t="forkl_forandras"></dd>
         <dt data-t="inst_franvaro"></dt>
         <dd data-t="forkl_franvaro"></dd>
-        <dt data-t="inst_strid"></dt>
-        <dd data-t="forkl_strid"></dd>
-        <dt data-t="inst_karta"></dt>
-        <dd data-t="forkl_karta"></dd>
-        <dt data-t="inst_storlek"></dt>
-        <dd data-t="forkl_storlek"></dd>
-        <dt data-t="inst_sol"></dt>
-        <dd data-t="forkl_sol"></dd>
-        <dt data-t="inst_turtid"></dt>
-        <dd data-t="forkl_turtid"></dd>
-        <dt data-t="inst_klasser"></dt>
-        <dd data-t="forkl_klasser"></dd>
       </dl>
     </details>
     </section>
@@ -535,47 +448,14 @@ $("barMain").onclick = () => $("startNow").click();
 // med det, eller medan en ändring är på väg till servern.
 let saving = false;
 
-// fillOptions fyller en lista med tal. 0 står först och betyder automatiskt.
-function fillOptions(sel, values, current) {
-  const all = [...new Set([0, ...values, current])].sort((a, b) => a - b);
-  if (!(sel.options.length === all.length && [...sel.options].every((o, i) => +o.value === all[i]))) {
-    sel.textContent = "";
-    all.forEach((n) => sel.append(new Option(String(n), String(n))));
-  }
-  sel.options[0].text = t("val_auto"); // också när språket byts
-}
-
 // optionTexts: de val i formuläret som har ett tal i texten. De andra
 // valen får sina texter av applyTexts.
 function optionTexts() {
   [...$("sFr").options].forEach((o) => {
     if (+o.value >= 2) o.text = t("val_franvaro_n", { antal: o.value });
   });
-  [...$("sStorlek").options].forEach((o) => {
-    if (+o.value) o.text = t("storlek_rum", { storlek: o.value });
-  });
 }
 optionTexts();
-
-// moreText: de hopfällda inställningarna i korthet.
-function moreText(s) {
-  const strid = { pa: "kort_strid_pa", halva: "kort_strid_halva", av: "kort_strid_av" }[s.strid];
-  return [
-    t("kort_min", { antal: s.min }),
-    t(s.avslojande ? "kort_avslojande_pa" : "kort_avslojande_av"),
-    s.avslojande && s.invigning === "svar" ? t("kort_invigning_svar") : "",
-    s.avslojande && !s.forandras ? t("kort_forandras_av") : "",
-    s.franvaro ? t("kort_franvaro", { antal: s.franvaro }) : t("kort_franvaro_star"),
-    strid ? t(strid) : t("kort_strid", { strid: s.strid }),
-    s.karta === "platt" ? t("kort_karta_platt") : "",
-    s.storlek ? t("storlek_rum", { storlek: s.storlek }) : t("kort_storlek_auto"),
-    s.sol ? t("kort_sol", { rundor: s.sol }) : "",
-    s.turtid ? t("kort_turtid", { sekunder: s.turtid }) : "",
-    t(s.klasser ? "kort_klasser_pa" : "kort_klasser_av"),
-  ]
-    .filter(Boolean)
-    .join(" · ");
-}
 
 function renderSettings(v) {
   const s = v.settings;
@@ -585,23 +465,6 @@ function renderSettings(v) {
   $("settingsHint").textContent = playing ? t("inst_hint_spel") : t("inst_hint");
   $("aiNote").textContent = s.ai > v.bots && !playing ? t("not_ai", { antal: v.bots }) : "";
   $("gmNote").textContent = s.spelledarlage ? t("not_spelledarlage") : t("not_spelledarlage_av");
-  // Invigningen hör till avslöjandet och går inte att välja utan det.
-  $("sInv").disabled = playing || !s.avslojande;
-  $("invNote").textContent = s.avslojande ? t("not_invigning") : t("not_kraver_avslojande");
-  $("sFor").disabled = playing || !s.avslojande;
-  $("forNote").textContent = s.avslojande ? t("not_forandras") : t("not_kraver_avslojande");
-  // De hopfällda inställningarna i korthet, så att de syns utan att fällas ut.
-  $("moreNote").textContent = moreText(s);
-  // Vad Automatisk ger just nu: solen efter tornets storlek, turtiden efter
-  // människorna vid portarna, eller den som gäller under vandringen.
-  $("solNote").textContent = s.sol
-    ? t("not_sol")
-    : t("not_sol_auto", { rundor: v.sunMax, storlek: v.size });
-  $("turNote").textContent = s.turtid
-    ? t("not_turtid")
-    : playing
-      ? t("not_turtid_auto_spel", { sekunder: v.turnSecs })
-      : t("not_turtid_auto", { sekunder: v.turnSecs });
   const busy = saving || form.contains(document.activeElement);
   const sv = $("sSv");
   const levels = v.svarigheter || [];
@@ -635,27 +498,16 @@ function aiChoices(gm) {
 
 // fillForm fyller i formuläret med inställningarna s, som de gäller på tornet.
 function fillForm(s) {
-  fillOptions($("sSol"), [20, 30, 40, 50, 60, 80], s.sol);
-  fillOptions($("sTur"), [15, 30, 45, 60], s.turtid);
   aiChoices(s.spelledarlage);
   $("sAI").value = String(s.ai);
   $("gmNote").textContent = s.spelledarlage ? t("not_spelledarlage") : t("not_spelledarlage_av");
-  $("sMin").value = String(s.min);
-  $("sSol").value = String(s.sol);
-  $("sTur").value = String(s.turtid);
   $("sRev").value = s.avslojande ? "1" : "0";
-  $("sInv").value = s.invigning || "namn";
-  $("sFor").value = s.forandras ? "1" : "0";
   const fr = $("sFr");
   if (![...fr.options].some((o) => +o.value === s.franvaro)) {
     fr.append(new Option(t("val_franvaro_n", { antal: s.franvaro }), String(s.franvaro)));
   }
   fr.value = String(s.franvaro);
-  $("sStrid").value = s.strid;
-  $("sKarta").value = s.karta || "snett";
   $("sGM").value = s.spelledarlage ? "1" : "0";
-  $("sKlass").value = s.klasser ? "1" : "0";
-  $("sStorlek").value = String(s.storlek || 0);
   $("sSprak").value = s.sprak || "sv";
 }
 
@@ -687,18 +539,9 @@ $("settings").addEventListener("change", async () => {
   aiChoices($("sGM").value === "1"); // syns direkt, innan tornet har svarat
   const s = {
     ai: +$("sAI").value,
-    min: +$("sMin").value,
-    sol: +$("sSol").value,
-    turtid: +$("sTur").value,
     avslojande: $("sRev").value === "1",
-    invigning: $("sInv").value,
-    forandras: $("sFor").value === "1",
     franvaro: +$("sFr").value,
-    strid: $("sStrid").value,
-    karta: $("sKarta").value,
     spelledarlage: $("sGM").value === "1",
-    klasser: $("sKlass").value === "1",
-    storlek: +$("sStorlek").value,
     svarighet: $("sSv").value,
     sprak: $("sSprak").value,
   };

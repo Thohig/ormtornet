@@ -4,6 +4,30 @@ Det som har ändrats i spelet, nyast först. README beskriver hur allt
 fungerar. Här står vad som är nytt och vad det betyder för den som spelar
 eller leder tornet.
 
+## 2026-11-22
+
+### Färre inställningar på värdsidan
+
+- Inför nästa vandring har nu sex inställningar: Svårighet, AI-spelare,
+  Spelledarläge, Språk, Avslöjandet och Frånvarande vandrare. Fler
+  inställningar finns inte längre.
+- Tornets storlek, solnedgången och turtiden bestäms alltid automatiskt
+  efter antalet vandrare.
+- Vandrarna väljer alltid klass, och strid mellan vandrare är alltid på
+  från första rundan. Portrummen är fortfarande fredade.
+- Vandringen börjar av sig själv när minst två är redo, AI-spelare
+  inräknade.
+- Med avslöjandet på gäller alltid invigningen med ormens namn och tornet
+  som förändras. Fasta svar finns inte längre; bara om datafilerna saknar
+  namn räcker svaren.
+- Kartan ritas alltid snett ovanifrån i 3D. En enhet utan WebGL visar
+  fortfarande den platta kartan.
+- Flaggorna `-klasser`, `-storlek`, `-invigning`, `-forandras` och
+  `-karta` är borttagna. `-sol`, `-turtid` och `-min` finns kvar för den
+  som provar.
+- Sparade inställningar från förr går att läsa; det som inte finns längre
+  hoppas över.
+
 ## 2026-11-21
 
 ### Ikonen i Safari

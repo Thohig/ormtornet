@@ -6,7 +6,6 @@ import "testing"
 // stängs aldrig, och genom en stängd port kommer ingen ut.
 func TestPortsCloseOneByOne(t *testing.T) {
 	g, a, _ := startTwo(t)
-	g.cfg.Change = true
 	g.data.Avslojande.Forandring.PortStangsVar = 2
 	g.level = 3
 	g.closePorts()
@@ -58,7 +57,6 @@ func roomShut(st stateMsg, x, y int) bool {
 // När tornet förändras gäller nivåns vikter för fällorna i nya rum.
 func TestTrapWeightsFollowLevel(t *testing.T) {
 	g, _, _ := startTwo(t)
-	g.cfg.Change = true
 	g.data.Avslojande.Forandring.Fallvikter = map[string]map[string]int{"3": {"ormgrop": 1000000000}}
 	g.level = 2
 	other := 0

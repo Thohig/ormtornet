@@ -64,22 +64,17 @@ Flaggor:
 
 - `-addr 0.0.0.0:8080` adress och port
 - `-data data` mapp med datafilerna
-- `-sol 0` antal rundor innan solen går ner; `0` är automatiskt efter tornets storlek (40 på 9 × 9, 50 på 11 × 11, 60 på 13 × 13)
-- `-turtid 0` längsta tid att välja drag per runda; `0` är automatiskt efter antalet människor (30–40 sekunder)
-- `-min 2` minsta antal spelare för att börja, datorspelare inräknade (sätt `-min 1` för att prova ensam)
+- `-sol 0` antal rundor innan solen går ner; `0` är automatiskt efter tornets storlek (40 på 9 × 9, 50 på 11 × 11, 60 på 13 × 13). Inte en inställning på värdsidan; för den som provar
+- `-turtid 0` längsta tid att välja drag per runda; `0` är automatiskt efter antalet människor (30–40 sekunder). Inte en inställning på värdsidan; för den som provar
+- `-min 2` minsta antal spelare för att börja, datorspelare inräknade (sätt `-min 1` för att prova ensam). Inte en inställning på värdsidan; för den som provar
 - `-ai 2` antal datorstyrda vandrare (0–7, eller 8 i spelledarläget)
 - `-svarighet normal` svårighet: `latt`, `normal`, `svar` eller `mardrom`
-- `-klasser=false` vandrarna väljer ingen klass
 - `-sprak en` språket i spelet och på värdsidan: `sv` eller `en`. Det som inte är översatt visas på svenska (se Språk nedan)
 - `-simulera 500` spelar 500 vandringar med bara AI-spelare och skriver hur det gick, utan att öppna tornet (se Simulera nedan)
 - `-kontrollera` kontrollerar datafilerna och avslutar, utan att öppna tornet
 - `-sida mapp` skriver sidorna för GitHub Pages till mappen och avslutar. Använd hellre `verktyg/bygg-sida.sh`, som också bygger tornet (se Tornet i webbläsaren nedan)
 - `-fro 0` frö för den första vandringen. Varje vandring skriver sitt frö i terminalen och på värdsidan. Startar du med samma frö och vandrarna gör samma drag blir tornet detsamma, rum för rum, så att en konstig vandring kan spelas upp igen. `0` ger ett slumpat frö
-- `-storlek 0` tornets storlek i rum: `9`, `11` eller `13`, eller `0` för automatisk (efter antalet vandrare). Ett torn blir aldrig för litet för alla
 - `-avslojande=false` stänger av avslöjandet: ingen berättelse, inga varsel, ingen invigning och inget tornet som förändras
-- `-invigning namn` invigningen: `namn` (ormens namn, nytt för varje vandring) eller `svar` (fasta svar)
-- `-forandras=false` tornet förändras inte med avslöjandets nivåer
-- `-karta platt` kartan ritas rakt ovanifrån i krita. Förval är `snett`, kartan snett ovanifrån i 3D (kräver WebGL; en enhet utan visar den platta). Se [docs/isometrisk.md](docs/isometrisk.md)
 - `-oppna` öppnar introt i webbläsaren när servern har startat; på den här datorn leder det till värdsidan, eller till spelledarbordet i spelledarläget
 - `-vaken` håller datorn vaken så länge servern är igång
 - `-autostopp 10m` stänger tornet när ingen spelare är ansluten och ingen sida har synts på tornets dator så länge (`0` = aldrig)
@@ -138,39 +133,30 @@ innehållet, hopfällda, och en liten knapp som stänger tornet. Har ingen
 människa kommit in en och en halv minut efter att sidan öppnades fälls
 Kommer någon inte in? ut av sig själv.
 
-Under Inför nästa vandring väljer spelledaren det här. Svårighet,
-AI-spelare, Spelledarläge och Språk syns direkt. Resten ligger under Fler
-inställningar, som visar de nuvarande valen i korthet tills man fäller ut
-den. Solnedgång och Turtid står där bara när de inte är automatiska.
-Under formuläret förklarar "Vad inställningarna gör", hopfälld, varje
+Under Inför nästa vandring väljer spelledaren det här. Under formuläret förklarar "Vad inställningarna gör", hopfälld, varje
 inställning med några meningar (`forkl_*` i `vardsidan.json`).
 
 | Inställning | Val | Förval |
 |---|---|---|
 | AI-spelare | 0–7, eller 8 i spelledarläget | 0 |
-| Minst antal vandrare | 1–8, AI-spelare inräknade | 2 |
 | Svårighet | Lätt, Normal, Svår, Mardröm | Normal |
-| Avslöjandet | på eller av | på |
-| Invigningen | ormens namn eller fasta svar (kräver avslöjandet) | ormens namn |
-| Tornet förändras | på eller av (kräver avslöjandet) | på |
+| Avslöjandet | på eller av; med det på gäller invigningen med ormens namn och tornet förändras | på |
 | Frånvarande vandrare | AI tar över efter 1–3 rundor, eller står still | 2 rundor |
-| Strid mellan vandrare | på, efter halva tiden, av | på |
-| Kartan | snett ovanifrån i 3D, eller rakt ovanifrån i krita | snett ovanifrån |
-| Tornets storlek | automatisk, 9, 11 eller 13 rum | automatisk |
-| Solnedgång | automatisk, eller 20–80 rundor | automatisk |
-| Turtid | automatisk, eller 15–60 sekunder per runda | automatisk |
-| Klasser | på eller av | på |
 | Spelledarläge | på eller av | av |
 | Språk | svenska eller English | svenska |
 
-Automatisk solnedgång ger 40 rundor i ett torn på 9 × 9, 50 på 11 × 11
-och 60 på 13 × 13, lika många fler som vägen till kammaren är längre. Ett
-eget val gäller som det står, oavsett storlek. Automatisk turtid ger 30
-sekunder för upp till fyra människor, 35 för fem eller sex och 40 för sju
-eller åtta. AI-spelare räknas inte. Turtiden räknas ut när vandringen
-börjar och ligger fast under den. Tillägget är litet med flit: rundan
-avgörs så fort alla har valt, och ett högre tak låter bara alla vänta
-längre på den som dröjer. Bredvid valen står vad automatisk ger just nu.
+Resten går inte att välja. Tornets storlek följer antalet vandrare: 9 × 9
+rum för upp till fyra, 11 × 11 för fem eller sex och 13 × 13 för sju eller
+åtta. Solen går ner efter 40 rundor i ett torn på 9 × 9, 50 på 11 × 11
+och 60 på 13 × 13, lika många fler som vägen till kammaren är längre.
+Turtiden är 30 sekunder för upp till fyra människor, 35 för fem eller sex
+och 40 för sju eller åtta. AI-spelare räknas inte. Turtiden räknas ut när
+vandringen börjar och ligger fast under den. Tillägget är litet med flit:
+rundan avgörs så fort alla har valt, och ett högre tak låter bara alla
+vänta längre på den som dröjer. Vandrarna väljer alltid klass, de kan
+alltid slåss med varandra utom i portrummen, och vandringen börjar av sig
+själv när minst två är redo, AI-spelare inräknade. Kartan ritas snett
+ovanifrån i 3D; en enhet utan WebGL visar den platta kartan.
 
 Under Vid porten står hur stort tornet blir och hur många rundor solen
 har. AI-spelare kommer och går direkt i lobbyn, och tornet byggs om i
@@ -330,7 +316,7 @@ den som dör och för alla i slutet (se slutet nedan och Strider):
      Visa krönikan i panelen Nu går tillbaka.
      Enter (Nytt torn) leder tillbaka till lobbyn när alla
      har tryckt, med ett nytt torn. Därefter kommer ett nytt klassval.
-     Utan klasser börjar nästa vandring direkt efter lobbyn. Starta nu på
+     Starta nu på
      värdsidan går från lobbyn till klassvalet, och under klassvalet
      börjar vandringen direkt.
 
@@ -496,8 +482,7 @@ igen.
 
 Namn, beskrivningar, texter och siffror står i `data/klasser.json`. Vad
 styrkan och svagheten gör styrs av klassens `id` i `classes.go` och där
-spelet händer. Spelledaren stänger av klasserna med "Klasser: av" på
-värdsidan, eller med `-klasser=false`.
+spelet händer. Klasserna går inte att stänga av.
 
 ### Strid mellan vandrare
 
@@ -509,8 +494,7 @@ anfaller, även om den går ut ur rummet. Varje träff kostar 1 liv och river
 Hur mycket någon bär syns inte, men man får en vink när man möter dem.
 Portrummen är fredade, och varje runda med strid gör ormen lite oroligare.
 AI-spelare anfaller bara människor, utom när alla vandrare är AI-spelare.
-Spelledaren väljer under "Strid mellan vandrare": på, efter halva tiden
-eller av.
+Striden går inte att stänga av.
 
 ### Spela mot datorn
 
@@ -707,22 +691,20 @@ Från nivå 2 kan en människa viska till tornet med V (eller knappen Viska),
 en gång per nivå. Viskningen skrivs i en egen ruta och syns bara för
 servern och spelledaren. Rätt viskning gör vandraren **invigd**. Tornet
 svarar bara "Det vet att du vet", och de andra hör att det blev tyst
-någonstans. Vad som är rätt beror på inställningen Invigningen:
+någonstans. Rätt viskning innehåller ormens namn.
+Varje vandring lottar ett namn i tre delar ur
+`namn` i `avslojande.json`, till exempel Karumeth (Ka, ru, meth). Vid
+nivå 2 får varje människa i tornet en del, fördelat så att gruppen
+tillsammans vet så mycket som möjligt, och vid nivå 3 och 4 en del till
+som den saknar. Den som spelar ensam har hela namnet vid nivå 4. Delarna
+står i loggen och i tecknen (`· RU ·`). Viskningen ska innehålla namnet,
+ihop eller i delar, och visa att man förstår: ett av svaren under `svar`
+("Karumeth, tornet är ormen") eller en mall under `svar_med_namn`
+("tornet är Karumeth"). Svaren räcker inte ensamma, så pusslet är nytt
+varje gång, också för den som har spelat förut. Saknar `avslojande.json`
+namn räcker svaren ensamma.
 
-- **Ormens namn** (förval). Varje vandring lottar ett namn i tre delar ur
-  `namn` i `avslojande.json`, till exempel Karumeth (Ka, ru, meth). Vid
-  nivå 2 får varje människa i tornet en del, fördelat så att gruppen
-  tillsammans vet så mycket som möjligt, och vid nivå 3 och 4 en del till
-  som den saknar. Den som spelar ensam har hela namnet vid nivå 4. Delarna
-  står i loggen och i tecknen (`· RU ·`). Viskningen ska innehålla namnet,
-  ihop eller i delar, och visa att man förstår: ett av svaren under `svar`
-  ("Karumeth, tornet är ormen") eller en mall under `svar_med_namn`
-  ("tornet är Karumeth"). Svaren räcker inte ensamma, så pusslet är nytt
-  varje gång, också för den som har spelat förut.
-- **Fasta svar**. Det räcker att viskningen innehåller något av svaren
-  under `svar`, som hela ord. Passar första kvällen.
-
-Med ormens namn finns två saker till:
+Till ormens namn hör också två saker:
 
 - **Byte vid dödande.** Den som dödar en annan vandrare hittar de delar av
   namnet som offret hade och dödaren saknade.
@@ -758,7 +740,7 @@ eller att låta bli. Texterna står under `varsel` i `avslojande.json`.
 
 ### Tornet förändras
 
-Med inställningen Tornet förändras (förval på):
+Med avslöjandet på förändras tornet:
 
 - Från nivå 3 blir fällorna som hör till ormens kropp vanligare i nya rum:
   det rasande golvet, det roterande rummet, ormgropen och det ömsade
@@ -1021,8 +1003,7 @@ go run . -simulera 500 -ai 4 -svarighet svar
 Det tar under en sekund. Utskriften säger hur många som kom ut med och
 utan skatt, dog eller blev kvar i mörkret, hur mycket skatt de bar, vad de
 dog av, hur ofta ormen vaknade och hur det gick för varje klass.
-Inställningarna är desamma som när tornet öppnas (`-sol`, `-storlek`,
-`-klasser` och de sparade). Vandringarna får frön i följd
+Inställningarna är desamma som när tornet öppnas (`-sol` och de sparade). Vandringarna får frön i följd
 från `-fro`, så samma kommando ger samma resultat, och en enskild vandring
 kan köras om med `-simulera 1 -fro` och dess frö.
 

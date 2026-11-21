@@ -8,87 +8,60 @@ import (
 	"errors"
 	"os"
 	"path/filepath"
-	"time"
 )
 
 type Settings struct {
-	AI         int    `json:"ai"`            // datorspelare, 0–3
-	Min        int    `json:"min"`           // minsta antal vandrare, datorspelare inräknade
-	Sol        int    `json:"sol"`           // rundor innan solen går ner, 0 för automatiskt efter tornets storlek
-	Turtid     int    `json:"turtid"`        // sekunder per runda, 0 för automatiskt efter antalet människor
-	Avslojande bool   `json:"avslojande"`    // låt tornet avslöja sin hemlighet
+	AI         int    `json:"ai"`            // datorspelare, 0–7
+	Avslojande bool   `json:"avslojande"`    // låt tornet avslöja sin hemlighet; då gäller också invigningen och tornet förändras
 	Franvaro   int    `json:"franvaro"`      // rundor innan AI tar över en frånvarande vandrare, 0 = aldrig
-	Strid      string `json:"strid"`         // strid mellan vandrare: "av", "pa" eller "halva"
 	Spelledare bool   `json:"spelledarlage"` // spelledaren spelar inte själv och ser allt
 	Svarighet  string `json:"svarighet"`     // förval i data/svarighet.json, tomt för standard
-	Klasser    bool   `json:"klasser"`       // vandrarna väljer klass
-	Storlek    int    `json:"storlek"`       // tornets storlek i rum: 9, 11 eller 13, 0 för automatisk
 	Sprak      string `json:"sprak"`         // språket i spelet och på värdsidan: "sv" eller "en"
-	Invigning  string `json:"invigning"`     // invigningen: "namn" (ormens namn) eller "svar" (fasta svar)
-	Forandras  bool   `json:"forandras"`     // tornet förändras med avslöjandets nivåer
-	Karta      string `json:"karta"`         // hur kartan ritas: "platt" (rakt ovanifrån) eller "snett" (snett ovanifrån i 3D)
 }
 
-// Kartans utseende. Snett ovanifrån är förval och ritas med WebGL
-// (web/iso/iso.js, byggd från klient/); där WebGL saknas visas den platta
-// kartan ändå.
-const (
-	mapFlat = "platt"
-	mapIso  = "snett"
-)
+// Det som inte går att ställa in. Tornets storlek, solen och turtiden
+// bestäms automatiskt; klasserna och striden mellan vandrarna är alltid
+// med. Flaggorna -sol, -turtid och -min finns kvar för den som provar.
+const defaultMin = 2
 
-var defaultSettings = Settings{AI: 0, Min: 2, Sol: 0, Turtid: 0, Avslojande: true, Franvaro: 2, Strid: pvpOn, Klasser: true, Sprak: langSv, Invigning: initName, Forandras: true, Karta: mapIso}
+var defaultSettings = Settings{AI: 0, Avslojande: true, Franvaro: 2, Sprak: langSv}
 
 var errPlaying = errors.New("inställningarna kan ändras när omgången är slut")
 
 // normalize håller värdena inom det spelet klarar av.
 func (s Settings) normalize() Settings {
 	// Utan spelledarläge måste en plats finnas kvar åt en människa. I
-	// spelledarläget kan alla fyra vandrarna vara AI-spelare.
+	// spelledarläget kan alla vandrarna vara AI-spelare.
 	maxAI := maxPlayers - 1
 	if s.Spelledare {
 		maxAI = maxPlayers
 	}
 	s.AI = max(0, min(maxAI, s.AI))
-	s.Min = max(1, min(maxPlayers, s.Min))
-	if s.Sol != 0 {
-		s.Sol = max(4, min(200, s.Sol))
-	}
-	if s.Turtid != 0 {
-		s.Turtid = max(3, min(600, s.Turtid))
-	}
 	s.Franvaro = max(0, min(10, s.Franvaro))
-	if s.Strid != pvpOff && s.Strid != pvpOn && s.Strid != pvpHalf {
-		s.Strid = pvpOn
-	}
-	if s.Storlek != 9 && s.Storlek != 11 && s.Storlek != 13 {
-		s.Storlek = 0
-	}
 	s.Sprak = langOrDefault(s.Sprak)
-	if s.Invigning != initAnswers {
-		s.Invigning = initName
-	}
-	if s.Karta != mapFlat {
-		s.Karta = mapIso
-	}
 	return s
 }
 
-func (s Settings) config() Config {
+// newConfig är spelets regler innan inställningarna läggs på.
+func newConfig() Config {
+	return Config{Classes: true, PvP: pvpOn, MinPlayers: defaultMin}
+}
+
+// applyTo lägger inställningarna på cfg. Det som inte är en inställning,
+// som solen och turtiden från flaggorna, får vara som det är.
+func (s Settings) applyTo(cfg Config) Config {
 	s = s.normalize()
-	return Config{Difficulty: s.Svarighet, AI: s.AI, AbsentRounds: s.Franvaro, PvP: s.Strid, Classes: s.Klasser, Size: s.Storlek, GMMode: s.Spelledare, MinPlayers: s.Min, SunMax: s.Sol, TurnTime: time.Duration(s.Turtid) * time.Second, Reveal: s.Avslojande, Lang: s.Sprak, Initiation: s.Invigning, Change: s.Forandras, Map: s.Karta}
+	cfg.Difficulty = s.Svarighet
+	cfg.AI = s.AI
+	cfg.AbsentRounds = s.Franvaro
+	cfg.GMMode = s.Spelledare
+	cfg.Reveal = s.Avslojande
+	cfg.Lang = s.Sprak
+	return cfg
 }
 
 func settingsFrom(cfg Config) Settings {
-	return Settings{Svarighet: cfg.Difficulty, AI: cfg.AI, Franvaro: cfg.AbsentRounds, Strid: cfg.PvP, Klasser: cfg.Classes, Storlek: cfg.Size, Spelledare: cfg.GMMode, Min: cfg.MinPlayers, Sol: cfg.SunMax, Turtid: int(cfg.TurnTime / time.Second), Avslojande: cfg.Reveal, Sprak: langOrDefault(cfg.Lang), Invigning: cfg.Initiation, Forandras: cfg.Change, Karta: mapOrDefault(cfg.Map)}
-}
-
-// mapOrDefault ger kartans utseende, snett ovanifrån när inget är valt.
-func mapOrDefault(m string) string {
-	if m == mapFlat {
-		return mapFlat
-	}
-	return mapIso
+	return Settings{Svarighet: cfg.Difficulty, AI: cfg.AI, Franvaro: cfg.AbsentRounds, Spelledare: cfg.GMMode, Avslojande: cfg.Reveal, Sprak: langOrDefault(cfg.Lang)}
 }
 
 // defaultSettingsPath ger ~/Library/Application Support/Ormtornet/installningar.json.
@@ -150,7 +123,7 @@ func (g *Game) ApplySettings(s Settings) (Settings, error) {
 		return settingsFrom(g.cfg), errPlaying
 	}
 	wasGM := g.cfg.GMMode
-	g.cfg = s.config()
+	g.cfg = s.applyTo(g.cfg)
 	g.cfg.Difficulty = g.base.difficultyID(g.cfg.Difficulty)
 	g.data = g.base.withDifficulty(g.cfg.Difficulty)
 	if g.phase == phaseLobby {
@@ -169,9 +142,6 @@ func (g *Game) ApplySettings(s Settings) (Settings, error) {
 	if g.phase == phaseLobby {
 		g.sunMax = g.scaledSun()
 		g.sun = g.sunMax
-	}
-	if g.phase == phaseLobby && g.towerSize() != g.size {
-		g.newTower() // ett torn av den nya storleken
 	}
 	g.syncBots(true)
 	if !g.checkStart() {

@@ -1,6 +1,6 @@
 package main
 
-// Tornet förändras med avslöjandets nivåer, när inställningen är på: från
+// Tornet förändras med avslöjandets nivåer, när avslöjandet är på: från
 // nivå 3 blir fällorna som hör till ormens kropp vanligare i nya rum, och på
 // nivå 4 sluter sig portarna en i taget. Den sista porten stängs aldrig.
 
@@ -10,7 +10,7 @@ import (
 
 // changes är sant när tornet förändras i den här vandringen.
 func (g *Game) changes() bool {
-	return g.cfg.Reveal && g.cfg.Change
+	return g.cfg.Reveal
 }
 
 // randomTrap väljer en fälla för ett nytt rum. När tornet förändras gäller

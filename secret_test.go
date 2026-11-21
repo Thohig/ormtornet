@@ -27,7 +27,8 @@ func TestWhisperMatching(t *testing.T) {
 func TestWhisperInitiates(t *testing.T) {
 	g, a, b := startTwo(t)
 	pa := a.player
-	g.Whisper(a, "tornet är ormen")
+	g.serpentName = []string{"Ka", "ru", "meth"}
+	g.Whisper(a, "Karumeth, tornet är ormen")
 	if pa.initiated {
 		t.Fatal("invigd på nivå 1")
 	}
@@ -37,17 +38,17 @@ func TestWhisperInitiates(t *testing.T) {
 	if pa.initiated || pa.guessLevel != 2 {
 		t.Fatal("fel viskning gick igenom")
 	}
-	g.Whisper(a, "tornet är ormen")
+	g.Whisper(a, "Karumeth, tornet är ormen")
 	if pa.initiated {
 		t.Fatal("två viskningar på samma nivå")
 	}
 	g.level = 3
-	g.Whisper(a, "Tornet är ormen.")
+	g.Whisper(a, "Karumeth, tornet är ormen.")
 	if !pa.initiated {
 		t.Fatal("rätt viskning gick inte igenom")
 	}
 	for _, line := range logs(b) {
-		if strings.Contains(line, "ormen") || strings.Contains(line, pa.Name) {
+		if strings.Contains(line, "ormen") || strings.Contains(line, "Karumeth") || strings.Contains(line, pa.Name) {
 			t.Fatalf("Bo fick veta något: %q", line)
 		}
 	}
@@ -58,7 +59,8 @@ func TestWhisperInitiates(t *testing.T) {
 	g2, c, _ := startTwo(t)
 	g2.cfg.Reveal = false
 	g2.level = 3
-	g2.Whisper(c, "tornet är ormen")
+	g2.serpentName = []string{"Ka", "ru", "meth"}
+	g2.Whisper(c, "Karumeth, tornet är ormen")
 	if c.player.initiated {
 		t.Fatal("invigd utan avslöjande")
 	}
@@ -169,11 +171,10 @@ func TestGMInitiateAndGiveItem(t *testing.T) {
 	}
 }
 
-// nameGame startar en vandring med n människor och invigningen "ormens namn".
+// nameGame startar en vandring med n människor.
 func nameGame(t *testing.T, n int) (*Game, []*Client) {
 	t.Helper()
 	g := testGame(t)
-	g.cfg.Initiation = initName
 	g.cfg.MinPlayers = 1
 	var cs []*Client
 	for i := range n {
@@ -239,13 +240,13 @@ func TestNameWhisper(t *testing.T) {
 			t.Errorf("%q: %v", c.w, got)
 		}
 	}
-	// Med fasta svar räcker svaret som förut.
-	g.cfg.Initiation = initAnswers
+	// Saknar datafilerna namn räcker svaret.
+	g.serpentName = nil
 	if !g.whisperRight("tornet är ormen") {
-		t.Fatal("fasta svar gick inte igenom")
+		t.Fatal("svaret gick inte igenom utan namn")
 	}
 	// Epilogen säger namnet.
-	g.cfg.Initiation = initName
+	g.serpentName = []string{"Ka", "ru", "meth"}
 	if g.serpentNameText() != "Karumeth" {
 		t.Fatalf("namnet skrivs %q", g.serpentNameText())
 	}
@@ -260,9 +261,9 @@ func TestKillTakesNameParts(t *testing.T) {
 	if a.parts != [3]bool{true, true, true} {
 		t.Fatalf("dödaren fick %v", a.parts)
 	}
-	// Med fasta svar finns inga delar att ta.
+	// Utan namn finns inga delar att ta.
 	g2, cs2 := nameGame(t, 2)
-	g2.cfg.Initiation = initAnswers
+	g2.serpentName = nil
 	c, d := cs2[0].player, cs2[1].player
 	d.parts = [3]bool{true, true, true}
 	g2.takeNameParts(c, d)
