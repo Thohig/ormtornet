@@ -29,7 +29,7 @@ func TestWriteSiteVersions(t *testing.T) {
 	if err := writeSite(dir, data); err != nil {
 		t.Fatal(err)
 	}
-	for _, page := range []string{"index.html", "torn.html", "spelledare.html", "spelledare/bord.html"} {
+	for _, page := range []string{"index.html", "torn.html", "spelledare.html"} {
 		b, err := os.ReadFile(filepath.Join(dir, page))
 		if err != nil {
 			t.Fatal(err)

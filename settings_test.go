@@ -38,19 +38,12 @@ func TestSettingsAddAndRemoveBots(t *testing.T) {
 	}
 }
 
-func TestAllBotsOnlyInGMMode(t *testing.T) {
+// En plats finns alltid kvar åt en människa: högst sju AI-spelare.
+func TestAtMostSevenBots(t *testing.T) {
 	g := testGame(t)
 	got, _ := g.ApplySettings(Settings{AI: 8})
-	if got.AI != 7 {
-		t.Fatalf("utan spelledarläge: %d AI-spelare, ville ha högst 7", got.AI)
-	}
-	got, _ = g.ApplySettings(Settings{AI: 8, Spelledare: true})
-	if got.AI != 8 || countBots(g) != 8 {
-		t.Fatalf("i spelledarläget: %d inställt, %d vid portarna, ville ha 8", got.AI, countBots(g))
-	}
-	got, _ = g.ApplySettings(Settings{AI: 8})
 	if got.AI != 7 || countBots(g) != 7 {
-		t.Fatalf("när spelledarläget slogs av: %d inställt, %d vid portarna, ville ha 7", got.AI, countBots(g))
+		t.Fatalf("%d inställt, %d vid portarna, ville ha 7", got.AI, countBots(g))
 	}
 }
 
@@ -174,7 +167,6 @@ func TestAutoSunAndTurn(t *testing.T) {
 	g := testGame(t)
 	g.cfg.SunMax = 0
 	g.cfg.TurnTime = 0
-	g.cfg.GMMode = true
 	g.cfg.MinPlayers = 1
 	g.AddBots(6)
 	if g.size != 11 || g.sunMax != 50 || g.sun != 50 {

@@ -212,7 +212,6 @@ func (g *Game) Whisper(c *Client, text string) {
 		return
 	}
 	p.guessLevel = g.level
-	p.whispered = text
 	if !g.whisperRight(text) {
 		g.logTo(p, g.data.Text("viskning_fel"), "dim")
 		return

@@ -105,7 +105,6 @@ Texterna ligger i `texter.json`.
 
 ## Det som inte ändras
 
-- Spelledarläget: översikten ser allt som förut.
 - Slutet: resultatet och krönikan berättar vem som gjorde vad. Det blir en
   del av upplösningen.
 - Strid mellan vandrare: man ser motståndaren när man står i samma rum, och

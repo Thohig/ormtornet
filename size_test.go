@@ -59,7 +59,7 @@ func TestBotsPlayEverySize(t *testing.T) {
 				t.Fatal(err)
 			}
 			d.AI.BetanketidMs = []int{3600000, 3600000}
-			g := NewGame(d, Config{Reveal: true, SunMax: 40, TurnTime: time.Hour, MinPlayers: 1, GMMode: true, AI: 8, PvP: pvpOn, Classes: true})
+			g := NewGame(d, Config{Reveal: true, SunMax: 40, TurnTime: time.Hour, MinPlayers: 1, AI: 8, PvP: pvpOn, Classes: true})
 			g.AddBots(bots)
 			if g.size != size {
 				t.Fatalf("%d vandrare: tornet %d, ville ha %d", bots, g.size, size)
@@ -85,7 +85,6 @@ func TestBotsPlayEverySize(t *testing.T) {
 
 func TestAutoSizeAndPorts(t *testing.T) {
 	g := testGame(t)
-	g.cfg.GMMode = true
 	g.cfg.MinPlayers = 1
 	for _, c := range []struct{ bots, size, ports int }{{4, 9, 4}, {5, 11, 8}, {6, 11, 8}, {7, 13, 8}, {8, 13, 8}} {
 		for g.botCount() < c.bots {

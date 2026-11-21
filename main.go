@@ -31,7 +31,7 @@ func main() {
 	sun := flag.Int("sol", 0, "antal rundor innan solen går ner (0 = automatiskt: 40, 50 eller 60 efter tornets storlek)")
 	turn := flag.Duration("turtid", 0, "längsta tid att välja drag per runda (0 = automatiskt: 30–40 sekunder efter antalet människor)")
 	minPlayers := flag.Int("min", defaultMin, "minsta antal spelare för att börja, datorspelare inräknade (för att prova; förval 2)")
-	bots := flag.Int("ai", defaultSettings.AI, "antal datorstyrda vandrare (0-7, eller 8 i spelledarläget)")
+	bots := flag.Int("ai", defaultSettings.AI, "antal datorstyrda vandrare (0-7)")
 	seed := flag.Uint64("fro", 0, "frö för första vandringen; samma frö och samma drag ger samma torn (0 = slumpat)")
 	difficulty := flag.String("svarighet", "", "svårighet: latt, normal, svar eller mardrom (förvalen står i data/svarighet.json)")
 	reveal := flag.Bool("avslojande", defaultSettings.Avslojande, "låt tornet avslöja sin hemlighet (false för den som redan känner till den)")

@@ -230,9 +230,6 @@
     "foremal_guld": [
       "What you carry in your bag is worth {antal} gold out here."
     ],
-    "foremal_fran_tornet": [
-      "Something heavy slides into your bag, though no one is here: {foremal}. {beskrivning}"
-    ],
     "kronika_foremal": [
       "{namn} found {foremal}."
     ]

@@ -22,8 +22,9 @@ README beskriver spelet, flaggorna och filerna.
 Så här skiljer vi på sakerna när användaren ger instruktioner:
 
 - **spelledaren**: personen eller rollen som leder tornet.
-- **spelledarläget**: inställningen där spelledaren inte spelar själv, ser
-  allt och kan göra ingrepp (`gm.go`, `ingrepp.go`).
+- **spelledaren** kan också spela själv, från tornets dator eller en
+  annan. Spelledarläget, spelledarbordet, översikten och ingreppen togs
+  bort 2026-11-22.
 - **värdsidan**: sidan på `/spelledare` på tornets dator (`host.go`,
   `web/spelledare.html`). Överst står **raden** med fasen och knappen
   som behövs just nu. Avsnitten heter Bjud in, Vid porten, Inför nästa
@@ -32,22 +33,12 @@ Så här skiljer vi på sakerna när användaren ger instruktioner:
   QR-koden och en varning om att hålla tornets flik öppen.
 - **skalet**: tornets flik när spelet kommer från GitHub Pages
   (`web/torn.html`, `web/torn.js`). Det kör tornet i en Web Worker
-  (`web/torn-arbetare.js`, `wasm.go`) och visar värdsidan, spelledarbordet
-  eller spelarsidan i en ram.
+  (`web/torn-arbetare.js`, `wasm.go`) och visar värdsidan eller
+  spelarsidan i en ram.
 - **länken**: adressen med rumskod och nyckel
   (`#torn=<kod>&nyckel=<nyckel>`) som spelarna öppnar för att ansluta till
   skalet över WebRTC (`web/natet.js`, `web/rtc/rtc.js` från
   `klient/src/rtc.ts`).
-- **spelledarbordet**: sidan på `/spelledare/bord` på tornets dator
-  (`web/bord.html`, `web/bord.js`), där spelledaren leder vandringen i
-  spelledarläget. Värdsidans rad har en knapp dit, och introt på tornets
-  dator leder dit när spelledarläget är på. Överst står samma slags rad
-  som på värdsidan; avsnitten är Vid porten (lobbyn och klassvalet),
-  Vandringen är slut (slutet) och översikten.
-- **översikten**: det spelledarbordet visar, med ingreppen, kartan,
-  tabellen över vandrarna och loggen.
-- **ingrepp**: det spelledaren gör under en vandring: tid, ormen,
-  avslöjandet, tornets röst och rum.
 - **spelarsidan**: sidan på `/` som spelarna öppnar, med vyerna introt,
   namnrutan, klassvalet, spelet och krönikan. Spelet har faserna lobbyn,
   klassvalet, vandringen och slutet (`lobby`, `klassval`, `spel`, `slut`). README beskriver under "Vad en spelare ser"
@@ -121,8 +112,8 @@ Skriv dit när ett steg är klart.
   det som återstår av förslagen och nya idéer. Inget där är bestämt; ta
   fram ett förslag och fråga innan du bygger något därifrån.
 
-- [docs/spelledaren.md](docs/spelledaren.md): värdsidan. Det mesta
-  av del 1–3 är byggt. Avsnittet Läget säger vad som är byggt, vad som är på
+- [docs/spelledaren.md](docs/spelledaren.md): värdsidan. Del 1 är byggd;
+  översikten och ingreppen i del 2–3 byggdes och togs bort 2026-11-22. Avsnittet Läget säger vad som är byggt, vad som är på
   gång och vad som inte är planerat. Fråga vilka delar som ska byggas innan
   du börjar på något som inte står under På gång.
 - [docs/github-pages.md](docs/github-pages.md): att spela från en länk på

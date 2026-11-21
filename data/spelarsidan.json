@@ -134,8 +134,6 @@
     "slut_forlorad": "förlorad",
     "slut_ai": "~ AI spelade en del av vägen",
     "slut_nytt_torn": "Enter: nytt torn",
-    "leder_rubrik": "DU LEDER TORNET",
-    "leder_tillbaka": "Enter: tillbaka till början",
 
     "_panel": "Panelerna Vandrare och Nu.",
     "panel_vandrare": "Vandrare",
@@ -215,7 +213,6 @@
     "knapp_viska": "Viska",
     "knapp_redo": "Redo",
     "knapp_nytt_torn": "Nytt torn",
-    "knapp_tillbaka": "Tillbaka",
 
     "_logg": "Loggen i högerkolumnen.",
     "logg_nya": "↑ nya rader",
@@ -230,7 +227,6 @@
     "natet_letar": "Letar efter tornet …",
     "natet_hittar_inte": "Hittar inte tornet. Kontrollera att länken är hel och att spelledaren har tornet öppet.",
     "natet_fel": "Kunde inte ladda det som behövs för att nå tornet. Ladda om sidan.",
-    "anslutning_stangt": "tornet är stängt",
-    "anslutning_leder": "du leder tornet"
+    "anslutning_stangt": "tornet är stängt"
   }
 }

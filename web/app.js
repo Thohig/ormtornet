@@ -9,9 +9,7 @@ let myName = "";
 let joined = false;
 let mapReady = false;
 let mapSize = 0; // tornets storlek när kartan ritades upp
-let towerClosed = false; // spelledaren har stängt tornet, eller den här datorn leder det
-let closedKey = "anslutning_stangt";
-let hostingHere = false; // spelledarläget slogs på och den här datorn leder tornet
+let towerClosed = false; // spelledaren har stängt tornet
 
 function show(id) {
   document.querySelectorAll(".screen").forEach((s) => s.classList.toggle("active", s.id === id));
@@ -266,7 +264,7 @@ function connect() {
   ws.onclose = () => {
     if (!joined) return;
     if (towerClosed) {
-      $("conn").textContent = t(closedKey);
+      $("conn").textContent = t("anslutning_stangt");
       return;
     }
     $("conn").textContent = t("anslutning_bruten");
@@ -316,16 +314,6 @@ function handle(msg) {
     case "sound":
       Sound.play(msg.s);
       break;
-    case "spelledare":
-      // Spelledarläget slogs på, och den här datorn leder tornet.
-      towerClosed = true;
-      hostingHere = true;
-      closedKey = "anslutning_leder";
-      $("conn").textContent = t(closedKey);
-      Log.push(msg.text, "varn");
-      if (ws) ws.close();
-      showHosting(msg.text);
-      break;
     case "stangt":
       towerClosed = true;
       $("conn").textContent = t("anslutning_stangt");
@@ -359,7 +347,7 @@ async function changeLanguage(lang, againIntro) {
   if (zoomKey) $("zoomName").textContent = t(zoomKey);
   const head = document.querySelector("#roundcard .cardhead");
   if (head) head.textContent = t("rundkort_rubrik", { runda: head.dataset.round });
-  if (state && !hostingHere) {
+  if (state) {
     renderSide();
     renderTop();
     renderOverlay();
@@ -1197,33 +1185,6 @@ function frame(lines, width) {
   return out.map((l) => (typeof l === "string" ? { text: l } : l));
 }
 
-// Rutan som visas när den här datorn har blivit spelledare: härifrån går
-// det bara tillbaka till startsidan.
-function showHosting(text) {
-  const el = $("overlay");
-  const words = text.split(" ");
-  const lines = [{ text: t("leder_rubrik") }, { text: "" }];
-  let row = "";
-  words.forEach((w) => {
-    if ((row + " " + w).trim().length > 30) {
-      lines.push({ text: row });
-      row = w;
-    } else {
-      row = (row + " " + w).trim();
-    }
-  });
-  if (row) lines.push({ text: row });
-  lines.push({ text: "" }, { text: touch ? t("tryck_knapp", { knapp: t("knapp_tillbaka") }) : t("leder_tillbaka") });
-  setEnterLabel(t("knapp_tillbaka"));
-  el.innerHTML = "";
-  frame(lines, 32).forEach((l) => {
-    const d = document.createElement("div");
-    d.textContent = l.text;
-    el.appendChild(d);
-  });
-  el.hidden = false;
-}
-
 // backToStart går tillbaka till startsidan med tornet i solnedgången, som
 // när sidan just har öppnats.
 function backToStart() {
@@ -1235,8 +1196,6 @@ function backToStart() {
   joined = false;
   state = null;
   towerClosed = false;
-  hostingHere = false;
-  closedKey = "anslutning_stangt";
   $("conn").textContent = "";
   $("overlay").hidden = true;
   $("log").textContent = "";
@@ -1291,11 +1250,9 @@ const Intro = (() => {
   let seen = false; // har sett hela övergången förut i den här fliken
   try { seen = sessionStorage.getItem("ormtornet-intro") === "1"; } catch {}
   let rumors = [];
-  // På tornets egen dator leder introt till värdsidan, eller till
-  // spelledarbordet i spelledarläget, utom när man har valt att spela
-  // själv (adressen slutar med ?spela).
+  // På tornets egen dator leder introt till värdsidan, utom när man har
+  // valt att spela själv (adressen slutar med ?spela).
   let toHostPage = false;
-  let hostPage = "spelledare.html"; // värdsidan, eller spelledarbordet i spelledarläget
   const wantsToPlay = new URLSearchParams(location.search).has("spela");
   let reveal = true;
   let next = 0;
@@ -1463,7 +1420,6 @@ const Intro = (() => {
       reveal = !!info.avslojande;
       if (!reveal) $("intro").classList.add("invigd");
       toHostPage = info.vard && !wantsToPlay;
-      hostPage = info.leder ? "spelledare/bord.html" : "spelledare.html";
       $("listen").textContent = (touch && info.ljudTryck) || info.ljud || "";
       signTexts = info.tecken || {};
       $("legendBtn").textContent = signTexts.rubrik || "";
@@ -1493,7 +1449,7 @@ const Intro = (() => {
     clearTimeout(timer);
     Rain.stop();
     if (toHostPage) {
-      location.href = hostPage;
+      location.href = "spelledare.html";
       return;
     }
     show("namescreen");
@@ -1682,9 +1638,8 @@ $("whisperText").addEventListener("keydown", (e) => {
 // skickar namnet på den tangent de står för. Svarar true om tangenten
 // betydde något.
 function pressKey(key) {
-  // Esc i namnrutan, eller Enter när den här datorn har blivit spelledare,
-  // går tillbaka till startsidan.
-  if ((key === "Escape" && $("namescreen").classList.contains("active")) || (key === "Enter" && hostingHere)) {
+  // Esc i namnrutan går tillbaka till startsidan.
+  if (key === "Escape" && $("namescreen").classList.contains("active")) {
     backToStart();
     return true;
   }
@@ -1785,7 +1740,7 @@ document.addEventListener("click", (e) => {
 let touch = !!(window.matchMedia && matchMedia("(pointer: coarse)").matches);
 function setTouch() {
   document.body.classList.toggle("touch", touch);
-  if (state && !hostingHere) {
+  if (state) {
     renderSide();
     renderOverlay();
   }

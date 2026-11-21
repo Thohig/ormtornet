@@ -76,7 +76,7 @@ Kvar att ta ställning till:
 | `data/*.json` | rum, fällor, varelser, klasser, föremål, ormen, avslöjandet och loggtexterna | cirka 60 kB |
 | `web/index.html`, `app.js`, `map.js` | spelarsidan: introt, namnrutan, klassvalet, frågetecknet, tecknen och kortet | cirka 110 texter |
 | `web/spelledare.html` | värdsidan: raden, avsnitten och inställningarna | cirka 140 texter |
-| Go-koden | besked och fel till värdsidan (`host.go`, `ingrepp.go`) och raderna i översikten (`gm.go`) | cirka 50 texter |
+| Go-koden | besked och fel till värdsidan (`host.go`) | cirka 15 texter |
 
 ## Steg
 

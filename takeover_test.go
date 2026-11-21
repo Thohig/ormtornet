@@ -128,28 +128,14 @@ func TestTowerWaitsWhenAllAreGone(t *testing.T) {
 		t.Fatal("tornet väntade fast Bo är kvar")
 	}
 	g.Leave(b)
-	if !g.paused || !g.awaiting {
+	if !g.paused {
 		t.Fatal("tornet väntar inte när alla har gått")
 	}
 	g.Join(testClient(), "Bo")
-	if g.paused || g.awaiting {
+	if g.paused {
 		t.Fatal("tornet fortsatte inte när Bo kom tillbaka")
 	}
 	if left := time.Until(g.deadline); left <= 0 {
 		t.Fatal("rundan fick ingen tid kvar")
-	}
-}
-
-// Spelledaren kan släppa tornets paus, och då rör tornet den inte mer.
-func TestHostCanResumeWaitingTower(t *testing.T) {
-	g, a, b := twoPlaying(t, 0)
-	g.Leave(a)
-	g.Leave(b)
-	if err := g.gmResume(); err != nil || g.paused || g.awaiting {
-		t.Fatal("spelledaren kunde inte släppa pausen")
-	}
-	g.Join(testClient(), "Alva")
-	if g.paused {
-		t.Fatal("tornet pausade när Alva kom tillbaka")
 	}
 }

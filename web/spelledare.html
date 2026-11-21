@@ -98,7 +98,6 @@
       <span id="barPhase">…</span>
       <span id="barWho"></span>
       <span id="barBtns">
-        <a class="btn main small" id="barBoard" href="spelledare/bord.html" data-t="rad_bord" hidden></a>
         <button class="btn main small" id="barMain" type="button" hidden></button>
       </span>
     </div>
@@ -139,13 +138,6 @@
       <select id="sAI" name="ai"><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option></select>
       <span class="note" id="aiNote"></span>
 
-      <label for="sGM" data-t="inst_spelledarlage"></label>
-      <select id="sGM" name="spelledarlage">
-        <option value="0" data-t="val_spelledarlage_av"></option>
-        <option value="1" data-t="val_spelledarlage_pa"></option>
-      </select>
-      <span class="note" id="gmNote"></span>
-
       <label for="sSprak" data-t="sprak"></label>
       <select id="sSprak" name="sprak">
         <option value="sv" data-t="val_svenska"></option>
@@ -176,8 +168,6 @@
         <dd data-t="forkl_svarighet"></dd>
         <dt data-t="inst_ai"></dt>
         <dd data-t="forkl_ai"></dd>
-        <dt data-t="inst_spelledarlage"></dt>
-        <dd data-t="forkl_spelledarlage"></dd>
         <dt data-t="sprak"></dt>
         <dd data-t="forkl_sprak"></dd>
         <dt data-t="inst_avslojande"></dt>
@@ -311,7 +301,6 @@ function statusText(v) {
   }
   if (v.phase === "klassval") return t("status_klassval");
   const prefix = v.phase === "slut" ? t("status_slut") + seedText(v) + " " : "";
-  if (v.settings.spelledarlage) return prefix + t("status_spelledarlage", { antal: here.length });
   if (humans.length === 0) return prefix + t("status_vantar");
   if (here.length < v.minPlayers) {
     return prefix + t("status_vantar_fler", { min: v.minPlayers, har: here.length });
@@ -389,13 +378,12 @@ function render(v) {
   renderSettings(v);
 
   const humans = v.players.filter((p) => !p.bot && p.online).length;
-  const gm = v.settings.spelledarlage;
-  const canStart = humans > 0 || (gm && v.players.length > 0);
+  const canStart = humans > 0;
   $("startNow").disabled = v.phase === "spel" || !canStart;
   $("startHint").textContent = v.phase === "spel"
     ? t("start_pagar")
     : !canStart
-      ? (gm ? t("start_minst_en") : t("start_minst_manniska"))
+      ? t("start_minst_manniska")
       : t("start_hint_alla");
 
   renderBar(v, canStart);
@@ -407,12 +395,10 @@ function render(v) {
     $("helpBox").open = true;
   }
 
-  $("joinSelf").hidden = gm;
 }
 
 // Raden överst: fasen, vilka som är här och knappen som behövs just nu,
-// Starta nu före vandringen. I spelledarläget leder en knapp till
-// spelledarbordet, där spelledaren pausar och gör ingrepp.
+// Starta nu före vandringen.
 
 function renderBar(v, canStart) {
   const phase = { lobby: t("rad_lobby"), klassval: t("rad_klassval"), slut: t("rad_slut") }[v.phase] ||
@@ -439,7 +425,6 @@ function renderBar(v, canStart) {
   } else {
     b.hidden = true;
   }
-  $("barBoard").hidden = !v.settings.spelledarlage;
 }
 
 $("barMain").onclick = () => $("startNow").click();
@@ -464,7 +449,6 @@ function renderSettings(v) {
   form.querySelectorAll("select").forEach((el) => (el.disabled = playing));
   $("settingsHint").textContent = playing ? t("inst_hint_spel") : t("inst_hint");
   $("aiNote").textContent = s.ai > v.bots && !playing ? t("not_ai", { antal: v.bots }) : "";
-  $("gmNote").textContent = s.spelledarlage ? t("not_spelledarlage") : t("not_spelledarlage_av");
   const busy = saving || form.contains(document.activeElement);
   const sv = $("sSv");
   const levels = v.svarigheter || [];
@@ -484,30 +468,15 @@ function renderSettings(v) {
   fillForm(s);
 }
 
-// aiChoices ger AI-spelare valet 8 i spelledarläget, där alla åtta kan vara
-// AI-spelare. Annars är det högst sju.
-function aiChoices(gm) {
-  const aiSel = $("sAI");
-  const all = [...aiSel.options].find((o) => o.value === "8");
-  if (gm && !all) aiSel.append(new Option("8", "8"));
-  if (!gm && all) {
-    if (aiSel.value === "8") aiSel.value = "7"; // annars hoppar listan till 0
-    all.remove();
-  }
-}
-
 // fillForm fyller i formuläret med inställningarna s, som de gäller på tornet.
 function fillForm(s) {
-  aiChoices(s.spelledarlage);
   $("sAI").value = String(s.ai);
-  $("gmNote").textContent = s.spelledarlage ? t("not_spelledarlage") : t("not_spelledarlage_av");
   $("sRev").value = s.avslojande ? "1" : "0";
   const fr = $("sFr");
   if (![...fr.options].some((o) => +o.value === s.franvaro)) {
     fr.append(new Option(t("val_franvaro_n", { antal: s.franvaro }), String(s.franvaro)));
   }
   fr.value = String(s.franvaro);
-  $("sGM").value = s.spelledarlage ? "1" : "0";
   $("sSprak").value = s.sprak || "sv";
 }
 
@@ -536,12 +505,10 @@ function say(text, isErr) {
 }
 
 $("settings").addEventListener("change", async () => {
-  aiChoices($("sGM").value === "1"); // syns direkt, innan tornet har svarat
   const s = {
     ai: +$("sAI").value,
     avslojande: $("sRev").value === "1",
     franvaro: +$("sFr").value,
-    spelledarlage: $("sGM").value === "1",
     svarighet: $("sSv").value,
     sprak: $("sSprak").value,
   };
@@ -552,8 +519,8 @@ $("settings").addEventListener("change", async () => {
     if (!r.ok) say(data.fel || t("inst_fel"), true);
     else if (data.varning) say(data.varning, true);
     else say(data.text || t("sparat"));
-    // Tornet kan ha justerat ett val, till exempel 8 AI-spelare till 7 utan
-    // spelledarläge. Visa det genast, även om formuläret har fokus.
+    // Tornet kan ha justerat ett val, till exempel frånvaron till högst 10
+    // rundor. Visa det genast, även om formuläret har fokus.
     if (data.settings) fillForm(data.settings);
   } catch {
     say(t("svarar_inte"), true);

@@ -323,18 +323,6 @@ func TestPortSound(t *testing.T) {
 	}
 }
 
-// Spelledarens översikt får inte krascha med egen karta.
-func TestGMViewWithOwnMap(t *testing.T) {
-	g, _, _ := startTwo(t)
-	g.cfg.GMMode = true
-	g.monsters = append(g.monsters, &Monster{ID: 7, Type: g.data.Monster.Typer[0].ID, X: 4, Y: 4, HP: 1})
-	g.reveal(4, 4)
-	v := g.GMView(false)
-	if len(v.Map.Monsters) != 1 {
-		t.Fatalf("översikten ser %d varelser", len(v.Map.Monsters))
-	}
-}
-
 // Från början känner var och en bara sitt eget startrum, oavsett
 // synligheten. En annans port blir känd när någon går in i den.
 func TestOnlyOwnPortAtStart(t *testing.T) {

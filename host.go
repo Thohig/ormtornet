@@ -95,7 +95,6 @@ type introInfo struct {
 	Avslojande bool     `json:"avslojande"`
 	Rykten     []string `json:"rykten"`
 	Vard       bool     `json:"vard"`      // sidan visas på datorn som kör tornet
-	Leder      bool     `json:"leder"`     // spelledarläget är på; introt på tornets dator leder då till spelledarbordet
 	Vanta      int      `json:"vanta"`     // sekunder innan knappen visas
 	Ljud       string   `json:"ljud"`      // uppmaningen att klicka för att höra stormen
 	LjudTryck  string   `json:"ljudTryck"` // samma uppmaning på en pekskärm
@@ -112,7 +111,7 @@ func (g *Game) Intro() introInfo {
 	if !g.cfg.Reveal {
 		key = "rykten_invigda"
 	}
-	return introInfo{Sprak: g.base.Lang, Avslojande: g.cfg.Reveal, Rykten: g.data.Texter[key], Leder: g.cfg.GMMode,
+	return introInfo{Sprak: g.base.Lang, Avslojande: g.cfg.Reveal, Rykten: g.data.Texter[key],
 		Vanta: g.data.Intro.Vanta, Ljud: g.data.Text("intro_ljud"), LjudTryck: g.data.Text("intro_ljud_tryck"), Tecken: g.data.signs()}
 }
 
@@ -308,33 +307,6 @@ func addHostRoutes(mux *http.ServeMux, web fs.FS, game *Game, addrs hostAddrs, h
 	mux.HandleFunc("GET /spelledare", localOnly(func(w http.ResponseWriter, r *http.Request) {
 		http.ServeFileFS(w, r, web, "spelledare.html")
 	}))
-	// Spelledarbordet: där spelledaren leder vandringen i spelledarläget.
-	// Sidan finns under två namn: bord.html är det som sidorna länkar till,
-	// så att samma länkar fungerar när tornet ligger på GitHub Pages.
-	board := localOnly(func(w http.ResponseWriter, r *http.Request) {
-		http.ServeFileFS(w, r, web, "bord.html")
-	})
-	mux.HandleFunc("GET /spelledare/bord", board)
-	mux.HandleFunc("GET /spelledare/bord.html", board)
-	mux.HandleFunc("POST /spelledare/ingrepp", hostAction(func(w http.ResponseWriter, r *http.Request) {
-		var req gmRequest
-		if err := json.NewDecoder(http.MaxBytesReader(w, r.Body, 4096)).Decode(&req); err != nil {
-			writeJSON(w, http.StatusBadRequest, map[string]string{"fel": game.HostText("server_ingrepp_las")})
-			return
-		}
-		if err := game.Intervene(req); err != nil {
-			writeJSON(w, http.StatusConflict, map[string]string{"fel": game.ErrorText(err)})
-			return
-		}
-		w.WriteHeader(http.StatusNoContent)
-	}))
-	mux.HandleFunc("GET /spelledare/oversikt", localOnly(func(w http.ResponseWriter, r *http.Request) {
-		if !game.Settings().Spelledare {
-			writeJSON(w, http.StatusForbidden, map[string]string{"fel": game.HostText("server_oversikt_bara_gm")})
-			return
-		}
-		writeJSON(w, http.StatusOK, game.GMView(r.URL.Query().Has("synlig")))
-	}))
 	mux.HandleFunc("GET /spelledare/status", localOnly(func(w http.ResponseWriter, r *http.Request) {
 		v := game.HostView(r.URL.Query().Has("synlig"))
 		v.Addrs = addrs
@@ -358,23 +330,4 @@ func (g *Game) HostText(key string, vars ...string) string {
 	g.mu.Lock()
 	defer g.mu.Unlock()
 	return g.base.HostText(key, vars...)
-}
-
-// hostError är ett fel som värdsidan visar. Texten står i
-// data/vardsidan.json under key, så att den kommer på tornets språk.
-type hostError struct {
-	key  string
-	vars []string
-}
-
-func (e *hostError) Error() string { return e.key }
-
-func hostErr(key string, vars ...string) error { return &hostError{key, vars} }
-
-// ErrorText gör ett fel till text för värdsidan.
-func (g *Game) ErrorText(err error) string {
-	if he, ok := err.(*hostError); ok {
-		return g.HostText(he.key, he.vars...)
-	}
-	return err.Error()
 }

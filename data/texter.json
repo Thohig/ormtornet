@@ -503,9 +503,6 @@
     "kronika_vaknade": [
       "Ormen vaknade när {namn} tog skatt."
     ],
-    "kronika_vaknade_sjalv": [
-      "Ormen vaknade, fast ingen rörde skatten."
-    ],
     "kronika_varelse": [
       "{namn} fällde {varelse}."
     ],
@@ -568,19 +565,6 @@
     "pack_tung": ["{namn} är här. {namn} går tungt, som om packningen vore full."],
     "pack_lite": ["{namn} är här. Något klirrar i packningen."],
     "pack_tom": ["{namn} är här. Packningen hänger tom."],
-    "spelledare_pa": ["Tornet har en spelledare i kväll. Någon ser allt som händer här inne."],
-    "spelledare_av": ["Tornet har inte längre någon spelledare."],
-    "spelledare_kan_inte": ["Den som leder tornet kan inte samtidigt vandra i det."],
-    "gm_paus": ["Allt i tornet stannar upp. Till och med dammet hänger stilla i luften."],
-    "gm_fortsatt": ["Tornet drar efter andan, och allt rör sig igen."],
-    "gm_sol_ner": ["Ljuset genom gluggarna faller plötsligt snett. Solen har sjunkit fortare än den borde."],
-    "gm_sol_upp": ["Ljuset blir starkare en stund, som om solen tvekade."],
-    "gm_liv_mer": ["Något varmt strömmar genom dig. Du har {liv} liv."],
-    "gm_liv_mindre": ["Det hugger till inombords, utan att du ser varifrån. Du har {liv} liv kvar."],
-    "gm_guld_mer": ["Packningen känns tyngre än nyss."],
-    "gm_guld_mindre": ["Packningen känns lättare än nyss."],
-    "gm_dryck_mer": ["I fickan hittar du en flaska som inte fanns där nyss."],
-    "gm_dryck_mindre": ["En av dina flaskor är borta. Du hörde den aldrig gå sönder."],
     "stanger_snart": ["Tornet stänger om en minut om ingen är kvar."],
     "tecken_rubrik": ["Tecken"],
     "tecken_du": ["Du, med en ring som blinkar."],

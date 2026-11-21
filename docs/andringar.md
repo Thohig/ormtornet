@@ -6,6 +6,21 @@ eller leder tornet.
 
 ## 2026-11-22
 
+### Spelledarläget är borttaget
+
+- Spelledarläget finns inte längre, och inte heller spelledarbordet med
+  översikten och ingreppen: pausa, tid, solen, tornets röst, fällor och
+  varelser, ormen, avslöjandets nivå, liv, guld, drycker, föremål och
+  invigningen.
+- Spelledaren leder tornet från värdsidan och kan spela med, från tornets
+  dator eller en annan. Introt på tornets dator leder alltid till
+  värdsidan.
+- Högst sju AI-spelare, eftersom en plats alltid finns kvar åt en
+  människa. Starta nu kräver minst en människa.
+- Tornet pausar fortfarande rundan när ingen människa är ansluten, och
+  fortsätter när någon kommer tillbaka.
+- Spelarna får inte längre veta att tornet har en spelledare.
+
 ### Färre inställningar på värdsidan
 
 - Inför nästa vandring har nu sex inställningar: Svårighet, AI-spelare,

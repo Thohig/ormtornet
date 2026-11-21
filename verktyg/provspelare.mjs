@@ -12,8 +12,7 @@
 // mot varelser, går mot kammaren, tar skatt högst två gånger, söker ibland,
 // använder föremål och viskar, och går ut mot närmaste kända port. Kör
 // tornet med -min satt så att alla provspelare hinner ansluta innan
-// vandringen börjar, och utan spelledarläget (det stänger ute anslutningar
-// från tornets egen dator).
+// vandringen börjar.
 import fs from "node:fs";
 
 const [port, name, gamesArg, logFile] = process.argv.slice(2);

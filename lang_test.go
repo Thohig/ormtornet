@@ -166,8 +166,7 @@ func TestPageTextKeysExist(t *testing.T) {
 	for file, texts := range map[string]map[string]string{
 		"web/index.html": sv.Spelarsidan, "web/app.js": sv.Spelarsidan,
 		"web/spelledare.html": sv.Vardsidan,
-		"web/bord.html":       sv.Vardsidan, "web/bord.js": sv.Vardsidan,
-		"web/torn.html": sv.Vardsidan, "web/torn.js": sv.Vardsidan,
+		"web/torn.html":       sv.Vardsidan, "web/torn.js": sv.Vardsidan,
 	} {
 		raw, err := os.ReadFile(file)
 		if err != nil {
@@ -182,7 +181,7 @@ func TestPageTextKeysExist(t *testing.T) {
 			}
 		}
 	}
-	goRe := regexp.MustCompile(`(?:HostText|hostErr|gmNote)\("([a-z0-9_]+)"|"(server_[a-z0-9_]+)"`)
+	goRe := regexp.MustCompile(`HostText\("([a-z0-9_]+)"|"(server_[a-z0-9_]+)"`)
 	files, _ := filepath.Glob("*.go")
 	for _, file := range files {
 		if strings.HasSuffix(file, "_test.go") {

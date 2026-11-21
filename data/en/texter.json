@@ -499,9 +499,6 @@
     "kronika_vaknade": [
       "The serpent woke when {namn} took treasure."
     ],
-    "kronika_vaknade_sjalv": [
-      "The serpent woke, though no one touched the treasure."
-    ],
     "kronika_varelse": [
       "{namn} felled {varelse}."
     ],
@@ -564,19 +561,6 @@
     "pack_tung": ["{namn} is here. {namn} walks heavily, as if their pack were full."],
     "pack_lite": ["{namn} is here. Something clinks in their pack."],
     "pack_tom": ["{namn} is here. Their pack hangs empty."],
-    "spelledare_pa": ["The tower has a Keeper tonight. Someone sees all that happens in here."],
-    "spelledare_av": ["The tower no longer has a Keeper."],
-    "spelledare_kan_inte": ["The one who keeps the tower cannot also wander in it."],
-    "gm_paus": ["Everything in the tower comes to a halt. Even the dust hangs still in the air."],
-    "gm_fortsatt": ["The tower draws breath, and everything moves again."],
-    "gm_sol_ner": ["The light through the arrow slits suddenly falls aslant. The sun has sunk faster than it should."],
-    "gm_sol_upp": ["The light grows stronger for a while, as if the sun hesitated."],
-    "gm_liv_mer": ["Something warm flows through you. You have {liv} lives."],
-    "gm_liv_mindre": ["A sudden pang within, and you cannot see from where. You have {liv} lives left."],
-    "gm_guld_mer": ["Your pack feels heavier than a moment ago."],
-    "gm_guld_mindre": ["Your pack feels lighter than a moment ago."],
-    "gm_dryck_mer": ["In your pocket you find a bottle that was not there before."],
-    "gm_dryck_mindre": ["One of your bottles is gone. You never heard it break."],
     "stanger_snart": ["The tower closes in a minute if no one is left."],
     "tecken_rubrik": ["Signs"],
     "tecken_du": ["You, with a blinking ring."],

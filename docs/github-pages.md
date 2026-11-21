@@ -18,7 +18,7 @@ webbläsare i stället för på en server.
 - **Tornets flik.** Spelledaren öppnar sidan på Pages och väljer att öppna
   tornet. Fliken laddar Go-koden kompilerad till WebAssembly
   (`torn.wasm`). Det är samma spelregler, samma synlighet och samma
-  `data/` som i dag. Värdsidan och spelledarbordet visas i samma flik.
+  `data/` som i dag. Värdsidan visas i samma flik.
 - **Spelarna** öppnar en länk eller QR-kod från värdsidan. Spelarsidan,
   bilderna och 3D-kartan hämtas från Pages. Sedan ansluter spelarens
   webbläsare direkt till tornets flik med WebRTC, och allt under
@@ -41,14 +41,14 @@ tornets adress på nätet.
 ### Tornets flik är ett skal
 
 Om fliken byter sida stängs tornet. Därför är tornets flik en skalsida
-(`web/torn.html`) som kör `torn.wasm` och visar värdsidan, spelledarbordet
+(`web/torn.html`) som kör `torn.wasm` och visar värdsidan
 eller den egna spelarsidan i en ram (`iframe`). Ramen kan byta sida fritt;
 skalet och tornet ligger kvar. Ramen och andra flikar i samma webbläsare
 pratar med skalet över en `BroadcastChannel`. Själva tornet går i en Web
 Worker (`web/torn-arbetare.js`), som skalet för meddelandena vidare till.
 
-Länkarna mellan värdsidan och spelledarbordet byter sida i ramen. De får
-inte öppna en egen flik, för då hamnar sidan utanför skalet.
+Länkar mellan sidorna byter sida i ramen. De får inte öppna en egen flik,
+för då hamnar sidan utanför skalet.
 
 Skalets flik heter först "Ormtornet – tornet". När tornet har startat tar
 fliken varje sekund titeln från sidan i ramen, till exempel "Ormtornet" på

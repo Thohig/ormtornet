@@ -65,7 +65,6 @@ En riktig kväll behövs för att se:
     Undrar någon över luckan?
   - Tjuven tog 173 guld på fem nävar i en vandring. Är hen för stark i
     kammaren?
-  - Väck ormen på spelledarbordet är inte provat.
 
 - Spela från en länk (2026-11-21, [github-pages.md](github-pages.md),
   steg 5): kommer alla in från mobilnät och andra nät, eller behövs TURN?
@@ -130,8 +129,6 @@ Från [spelledaren.md](spelledaren.md):
   ormkort, nivågränser och personlighet för varje AI-spelare.
 - Namngivna förval och paus mellan rundor.
 - Frö, för att kunna spela samma torn igen.
-- Ingrepp: flytta en vandrare, slå klockan, låta ormen röra sig, spela upp
-  ett ljud, lägga ett föremål i ett rum.
 - Statistik över flera kvällar och redigering av datafilerna i webbläsaren.
 - En färdigbyggd app som går att dela utan Go.
 

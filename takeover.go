@@ -114,20 +114,17 @@ func (g *Game) shouldAwait() bool {
 }
 
 // checkAwait pausar rundan när den sista människan har gått, och låter den
-// fortsätta när någon kommer tillbaka. Har spelledaren pausat själv, eller
-// släppt tornets paus, rör den inte pausen.
+// fortsätta när någon kommer tillbaka.
 func (g *Game) checkAwait() {
 	switch should := g.shouldAwait(); {
 	case should && !g.paused:
-		g.paused, g.awaiting = true, true
+		g.paused = true
 		g.pauseLeft = max(time.Second, time.Until(g.deadline))
 		if g.timer != nil {
 			g.timer.Stop()
 		}
-		g.gmNote("server_not_vantar")
-	case !should && g.awaiting:
-		g.paused, g.awaiting = false, false
+	case !should && g.paused:
+		g.paused = false
 		g.armTimer(g.pauseLeft)
-		g.gmNote("server_not_tillbaka")
 	}
 }

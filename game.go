@@ -56,7 +56,6 @@ type Config struct {
 	AbsentRounds int    // rundor innan AI tar över en frånvarande vandrare, 0 = aldrig
 	PvP          string // strid mellan vandrare: "pa", eller "av" (tomt) i testerna
 	Classes      bool   // vandrarna väljer klass; alltid i spelet, av i de flesta testerna
-	GMMode       bool   // spelledarläge: spelledaren spelar inte och ser allt
 	Reveal       bool   // false stänger av avslöjandet
 	SunMax       int
 	TurnTime     time.Duration
@@ -234,7 +233,6 @@ type Player struct {
 
 	initiated  bool    // vandraren har viskat tornets hemlighet
 	guessLevel int     // nivån då vandraren senast viskade
-	whispered  string  // det vandraren senast viskade, för spelledaren
 	parts      [3]bool // delarna av ormens namn som vandraren har fått
 	calmed     bool    // den invigde har lugnat ormen under vandringen
 	X, Y       int
@@ -319,18 +317,13 @@ type Game struct {
 	lastReal   time.Time // senast någon gjorde något eller en sida syntes
 	closeAt    time.Time // när tornet stänger om ingen kommer, satt under sista minuten
 
-	gmLog []gmEntry // allt vandrarna har fått läsa, för spelledarläget
-
-	paused    bool          // spelledaren har pausat rundan
+	paused    bool          // rundan står still: ingen människa är ansluten
 	pauseLeft time.Duration // tid som var kvar när rundan pausades
-	awaiting  bool          // pausen är tornets egen: ingen människa är ansluten
 
 	chron  []chronEvent // krönikan över vandringen
 	epilog []chronLine  // epilogen som alla fick, för krönikan på egen skärm
 
 	graceUsed bool // porten har redan väntat på de invigda
-
-	levelHeld bool // spelledaren håller kvar avslöjandets nivå
 
 	serpentName []string // ormens namn i tre delar, med invigningen "ormens namn"
 	mercy       int      // vakna-kort som tornets nåd har tagit bort, också när leken byggs om
@@ -546,7 +539,6 @@ type playerView struct {
 	AI         bool       `json:"ai"`                    // en AI-spelare styr medan människan är borta
 	Class      string     `json:"klass,omitempty"`       // klassen med liten bokstav
 	ClassID    string     `json:"klassId,omitempty"`     // klassens id, för figuren på kartan snett ovanifrån
-	ItemIDs    []string   `json:"foremalIds,omitempty"`  // föremålen, bara för spelledaren (andras väskor är hemliga)
 	ClassModel *ModelLook `json:"klassModell,omitempty"` // färg och storlek på figuren
 }
 
@@ -647,7 +639,6 @@ func (g *Game) send(c *Client, v any) {
 
 func (g *Game) logTo(p *Player, text, class string) {
 	if p != nil && text != "" {
-		g.recordLog(p, text, class)
 		g.send(p.client, logMsg{T: "log", Text: text, C: class})
 	}
 }
@@ -852,7 +843,7 @@ func (g *Game) placeAtCorner(p *Player) {
 	p.Potions, p.Stuck, p.Cellar, p.Poison, p.Dark = 0, 0, 0, 0, 0
 	p.known = newGrid[bool](g.size)
 	p.items = nil
-	p.initiated, p.guessLevel, p.whispered, p.calmed = false, 0, "", false
+	p.initiated, p.guessLevel, p.calmed = false, 0, false
 	p.parts = [3]bool{}
 	g.revealPorts()
 	g.noteRoom(p)
@@ -878,7 +869,7 @@ func (g *Game) knowsRoom(me *Player, x, y int) bool {
 		return false
 	}
 	if me == nil || g.phase == phaseEnd {
-		return true // spelledarens översikt ser hela tornet
+		return true
 	}
 	if me.known != nil && me.known[y][x] {
 		return true
@@ -891,10 +882,6 @@ func (g *Game) knowsRoom(me *Player, x, y int) bool {
 
 func (g *Game) Join(c *Client, rawName string) {
 	if c.player != nil {
-		return
-	}
-	if c.local && g.cfg.GMMode {
-		g.send(c, logMsg{T: "error", Text: g.data.Text("spelledare_kan_inte")})
 		return
 	}
 	name := cleanName(rawName)
@@ -978,9 +965,6 @@ func (g *Game) Join(c *Client, rawName string) {
 		if b != nil && b.bot != nil {
 			g.logTo(p, fill(pick(g.aiTexts(g.data.AI.Ansluter, g.data.AI.AnsluterDolt)), "namn", b.Name, "horn", g.data.Horn[b.Corner]), "info")
 		}
-	}
-	if g.cfg.GMMode {
-		g.logTo(p, g.data.Text("spelledare_pa"), "info")
 	}
 	g.logTo(p, g.data.Text("lobby", "min", strconv.Itoa(g.cfg.MinPlayers)), "info")
 	g.logOthers(p, g.hiddenText("ansluter", "namn", name, "horn", horn), "info")
@@ -1115,7 +1099,7 @@ func (g *Game) toLobby() {
 		g.useData(g.nextData)
 	}
 	g.phase = phaseLobby
-	g.level, g.levelHeld = 1, false // tornet i lobbyn har inte börjat avslöja något
+	g.level = 1 // tornet i lobbyn har inte börjat avslöja något
 	if g.dropAbsent() > 0 {
 		g.syncBots(true)
 	}
@@ -1189,7 +1173,7 @@ func (g *Game) drawCorners() {
 }
 
 func (g *Game) startGame() {
-	g.paused, g.awaiting = false, false
+	g.paused = false
 	g.seedWandering()
 	g.ensureClasses()
 	if g.towerSize() != g.size {
@@ -1206,7 +1190,6 @@ func (g *Game) startGame() {
 	g.portClock, g.portNext = 0, -1
 	g.buildDeck()
 	g.level = 1
-	g.levelHeld = false
 	g.graceUsed = false
 	g.usedClues = map[string]bool{}
 	g.pickSerpentName()
@@ -1480,7 +1463,7 @@ func (g *Game) sunWarning(before int) {
 
 func (g *Game) endGame() {
 	g.phase = phaseEnd
-	g.paused, g.awaiting = false, false
+	g.paused = false
 	if g.timer != nil {
 		g.timer.Stop()
 	}

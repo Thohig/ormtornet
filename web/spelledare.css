@@ -1,5 +1,4 @@
-/* Det som värdsidan (spelledare.html) och spelledarbordet (bord.html) har
-   gemensamt: sidans ram, rubrikerna, knapparna och raden överst. */
+/* Värdsidans (spelledare.html) ram, rubriker, knappar och raden överst. */
 html, body { overflow: auto; }
 #crt { min-height: 100%; height: auto; }
 #host {

@@ -278,17 +278,6 @@ func (g *Game) itemIDs(p *Player) []string {
 	return out
 }
 
-// itemNames är vandrarens föremål för spelledarens översikt.
-func (g *Game) itemNames(p *Player) []string {
-	var out []string
-	for _, it := range p.items {
-		if t := g.data.itemType(it.ID); t != nil {
-			out = append(out, t.Kort)
-		}
-	}
-	return out
-}
-
 // Föremål som vandraren använder själv. Draget skrivs "f" och platsen i
 // väskan (1–3), och för föremål som pekar åt ett håll en riktning efter:
 // "f2E" kastar det andra föremålet österut.

@@ -1,24 +1,21 @@
 # Förslag: Spelledaren
 
-Status: förslaget skrevs 2026-11-18. Det mesta av del 1–3 är byggt, se
-läget nedan. Resten av dokumentet är det ursprungliga förslaget.
+Status: förslaget skrevs 2026-11-18. Det mesta av del 1–3 byggdes, se
+läget nedan. Spelledarläget med översikten och ingreppen (del 2–3) togs
+bort 2026-11-22. Resten av dokumentet är det ursprungliga förslaget.
 
 ## Läget
 
 Byggt (README beskriver hur det fungerar):
 
 - Värdsidan på `/spelledare`, bara från tornets egen dator.
-- Inställningar som ändras utan omstart: svårighet, AI-spelare,
-  spelledarläget, språket, avslöjandet och frånvarande vandrare. De sparas
+- Inställningar som ändras utan omstart: svårighet, AI-spelare, språket, avslöjandet och frånvarande vandrare. De sparas
   till nästa gång. ("Vandrarna syns" togs bort 2026-11-21: egen karta är
   det enda läget. Minsta antal, sol, turtid, strid mellan vandrare, tornets
   storlek, klasser, invigningen, tornet förändras och kartan togs bort
   2026-11-22: de bestäms automatiskt eller gäller alltid.)
 - Starta nu, Stäng tornet, och inbjudan att kopiera till en gruppchatt.
-- Översikten i spelledarläget: hela tornet, vandrarna, varelserna, hur djupt
-  ormen sover, avslöjandets nivå och allt vandrarna har läst.
-- Ingrepp: tid, tornets röst, fällor och varelser, väcka och lugna ormen,
-  liv, guld och drycker, och AI tar över en frånvarande vandrare.
+- AI tar över en frånvarande vandrare.
 - `Ormtornet.app` via `./skapa-app.sh`. Den bygger från repot och kräver Go.
 - Värdsidan på GitHub Pages (2026-11-21, [github-pages.md](github-pages.md)):
   den visas i tornets flik, skalet, och har under Bjud in en länk och en
@@ -27,21 +24,17 @@ Byggt (README beskriver hur det fungerar):
 - Pekkontroller, så att telefoner och surfplattor kan spela.
 - Krönikan: en sammanfattning efter varje omgång.
 - Förval för svårighet: Lätt, Normal, Svår och Mardröm.
-- Risken att ormen vaknar i översikten, och att flytta fram eller hålla kvar
-  avslöjandets nivå.
-- I översikten: klass, föremål, viskningar och vem som är invigd. Ingrepp:
-  ge föremål, och inviga eller ta tillbaka invigningen.
-- Tornet pausar rundan själv när ingen vandrare är ansluten, och
-  spelledaren kan släppa pausen med Fortsätt.
+- Tornet pausar rundan själv när ingen vandrare är ansluten.
 - Läs om innehållet i `data/` utan omstart, med felen på värdsidan om
   filerna inte går ihop. Vandringens frö visas under Vid porten.
 - Värdsidans avsnitt står alltid i samma ordning. Under vandringen visar
   Vid porten bara raden om vandringen och vandrarna (2026-11-21).
-- Spelledarbordet på `/spelledare/bord`: översikten och ingreppen på en
-  egen sida, med en knapp dit från värdsidans rad. Där står också porten
-  före vandringen, resultatet och krönikan efter den, och en knapp som
-  slår på spelledarläget. Introt på tornets dator leder dit i
-  spelledarläget.
+
+Borttaget 2026-11-22: spelledarläget, spelledarbordet på
+`/spelledare/bord`, översikten (hela tornet, vandrarna, ormens sömn och
+risk, viskningarna och loggen) och ingreppen (tid, tornets röst, fällor
+och varelser, ormen, avslöjandets nivå, liv, guld, drycker, föremål och
+invigningen). Spelledaren spelar nu alltid med eller låter bli.
 
 På gång: inget just nu.
 
@@ -50,8 +43,6 @@ Inte byggt, och inte planerat just nu:
 - Fler enskilda inställningar (chans för fällor, varelser och dörrar, frö,
   liv, ormkort, nivågränser, personlighet för varje AI-spelare), namngivna
   förval och paus mellan rundor.
-- Ingrepp: flytta en vandrare, slå klockan, låta ormen röra sig, spela upp
-  ett ljud.
 - Statistik över flera kvällar och redigering av datafilerna i webbläsaren.
 - Kod för att nå sidan från andra datorer.
 - En färdigbyggd app som går att dela utan Go.

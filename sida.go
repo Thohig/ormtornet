@@ -4,8 +4,8 @@ package main
 
 // Tornet som en sida för GitHub Pages (docs/github-pages.md). writeSite
 // skriver web/ till en mapp, med det som en vanlig webbserver behöver för
-// att visa sidorna utan tornets program: bord.html där sidorna länkar till
-// den, och sidornas texter som färdiga skript. Tornet själv, torn.wasm och
+// att visa sidorna utan tornets program: sidornas texter som färdiga
+// skript. Tornet själv, torn.wasm och
 // wasm_exec.js, läggs dit av verktyg/bygg-sida.sh.
 //
 // GitHub Pages låter webbläsaren spara filerna en stund. För att en ny
@@ -31,15 +31,6 @@ func writeSite(dir string, data *Data) error {
 		return err
 	}
 	if err := os.CopyFS(dir, sub); err != nil {
-		return err
-	}
-	// Spelledarbordet heter spelledare/bord(.html) i tornets program, och
-	// sidorna länkar dit med relativa adresser.
-	board, err := fs.ReadFile(sub, "bord.html")
-	if err != nil {
-		return err
-	}
-	if err := writeFile(filepath.Join(dir, "spelledare", "bord.html"), board); err != nil {
 		return err
 	}
 	// Texterna på svenska. Byter tornet språk hämtar sidorna nya texter

@@ -9,7 +9,7 @@ import (
 	"strings"
 )
 
-// omenNote är ett varsel som har getts, för spelledaren.
+// omenNote är ett varsel som har getts i vandringen.
 type omenNote struct {
 	X, Y  int
 	What  string // "falla:id", "varelse:id" eller "tomt"

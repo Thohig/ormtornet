@@ -21,7 +21,7 @@ spelet. De andra öppnar en adress i webbläsaren.
 
 Skriptet bygger spelet, öppnar introt i webbläsaren och håller datorn vaken
 så länge tornet är öppet. På datorn som kör tornet leder introt till
-värdsidan, eller till spelledarbordet när spelledarläget är på. Flaggor skickas vidare, till exempel `./starta.sh -ai 2`.
+värdsidan. Flaggor skickas vidare, till exempel `./starta.sh -ai 2`.
 Är tornet redan igång öppnas bara introt.
 
 Det går också att starta direkt med `go run .`.
@@ -36,8 +36,7 @@ skapar `~/Projekt/Lokalt/Ormtornet.app` med tornets ikon. Mappen skapas om
 den saknas; ange en annan mapp som argument om du vill, till exempel
 `./skapa-app.sh ~/Applications`. Ikonen ritas av `verktyg/appikon`, så
 appen går att ta bort och skapa igen när som helst. Dubbelklick på appen bygger spelet från den här mappen,
-startar tornet i bakgrunden och öppnar introt, som leder till värdsidan
-eller spelledarbordet. Inget terminalfönster behövs. Loggen hamnar i `/tmp/ormtornet.log`.
+startar tornet i bakgrunden och öppnar introt, som leder till värdsidan. Inget terminalfönster behövs. Loggen hamnar i `/tmp/ormtornet.log`.
 Appen behöver bara skapas om när den här mappen flyttas.
 
 Servern lyssnar på `0.0.0.0:8080` och skriver ut adressen spelarna ska
@@ -67,7 +66,7 @@ Flaggor:
 - `-sol 0` antal rundor innan solen går ner; `0` är automatiskt efter tornets storlek (40 på 9 × 9, 50 på 11 × 11, 60 på 13 × 13). Inte en inställning på värdsidan; för den som provar
 - `-turtid 0` längsta tid att välja drag per runda; `0` är automatiskt efter antalet människor (30–40 sekunder). Inte en inställning på värdsidan; för den som provar
 - `-min 2` minsta antal spelare för att börja, datorspelare inräknade (sätt `-min 1` för att prova ensam). Inte en inställning på värdsidan; för den som provar
-- `-ai 2` antal datorstyrda vandrare (0–7, eller 8 i spelledarläget)
+- `-ai 2` antal datorstyrda vandrare (0–7)
 - `-svarighet normal` svårighet: `latt`, `normal`, `svar` eller `mardrom`
 - `-sprak en` språket i spelet och på värdsidan: `sv` eller `en`. Det som inte är översatt visas på svenska (se Språk nedan)
 - `-simulera 500` spelar 500 vandringar med bara AI-spelare och skriver hur det gick, utan att öppna tornet (se Simulera nedan)
@@ -75,7 +74,7 @@ Flaggor:
 - `-sida mapp` skriver sidorna för GitHub Pages till mappen och avslutar. Använd hellre `verktyg/bygg-sida.sh`, som också bygger tornet (se Tornet i webbläsaren nedan)
 - `-fro 0` frö för den första vandringen. Varje vandring skriver sitt frö i terminalen och på värdsidan. Startar du med samma frö och vandrarna gör samma drag blir tornet detsamma, rum för rum, så att en konstig vandring kan spelas upp igen. `0` ger ett slumpat frö
 - `-avslojande=false` stänger av avslöjandet: ingen berättelse, inga varsel, ingen invigning och inget tornet som förändras
-- `-oppna` öppnar introt i webbläsaren när servern har startat; på den här datorn leder det till värdsidan, eller till spelledarbordet i spelledarläget
+- `-oppna` öppnar introt i webbläsaren när servern har startat; på den här datorn leder det till värdsidan
 - `-vaken` håller datorn vaken så länge servern är igång
 - `-autostopp 10m` stänger tornet när ingen spelare är ansluten och ingen sida har synts på tornets dator så länge (`0` = aldrig)
 - `-autostopp-max 12h` stänger tornet när ingen har gjort något så länge, även om flikar står öppna (`0` = aldrig)
@@ -97,9 +96,6 @@ till dem som ska spela.
 - Avsluta med "Stäng tornet" på värdsidan innan du stänger fliken. Då får
   spelarna beskedet att tornet stänger. Stängs bara fliken tror deras
   sidor att anslutningen bröts och börjar leta efter tornet igen.
-- Värdsidan och spelledarbordet byter sida i tornets flik. Knappen
-  Spelledarbordet på värdsidans rad leder dit, och knappen Värdsidan på
-  bordets rad leder tillbaka.
 - En dator är bäst. På en telefon kan tornet stanna när skärmen släcks.
 - Den som tappar anslutningen öppnar länken igen och skriver samma namn.
 - Vissa nät stoppar anslutningen, oftast mobilnät och nät på jobb och
@@ -123,8 +119,7 @@ och vad man kan göra om någon inte kommer in.
 Överst står en rad som följer med när sidan rullar: lobbyn, klassvalet,
 rundan och solen, eller att vandringen är slut, hur många människor och
 AI-spelare som är här och vilka som är borta. Där ligger också knappen som
-behövs just nu: Starta nu före vandringen. I spelledarläget finns där
-också knappen Spelledarbordet (se nedan).
+behövs just nu: Starta nu före vandringen.
 
 Avsnitten står alltid i samma ordning: Bjud in, Vid porten och Inför
 nästa vandring. Under och efter vandringen krymper Bjud in till adressen
@@ -138,11 +133,10 @@ inställning med några meningar (`forkl_*` i `vardsidan.json`).
 
 | Inställning | Val | Förval |
 |---|---|---|
-| AI-spelare | 0–7, eller 8 i spelledarläget | 0 |
+| AI-spelare | 0–7 | 0 |
 | Svårighet | Lätt, Normal, Svår, Mardröm | Normal |
 | Avslöjandet | på eller av; med det på gäller invigningen med ormens namn och tornet förändras | på |
 | Frånvarande vandrare | AI tar över efter 1–3 rundor, eller står still | 2 rundor |
-| Spelledarläge | på eller av | av |
 | Språk | svenska eller English | svenska |
 
 Resten går inte att välja. Tornets storlek följer antalet vandrare: 9 × 9
@@ -177,61 +171,9 @@ tillbaka innan vandringen är slut är inte med i nästa.
 Är ingen människa ansluten alls, till exempel när nätet försvinner för
 alla, väntar tornet: rundan står pausad tills någon kommer tillbaka, så att
 solen inte hinner gå ner medan AI:n spelar ensam. Raden säger att rundan
-är pausad, och i spelledarläget kan spelledaren släppa pausen med Fortsätt
-på spelledarbordet. En
-vandring med bara AI-spelare går som vanligt.
+är pausad.
 
-Med "Spelledarläge: på" leder spelledaren tornet utan att spela. Ingen kan
-då ansluta som vandrare från spelledarens dator, och spelarna får veta att
-tornet har en spelledare. Spelledaren startar vandringen med Starta nu, även
-när alla vandrare är AI-spelare.
-
-### Spelledarbordet
-
-Spelledaren leder vandringen på en egen sida, spelledarbordet på
-`http://localhost:8080/spelledare/bord`, som knappen Spelledarbordet på
-värdsidans rad öppnar. Den visas bara på tornets dator, som värdsidan.
-Inbjudan och inställningarna ligger kvar på värdsidan. Introt på tornets
-dator leder hit när spelledarläget är på. Med spelledarläget av säger
-spelledarbordet det och har en knapp som slår på det mellan vandringarna.
-
-Överst står samma rad som på värdsidan, med Starta nu före vandringen och
-Pausa eller Fortsätt under den, och en knapp tillbaka till värdsidan.
-Värdsidan och spelledarbordet byter sida i samma flik, och i skalet på
-Pages i samma ram. I lobbyn och klassvalet står vilka som har
-kommit till porten, om de är redo och vilken klass de har valt. När
-vandringen är slut står hur det gick för var och en och krönikan över
-vandringen. Sidan visar också en översikt: hela tornet så
-långt det har vuxit fram, med fällor som väntar och alla varelser, varje
-vandrares plats, klass, liv, skatt, drycker, föremål, tillstånd och valda
-drag, vad var och en har viskat till tornet och vem som är invigd, hur djupt
-ormen sover och risken att den vaknar vid nästa näve, avslöjandets nivå och
-allt vandrarna har fått läsa. Vandrarnas logg står längst ner. Där står den senaste rundan överst, de två senaste rundorna är
-öppna och de äldre fällda ihop, och loggen kan visa en vandrare i taget.
-
-På en bred skärm står kartan till vänster och ingreppen till höger, med
-tabellen över vandrarna under dem. Ett klick på en vandrares namn i
-tabellen låter kartan följa den vandraren, fem rum åt gången, och ett
-klick till visar hela tornet igen. Spelledaren kan också göra ingrepp
-under en vandring, och varje ingrepp skrivs i loggen:
-
-- **Tid:** pausa och fortsätta, ge rundan 30 sekunder till, avgöra rundan
-  direkt, och flytta solen fram eller tillbaka (den går aldrig ner av ett
-  ingrepp, det gör bara rundorna).
-- **Tornets röst:** ett meddelande till en vandrare eller alla, i en egen
-  färg och med en viskning.
-- **I ett rum:** lägga en fälla eller släppa in en varelse i ett rum som
-  redan finns.
-- **Ormen:** väcka den, eller lugna den genom att ta ett vakna-kort ur leken.
-- **Avslöjandet:** flytta fram det en nivå direkt, med ljud, texter och
-  ledtrådar som när solen gör det, eller hålla kvar nivån så att den inte
-  följer solen. Släpps nivån hinner den ikapp solen efter rundan.
-- **Vandrarna:** ge eller ta liv, guld och drycker, och ge ett föremål.
-  Vandraren märker att något händer, men inte varifrån.
-- **Den invigde:** inviga en vandrare, som om den hade viskat hemligheten,
-  eller ta tillbaka det (bara med avslöjandet på).
-
-Utan spelledarläge visar värdsidan inga skatter, positioner eller drag, så spelledaren kan spela med i
+Värdsidan visar inga skatter, positioner eller drag, så spelledaren kan spela med i
 en annan flik ("Gå in själv", som leder till introt och sedan namnrutan). Andra datorer i nätverket kommer inte åt sidan.
 
 ## Spela
@@ -294,7 +236,7 @@ den som dör och för alla i slutet (se slutet nedan och Strider):
      Ingen text på spelskärmen är dämpad; bara det som inte går att
      använda, som frånkopplade vandrare och tagna kort, är utgråat.
      I loggen säger ett tecken i marginalen vad slags rad det är (`!` fara,
-     `›` det du ser, `▸` rummets namn, `·` besked, `❝` tornets röst,
+     `›` det du ser, `▸` rummets namn, `·` besked, `❝` tornet talar till dig,
      `✎` krita, `≡` rundans sammanfattning). Varje runda har en rubrik, och den senaste rundan står
      överst. Inom en runda står raderna i den ordning de hände. Den första
      raden i en runda skrivs fram tecken för tecken, resten kommer en hel
@@ -320,8 +262,7 @@ den som dör och för alla i slutet (se slutet nedan och Strider):
      värdsidan går från lobbyn till klassvalet, och under klassvalet
      börjar vandringen direkt.
 
-Under spelet kan spelaren också se att tornet har en spelledare, tornets röst
-i loggen, "tornet är stängt" när tornet stänger och "förbindelsen bröts,
+Under spelet kan spelaren också se "tornet är stängt" när tornet stänger och "förbindelsen bröts,
 försöker igen" om förbindelsen bryts.
 
 Värdsidan ser spelaren aldrig. Den som öppnar `/spelledare` från en annan
@@ -419,8 +360,7 @@ De vaga texterna har nycklar som slutar på `_dolt` i datafilerna, och
 fällorna har `andra_dolt`. Ekofällan visar som förut var den drabbade är.
 Att någon går ut eller dör får alla veta.
 
-Spelledaren ser allt i översikten på spelledarbordet, och när vandringen
-är slut syns alla igen. Den som har dött ser inte mer än förut.
+När vandringen är slut syns alla igen. Den som har dött ser inte mer än förut.
 
 Varje vandrare har sin egen karta. Den visar bara rum du själv har gått
 igenom, med fällornas tecken och varelserna i dem. Rummen finns ändå bara en gång i tornet: en fälla slår bara till för
@@ -464,7 +404,7 @@ tryck. Ingen klass finns två gånger i samma torn, så kort som andra har
 tagit går inte att välja. Vandringen börjar när alla har valt, eller när
 tiden är slut (`klassval_sekunder` i `data/klasser.json`, förval 30). Den
 som inte har valt får då ett slumpat ledigt kort. Klassen står i listan
-över vandrare, och i spelledarens översikt. AI-spelarna väljer efter sin
+över vandrare. AI-spelarna väljer efter sin
 personlighet, men först när alla människor har valt, så att människorna
 får de klasser de vill ha. Klassen gäller en vandring: efter Nytt torn väljer alla
 igen.
@@ -723,8 +663,6 @@ Den invigde:
 
 Men varelserna anfaller den invigde oftare, och en näve ur kammaren väcker
 ormen lättare. Siffrorna står under `invigd` i `avslojande.json`.
-Spelledaren ser på spelledarbordet vad var och en har viskat, ormens namn
-och vilka delar var och en har, och kan inviga eller ta tillbaka det.
 Krönikan nämner den som förstod, bytena, nåden och de invigda som kom ut,
 och epilogen säger namnet.
 
@@ -822,10 +760,9 @@ laddar. Sedan byts den mot titeln på tornets språk:
 | Spelarsidan | Ormtornet | The Serpent Tower |
 | Skalet på Pages, innan tornet har startat | Ormtornet – tornet | The Serpent Tower – the tower |
 | Värdsidan | Ormtornet – värd | The Serpent Tower – Keeper |
-| Spelledarbordet | Ormtornet – spelledarbordet | The Serpent Tower – Keeper's table |
 
 Titlarna är `sidans_titel` i `data/spelarsidan.json` och `skal_sidtitel`,
-`sidtitel` och `bord_sidtitel` i `data/vardsidan.json`.
+och `sidtitel` i `data/vardsidan.json`.
 
 På engelska heter undanmanövern E (evade). U fungerar också, på båda
 språken. En viskning till tornet räknas på båda språken.
@@ -861,8 +798,6 @@ Beskrivningarna för rummen ligger under nivåerna `"1"` till `"4"`.
 - `game.go` tornet, rummen, vandrarna, rundorna och vad var och en ser
 - `settings.go` spelledarens inställningar och hur de sparas
 - `host.go` värdsidan och dess adresser
-- `gm.go` spelledarens översikt
-- `ingrepp.go` spelledarens ingrepp
 - `activity.go` autostopp för ett bortglömt torn
 - `takeover.go` AI tar över en frånvarande vandrare
 - `pvp.go` strid mellan vandrare
@@ -900,8 +835,7 @@ Beskrivningarna för rummen ligger under nivåerna `"1"` till `"4"`.
   - `index.html` och `app.js` spelarsidan: introt, namnrutan, klassvalet
     och spelet
   - `spelledare.html` värdsidan
-  - `bord.html` och `bord.js` spelledarbordet
-  - `spelledare.css` det som värdsidan och spelledarbordet har gemensamt
+  - `spelledare.css` värdsidans stil
   - `torn.html` och `torn.js` skalet: tornets flik när spelet kommer från
     GitHub Pages, och `torn-arbetare.js` workern som kör tornet i den
   - `natet.js` vägen till tornet från GitHub Pages, i samma webbläsare
@@ -1034,7 +968,5 @@ Varje robot spelar tio vandringar och skriver allt den får i loggen till
 `provlogg.txt`, med namnet först på varje rad. Rader som ser trasiga ut
 märks med `<<< MISSTÄNKT`, och resultatet av varje vandring står på en
 rad som börjar med `RESULTAT`. `-min` ska räkna med både robotarna och
-AI-spelarna, så att alla hinner ansluta innan vandringen börjar.
-Spelledarläget ska vara av, eftersom det stänger ute anslutningar från
-tornets egen dator. Kräver Node 22 eller senare. Provspelet 2026-11-21
+AI-spelarna, så att alla hinner ansluta innan vandringen börjar. Kräver Node 22 eller senare. Provspelet 2026-11-21
 beskrivs i [docs/provspel-2026-11-21.md](docs/provspel-2026-11-21.md).

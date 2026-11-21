@@ -151,26 +151,6 @@ func TestInitiatedWakesSerpentMoreEasily(t *testing.T) {
 	}
 }
 
-func TestGMInitiateAndGiveItem(t *testing.T) {
-	g, a, _ := gmGame(t)
-	p := a.player
-	if err := g.Intervene(gmRequest{Typ: "invig", Spelare: p.ID}); err != nil || !p.initiated {
-		t.Fatalf("inviga: %v", err)
-	}
-	if err := g.Intervene(gmRequest{Typ: "invig", Spelare: p.ID}); err != nil || p.initiated {
-		t.Fatalf("ta tillbaka: %v", err)
-	}
-	if err := g.Intervene(gmRequest{Typ: "foremal", Spelare: p.ID, ID: "rep"}); err != nil || p.has("rep") == nil {
-		t.Fatalf("ge föremål: %v", err)
-	}
-	if err := g.Intervene(gmRequest{Typ: "foremal", Spelare: p.ID, ID: "finns_inte"}); err == nil {
-		t.Fatal("gav ett föremål som inte finns")
-	}
-	if v := g.GMView(false); len(v.Items) == 0 || !v.Map.Reveal {
-		t.Fatal("översikten saknar föremålen")
-	}
-}
-
 // nameGame startar en vandring med n människor.
 func nameGame(t *testing.T, n int) (*Game, []*Client) {
 	t.Helper()
