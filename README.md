@@ -99,6 +99,12 @@ till dem som ska spela.
 - Tornets flik måste vara öppen hela vandringen. Stängs den eller laddas
   den om stängs tornet. Fliken får ligga i bakgrunden, till exempel när
   spelledaren går in själv med "Gå in själv".
+- Avsluta med "Stäng tornet" på värdsidan innan du stänger fliken. Då får
+  spelarna beskedet att tornet stänger. Stängs bara fliken tror deras
+  sidor att anslutningen bröts och börjar leta efter tornet igen.
+- Värdsidan och spelledarbordet byter sida i tornets flik. Knappen
+  Spelledarbordet på värdsidans rad leder dit, och knappen Värdsidan på
+  bordets rad leder tillbaka.
 - En dator är bäst. På en telefon kan tornet stanna när skärmen släcks.
 - Den som tappar anslutningen öppnar länken igen och skriver samma namn.
 - Vissa nät stoppar anslutningen, oftast mobilnät och nät på jobb och
