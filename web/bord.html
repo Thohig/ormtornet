@@ -143,14 +143,14 @@
       </div>
       <form class="gmrow" id="gmVoice" autocomplete="off">
         <span class="gmlabel" data-t="gm_rost"></span>
-        <select id="gmVoiceTo"></select>
-        <input id="gmVoiceText" maxlength="200" data-t-placeholder="gm_rost_exempel">
+        <select id="gmVoiceTo" data-t-aria="aria_rost_till"></select>
+        <input id="gmVoiceText" maxlength="200" data-t-placeholder="gm_rost_exempel" data-t-aria="aria_rost_text">
         <button class="btn small" type="submit" data-t="gm_sag"></button>
       </form>
       <form class="gmrow" id="gmPlace" autocomplete="off">
         <span class="gmlabel" data-t="gm_i_rum"></span>
-        <select id="gmRoom"></select>
-        <select id="gmWhat"></select>
+        <select id="gmRoom" data-t-aria="aria_rum"></select>
+        <select id="gmWhat" data-t-aria="aria_rum_vad"></select>
         <button class="btn small" type="submit" data-t="gm_lagg_dit"></button>
       </form>
       <p id="gmMsg"></p>
@@ -167,7 +167,7 @@
         <summary><h2 data-t="logg"></h2></summary>
         <div class="gmrow">
           <span class="gmlabel" data-t="logg_visa"></span>
-          <select id="gmLogWho"></select>
+          <select id="gmLogWho" data-t-aria="aria_logg_vem"></select>
         </div>
         <div id="gmLog"></div>
       </details>

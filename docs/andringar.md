@@ -6,6 +6,16 @@ eller leder tornet.
 
 ## 2026-11-21
 
+### Värdsidan och spelledarbordet
+
+- Under vandringen visar Vid porten bara raden om vandringen och
+  vandrarna: de lediga platserna, Starta nu och raden om tornets storlek
+  är borta tills vandringen är slut.
+- Raden under Vid porten står inte längre indragen eller högerställd.
+  Spelarsidans stil för tecknen träffade den av misstag.
+- Spelledarbordets valrutor och textrutan för tornets röst har etiketter
+  för skärmläsare, på svenska och engelska.
+
 ### Tornets rum
 
 - Rummen bredvid en port har aldrig en fälla, så att ingen förlorar liv

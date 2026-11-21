@@ -21,6 +21,7 @@
   #ips span { color: var(--fg); }
   #copied { color: var(--info); min-height: 1.2em; }
   #status { color: var(--hi); }
+  #host #status { display: block; } /* inte tecknens flexrad från style.css */
   #status.dead { color: var(--warn); }
   #slots { list-style: none; margin: 10px 0 0; padding: 0; }
   #slots li { display: flex; gap: 12px; margin: 5px 0; }
@@ -71,6 +72,10 @@
   body.fas-slut #invite .full, body.fas-slut #copyInvite { display: none; }
   body.fas-spel #addr, body.fas-slut #addr { font-size: 15px; }
   body.fas-spel #invite .buttons, body.fas-slut #invite .buttons { margin-top: 6px; }
+  /* Under vandringen kan ingen ny komma in och den går inte att starta:
+     Vid porten visar bara raden om vandringen och vandrarna. */
+  body.fas-spel #slots li.emptyslot, body.fas-spel #towerInfo,
+  body.fas-spel #port .buttons, body.fas-spel #startHint { display: none; }
   #foot { margin-top: 20px; }
   #foot h2 { margin-top: 18px; }
   #reloadMsg:empty { display: none; }
@@ -420,6 +425,7 @@ function render(v) {
         li.append(b);
       }
     } else {
+      li.className = "emptyslot";
       name.className = "name empty";
       name.textContent = "·  " + t("ledig_plats");
       li.append(name);

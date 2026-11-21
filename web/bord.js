@@ -298,6 +298,7 @@ function renderGM(o) {
       }
       // Översikten ritas om hela tiden: kom ihåg vilket föremål som är valt.
       const sel = document.createElement("select");
+      sel.setAttribute("aria-label", t("aria_foremal", { namn: p.name }));
       (o.foremal || []).forEach((it) => sel.append(new Option(it.namn, it.id)));
       if (chosenItem[p.id]) sel.value = chosenItem[p.id];
       sel.addEventListener("change", () => (chosenItem[p.id] = sel.value));
