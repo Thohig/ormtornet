@@ -264,9 +264,11 @@ type Player struct {
 	Poison  int // rundor kvar med gift i kroppen
 	Dark    int // rundor kvar utan ljus
 
-	stats    chronStats // det krönikan räknar
-	hurtKind string     // vad som skadade vandraren senast, för krönikan
-	hurtWhat string     // namnet på fällan, varelsen eller vandraren
+	stats    chronStats     // det krönikan räknar
+	journal  []journeyRound // rundans kort, runda för runda, för krönikan på egen skärm
+	death    string         // hur vandraren dog, för krönikan på egen skärm
+	hurtKind string         // vad som skadade vandraren senast, för krönikan
+	hurtWhat string         // namnet på fällan, varelsen eller vandraren
 }
 
 // present är sant för en spelare som deltar just nu: en människa med öppen
@@ -563,6 +565,8 @@ type stateMsg struct {
 	Players    []playerView  `json:"players"`
 	Rooms      []roomView    `json:"rooms"`
 	Results    []resultView  `json:"results,omitempty"`
+	Journey    *journeyView  `json:"vandring,omitempty"` // den egna vandringen, för den som har dött och för alla i slutet
+	Chronicle  []chronLine   `json:"kronika,omitempty"`  // hela krönikan, när vandringen är slut
 }
 
 type logMsg struct {
@@ -734,6 +738,9 @@ func (g *Game) stateFor(me *Player) stateMsg {
 	}
 	if g.phase == phaseEnd {
 		st.Results = g.results()
+	}
+	if (g.phase == phasePlay && me.Status == statusDead) || g.phase == phaseEnd {
+		st.Journey = g.journeyOf(me)
 	}
 	return st
 }

@@ -53,11 +53,16 @@ func (g *Game) snapshot() map[*Player]before {
 // summarize skickar rundans sammanfattning till var och en som var i tornet.
 func (g *Game) summarize(snap map[*Player]before, wakesBefore int) {
 	for p, b := range snap {
-		if p.client == nil {
-			continue
+		if p.bot != nil && !p.takenOver && p.client == nil {
+			continue // en datorspelare behöver ingen krönika på skärmen
 		}
 		lines := g.summaryFor(p, b, g.wakes > wakesBefore)
-		g.send(p.client, summaryMsg{T: "runda", Round: g.round, Lines: lines})
+		if len(lines) > 0 {
+			p.journal = append(p.journal, journeyRound{Round: g.round, Lines: lines})
+		}
+		if p.client != nil {
+			g.send(p.client, summaryMsg{T: "runda", Round: g.round, Lines: lines})
+		}
 	}
 }
 

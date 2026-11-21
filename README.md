@@ -538,6 +538,12 @@ gallgasten ofta).
 
 Varelserna sköts alltid av tornet. Den som dör väntar rundan inte på.
 
+Den som dör får en egen skärm, **Din vandring**: rundans kort runda för
+runda, hur hen dog och sina siffror, och hur många som är kvar i tornet och
+har gått ut. Var de andra är och vad de gör står inte där, så att den döda
+inte kan avslöja något för de levande. Visa kartan går tillbaka till
+spelet, och Din vandring i panelen Nu hit igen.
+
 ### Rum och fällor
 
 När någon går in i ett nytt rum kan en fälla slå till. Ett tecken i rummet

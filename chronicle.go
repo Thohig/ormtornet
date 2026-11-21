@@ -47,6 +47,7 @@ func (g *Game) chronicleDeath(p *Player) {
 		key = "kronika_dod"
 	}
 	g.chronicle(key, "namn", p.Name, "vad", p.hurtWhat)
+	p.death = g.data.Text("kronika_rad", "runda", strconv.Itoa(g.round), "text", g.chron[len(g.chron)-1].text)
 }
 
 // resetChronicle börjar en ny krönika inför en vandring.
@@ -56,6 +57,7 @@ func (g *Game) resetChronicle() {
 		if p != nil {
 			p.stats = chronStats{}
 			p.hurt("", "")
+			p.journal, p.death = nil, ""
 		}
 	}
 }
@@ -84,16 +86,61 @@ func (g *Game) chronicleLines() []chronLine {
 		lines = append(lines, chronLine{g.data.Text("kronika_invigda_ute", "namn", strings.Join(knew, ", ")), "rost"})
 	}
 	for _, p := range g.players {
+		if p != nil {
+			lines = append(lines, chronLine{g.statsLine(p), "dim"})
+		}
+	}
+	return lines
+}
+
+// statsLine är vandrarens rad med siffror i krönikan.
+func (g *Game) statsLine(p *Player) string {
+	s := p.stats
+	return g.data.Text("kronika_vandrare", "namn", p.Name,
+		"naver", strconv.Itoa(s.takes), "kammarguld", strconv.Itoa(s.takeGold),
+		"fallor", strconv.Itoa(s.traps), "varelser", strconv.Itoa(s.kills),
+		"sokt", strconv.Itoa(s.searched))
+}
+
+// journeyRound är det som hände vandraren under en runda: rundans kort.
+type journeyRound struct {
+	Round int           `json:"runda"`
+	Lines []summaryLine `json:"rader"`
+}
+
+// journeyView är vandrarens egen vandring, som den som har dött ser på en
+// egen skärm: rundans kort runda för runda, hur hen dog och siffrorna. Den
+// berättar inget om de andra utom hur många som är kvar, så att den döda
+// inte kan avslöja något för de levande. När vandringen är slut får alla
+// sin vandring, bredvid hela krönikan.
+type journeyView struct {
+	Rounds []journeyRound `json:"rundor"`
+	Death  string         `json:"dod,omitempty"`
+	Stats  string         `json:"siffror"`
+	In     int            `json:"inne"` // vandrare kvar i tornet
+	Out    int            `json:"ute"`  // vandrare som har gått ut
+}
+
+func (g *Game) journeyOf(me *Player) *journeyView {
+	if me == nil {
+		return nil
+	}
+	v := &journeyView{Rounds: me.journal, Death: me.death, Stats: g.statsLine(me)}
+	if v.Rounds == nil {
+		v.Rounds = []journeyRound{}
+	}
+	for _, p := range g.players {
 		if p == nil {
 			continue
 		}
-		s := p.stats
-		lines = append(lines, chronLine{g.data.Text("kronika_vandrare", "namn", p.Name,
-			"naver", strconv.Itoa(s.takes), "kammarguld", strconv.Itoa(s.takeGold),
-			"fallor", strconv.Itoa(s.traps), "varelser", strconv.Itoa(s.kills),
-			"sokt", strconv.Itoa(s.searched)), "dim"})
+		switch p.Status {
+		case statusIn:
+			v.In++
+		case statusOut:
+			v.Out++
+		}
 	}
-	return lines
+	return v
 }
 
 // tellChronicle berättar krönikan för alla.

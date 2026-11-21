@@ -481,10 +481,64 @@ function playerTag(p) {
 // om när spelskärmen syns igen, eftersom den inte har någon storlek medan
 // den är dold.
 function showPhase() {
-  const want = state.phase === "klassval" ? "classscreen" : "game";
+  const chron = wantsChron();
+  if (chron && !chronWas) chronMap = false; // en ny anledning att visa krönikan
+  chronWas = chron;
+  renderChron();
+  const want = state.phase === "klassval" ? "classscreen" : chron && !chronMap ? "chronscreen" : "game";
   if ($(want).classList.contains("active")) return;
   show(want);
   if (want === "game") MapView.resize();
+}
+
+// Krönikan på egen skärm. Den som har dött ser sin egen vandring: rundans
+// kort runda för runda, hur hen dog och sina siffror, men inget om var de
+// andra är. Knappen Visa kartan går tillbaka till spelet, och Din vandring
+// i panelen Nu hit igen.
+let chronMap = false; // kartan visas i stället för krönikan
+let chronWas = false;
+function wantsChron() {
+  const me = myPlayer();
+  return !!(state && state.vandring && state.phase === "spel" && me && me.status === "dod");
+}
+function renderChron() {
+  const v = state && state.vandring;
+  if (!v) return;
+  $("chronTitle").textContent = t("vandring_rubrik");
+  $("chronLead").textContent = v.dod || "";
+  $("chronStatus").textContent = state.phase === "spel" ? t("vandring_pagar", { runda: state.round, sol: state.sun, inne: v.inne, ute: v.ute }) : "";
+  const box = $("chronRounds");
+  box.innerHTML = "";
+  if (!v.rundor.length) {
+    const p = document.createElement("p");
+    p.className = "dimline";
+    p.textContent = t("vandring_tom");
+    box.appendChild(p);
+  }
+  v.rundor.forEach((r) => {
+    const d = document.createElement("div");
+    d.className = "chronRound";
+    const h = document.createElement("h3");
+    h.textContent = t("vandring_runda", { runda: r.runda });
+    d.appendChild(h);
+    r.rader.forEach((l) => {
+      const p = document.createElement("div");
+      p.textContent = l.text;
+      if (l.c) p.className = l.c;
+      d.appendChild(p);
+    });
+    box.appendChild(d);
+  });
+  $("chronStats").textContent = v.siffror;
+  $("chronWait").textContent = state.phase === "spel" ? t("vandring_vantar") : "";
+}
+$("chronMap").addEventListener("click", () => {
+  chronMap = true;
+  showPhase();
+});
+function showChron() {
+  chronMap = false;
+  showPhase();
 }
 
 // Korten: ett för varje klass. Ett kort som någon annan har tagit går inte
@@ -717,7 +771,17 @@ function renderNow(me) {
   if (aimSlot !== null && state.foremal && state.foremal[aimSlot]) {
     line(t(touch ? "nu_sikta_peka" : "nu_sikta", { foremal: state.foremal[aimSlot].namn }), "plan");
   }
-  if (me.status === "dod") line(t("nu_dod"), "cond");
+  if (me.status === "dod") {
+    line(t("nu_dod"), "cond");
+    if (wantsChron()) {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "chronBack";
+      b.textContent = t("vandring_visa");
+      b.addEventListener("click", showChron);
+      box.appendChild(b);
+    }
+  }
   if (me.status === "inne") {
     if (state.sleep >= 0 && state.sleepText) line(state.sleepText, state.sleep >= 2 ? "cond" : "sleep");
     const foe = (state.monsters || []).find((m) => m.x === me.x && m.y === me.y);

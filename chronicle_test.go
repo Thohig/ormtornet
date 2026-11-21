@@ -56,3 +56,37 @@ func TestChronicle(t *testing.T) {
 		t.Fatalf("fas %s, krönika %d, nävar %d", g.phase, len(g.chron), pa.stats.takes)
 	}
 }
+
+// Den som dör ser sin egen vandring, men inget om de andra utom hur många
+// som är kvar. Den som lever ser den inte förrän vandringen är slut.
+func TestJourneyForTheDead(t *testing.T) {
+	g, a, b := startTwo(t)
+	pa, pb := a.player, b.player
+	putInRoom(g, pa, 3, 3)
+	putInRoom(g, pb, 5, 5)
+	step(g, a, b, actSearch, actWait)
+	if st := g.stateFor(pa); st.Journey != nil {
+		t.Fatal("den levande ser sin vandring mitt i vandringen")
+	}
+	pb.HP = 1
+	g.trigger(pb, g.data.trap("pilar"), 0)
+	st := g.stateFor(pb)
+	if st.Journey == nil {
+		t.Fatal("den döda ser ingen vandring")
+	}
+	if !strings.Contains(st.Journey.Death, "Bo dog av pilfällan") {
+		t.Errorf("döden: %q", st.Journey.Death)
+	}
+	if st.Journey.In != 1 || st.Journey.Out != 0 {
+		t.Errorf("kvar %d, ute %d", st.Journey.In, st.Journey.Out)
+	}
+	if !strings.Contains(st.Journey.Stats, "Bo:") {
+		t.Errorf("siffrorna: %q", st.Journey.Stats)
+	}
+	if len(st.Chronicle) != 0 {
+		t.Error("den döda ser hela krönikan mitt i vandringen")
+	}
+	if len(pa.journal) == 0 {
+		t.Error("Alvas runda med sökandet skrevs inte ner")
+	}
+}

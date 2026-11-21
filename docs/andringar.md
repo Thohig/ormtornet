@@ -6,6 +6,15 @@ eller leder tornet.
 
 ## 2026-11-21
 
+### Din vandring: en egen skärm för den som dör
+
+- Den som dör ser nu sin egen vandring på en egen skärm: det som hände en
+  runda för runda (rundans kort), hur man dog och sina siffror.
+- Skärmen säger hur många som är kvar i tornet, men inte var de är eller
+  vad de har hittat.
+- Visa kartan går tillbaka till spelet, och Din vandring i panelen Nu går
+  hit igen.
+
 ### Den döda styr inte längre varelserna
 
 - Den första som dör tar inte längre över tornets varelser. Varelserna

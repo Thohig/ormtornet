@@ -928,3 +928,45 @@ body.touch .card .num { display: none; }
   .card { min-height: 0; }
 }
 #me .plan:first-child { margin-top: 0; padding-top: 0; border-top: none; }
+
+/* Krönikan på egen skärm (renderChron i app.js). */
+#chronscreen { align-items: flex-start; justify-content: center; overflow-y: auto; }
+#chron {
+  width: min(720px, 100%);
+  padding: 28px 18px 40px;
+  margin: 0 auto;
+}
+#chron h1 {
+  margin: 0 0 12px;
+  color: var(--hi);
+  font-size: 22px;
+  font-weight: normal;
+  letter-spacing: 0.3em;
+  text-align: center;
+}
+#chronLead { color: var(--warn); text-align: center; margin: 0 0 6px; }
+#chronStatus, #chronWait { color: var(--fg); opacity: 0.75; text-align: center; margin: 0 0 18px; font-size: 13px; }
+#chronRounds { display: grid; gap: 10px; }
+.chronRound h3 {
+  margin: 0 0 2px;
+  font-size: 11px;
+  font-weight: normal;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--chalk);
+}
+.chronRound .varn { color: var(--warn); }
+.chronRound .gold { color: var(--hi); }
+#chronStats { color: var(--chalk); margin: 18px 0; font-size: 13px; }
+#chronButtons { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+#chronButtons button, .chronBack {
+  font: inherit;
+  color: var(--fg);
+  background: transparent;
+  border: 1px solid var(--dim);
+  border-radius: 6px;
+  padding: 6px 14px;
+  cursor: pointer;
+}
+#chronButtons button:hover, #chronButtons button:focus-visible, .chronBack:hover, .chronBack:focus-visible { color: var(--hi); border-color: var(--hi); outline: none; }
+.chronBack { margin-top: 6px; font-size: 13px; }
