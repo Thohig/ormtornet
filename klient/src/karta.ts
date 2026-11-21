@@ -6,6 +6,8 @@
 import * as THREE from "three";
 import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils.js";
 import * as K from "./krita";
+import * as M from "./modeller";
+import type { Figur } from "./modeller";
 import type { Rum, Tillstand, Utsnitt, Val } from "./typer";
 
 const S = 6; // ett rum i världen
@@ -33,6 +35,7 @@ const FARG = {
 };
 const RING = ["#c9a24f", "#c9a24f", "#c9a24f", "#c98a5a", "#c4483a"]; // per nivå
 const EKO_MS = 4500;
+const FART = 3.4; // så fort figurerna går, i världens enheter per sekund
 const VAKEN_MS = 3500;
 
 // Kameran tittar från sydost, snett uppifrån.
@@ -53,6 +56,19 @@ function vidDorr(rx: number, ry: number, d: number): [number, number, number] {
   return [rx * S + p[0], ry * S + p[1], [Math.PI / 2, 0, -Math.PI / 2, Math.PI][d]];
 }
 
+// En figur på kartan: en vandrare eller en varelse. Den står kvar mellan
+// tillstånden och går dit den ska i stället för att hoppa.
+interface Aktor {
+  hall: THREE.Group; // platsen och riktningen
+  fig: Figur;
+  nyckel: string; // modellen: byts den, byggs figuren om
+  rum: [number, number];
+  vag: THREE.Vector3[]; // punkterna den går mot
+  vinkel: number;
+  dod: boolean;
+  ring?: THREE.Mesh; // den egna vandrarens ring
+}
+
 export class IsoKarta {
   private renderer: THREE.WebGLRenderer;
   private scene = new THREE.Scene();
@@ -61,6 +77,8 @@ export class IsoKarta {
   private torn = new THREE.Group(); // golv, väggar och portar
   private rorligt = new THREE.Group(); // allt som ändras med varje tillstånd
   private ekon = new THREE.Group();
+  private figurer = new THREE.Group();
+  private aktorer = new Map<string, Aktor>();
   private tornNyckel = "";
   private state: Tillstand | null = null;
   private storleken = 0;
@@ -69,7 +87,6 @@ export class IsoKarta {
   private hojd = 0;
   private ringar: THREE.MeshBasicMaterial[] = [];
   private blinkar: THREE.Object3D[] = [];
-  private pulsar: THREE.Object3D[] = [];
   private vaknade = -Infinity;
   private mitten: THREE.Vector3 | null = null; // kamerans mitt, som glider efter
   private senast = 0;
@@ -91,7 +108,7 @@ export class IsoKarta {
     this.sol.castShadow = true;
     this.sol.shadow.mapSize.set(2048, 2048);
     this.sol.shadow.bias = -0.0006;
-    this.scene.add(this.sol, this.sol.target, this.torn, this.rorligt, this.ekon);
+    this.scene.add(this.sol, this.sol.target, this.torn, this.rorligt, this.ekon, this.figurer);
 
     new ResizeObserver(() => this.anpassa()).observe(canvas.parentElement!);
     const loop = (t: number) => {
@@ -170,16 +187,6 @@ export class IsoKarta {
     let m = this.material.get(k);
     if (!m) {
       m = new THREE.MeshBasicMaterial({ map: tex, color: farg, transparent: true, opacity, depthWrite: false });
-      this.material.set(k, m);
-    }
-    return m;
-  }
-
-  private figurMaterial(farg: string): THREE.Material {
-    const k = "figur" + farg;
-    let m = this.material.get(k);
-    if (!m) {
-      m = new THREE.MeshLambertMaterial({ color: farg, flatShading: true });
       this.material.set(k, m);
     }
     return m;
@@ -348,7 +355,6 @@ export class IsoKarta {
   private byggRorligt(state: Tillstand): void {
     this.rorligt.clear();
     this.blinkar = [];
-    this.pulsar = [];
     const g = this.rorligt;
     const kanda = new Set(state.rooms.map((r) => r.x + "," + r.y));
 
@@ -395,28 +401,31 @@ export class IsoKarta {
       this.golvkrita(g, K.liten(), "liten", this.val.farger[sedd.slot] || "#ffffff", 0.8, x, z, 0, 0.016, 0.45);
     });
 
+    // Vandrarna och varelserna. De döda ligger kvar, med ett x i krita.
+    const sedda = new Set<string>();
     state.players.forEach((p) => {
       if (p.status === "ute" || p.hidden || p.x < 0) return;
       const [sx, sy] = SLOTS[p.slot] || SLOTS[0];
       const [x, z] = plats(p.x, p.y, sx, sy);
-      if (p.status === "forlorad" || p.status === "dod") {
-        this.golvkrita(g, K.tecken("x"), "tx", FARG.forlorad, 0.9, x, z);
-        return;
-      }
-      const farg = p.online ? this.val.farger[p.slot] || "#ffffff" : FARG.borta;
-      g.add(this.figur(farg, x, z));
-      if (p.id === state.you) this.pulsar.push(this.golvkrita(g, K.liten(), "liten", farg, 1.05, x, z, 0, 0.02));
+      const dod = p.status === "forlorad" || p.status === "dod";
+      if (dod) this.golvkrita(g, K.tecken("x"), "tx", FARG.forlorad, 0.9, x, z);
+      const farg = p.online && !dod ? this.val.farger[p.slot] || "#ffffff" : FARG.borta;
+      const klass = p.klassId || "";
+      const a = this.flytta("v" + p.id, klass + farg, () => M.vandrare(klass, farg), p.x, p.y, x, z);
+      a.dod = dod;
+      this.egenRing(a, p.id === state.you && !dod ? farg : "");
+      sedda.add("v" + p.id);
     });
-
-    // Varelserna står som tecken i krita.
     (state.monsters || []).forEach((m) => {
       const [x, z] = plats(m.x, m.y, Math.floor(RW / 2) + 1, Math.floor(RH / 2));
-      const sp = new THREE.Sprite(this.spriteMaterial(m.glyph, FARG.varelse));
-      sp.center.set(0.5, 0.08);
-      sp.scale.set(1.5, 1.5, 1);
-      sp.position.set(x, 0, z);
-      g.add(sp);
-      this.golvkrita(g, K.skugga(), "skugga", "#ffffff", 1.1, x, z, 0, 0.01);
+      const typ = m.typ || "";
+      this.flytta("m" + m.id, "m" + typ + m.glyph, () => M.varelse(typ) || this.tecknad(m.glyph), m.x, m.y, x, z);
+      sedda.add("m" + m.id);
+    });
+    this.aktorer.forEach((a, id) => {
+      if (sedda.has(id)) return;
+      this.figurer.remove(a.hall);
+      this.aktorer.delete(id);
     });
 
     // Den döda spelarens drag för en varelse, och det egna draget, är en pil
@@ -438,29 +447,102 @@ export class IsoKarta {
     }
   }
 
-  // figur är en vandrare: en kropp och ett huvud i vandrarens färg. Steg 3
-  // ger klasserna egna modeller (docs/isometrisk.md).
-  private figur(farg: string, x: number, z: number): THREE.Group {
-    const g = new THREE.Group();
-    const mat = this.figurMaterial(farg);
-    const kropp = new THREE.Mesh(this.geometri("kropp", () => new THREE.CylinderGeometry(0.2, 0.32, 0.9, 8)), mat);
-    kropp.position.y = 0.45;
-    const huvud = new THREE.Mesh(this.geometri("huvud", () => new THREE.IcosahedronGeometry(0.2, 1)), mat);
-    huvud.position.y = 1.08;
-    kropp.castShadow = huvud.castShadow = true;
-    g.add(kropp, huvud);
-    g.position.set(x, 0, z);
-    return g;
+  // flytta ser till att figuren id finns och går mot (x, z) i rummet
+  // (rx, ry). Till ett rum bredvid går den genom dörren; längre bort, som
+  // ur källarvalven, står den bara där.
+  private flytta(id: string, nyckel: string, gor: () => Figur, rx: number, ry: number, x: number, z: number): Aktor {
+    const mal = new THREE.Vector3(x, 0, z);
+    let a = this.aktorer.get(id);
+    if (a && a.nyckel !== nyckel) {
+      const fig = gor();
+      a.hall.remove(a.fig.grupp);
+      a.hall.add(fig.grupp);
+      a.fig = fig;
+      a.nyckel = nyckel;
+    }
+    if (!a) {
+      const hall = new THREE.Group();
+      const fig = gor();
+      hall.add(fig.grupp);
+      hall.position.copy(mal);
+      const vinkel = Math.PI / 4; // mot kameran
+      hall.rotation.y = vinkel;
+      this.figurer.add(hall);
+      a = { hall, fig, nyckel, rum: [rx, ry], vag: [], vinkel, dod: false };
+      this.aktorer.set(id, a);
+      return a;
+    }
+    const [ox, oy] = a.rum;
+    if (ox === rx && oy === ry) {
+      if (a.hall.position.distanceTo(mal) > 0.01) a.vag = [mal];
+    } else if (Math.abs(ox - rx) + Math.abs(oy - ry) === 1) {
+      const dorr = new THREE.Vector3(((ox + rx + 1) / 2) * S, 0, ((oy + ry + 1) / 2) * S);
+      a.vag = [dorr, mal];
+    } else {
+      a.hall.position.copy(mal);
+      a.vag = [];
+    }
+    a.rum = [rx, ry];
+    return a;
   }
 
-  private geometrier = new Map<string, THREE.BufferGeometry>();
-  private geometri(nyckel: string, gor: () => THREE.BufferGeometry): THREE.BufferGeometry {
-    let g = this.geometrier.get(nyckel);
-    if (!g) {
-      g = gor();
-      this.geometrier.set(nyckel, g);
+  // egenRing ger den egna vandraren en ring i sin färg, eller tar bort den.
+  private egenRing(a: Aktor, farg: string): void {
+    if (a.ring && (!farg || (a.ring.material as THREE.MeshBasicMaterial).color.getStyle() !== new THREE.Color(farg).getStyle())) {
+      a.hall.remove(a.ring);
+      a.ring = undefined;
     }
-    return g;
+    if (!farg || a.ring) return;
+    a.ring = new THREE.Mesh(this.yta(1.05), this.kritMaterial(K.liten(), farg, "liten", 1));
+    a.ring.rotation.x = -Math.PI / 2;
+    a.ring.position.y = 0.02;
+    a.ring.renderOrder = 1;
+    a.hall.add(a.ring);
+  }
+
+  // tecknad är en varelse utan modell: dess tecken i krita, stående.
+  private tecknad(glyph: string): Figur {
+    const g = new THREE.Group();
+    const sp = new THREE.Sprite(this.spriteMaterial(glyph, FARG.varelse));
+    sp.center.set(0.5, 0.08);
+    sp.scale.set(1.5, 1.5, 1);
+    g.add(sp);
+    const sk = new THREE.Mesh(this.yta(1.1), this.kritMaterial(K.skugga(), "#ffffff", "skugga", 1));
+    sk.rotation.x = -Math.PI / 2;
+    sk.position.y = 0.01;
+    g.add(sk);
+    return { grupp: g, steg: () => {} };
+  }
+
+  // figurerna går, vänder sig och lägger sig när de dör.
+  private rorFigurer(t: number, dt: number): void {
+    const p = 1 + 0.12 * Math.sin(t / 260);
+    this.aktorer.forEach((a) => {
+      let gar = false;
+      let kvar = (FART * dt) / 1000;
+      while (a.vag.length && kvar > 0) {
+        const mal = a.vag[0];
+        const d = mal.clone().sub(a.hall.position);
+        const l = d.length();
+        if (l > 0.001) a.vinkel = Math.atan2(d.x, d.z);
+        if (l <= kvar) {
+          a.hall.position.copy(mal);
+          a.vag.shift();
+          kvar -= l;
+        } else {
+          a.hall.position.addScaledVector(d, kvar / l);
+          kvar = 0;
+        }
+        gar = true;
+      }
+      let dv = a.vinkel - a.hall.rotation.y;
+      dv = Math.atan2(Math.sin(dv), Math.cos(dv));
+      a.hall.rotation.y += dv * Math.min(1, dt / 90);
+      a.fig.grupp.rotation.z = a.dod ? Math.PI / 2 : 0;
+      a.fig.grupp.position.y = a.dod ? 0.2 : 0;
+      if (!a.dod) a.fig.steg(t, gar);
+      if (a.ring) a.ring.scale.set(p, p, 1);
+    });
   }
 
   private spriteMaterial(ch: string, farg: string): THREE.SpriteMaterial {
@@ -517,8 +599,7 @@ export class IsoKarta {
 
     const blink = Math.floor(t / 550) % 2 === 0;
     this.blinkar.forEach((o) => (o.visible = blink));
-    const p = 1 + 0.12 * Math.sin(t / 260);
-    this.pulsar.forEach((o) => o.scale.set(p, p, 1));
+    this.rorFigurer(t, dt);
 
     const vaken = t - this.vaknade < VAKEN_MS;
     const blixt = vaken && Math.floor((t - this.vaknade) / 180) % 2 === 0;

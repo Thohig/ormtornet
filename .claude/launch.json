@@ -50,8 +50,7 @@
         "-karta",
         "snett",
         "-synlighet",
-        "alla",
-        "-klasser=false"
+        "alla"
       ],
       "port": 8092
     }

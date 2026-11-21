@@ -300,6 +300,14 @@ func (g *Game) classLabel(p *Player) string {
 	return ""
 }
 
+// classID ger id för vandrarens klass, eller tomt.
+func (g *Game) classID(p *Player) string {
+	if c := g.classOf(p); c != nil {
+		return c.ID
+	}
+	return ""
+}
+
 // wakeCardsLeft räknar vakna-korten i ormleken, för ormtjusaren.
 func (g *Game) wakeCardsLeft() int {
 	n := 0

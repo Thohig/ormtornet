@@ -493,9 +493,10 @@ type playerView struct {
 	Chosen   bool   `json:"chosen"`
 	Treasure int    `json:"treasure"` // -1 om spelaren inte får veta
 	Bot      bool   `json:"bot"`
-	Hidden   bool   `json:"hidden"`          // positionen är okänd för den som tittar
-	AI       bool   `json:"ai"`              // en AI-spelare styr medan människan är borta
-	Class    string `json:"klass,omitempty"` // klassen med liten bokstav
+	Hidden   bool   `json:"hidden"`            // positionen är okänd för den som tittar
+	AI       bool   `json:"ai"`                // en AI-spelare styr medan människan är borta
+	Class    string `json:"klass,omitempty"`   // klassen med liten bokstav
+	ClassID  string `json:"klassId,omitempty"` // klassens id, för figuren på kartan snett ovanifrån
 }
 
 type roomView struct {
@@ -698,7 +699,7 @@ func (g *Game) stateFor(me *Player) stateMsg {
 		pv := playerView{
 			ID: p.ID, Name: p.Name, Slot: p.Slot, X: p.X, Y: p.Y,
 			Online: p.present(), Bot: p.bot != nil, Status: p.Status, Ready: p.Ready,
-			Chosen: p.Action != "", Treasure: -1, AI: p.takenOver, Class: g.classLabel(p),
+			Chosen: p.Action != "", Treasure: -1, AI: p.takenOver, Class: g.classLabel(p), ClassID: g.classID(p),
 		}
 		if p == me || g.phase == phaseEnd {
 			pv.Treasure = p.Treasure

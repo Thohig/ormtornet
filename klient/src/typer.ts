@@ -22,12 +22,14 @@ export interface Vandrare {
   online: boolean;
   status: string; // "inne", "ute", "forlorad" eller "dod"
   hidden: boolean;
+  klassId?: string; // klassens id i klasser.json
 }
 
 export interface Varelse {
   id: number;
   name: string;
   glyph: string;
+  typ?: string; // varelsens id i monster.json
   x: number;
   y: number;
 }

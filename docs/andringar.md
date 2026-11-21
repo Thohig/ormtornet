@@ -6,6 +6,17 @@ eller leder tornet.
 
 ## 2026-11-21
 
+### Kartan snett ovanifrån: figurerna
+
+- Vandrarna på kartan snett ovanifrån har nu armar och ben och bär det
+  deras klass bär: hjälm och sköld, lykta, kartrulle, stav och så vidare.
+- Varelserna har egna modeller: Blekkryparen, Ormynglet, Fjällvakten,
+  Gallgasten och Benväktaren.
+- Figurerna går genom dörren till nästa rum i stället för att hoppa, och
+  den som dör lägger sig på golvet.
+- Steg 3 av 4 i [isometrisk.md](isometrisk.md). Kvar är avslöjandets
+  utseende.
+
 ### Kartan snett ovanifrån, första versionen
 
 - Värdsidan har ett nytt val under Inför nästa vandring: **Kartan**, rakt

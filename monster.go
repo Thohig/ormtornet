@@ -40,6 +40,7 @@ type monsterView struct {
 	ID    int    `json:"id"`
 	Name  string `json:"name"`
 	Glyph string `json:"glyph"`
+	Type  string `json:"typ"` // varelsens id i monster.json, för modellen på kartan snett ovanifrån
 	X     int    `json:"x"`
 	Y     int    `json:"y"`
 	HP    int    `json:"hp"`
@@ -413,7 +414,7 @@ func (g *Game) monsterViews(me *Player, blind bool) []monsterView {
 		}
 		t := g.data.monsterType(m.Type)
 		out = append(out, monsterView{
-			ID: m.ID, Name: t.Namn, Glyph: t.Tecken, X: m.X, Y: m.Y, HP: m.HP, MaxHP: t.Liv,
+			ID: m.ID, Name: t.Namn, Glyph: t.Tecken, Type: m.Type, X: m.X, Y: m.Y, HP: m.HP, MaxHP: t.Liv,
 		})
 	}
 	return out

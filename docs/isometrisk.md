@@ -1,8 +1,8 @@
 # Förslag: Tornet snett ovanifrån
 
 Status: förslaget skrevs 2026-11-21. Skisserna visade två alternativ,
-platta kritfigurer (A) och 3D-modeller (B). Användaren valde B. Steg 1 och
-2 är byggda.
+platta kritfigurer (A) och 3D-modeller (B). Användaren valde B. Steg 1–3
+är byggda.
 
 Kartan ritas i dag med Canvas 2D i `web/map.js`, rakt ovanifrån, med tecken
 i ett rutnät. Förslaget är en ny karta i isometrisk vy, ritad med Three.js
@@ -58,7 +58,7 @@ Vandrarna och varelserna blir enkla 3D-modeller med ljus och skuggor.
    samma gränssnitt som `MapView`. Valet platt eller snett ovanifrån på
    värdsidan. **Byggt.**
 3. Modellerna: vandrarna med klassernas föremål, varelserna, guldet, och
-   rörelsen mellan rummen. Ekot och de dolda vandrarnas ringar.
+   rörelsen mellan rummen. Ekot och de dolda vandrarnas ringar. **Byggt.**
 4. Avslöjandet: nivåerna 2–4, ormens ögon och munnarna.
 
 Efter varje steg görs en commit, och användaren provar innan nästa steg.
@@ -83,3 +83,26 @@ Efter varje steg görs en commit, och användaren provar innan nästa steg.
 - Kvar till senare steg: pilarna vid kanten för det som ligger utanför
   utsnittet, och avslöjandets utseende (väggarna andas inte än, och
   portarna på nivå 4 är vanliga portar).
+
+## Så är steg 3 byggt
+
+- Modellerna står i `klient/src/modeller.ts`. Tillståndet har klassens id
+  (`klassId`) för varje vandrare och varelsens id (`typ`) för varje
+  varelse, så att modellen hittas oavsett språk.
+- Vandrarna har kropp, huvud, armar och ben, i sin färg. Klasserna bär sitt:
+  Legoknekten hjälm, sköld och svärd, Tjuven mörk huva, säck och dolk,
+  Örtkvinnan stav med en blomma och korg, Kartritaren en kartrulle,
+  Ormtjusaren en orm kring halsen och en flöjt, Spårfinnaren hatt och
+  käpp, Lyktbäraren en lysande lykta och Pilgrimen bredbrättad hatt och
+  stav med kalebass. Utan klasser bär alla en huva.
+- Varelserna: Blekkryparen med sex ben, Ormynglet rest ur dammet,
+  Fjällvakten i fjällrustning med sköld och spjut, Gallgasten som en
+  genomskinlig grön skepnad i trasor och Benväktaren av ben och revben. En
+  ny varelse i `monster.json` utan modell visas med sitt tecken.
+- Figurerna står kvar mellan rundorna och går till sin nya plats. Till ett
+  rum bredvid går de genom dörren; längre bort, som ur källarvalven, står
+  de bara där. De vänder sig åt det håll de går, och benen och armarna
+  rör sig. Den som dör lägger sig grå på golvet, med ett x i krita.
+- Den egna ringen följer figuren.
+- Modellerna står i koden, inte i `data/`. Det går att flytta dem dit
+  senare, om de ska kunna ändras utan att bygga om.
