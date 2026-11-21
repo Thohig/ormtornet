@@ -140,6 +140,19 @@ export function ram(): THREE.Texture {
   });
 }
 
+// revben är en ryggrad med revben, som syns genom golvet från nivå 3.
+export function revben(): THREE.Texture {
+  return spara("revben", () => {
+    const [c, x] = duk(256, 256);
+    streck(x, [[128, 18], [128, 238]], 8);
+    for (let i = 0; i < 6; i++) {
+      const y = 40 + i * 34;
+      [-1, 1].forEach((s) => streck(x, [[128, y], [128 + s * 50, y - 14], [128 + s * 92, y + 6], [128 + s * 104, y + 30]], 6));
+    }
+    return textur(grova(c, 0.85));
+  });
+}
+
 export function skiffer(): THREE.Texture {
   return spara("skiffer", () => {
     const [c, x] = duk(256, 256);

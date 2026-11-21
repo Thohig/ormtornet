@@ -34,6 +34,37 @@ const FARG = {
   vagg: "#c9c6bc",
 };
 const RING = ["#c9a24f", "#c9a24f", "#c9a24f", "#c98a5a", "#c4483a"]; // per nivå
+
+// Avslöjandet: tornets utseende följer nivån, som på den platta kartan. På
+// nivå 2 andas kritan, på nivå 3 syns revbenen och hjärtslagen, på nivå 4
+// är det kött och tänder. vagg och hi är väggens färg i vila och i slaget,
+// golv golvets ton, period hur länge ett andetag eller hjärtslag tar och
+// revben hur tydliga revbenen på golvet är.
+const LOOK: Record<number, { vagg: number[]; hi: number[]; golv: number[]; period: number; revben: number }> = {
+  1: { vagg: [201, 198, 188], hi: [201, 198, 188], golv: [255, 255, 255], period: 0, revben: 0 },
+  2: { vagg: [196, 192, 182], hi: [240, 234, 220], golv: [255, 248, 236], period: 4200, revben: 0 },
+  3: { vagg: [196, 160, 140], hi: [240, 170, 140], golv: [230, 170, 160], period: 1250, revben: 0.35 },
+  4: { vagg: [176, 92, 74], hi: [255, 118, 88], golv: [210, 130, 120], period: 950, revben: 0.55 },
+};
+const PORT_KOTT = "#a4483a";
+const MS_PER_ENHET = 16; // hjärtslaget sprider sig från tornets mitt så här fort
+
+// puls ger slaget just nu, 0–1, för en punkt dist enheter från mitten.
+// Samma form som pulse i web/map.js. Väggarna räknar ut samma sak i sin
+// shader (se vaggMaterial).
+function puls(niva: number, t: number, dist: number): number {
+  const look = LOOK[niva];
+  if (!look.period) return 0;
+  const tt = t - dist * MS_PER_ENHET;
+  if (niva === 2) return 0.5 + 0.5 * Math.sin((2 * Math.PI * tt) / look.period);
+  const ph = (((tt % look.period) + look.period) % look.period) / look.period;
+  const g = (c: number) => Math.exp(-(((ph - c) / 0.07) ** 2));
+  return Math.max(g(0), 0.7 * g(0.22), g(1));
+}
+
+function srgb(c: number[]): THREE.Color {
+  return new THREE.Color().setRGB(c[0] / 255, c[1] / 255, c[2] / 255, THREE.SRGBColorSpace);
+}
 const EKO_MS = 4500;
 const FART = 3.4; // så fort figurerna går, i världens enheter per sekund
 const VAKEN_MS = 3500;
@@ -86,6 +117,19 @@ export class IsoKarta {
   private bredd = 0;
   private hojd = 0;
   private ringar: THREE.MeshBasicMaterial[] = [];
+  private munnar: { upper: THREE.Group; lower: THREE.Group }[] = [];
+  private ogon: THREE.Group[] = [];
+  private guldljus: THREE.PointLight | null = null;
+  private revbenMat = new THREE.MeshBasicMaterial({ map: K.revben(), color: 0xa03a2c, transparent: true, opacity: 0, depthWrite: false });
+  // Väggarnas shader läser de här värdena varje bildruta.
+  private vaggar = {
+    uTid: { value: 0 },
+    uPeriod: { value: 0 },
+    uNiva: { value: 1 },
+    uVagg: { value: srgb(LOOK[1].vagg) },
+    uHi: { value: srgb(LOOK[1].hi) },
+    uMitt: { value: new THREE.Vector2() },
+  };
   private blinkar: THREE.Object3D[] = [];
   private vaknade = -Infinity;
   private mitten: THREE.Vector3 | null = null; // kamerans mitt, som glider efter
@@ -102,7 +146,7 @@ export class IsoKarta {
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
     this.renderer.setClearColor(0x15171a);
     this.renderer.shadowMap.enabled = true;
-    this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    this.renderer.shadowMap.type = THREE.PCFShadowMap;
 
     this.scene.add(new THREE.HemisphereLight(0xc9cfdc, 0x1a1c20, 1.1));
     this.sol.castShadow = true;
@@ -211,6 +255,8 @@ export class IsoKarta {
     });
     this.torn.clear();
     this.ringar = [];
+    this.munnar = [];
+    this.ogon = [];
 
     const golv: THREE.BufferGeometry[] = [];
     const vaggar: THREE.BufferGeometry[] = [];
@@ -232,6 +278,13 @@ export class IsoKarta {
       g.rotateX(-Math.PI / 2);
       g.translate(r.x * S + S / 2, 0, r.y * S + S / 2);
       golv.push(g);
+      // Revbenen syns genom golvet från nivå 3.
+      if (r.k !== "kammare") {
+        const rev = new THREE.Mesh(this.yta(S * 0.8), this.revbenMat);
+        rev.rotation.set(-Math.PI / 2, 0, (r.x + r.y) % 2 ? 0.3 : -0.4);
+        rev.position.set(r.x * S + S / 2, 0.008, r.y * S + S / 2);
+        this.torn.add(rev);
+      }
       // Sidorna: N, Ö, S, V.
       const sidor = [
         kant("h" + r.x + "," + r.y, true, r.x * S, r.y * S),
@@ -275,6 +328,7 @@ export class IsoKarta {
       at(S / 2 + LUCKA / 2 - VT * 0.2, 0.7, VT * 1.5, 1.4, VT * 1.5);
       at(S / 2, 1.5, LUCKA + VT * 1.2, 0.3, VT * 1.6);
       if (k.stangd) at(S / 2, 0.68, LUCKA, 1.36, VT, stangda);
+      else this.mun(k);
     });
 
     const lagg = (lista: THREE.BufferGeometry[], mat: THREE.Material, skugga: boolean) => {
@@ -292,6 +346,30 @@ export class IsoKarta {
     lagg(stangda, this.enkelt("stangd", FARG.stangd), true);
   }
 
+  // mun ger en öppen port tänder, som syns och tuggar på nivå 4.
+  private mun(k: { h: boolean; x: number; z: number }): void {
+    const mun = new THREE.Group();
+    mun.position.set(k.h ? k.x + S / 2 : k.x, 0, k.h ? k.z : k.z + S / 2);
+    if (!k.h) mun.rotation.y = Math.PI / 2;
+    const tand = this.tandGeo || (this.tandGeo = new THREE.ConeGeometry(0.1, 0.36, 5));
+    const mat = this.enkelt("tand", "#eadfc8");
+    const upper = new THREE.Group(), lower = new THREE.Group();
+    for (let i = 0; i < 5; i++) {
+      const u = new THREE.Mesh(tand, mat);
+      u.rotation.x = Math.PI;
+      u.position.set(-0.7 + i * 0.35, 1.17, 0);
+      upper.add(u);
+      const d = new THREE.Mesh(tand, mat);
+      d.position.set(-0.53 + i * 0.35, 0.18, 0);
+      lower.add(d);
+    }
+    mun.add(upper, lower);
+    mun.visible = false;
+    this.torn.add(mun);
+    this.munnar.push({ upper, lower });
+  }
+  private tandGeo: THREE.ConeGeometry | null = null;
+
   private golvMaterial(): THREE.Material {
     let m = this.material.get("golv");
     if (!m) {
@@ -304,7 +382,38 @@ export class IsoKarta {
   private vaggMaterial(): THREE.Material {
     let m = this.material.get("vagg");
     if (!m) {
-      m = new THREE.MeshLambertMaterial({ map: K.vagg(), color: FARG.vagg });
+      // Väggarnas färg räknas ut i shadern, så att hjärtslaget kan gå som en
+      // våg från tornets mitt: samma puls som i puls(), för varje punkt.
+      const mat = new THREE.MeshLambertMaterial({ map: K.vagg(), color: FARG.vagg });
+      const u = this.vaggar;
+      mat.onBeforeCompile = (sh) => {
+        Object.assign(sh.uniforms, u);
+        sh.vertexShader = sh.vertexShader
+          .replace("#include <common>", "#include <common>\nvarying vec3 vVarld;")
+          .replace("#include <begin_vertex>", "#include <begin_vertex>\nvVarld = (modelMatrix * vec4(transformed, 1.0)).xyz;");
+        sh.fragmentShader = sh.fragmentShader
+          .replace(
+            "#include <common>",
+            `#include <common>
+varying vec3 vVarld;
+uniform float uTid;
+uniform float uPeriod;
+uniform float uNiva;
+uniform vec3 uVagg;
+uniform vec3 uHi;
+uniform vec2 uMitt;
+float g(float ph, float c) { float d = (ph - c) / 0.07; return exp(-d * d); }
+float puls() {
+  if (uPeriod <= 0.0) return 0.0;
+  float t = uTid - length(vVarld.xz - uMitt) * ${MS_PER_ENHET.toFixed(1)};
+  if (uNiva < 2.5) return 0.5 + 0.5 * sin(6.2831853 * t / uPeriod);
+  float ph = mod(t, uPeriod) / uPeriod;
+  return max(max(g(ph, 0.0), 0.7 * g(ph, 0.22)), g(ph, 1.0));
+}`,
+          )
+          .replace("vec4 diffuseColor = vec4( diffuse, opacity );", "vec4 diffuseColor = vec4( mix(uVagg, uHi, puls()), opacity );");
+      };
+      m = mat;
       this.material.set("vagg", m);
     }
     return m;
@@ -319,6 +428,8 @@ export class IsoKarta {
     return m;
   }
 
+  private ogaGeo: THREE.SphereGeometry | null = null;
+
   // Kammaren: en kritring kring en hög av guld.
   private byggKammare(r: Rum): void {
     const cx = r.x * S + S / 2, cz = r.y * S + S / 2;
@@ -328,6 +439,28 @@ export class IsoKarta {
     ring.position.set(cx, 0.012, cz);
     this.torn.add(ring);
     this.ringar.push(ringMat);
+
+    // Ormens ögon över guldet, som lyser när den vaknar. De står bredvid
+    // varandra som kameran ser dem.
+    const ogon = new THREE.Group();
+    const ogonMat = this.material.get("ögon") || new THREE.MeshBasicMaterial({ color: 0xffe14a });
+    this.material.set("ögon", ogonMat);
+    const oga = this.ogaGeo || (this.ogaGeo = new THREE.SphereGeometry(0.11, 10, 8));
+    [-1, 1].forEach((sida) => {
+      const e = new THREE.Mesh(oga, ogonMat);
+      e.scale.set(1, 0.7, 1);
+      e.position.set(sida * 0.25, 0, -sida * 0.25);
+      ogon.add(e);
+    });
+    ogon.position.set(cx, 1.6, cz);
+    ogon.visible = false;
+    this.torn.add(ogon);
+    this.ogon.push(ogon);
+    if (!this.guldljus) {
+      this.guldljus = new THREE.PointLight(0xffc94a, 0, 10, 2);
+      this.scene.add(this.guldljus);
+    }
+    this.guldljus.position.set(cx, 1.6, cz);
 
     const mynt: THREE.BufferGeometry[] = [];
     let s = 3;
@@ -555,6 +688,36 @@ export class IsoKarta {
     return m;
   }
 
+  // avslojande ger tornet nivåns utseende: väggarna andas eller slår,
+  // golvet mörknar mot kött, revbenen syns och portarna blir munnar.
+  private avslojande(t: number): void {
+    const niva = this.niva();
+    const look = LOOK[niva];
+    const n = this.storleken || 9;
+    const u = this.vaggar;
+    u.uTid.value = t;
+    u.uPeriod.value = look.period;
+    u.uNiva.value = niva;
+    u.uVagg.value.copy(srgb(look.vagg));
+    u.uHi.value.copy(srgb(look.hi));
+    u.uMitt.value.set((n * S) / 2, (n * S) / 2);
+
+    // Golvet och revbenen slår i takt med väggarna, mätt vid kameran.
+    const p = niva >= 3 && this.mitten ? puls(niva, t, Math.hypot(this.mitten.x - (n * S) / 2, this.mitten.z - (n * S) / 2)) : 0;
+    const f = niva >= 3 ? 0.75 + 0.25 * p : 1;
+    (this.golvMaterial() as THREE.MeshLambertMaterial).color.copy(srgb(look.golv)).multiplyScalar(f);
+    this.revbenMat.opacity = look.revben * (niva >= 3 ? 0.7 + 0.3 * p : 1);
+    this.revbenMat.visible = look.revben > 0;
+
+    (this.enkelt("port", FARG.port) as THREE.MeshLambertMaterial).color.set(niva === 4 ? PORT_KOTT : FARG.port);
+    const tugga = (Math.sin(t / 260) + 1) / 2;
+    this.munnar.forEach(({ upper, lower }) => {
+      upper.parent!.visible = niva === 4;
+      upper.position.y = -tugga * 0.22;
+      lower.position.y = tugga * 0.12;
+    });
+  }
+
   // ---- Varje bildruta ----
 
   private rita(t: number): void {
@@ -604,6 +767,9 @@ export class IsoKarta {
     const vaken = t - this.vaknade < VAKEN_MS;
     const blixt = vaken && Math.floor((t - this.vaknade) / 180) % 2 === 0;
     this.ringar.forEach((m) => m.color.set(vaken ? (blixt ? "#ff5a3a" : "#a8402c") : RING[this.niva()]));
+    this.ogon.forEach((o) => (o.visible = vaken && (blixt || t - this.vaknade > 1100)));
+    if (this.guldljus) this.guldljus.intensity = vaken ? 30 * (0.7 + 0.3 * Math.sin(t / 60)) : 0;
+    this.avslojande(t);
 
     [...this.ekon.children].forEach((o) => {
       const gar = t - o.userData.at;

@@ -1,8 +1,8 @@
 # Förslag: Tornet snett ovanifrån
 
 Status: förslaget skrevs 2026-11-21. Skisserna visade två alternativ,
-platta kritfigurer (A) och 3D-modeller (B). Användaren valde B. Steg 1–3
-är byggda.
+platta kritfigurer (A) och 3D-modeller (B). Användaren valde B. Alla fyra
+stegen är byggda. Kartan är fortfarande platt som förval.
 
 Kartan ritas i dag med Canvas 2D i `web/map.js`, rakt ovanifrån, med tecken
 i ett rutnät. Förslaget är en ny karta i isometrisk vy, ritad med Three.js
@@ -59,7 +59,7 @@ Vandrarna och varelserna blir enkla 3D-modeller med ljus och skuggor.
    värdsidan. **Byggt.**
 3. Modellerna: vandrarna med klassernas föremål, varelserna, guldet, och
    rörelsen mellan rummen. Ekot och de dolda vandrarnas ringar. **Byggt.**
-4. Avslöjandet: nivåerna 2–4, ormens ögon och munnarna.
+4. Avslöjandet: nivåerna 2–4, ormens ögon och munnarna. **Byggt.**
 
 Efter varje steg görs en commit, och användaren provar innan nästa steg.
 
@@ -80,9 +80,8 @@ Efter varje steg görs en commit, och användaren provar innan nästa steg.
   pulserar. Varelserna står som sitt tecken. Fällornas märken, kritpilarna,
   föremålen och de döda (x) står i krita på golvet, och draget är en pil
   vid dörren som blinkar. Ekot färgar rummets golv.
-- Kvar till senare steg: pilarna vid kanten för det som ligger utanför
-  utsnittet, och avslöjandets utseende (väggarna andas inte än, och
-  portarna på nivå 4 är vanliga portar).
+- Pilarna vid kanten för det som ligger utanför utsnittet finns inte på
+  kartan snett ovanifrån (se Inte byggt nedan).
 
 ## Så är steg 3 byggt
 
@@ -106,3 +105,22 @@ Efter varje steg görs en commit, och användaren provar innan nästa steg.
 - Den egna ringen följer figuren.
 - Modellerna står i koden, inte i `data/`. Det går att flytta dem dit
   senare, om de ska kunna ändras utan att bygga om.
+
+## Så är steg 4 byggt
+
+- Utseendet följer avslöjandets nivå med samma färger och takt som den
+  platta kartan (`LOOK` i `klient/src/karta.ts` och `web/map.js`).
+- Väggarnas färg räknas ut i en shader. På nivå 2 andas kritan; på nivå 3
+  och 4 går hjärtslaget som en våg från tornets mitt, två slag tätt efter
+  varandra och sedan vila.
+- Från nivå 3 mörknar golvet mot kött i takt med slagen, och revben syns
+  genom golvet. På nivå 4 är väggarna kött och de öppna portarna munnar med
+  tänder som tuggar. När vandringen är slut har munnarna slutit sig.
+- När ormen vaknar lyser två ögon över guldet och guldet glöder, medan
+  kritringen blinkar som förut.
+
+## Inte byggt
+
+- Pilarna vid kanten för portar, kammaren och vandrare utanför utsnittet.
+- Att kartan snett ovanifrån blir förval.
+- Modellerna i `data/`, så att de kan ändras utan att bygga om.

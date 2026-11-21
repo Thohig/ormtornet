@@ -6,6 +6,16 @@ eller leder tornet.
 
 ## 2026-11-21
 
+### Kartan snett ovanifrån: avslöjandet
+
+- Tornet snett ovanifrån förändras nu med avslöjandets nivåer, som den
+  platta kartan: kritan andas på nivå 2, hjärtslagen går genom väggarna
+  och revben syns genom golvet på nivå 3, och på nivå 4 är väggarna kött
+  och portarna munnar som tuggar.
+- När ormen vaknar lyser dess ögon över guldet.
+- Det var sista steget i [isometrisk.md](isometrisk.md). Kartan är
+  fortfarande platt som förval; välj Kartan: snett ovanifrån på värdsidan.
+
 ### Kartan snett ovanifrån: figurerna
 
 - Vandrarna på kartan snett ovanifrån har nu armar och ben och bär det
