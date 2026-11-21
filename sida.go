@@ -68,7 +68,7 @@ func siteVersion() string {
 }
 
 // localRef är en relativ adress till ett skript, en stil eller en bild.
-var localRef = regexp.MustCompile(`((?:src|href)=")([^"?#:]+\.(?:js|css|png|svg))"`)
+var localRef = regexp.MustCompile(`((?:src|href)=")([^"?#:]+\.(?:js|css|png|svg|ico))"`)
 
 // withVersion lägger till versionsnumret på sidans egna filer.
 func withVersion(html, version string) string {

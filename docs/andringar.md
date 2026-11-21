@@ -6,6 +6,12 @@ eller leder tornet.
 
 ## 2026-11-21
 
+### Ikonen i Safari
+
+- Sidorna har nu också en liten ikon som PNG och en `favicon.ico`, så att
+  Safari visar tornets ikon i flikarna. Förut fanns bara SVG:n och en stor
+  PNG, och Safari visade ingen ikon.
+
 ### Tillbaka från spelledarbordet
 
 - Spelledarbordet har en knapp Värdsidan i raden överst. Värdsidan och

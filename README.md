@@ -935,6 +935,9 @@ Beskrivningarna för rummen ligger under nivåerna `"1"` till `"4"`.
     av dem
   - `audio.js` allt ljud, skapat med Web Audio API, även stormen i introt
   - `style.css` utseendet
+  - `ikon.svg`, `ikon.png`, `ikon-32.png` och `favicon.ico` tornets ikon
+    i flikarna och på hemskärmen. De små ritas av `verktyg/appikon`
+    (`icon_32x32.png`), eftersom Safari inte använder SVG:n
   - `iso/iso.js` kartan snett ovanifrån, byggd från `klient/` (rör den inte
     för hand). `map.js` väljer kartan efter inställningen Kartan; den
     platta räknar alltid ut utsnittet och teckenförklaringen, och kartan
