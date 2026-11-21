@@ -278,7 +278,7 @@ type Player struct {
 func (p *Player) present() bool { return p.client != nil || p.bot != nil }
 
 type Client struct {
-	conn   *wsConn
+	conn   msgConn
 	send   chan []byte
 	player *Player
 	closed bool
@@ -1680,7 +1680,15 @@ type clientMsg struct {
 }
 
 // serve sköter en websocket-anslutning tills den stängs.
-func (g *Game) serve(conn *wsConn, local bool) {
+// msgConn är en anslutning till en spelarsida: en websocket när tornet är ett
+// program (ws.go), eller en kanal i webbläsaren när tornet körs där (wasm.go).
+type msgConn interface {
+	ReadMessage() ([]byte, error)
+	WriteText([]byte) error
+	Close() error
+}
+
+func (g *Game) serve(conn msgConn, local bool) {
 	c := &Client{conn: conn, send: make(chan []byte, 64), local: local}
 	go func() {
 		for b := range c.send {

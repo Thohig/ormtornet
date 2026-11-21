@@ -6,6 +6,20 @@ eller leder tornet.
 
 ## 2026-11-21
 
+### Tornet i webbläsaren
+
+- Steg 1 i [github-pages.md](github-pages.md). Tornet kan byggas till
+  WebAssembly och köras i en flik, skalet (`web/torn.html`), med
+  `verktyg/bygg-sida.sh`. Spelledaren och spelarna i samma webbläsare når
+  det genom `web/natet.js`. README beskriver hur man provar under Tornet i
+  webbläsaren. Spelare på andra datorer kan inte ansluta än.
+- Sidorna länkar nu till varandra med relativa adresser, till exempel
+  `spelledare.html` och `spelledare/bord.html`, så att samma länkar
+  fungerar från tornets program och från en vanlig webbserver. Tornets
+  program svarar på de nya adresserna, och de gamla (`/spelledare`,
+  `/spelledare/bord`) fungerar som förut.
+- Ny flagga `-sida`, som skriver sidorna för GitHub Pages till en mapp.
+
 ### Three.js licens följer med kartan
 
 - Kartan snett ovanifrån (`web/iso/iso.js`) börjar nu med three.js

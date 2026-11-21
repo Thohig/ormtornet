@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title data-t="skal_sidtitel"></title>
+<link rel="icon" href="ikon.svg" type="image/svg+xml">
+<link rel="icon" href="ikon.png" type="image/png" sizes="180x180">
+<link rel="apple-touch-icon" href="ikon.png">
+<link rel="stylesheet" href="style.css">
+<style>
+  html, body { height: 100%; margin: 0; overflow: hidden; }
+  #sida { position: fixed; inset: 0; width: 100%; height: 100%; border: 0; }
+  #skal {
+    position: fixed; inset: 0; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 18px;
+    padding: 16px; text-align: center; color: var(--hi);
+  }
+  #skal[hidden] { display: none; }
+</style>
+</head>
+<body>
+<!-- Tornets flik när spelet kommer från GitHub Pages (docs/github-pages.md).
+     Skalet kör tornet (torn.wasm) och visar sidorna i ramen nedanför. Ramen
+     kan byta sida; skalet och tornet ligger kvar så länge fliken är öppen. -->
+<div id="skal">
+  <p id="skalText" data-t="skal_vaknar"></p>
+  <button class="btn" id="skalIgen" data-t="skal_igen" hidden></button>
+</div>
+<iframe id="sida" title="Ormtornet" hidden></iframe>
+<script src="texter/vardsidan.js"></script>
+<script src="texter.js"></script>
+<script src="wasm_exec.js"></script>
+<script src="torn.js"></script>
+</body>
+</html>

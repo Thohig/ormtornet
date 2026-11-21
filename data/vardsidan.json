@@ -359,6 +359,13 @@
     "server_drag_vanta": "väntar",
     "server_drag_ta": "tar skatt",
     "server_drag_sok": "söker",
-    "server_drag_drick": "dricker"
+    "server_drag_drick": "dricker",
+    "_skal": "Tornets flik när spelet kommer från GitHub Pages (web/torn.html, web/torn.js)",
+    "skal_sidtitel": "Ormtornet – tornet",
+    "skal_vaknar": "Tornet vaknar …",
+    "skal_redan": "Tornet är redan öppet i en annan flik i den här webbläsaren. Använd den fliken, eller stäng den och ladda om den här.",
+    "skal_fel": "Tornet kunde inte öppnas i den här webbläsaren. ({fel})",
+    "skal_stangt": "Tornet är stängt.",
+    "skal_igen": "Öppna tornet igen"
   }
 }

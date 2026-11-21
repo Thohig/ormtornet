@@ -1,3 +1,5 @@
+//go:build !js
+
 package main
 
 import (
@@ -42,6 +44,7 @@ func main() {
 	abandoned := flag.Duration("autostopp-max", 12*time.Hour, "stäng tornet när ingen har gjort något så här länge, även om flikar står öppna (0 = aldrig)")
 	simulate := flag.Int("simulera", 0, "spela så många vandringar med bara AI-spelare (-ai, förval 4) och skriv hur det gick, utan att öppna tornet")
 	check := flag.Bool("kontrollera", false, "kontrollera datafilerna och avsluta")
+	site := flag.String("sida", "", "skriv sidorna för GitHub Pages till mappen och avsluta (verktyg/bygg-sida.sh lägger till tornet)")
 	initiation := flag.String("invigning", defaultSettings.Invigning, "invigningen: namn (ormens namn, nytt för varje vandring) eller svar (fasta svar)")
 	change := flag.Bool("forandras", defaultSettings.Forandras, "tornet förändras med avslöjandets nivåer: fler fällor från nivå 3, portarna stängs på nivå 4")
 	mapLook := flag.String("karta", defaultSettings.Karta, "hur kartan ritas: snett (snett ovanifrån i 3D, kräver WebGL) eller platt (rakt ovanifrån, i krita)")
@@ -96,6 +99,17 @@ func main() {
 				log.Fatalf("översättningen till %s: %v", l, err)
 			}
 		}
+		return
+	}
+	if *site != "" {
+		sv, _, err := loadDataLang(*dataPath, langSv)
+		if err == nil {
+			err = writeSite(*site, sv)
+		}
+		if err != nil {
+			log.Fatalf("sidorna: %v", err)
+		}
+		fmt.Println("Sidorna är skrivna till", *site)
 		return
 	}
 	if *simulate > 0 {

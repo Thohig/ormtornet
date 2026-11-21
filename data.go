@@ -178,8 +178,13 @@ func loadData(dir string) (*Data, string, error) {
 }
 
 // readDataFile läser den svenska datafilen name ur dir, eller den inbyggda
-// kopian om den saknas.
+// kopian om den saknas. Med dir tom används bara de inbyggda filerna, som i
+// webbläsaren där det inte finns några filer att läsa.
 func readDataFile(dir, name string) ([]byte, string, error) {
+	if dir == "" {
+		raw, err := embeddedData.ReadFile("data/" + name)
+		return raw, name + " (inbyggd)", err
+	}
 	path := filepath.Join(dir, name)
 	raw, err := os.ReadFile(path)
 	if errors.Is(err, os.ErrNotExist) {

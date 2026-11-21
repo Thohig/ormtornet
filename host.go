@@ -309,9 +309,13 @@ func addHostRoutes(mux *http.ServeMux, web fs.FS, game *Game, addrs hostAddrs, h
 		http.ServeFileFS(w, r, web, "spelledare.html")
 	}))
 	// Spelledarbordet: där spelledaren leder vandringen i spelledarläget.
-	mux.HandleFunc("GET /spelledare/bord", localOnly(func(w http.ResponseWriter, r *http.Request) {
+	// Sidan finns under två namn: bord.html är det som sidorna länkar till,
+	// så att samma länkar fungerar när tornet ligger på GitHub Pages.
+	board := localOnly(func(w http.ResponseWriter, r *http.Request) {
 		http.ServeFileFS(w, r, web, "bord.html")
-	}))
+	})
+	mux.HandleFunc("GET /spelledare/bord", board)
+	mux.HandleFunc("GET /spelledare/bord.html", board)
 	mux.HandleFunc("POST /spelledare/ingrepp", hostAction(func(w http.ResponseWriter, r *http.Request) {
 		var req gmRequest
 		if err := json.NewDecoder(http.MaxBytesReader(w, r.Body, 4096)).Decode(&req); err != nil {

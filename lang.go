@@ -42,15 +42,17 @@ func readTranslation(dir, lang, name string) ([]byte, string, error) {
 	if lang == langSv {
 		return nil, "", nil
 	}
-	path := filepath.Join(dir, lang, name)
-	raw, err := os.ReadFile(path)
-	if err == nil {
-		return raw, path, nil
+	if dir != "" {
+		path := filepath.Join(dir, lang, name)
+		raw, err := os.ReadFile(path)
+		if err == nil {
+			return raw, path, nil
+		}
+		if !errors.Is(err, os.ErrNotExist) {
+			return nil, "", err
+		}
 	}
-	if !errors.Is(err, os.ErrNotExist) {
-		return nil, "", err
-	}
-	raw, err = embeddedData.ReadFile("data/" + lang + "/" + name)
+	raw, err := embeddedData.ReadFile("data/" + lang + "/" + name)
 	if err != nil {
 		return nil, "", nil // ingen översättning; texterna står kvar på svenska
 	}

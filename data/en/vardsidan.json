@@ -348,6 +348,12 @@
     "server_drag_vanta": "waits",
     "server_drag_ta": "takes treasure",
     "server_drag_sok": "searches",
-    "server_drag_drick": "drinks"
+    "server_drag_drick": "drinks",
+    "skal_sidtitel": "The Serpent Tower – the tower",
+    "skal_vaknar": "The tower is waking …",
+    "skal_redan": "The tower is already open in another tab in this browser. Use that tab, or close it and reload this one.",
+    "skal_fel": "The tower could not be opened in this browser. ({fel})",
+    "skal_stangt": "The tower is closed.",
+    "skal_igen": "Open the tower again"
   }
 }

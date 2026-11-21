@@ -1296,7 +1296,7 @@ const Intro = (() => {
   // spelledarbordet i spelledarläget, utom när man har valt att spela
   // själv (adressen slutar med ?spela).
   let toHostPage = false;
-  let hostPage = "/spelledare"; // värdsidan, eller spelledarbordet i spelledarläget
+  let hostPage = "spelledare.html"; // värdsidan, eller spelledarbordet i spelledarläget
   const wantsToPlay = new URLSearchParams(location.search).has("spela");
   let reveal = true;
   let next = 0;
@@ -1464,7 +1464,7 @@ const Intro = (() => {
       reveal = !!info.avslojande;
       if (!reveal) $("intro").classList.add("invigd");
       toHostPage = info.vard && !wantsToPlay;
-      hostPage = info.leder ? "/spelledare/bord" : "/spelledare";
+      hostPage = info.leder ? "spelledare/bord.html" : "spelledare.html";
       $("listen").textContent = (touch && info.ljudTryck) || info.ljud || "";
       signTexts = info.tecken || {};
       $("legendBtn").textContent = signTexts.rubrik || "";

@@ -1,6 +1,6 @@
 # Förslag: Ormtornet på GitHub Pages
 
-Status: förslag, skrivet 2026-11-21. Inget är byggt.
+Status: förslag, skrivet 2026-11-21. Steg 0 och 1 är byggda.
 
 Målet är att man ska kunna spela Ormtornet från en länk, utan att
 installera något och även när vandrarna sitter på olika nät. Tornet som

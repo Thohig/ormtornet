@@ -70,6 +70,7 @@ Flaggor:
 - `-sprak en` språket i spelet och på värdsidan: `sv` eller `en`. Det som inte är översatt visas på svenska (se Språk nedan)
 - `-simulera 500` spelar 500 vandringar med bara AI-spelare och skriver hur det gick, utan att öppna tornet (se Simulera nedan)
 - `-kontrollera` kontrollerar datafilerna och avslutar, utan att öppna tornet
+- `-sida mapp` skriver sidorna för GitHub Pages till mappen och avslutar. Använd hellre `verktyg/bygg-sida.sh`, som också bygger tornet (se Tornet i webbläsaren nedan)
 - `-fro 0` frö för den första vandringen. Varje vandring skriver sitt frö i terminalen och på värdsidan. Startar du med samma frö och vandrarna gör samma drag blir tornet detsamma, rum för rum, så att en konstig vandring kan spelas upp igen. `0` ger ett slumpat frö
 - `-storlek 0` tornets storlek i rum: `9`, `11` eller `13`, eller `0` för automatisk (efter antalet vandrare). Ett torn blir aldrig för litet för alla
 - `-avslojande=false` stänger av avslöjandet: ingen berättelse, inga varsel, ingen invigning och inget tornet som förändras
@@ -856,12 +857,20 @@ Beskrivningarna för rummen ligger under nivåerna `"1"` till `"4"`.
 - `lang.go` språken: översättningarna i `data/en/` läggs över de svenska texterna
 - `web/texter.js` sidornas texter: `t()`, `applyTexts()` och språkbytet
 - `ws.go` en liten websocket-implementation utan beroenden
+- `wasm.go` tornet i webbläsaren, byggt till WebAssembly (se Tornet i
+  webbläsaren)
+- `sida.go` skriver sidorna för GitHub Pages (`-sida`)
+- `verktyg/bygg-sida.sh` bygger allt för GitHub Pages till `sida/`
 - `web/` klienten: HTML, CSS och JavaScript utan ramverk
   - `index.html` och `app.js` spelarsidan: introt, namnrutan, klassvalet
     och spelet
   - `spelledare.html` värdsidan
   - `bord.html` och `bord.js` spelledarbordet
   - `spelledare.css` det som värdsidan och spelledarbordet har gemensamt
+  - `torn.html` och `torn.js` skalet: tornets flik när spelet kommer från
+    GitHub Pages
+  - `natet.js` vägen till tornet från GitHub Pages; gör ingenting när
+    sidorna kommer från tornets program
   - `map.js` ritar kartan som krita på en skiffertavla: väggarna är
     handritade streck, vandrarna prickar i sin färg (den egna med en ring)
     och varelser och märken tecken. Kartan visar bara det kända och
@@ -896,6 +905,31 @@ Spellogiken har tester:
 ```bash
 go test ./...
 ```
+
+### Tornet i webbläsaren
+
+Spelet ska kunna spelas från en länk på GitHub Pages
+([docs/github-pages.md](docs/github-pages.md)). Då körs tornet i
+spelledarens webbläsare, i en flik som heter skalet (`web/torn.html`), och
+sidorna i samma webbläsare når det över en `BroadcastChannel`
+(`web/natet.js`). Hittills går det bara att spela i en och samma
+webbläsare, med andra flikar och robotar.
+
+```bash
+verktyg/bygg-sida.sh
+```
+
+```bash
+python3 -m http.server 8000 -d sida
+```
+
+Öppna `http://localhost:8000/`. Introt märker att inget torn är öppet och
+öppnar skalet, som visar introt och sedan värdsidan. "Gå in själv" på
+värdsidan öppnar spelarsidan i en ny flik. Skalets flik måste vara öppen så
+länge tornet ska vara det.
+
+Inställningarna sparas i webbläsaren. Läs om innehållet läser bara det
+inbyggda innehållet, eftersom det inte finns någon `data/` att läsa.
 
 ### Simulera
 

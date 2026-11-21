@@ -167,6 +167,7 @@ func TestPageTextKeysExist(t *testing.T) {
 		"web/index.html": sv.Spelarsidan, "web/app.js": sv.Spelarsidan,
 		"web/spelledare.html": sv.Vardsidan,
 		"web/bord.html":       sv.Vardsidan, "web/bord.js": sv.Vardsidan,
+		"web/torn.html": sv.Vardsidan, "web/torn.js": sv.Vardsidan,
 	} {
 		raw, err := os.ReadFile(file)
 		if err != nil {
