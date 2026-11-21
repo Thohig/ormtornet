@@ -38,7 +38,6 @@ func (g *Game) kill(p *Player) {
 	g.logTo(p, g.data.Text("dod"), "varn")
 	g.logOthers(p, g.data.Text("dod_andra", "namn", p.Name), "varn")
 	g.soundAll("dod")
-	g.makeController(p)
 }
 
 // trigger låter en fälla slå till mot spelaren.

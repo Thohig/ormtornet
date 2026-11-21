@@ -266,8 +266,6 @@ func (g *Game) actionText(p *Player) string {
 			return g.data.HostText("server_drag_mot", "drag", g.choiceWord(a), "mal", foe.Name)
 		}
 		return g.choiceWord(a)
-	case a[0] == 'm':
-		return g.data.HostText("server_drag_styr")
 	case isItemAction(a):
 		if _, t, _, ok := g.parseItemAction(p, a); ok {
 			return g.data.HostText("server_drag_anvander", "foremal", t.Kort)

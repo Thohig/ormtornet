@@ -6,6 +6,15 @@ eller leder tornet.
 
 ## 2026-11-21
 
+### Den döda styr inte längre varelserna
+
+- Den första som dör tar inte längre över tornets varelser. Varelserna
+  sköts alltid av tornet och vandrar efter sina vanor, som de redan gjorde
+  innan någon hade dött.
+- Den som har dött ser inte heller alla vandrare eller hela tornet längre.
+  Spelledaren ser allt som förut.
+- Tab byter bara mål när flera vandrare står i rummet.
+
 ### Piltangenterna syns vid dörrarna
 
 - På kartan snett ovanifrån står en liten tangent med pilen vid varje

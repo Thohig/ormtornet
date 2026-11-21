@@ -51,7 +51,6 @@ export interface Tillstand {
   reveal: boolean;
   phase: string;
   action?: string;
-  controller?: boolean;
   karta?: string;
   rooms: Rum[];
   foremal?: { id: string }[]; // den egna väskan

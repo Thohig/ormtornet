@@ -31,7 +31,7 @@ func wanderGame(t *testing.T) (*Game, *Monster) {
 
 func TestMonsterWandersIntoUnknownRoom(t *testing.T) {
 	g, m := wanderGame(t)
-	g.wanderMonsters(nil)
+	g.wanderMonsters()
 	if m.X != 3 || m.Y != 1 {
 		t.Fatalf("varelsen står på %d,%d", m.X, m.Y)
 	}
@@ -55,7 +55,7 @@ func TestMonsterStaysWithWanderer(t *testing.T) {
 	g.rooms[1][2].Doors = [4]bool{}
 	g.rooms[1][2].Doors[East] = true
 	c.player.Status = statusIn
-	g.wanderMonsters(nil)
+	g.wanderMonsters()
 	if m.X != 2 {
 		t.Fatal("varelsen lämnade striden")
 	}
@@ -69,7 +69,7 @@ func TestMonsterDoesNotWanderToWanderer(t *testing.T) {
 	c.player.Status = statusIn
 	g.rooms[1][3].Doors[West] = true
 	for i := 0; i < 20; i++ {
-		g.wanderMonsters(nil)
+		g.wanderMonsters()
 	}
 	if m.X != 2 {
 		t.Fatal("varelsen vandrade in till Alva")
@@ -80,7 +80,7 @@ func TestMonsterNeverEntersPortOrChamber(t *testing.T) {
 	g, m := wanderGame(t)
 	// Varelsen står bredvid ett portrum och kammaren och får välja fritt.
 	for i := 0; i < 200; i++ {
-		g.wanderMonsters(nil)
+		g.wanderMonsters()
 		if r := &g.rooms[m.Y][m.X]; r.Kind != "rum" {
 			t.Fatalf("varelsen gick in i %q på %d,%d", r.Kind, m.X, m.Y)
 		}

@@ -10,7 +10,7 @@ import "time"
 // fortfarande har något att göra i tornet.
 func (g *Game) canTakeOver(p *Player) bool {
 	return g.phase == phasePlay && p != nil && p.client == nil && p.bot == nil &&
-		(p.Status == statusIn || g.isController(p))
+		p.Status == statusIn
 }
 
 func (g *Game) takeOver(p *Player) {
@@ -106,7 +106,7 @@ func (g *Game) shouldAwait() bool {
 		if p.client != nil {
 			return false
 		}
-		if (p.bot == nil || p.takenOver) && (p.Status == statusIn || g.isController(p)) {
+		if (p.bot == nil || p.takenOver) && p.Status == statusIn {
 			waiting = true
 		}
 	}

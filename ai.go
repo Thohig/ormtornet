@@ -131,7 +131,7 @@ func (g *Game) scheduleBotIn(p *Player, lo, hi int) {
 	if p == nil || p.bot == nil {
 		return
 	}
-	if !g.isController(p) && (p.Status != statusIn || p.Cellar > 0) {
+	if p.Status != statusIn || p.Cellar > 0 {
 		return
 	}
 	round := g.round
@@ -150,7 +150,7 @@ func (g *Game) botAct(p *Player, round int) {
 	if p.bot == nil || g.phase != phasePlay || g.round != round || p.Action != "" {
 		return
 	}
-	if !g.isController(p) && (p.Status != statusIn || p.Cellar > 0) {
+	if p.Status != statusIn || p.Cellar > 0 {
 		return
 	}
 	a, m := g.botDecide(p)
@@ -281,12 +281,9 @@ func (bm *botMap) toward(want func(pos) bool, extra func(pos) int) (Dir, bool) {
 
 var dirLetter = [4]string{"N", "E", "S", "W"}
 
-// botDecide väljer datorspelarens drag. Den returnerar draget och, för den
-// som styr varelserna, vilken varelse som ska flyttas.
+// botDecide väljer datorspelarens drag. Den returnerar draget och, vid
+// strid mot en annan vandrare, vem den slår mot (som -id).
 func (g *Game) botDecide(p *Player) (string, int) {
-	if g.isController(p) {
-		return g.botControl()
-	}
 	st := g.stateFor(p)
 	pers := p.bot.pers
 	here := pos{p.X, p.Y}
@@ -451,53 +448,6 @@ func (g *Game) monsterTypeID(id int) string {
 		return m.Type
 	}
 	return ""
-}
-
-// botControl: en död datorspelare flyttar den varelse som kommer närmast en
-// levande vandrare.
-func (g *Game) botControl() (string, int) {
-	var targets []pos
-	for _, p := range g.players {
-		if p != nil && p.Status == statusIn && p.Cellar == 0 {
-			targets = append(targets, pos{p.X, p.Y})
-		}
-	}
-	if len(targets) == 0 {
-		return actWait, 0
-	}
-	near := func(x, y int) int {
-		best := -1
-		for _, t := range targets {
-			d := abs(t.x-x) + abs(t.y-y)
-			if best < 0 || d < best {
-				best = d
-			}
-		}
-		return best
-	}
-	bestGain, bestID, bestDir := 0, 0, Dir(0)
-	for _, m := range g.monsters {
-		if !g.rooms[m.Y][m.X].Revealed {
-			continue
-		}
-		now := near(m.X, m.Y)
-		if now == 0 {
-			continue // står redan hos någon
-		}
-		for d := North; d <= West; d++ {
-			if !g.canMonsterGo(m, d) {
-				continue
-			}
-			gain := now - near(m.X+dirDX[d], m.Y+dirDY[d])
-			if gain > bestGain || (gain == bestGain && gain > 0 && g.rng.IntN(2) == 0) {
-				bestGain, bestID, bestDir = gain, m.ID, d
-			}
-		}
-	}
-	if bestID == 0 {
-		return actWait, 0
-	}
-	return dirLetter[bestDir], bestID
 }
 
 func abs(v int) int {

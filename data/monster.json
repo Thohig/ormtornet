@@ -142,17 +142,8 @@
       "monster_kommer": [
         "{Monster} glider in i rummet."
       ],
-      "tjanare": [
-        "Du är död, men tornet släpper dig inte. Du känner dess varelser som om de vore dina egna fingrar. Tab väljer en varelse, pilarna flyttar den ett rum per runda, mellanslag låter den vila. På en pekskärm heter de Byt, pilarna och ·."
-      ],
-      "tjanare_andra": [
-        "{namn} är död, men något av {namn} finns kvar i tornet. Varelserna rör sig nu med avsikt."
-      ],
       "inget_monster_har": [
         "Det finns inget här att slåss mot."
-      ],
-      "kan_inte_flytta": [
-        "Varelsen kan inte ta sig dit."
       ]
     }
   }

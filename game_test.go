@@ -464,7 +464,8 @@ func TestFleeAndUnprepared(t *testing.T) {
 	}
 }
 
-func TestDeadPlayerControlsMonsters(t *testing.T) {
+// Den som dör väntar ingen på, och varelserna sköts av tornet.
+func TestDeadPlayerIsNotWaitedFor(t *testing.T) {
 	g, a, b := startTwo(t)
 	pa, pb := a.player, b.player
 	putInRoom(g, pb, 4, 2)
@@ -477,13 +478,16 @@ func TestDeadPlayerControlsMonsters(t *testing.T) {
 	g.reveal(4, 3)
 
 	g.damage(pa, 100, false)
-	if !g.isController(pa) {
-		t.Fatal("den döda spelaren styr inte varelserna")
+	g.Act(a, "N", m.ID) // en död spelare kan inte välja något
+	if pa.Action != "" {
+		t.Fatalf("den döda spelaren valde %q", pa.Action)
 	}
-	// Rundan väntar på den döda spelaren också.
 	g.Act(b, actWait, 0)
-	if g.round != 1 {
-		t.Fatal("rundan utfördes utan den döda spelarens val")
+	if g.round != 2 {
+		t.Fatal("rundan väntade på den döda spelaren")
+	}
+	if st := g.stateFor(pa); st.Phase != phasePlay {
+		t.Fatalf("fas %s", st.Phase)
 	}
 	// Varelsen kan inte gå genom en vägg, men väl till ett rum som inte finns än.
 	g.rooms[2][4].Doors[East], g.rooms[2][4].Doors[West] = false, true
@@ -492,15 +496,6 @@ func TestDeadPlayerControlsMonsters(t *testing.T) {
 	}
 	if !g.rooms[2][3].Revealed && !g.canMonsterGo(m, West) {
 		t.Fatal("varelsen kan inte gå till ett rum som inte finns än")
-	}
-	g.Act(a, "N", m.ID)
-	if g.round != 2 || m.Y != 1 {
-		t.Fatalf("varelsen flyttades inte: runda %d, y %d", g.round, m.Y)
-	}
-	// Bara den första som dör blir styrande.
-	g.damage(pb, 100, false)
-	if g.isController(pb) {
-		t.Fatal("två spelare styr varelserna")
 	}
 }
 
@@ -697,66 +692,6 @@ func TestBotsNeverTakeHumanNamesOrNeedReady(t *testing.T) {
 	g.Ready(c)
 	if g.phase != phasePlay {
 		t.Fatal("datorspelarna hindrade starten")
-	}
-}
-
-// Har en AI-spelare tagit varelserna tar en människa som dör över dem.
-func TestHumanTakesMonstersFromDeadBot(t *testing.T) {
-	g := testGame(t)
-	g.AddBots(2)
-	c := testClient()
-	g.Join(c, "Alva")
-	g.Ready(c)
-	var bots []*Player
-	for _, p := range g.players {
-		if p != nil && p.bot != nil {
-			bots = append(bots, p)
-		}
-	}
-	g.damage(bots[0], 100, false)
-	if !g.isController(bots[0]) {
-		t.Fatal("den första döda AI-spelaren styr inte varelserna")
-	}
-	g.damage(bots[1], 100, false)
-	if !g.isController(bots[0]) {
-		t.Fatal("en annan AI-spelare tog varelserna")
-	}
-	g.damage(c.player, 100, false)
-	if !g.isController(c.player) || g.isController(bots[0]) {
-		t.Fatal("Alva tog inte över varelserna")
-	}
-	if !g.stateFor(c.player).Controller {
-		t.Fatal("Alvas skärm visar inte att Alva styr varelserna")
-	}
-}
-
-func TestBotControlsMonstersWhenDead(t *testing.T) {
-	g := testGame(t)
-	g.AddBots(1)
-	c := testClient()
-	g.Join(c, "Alva")
-	g.Ready(c)
-	var bot *Player
-	for _, p := range g.players {
-		if p != nil && p.bot != nil {
-			bot = p
-		}
-	}
-	human := c.player
-	putInRoom(g, human, 4, 1)
-	r := putInRoom(g, &Player{Seen: map[string]bool{}}, 4, 2)
-	r.Doors[North] = true
-	g.rooms[1][4].Doors[South] = true
-	g.monsters = append(g.monsters, &Monster{ID: 5, Type: "krypare", X: 4, Y: 3, HP: 2})
-	g.reveal(4, 3).Doors[North] = true
-	g.rooms[2][4].Doors[South] = true
-	g.damage(bot, 100, false)
-	if !g.isController(bot) {
-		t.Fatal("datorspelaren styr inte varelserna")
-	}
-	a, id := g.botDecide(bot)
-	if a != "N" || id != 5 {
-		t.Fatalf("varelsen skulle gå mot Alva, fick %q %d", a, id)
 	}
 }
 

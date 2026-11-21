@@ -98,17 +98,8 @@
       "monster_kommer": [
         "{Monster} glides into the room."
       ],
-      "tjanare": [
-        "You are dead, but the tower does not let you go. You feel its creatures as if they were your own fingers. Tab picks a creature, the arrows move it one room per round, space lets it rest. On a touch screen they are called Switch, the arrows and ·."
-      ],
-      "tjanare_andra": [
-        "{namn} is dead, but something of {namn} remains in the tower. The creatures now move with purpose."
-      ],
       "inget_monster_har": [
         "There is nothing here to fight."
-      ],
-      "kan_inte_flytta": [
-        "The creature cannot get there."
       ]
     }
   }

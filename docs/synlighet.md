@@ -1,6 +1,8 @@
 # Förslag: Synlighet
 
-Status: förslaget skrevs 2026-11-18. Alla tre stegen är byggda (README,
+Status: förslaget skrevs 2026-11-18. Sedan 2026-11-21 styr den döda inte
+längre varelserna och ser därför inte mer än andra; det som står om den
+döda spelaren nedan gäller inte längre. Alla tre stegen är byggda (README,
 "Vem ser vem"). Steg 2, "egen karta", är förval.
 
 Varje vandrare ser bara sig själv. De andra syns bara när man möter dem i

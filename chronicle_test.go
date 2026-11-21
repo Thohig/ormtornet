@@ -27,7 +27,6 @@ func TestChronicle(t *testing.T) {
 	// Alva går ut genom sin port, och vandringen är slut.
 	pa.X, pa.Y = 0, 0
 	g.Act(a, "W", 0)
-	g.Act(b, actWait, 0) // Bo styr varelserna och låter dem vila
 	if g.phase != phaseEnd {
 		t.Fatalf("fas %s", g.phase)
 	}

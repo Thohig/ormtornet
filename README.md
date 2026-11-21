@@ -317,7 +317,7 @@ dess. Den som inte hinner välja blir stående.
 | A          | anfall (i strid)                  |
 | P          | parera (i strid)                  |
 | U eller E  | undanmanöver (i strid; E för evade på engelska) |
-| Tab        | byt mål: motståndare, eller varelse när du är död |
+| Tab        | byt mål när flera vandrare står i rummet |
 | Enter      | redo / spela igen                 |
 | 1–3        | använd ett föremål i väskan       |
 | V          | viska till tornet (från nivå 2)   |
@@ -381,16 +381,15 @@ De vaga texterna har nycklar som slutar på `_dolt` i datafilerna, och
 fällorna har `andra_dolt`. Ekofällan visar som förut var den drabbade är.
 Att någon går ut eller dör får alla veta.
 
-Den döda spelaren som styr varelserna ser alla vandrare. Spelledaren ser
-allt i översikten på spelledarbordet, och när vandringen är slut syns alla igen.
+Spelledaren ser allt i översikten på spelledarbordet, och när vandringen
+är slut syns alla igen. Den som har dött ser inte mer än förut.
 
 Varje vandrare har sin egen karta. Den visar bara rum du själv har gått
 igenom, med fällornas tecken och varelserna i dem. Rummen finns ändå bara en gång i tornet: en fälla slår bara till för
 den som först går in, och den som kommer efter ser tecknet. Ljudet för ett
 nytt rum hör bara den som gick in, och tornet berättar inte om andras nya
-rum. Vill ni veta hur tornet ser ut får ni berätta för varandra. Den döda
-spelaren som styr varelserna ser hela tornet så långt det har vuxit fram,
-och när vandringen är slut syns hela tornet för alla.
+rum. Vill ni veta hur tornet ser ut får ni berätta för varandra. När vandringen
+är slut syns hela tornet för alla.
 
 Även när du inte ser de andra kan du ana var de är:
 
@@ -490,8 +489,6 @@ de som "(dator)".
 - I strid gissar de varelsens vanor utifrån dess beskrivning och lär sig av
   det de ser. De flyr när nästa slag kan döda dem.
 - Det finns två personligheter som turas om: en djärv och en försiktig.
-- Dör en datorspelare först tar den över varelserna och flyttar dem mot
-  närmaste levande vandrare, tills en människa dör. Då tar människan över.
 - Ledtrådarna om tornets hemlighet går bara till människor.
 
 Namn, personligheter och betänketid ligger i `data/ai.json`.
@@ -539,11 +536,7 @@ ofta de vandrar står i `vandra_chans` i `data/monster.json`, och en sort
 kan ha en egen chans i `vandrar` (benväktaren rör sig nästan aldrig,
 gallgasten ofta).
 
-Den första spelaren som dör tar över tornets varelser. Var det en
-datorspelare tar den första människa som dör över efter den. Med Tab väljer den spelaren en
-varelse och med pilarna flyttar den ett rum per runda (till vanliga rum
-utan annan varelse, också till rum som ingen har hittat än). Mellanslag låter varelserna vila. Rundan
-väntar på det valet som på alla andras.
+Varelserna sköts alltid av tornet. Den som dör väntar rundan inte på.
 
 ### Rum och fällor
 
@@ -824,7 +817,7 @@ Beskrivningarna för rummen ligger under nivåerna `"1"` till `"4"`.
 - `pvp.go` strid mellan vandrare
 - `events.go` fällor, sökande och drycker
 - `serpent.go` skattkammaren och ormkorten
-- `monster.go` varelser, strider och den döda spelarens styrning
+- `monster.go` varelser, strider och hur varelserna vandrar
 - `reveal.go` avslöjandet: nivåer, ledtrådar och epilog
 - `chronicle.go` krönikan över vandringen
 - `sounds.go` spår och ljud från grannrummen

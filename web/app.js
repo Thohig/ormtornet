@@ -415,26 +415,6 @@ function cycleFoe() {
   renderSide();
 }
 
-// Den döda spelaren som styr varelserna väljer en av dem med Tab.
-let selectedMonster = 0;
-function controlledMonster() {
-  if (!state || !state.monsters || state.monsters.length === 0) return null;
-  let m = state.monsters.find((x) => x.id === selectedMonster);
-  if (!m) {
-    m = state.monsters[0];
-    selectedMonster = m.id;
-  }
-  return m;
-}
-function cycleMonster() {
-  const list = (state && state.monsters) || [];
-  if (list.length === 0) return;
-  const i = list.findIndex((x) => x.id === selectedMonster);
-  selectedMonster = list[(i + 1) % list.length].id;
-  MapView.draw(state);
-  renderSide();
-}
-
 // Mätare med fast bredd i kod, ett tecken per liv.
 // En mätare: en etikett, en rad rutor (en per enhet) och ett tal. Rutorna
 // byggs i kod, så att mätaren alltid har samma bredd.
@@ -737,7 +717,7 @@ function renderNow(me) {
   if (aimSlot !== null && state.foremal && state.foremal[aimSlot]) {
     line(t(touch ? "nu_sikta_peka" : "nu_sikta", { foremal: state.foremal[aimSlot].namn }), "plan");
   }
-  if (me.status === "dod" && !state.controller) line(t("nu_dod"), "cond");
+  if (me.status === "dod") line(t("nu_dod"), "cond");
   if (me.status === "inne") {
     if (state.sleep >= 0 && state.sleepText) line(state.sleepText, state.sleep >= 2 ? "cond" : "sleep");
     const foe = (state.monsters || []).find((m) => m.x === me.x && m.y === me.y);
@@ -760,20 +740,6 @@ function renderNow(me) {
         if (state.pvp === "for_tidigt") line(t("nu_for_tidigt"), "dimline");
       }
     }
-  }
-  if (state.controller) {
-    line(t("nu_styr"), "cond");
-    const m = controlledMonster();
-    if (m) {
-      line(t("nu_vald", { namn: m.name, tangent: keyName("Tab") }), "foe");
-      const a = state.action;
-      if (a && a[0] === "m") line(t("nu_drag", { drag: a.replace(/^m\d+/, "").split("").map(dirWord).join("") }), "plan");
-      else if (a === "vanta") line(t("nu_drag", { drag: t("drag_vila") }), "plan");
-      else line(t("nu_valj_ett"), "plan");
-    } else {
-      line(t("nu_inga_varelser"), "dimline");
-    }
-    return;
   }
   if (state.phase === "spel" && me.status === "inne") {
     line(state.action ? t("nu_drag", { drag: actionWord(state.action) }) : t("nu_valj_ditt"), "plan");
@@ -1664,19 +1630,6 @@ function pressKey(key) {
   }
   if (key === "Enter") {
     send({ t: "ready" });
-    return true;
-  }
-  if (state && state.controller) {
-    // Den döda spelaren: Tab väljer varelse, pilarna flyttar den.
-    if (key === "Tab") {
-      cycleMonster();
-      return true;
-    }
-    const a = KEYS[key];
-    if (a !== "vanta" && !DIR_WORDS[a]) return false;
-    const m = controlledMonster();
-    if (a === "vanta") send({ t: "act", a });
-    else if (m) send({ t: "act", a, m: m.id });
     return true;
   }
   if (key === "Tab" && foesHere().length) {

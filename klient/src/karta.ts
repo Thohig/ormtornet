@@ -209,7 +209,6 @@ export class IsoKarta {
     uHi: { value: srgb(LOOK[1].hi) },
     uMitt: { value: new THREE.Vector2() },
   };
-  private blinkar: THREE.Object3D[] = [];
   private vaknade = -Infinity;
   private lag = false; // lägre kvalitet: inga skuggor och lägre upplösning
   private rutor: number[] = [];
@@ -663,7 +662,6 @@ float puls() {
 
   private byggRorligt(state: Tillstand): void {
     this.rorligt.clear();
-    this.blinkar = [];
     const g = this.rorligt;
     const kanda = new Set(state.rooms.map((r) => r.x + "," + r.y));
 
@@ -753,18 +751,7 @@ float puls() {
       this.aktorer.delete(id);
     });
 
-    // Den döda spelarens drag för en varelse, och det egna draget, är en pil
-    // vid dörren som blinkar.
     const riktning: Record<string, number> = { N: 0, E: 1, S: 2, W: 3 };
-    if (state.controller && state.action && state.action[0] === "m") {
-      const id = parseInt(state.action.slice(1), 10);
-      const d = riktning[state.action.slice(-1)];
-      const m = (state.monsters || []).find((q) => q.id === id);
-      if (m && d !== undefined) {
-        const [x, z, v] = vidDorr(m.x, m.y, d);
-        this.blinkar.push(this.golvkrita(g, K.pil(), "pil", FARG.varelse, 1.3, x, z, v, 0.02));
-      }
-    }
     // Det egna draget visas på tangenten vid dörren (ritaTangenter).
     const d = state.action ? riktning[state.action] : undefined;
     const rum = jag && jag.status === "inne" && !jag.hidden && jag.x >= 0 && state.phase === "spel"
@@ -988,8 +975,6 @@ float puls() {
       sk.updateProjectionMatrix();
     }
 
-    const blink = Math.floor(t / 550) % 2 === 0;
-    this.blinkar.forEach((o) => (o.visible = blink));
     this.rorFigurer(t, dt);
 
     const vaken = t - this.vaknade < VAKEN_MS;

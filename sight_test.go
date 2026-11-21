@@ -43,22 +43,20 @@ func TestSightMeetHidesOthers(t *testing.T) {
 	}
 }
 
-func TestSightMeetControllerAndEnd(t *testing.T) {
+func TestSightMeetDeadAndEnd(t *testing.T) {
 	g, a, b := startTwo(t)
 	g.cfg.Sight = sightMeet
 	pa, pb := a.player, b.player
 	putInRoom(g, pa, 2, 3)
 	putInRoom(g, pb, 5, 3)
 
-	// Den döda spelaren som styr varelserna ser alla.
+	// Den döda spelaren ser inte de andra medan vandringen pågår.
 	pa.Status = statusDead
-	g.controller = pa.ID
-	if v := viewOf(g.stateFor(pa), pb); v.Hidden {
-		t.Fatal("den som styr varelserna ser inte Bo")
+	if v := viewOf(g.stateFor(pa), pb); !v.Hidden {
+		t.Fatal("den döda spelaren ser Bo")
 	}
 
 	// När vandringen är slut syns alla.
-	g.controller = 0
 	g.phase = phaseEnd
 	if v := viewOf(g.stateFor(pa), pb); v.Hidden {
 		t.Fatal("Bo syns inte i slutet")
@@ -157,15 +155,14 @@ func TestSightOwnMap(t *testing.T) {
 	}
 }
 
-func TestSightOwnController(t *testing.T) {
+func TestSightOwnDead(t *testing.T) {
 	g, a, b := startTwo(t)
 	g.cfg.Sight = sightOwn
 	pa, pb := a.player, b.player
 	putInRoom(g, pb, 6, 6)
 	pa.Status = statusDead
-	g.controller = pa.ID
-	if !hasRoom(g.stateFor(pa), 6, 6) {
-		t.Fatal("den som styr varelserna ser inte hela tornet")
+	if hasRoom(g.stateFor(pa), 6, 6) {
+		t.Fatal("den döda spelaren ser Bos rum")
 	}
 }
 

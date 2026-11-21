@@ -309,10 +309,8 @@ type Game struct {
 
 	monsters      []*Monster
 	nextMonsterID int
-	controller    int          // id för den döda spelare som styr varelserna
-	rng           *rand.Rand   // tornets slump; samma frö ger samma torn
-	seed          uint64       // fröet för den pågående vandringen
-	pendingMove   *monsterMove // varelsens drag för rundan
+	rng           *rand.Rand // tornets slump; samma frö ger samma torn
+	seed          uint64     // fröet för den pågående vandringen
 
 	usedClues map[string]bool // ledtrådar som redan har delats ut
 
@@ -547,7 +545,6 @@ type stateMsg struct {
 	Poison     int           `json:"poison"`
 	Dark       int           `json:"dark"`
 	Sleep      int           `json:"sleep"` // -1 utanför kammaren
-	Controller bool          `json:"controller"`
 	Monsters   []monsterView `json:"monsters"`
 	PvP        string        `json:"pvp"` // om det går att strida mot andra vandrare här
 	Paused     bool          `json:"paused,omitempty"`
@@ -630,7 +627,7 @@ func (g *Game) soundAll(s string) {
 // vandrare bara i samma rum. Den döda spelaren som styr varelserna ser alla,
 // annars kan den inte jaga, och när vandringen är slut syns alla igen.
 func (g *Game) sees(me, o *Player) bool {
-	if g.cfg.Sight == sightAll || g.cfg.Sight == "" || g.phase == phaseEnd || g.isController(me) || g.nearLantern(me, o) {
+	if g.cfg.Sight == sightAll || g.cfg.Sight == "" || g.phase == phaseEnd || g.nearLantern(me, o) {
 		return true
 	}
 	return me.Status == statusIn && o.Status == statusIn && me.Cellar == 0 &&
@@ -735,7 +732,6 @@ func (g *Game) stateFor(me *Player) stateMsg {
 	if g.phase == phasePlay {
 		st.PvP = g.pvpStatus(me)
 	}
-	st.Controller = g.isController(me) && g.phase == phasePlay
 	if g.phase == phaseEnd {
 		st.Results = g.results()
 	}
@@ -828,7 +824,7 @@ func (g *Game) knowsRoom(me *Player, x, y int) bool {
 	if !r.Revealed {
 		return false
 	}
-	if me == nil || g.phase == phaseEnd || g.isController(me) {
+	if me == nil || g.phase == phaseEnd {
 		return true // spelledarens översikt ser hela tornet
 	}
 	if me.known != nil && me.known[y][x] {
@@ -1144,8 +1140,6 @@ func (g *Game) startGame() {
 	g.clueDeals, g.omens = 0, nil
 	g.portClock, g.portNext = 0, -1
 	g.buildDeck()
-	g.controller = 0
-	g.pendingMove = nil
 	g.level = 1
 	g.levelHeld = false
 	g.graceUsed = false
@@ -1240,7 +1234,7 @@ func (g *Game) allChosen() bool {
 		if p == nil || !p.present() {
 			continue
 		}
-		if !g.isController(p) && (p.Status != statusIn || p.Cellar > 0) {
+		if p.Status != statusIn || p.Cellar > 0 {
 			continue
 		}
 		if p.Action == "" {
@@ -1258,10 +1252,6 @@ func (g *Game) Act(c *Client, a string, monsterID int) {
 
 // actPlayer tar emot ett val från en människa eller en datorspelare.
 func (g *Game) actPlayer(p *Player, a string, monsterID int) {
-	if p != nil && g.phase == phasePlay && g.isController(p) {
-		g.actController(p, a, monsterID)
-		return
-	}
 	if p == nil || g.phase != phasePlay || p.Status != statusIn || p.Cellar > 0 {
 		return
 	}
@@ -1346,12 +1336,7 @@ func (g *Game) resolve() {
 	}
 	sunBefore := g.sun
 	snap, wakes := g.snapshot(), g.wakes
-	g.moveMonsters()
-	for _, p := range g.players {
-		if g.isController(p) {
-			p.Action = ""
-		}
-	}
+	g.wanderMonsters()
 	var active []*Player
 	for _, p := range g.players {
 		if p != nil && p.Status == statusIn {

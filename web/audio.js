@@ -602,10 +602,6 @@ const Sound = (() => {
       tone(180, 40, "sawtooth", 0.07, 0.01, 1.2, true);
       noiseHit(brown, "lowpass", 400, 0.3, 0.01, 0.8, false);
     },
-    // Den döda spelaren tar över varelserna.
-    tjanare() {
-      [220, 233, 311].forEach((f, i) => tone(f, f * 0.5, "sine", 0.06, 1.0, 3.0, true, i * 0.2));
-    },
     ansluter() {
       tone(196, null, "triangle", 0.05, 0.4, 1.6, true);
       tone(294, null, "triangle", 0.035, 0.4, 1.6, true, 0.25);
