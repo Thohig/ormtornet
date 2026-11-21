@@ -69,6 +69,15 @@ const EKO_MS = 4500;
 const FART = 3.4; // så fort figurerna går, i världens enheter per sekund
 const VAKEN_MS = 3500;
 
+// Telefoner och svaga enheter: på en pekskärm ritas högst 30 bilder i
+// sekunden, för batteriets skull. Går det för trögt ändå slår kartan av
+// skuggorna och ritar med lägre upplösning (sankKvalitet). Adressen kan
+// tvinga fram det med ?kvalitet=lag, för att prova.
+const PEK = typeof matchMedia === "function" && matchMedia("(pointer: coarse)").matches;
+const MAX_BILDER = PEK ? 30 : 60;
+const TROGT_MS = PEK ? 45 : 30; // medianen för en bildruta som räknas som trög
+const MATT_RUTOR = 90; // så många bildrutor mäts innan kartan bestämmer sig
+
 // Kameran tittar från sydost, snett uppifrån.
 const FRAN = new THREE.Vector3(30, 26, 30).normalize();
 const LUTNING = FRAN.y; // hur mycket golvet trycks ihop på höjden
@@ -196,6 +205,9 @@ export class IsoKarta {
   };
   private blinkar: THREE.Object3D[] = [];
   private vaknade = -Infinity;
+  private lag = false; // lägre kvalitet: inga skuggor och lägre upplösning
+  private rutor: number[] = [];
+  private senasteRuta = 0;
   private mitten: THREE.Vector3 | null = null; // kamerans mitt, som glider efter
   private senast = 0;
   private material = new Map<string, THREE.Material>();
@@ -233,6 +245,9 @@ export class IsoKarta {
     canvas.after(this.kompass, this.kant);
 
     new ResizeObserver(() => this.anpassa()).observe(canvas.parentElement!);
+    const nav = navigator as Navigator & { deviceMemory?: number };
+    const tvinga = new URLSearchParams(location.search).get("kvalitet") === "lag";
+    if (tvinga || (nav.hardwareConcurrency || 8) <= 2 || (nav.deviceMemory || 8) <= 2) this.sankKvalitet();
     const loop = (t: number) => {
       this.rita(t);
       requestAnimationFrame(loop);
@@ -861,8 +876,33 @@ float puls() {
 
   // ---- Varje bildruta ----
 
+  // sankKvalitet slår av skuggorna och ritar med en pixel per punkt.
+  private sankKvalitet(): void {
+    if (this.lag) return;
+    this.lag = true;
+    this.sol.castShadow = false;
+    this.renderer.setPixelRatio(1);
+    this.anpassa();
+    console.info("Kartan snett ovanifrån ritas med lägre kvalitet: inga skuggor och lägre upplösning.");
+  }
+
+  // matRuta räknar hur lång tid bildrutorna tar och sänker kvaliteten om
+  // kartan går trögt.
+  private matRuta(ram: number): void {
+    if (this.lag || ram > 500) return; // en lång paus är en dold flik, inte trögt
+    this.rutor.push(ram);
+    if (this.rutor.length < MATT_RUTOR) return;
+    const sorterade = this.rutor.sort((a, b) => a - b);
+    const median = sorterade[Math.floor(sorterade.length / 2)];
+    this.rutor = [];
+    if (median > TROGT_MS) this.sankKvalitet();
+  }
+
   private rita(t: number): void {
     if (!this.aktiv || !this.bredd || !this.hojd || this.canvas.offsetParent === null) return;
+    if (t - this.senasteRuta < 1000 / MAX_BILDER - 2) return;
+    this.matRuta(t - this.senasteRuta);
+    this.senasteRuta = t;
     const n = this.storleken || 9;
     const u: Utsnitt = this.val.utsnitt() || { x: 0, y: 0, w: n, h: n };
 
@@ -882,7 +922,9 @@ float puls() {
     this.cam.position.copy(mitt).addScaledVector(FRAN, 150);
     this.cam.lookAt(mitt);
     const diag = ((u.w + u.h) * S) / Math.SQRT2;
-    const skarp = f ? 0.72 : 1.03;
+    // Nära (3 rum) går lite närmare än de andra nivåerna, så att rummet man
+    // står i fyller mer av en smal skärm.
+    const skarp = f ? 0.6 + 0.12 * Math.min(1, Math.max(0, (Math.min(u.w, u.h) - 3) / 2)) : 1.03;
     let hw = (diag / 2) * skarp;
     let hh = (diag / 2) * LUTNING * skarp + 1.2;
     const asp = this.bredd / this.hojd;

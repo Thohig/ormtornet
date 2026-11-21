@@ -324,6 +324,10 @@ dess. Den som inte hinner välja blir stående.
 
 ### På en telefon eller surfplatta
 
+Kartan snett ovanifrån ritar högst 30 bilder i sekunden på en pekskärm,
+och går den trögt slår den av skuggorna och ritar med lägre upplösning.
+`/?kvalitet=lag` i adressen gör det från början.
+
 En iPhone, iPad eller Android-telefon i samma nätverk kan vara med. Öppna
 samma adress i Safari eller Chrome. På en pekskärm visas knappar i stället
 för tangenterna: pilarna och `·` (vänta), och Ta, Sök, Drick, Anfall,

@@ -137,6 +137,12 @@ Efter varje steg görs en commit, och användaren provar innan nästa steg.
   kammaren och portarna (`bild` i `klient/src/karta.ts`, `legendImage` i
   `web/map.js`). Det som står i krita på golvet, som fällor och pilar,
   har kvar sitt tecken. Bilderna ritas en gång och sparas.
+- Telefoner och svaga enheter: på en pekskärm ritas högst 30 bilder i
+  sekunden. Kartan mäter hur lång tid bildrutorna tar, och går det trögt
+  (median över 45 ms på en pekskärm, 30 ms annars) slår den av skuggorna
+  och ritar med en pixel per punkt. Enheter med högst två kärnor eller 2 GB
+  minne börjar så. `?kvalitet=lag` i adressen tvingar fram det. Zoomen Nära
+  går lite närmare än förut.
 
 ## Inte byggt
 

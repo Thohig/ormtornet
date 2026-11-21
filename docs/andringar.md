@@ -6,6 +6,15 @@ eller leder tornet.
 
 ## 2026-11-21
 
+### Kartan snett ovanifrån på telefoner
+
+- På en telefon eller surfplatta ritar kartan högst 30 bilder i sekunden,
+  vilket sparar batteri.
+- Går kartan trögt slår den av sig själv av skuggorna och ritar med lägre
+  upplösning. Adressen `/?kvalitet=lag` gör det direkt.
+- Zoomen Nära går lite närmare, så att rummet man står i syns bättre på en
+  smal skärm.
+
 ### Teckenförklaringen visar modellerna
 
 - Med kartan snett ovanifrån visar teckenförklaringen uppe till vänster en
