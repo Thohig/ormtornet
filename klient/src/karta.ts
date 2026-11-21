@@ -223,6 +223,11 @@ export class IsoKarta {
   private kompass: HTMLDivElement; // N och en pil i hörnet nere till vänster
   private kant: HTMLDivElement; // pilarna vid kanten för det som ligger utanför
   private kantPilar: HTMLDivElement[] = [];
+  // Tangenterna vid dörrarna: pilen på tangentbordet som går åt varje håll
+  // ur rummet vandraren står i, och vilken av dem som är vald.
+  private tangenter: HTMLDivElement;
+  private tangent: HTMLSpanElement[] = [];
+  private tangentRum: { x: number; y: number; oppen: boolean[]; vald: number; farg: string } | null = null;
 
   constructor(canvas: HTMLCanvasElement, val: Val) {
     this.canvas = canvas;
@@ -248,7 +253,18 @@ export class IsoKarta {
     this.kant.className = "isokant";
     this.kant.setAttribute("aria-hidden", "true");
     this.kant.hidden = true;
-    canvas.after(this.kompass, this.kant);
+    this.tangenter = document.createElement("div");
+    this.tangenter.className = "isotangenter";
+    this.tangenter.setAttribute("aria-hidden", "true");
+    this.tangenter.hidden = true;
+    ["↑", "→", "↓", "←"].forEach((pil) => {
+      const t = document.createElement("span");
+      t.textContent = pil;
+      t.hidden = true;
+      this.tangenter.appendChild(t);
+      this.tangent.push(t);
+    });
+    canvas.after(this.kompass, this.kant, this.tangenter);
 
     new ResizeObserver(() => this.anpassa()).observe(canvas.parentElement!);
     const nav = navigator as Navigator & { deviceMemory?: number };
@@ -267,6 +283,7 @@ export class IsoKarta {
     this.canvas.hidden = !pa;
     this.kompass.hidden = !pa;
     this.kant.hidden = !pa;
+    this.tangenter.hidden = !pa;
     if (pa) this.anpassa();
   }
 
@@ -748,11 +765,20 @@ float puls() {
         this.blinkar.push(this.golvkrita(g, K.pil(), "pil", FARG.varelse, 1.3, x, z, v, 0.02));
       }
     }
+    // Det egna draget visas på tangenten vid dörren (ritaTangenter).
     const d = state.action ? riktning[state.action] : undefined;
-    if (jag && jag.status === "inne" && d !== undefined) {
-      const [x, z, v] = vidDorr(jag.x, jag.y, d);
-      this.blinkar.push(this.golvkrita(g, K.pil(), "pil", this.val.farger[jag.slot] || "#ffffff", 1.3, x, z, v, 0.02));
-    }
+    const rum = jag && jag.status === "inne" && !jag.hidden && jag.x >= 0 && state.phase === "spel"
+      ? state.rooms.find((r) => r.x === jag.x && r.y === jag.y)
+      : undefined;
+    this.tangentRum = rum && jag
+      ? {
+          x: rum.x,
+          y: rum.y,
+          oppen: [0, 1, 2, 3].map((i) => rum.d[i] || (rum.exit === i && !rum.stangd)),
+          vald: d === undefined ? -1 : d,
+          farg: this.val.farger[jag.slot] || "#ffffff",
+        }
+      : null;
   }
 
   // flytta ser till att figuren id finns och går mot (x, z) i rummet
@@ -983,6 +1009,32 @@ float puls() {
 
     this.renderer.render(this.scene, this.cam);
     this.ritaKanten(!!f);
+    this.ritaTangenter();
+  }
+
+  // ritaTangenter sätter en tangent med pilen vid varje öppen dörr och port
+  // i rummet vandraren står i, så att man ser vart piltangenterna går när
+  // norr inte är uppåt. Den valda tangenten lyser i vandrarens färg.
+  private ritaTangenter(): void {
+    const r = this.tangentRum;
+    const v = new THREE.Vector3();
+    this.tangent.forEach((el, d) => {
+      if (!r || !r.oppen[d]) {
+        el.hidden = true;
+        return;
+      }
+      const [x, z] = vidDorr(r.x, r.y, d);
+      // Lite längre in i rummet än pilen, så att tangenten inte täcker dörren.
+      const mx = r.x * S + S / 2, mz = r.y * S + S / 2;
+      v.set(x + (mx - x) * 0.25, 0.1, z + (mz - z) * 0.25).project(this.cam);
+      el.hidden = false;
+      el.style.left = ((v.x + 1) / 2) * this.bredd + "px";
+      el.style.top = ((1 - v.y) / 2) * this.hojd + "px";
+      const vald = r.vald === d;
+      el.classList.toggle("vald", vald);
+      el.style.color = vald ? r.farg : "";
+      el.style.borderColor = vald ? r.farg : "";
+    });
   }
 
   // ritaKanten sätter en liten pil vid kanten för det som ligger utanför

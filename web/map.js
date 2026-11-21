@@ -881,8 +881,13 @@ const MapView = (() => {
     if (iso) iso.vakna();
   }
 
+  // isIso säger om kartan visas snett ovanifrån just nu.
+  function isIso() {
+    return useIso;
+  }
+
   return {
-    setup, draw, resize, ping, wake,
+    setup, draw, resize, ping, wake, isIso,
     zoom: FlatMap.zoom, toggleWhole: FlatMap.toggleWhole, setZoomListener: FlatMap.setZoomListener,
     follow: FlatMap.follow, setLegend, legendImage, PLAYER_COLORS: FlatMap.PLAYER_COLORS,
   };

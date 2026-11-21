@@ -127,6 +127,11 @@ Efter varje steg görs en commit, och användaren provar innan nästa steg.
 - Pilarna vid kanten: portarna och kammaren man känner till, och vandrarna
   man ser, får en pil vid kanten med sitt tecken när de ligger utanför
   bilden. Som på den platta kartan bara när kartan följer någon.
+- Tangenterna vid dörrarna: i rummet vandraren står i står en tangent med
+  pilen vid varje öppen dörr och port, så att man ser vart piltangenterna
+  går. Det valda draget lyser på sin tangent i vandrarens färg, i stället
+  för den blinkande pilen på golvet. På pekskärmen visar knapparna sneda
+  pilar (↗ ↘ ↙ ↖) när kartan är snett ovanifrån.
 - Föremålen på figuren: det vandraren bär syns på den egna figuren,
   vid bältet, på bröstet, på ryggen eller på huvudet (`fastPa` i
   `klient/src/modeller.ts`). Andras väskor är hemliga och syns inte, men

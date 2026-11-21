@@ -295,6 +295,7 @@ function handle(msg) {
         mapSize = msg.size;
       }
       MapView.draw(state);
+      padArrows();
       Sound.breath(state.phase === "spel" ? state.sleep : -1);
       Sound.level(state.reveal ? state.level : 0);
       document.body.dataset.niva = state.reveal ? String(state.level) : "1";
@@ -1461,6 +1462,17 @@ const Intro = (() => {
     entering() { return entering; },
   };
 })();
+
+// padArrows visar pilarna på pekskärmens knappar åt det håll figuren går.
+// Snett ovanifrån pekar norr upp åt höger, så pilarna blir sneda.
+function padArrows() {
+  const iso = MapView.isIso();
+  const glyphs = iso ? { n: "↗", e: "↘", s: "↙", w: "↖" } : { n: "↑", e: "→", s: "↓", w: "←" };
+  Object.entries(glyphs).forEach(([c, ch]) => {
+    const b = document.querySelector("#pad .dirs ." + c);
+    if (b && b.textContent !== ch) b.textContent = ch;
+  });
+}
 
 // Zoomen: knapparna i kartans hörn, scrollhjulet och två fingrar väljer hur
 // nära kartan går. + och − på tangentbordet, och M för allt man känner till,

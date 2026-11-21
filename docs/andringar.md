@@ -6,6 +6,14 @@ eller leder tornet.
 
 ## 2026-11-21
 
+### Piltangenterna syns vid dörrarna
+
+- På kartan snett ovanifrån står en liten tangent med pilen vid varje
+  öppen dörr och port i rummet du står i: ↑ vid den norra, → vid den
+  östra och så vidare. Draget du har valt lyser i din färg.
+- På en telefon visar pilknapparna sneda pilar, ↗ ↘ ↙ ↖, åt det håll
+  figuren går.
+
 ### Modellernas färg och storlek i data/
 
 - Varje klass i `klasser.json` och varelse i `monster.json` har `modell`

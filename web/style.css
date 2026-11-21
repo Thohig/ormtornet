@@ -464,7 +464,22 @@ body[data-niva="4"] #crt::after { animation: throb 0.95s infinite; }
   border-bottom: 5px solid transparent;
 }
 .isokant .tecken { position: absolute; font: bold 13px Menlo, Monaco, monospace; }
-.isokompass[hidden], .isokant[hidden], .isokant > div[hidden] { display: none; }
+.isotangenter { position: absolute; inset: 0; pointer-events: none; z-index: 2; overflow: hidden; }
+.isotangenter span {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  min-width: 18px;
+  padding: 1px 4px;
+  text-align: center;
+  font: bold 12px Menlo, Monaco, monospace;
+  color: var(--chalk);
+  background: rgba(21, 23, 26, 0.72);
+  border: 1px solid rgba(169, 166, 157, 0.55);
+  border-bottom-width: 2px;
+  border-radius: 4px;
+}
+.isotangenter span.vald { background: rgba(21, 23, 26, 0.9); box-shadow: 0 0 8px currentColor; }
+.isokompass[hidden], .isokant[hidden], .isokant > div[hidden], .isotangenter[hidden], .isotangenter span[hidden] { display: none; }
 
 #roomname {
   color: var(--chalk);
