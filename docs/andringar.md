@@ -6,6 +6,13 @@ eller leder tornet.
 
 ## 2026-11-21
 
+### Stäng tornet på Pages
+
+- På GitHub Pages säger texten vid Stäng tornet inte längre att man kan
+  trycka Ctrl+C i terminalen, och frågan talar inte om en server. I stället
+  står det vad knappen är bra för där: spelarna får beskedet att tornet
+  stänger, i stället för att deras sidor börjar leta efter tornet igen.
+
 ### Sidorna heter Ormtornet från början
 
 - Sidornas titel står nu som "Ormtornet" redan i HTML:en. Förut var den

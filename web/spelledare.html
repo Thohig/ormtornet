@@ -329,6 +329,7 @@ if (onPages) {
   document.body.classList.add("sida");
   document.querySelector('[data-t="bjud_in_text"]').dataset.t = "bjud_in_text_sida";
   $("copyAddr").dataset.t = "kopiera_lanken";
+  document.querySelector('[data-t="stang_not"]').dataset.t = "stang_not_sida";
   $("tabWarn").hidden = false;
   $("help").hidden = true;
   $("helpPages").hidden = false;
@@ -367,7 +368,7 @@ $("copyInvite").onclick = () => view && copy(inviteText(view), "kopierad_inbjuda
 $("copyAddr").onclick = () => view && copy(view.addrs.name, onPages ? "kopierad_lanken" : "kopierad_adressen");
 
 $("closeTower").onclick = async () => {
-  if (!confirm(t("stang_fraga"))) return;
+  if (!confirm(t(onPages ? "stang_fraga_sida" : "stang_fraga"))) return;
   try {
     const r = await fetch("/spelledare/stang", { method: "POST", headers: { "X-Ormtornet": "spelledare" } });
     if (!r.ok) throw new Error(r.status);

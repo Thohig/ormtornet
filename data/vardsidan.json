@@ -299,6 +299,8 @@
     "stang": "Stäng tornet",
     "stang_not": "eller tryck Ctrl+C i terminalen. Spelarna får ett meddelande om att tornet stänger, och datorn får somna igen.",
     "stang_fraga": "Stäng tornet? Alla spelare kopplas bort och servern stängs.",
+    "stang_not_sida": "Spelarna får ett meddelande om att tornet stänger, i stället för att deras sidor börjar leta efter tornet igen. Sedan kan du stänga fliken.",
+    "stang_fraga_sida": "Stäng tornet? Alla spelare kopplas bort och vandringen är slut.",
     "stang_svarar_inte": "Tornet svarade inte. Kanske är det redan stängt.",
     "_server": "Besked och fel som tornet (Go-koden) skickar till värdsidan, och raderna i spelledarens logg och översikt.",
     "server_kan_inte_starta": "Det går inte att starta nu. Minst en människa måste vara i tornet, och ingen vandring får pågå.",

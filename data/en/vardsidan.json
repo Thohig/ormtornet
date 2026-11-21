@@ -289,6 +289,8 @@
     "stang": "Close the tower",
     "stang_not": "or press Ctrl+C in the terminal. The players are told that the tower is closing, and the computer may sleep again.",
     "stang_fraga": "Close the tower? All players are disconnected and the server shuts down.",
+    "stang_not_sida": "The players are told that the tower is closing, instead of their pages starting to search for the tower again. Then you can close the tab.",
+    "stang_fraga_sida": "Close the tower? All players are disconnected and the wandering is over.",
     "stang_svarar_inte": "The tower did not answer. Perhaps it is already closed.",
     "server_kan_inte_starta": "Cannot start now. At least one human must be in the tower, and no wandering may be under way.",
     "server_ta_over": "The AI can only take over a wanderer whose player is away, in the middle of a wandering.",
