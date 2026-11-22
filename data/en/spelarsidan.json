@@ -89,6 +89,7 @@
     "hjalp_undan": "<b>E</b>evade",
     "hjalp_viska": "<b>V</b>whisper to the tower",
     "hjalp_zoom": "<b>Z</b>change zoom: near, middle, far, all",
+    "hjalp_logg": "<b>L</b>the whole log",
     "hjalp_redo": "<b>Enter</b>ready",
     "hjalp_visa": "<b>?</b>show and hide the controls",
     "hjalp_tips": "Hold the mouse over the signs at the top right to see what they mean.",
@@ -187,6 +188,8 @@
 
     "logg_nya": "↑ new lines",
     "logg_mer": "more ↓",
+    "logg_knapp": "Log",
+    "logg_stang": "Close the log",
     "logg_fore": "Before the wandering",
     "logg_start": "The wandering begins",
     "logg_slut": "The end",

@@ -150,6 +150,7 @@
               <div data-lage="strid" data-t-html="hjalp_undan"></div>
               <div data-lage="viska" data-t-html="hjalp_viska"></div>
               <div data-lage="fri strid annat" data-t-html="hjalp_zoom"></div>
+              <div class="widelog" data-t-html="hjalp_logg"></div>
               <div data-lage="redo" data-t-html="hjalp_redo"></div>
               <div data-t-html="hjalp_visa"></div>
             </div>
@@ -200,6 +201,8 @@
           <div id="log" aria-live="polite"></div>
           <button type="button" id="logNew" hidden data-t="logg_nya"></button>
         </div>
+        <!-- På en bred skärm: hela loggen i en låda på kartan (L). -->
+        <button type="button" id="logToggle" class="keys" aria-expanded="false"></button>
       </aside>
     </div>
   </section>

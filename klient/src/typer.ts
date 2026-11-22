@@ -72,6 +72,9 @@ export interface Utsnitt {
 export interface Val {
   utsnitt: () => Utsnitt | null;
   fokus: () => { x: number; y: number } | null; // rummet kartan följer
+  // Hur stor del av kartans bredd, från vänster, som loggen täcker (0–0,5).
+  // Kameran ställer utsnittet i den del som syns.
+  tackt?: () => number;
 
   farger: string[]; // vandrarnas färger, en per plats
 }

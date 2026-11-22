@@ -308,8 +308,35 @@ function placeSide() {
   document.body.classList.toggle("logpakartan", wideScreen.matches);
   MapView.resize();
 }
-wideScreen.addEventListener("change", placeSide);
+wideScreen.addEventListener("change", () => {
+  toggleLog(false);
+  placeSide();
+});
 placeSide();
+
+// toggleLog öppnar och stänger hela loggen när den står på kartan: en låda
+// där de äldre rundorna går att läsa och rulla i (knappen Loggen, L, Esc).
+function toggleLog(open) {
+  const was = document.body.classList.contains("loggenoppen");
+  if (open === undefined) open = !was;
+  if (!wideScreen.matches) open = false;
+  document.body.classList.toggle("loggenoppen", open);
+  const b = $("logToggle");
+  b.setAttribute("aria-expanded", open ? "true" : "false");
+  b.innerHTML = "";
+  b.append(t(open ? "logg_stang" : "logg_knapp") + " ");
+  const k = document.createElement("span");
+  k.className = "key";
+  k.textContent = "L";
+  b.append(k);
+  if (open !== was) $("log").scrollTop = 0;
+}
+$("logToggle").addEventListener("click", () => toggleLog());
+// Ett klick utanför lådan stänger den.
+document.addEventListener("pointerdown", (e) => {
+  if (document.body.classList.contains("loggenoppen") && !e.target.closest("#side")) toggleLog(false);
+});
+toggleLog(false);
 
 function send(obj) {
   if (ws && ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify(obj));
@@ -434,6 +461,7 @@ async function changeLanguage(lang, againIntro) {
   if (!(await refreshTexts("spelarsidan", lang))) return;
   Log.relabel();
   if (zoomKey) $("zoomName").textContent = t(zoomKey);
+  toggleLog(document.body.classList.contains("loggenoppen"));
   const head = document.querySelector("#roundcard .cardhead");
   if (head) head.textContent = t("rundkort_rubrik", { runda: head.dataset.round });
   if (state) {
@@ -1828,6 +1856,7 @@ $("zoomName").addEventListener("click", () => MapView.toggleWhole());
   // styrplatta ger många små steg som blir en jämn zoom.
   $("mapbox").addEventListener("wheel", (e) => {
     if (!state || state.phase !== "spel" || !e.deltaY) return;
+    if (e.target.closest("#side")) return; // hjulet rullar loggen, inte kartan
     e.preventDefault();
     const px = e.deltaMode === 1 ? e.deltaY * 33 : e.deltaMode === 2 ? e.deltaY * 400 : e.deltaY;
     MapView.zoomBy(Math.max(-0.5, Math.min(0.5, px / 300)));
@@ -1837,7 +1866,7 @@ $("zoomName").addEventListener("click", () => MapView.toggleWhole());
   let pinch = 0;
   const dist = (t) => Math.hypot(t[0].clientX - t[1].clientX, t[0].clientY - t[1].clientY);
   $("mapbox").addEventListener("touchstart", (e) => {
-    if (e.touches.length === 2) pinch = dist(e.touches);
+    if (e.touches.length === 2 && !e.target.closest("#side")) pinch = dist(e.touches);
   }, { passive: true });
   $("mapbox").addEventListener("touchmove", (e) => {
     if (e.touches.length !== 2 || !pinch) return;
@@ -1922,6 +1951,14 @@ function pressKey(key) {
   }
   if (key === "Escape" && !$("helpbox").hidden) {
     toggleHelp(false);
+    return true;
+  }
+  if ((key === "l" || key === "L") && wideScreen.matches) {
+    toggleLog();
+    return true;
+  }
+  if (key === "Escape" && document.body.classList.contains("loggenoppen")) {
+    toggleLog(false);
     return true;
   }
   if (state && state.phase === "spel") {

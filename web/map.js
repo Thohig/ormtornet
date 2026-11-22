@@ -212,10 +212,14 @@ const MapView = (() => {
     towerSize = size;
     target = null; // hoppa direkt till rätt utsnitt
     if (!iso && window.IsoKarta && IsoKarta.stods()) {
-      iso = IsoKarta.skapa(canvas, { utsnitt: () => viewAt(performance.now()), fokus: focusRoom, farger: PLAYER_COLORS });
+      iso = IsoKarta.skapa(canvas, { utsnitt: () => viewAt(performance.now()), fokus: focusRoom, farger: PLAYER_COLORS, tackt: () => cover });
       iso.visa(true);
     }
     if (iso) iso.storlek(size);
+    if (!coverWatch && window.ResizeObserver) {
+      coverWatch = new ResizeObserver(measureCover);
+      coverWatch.observe(document.getElementById("mapbox"));
+    }
     const none = document.getElementById("mapNone");
     if (none) none.hidden = !!iso;
     canvas.hidden = !iso;
@@ -229,7 +233,21 @@ const MapView = (() => {
     if (iso) iso.visaTillstand(state);
   }
 
+  // cover är den del av kartans bredd som loggen täcker när den står på
+  // kartan (placeSide i app.js). Den mäts när kartan byter storlek.
+  let cover = 0;
+  let coverWatch = null;
+  function measureCover() {
+    const side = document.getElementById("side");
+    const box = document.getElementById("mapbox");
+    cover = 0;
+    if (side && box && side.parentElement === box && box.clientWidth > 0) {
+      cover = Math.min(0.45, (side.offsetLeft + side.offsetWidth + 8) / box.clientWidth);
+    }
+  }
+
   function resize() {
+    measureCover();
     if (iso) iso.anpassa();
   }
 

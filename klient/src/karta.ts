@@ -292,6 +292,7 @@ export class IsoKarta {
   private aktiv = false;
   private bredd = 0;
   private hojd = 0;
+  private tackt = 0; // den del av bredden som loggen täcker (Val.tackt)
   private ringar: THREE.MeshBasicMaterial[] = [];
   private munnar: { upper: THREE.Group; lower: THREE.Group }[] = [];
   private ogon: THREE.Group[] = [];
@@ -1322,10 +1323,15 @@ float puls() {
     const skarp = f ? 0.6 + 0.12 * Math.min(1, Math.max(0, (Math.min(u.w, u.h) - 3) / 2)) : 1.03;
     let hw = (diag / 2) * skarp;
     let hh = (diag / 2) * LUTNING * skarp + 1.2;
-    const asp = this.bredd / this.hojd;
+    // Täcker loggen kartans vänstra del ställs utsnittet i den del som
+    // syns: kartan ritas bredare och flyttas åt höger.
+    const tackt = Math.max(0, Math.min(0.5, this.val.tackt ? this.val.tackt() : 0));
+    this.tackt = tackt;
+    const asp = (this.bredd * (1 - tackt)) / this.hojd;
     if (hw / hh > asp) hh = hw / asp;
     else hw = hh * asp;
-    Object.assign(this.cam, { left: -hw, right: hw, top: hh, bottom: -hh });
+    const hel = hw / (1 - tackt);
+    Object.assign(this.cam, { left: -hel - hel * tackt, right: hel - hel * tackt, top: hh, bottom: -hh });
     this.cam.updateProjectionMatrix();
 
     // Solen följer kameran, så att skuggorna är skarpa där man tittar.
@@ -1427,16 +1433,17 @@ float puls() {
         mal.push({ x: p.x * S + S / 2, z: p.y * S + S / 2, tecken: "●", farg: this.val.farger[p.slot] || "#ffffff" });
       });
     }
-    const W = this.bredd, H = this.hojd, m = 16, mx = W / 2, my = H / 2;
+    // Pilarna står vid kanten av den del av kartan som syns bredvid loggen.
+    const W = this.bredd, H = this.hojd, m = 16, x0 = W * this.tackt, mx = (x0 + W) / 2, my = H / 2;
     const sedda: { nyckel: string; x: number; y: number }[] = [];
     const v = new THREE.Vector3();
     let n = 0;
     mal.forEach((q) => {
       v.set(q.x, 0.3, q.z).project(this.cam);
       const tx = ((v.x + 1) / 2) * W, ty = ((1 - v.y) / 2) * H;
-      if (tx >= 0 && tx <= W && ty >= 0 && ty <= H) return;
+      if (tx >= x0 && tx <= W && ty >= 0 && ty <= H) return;
       const dx = tx - mx, dy = ty - my;
-      const k = Math.min((mx - m) / Math.abs(dx || 1e-6), (my - m) / Math.abs(dy || 1e-6));
+      const k = Math.min(((W - x0) / 2 - m) / Math.abs(dx || 1e-6), (my - m) / Math.abs(dy || 1e-6));
       const ex = mx + dx * k, ey = my + dy * k;
       const nyckel = q.tecken + q.farg;
       if (sedda.some((o) => o.nyckel === nyckel && Math.hypot(o.x - ex, o.y - ey) < 22)) return;
