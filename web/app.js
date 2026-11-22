@@ -54,6 +54,44 @@ const Log = (() => {
     if (!busy) next();
   }
 
+  // room lägger rumsblocket (here.go) överst i rundan: rummets namn,
+  // beskrivningen när rummet är nytt och vad som finns där. Ett nytt block
+  // i samma runda ersätter det förra.
+  function room(msg) {
+    queue.push({ room: msg, key: keyNow() });
+    if (!busy) next();
+  }
+
+  function roomBlock(g, msg) {
+    const list = g.querySelector(".lines");
+    const block = document.createElement("div");
+    block.className = "roomblock" + (msg.kvar ? " kvar" : "");
+    const name = document.createElement("div");
+    name.className = "roomname";
+    name.textContent = msg.namn;
+    block.appendChild(name);
+    if (msg.text) {
+      const d = document.createElement("div");
+      d.className = "roomdesc";
+      d.textContent = msg.text;
+      block.appendChild(d);
+    }
+    if (msg.har) {
+      const h = document.createElement("div");
+      h.className = "roomhere";
+      paint(h, msg.har);
+      block.appendChild(h);
+    }
+    block.classList.add("appear");
+    keep(() => {
+      const old = list.querySelector(":scope > .roomblock");
+      if (old) old.replaceWith(block);
+      else list.prepend(block);
+    });
+    if (g.classList.contains("folded")) summarize(g);
+    follow();
+  }
+
   // keep gör en ändring utan att texten man läser flyttar sig när man har
   // rullat ner: raden överst i rutan står kvar på samma plats.
   function keep(change) {
@@ -102,7 +140,7 @@ const Log = (() => {
     const folded = g.classList.contains("folded");
     let text = (folded ? "▸ " : "▾ ") + label(g.dataset.key);
     if (folded) {
-      const rooms = [...g.querySelectorAll(".lines > .rubrik")].map((d) => d.textContent.replace(/\.$/, ""));
+      const rooms = [...g.querySelectorAll(".lines > .roomblock > .roomname")].map((d) => d.textContent);
       if (rooms.length) text += " · " + rooms.join(", ");
       text += " · " + t(lines.length === 1 ? "logg_rader_en" : "logg_rader_flera", { n: lines.length });
     }
@@ -182,6 +220,11 @@ const Log = (() => {
     }
     busy = true;
     const g = group(item.key);
+    if (item.room) {
+      roomBlock(g, item.room);
+      setTimeout(next, queue.some((q) => q.key !== item.key) ? CATCH_UP : LINE_GAP);
+      return;
+    }
     const list = g.querySelector(".lines");
     const first = list.children.length === 0;
     const line = document.createElement("div");
@@ -237,7 +280,7 @@ const Log = (() => {
     box().querySelectorAll(".round").forEach(summarize);
   }
 
-  return { push, init, relabel };
+  return { push, room, init, relabel };
 })();
 Log.init();
 
@@ -308,6 +351,9 @@ function handle(msg) {
     case "log":
       Log.push(msg.text, msg.c);
       break;
+    case "rum":
+      Log.room(msg);
+      break;
     case "runda":
       showRoundCard(msg);
       break;
@@ -343,8 +389,7 @@ function handle(msg) {
 
 // Byte av språk: spelledaren har valt ett annat språk, och servern säger
 // det i läget och i svaret från /intro. Sidan hämtar de nya texterna och
-// ritar om det den själv har skrivit, utan att laddas om. Teckenförklaringen
-// kommer från /intro och hämtas igen när det behövs.
+// ritar om det den själv har skrivit, utan att laddas om.
 async function changeLanguage(lang, againIntro) {
   if (!(await refreshTexts("spelarsidan", lang))) return;
   Log.relabel();
@@ -361,9 +406,6 @@ async function changeLanguage(lang, againIntro) {
   if (!againIntro) return;
   try {
     const info = await (await fetch("/intro", { cache: "no-store" })).json();
-    signTexts = info.tecken || {};
-    $("legendBtn").textContent = signTexts.rubrik || "";
-    MapView.setLegend(renderLegend);
     if (state && mapReady) MapView.draw(state);
   } catch {}
 }
@@ -541,7 +583,6 @@ function renderChron() {
       const d = document.createElement("div");
       d.textContent = l.text;
       if (l.c) d.className = l.c;
-      if (l.tecken) d.prepend(signRow(l.tecken));
       if (l.kort && l.kort.length) d.appendChild(cardRow(l.kort));
       box.appendChild(d);
     });
@@ -549,12 +590,11 @@ function renderChron() {
   };
   $("chronTitle").textContent = end ? endTitle() : t("vandring_rubrik");
   $("chronLead").textContent = end ? "" : v.dod || "";
-  if (!end && v.dod && v.dodTecken) $("chronLead").prepend(signRow(v.dodTecken));
   $("chronStatus").textContent = end ? "" : t("vandring_pagar", { runda: state.round, sol: state.sun, inne: v.inne, ute: v.ute });
   // Resultaten: vem som kom ut med hur mycket, vinnaren först.
   rows("chronResults", end ? (state.results || []).map((r) => ({ text: (r.winner ? "★ " : "") + r.name + (r.ai ? " ~" : "") + " · " + resultWord(r), c: r.winner ? "win" : r.status !== "ute" ? "lost" : "" })) : []);
   rows("chronEpilog", end ? state.epilog : []);
-  rows("chronAll", end ? (state.kronika || []).filter((l) => l.c !== "rubrik").map((l) => ({ text: l.text, c: l.c, kort: l.kort, tecken: l.tecken })) : []);
+  rows("chronAll", end ? (state.kronika || []).filter((l) => l.c !== "rubrik").map((l) => ({ text: l.text, c: l.c, kort: l.kort })) : []);
   if (end && state.kronika && state.kronika[0]) {
     const h = document.createElement("h2");
     h.textContent = state.kronika[0].text;
@@ -584,7 +624,6 @@ function renderChron() {
     r.rader.forEach((l) => {
       const p = document.createElement("div");
       p.textContent = l.text;
-      if (l.tecken) p.prepend(signRow(l.tecken));
       if (l.ormkort) p.prepend(miniCard(l.ormkort));
       if (l.c) p.className = l.c;
       d.appendChild(p);
@@ -990,37 +1029,6 @@ function miniCard(id) {
   return s;
 }
 
-// signRow är tecknen från kartan framför en rad i krönikan (signs.go):
-// samma bilder som i teckenförklaringen, med samma förklaring när musen är
-// över dem eller efter ett tryck.
-let signCount = 0;
-function signRow(list) {
-  const r = document.createElement("span");
-  r.className = "tecknrad";
-  list.forEach((s) => {
-    const look = MapView.signLook(s);
-    const g = document.createElement("span");
-    g.className = "sign glyph";
-    if (look.img) {
-      const i = document.createElement("img");
-      i.src = look.img;
-      i.alt = "";
-      g.classList.add("model");
-      g.appendChild(i);
-    } else g.textContent = look.glyph;
-    g.style.color = look.color;
-    const text = s.namn || signTexts[s.key.split(":")[0]] || "";
-    if (text) {
-      g.dataset.tip = text;
-      g.dataset.slot = "rad:" + signCount++;
-      g.tabIndex = 0;
-      g.setAttribute("aria-label", text);
-    } else g.setAttribute("aria-hidden", "true");
-    r.appendChild(g);
-  });
-  return r;
-}
-
 // cardRow är en rad små ormkort, med namnen när musen är över dem.
 function cardRow(list) {
   const r = document.createElement("span");
@@ -1113,56 +1121,6 @@ function hideWakeCard() {
 }
 $("vakenkort").addEventListener("click", hideWakeCard);
 
-// Teckenförklaringen uppe till vänster på kartan: de tecken som står i
-// rummen just nu, under varandra. Betydelsen syns när musen är över ett
-// tecken, eller efter ett tryck på det, som med tecknen till höger. Texterna
-// kommer från tecken_* i data/texter.json, och fällor och varelser förklaras
-// med sina namn. Den går att fälla ihop.
-let signTexts = {};
-let legendOpen = true;
-try {
-  const saved = localStorage.getItem("ormtornet-tecken");
-  if (saved) legendOpen = saved === "1";
-} catch {}
-function renderLegend(list) {
-  const box = $("legendList");
-  box.innerHTML = "";
-  list.forEach((e) => {
-    const text = e.name || signTexts[e.key.split(":")[0]];
-    if (!text) return;
-    const g = document.createElement("span");
-    g.className = "sign glyph";
-    // Snett ovanifrån står modellen i stället för tecknet, där den finns.
-    const img = MapView.legendImage(e);
-    if (img) {
-      const i = document.createElement("img");
-      i.src = img;
-      i.alt = "";
-      g.classList.add("model");
-      g.appendChild(i);
-    } else g.textContent = e.glyph;
-    g.style.color = e.color;
-    g.dataset.tip = text;
-    g.dataset.slot = "tecken:" + e.key;
-    g.tabIndex = 0;
-    g.setAttribute("aria-label", text);
-    box.appendChild(g);
-  });
-  $("legend").hidden = box.childElementCount === 0;
-  showLegendOpen();
-  if (tipKey.startsWith("tecken:")) restoreTip();
-}
-function showLegendOpen() {
-  $("legendList").hidden = !legendOpen;
-  $("legendBtn").setAttribute("aria-expanded", String(legendOpen));
-}
-$("legendBtn").addEventListener("click", () => {
-  legendOpen = !legendOpen;
-  try { localStorage.setItem("ormtornet-tecken", legendOpen ? "1" : "0"); } catch {}
-  showLegendOpen();
-});
-MapView.setLegend(renderLegend);
-
 // Förklaringen till ett tecken på kartan. Den läggs under tecknet, inom
 // kartans ruta.
 function showTip(el) {
@@ -1174,14 +1132,7 @@ function showTip(el) {
   const w = tip.offsetWidth;
   // Under tecknet, inom fönstret. Tecknen på kartan står till höger, så
   // förklaringen slutar där tecknet slutar; prickarna börjar där de börjar.
-  // Teckenförklaringen står till vänster, så där hamnar förklaringen
-  // bredvid tecknet. I krönikan börjar den där tecknet börjar.
-  if (el.closest("#legend")) {
-    tip.style.top = r.top - 4 + "px";
-    tip.style.left = Math.min(window.innerWidth - w - 4, r.right + 8) + "px";
-    return;
-  }
-  const left = el.closest("#crew, #chron") ? r.left : r.right - w;
+  const left = el.closest("#crew") ? r.left : r.right - w;
   tip.style.top = r.bottom + 6 + "px";
   tip.style.left = Math.max(4, Math.min(window.innerWidth - w - 4, left)) + "px";
 }
@@ -1190,7 +1141,7 @@ function hideTip() {
   tipKey = "";
 }
 // Tecknen på kartan och prickarna i översta raden har samma förklaringar.
-for (const id of ["hud", "crew", "legend", "chron"]) {
+for (const id of ["hud", "crew"]) {
   const area = $(id);
   area.addEventListener("mouseover", (e) => {
     if (touch) return; // på en pekskärm är det trycket som räknas
@@ -1220,21 +1171,15 @@ for (const id of ["hud", "crew", "legend", "chron"]) {
     else showTip(el);
   });
 }
-// Förklaringen står still på skärmen, så den göms när krönikan skrollar.
-const hideRowTip = () => {
-  if (tipKey.startsWith("rad:")) hideTip();
-};
-$("chronscreen").addEventListener("scroll", hideRowTip, { passive: true });
-window.addEventListener("scroll", hideRowTip, { passive: true });
 // Ett tryck någon annanstans döljer förklaringen.
 document.addEventListener("click", (e) => {
-  if (tipKey && !e.target.closest("#hud, #crew, #legend, #chron")) hideTip();
+  if (tipKey && !e.target.closest("#hud, #crew")) hideTip();
 });
 
 // restoreTip visar förklaringen igen efter att läget har ritats om.
 function restoreTip() {
   if (!tipKey) return;
-  const el = [...document.querySelectorAll("#hud [data-tip], #crew [data-tip], #legend [data-tip], #chron [data-tip]")].find((x) => keyOf(x) === tipKey);
+  const el = [...document.querySelectorAll("#hud [data-tip], #crew [data-tip]")].find((x) => keyOf(x) === tipKey);
   if (el) showTip(el);
   else hideTip();
 }
@@ -1670,9 +1615,6 @@ const Intro = (() => {
       if (!reveal) $("intro").classList.add("invigd");
       toHostPage = info.vard && !wantsToPlay;
       $("listen").textContent = (touch && info.ljudTryck) || info.ljud || "";
-      signTexts = info.tecken || {};
-      $("legendBtn").textContent = signTexts.rubrik || "";
-      MapView.setLegend(renderLegend); // texterna kom efter kartan
       if (state && mapReady) MapView.draw(state);
       rumors = (info.rykten || []).slice().sort(() => Math.random() - 0.5);
       showRumor();

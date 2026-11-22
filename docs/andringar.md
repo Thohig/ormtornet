@@ -6,6 +6,19 @@ eller leder tornet.
 
 ## 2026-11-22
 
+### Rummet i loggen, utan teckenförklaring
+
+- Överst i varje runda står ett rumsblock: rummets namn, beskrivningen
+  när rummet är nytt, och i ord vad som finns där (varelsen, de andra
+  vandrarna, skatten, porten, en fälla som har slagit till, föremål som
+  någon har lämnat). Står du kvar kommer ett kort block bara när något
+  har ändrats, som när en varelse har kommit in eller en vandrare har
+  gått.
+- Teckenförklaringen uppe till vänster på kartan är borta. Hur saker ser
+  ut syns på kartan, och vad de är står i loggen.
+- Bilderna på krönikans rader och på rundans kort i Din vandring är
+  borta igen. Krönikan är bara text.
+
 ### Lobbyn utan listan över vandrare
 
 - Panelen Vandrare är borta. I lobbyn och slutet står vandrarna som

@@ -393,8 +393,32 @@
       "Kvällsljuset skär i ögonen. Inte än. Tornet har mer att ge.",
       "Du ser ut över backen nedanför. Sedan vänder du tillbaka in."
     ],
-    "kant_rum": [
-      "{rum}."
+    "har_varelse": [
+      "{varelse} är här."
+    ],
+    "har_vandrare": [
+      "{namn} står här med dig."
+    ],
+    "har_vandrare_flera": [
+      "{namn} och {sista} står här med dig."
+    ],
+    "har_kammare": [
+      "Här ligger ormens skatt."
+    ],
+    "har_port": [
+      "Här går en port ut ur tornet."
+    ],
+    "har_port_stangd": [
+      "Porten här har slutit sig."
+    ],
+    "har_falla": [
+      "{falla} har redan slagit till här."
+    ],
+    "har_foremal": [
+      "Någon har lämnat {foremal} här."
+    ],
+    "har_tomt": [
+      "Rummet är tomt."
     ],
     "sen_ankomst": [
       "{namn}, vandringen har just tagit slut. Du är med när nästa torn reser sig. Tryck Enter när du är redo (på en pekskärm: Nytt torn)."
@@ -593,24 +617,6 @@
     "pack_lite": ["{namn} är här. Något klirrar i packningen."],
     "pack_tom": ["{namn} är här. Packningen hänger tom."],
     "stanger_snart": ["Tornet stänger om en minut om ingen är kvar."],
-    "tecken_rubrik": ["Tecken"],
-    "tecken_du": ["Du, med en ring som blinkar."],
-    "tecken_vandrare": ["En vandrare, i sin färg."],
-    "tecken_borta": ["En vandrare som har tappat kontakten."],
-    "tecken_skymd": ["Där en vandrare sågs senast."],
-    "tecken_forlorad": ["En vandrare som tornet har tagit."],
-    "tecken_drag": ["Ditt drag, åt det hållet."],
-    "tecken_port": ["En port ut. Skatten räknas bara om den bärs ut här."],
-    "tecken_port_stangd": ["En port som har slutit sig. Det går inte att komma ut genom den."],
-    "tecken_okand": ["Ett rum som ingen har varit i än."],
-    "tecken_mitten": ["Tornets mitt."],
-    "tecken_kammare": ["Kammaren, med en hög av guld."],
-    "tecken_vaken": ["Något i kammaren har vaknat."],
-    "tecken_foremal": ["Här ligger ett föremål."],
-    "tecken_krita": ["En pil i krita, ritad av en vandrare."],
-    "tecken_eko": ["Ett eko. En vandrare hördes här."],
-    "tecken_falla": ["En fälla har slagit till här."],
-    "tecken_varelse": ["En varelse."],
     "intro_ljud": [
       "klicka för att höra stormen"
     ],

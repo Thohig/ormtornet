@@ -218,14 +218,15 @@ den som dör och för alla i slutet (se slutet nedan och Strider):
      eller tryck, för namn, klass och läge. I lobbyn och slutet står namnet
      bredvid pricken, och knappen Redo (Nytt torn i slutet) står till
      höger i översta raden. Panelen Nu syns bara när den har något att
-     säga. I loggen står vandrarnas namn i deras färg. Uppe till
-     vänster på kartan står rummets namn, och under det
-     teckenförklaringen: de tecken som står i rummen just nu, som
-     vandrarna, varelserna och fällorna, kammaren, portarna, krita och
-     okända rum. En port som har slutit sig står som ett rött block. Tecknen står under varandra, och vad de betyder (med
-     fällornas och varelsernas namn) syns när musen är över ett tecken
-     eller efter ett tryck på det. Den fälls ihop med ett klick på
-     rubriken, och texterna står under `tecken_*` i `data/texter.json`. Uppe till höger står statusen
+     säga. I loggen står vandrarnas namn i deras färg. Överst i
+     varje runda står rumsblocket: rummets namn, beskrivningen när
+     rummet är nytt, och i ord vad som finns där, som varelsen, de andra
+     vandrarna, skatten, porten, en fälla som har slagit till och
+     föremål som någon har lämnat. Står man kvar kommer ett kort block
+     bara när något har ändrats. I mörkret och i källarvalven väntar
+     blocket tills man ser igen. Texterna står under `har_*` i
+     `data/texter.json`. Uppe till vänster på kartan står rummets namn.
+     Uppe till höger står statusen
      som tecken: klassens tecken, liv, skatt, drycker,
      tillstånd som fast, gift och mörker, kompassen, dunket, viskningen och
      `⁂` med de tecken i väggarna som vandraren har hittat, och under dem
@@ -409,9 +410,7 @@ med hur många nävar den tog ur kammaren och hur mycket guld de gav, och hur
 många fällor, fällda varelser och sökta rum den fick. Den som har träffat
 andra vandrare får också träffarna och det stulna guldet på sin rad.
 Texterna står i `data/texter.json` under `kronika_*`. Under krönikan står
-den egna vandringen, samma som den som dör ser under vandringen. Raderna
-har samma tecken som teckenförklaringen på kartan (`signs.go`), både i
-krönikan och på rundans kort i den egna vandringen.
+den egna vandringen, samma som den som dör ser under vandringen.
 
 ### Klasser
 
@@ -847,7 +846,7 @@ Beskrivningarna för rummen ligger under nivåerna `"1"` till `"4"`.
 - `monster.go` varelser, strider och hur varelserna vandrar
 - `reveal.go` avslöjandet: nivåer, ledtrådar och epilog
 - `chronicle.go` krönikan över vandringen
-- `signs.go` tecknen från kartan på krönikans rader och rundans kort
+- `here.go` rumsblocket i loggen: rummets namn, beskrivning och vad som finns där
 - `sounds.go` spår och ljud från grannrummen
 - `summary.go` rundans sammanfattning, kortet efter varje runda
 - `difficulty.go` förvalen för svårighet
@@ -886,8 +885,7 @@ Beskrivningarna för rummen ligger under nivåerna `"1"` till `"4"`.
   - `rtc/rtc.js` WebRTC med Trystero och QR-koden, byggt från `klient/`
     (rör den inte för hand)
   - `map.js` räknar ut kartans utsnitt och zoom, så att kartan följer
-    rummet vandraren står i, och vilka tecken som står i
-    teckenförklaringen. Den skapar kartan snett ovanifrån, eller visar en
+    rummet vandraren står i. Den skapar kartan snett ovanifrån, eller visar en
     text där WebGL saknas
   - `audio.js` allt ljud, skapat med Web Audio API, även stormen i introt
   - `style.css` utseendet

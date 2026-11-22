@@ -238,6 +238,7 @@ type Player struct {
 	Treasure   int
 	Status     string
 	Seen       map[string]bool // fällor och varelser spelaren har mött
+	told       told            // vad vandraren senast fick veta om sitt rum (here.go)
 	known      [][]bool        // rum vandraren själv har varit i, det enda den ser på kartan
 	bot        *botBrain       // satt för datorstyrda vandrare
 
@@ -256,14 +257,12 @@ type Player struct {
 	Poison  int // rundor kvar med gift i kroppen
 	Dark    int // rundor kvar utan ljus
 
-	stats      chronStats     // det krönikan räknar
-	journal    []journeyRound // rundans kort, runda för runda, för krönikan på egen skärm
-	death      string         // hur vandraren dog, för krönikan på egen skärm
-	epilog     []chronLine    // epilogens rader för just den här vandraren
-	hurtKind   string         // vad som skadade vandraren senast, för krönikan
-	hurtWhat   string         // namnet på fällan, varelsen eller vandraren
-	hurtSign   []mapSign      // tecknet för det som skadade vandraren, för krönikan
-	deathSigns []mapSign      // tecknen på raden death
+	stats    chronStats     // det krönikan räknar
+	journal  []journeyRound // rundans kort, runda för runda, för krönikan på egen skärm
+	death    string         // hur vandraren dog, för krönikan på egen skärm
+	epilog   []chronLine    // epilogens rader för just den här vandraren
+	hurtKind string         // vad som skadade vandraren senast, för krönikan
+	hurtWhat string         // namnet på fällan, varelsen eller vandraren
 }
 
 // present är sant för en spelare som deltar just nu: en människa med öppen
@@ -853,6 +852,7 @@ func (g *Game) placeAtCorner(p *Player) {
 	p.items = nil
 	p.initiated, p.guessLevel, p.calmed = false, 0, false
 	p.parts = [3]bool{}
+	p.forgetRoom()
 	g.revealPorts()
 	g.noteRoom(p)
 }
@@ -968,7 +968,8 @@ func (g *Game) Join(c *Client, rawName string) {
 	g.broadcastState()
 	g.soundAll("ansluter")
 	g.logTo(p, g.hiddenText("valkommen", "namn", name, "horn", horn), "syn")
-	g.logTo(p, g.describe(p, &g.rooms[p.Y][p.X], p.X, p.Y), "")
+	g.describeLater(p, &g.rooms[p.Y][p.X], p.X, p.Y)
+	g.tellRoom(p)
 	for _, b := range g.players {
 		if b != nil && b.bot != nil {
 			g.logTo(p, fill(pick(g.aiTexts(g.data.AI.Ansluter, g.data.AI.AnsluterDolt)), "namn", b.Name, "horn", g.data.Horn[b.Corner]), "info")
@@ -1226,6 +1227,9 @@ func (g *Game) startGame() {
 	for _, p := range g.players {
 		if p != nil {
 			g.noteRoom(p) // efter klassvalet: kartritaren ser in i grannrummen
+			p.forgetRoom()
+			g.describeLater(p, &g.rooms[p.Y][p.X], p.X, p.Y)
+			g.tellRoom(p)
 		}
 	}
 	g.startRound()
@@ -1412,6 +1416,7 @@ func (g *Game) resolve() {
 			g.meetIfNew(p)
 		}
 	}
+	g.tellRooms()
 	g.checkMercy()
 
 	g.sun--
@@ -1597,9 +1602,9 @@ func (g *Game) move(p *Player, d Dir, depth int) {
 			}
 		}
 		if p.Treasure > 0 {
-			g.chronicleSigns(signs(placeSign("port")), "kronika_ut", "namn", p.Name, "guld", strconv.Itoa(p.Treasure))
+			g.chronicle("kronika_ut", "namn", p.Name, "guld", strconv.Itoa(p.Treasure))
 		} else {
-			g.chronicleSigns(signs(placeSign("port")), "kronika_ut_tom", "namn", p.Name)
+			g.chronicle("kronika_ut_tom", "namn", p.Name)
 		}
 		if p.Treasure > 0 {
 			g.logTo(p, g.data.Text("ut_med_skatt", "skatt", strconv.Itoa(p.Treasure)), "syn")
@@ -1624,14 +1629,12 @@ func (g *Game) move(p *Player, d Dir, depth int) {
 	p.X, p.Y = nx, ny
 	g.noteRoom(p)
 
-	name := g.roomName(target)
 	if isNew {
 		g.newRoomSound(p)
 		if p.Dark > 0 {
 			g.logTo(p, g.data.Text("morker_nytt"), "dim")
 		} else {
-			g.logTo(p, name+".", "rubrik")
-			g.logTo(p, g.describe(p, target, nx, ny), "")
+			g.describeLater(p, target, nx, ny)
 		}
 		if target.Event != "" {
 			ev := target.Event
@@ -1652,7 +1655,6 @@ func (g *Game) move(p *Player, d Dir, depth int) {
 		}
 	} else {
 		g.soundTo(p, "steg")
-		g.logTo(p, g.data.Text("kant_rum", "rum", name), "dim")
 		g.noticeTrail(p) // i ett nytt rum har ingen gått förut
 		g.noticeChalk(p)
 	}

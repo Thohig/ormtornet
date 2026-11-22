@@ -110,7 +110,7 @@ func (g *Game) give(p *Player, id string) bool {
 	}
 	p.items = append(p.items, &Item{ID: id, uses: uses})
 	p.stats.items++
-	g.chronicleSigns(signs(itemSign(t)), "kronika_foremal", "namn", p.Name, "foremal", lowerFirst(t.Namn))
+	g.chronicle("kronika_foremal", "namn", p.Name, "foremal", lowerFirst(t.Namn))
 	return true
 }
 

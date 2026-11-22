@@ -935,16 +935,6 @@ float puls() {
   private bildScen: THREE.Scene | null = null;
   private bildMal: THREE.WebGLRenderTarget | null = null;
 
-  // lar berättar vilken modell ett tecken har, för tecken som inte står på
-  // kartan: krönikan nämner varelser och fällor som vandraren kanske aldrig
-  // har sett. Det som kartan redan vet står kvar.
-  lar(nyckel: string, glyph: string, id: string, modell?: { farg?: string; storlek?: number }): void {
-    const slag = nyckel.split(":")[0];
-    if (!id) return;
-    if (slag === "varelse" && !this.typer.has(glyph)) this.typer.set(glyph, { typ: id, farg: modell?.farg, storlek: modell?.storlek });
-    else if (slag === "falla" && !this.fallTyper.has(glyph)) this.fallTyper.set(glyph, id);
-  }
-
   // bild ger en liten bild av modellen för ett tecken i teckenförklaringen,
   // som en data-URL, eller null där tecknet själv står på kartan (krita på
   // golvet och liknande). Bilderna ritas en gång och sparas.

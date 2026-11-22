@@ -382,8 +382,7 @@ body[data-niva="4"] #crt::after { animation: throb 0.95s infinite; }
 }
 #side > .block { flex: 0 0 auto; }
 
-/* Rummets namn och teckenförklaringen uppe till vänster, statusen uppe till
-   höger på kartan. */
+/* Rummets namn uppe till vänster, statusen uppe till höger på kartan. */
 #mapleft {
   position: absolute;
   top: 8px;
@@ -394,34 +393,9 @@ body[data-niva="4"] #crt::after { animation: throb 0.95s infinite; }
   gap: 6px;
   max-width: 40%;
   pointer-events: none;
-  /* Under skärmens svepande linjer och mörka kanter, som kartan, så att
-     teckenförklaringens ruta har samma färg som kartan runt den. */
+  /* Under skärmens svepande linjer och mörka kanter, som kartan. */
   z-index: 9;
 }
-#legend {
-  padding: 4px 8px;
-  border-radius: 4px;
-  background: var(--slate);
-  font-size: 13px;
-  pointer-events: auto;
-}
-#legend[hidden] { display: none; }
-#legendBtn {
-  padding: 0;
-  border: 0;
-  background: none;
-  color: var(--chalk);
-  font: inherit;
-  letter-spacing: 0.08em;
-  cursor: pointer;
-}
-#legendBtn:hover, #legendBtn:focus-visible { color: var(--hi); outline: none; }
-#legendBtn::after { content: " ▾"; }
-#legendBtn[aria-expanded="false"]::after { content: " ▸"; }
-#legendList { display: flex; flex-direction: column; align-items: flex-start; margin-top: 3px; }
-#legendList[hidden] { display: none; }
-#legendList .sign.model { line-height: 0; }
-#legendList .sign.model img { width: 28px; height: 28px; display: block; }
 .sign {
   min-width: 1.4em;
   padding: 1px 0;
@@ -763,6 +737,23 @@ body.touch #helpBtn { display: none; }
 #log .info { color: var(--info); }
 #log .syn { color: var(--hi); }
 #log .rubrik { color: var(--hi); letter-spacing: 0.08em; }
+/* Rumsblocket överst i rundan (here.go): rummets namn, beskrivningen och
+   vad som finns där. */
+#log .lines > .roomblock {
+  margin: 2px 0 8px;
+  padding: 6px 9px 7px;
+  text-indent: 0;
+  border: 1px solid var(--chalkline);
+  border-radius: 6px;
+  background: var(--slate);
+}
+#log .lines > .roomblock::before { display: none; }
+#log .roomname { color: var(--hi); letter-spacing: 0.08em; }
+#log .roomdesc { margin-top: 3px; }
+#log .roomhere { margin-top: 4px; color: var(--info); }
+#log .roomblock.kvar { padding: 4px 9px 5px; }
+#log .roomblock.kvar .roomname { color: var(--fg); font-size: 12px; }
+#log .roomblock.kvar .roomhere { margin-top: 1px; }
 #log .varn { color: var(--warn); }
 #log .rost { color: #e3b8f0; letter-spacing: 0.04em; text-shadow: 0 0 6px rgba(227, 184, 240, 0.35); }
 #log .cursor::after {
@@ -1015,11 +1006,6 @@ body.touch .card .num { display: none; }
 #chronLead { color: var(--warn); text-align: center; margin: 0 0 6px; }
 #chronStatus, #chronWait { color: var(--fg); opacity: 0.75; text-align: center; margin: 0 0 18px; font-size: 13px; }
 #chronRounds { display: grid; gap: 10px; }
-/* Tecknen från kartan framför krönikans rader (signRow i app.js). */
-.tecknrad { display: inline-flex; gap: 2px; margin-right: 6px; vertical-align: middle; }
-.tecknrad .sign { min-width: 24px; padding: 0; font-size: 14px; line-height: 1; cursor: default; }
-.tecknrad .sign.model { line-height: 0; }
-.tecknrad .sign.model img { width: 24px; height: 24px; display: block; }
 .chronRound h3 {
   margin: 0 0 2px;
   font-size: 11px;

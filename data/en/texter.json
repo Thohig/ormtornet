@@ -377,8 +377,32 @@
       "The evening light stings your eyes. Not yet. The tower has more to give.",
       "You look out over the slope below. Then you turn back in."
     ],
-    "kant_rum": [
-      "{rum}."
+    "har_varelse": [
+      "{varelse} is here."
+    ],
+    "har_vandrare": [
+      "{namn} is here with you."
+    ],
+    "har_vandrare_flera": [
+      "{namn} and {sista} are here with you."
+    ],
+    "har_kammare": [
+      "The serpent's treasure lies here."
+    ],
+    "har_port": [
+      "A gate leads out of the tower here."
+    ],
+    "har_port_stangd": [
+      "The gate here has closed."
+    ],
+    "har_falla": [
+      "{falla} has already struck here."
+    ],
+    "har_foremal": [
+      "Someone has left {foremal} here."
+    ],
+    "har_tomt": [
+      "The room is empty."
     ],
     "sen_ankomst": [
       "{namn}, the wandering has just ended. You will be part of it when the next tower rises. Press Enter when you are ready (on a touch screen: New tower)."
@@ -577,24 +601,6 @@
     "pack_lite": ["{namn} is here. Something clinks in their pack."],
     "pack_tom": ["{namn} is here. Their pack hangs empty."],
     "stanger_snart": ["The tower closes in a minute if no one is left."],
-    "tecken_rubrik": ["Signs"],
-    "tecken_du": ["You, with a blinking ring."],
-    "tecken_vandrare": ["A wanderer, in their colour."],
-    "tecken_borta": ["A wanderer who has lost contact."],
-    "tecken_skymd": ["Where a wanderer was last seen."],
-    "tecken_forlorad": ["A wanderer the tower has taken."],
-    "tecken_drag": ["Your move, in that direction."],
-    "tecken_port": ["A gate out. Treasure only counts if carried out here."],
-    "tecken_port_stangd": ["A gate that has closed. There is no way out through it."],
-    "tecken_okand": ["A room no one has been in yet."],
-    "tecken_mitten": ["The middle of the tower."],
-    "tecken_kammare": ["The chamber, with a heap of gold."],
-    "tecken_vaken": ["Something in the chamber has woken."],
-    "tecken_foremal": ["An item lies here."],
-    "tecken_krita": ["A chalk arrow, drawn by a wanderer."],
-    "tecken_eko": ["An echo. A wanderer was heard here."],
-    "tecken_falla": ["A trap has sprung here."],
-    "tecken_varelse": ["A creature."],
     "intro_ljud": [
       "click to hear the storm"
     ],

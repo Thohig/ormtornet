@@ -55,7 +55,7 @@ func (g *Game) trigger(p *Player, t *Trap, depth int) {
 	}
 	p.Seen[t.ID] = true
 	p.stats.traps++
-	p.hurt("falla", lowerFirst(t.Namn), trapSign(t))
+	p.hurt("falla", lowerFirst(t.Namn))
 
 	g.logTo(p, t.Namn+"!", "varn")
 	g.logTo(p, pick(t.Texter), "")
@@ -151,7 +151,7 @@ func (g *Game) leaveCellar(p *Player) {
 	g.noteRoom(p)
 	g.newRoomSound(p)
 	g.logTo(p, g.data.Text("kallare_ut", "rum", g.roomName(room)), "info")
-	g.logTo(p, g.describe(p, room, p.X, p.Y), "")
+	g.describeLater(p, room, p.X, p.Y)
 	g.noticeTrail(p)
 	g.pickUp(p)
 	g.logOthers(p, g.hiddenText("kallare_ut_andra", "namn", p.Name, "region", g.data.region(p.X, p.Y, g.size)), "info")

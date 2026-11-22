@@ -399,18 +399,6 @@ func (d *Data) trapByMark(mark string) *Trap {
 	return nil
 }
 
-// signs ger förklaringarna till kartans tecken, från texterna tecken_*.
-// Nyckeln är det som står efter tecken_.
-func (d *Data) signs() map[string]string {
-	m := map[string]string{}
-	for k, v := range d.Texter {
-		if name, ok := strings.CutPrefix(k, "tecken_"); ok && len(v) > 0 {
-			m[name] = v[0]
-		}
-	}
-	return m
-}
-
 // SearchText väljer en text för ett sökresultat.
 func (d *Data) SearchText(key string, vars ...string) string {
 	return fill(pick(d.Sok.Texter[key]), vars...)

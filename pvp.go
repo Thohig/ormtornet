@@ -223,7 +223,7 @@ func (g *Game) hit(a, b *Player, gold int, bakhall bool) {
 	if !killing {
 		g.chronicleHit(a, b, gold, bakhall)
 	}
-	b.hurt("vandrare", a.Name, playerSign(a))
+	b.hurt("vandrare", a.Name)
 	g.damage(b, pvpSkada, false)
 }
 
@@ -237,7 +237,7 @@ func (g *Game) chronicleHit(a, b *Player, gold int, bakhall bool) {
 	if gold > 0 {
 		key += "_byte"
 	}
-	g.chronicleSigns(signs(playerSign(a), playerSign(b)), key, "namn", a.Name, "offer", b.Name, "guld", strconv.Itoa(gold))
+	g.chronicle(key, "namn", a.Name, "offer", b.Name, "guld", strconv.Itoa(gold))
 }
 
 // fightNoise låter resten av tornet höra striden.

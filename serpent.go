@@ -155,7 +155,7 @@ func (g *Game) take(p *Player) {
 	}
 	p.stats.draws = append(p.stats.draws, c.ID)
 	if c.Vaknar {
-		g.chronicleSigns(signs(placeSign("kammare")), "kronika_vaknade", "namn", p.Name)
+		g.chronicle("kronika_vaknade", "namn", p.Name)
 		g.logTo(p, pick(c.Texter), "varn")
 		p.Seen["ormen"] = true
 		g.wakeSerpent()
@@ -231,7 +231,7 @@ func (g *Game) wakeSerpent() {
 		text := fill(pick(o.KastasUt), "forlust", strconv.Itoa(lost), "skada", strconv.Itoa(dmg))
 		g.logTo(p, text, "varn")
 		msgs[p] = wakeMsg{T: "vaknar", Namn: name, Text: text, Inne: true, Forlust: lost, Skada: dmg}
-		p.hurt("ormen", "", placeSign("kammare"))
+		p.hurt("ormen", "")
 		g.damage(p, dmg, true)
 		if p.Status != statusIn {
 			continue

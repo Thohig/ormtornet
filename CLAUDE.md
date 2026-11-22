@@ -47,9 +47,6 @@ Så här skiljer vi på sakerna när användaren ger instruktioner:
   - **översta raden**: solmätaren, **prickarna** (vandrarna i sin färg,
     fyllda när de har valt drag eller är redo, med namn i lobbyn och
     slutet), tiden och knappen Redo (Nytt torn i slutet),
-  - **teckenförklaringen**: listan uppe till vänster på kartan, under
-    rummets namn, med de tecken som står i rummen just nu (`tecken_` i
-    `data/texter.json`),
   - **tecknen**: statusen uppe till höger på kartan (klass, liv, skatt,
     drycker, tillstånd) och föremålen under dem, med förklaringar,
   - **frågetecknet**: styrningen, som ligger bakom ? på kartan,
@@ -62,7 +59,10 @@ Så här skiljer vi på sakerna när användaren ger instruktioner:
   - **sömnmätaren**: hur djupt ormen sover, i panelen Nu i skattkammaren,
   - **panelen Nu**: draget, striden och vad som väntar. Den syns bara när
     den har något att säga. Panelen Vandrare togs bort 2026-11-22,
-  - **loggen**: raderna i högerkolumnen, grupperade per runda.
+  - **loggen**: raderna i högerkolumnen, grupperade per runda. Överst i
+    rundan står **rumsblocket**: rummets namn, beskrivningen när rummet
+    är nytt och vad som finns där (`here.go`, `har_` i
+    `data/texter.json`). Teckenförklaringen togs bort 2026-11-22.
 - **tornets dator**: datorn som kör servern.
 - **språket**: inställningen Språk på värdsidan (`-sprak`), svenska eller
   engelska, för hela tornet (`lang.go`). Översättningarna ligger i
@@ -81,7 +81,6 @@ Så här skiljer vi på sakerna när användaren ger instruktioner:
   `web/app.js`). Den som dör ser **Din vandring**, rundans kort runda för
   runda (`vandring` i tillståndet, `journeyOf` i `chronicle.go`), och i
   slutet ser alla resultaten, epilogen, hela krönikan och sin vandring.
-  Raderna har samma tecken som teckenförklaringen (`signs.go`).
 - **tangenterna vid dörrarna**: piltangenterna som står vid dörrarna i ens
   rum på kartan snett ovanifrån (`ritaTangenter` i `klient/src/karta.ts`).
 - **väskan**: föremålen under tecknen, med en plats för varje föremål man

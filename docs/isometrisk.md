@@ -146,16 +146,11 @@ längre.
   `klient/src/modeller.ts`). Andras väskor är hemliga och syns inte, men
   spelledarbordet visade föremålen på alla, tills det togs bort
   2026-11-22. Förbannade föremål ser ut som andra.
-- Teckenförklaringen med bilder: med kartan snett ovanifrån står en liten
-  bild av modellen i stället för tecknet för vandrarna, varelserna,
-  kammaren och portarna (`bild` i `klient/src/karta.ts`, `legendImage` i
-  `web/map.js`). Sedan 2026-11-22 har fällorna också en bild. Det som står
-  i krita på golvet, som pilarna, har kvar sitt tecken. Bilderna ritas en
-  gång och sparas. Sedan 2026-11-22 står samma bilder på krönikans rader
-  och rundans kort i Din vandring (`signLook` i `web/map.js`, `signs.go`).
-  Där berättar tornet vilken modell en varelse eller fälla har (`lar` i
-  `karta.ts`), så att kartan kan rita den även om vandraren aldrig såg
-  den.
+- Teckenförklaringen med bilder: med kartan snett ovanifrån stod en liten
+  bild av modellen i stället för tecknet (`bild` i `klient/src/karta.ts`).
+  Teckenförklaringen och bilderna på krönikans rader togs bort
+  2026-11-22; loggen säger i ord vad som finns i rummet (`here.go`).
+  `bild` finns kvar i `karta.ts` men används inte.
 - Telefoner och svaga enheter: på en pekskärm ritas högst 30 bilder i
   sekunden. Kartan mäter hur lång tid bildrutorna tar, och går det trögt
   (median över 45 ms på en pekskärm, 30 ms annars) slår den av skuggorna

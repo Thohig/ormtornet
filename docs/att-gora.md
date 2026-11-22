@@ -25,7 +25,7 @@ En riktig kväll behövs för att se:
 - Kartan (2026-11-19): är Mellan på datorn och Nära på telefonen bra
   förval? Går det att zooma med två fingrar på en riktig telefon (bara
   provat med hjul, tangenter och knappar)? Hittar man M och knapparna
-  nere till höger? Hamnar pilarna vid kanten under teckenförklaringen
+  nere till höger? Hamnar pilarna vid kanten under rummets namn
   eller tecknen i kartans övre hörn?
 - Klassvalet: räcker 30 sekunder för att läsa korten? På en telefon står
   korten sedan 2026-11-21 två och två utan den kursiva beskrivningen, med
@@ -48,14 +48,11 @@ En riktig kväll behövs för att se:
 - Färre inställningar (2026-11-22): strid är alltid på från första rundan
   och klasserna alltid med. Blir striden för tidig, och saknar någon att
   kunna spela utan klasser?
-- Teckenförklaringen på kartan (2026-11-19): nu bara tecknen, med
-  betydelsen vid tryck. Hittar spelarna att man kan trycka på dem, och
-  skymmer den fortfarande något på en telefon? I utsnittet tar den med
-  tecken från kända rum som ligger utanför bild.
-- Striderna och tecknen i krönikan (2026-11-22): blir krönikan för lång
-  när många slåss, och är raden med siffror för lång på en telefon? Känns
-  tecknen igen från kartan, och hittar man förklaringen? Rundans kort på
-  kartan under spelet har inga tecken än; ska det ha det?
+- Striderna i krönikan (2026-11-22): blir krönikan för lång när många
+  slåss, och är raden med siffror för lång på en telefon?
+- Rumsblocket i loggen (2026-11-22): förstår spelarna vad figurerna på
+  kartan är utan teckenförklaringen, när bara texten säger vad som finns
+  i rummet? Blir rumsbeskrivningarna för långa på en telefon?
 - Bara den egna porten: hittar spelarna ut, eller går de vilse när de
   inte ser de andra portarna?
 - Tecknen på kartan (2026-11-19): går de att förstå, och skymmer de

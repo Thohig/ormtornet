@@ -10,26 +10,6 @@ const MapView = (() => {
   // åt även för den som har svårt att se skillnad på rött och grönt.
   const PLAYER_COLORS = ["#ffcc66", "#66e0ff", "#ff7a9a", "#9dff7a", "#c9a0ff", "#ff9a3c", "#3fd0b0", "#f2f2f2"];
 
-  // Färgerna på tecknen i teckenförklaringen, där ingen modell står.
-  const COLORS = {
-    unknown: "#3a3d43",
-    exit: "#8d8a82",
-    shut: "#d0503a",
-    gold: "#ffd36b",
-    awake: "#ffe14a",
-    lost: "#a04a3c",
-    mark: "#ff8a6a",
-    monster: "#ff7a5a",
-    chalk: "#f2f0e8",
-    offline: "#5a5d63",
-  };
-  const ARROWS = ["▲", "▶", "▼", "◀"];
-
-  const WAKE_MS = 3500; // så länge ormen syns vaken efter att den har vaknat
-  const PING_MS = 4500; // så länge ett eko syns
-  let wokeAt = -Infinity;
-  let pings = [];
-
   // ---- Utsnittet ----
 
   // Kartan följer det rum vandraren står i, som står i mitten med lika
@@ -181,125 +161,11 @@ const MapView = (() => {
     return p ? { x: p.x, y: p.y } : null;
   }
 
-  // ---- Teckenförklaringen ----
-
-  // De tecken som står på kartan just nu. Nyckeln säger vilken förklaring
-  // som gäller, name är fällans eller varelsens namn. Där kartan har en
-  // modell står en bild av den i stället för tecknet (legendImage).
-  let legendSig = "";
-  let onLegend = null;
-  const LEGEND_ORDER = ["du", "vandrare", "borta", "skymd", "forlorad", "drag", "varelse", "falla",
-    "kammare", "vaken", "port", "port_stangd", "foremal", "krita", "eko", "okand", "mitten"];
-
-  function legendOf(state, now) {
-    const legend = new Map();
-    const note = (key, glyph, color, name) => {
-      if (!legend.has(key)) legend.set(key, { key, glyph, color, name: name || "" });
-    };
-    const lvl = state.reveal ? Math.min(4, Math.max(1, state.level || 1)) : 1;
-
-    // Okända rum: för en vandrare bara rummen bredvid dem den känner till.
-    const size = state.size;
-    const mid = Math.floor(size / 2);
-    const known = new Set(state.rooms.map((r) => r.x + "," + r.y));
-    const near = (x, y) => [[0, 0], [1, 0], [-1, 0], [0, 1], [0, -1]].some(([dx, dy]) => known.has(x + dx + "," + (y + dy)));
-    for (let y = 0; y < size; y++) {
-      for (let x = 0; x < size; x++) {
-        if (!near(x, y) || known.has(x + "," + y)) continue;
-        if (x === mid && y === mid) note("mitten", "◌", COLORS.unknown);
-        else note("okand", "·", COLORS.unknown);
-      }
-    }
-
-    state.rooms.forEach((r) => {
-      if (r.exit >= 0) {
-        if (r.stangd) note("port_stangd", "█", COLORS.shut);
-        else if (lvl === 4 && state.phase === "slut") note("port", "█", COLORS.shut);
-        else if (lvl === 4) note("port", "⩛", COLORS.monster);
-        else note("port", "˄", COLORS.exit);
-      }
-      if (r.mark) note("falla:" + r.mark, r.mark, COLORS.mark, r.markn);
-      if (r.f) note("foremal", "+", COLORS.gold); // ett föremål som någon har lämnat, för spårfinnaren
-      if (r.c >= 0 && r.c !== undefined) note("krita", ARROWS[r.c], COLORS.chalk);
-      if (r.k === "kammare") {
-        note("kammare", "¤", COLORS.gold);
-        if (now - wokeAt < WAKE_MS) note("vaken", "◉", COLORS.awake);
-      }
-    });
-
-    pings = pings.filter((p) => now - p.at < PING_MS);
-    pings.forEach((p) => note("eko", "◎", PLAYER_COLORS[p.slot]));
-
-    state.players.forEach((p) => {
-      const seen = state.lastSeen && state.lastSeen[p.id];
-      if (seen && p.hidden) note("skymd", "○", PLAYER_COLORS[seen.slot] || "#ffffff");
-    });
-    state.players.forEach((p) => {
-      if (p.status === "ute" || p.hidden) return;
-      if (p.status === "forlorad" || p.status === "dod") {
-        note("forlorad", "x", COLORS.lost);
-        return;
-      }
-      const color = p.online ? PLAYER_COLORS[p.slot] || "#fff" : COLORS.offline;
-      if (p.id === state.you) note("du", "◉", color);
-      else if (!p.online) note("borta", "●", color);
-      else note("vandrare", "●", color);
-    });
-
-    (state.monsters || []).forEach((m) => note("varelse:" + m.glyph, m.glyph, COLORS.monster, m.name));
-
-    // Det egna, valda draget.
-    const me = state.players.find((p) => p.id === state.you);
-    const dir = { N: 0, E: 1, S: 2, W: 3 }[state.action];
-    if (me && me.status === "inne" && dir !== undefined) note("drag", ARROWS[dir], PLAYER_COLORS[me.slot]);
-
-    const rank = (e) => LEGEND_ORDER.indexOf(e.key.split(":")[0]);
-    return [...legend.values()].sort((a, b) => rank(a) - rank(b));
-  }
-
-  // tellLegend säger till sidan när tecknen på kartan har ändrats.
-  function tellLegend(state, now) {
-    if (!onLegend) return;
-    const list = legendOf(state, now);
-    const sig = list.map((e) => e.key + e.glyph + e.color + e.name).join("|");
-    if (sig === legendSig) return;
-    legendSig = sig;
-    onLegend(list);
-  }
-
-  function setLegend(fn) {
-    onLegend = fn;
-    legendSig = "";
-    if (lastState) tellLegend(lastState, performance.now());
-  }
-
-  // legendImage ger en bild av modellen för ett tecken i teckenförklaringen,
-  // eller null där tecknet själv står på kartan.
-  function legendImage(e) {
-    return iso ? iso.bild(e.key, e.glyph, e.color) : null;
-  }
-
-  // signLook ger bilden, tecknet och färgen för ett tecken från tornet på en
-  // rad i krönikan eller på rundans kort (signs.go): samma bild som i
-  // teckenförklaringen, eller tecknet i sin färg där ingen bild går att rita.
-  const SIGN_COLORS = { varelse: COLORS.monster, falla: COLORS.mark, foremal: COLORS.gold, kammare: COLORS.gold, port: COLORS.exit, port_stangd: COLORS.shut };
-  function signLook(s) {
-    const slag = s.key.split(":")[0];
-    const color = s.slot !== undefined ? PLAYER_COLORS[s.slot] || "#fff" : SIGN_COLORS[slag] || COLORS.chalk;
-    let img = null;
-    if (iso && slag !== "foremal") {
-      if (s.id) iso.lar(s.key, s.glyph || "", s.id, s.modell);
-      img = iso.bild(s.key, s.glyph || "", color);
-    }
-    return { img, glyph: s.glyph || "", color };
-  }
-
   // ---- Kartan ----
 
   let canvas = null;
   let iso = null;
   let lastState = null;
-  let timer = null; // ritar om teckenförklaringen när ett eko eller ormens uppvaknande är över
 
   // setup gör i ordning kartan på canvas för ett torn av storleken size.
   // Den anropas igen när ett nytt torn har en annan storlek.
@@ -322,14 +188,7 @@ const MapView = (() => {
     if (state.size) towerSize = state.size;
     const now = performance.now();
     aim(wanted(state), now);
-    if (iso) iso.visaTillstand(state); // först, så att den vet vilka varelser som finns när förklaringen frågar efter bilder
-    tellLegend(state, now);
-  }
-
-  // later ritar om teckenförklaringen efter ms, när något tillfälligt är över.
-  function later(ms) {
-    clearTimeout(timer);
-    timer = setTimeout(() => lastState && tellLegend(lastState, performance.now()), ms + 50);
+    if (iso) iso.visaTillstand(state);
   }
 
   function resize() {
@@ -337,18 +196,12 @@ const MapView = (() => {
   }
 
   function ping(x, y, slot) {
-    pings.push({ x, y, slot, at: performance.now() });
     if (iso) iso.eko(x, y, slot);
-    if (lastState) tellLegend(lastState, performance.now());
-    later(PING_MS);
   }
 
   function wake() {
-    wokeAt = performance.now();
     if (iso) iso.vakna();
-    if (lastState) tellLegend(lastState, wokeAt);
-    later(WAKE_MS);
   }
 
-  return { setup, draw, resize, ping, wake, zoom, toggleWhole, setZoomListener, setLegend, legendImage, signLook, PLAYER_COLORS };
+  return { setup, draw, resize, ping, wake, zoom, toggleWhole, setZoomListener, PLAYER_COLORS };
 })();
