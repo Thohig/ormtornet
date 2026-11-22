@@ -955,7 +955,15 @@ body.touch #side { overflow-y: auto; }
   #main { display: block; }
   #mapcol { display: block; }
   #nowBlock { margin-bottom: 8px; }
-  #mapbox { width: 100%; aspect-ratio: 0.95; margin: 6px 0; }
+  /* Kartan fyller höjden mellan översta raden och knapparna, med en rad
+     kvar för Nu. Höjderna mäts i app.js (measureBars). */
+  #mapbox {
+    width: 100%;
+    height: calc(100vh - var(--topp, 64px) - var(--nere, 0px) - 64px);
+    height: calc(100svh - var(--topp, 64px) - var(--nere, 0px) - 64px);
+    min-height: 260px;
+    margin: 6px 0;
+  }
   #side { display: block; overflow: visible; }
   #logwrap { margin-top: 4px; }
   #log {
@@ -976,7 +984,7 @@ body.touch #side { overflow-y: auto; }
   #log .roomblock.lang .roommore { display: inline-block; }
   #log .roomblock.open .roommore { display: none; }
   #hud { max-width: 58%; }
-  body.touch #game.active { padding-bottom: calc(170px + env(safe-area-inset-bottom)); }
+  body.touch #game.active { padding-bottom: calc(var(--nere, 170px) + 8px); }
   body.touch #pad {
     position: fixed;
     left: 0;

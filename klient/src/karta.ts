@@ -1329,6 +1329,13 @@ float puls() {
     const tackt = Math.max(0, Math.min(0.5, this.val.tackt ? this.val.tackt() : 0));
     this.tackt = tackt;
     const asp = (this.bredd * (1 - tackt)) / this.hojd;
+    // En smal, hög karta (telefonen) går närmare när den följer någon:
+    // rummet får mer av bredden, och rombens sidor skärs av.
+    if (f && asp < 1) {
+      const k = Math.max(0.75, Math.min(1, 0.45 + 0.55 * asp));
+      hw *= k;
+      hh *= k;
+    }
     if (hw / hh > asp) hh = hw / asp;
     else hw = hh * asp;
     const hel = hw / (1 - tackt);

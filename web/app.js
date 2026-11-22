@@ -344,6 +344,23 @@ wideScreen.addEventListener("change", () => {
 });
 placeSide();
 
+// measureBars mäter översta raden och knapparna längst ned på telefonen
+// (--topp och --nere), så att kartan fyller höjden mellan dem.
+function measureBars() {
+  const root = document.documentElement.style;
+  root.setProperty("--topp", $("top").offsetHeight + "px");
+  const pad = $("pad");
+  const fixed = pad.offsetHeight > 0 && getComputedStyle(pad).position === "fixed";
+  root.setProperty("--nere", (fixed ? pad.offsetHeight : 0) + "px");
+}
+if (window.ResizeObserver) {
+  const bars = new ResizeObserver(measureBars);
+  bars.observe($("top"));
+  bars.observe($("pad"));
+}
+window.addEventListener("resize", measureBars);
+measureBars();
+
 // toggleLog öppnar och stänger hela loggen när den står på kartan: en låda
 // där de äldre rundorna går att läsa och rulla i (knappen Loggen, L, Esc).
 function toggleLog(open) {
