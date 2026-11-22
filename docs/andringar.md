@@ -6,6 +6,18 @@ eller leder tornet.
 
 ## 2026-11-22
 
+### Spelledaren spelar i samma flik
+
+- Gå in själv på värdsidan byter till spelarsidan i samma flik, utan
+  introt. På GitHub Pages byter ramen i skalet sida, så tornet går vidare.
+- Spelledaren ser "spelledare" i översta raden. I lobbyn och slutet är det
+  en knapp, Värdsidan, och i slutet står Till värdsidan bredvid Nytt torn.
+  De andra vandrarna ser inte vem som är spelledare.
+- Har spelledaren en vandrare under vandringen heter knappen på värdsidan
+  Till spelet.
+- Rättat: Din vandring och slutet kraschade på spelarsidan när en runda
+  hade ett rum men inga rader på kortet.
+
 ### Vandringen börjar i det du ser och hör
 
 - Portrummet beskrivs inte längre i lobbyn. När vandringen börjar kommer

@@ -68,6 +68,18 @@
         "4"
       ],
       "port": 8094
+    },
+    {
+      "name": "ormtornet-sida",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "8000",
+        "-d",
+        "sida"
+      ],
+      "port": 8000
     }
   ]
 }

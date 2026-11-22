@@ -101,6 +101,7 @@ func (g *Game) handBack(p *Player, c *Client) {
 	p.takenOver = false
 	p.awayRound, p.still = 0, 0
 	p.client, c.player = c, p
+	p.vard = c.local
 	g.checkAwait()
 	g.broadcastState()
 	g.logTo(p, g.data.Text("tillbaka"), "syn")

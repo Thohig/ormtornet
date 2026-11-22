@@ -29,6 +29,7 @@ type hostPlayer struct {
 	AI     bool   `json:"ai"`          // en AI-spelare styr medan människan är borta
 	CanAI  bool   `json:"canTakeOver"` // spelledaren kan låta AI:n ta över
 	Chosen bool   `json:"chosen"`      // har valt klass under klassvalet
+	Vard   bool   `json:"vard"`        // spelledarens egen vandrare
 }
 
 type hostView struct {
@@ -83,7 +84,7 @@ func (g *Game) HostView(visible bool) hostView {
 		v.Players = append(v.Players, hostPlayer{
 			Name: p.Name, Slot: p.Slot, Bot: p.bot != nil, Online: p.present(),
 			Ready: p.Ready || p.bot != nil, Status: p.Status,
-			AI: p.takenOver, CanAI: g.canTakeOver(p), Chosen: p.classID != "",
+			AI: p.takenOver, CanAI: g.canTakeOver(p), Chosen: p.classID != "", Vard: p.vard,
 		})
 	}
 	return v

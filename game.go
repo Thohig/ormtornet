@@ -248,6 +248,7 @@ type Player struct {
 	takenOver bool // en AI-spelare styr vandraren medan människan är borta
 	exitAsked int  // rundan då porten frågade om vandraren ville ut tomhänt, 0 om den inte har frågat
 	aiPlayed  bool // AI:n har styrt vandraren någon gång under vandringen
+	vard      bool // vandraren spelas från tornets dator, av spelledaren
 	still     int  // rundor i rad som en ansluten människa inte har valt något drag
 
 	target int // vandraren som ett stridsval den här rundan riktas mot
@@ -656,6 +657,7 @@ type stateMsg struct {
 	// Motstandare är vandraren tornet väljer om du slåss här (pickFoe).
 	Motstandare string       `json:"motstandare,omitempty"`
 	Paused      bool         `json:"paused,omitempty"`
+	Vard        bool         `json:"vard,omitempty"` // spelar från tornets dator: spelledaren
 	SleepText   string       `json:"sleepText,omitempty"`
 	WakeCards   *int         `json:"vaknaKort,omitempty"` // vakna-korten kvar i leken, bara för ormtjusaren
 	Class       *classView   `json:"klass,omitempty"`
@@ -761,6 +763,7 @@ func (g *Game) stateFor(me *Player) stateMsg {
 		MinPlayers: g.cfg.MinPlayers, Action: me.Action,
 		HP: me.HP, MaxHP: g.maxHP(me), Potions: me.Potions, MaxItems: g.data.maxItems(),
 		Stuck: me.Stuck, Cellar: me.Cellar, Poison: me.Poison, Dark: me.Dark,
+		Vard: me.client != nil && me.client.local,
 	}
 	// I mörker ser man bara sig själv och rummet man står i.
 	blind := g.phase == phasePlay && me.Status == statusIn && me.Dark > 0
@@ -984,6 +987,7 @@ func (g *Game) Join(c *Client, rawName string) {
 			}
 			p.awayRound, p.still = 0, 0
 			p.client, c.player = c, p
+			p.vard = c.local
 			g.checkAwait()
 			g.broadcastState()
 			g.logTo(p, g.data.Text("tillbaka"), "syn")
@@ -1023,6 +1027,7 @@ func (g *Game) Join(c *Client, rawName string) {
 	p := &Player{ID: g.nextID, Name: name, Slot: slot, client: c}
 	g.players[slot] = p
 	c.player = p
+	p.vard = c.local
 	g.fitTower(p)
 	if g.phase == phaseEnd {
 		// Vandringen är redan slut: den nya väntar på nästa torn och står

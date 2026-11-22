@@ -90,3 +90,19 @@ func TestSummaryNamesTheFoe(t *testing.T) {
 		t.Fatalf("Bos kort saknar %q", want)
 	}
 }
+
+// En runda med rummet men utan rader ger en tom lista, inte null, så att
+// Din vandring på spelarsidan kan läsa den.
+func TestJourneyRoundHasLines(t *testing.T) {
+	g, a, b := startTwo(t)
+	g.Act(a, actWait, 0)
+	g.Act(b, actWait, 0)
+	for _, jr := range a.player.journal {
+		if jr.Lines == nil {
+			t.Fatalf("runda %d har inga rader alls (null)", jr.Round)
+		}
+	}
+	if len(a.player.journal) == 0 {
+		t.Fatal("ingen runda i vandringen")
+	}
+}

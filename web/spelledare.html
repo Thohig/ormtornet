@@ -65,7 +65,7 @@
   /* Avsnitten står alltid i samma ordning. Under och efter vandringen
      krymper Bjud in till adressen och en knapp för den som kommer sent, så
      att Vid porten och Inför nästa vandring kommer upp. */
-  body.fas-spel #invite .full, body.fas-spel #copyInvite, body.fas-spel #joinSelf,
+  body.fas-spel #invite .full, body.fas-spel #copyInvite, body.fas-spel:not(.har-vandrare) #joinSelf,
   body.fas-slut #invite .full, body.fas-slut #copyInvite { display: none; }
   body.fas-spel #addr, body.fas-slut #addr { font-size: 15px; }
   body.fas-spel #invite .buttons, body.fas-slut #invite .buttons { margin-top: 6px; }
@@ -116,7 +116,7 @@
           <button class="btn main" id="copyInvite" type="button" data-t="kopiera_inbjudan"></button>
           <button class="btn" id="copyAddr" type="button" data-t="kopiera_adressen"></button>
           <button class="btn" id="showAddr" type="button" aria-expanded="false" aria-controls="addrBox" data-t="visa_adressen"></button>
-          <a class="btn" id="joinSelf" href="./?spela" target="_blank" rel="noopener" data-t="ga_in_sjalv"></a>
+          <a class="btn" id="joinSelf" href="./?spela" data-t="ga_in_sjalv"></a>
         </div>
         <p id="copied"></p>
         </section>
@@ -394,6 +394,12 @@ function render(v) {
 
   renderBar(v, canStart);
   for (const f of ["lobby", "klassval", "spel", "slut"]) document.body.classList.toggle("fas-" + f, v.phase === f);
+  // Gå in själv byter till spelarsidan i samma flik. Har spelledaren redan
+  // en vandrare heter knappen Till spelet och tar hen tillbaka till den.
+  const mine = v.players.some((p) => p.vard);
+  document.body.classList.toggle("har-vandrare", mine);
+  $("joinSelf").dataset.t = mine ? "till_spelet" : "ga_in_sjalv";
+  $("joinSelf").textContent = t($("joinSelf").dataset.t);
   // Kommer ingen människa in en stund efter att sidan öppnades fälls hjälpen
   // ut av sig själv, en gång.
   if (v.phase === "lobby" && humans === 0 && !helpShown && Date.now() - openedAt > 90000) {

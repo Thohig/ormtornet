@@ -24,6 +24,7 @@
     "kopiera_inbjudan": "Kopiera inbjudan",
     "kopiera_adressen": "Kopiera adressen",
     "ga_in_sjalv": "Gå in själv",
+    "till_spelet": "Till spelet",
     "inbjudan": "Kom och spela Ormtornet!\nVar på samma wifi som jag, öppna Safari eller Chrome och gå till:\n{adress}",
     "inbjudan_ips": "Fungerar inte det, prova:\n{adresser}",
     "kopierad_inbjudan": "Inbjudan kopierad. Klistra in den i Meddelanden eller er gruppchatt.",

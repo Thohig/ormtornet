@@ -21,6 +21,7 @@
     "kopiera_inbjudan": "Copy invitation",
     "kopiera_adressen": "Copy address",
     "ga_in_sjalv": "Join yourself",
+    "till_spelet": "Back to the game",
     "inbjudan": "Come and play The Serpent Tower!\nBe on the same wifi as me, open Safari or Chrome and go to:\n{adress}",
     "inbjudan_ips": "If that does not work, try:\n{adresser}",
     "kopierad_inbjudan": "Invitation copied. Paste it into Messages or your group chat.",

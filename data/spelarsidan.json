@@ -195,6 +195,10 @@
     "knapp_redo": "Redo",
     "knapp_redo_klar": "Redo ✓",
     "knapp_nytt_torn": "Nytt torn",
+    "knapp_vardsidan": "Värdsidan",
+    "knapp_vardsidan_tips": "Du är spelledare. Värdsidan öppnas i den här fliken, och Gå in själv där tar dig tillbaka.",
+    "topp_spelledare": "spelledare",
+    "kronika_vardsidan": "Till värdsidan",
 
     "_logg": "Loggen i högerkolumnen.",
     "logg_nya": "↑ nya rader",

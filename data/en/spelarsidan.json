@@ -178,6 +178,10 @@
     "knapp_redo": "Ready",
     "knapp_redo_klar": "Ready ✓",
     "knapp_nytt_torn": "New tower",
+    "knapp_vardsidan": "Host page",
+    "knapp_vardsidan_tips": "You are the game master. The host page opens in this tab, and Join yourself there brings you back.",
+    "topp_spelledare": "game master",
+    "kronika_vardsidan": "To the host page",
 
     "logg_nya": "↑ new lines",
     "logg_mer": "more ↓",

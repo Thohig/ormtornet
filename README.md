@@ -185,8 +185,14 @@ alla, väntar tornet: rundan står pausad tills någon kommer tillbaka, så att
 solen inte hinner gå ner medan AI:n spelar ensam. Raden säger att rundan
 är pausad.
 
-Värdsidan visar inga skatter, positioner eller drag, så spelledaren kan spela med i
-en annan flik ("Gå in själv", som leder till introt och sedan lobbyn). Andra datorer i nätverket kommer inte åt sidan.
+Värdsidan visar inga skatter, positioner eller drag, så spelledaren kan spela med.
+"Gå in själv" byter till spelarsidan i samma flik, utan introt. Där står
+"spelledare" i översta raden, och i lobbyn och slutet en knapp Värdsidan;
+i slutet finns också Till värdsidan bredvid Nytt torn. Under vandringen
+finns ingen knapp, eftersom den som går då räknas som frånvarande. Har
+spelledaren en vandrare under vandringen heter knappen på värdsidan Till
+spelet. På GitHub Pages byter ramen i skalet sida, så tornets flik står
+kvar. Andra datorer i nätverket kommer inte åt sidan.
 
 ## Spela
 
@@ -966,7 +972,7 @@ Pages låter webbläsaren spara filerna en stund.
 
 Öppna `http://localhost:8000/`. Introt märker att inget torn är öppet och
 öppnar skalet, som visar introt och sedan värdsidan. "Gå in själv" på
-värdsidan öppnar spelarsidan i en ny flik. Länken under Bjud in går också
+värdsidan byter till spelarsidan i samma flik. Länken under Bjud in går också
 att öppna i en annan webbläsare; den ansluter över WebRTC. Skalets flik
 måste vara öppen så länge tornet ska vara det.
 

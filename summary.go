@@ -72,7 +72,8 @@ func (g *Game) summarize(snap map[*Player]before, wakesBefore int) {
 		room := p.roundRoom
 		p.roundRoom = nil
 		if len(lines) > 0 || room != nil {
-			jr := journeyRound{Round: g.round, Lines: lines}
+			// Lines är aldrig nil, så att spelarsidan alltid får en lista.
+			jr := journeyRound{Round: g.round, Lines: append([]summaryLine{}, lines...)}
 			if room != nil {
 				jr.Room, jr.Here, jr.Heard = room.Namn, room.Har, room.Hor
 			}

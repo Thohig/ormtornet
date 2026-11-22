@@ -313,6 +313,20 @@ body[data-niva="4"] #crt::after { animation: throb 0.95s infinite; }
 #readyBtn .key { margin-left: 8px; color: var(--chalk); font-size: 11px; letter-spacing: 0.1em; }
 #readyBtn.done { color: var(--fg); border-color: var(--faint); cursor: default; }
 #readyBtn[hidden] { display: none; }
+/* Spelledarens märke i översta raden: en knapp till värdsidan i lobbyn och
+   slutet, annars bara ordet. */
+#vard { color: var(--chalk); font-size: 12px; letter-spacing: 0.08em; align-self: center; }
+#vard[hidden] { display: none; }
+#vard button {
+  font: inherit;
+  color: var(--fg);
+  background: none;
+  border: 1px solid var(--faint);
+  border-radius: 4px;
+  padding: 2px 8px;
+  cursor: pointer;
+}
+#vard button:hover, #vard button:focus-visible { color: var(--hi); border-color: var(--dim); outline: none; }
 #turn.urgent { color: var(--warn); }
 
 #main {
@@ -1076,7 +1090,7 @@ body.touch .card .num { display: none; }
 }
 #chronAll .dim { color: var(--chalk); font-size: 13px; }
 #chronAll .rost { color: #e3b8f0; }
-#chronResults[hidden], #chronEpilog[hidden], #chronAll[hidden], #chronOwn[hidden], #chronNext[hidden] { display: none; }
+#chronResults[hidden], #chronEpilog[hidden], #chronAll[hidden], #chronOwn[hidden], #chronNext[hidden], #chronHost[hidden] { display: none; }
 #chronNext:disabled { opacity: 0.6; cursor: default; }
 /* Pergamentkanten runt kartan snett ovanifrån: en tunn ram och mörker
    mot kanterna, som på ett gammalt spelbräde. */

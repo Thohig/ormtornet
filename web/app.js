@@ -646,6 +646,7 @@ function renderChron() {
   next.hidden = !end;
   next.textContent = me && me.ready ? t("nu_vantar") : t("knapp_nytt_torn");
   next.disabled = !!(me && me.ready);
+  $("chronHost").hidden = !end || !state.vard;
   const box = $("chronRounds");
   box.innerHTML = "";
   if (!v.rundor.length) {
@@ -678,7 +679,7 @@ function renderChron() {
       el.textContent = r.hor;
       d.appendChild(el);
     }
-    r.rader.forEach((l) => {
+    (r.rader || []).forEach((l) => {
       const p = document.createElement("div");
       p.textContent = l.text;
       if (l.ormkort) p.prepend(miniCard(l.ormkort));
@@ -692,6 +693,7 @@ function renderChron() {
   $("chronWait").textContent = end ? (touch ? "" : t("slut_nytt_torn")) : t("vandring_vantar");
 }
 $("chronNext").addEventListener("click", () => send({ t: "ready" }));
+$("chronHost").addEventListener("click", goHost);
 $("chronMap").addEventListener("click", () => {
   chronMap = true;
   showPhase();
@@ -1318,7 +1320,35 @@ function renderTop() {
   else if (state.sun <= state.sunMax / 4) m.classList.add("low");
   el.appendChild(m);
   renderCrew();
+  renderHost();
   updateTimer();
+}
+
+// renderHost visar för spelledaren, den som spelar från tornets dator, att
+// hen är det. I lobbyn och slutet är det en knapp till värdsidan; under
+// vandringen bara ordet, eftersom den som går då räknas som frånvarande.
+function renderHost() {
+  const el = $("vard");
+  el.hidden = !state.vard;
+  el.textContent = "";
+  if (!state.vard) return;
+  if (state.phase === "lobby" || state.phase === "slut") {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.textContent = t("knapp_vardsidan");
+    b.title = t("knapp_vardsidan_tips");
+    b.setAttribute("aria-label", b.textContent);
+    b.addEventListener("click", goHost);
+    el.appendChild(b);
+  } else {
+    el.textContent = t("topp_spelledare");
+  }
+}
+
+// goHost går till värdsidan i samma flik. Vandraren står kvar i lobbyn en
+// stund och tas tillbaka med Till spelet.
+function goHost() {
+  location.href = "spelledare.html";
 }
 
 // Vandrarna som prickar i sin färg i översta raden. Under vandringen är
@@ -1649,6 +1679,11 @@ const Intro = (() => {
       reveal = !!info.avslojande;
       if (!reveal) $("intro").classList.add("invigd");
       toHostPage = info.vard && !wantsToPlay;
+      // Spelledaren som kommer från värdsidan har redan sett introt.
+      if (info.vard && wantsToPlay) {
+        finish();
+        return;
+      }
       $("listen").textContent = (touch && info.ljudTryck) || info.ljud || "";
       if (state && mapReady) MapView.draw(state);
       rumors = (info.rykten || []).slice().sort(() => Math.random() - 0.5);
