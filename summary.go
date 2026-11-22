@@ -194,7 +194,11 @@ func (g *Game) summaryFor(p *Player, b before, woke bool) []summaryLine {
 		}
 	}
 	if p.Potions > b.potions {
-		add(t("sam_dryck", "antal", itoa(p.Potions-b.potions)), "")
+		if n := p.Potions - b.potions; n > 1 {
+			add(t("sam_dryck_flera", "antal", itoa(n)), "")
+		} else {
+			add(t("sam_dryck", "antal", itoa(n)), "")
+		}
 	}
 	for _, it := range p.items {
 		if !slices.Contains(b.items, it.ID) {

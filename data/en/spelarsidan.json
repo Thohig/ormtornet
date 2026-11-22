@@ -101,7 +101,7 @@
     "karta_utan_webgl": "The map cannot be drawn here, because this browser lacks WebGL. The log and the Now panel work as usual.",
     "ormkort_guld": "+{antal} gold",
     "nu_ormen": "The serpent",
-    "nu_vaknakort": "{antal} waking cards left in the deck",
+    "nu_vaknakort": "Waking cards left in the deck: {antal}",
     "vakenkort_forlust": "gold −{guld} · lives −{liv}",
     "zoom_nara": "Near",
     "zoom_mellan": "Middle",

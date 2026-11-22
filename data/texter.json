@@ -774,6 +774,7 @@
     "sam_guld_plus": ["+{antal} guld. Du bär {skatt}."],
     "sam_guld_minus": ["−{antal} guld. Du bär {skatt}."],
     "sam_dryck": ["+{antal} dryck."],
+    "sam_dryck_flera": ["+{antal} drycker."],
     "sam_foremal": ["Du hittade {foremal}."],
     "sam_fast": ["Du sitter fast i {antal} rundor."],
     "sam_fast_en": ["Du sitter fast en runda."],

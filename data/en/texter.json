@@ -736,6 +736,7 @@
     "sam_guld_plus": ["+{antal} gold. You carry {skatt}."],
     "sam_guld_minus": ["−{antal} gold. You carry {skatt}."],
     "sam_dryck": ["+{antal} potion."],
+    "sam_dryck_flera": ["+{antal} potions."],
     "sam_foremal": ["You found {foremal}."],
     "sam_fast": ["You are stuck for {antal} rounds."],
     "sam_fast_en": ["You are stuck for one round."],
