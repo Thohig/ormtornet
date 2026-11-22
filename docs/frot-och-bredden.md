@@ -1,6 +1,9 @@
 # Samlat förslag: fröet, hela bredden och värdsidan under vandringen
 
-Förslag 2026-11-22. Inget är byggt. Förslaget samlar tre saker: fröet
+Förslag 2026-11-22, byggt samma dag i steg 1–6. En avvikelse: loggen
+står **nere** till vänster på kartan, med den senaste rundan nederst, och
+inte uppe. Då syns alltid de senaste raderna även när en runda är lång,
+och knapparna på en pekskärm står under loggen. Förslaget samlar tre saker: fröet
 som ett eget avsnitt på värdsidan, spelskärmen över hela bredden med
 loggen på kartan, och hur spelledaren når värdsidan under vandringen
 utan att räknas som frånvarande. Varje öppen fråga har ett svar nedan,
@@ -60,7 +63,8 @@ sin enda kolumn med loggen under kartan.
 
 - **Kartan fyller hela bredden** under översta raden. Panelen Nu står
   kvar som en rad under kartan, över hela bredden.
-- **Loggen står på kartan, uppe till vänster**, cirka 40 tecken bred.
+- **Loggen står på kartan, nere till vänster** (byggt så; först tänkt
+  uppe), cirka 40 tecken bred.
   Höger sida har redan tecknen, ormkortet och zoomen, och kortet står nere
   i mitten.
 - **Ingen ruta.** Texten är ljus med en mjuk, mörk skugga runt varje
@@ -102,7 +106,7 @@ sin enda kolumn med loggen under kartan.
 
 | Fråga | Svar |
 | --- | --- |
-| Uppe till vänster eller nere till vänster? | Uppe, eftersom man läser uppifrån och knapparna på en surfplatta behöver det nedre hörnet. |
+| Uppe till vänster eller nere till vänster? | Nere, med den senaste rundan nederst, så att de senaste raderna alltid syns; knapparna på en surfplatta står under loggen. |
 | Tonar den förra rundan bort? | Den står kvar svagt en runda och försvinner sedan. |
 | Behövs lådan med hela loggen? | Ja, de äldre rundorna ska gå att läsa under vandringen, inte bara i krönikan. |
 

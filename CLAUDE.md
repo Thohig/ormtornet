@@ -28,7 +28,7 @@ Så här skiljer vi på sakerna när användaren ger instruktioner:
 - **värdsidan**: sidan på `/spelledare` på tornets dator (`host.go`,
   `web/spelledare.html`). Överst står **raden** med fasen och knappen
   som behövs just nu. Avsnitten heter Bjud in, Vid porten, Inför nästa
-  vandring, Kommer någon inte in?, Läs om innehållet och Stäng tornet, och
+  vandring, Fröet, Kommer någon inte in?, Läs om innehållet och Stäng tornet, och
   står alltid i den ordningen. På en bred skärm står de i två kolumner,
   Bjud in och Vid porten till vänster och resten till höger. Under Bjud
   in står adressen (på Pages länken) inte utskriven; knapparna kopierar
@@ -54,8 +54,9 @@ Så här skiljer vi på sakerna när användaren ger instruktioner:
     fyllda när de har valt drag eller är redo, med namn i lobbyn och
     slutet), tiden, knappen Redo (Nytt torn i slutet) och, för
     spelledaren, **märket**: ordet spelledare, som i lobbyn och slutet är
-    knappen Värdsidan (`renderHost` i `web/app.js`, `vard` i tillståndet
-    för den som är ansluten från tornets dator),
+    knappen Värdsidan och under vandringen öppnar värdsidan i en ny flik
+    (bara ordet på Pages) (`renderHost` i `web/app.js`, `vard` i
+    tillståndet för den som är ansluten från tornets dator),
   - **tecknen**: statusen uppe till höger på kartan (klass, liv, skatt,
     drycker, tillstånd) och föremålen under dem, med förklaringar,
   - **frågetecknet**: styrningen, som ligger bakom ? på kartan,
@@ -68,7 +69,10 @@ Så här skiljer vi på sakerna när användaren ger instruktioner:
   - **sömnmätaren**: hur djupt ormen sover, i panelen Nu i skattkammaren,
   - **panelen Nu**: draget, striden och vad som väntar, som en rad under
     kartan (`#nowBlock`). Den syns bara när den har något att säga. Panelen Vandrare togs bort 2026-11-22,
-  - **loggen**: raderna i högerkolumnen, grupperade per runda under
+  - **loggen**: raderna, på en bred skärm som text utan ruta nere till
+    vänster **på kartan** (`placeSide` i `web/app.js`), med den senaste
+    rundan nederst och den förra svag, och hela loggen i **lådan** (knappen
+    Loggen, L); på telefonen under kartan. Grupperade per runda under
     rubrikerna Före vandringen (lobbyn), Vandringen börjar (klassvalet och
     det första rumsblocket) och Runda 1, 2 … Bara den
     senaste rundan står i bild; de äldre ligger under strecket "tidigare".
@@ -92,6 +96,9 @@ Så här skiljer vi på sakerna när användaren ger instruktioner:
   eller står still, alltså inte väljer något drag (`takeover.go`). Ett eget
   drag, eller att komma tillbaka, ger vandraren tillbaka.
 - **tornets dator**: datorn som kör servern.
+- **fröet**: talet som avgör tornet; samma frö och samma drag ger samma
+  vandring (`seed.go`). Avsnittet Fröet på värdsidan visar den här
+  vandringens frö och nästa vandrings, som går att skriva in eller slumpa.
 - **språket**: inställningen Språk på värdsidan (`-sprak`), svenska eller
   engelska, för hela tornet (`lang.go`). Översättningarna ligger i
   `data/en/` med bara texter.
@@ -201,5 +208,9 @@ Skriv dit när ett steg är klart.
   farre-kommandon.md.
 - [docs/vardsida-tva-kolumner.md](docs/vardsida-tva-kolumner.md):
   värdsidan i två kolumner på en bred skärm. Allt är byggt.
+- [docs/frot-och-bredden.md](docs/frot-och-bredden.md): avsnittet Fröet
+  på värdsidan, spelskärmen över hela bredden med loggen på kartan och
+  lådan med hela loggen, och märket som öppnar värdsidan i en ny flik.
+  Allt är byggt.
 - [docs/slumpade-namn.md](docs/slumpade-namn.md): tornet ger namnen och
   namnrutan är borta. Steg 1–2 är byggda; Nytt namn i lobbyn valdes bort.

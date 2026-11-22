@@ -6,6 +6,24 @@ eller leder tornet.
 
 ## 2026-11-22
 
+### Fröet, hela bredden och loggen på kartan
+
+- Värdsidan har ett nytt avsnitt, **Fröet**, efter Inför nästa vandring.
+  Där står den här vandringens frö med Kopiera och, i slutet, Samma igen.
+  Fältet Nästa vandring visar alltid fröet nästa vandring får; det går
+  att skriva in ett eget eller slumpa ett nytt. Fröet står inte längre i
+  Vid porten.
+- På en bred skärm fyller kartan hela bredden. Loggen står som text utan
+  ruta nere till vänster på kartan, med skugga runt bokstäverna, och
+  kartan ställer sig bredvid den. Den senaste rundan står nederst och den
+  förra svagt ovanför. Knappen Loggen, eller L, öppnar hela loggen i en
+  låda. Kompassen står ovanför zoomen.
+- På en surfplatta och en telefon på bredden står knapparna nere till
+  vänster på kartan. En låg skärm får en smalare logg med bara den
+  senaste rundan. Telefonen på höjden är som förut.
+- Under vandringen öppnar märket spelledare värdsidan i en ny flik, så
+  att spelledarens vandrare inte blir frånvarande. Inte på Pages.
+
 ### Zoomen glider
 
 - Scrollhjulet och två fingrar zoomar kartan gradvis i stället för att

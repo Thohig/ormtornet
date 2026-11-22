@@ -72,7 +72,7 @@ Flaggor:
 - `-simulera 500` spelar 500 vandringar med bara AI-spelare och skriver hur det gick, utan att öppna tornet (se Simulera nedan)
 - `-kontrollera` kontrollerar datafilerna och avslutar, utan att öppna tornet
 - `-sida mapp` skriver sidorna för GitHub Pages till mappen och avslutar. Använd hellre `verktyg/bygg-sida.sh`, som också bygger tornet (se Tornet i webbläsaren nedan)
-- `-fro 0` frö för den första vandringen. Varje vandring skriver sitt frö i terminalen och på värdsidan. Startar du med samma frö och vandrarna gör samma drag blir tornet detsamma, rum för rum, så att en konstig vandring kan spelas upp igen. `0` ger ett slumpat frö
+- `-fro 0` frö för den första vandringen. Varje vandring skriver sitt frö i terminalen och under Fröet på värdsidan, där nästa vandrings frö också går att skriva in eller slumpa. Startar du med samma frö och vandrarna gör samma drag blir tornet detsamma, rum för rum, så att en konstig vandring kan spelas upp igen. `0` ger ett slumpat frö
 - `-avslojande=false` stänger av avslöjandet: ingen berättelse, inga varsel, ingen invigning och inget tornet som förändras
 - `-oppna` öppnar introt i webbläsaren när servern har startat; på den här datorn leder det till värdsidan
 - `-vaken` håller datorn vaken så länge servern är igång
@@ -122,8 +122,8 @@ rundan och solen, eller att vandringen är slut, hur många människor och
 AI-spelare som är här och vilka som är borta. Där ligger också knappen som
 behövs just nu: Starta nu före vandringen.
 
-Avsnitten står alltid i samma ordning: Bjud in, Vid porten och Inför
-nästa vandring. På en skärm som är minst 1100 punkter bred står de i två
+Avsnitten står alltid i samma ordning: Bjud in, Vid porten, Inför
+nästa vandring och Fröet. På en skärm som är minst 1100 punkter bred står de i två
 kolumner under raden: Bjud in och Vid porten till vänster, Inför nästa
 vandring och resten till höger, med förklaringen under varje val. På en
 smalare skärm är sidan en kolumn. Under Bjud in står inte adressen (eller
@@ -134,6 +134,15 @@ adressen, så att resten kommer upp. Längst ner ligger Kommer någon inte in? o
 innehållet, hopfällda, och en liten knapp som stänger tornet. Har ingen
 människa kommit in en och en halv minut efter att sidan öppnades fälls
 Kommer någon inte in? ut av sig själv.
+
+Under Fröet står den här vandringens frö, under vandringen och i slutet,
+med Kopiera och, i slutet, Samma igen, som ger nästa vandring samma frö.
+Fältet Nästa vandring visar alltid fröet nästa vandring får: tornet
+slumpar det i förväg, Slumpa drar ett nytt, och ett eget frö (1–999 999
+999) skrivs in och sparas med Använd eller Enter. Fröet gäller bara nästa
+vandring; vandringen efter får ett nytt. I lobbyn byggs tornet om med
+fröet, så att också portarna blir desamma. Samma frö ger samma torn när
+lika många vandrar, med samma svårighet och samma drag.
 
 Under Inför nästa vandring väljer spelledaren det här. Under formuläret förklarar "Vad inställningarna gör", hopfälld, varje
 inställning med några meningar (`forkl_*` i `vardsidan.json`).
@@ -189,10 +198,13 @@ Värdsidan visar inga skatter, positioner eller drag, så spelledaren kan spela 
 "Gå in själv" byter till spelarsidan i samma flik, utan introt. Där står
 "spelledare" i översta raden, och i lobbyn och slutet en knapp Värdsidan;
 i slutet finns också Till värdsidan bredvid Nytt torn. Under vandringen
-finns ingen knapp, eftersom den som går då räknas som frånvarande. Har
-spelledaren en vandrare under vandringen heter knappen på värdsidan Till
-spelet. På GitHub Pages byter ramen i skalet sida, så tornets flik står
-kvar. Andra datorer i nätverket kommer inte åt sidan.
+öppnar ett tryck på "spelledare" värdsidan i en ny flik, så att
+spelarsidan är kvar och vandraren inte räknas som frånvarande; Till
+spelet i den fliken går tillbaka till spelets flik. Har spelledaren en
+vandrare under vandringen heter knappen på värdsidan Till spelet. På
+GitHub Pages byter ramen i skalet sida, så tornets flik står kvar, och
+under vandringen är "spelledare" bara ordet, eftersom den som går till
+värdsidan då räknas som frånvarande. Andra datorer i nätverket kommer inte åt sidan.
 
 ## Spela
 
@@ -229,8 +241,9 @@ den som dör och för alla i slutet (se slutet nedan och Strider):
      tagit är gråa. Den som inte har valt när tiden är slut får ett av de
      lediga korten,
    - **vandringen**: kartan, solmätaren, vandrarna som prickar i sin färg
-     i översta raden, panelen Nu som en rad under kartan, och loggen, som
-     fyller hela högerkolumnen. En prick är fylld när vandraren har valt drag
+     i översta raden, panelen Nu som en rad under kartan, och loggen. På en
+     bred skärm fyller kartan hela bredden och loggen står på kartan, nere
+     till vänster (se nedan). En prick är fylld när vandraren har valt drag
      (i lobbyn när den är redo), ✕ är död och ◌ ute; håll musen över den,
      eller tryck, för namn, klass och läge. I lobbyn och slutet står namnet
      bredvid pricken, och knappen Redo (Nytt torn i slutet) står till
@@ -277,9 +290,16 @@ den som dör och för alla i slutet (se slutet nedan och Strider):
      använda, som frånkopplade vandrare och tagna kort, är utgråat.
      I loggen säger ett tecken i marginalen vad slags rad det är (`!` fara,
      `›` det du ser, `·` besked, `❝` tornet talar till dig, `✎` krita).
-     Varje runda har en rubrik, och den senaste rundan står överst och
-     fyller hela loggens höjd. De äldre rundorna ligger under strecket
-     "tidigare ↓" och syns bara när man rullar ner. Inom en runda står raderna i den ordning de hände. Den första
+     Varje runda har en rubrik. På en bred skärm står loggen som text
+     utan ruta nere till vänster på kartan, med en mörk skugga runt
+     bokstäverna och en svag toning, så att kartan syns mellan raderna och
+     går att klicka genom texten. Den senaste rundan står nederst, den
+     förra svagt ovanför, och de äldre syns inte. Kartan ställer sig i den
+     del som loggen inte täcker. Knappen Loggen under texten, eller L,
+     öppnar hela loggen i en låda på kartan; den stängs med L, Esc eller ett
+     klick utanför. I lådan, och på en smal skärm, står den senaste rundan
+     överst och fyller hela loggens höjd, och de äldre rundorna ligger
+     under strecket "tidigare ↓" och syns bara när man rullar ner. Inom en runda står raderna i den ordning de hände. Den första
      raden i en runda skrivs fram tecken för tecken, resten kommer en hel
      rad i taget. Har man rullat ner för att läsa ligger texten kvar där,
      och "↑ nya rader" tar en tillbaka upp. Ligger loggen efter
@@ -327,6 +347,7 @@ fram.
 | P          | parera (i strid)                  |
 | U eller E  | undanmanöver (i strid; E för evade på engelska) |
 | Z          | byt zoom på kartan: Nära, Mellan, Långt, Allt |
+| L          | hela loggen (på en bred skärm)    |
 | Enter      | redo / spela igen                 |
 | V          | viska till tornet (från nivå 2)   |
 
@@ -347,7 +368,11 @@ trycka på pilarna vid dörrarna. På en smal skärm står allt i en kolumn:
 översta raden fast högst upp, kartan, raden Nu och loggen, och knapparna
 fast längst ner. Sidan rullar, och loggen rullar med den. Den senaste
 rundan tar så mycket plats att de äldre bara syns när man rullar ner, och
-en lång rumsbeskrivning visar tre rader med "mer ↓" för resten. Introt fyller skärmen, så ett tryck var som
+en lång rumsbeskrivning visar tre rader med "mer ↓" för resten. På en
+surfplatta, och en telefon på bredden, står loggen på kartan som på en
+dator och knapparna nere till vänster under den. En låg skärm (telefonen
+på bredden) får en smalare logg med bara den senaste rundan, tre rader
+rumsbeskrivning med "mer ↓", mindre knappar och panelen Nu på en rad. Introt fyller skärmen, så ett tryck var som
 helst räknas. I klassvalet står korten två och två och nedräkningen fast
 överst. Står telefonen på ljudlöst hörs inget ljud.
 
@@ -886,6 +911,7 @@ Beskrivningarna för rummen ligger under nivåerna `"1"` till `"4"`.
 
 - `main.go` startar webbservern, läser flaggorna och skriver ut adressen
 - `game.go` tornet, rummen, vandrarna, rundorna och vad var och en ser
+- `seed.go` fröet: nästa vandrings frö, som spelledaren kan skriva in eller slumpa
 - `settings.go` spelledarens inställningar och hur de sparas
 - `host.go` värdsidan och dess adresser
 - `activity.go` autostopp för ett bortglömt torn
