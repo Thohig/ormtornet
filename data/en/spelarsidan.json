@@ -70,7 +70,7 @@
     "tecken_fast_en": "Held fast for {n} round. You cannot leave here.",
     "tecken_fast_flera": "Held fast for {n} rounds. You cannot leave here.",
     "tecken_gift": "Poisoned. You lose lives every round until the poison passes. A potion draws it out.",
-    "tecken_morker": "The lantern is out. You see only the chamber you stand in.",
+    "tecken_morker": "The lantern is out. You see only the room you stand in, but not its doors: you must feel your way.",
     "tecken_invigd": "The tower has heard you.",
     "tecken_viska": "{tryck} to whisper to the tower.",
     "tecken_namndelar": "Signs you have found in the walls. The dots are the ones you are missing.",

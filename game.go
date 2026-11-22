@@ -767,7 +767,8 @@ func (g *Game) stateFor(me *Player) stateMsg {
 		Stuck: me.Stuck, Cellar: me.Cellar, Poison: me.Poison, Dark: me.Dark,
 		Vard: me.client != nil && me.client.local,
 	}
-	// I mörker ser man bara sig själv och rummet man står i.
+	// I mörker ser man bara sig själv och rummet man står i, utan dess
+	// dörrar och port.
 	blind := g.phase == phasePlay && me.Status == statusIn && me.Dark > 0
 	st.Sleep = -1
 	if g.phase == phasePlay && me.Status == statusIn && me.Cellar == 0 && g.rooms[me.Y][me.X].Kind == "kammare" {
@@ -840,6 +841,13 @@ func (g *Game) stateFor(me *Player) stateMsg {
 			if r.HasExit {
 				rv.Exit = int(r.Exit)
 				rv.Shut = r.Shut
+			}
+			if blind {
+				// I mörkret ser man inte dörrarna eller porten och får pröva
+				// sig fram (actPlayer): kartan ritar hela murar och inga
+				// tangenter vid dörrarna.
+				rv.D = [4]bool{}
+				rv.Exit, rv.Shut = -1, false
 			}
 			st.Rooms = append(st.Rooms, rv)
 		}

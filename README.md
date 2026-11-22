@@ -280,8 +280,8 @@ stället för lobbyn. Den som vill spela där öppnar `/?spela` eller trycker
 Spelet går i rundor. Alla väljer sitt drag samtidigt, och när alla har valt
 (eller turtiden tar slut) utförs alla drag på en gång. Du kan ändra dig tills
 dess. Den som inte hinner välja blir stående. Ett steg mot en vägg avvisas
-direkt, så att ett feltryck inte kostar rundan; i mörker får man pröva sig
-fram.
+direkt, så att ett feltryck inte kostar rundan; i mörker syns inte dörrarna
+på kartan, och man får pröva sig fram.
 
 | Tangent    | Drag                              |
 |------------|-----------------------------------|

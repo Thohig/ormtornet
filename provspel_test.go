@@ -161,3 +161,27 @@ func TestReloadMidGameRetellsRoom(t *testing.T) {
 		t.Fatal("rummet skickades inte igen")
 	}
 }
+
+// I mörkret ser man inte dörrarna eller porten i rummet man står i, så
+// kartan visar inga tangenter; ett steg mot en vägg kostar rundan.
+func TestDarkHidesDoors(t *testing.T) {
+	g, a, _ := startTwo(t)
+	p := a.player
+	room := &g.rooms[p.Y][p.X]
+	if !room.HasExit {
+		t.Fatal("vandraren står inte i portrummet")
+	}
+	p.Dark = 2
+	st := g.stateFor(p)
+	if len(st.Rooms) != 1 {
+		t.Fatalf("i mörkret ska bara det egna rummet synas, inte %d", len(st.Rooms))
+	}
+	rv := st.Rooms[0]
+	if rv.D != [4]bool{} || rv.Exit != -1 {
+		t.Fatalf("dörrarna eller porten syns i mörkret: %+v", rv)
+	}
+	p.Dark = 0
+	if rv := g.stateFor(p).Rooms; len(rv) == 0 || rv[0].Exit < 0 {
+		t.Fatal("porten syns inte i ljuset")
+	}
+}

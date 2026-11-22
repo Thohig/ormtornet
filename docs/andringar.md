@@ -17,6 +17,8 @@ Rättat efter en timmes provspel (se
   börjar inte längre en ny runda i loggen. Raden hamnar under rundan som
   står i bild, så att rummet man står i inte försvinner under "tidigare"
   på telefonen.
+- I mörkret syns inte dörrarna och porten i rummet man står i, och inga
+  tangenter vid dörrarna: man får pröva sig fram, som reglerna redan sa.
 - Knappen Drick syns bara när man har en dryck.
 - Tangenterna vid dörrarna krymper när rummet är litet på skärmen och
   ligger inte längre över varandra på telefonen.
