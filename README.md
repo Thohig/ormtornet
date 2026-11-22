@@ -879,8 +879,8 @@ järnstänger"), och `kort`, `kort_bestamd` och `kort_igen` för varelserna
 `kort_igen` används i striden från andra rundan. Ett test kräver att alla
 har dem på båda språken.
 
-Fällor, varelser och föremål har ett fält `bild`: motivet på deras
-spelkort, ett av dem som `web/kort.js` kan rita. Tornet säger till om
+Fällor, varelser, föremål och klasser har ett fält `bild`: motivet på
+deras spelkort eller klasskort, ett av dem som `web/kort.js` kan rita. Tornet säger till om
 bilden inte finns. `verktyg/kortbilder.html` visar alla motiv; öppna den
 med `python3 -m http.server 8095` i repots rot och
 <http://localhost:8095/verktyg/kortbilder.html>.

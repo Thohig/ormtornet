@@ -850,6 +850,7 @@ function renderChoose() {
     add("num", String(i + 1));
     add("num low", String(i + 1));
     add("cname", (c.tecken ? c.tecken + " " : "") + c.namn);
+    add("cbild", "").innerHTML = Kort.bild(c.bild);
     add("desc", c.beskrivning);
     const stats = [];
     if (c.liv) stats.push(t(c.liv > 0 ? "klasskort_liv_mer" : "klasskort_liv_mindre", { n: Math.abs(c.liv) }));

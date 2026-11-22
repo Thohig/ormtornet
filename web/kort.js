@@ -436,6 +436,72 @@ ${[-60, -30, 0, 30, 60].map((a) => { const r = (a - 90) * Math.PI / 180; return 
 <path d="M26 56h20M54 56h20M26 78h20M54 78h20" stroke="${JARN}" stroke-width="2.4"/>
 <path d="M10 66h8l-3 -3M10 66l5 3M90 66h-8l3 -3M90 66l-5 3" fill="none" stroke="${BRUN}" stroke-width="1.6" stroke-linecap="round"/>`;
 
+  // ---- Klasserna ----
+
+  // Legoknekten: en järnhatt över en sköld och ett svärd.
+  BILDER.legoknekt = () => `${ljus}
+<path d="M28 82l44 -50" stroke="#b8b4ac" stroke-width="4" stroke-linecap="round"/>
+<path d="M30 74l10 10" stroke="${BRUN}" stroke-width="4" stroke-linecap="round"/>
+<path d="M50 40l22 7q0 26 -22 40q-22 -14 -22 -40z" fill="#8a7a5a" stroke="${BLAECK}" stroke-width="1.4"/>
+<path d="M50 46v34M34 56h32" stroke="${BRUN}" stroke-width="2"/>
+<path d="M28 30q22 -22 44 0z" fill="${JARN}" stroke="${BLAECK}" stroke-width="1.2"/>
+<path d="M20 31h60" stroke="${JARN}" stroke-width="4" stroke-linecap="round"/>`;
+
+  // Tjuven: en hand som sträcker sig efter en pung.
+  BILDER.tjuv = () => `${ljus}
+<path d="M58 84q-12 0 -12 -14q0 -10 8 -14h12q8 4 8 14q0 14 -16 14z" fill="#7a5a34" stroke="${BLAECK}" stroke-width="1.2"/>
+<path d="M54 56q6 -6 12 0" fill="none" stroke="${BRUN}" stroke-width="2.4"/>
+<ellipse cx="60" cy="88" rx="5" ry="2" fill="${GULD}"/><ellipse cx="70" cy="86" rx="4" ry="1.8" fill="${GULD}"/>
+<path d="M10 30q14 2 24 10l10 8q4 4 0 7q-4 2 -8 -2l-4 -3 6 8q2 5 -3 5l-8 -8q-12 -6 -17 -14z" fill="#4a3a2c" stroke="${BLAECK}" stroke-width="1"/>
+<path d="M36 46l8 -2M38 50l7 0" stroke="${BLAECK}" stroke-width="1" opacity="0.6"/>`;
+
+  // Örtkvinnan: en mortel med örter.
+  BILDER.ortkvinna = () => `${ljus}
+<path d="M28 58h44q-2 22 -22 26q-20 -4 -22 -26z" fill="#9a8a6e" stroke="${BLAECK}" stroke-width="1.4"/>
+<path d="M26 58h48" stroke="${BLAECK}" stroke-width="2"/>
+<path d="M56 62l18 -34" stroke="#8a7a64" stroke-width="5" stroke-linecap="round"/>
+${[[34, 54, -30], [42, 50, -10], [48, 52, 20], [38, 46, -40]].map(([x, y, a]) => `<path d="M${x} ${y}q-2 -14 4 -22" fill="none" stroke="${GRON}" stroke-width="1.6" transform="rotate(${a} ${x} ${y})"/><ellipse cx="${x}" cy="${y - 16}" rx="3" ry="5" fill="#7a9a4a" transform="rotate(${a} ${x} ${y})"/>`).join("")}`;
+
+  // Kartritaren: en karta och en passare.
+  BILDER.kartritare = () => `${ljus}
+<path d="M16 30l20 -6 22 6 26 -6v52l-26 6 -22 -6 -20 6z" fill="#efe6d0" stroke="${BRUN}" stroke-width="1.2"/>
+<path d="M36 24v52M58 30v52" stroke="${STEN}" stroke-width="0.8"/>
+<path d="M22 50h10v-12h14v20h14v-10h16" fill="none" stroke="${BRUN}" stroke-width="1.6"/>
+<path d="M24 66l8 -4M68 40l6 6M74 40l-6 6" stroke="${ROD}" stroke-width="1.4"/>
+<path d="M60 88l10 -30 10 30" fill="none" stroke="${JARN}" stroke-width="2"/><circle cx="70" cy="58" r="2.4" fill="${JARN}"/>`;
+
+  // Ormtjusaren: en orm som reser sig ur en korg vid en flöjt.
+  BILDER.ormtjusare = () => `${ljus}
+<path d="M26 64h36l-4 24H30z" fill="#a8823a" stroke="${BLAECK}" stroke-width="1.2"/>
+<path d="M28 70h32M29 76h30M30 82h28" stroke="${BRUN}" stroke-width="0.9"/>
+<path d="M44 64q-8 -12 2 -20t-2 -20" fill="none" stroke="#1d2410" stroke-width="7" stroke-linecap="round"/>
+<path d="M44 64q-8 -12 2 -20t-2 -20" fill="none" stroke="${GRON}" stroke-width="5" stroke-linecap="round"/>
+<ellipse cx="45" cy="22" rx="6" ry="4" fill="${GRON}" stroke="#1d2410" stroke-width="1"/><circle cx="47" cy="21" r="1.2" fill="#e8c040"/>
+<path d="M66 54l18 -22" stroke="${BRUN}" stroke-width="6" stroke-linecap="round"/><path d="M66 54l18 -22" stroke="#e6d8b8" stroke-width="3.6" stroke-linecap="round"/>
+<path d="M76 30q4 -4 8 0M80 24q4 -4 8 0" fill="none" stroke="${BRUN}" stroke-width="1.2" stroke-linecap="round"/>`;
+
+  // Spårfinnaren: fotspår i dammet.
+  BILDER.sparfinnare = () => `${golv(62)}
+${[[22, 84, -20], [34, 70, 10], [44, 60, -15], [58, 50, 12], [66, 38, -10], [80, 30, 15]].map(([x, y, a]) => `<g transform="rotate(${a} ${x} ${y})"><ellipse cx="${x}" cy="${y}" rx="3.6" ry="6" fill="${BRUN}" opacity="0.8"/><ellipse cx="${x}" cy="${y - 8.5}" rx="2.8" ry="2.4" fill="${BRUN}" opacity="0.8"/></g>`).join("")}`;
+
+  // Lyktbäraren: en lykta som lyser.
+  BILDER.lyktbarare = () => `<circle cx="50" cy="54" r="40" fill="#f8d878" opacity="0.3"/><circle cx="50" cy="54" r="26" fill="#f8d878" opacity="0.35"/>
+<path d="M50 12v8M42 20q8 -8 16 0" fill="none" stroke="${JARN}" stroke-width="2.4"/>
+<path d="M38 24h24l-3 8H41z" fill="${JARN}"/>
+<path d="M40 32h20v36H40z" fill="#fff0b0" opacity="0.85" stroke="${JARN}" stroke-width="2.4"/>
+<path d="M50 32v36M40 50h20" stroke="${JARN}" stroke-width="1.2"/>
+${laga(50, 60, 16)}
+<path d="M36 68h28l-4 6H40z" fill="${JARN}"/>`;
+
+  // Pilgrimen: en stav med en mussla och en kalebass.
+  BILDER.pilgrim = () => `${ljus}
+<path d="M40 92L56 10" stroke="${BRUN}" stroke-width="4" stroke-linecap="round"/>
+<path d="M56 10q6 2 4 8" fill="none" stroke="${BRUN}" stroke-width="3" stroke-linecap="round"/>
+<path d="M52 32q-6 0 -8 6t8 14q4 -2 6 -8t-6 -12z" fill="#c8a878" stroke="${BLAECK}" stroke-width="1"/>
+<circle cx="64" cy="62" r="9" fill="#b8823a" stroke="${BLAECK}" stroke-width="1.2"/><circle cx="64" cy="50" r="5" fill="#b8823a" stroke="${BLAECK}" stroke-width="1.2"/>
+<path d="M52 40l-4 6M54 42l-2 7M50 38l-5 4" stroke="${BRUN}" stroke-width="0.9"/>
+<path d="M56 46q4 0 6 2" fill="none" stroke="${BRUN}" stroke-width="1.4"/>`;
+
   const ORM = ["sover", "ror_sig", "vaknar"];
 
   return {

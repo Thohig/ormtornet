@@ -120,6 +120,7 @@ var cardImages = []string{
 	"flojt", "timglas", "svart_parla", "mynt_hal", "rostkrona", "brev", "dryck", "guld",
 	"kallare", "varsel", "namndel", "invigd",
 	"ut", "dod", "sol", "port",
+	"legoknekt", "tjuv", "ortkvinna", "kartritare", "ormtjusare", "sparfinnare", "lyktbarare", "pilgrim",
 }
 
 // cardImage är motivet för innehåll i data/: fältet bild, annars id:t.

@@ -165,6 +165,7 @@ func (d *Data) validate() []string {
 	for _, c := range d.Klasser {
 		ids = append(ids, c.ID)
 		model("klasser.json", "klassen", c.ID, c.Modell)
+		cardImageOK("klasser.json", "klassen "+c.ID, cardImage(c.Bild, c.ID))
 	}
 	classes := unique("klasser.json", "klassen", ids)
 

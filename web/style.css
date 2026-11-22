@@ -1084,6 +1084,8 @@ body.touch #side { overflow-y: auto; }
   padding: 0 16px 5px;
   border-bottom: 1px solid #8a6a3a;
 }
+.card .cbild { align-self: center; width: 110px; height: 96px; flex: 0 0 auto; }
+.card .cbild svg { display: block; width: 100%; height: 100%; }
 .card .desc { color: #5a4a36; font-style: italic; font-size: 12.5px; }
 .card .stats { color: #2a4a5e; font-size: 12.5px; }
 .card .good, .card .bad { font-size: 12.5px; line-height: 1.4; }
@@ -1116,6 +1118,7 @@ body.touch .card .num { display: none; }
   .card:hover:not(:disabled), .card:focus-visible { transform: none; }
   .card .cname { font-size: 11.5px; letter-spacing: 0.12em; padding: 0 0 4px; }
   .card .desc { display: none; }
+  .card .cbild { width: 76px; height: 66px; }
   .card .stats, .card .good, .card .bad { font-size: 12px; line-height: 1.35; }
 }
 

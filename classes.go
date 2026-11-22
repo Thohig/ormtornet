@@ -15,6 +15,7 @@ type Class struct {
 	Namn        string             `json:"namn"`
 	Kort        string             `json:"kort"`   // med liten bokstav, för listan och texterna
 	Tecken      string             `json:"tecken"` // klassens tecken på kartan
+	Bild        string             `json:"bild"`   // klasskortets motiv (web/kort.js); utan bild gäller id:t
 	Beskrivning string             `json:"beskrivning"`
 	Styrka      string             `json:"styrka"`
 	Svaghet     string             `json:"svaghet"`
@@ -29,6 +30,7 @@ type classView struct {
 	ID          string `json:"id"`
 	Namn        string `json:"namn"`
 	Tecken      string `json:"tecken,omitempty"`
+	Bild        string `json:"bild"`
 	Beskrivning string `json:"beskrivning"`
 	Styrka      string `json:"styrka"`
 	Svaghet     string `json:"svaghet"`
@@ -42,7 +44,7 @@ func viewOfClass(c *Class) *classView {
 	if c == nil {
 		return nil
 	}
-	return &classView{ID: c.ID, Namn: c.Namn, Tecken: c.Tecken, Beskrivning: c.Beskrivning, Styrka: c.Styrka, Svaghet: c.Svaghet, Liv: c.Liv, Drycker: c.Drycker}
+	return &classView{ID: c.ID, Namn: c.Namn, Tecken: c.Tecken, Bild: cardImage(c.Bild, c.ID), Beskrivning: c.Beskrivning, Styrka: c.Styrka, Svaghet: c.Svaghet, Liv: c.Liv, Drycker: c.Drycker}
 }
 
 func (d *Data) class(id string) *Class {

@@ -6,6 +6,7 @@
     {
       "id": "legoknekt",
       "tecken": "⛨",
+      "bild": "legoknekt",
       "modell": { "farg": "#7a5a32", "storlek": 1 },
       "namn": "Legoknekten",
       "kort": "legoknekten",
@@ -19,6 +20,7 @@
     {
       "id": "tjuv",
       "tecken": "⚷",
+      "bild": "tjuv",
       "modell": { "farg": "#2a2a30", "storlek": 1 },
       "namn": "Tjuven",
       "kort": "tjuven",
@@ -32,6 +34,7 @@
     {
       "id": "ortkvinna",
       "tecken": "⚘",
+      "bild": "ortkvinna",
       "modell": { "farg": "#e070b0", "storlek": 1 },
       "namn": "Örtkvinnan",
       "kort": "örtkvinnan",
@@ -45,6 +48,7 @@
     {
       "id": "kartritare",
       "tecken": "⌖",
+      "bild": "kartritare",
       "modell": { "farg": "#e9dcc0", "storlek": 1 },
       "namn": "Kartritaren",
       "kort": "kartritaren",
@@ -58,6 +62,7 @@
     {
       "id": "ormtjusare",
       "tecken": "∿",
+      "bild": "ormtjusare",
       "modell": { "farg": "#6d8040", "storlek": 1 },
       "namn": "Ormtjusaren",
       "kort": "ormtjusaren",
@@ -71,6 +76,7 @@
     {
       "id": "sparfinnare",
       "tecken": "⁂",
+      "bild": "sparfinnare",
       "modell": { "farg": "#6a4a2a", "storlek": 1 },
       "namn": "Spårfinnaren",
       "kort": "spårfinnaren",
@@ -84,6 +90,7 @@
     {
       "id": "lyktbarare",
       "tecken": "☼",
+      "bild": "lyktbarare",
       "modell": { "farg": "#ffd36b", "storlek": 1 },
       "namn": "Lyktbäraren",
       "kort": "lyktbäraren",
@@ -97,6 +104,7 @@
     {
       "id": "pilgrim",
       "tecken": "⚲",
+      "bild": "pilgrim",
       "modell": { "farg": "#3a3530", "storlek": 1 },
       "namn": "Pilgrimen",
       "kort": "pilgrimen",

@@ -11,6 +11,8 @@ eller leder tornet.
 - Klasskorten i klassvalet har spelkortens pergament, ram och mörka
   text, med namnet i versaler överst, styrkan i grönt och svagheten i
   rött.
+- Varje klass har en bild på kortet, i samma stil som spelkorten. Fältet
+  `bild` finns nu också i `data/klasser.json`.
 
 ### Vandringens största stunder
 
