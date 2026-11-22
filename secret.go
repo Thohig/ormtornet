@@ -188,13 +188,13 @@ func (g *Game) Whisper(c *Client, text string) {
 		// I kammaren kan den invigde lugna ormen, en gång per vandring.
 		switch {
 		case g.rooms[p.Y][p.X].Kind != "kammare":
-			g.logTo(p, g.data.Text("viskning_redan"), "dim")
+			g.answerTo(p, g.data.Text("viskning_redan"), "dim")
 		case p.calmed:
-			g.logTo(p, g.data.Text("invigd_lugnat"), "dim")
+			g.answerTo(p, g.data.Text("invigd_lugnat"), "dim")
 		default:
 			p.calmed = true
 			g.calmSerpent()
-			g.logTo(p, g.data.Text("invigd_lugnar"), "rost")
+			g.answerTo(p, g.data.Text("invigd_lugnar"), "rost")
 		}
 		return
 	}
@@ -206,22 +206,22 @@ func (g *Game) Whisper(c *Client, text string) {
 	}
 	minLevel := max(1, g.data.Avslojande.ViskaFranNiva)
 	if g.level < minLevel {
-		g.logTo(p, g.data.Text("viskning_tidigt"), "dim")
+		g.answerTo(p, g.data.Text("viskning_tidigt"), "dim")
 		return
 	}
 	if p.guessLevel >= g.level {
-		g.logTo(p, g.data.Text("viskning_vanta"), "dim")
+		g.answerTo(p, g.data.Text("viskning_vanta"), "dim")
 		return
 	}
 	p.guessLevel = g.level
 	if !g.whisperRight(text) {
-		g.logTo(p, g.data.Text("viskning_fel"), "dim")
+		g.answerTo(p, g.data.Text("viskning_fel"), "dim")
 		return
 	}
 	p.initiated = true
 	g.soundTo(p, "rost")
 	said := g.data.Text("invigd")
-	g.logTo(p, said, "rost")
+	g.answerTo(p, said, "rost")
 	g.sendCard(p, gameCard{Slag: "viska", Bild: "invigd", Rubrik: g.data.Text("kort_invigd"), Text: said})
 	g.logOthers(p, g.data.Text("invigd_andra"), "dim")
 	g.chronicle("kronika_invigd", "namn", p.Name, "runda", strconv.Itoa(g.round))
