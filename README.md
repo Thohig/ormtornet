@@ -761,8 +761,10 @@ står i loggen och i tecknen (`· RU ·`). Viskningen ska innehålla namnet,
 ihop eller i delar, och visa att man förstår: ett av svaren under `svar`
 ("Karumeth, tornet är ormen") eller en mall under `svar_med_namn`
 ("tornet är Karumeth"). Svaren räcker inte ensamma, så pusslet är nytt
-varje gång, också för den som har spelat förut. Saknar `avslojande.json`
-namn räcker svaren ensamma.
+varje gång, också för den som har spelat förut. Viskar man bara namnet
+känner tornet igen det och frågar vad man vill säga om det
+(`viskning_bara_namn`), och försöket är inte förbrukat. Saknar
+`avslojande.json` namn räcker svaren ensamma.
 
 Till ormens namn hör också två saker:
 

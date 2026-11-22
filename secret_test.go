@@ -292,3 +292,26 @@ func TestMercyWhenAllInsideKnow(t *testing.T) {
 		t.Fatal("nåden kom två gånger")
 	}
 }
+
+// Bara namnet förbrukar inte försöket: tornet känner igen det och frågar
+// vad man vill säga om det.
+func TestWhisperOnlyNameKeepsTheTry(t *testing.T) {
+	g, a, _ := startTwo(t)
+	pa := a.player
+	g.serpentName = []string{"Ka", "ru", "meth"}
+	g.level = 2
+	for _, w := range []string{"Karumeth", "ka ru meth!", "KARUMETH."} {
+		logs(a)
+		g.Whisper(a, w)
+		if pa.initiated || pa.guessLevel != 0 || !g.canWhisper(pa) {
+			t.Fatalf("%q: invigd %v, försök %d", w, pa.initiated, pa.guessLevel)
+		}
+		if !contains(logs(a), g.data.Text("viskning_bara_namn")) {
+			t.Fatalf("%q gav inget svar om namnet", w)
+		}
+	}
+	g.Whisper(a, "tornet är Karumeth")
+	if !pa.initiated {
+		t.Fatal("rätt viskning efter namnet gick inte igenom")
+	}
+}

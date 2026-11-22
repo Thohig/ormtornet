@@ -178,6 +178,17 @@ func (g *Game) whisperRight(text string) bool {
 	return whisperMatches(w, forms)
 }
 
+// onlyName är sant när viskningen är ormens namn och inget mer. Det är rätt
+// namn men ingen mening om det, och då förbrukas inte försöket.
+func (g *Game) onlyName(text string) bool {
+	if !g.usesName() {
+		return false
+	}
+	w := normalizeWhisper(text)
+	return w == normalizeWhisper(strings.Join(g.serpentName, "")) ||
+		w == normalizeWhisper(strings.Join(g.serpentName, " "))
+}
+
 // Whisper tar emot en viskning från en vandrare.
 func (g *Game) Whisper(c *Client, text string) {
 	p := c.player
@@ -213,9 +224,15 @@ func (g *Game) Whisper(c *Client, text string) {
 		g.answerTo(p, g.data.Text("viskning_vanta"), "dim")
 		return
 	}
+	if g.onlyName(text) {
+		// Rätt namn men ingenting om det: tornet känner igen namnet, och
+		// vandraren får försöka igen.
+		g.answerTo(p, g.data.Text("viskning_bara_namn"), "rost")
+		return
+	}
 	p.guessLevel = g.level
 	if !g.whisperRight(text) {
-		g.answerTo(p, g.data.Text("viskning_fel"), "dim")
+		g.answerTo(p, g.data.Text("viskning_fel"), "rost")
 		return
 	}
 	p.initiated = true

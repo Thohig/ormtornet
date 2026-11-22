@@ -261,6 +261,9 @@
     "viskning_fel": [
       "You whisper to the wall. Nothing answers. Perhaps you will understand more once the sun has sunk."
     ],
+    "viskning_bara_namn": [
+      "The walls flinch as you say the name, as if something knows it. But what is it you want to say about it?"
+    ],
     "viskning_tidigt": [
       "The tower is still silent. There is nothing to whisper to yet."
     ],

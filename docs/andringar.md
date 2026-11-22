@@ -6,6 +6,15 @@ eller leder tornet.
 
 ## 2026-11-22
 
+### Viskningen
+
+- Viskar man bara ormens namn känner tornet igen det: "Väggarna rycker
+  till när du säger namnet … Men vad är det du vill säga om det?" Försöket
+  är inte förbrukat, och V finns kvar. Förut svarade tornet som på en fel
+  viskning, och då gick det inte att viska igen förrän tornet förändrades.
+- Svaret på en viskning står i hemlighetens färg i loggen i stället för
+  som en svag rad, så att det syns.
+
 ### Den dödes guld
 
 - Den som dör tappar sitt guld i rummet, som föremålen. Förut gick guldet

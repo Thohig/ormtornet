@@ -258,6 +258,9 @@
     "viskning_fel": [
       "Du viskar mot väggen. Ingenting svarar. Kanske förstår du mer när solen har sjunkit."
     ],
+    "viskning_bara_namn": [
+      "Väggarna rycker till när du säger namnet, som om något känner igen det. Men vad är det du vill säga om det?"
+    ],
     "viskning_tidigt": [
       "Tornet är tyst än. Det finns inget att viska till."
     ],
