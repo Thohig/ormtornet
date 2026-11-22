@@ -6,6 +6,12 @@ eller leder tornet.
 
 ## 2026-11-22
 
+### Ormtornet.app i ~/Applications
+
+- `./skapa-app.sh` skapar nu appen i `~/Applications`, där macOS letar
+  efter appar, i stället för `~/Projekt/Lokalt`. En annan mapp kan
+  fortfarande anges som argument.
+
 ### Provspelet 2026-11-22
 
 Rättat efter en timmes provspel (se

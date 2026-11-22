@@ -2,14 +2,14 @@
 # Skapar Ormtornet.app med tornets ikon. Dubbelklick på appen startar tornet
 # i bakgrunden och öppnar värdsidan i webbläsaren.
 #
-#   ./skapa-app.sh             skapar ~/Projekt/Lokalt/Ormtornet.app
+#   ./skapa-app.sh             skapar ~/Applications/Ormtornet.app
 #   ./skapa-app.sh ~/Desktop   skapar appen i en annan mapp
 #
 # Appen bygger alltid spelet från den här mappen, så den behöver bara skapas
 # om när mappen flyttas eller Go installeras på nytt ställe.
 set -e
 GAME=${0:A:h}
-DEST=${1:-$HOME/Projekt/Lokalt}
+DEST=${1:-$HOME/Applications}
 APP=$DEST/Ormtornet.app
 ID=se.ormtornet.start
 

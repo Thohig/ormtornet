@@ -835,9 +835,9 @@ Det går också att starta direkt med `go run .`.
 ./skapa-app.sh
 ```
 
-skapar `~/Projekt/Lokalt/Ormtornet.app` med tornets ikon. Mappen skapas om
+skapar `~/Applications/Ormtornet.app` med tornets ikon. Mappen skapas om
 den saknas; ange en annan mapp som argument om du vill, till exempel
-`./skapa-app.sh ~/Applications`. Ikonen ritas av `verktyg/appikon`, så
+`./skapa-app.sh ~/Desktop`. Ikonen ritas av `verktyg/appikon`, så
 appen går att ta bort och skapa igen när som helst. Dubbelklick på appen bygger spelet från den här mappen,
 startar tornet i bakgrunden och öppnar introt, som leder till värdsidan. Inget terminalfönster behövs. Loggen hamnar i `/tmp/ormtornet.log`.
 Appen behöver bara skapas om när den här mappen flyttas.

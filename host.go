@@ -16,7 +16,7 @@ import (
 )
 
 type hostAddrs struct {
-	Name string   `json:"name"` // t.ex. http://Stefans-MacBook.local:8080
+	Name string   `json:"name"` // t.ex. http://Din-Mac.local:8080
 	IPs  []string `json:"ips"`  // reservadresser med IP-nummer
 }
 

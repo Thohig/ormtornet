@@ -276,7 +276,7 @@ func openBrowser(url string) {
 	}
 }
 
-// localName ger Macens Bonjour-namn, t.ex. "Stefans-MacBook.local".
+// localName ger Macens Bonjour-namn, t.ex. "Din-Mac.local".
 func localName() string {
 	if out, err := exec.Command("scutil", "--get", "LocalHostName").Output(); err == nil {
 		if n := strings.TrimSpace(string(out)); n != "" {
