@@ -665,6 +665,7 @@ type stateMsg struct {
 	Journey     *journeyView `json:"vandring,omitempty"` // den egna vandringen, för den som har dött och för alla i slutet
 	Chronicle   []chronLine  `json:"kronika,omitempty"`  // hela krönikan, när vandringen är slut
 	Epilogue    []chronLine  `json:"epilog,omitempty"`   // epilogen, när vandringen är slut
+	Moments     []momentView `json:"stunder,omitempty"`  // vandringens största stunder, när vandringen är slut
 }
 
 type logMsg struct {
@@ -850,6 +851,7 @@ func (g *Game) stateFor(me *Player) stateMsg {
 	if g.phase == phaseEnd {
 		st.Chronicle = g.chronicleLines()
 		st.Epilogue = append(slices.Clone(g.epilog), me.epilog...)
+		st.Moments = g.moments()
 	}
 	return st
 }

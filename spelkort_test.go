@@ -250,3 +250,39 @@ func TestJourneyCards(t *testing.T) {
 		t.Fatalf("Din vandring: %+v", last)
 	}
 }
+
+// Vandringens största stunder: de viktigaste slagen väljs, högst två av
+// samma slag och fem i allt, och de läggs fram i den ordning de hände.
+// Den som kom ut men inte vann räknas inte.
+func TestMoments(t *testing.T) {
+	g, a, b := startTwo(t)
+	pa, pb := a.player, b.player
+	pa.Status, pa.Treasure = statusOut, 50
+	pb.Status, pb.Treasure = statusOut, 10
+	g.chron = nil
+	for r, ev := range []struct{ key, who string }{
+		{"kronika_kammaren", pa.Name},
+		{"kronika_vaknade", pa.Name},
+		{"kronika_dod", "x"},
+		{"kronika_dod", "y"},
+		{"kronika_dod", "z"},
+		{"kronika_klocka", pb.Name},
+		{"kronika_ut", pb.Name},
+		{"kronika_ut", pa.Name},
+	} {
+		g.round = r + 1
+		g.chronicle(ev.key, "namn", ev.who, "skatt", "1", "guld", "1")
+	}
+	m := g.moments()
+	var got []string
+	for _, x := range m {
+		got = append(got, x.Kort.Slag)
+	}
+	want := []string{"vaknade", "dod", "dod", "klocka", "vinnare"}
+	if !slices.Equal(got, want) {
+		t.Fatalf("stunderna: %v, ville ha %v", got, want)
+	}
+	if m[4].Kort.Text == "" || m[4].Round != 8 || m[0].Kort.Rubrik == "" {
+		t.Fatalf("vinnarens kort: %+v", m)
+	}
+}

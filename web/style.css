@@ -1171,6 +1171,13 @@ body.touch .card .num { display: none; }
 }
 #chronAll .dim { color: var(--chalk); font-size: 13px; }
 #chronAll .rost { color: #e3b8f0; }
+/* Vandringens största stunder: stora kort i en rad som bryts, vända upp
+   ett i taget (renderMoments i app.js). */
+#chronMoments { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; margin: 4px 0 22px; }
+#chronMoments .okort { position: relative; width: 168px; perspective: 800px; display: flex; }
+#chronMoments .ok-inner { flex: 1; display: flex; transition-delay: var(--vand-efter, 0s); }
+#chronMoments .ok-front { flex: 1; }
+#chronMoments[hidden], #chronMomentsHead[hidden],
 #chronResults[hidden], #chronEpilog[hidden], #chronAll[hidden], #chronOwn[hidden], #chronNext[hidden], #chronHost[hidden] { display: none; }
 #chronNext:disabled { opacity: 0.6; cursor: default; }
 /* Pergamentkanten runt kartan snett ovanifrån: en tunn ram och mörker

@@ -373,9 +373,45 @@
   ],
   "spelkort": {
     "_om": "Spelkorten (docs/spelkort.md): ordningen säger vilket kort som vänds upp när flera saker händer samma runda. Det första i listan är viktigast; resten blir minikort.",
-    "ordning": ["dod", "ut", "ormen", "varelse", "vandrare", "falla", "forbannelse", "foremal", "guld", "kallare", "varsel", "namn", "viska", "brev", "dryck"]
+    "ordning": ["dod", "ut", "ormen", "varelse", "vandrare", "falla", "forbannelse", "foremal", "guld", "kallare", "varsel", "namn", "viska", "brev", "dryck"],
+    "stunder": {
+      "_om": "Vandringens största stunder i krönikan i slutet: krönikans händelser (nycklar) som läggs fram som stora kort. Slagen står med det viktigaste först; antal är hur många kort och per_slag hur många av samma slag. rubrik är en nyckel bland texterna. bara_vinnare tar bara med den som vann.",
+      "antal": 5,
+      "per_slag": 2,
+      "slag": [
+        { "id": "vinnare", "nycklar": ["kronika_ut"], "bild": "ut", "rubrik": "stund_vinnare", "bara_vinnare": true },
+        { "id": "vaknade", "nycklar": ["kronika_vaknade"], "bild": "vaknar", "rubrik": "stund_vaknade" },
+        { "id": "dod", "nycklar": ["kronika_dod", "kronika_dod_falla", "kronika_dod_varelse", "kronika_dod_vandrare", "kronika_dod_ormen", "kronika_dod_gift", "kronika_dod_tornet"], "bild": "dod", "rubrik": "kort_dod" },
+        { "id": "invigd", "nycklar": ["kronika_invigd"], "bild": "invigd", "rubrik": "kort_invigd" },
+        { "id": "port", "nycklar": ["kronika_port"], "bild": "port", "rubrik": "kort_port" },
+        { "id": "nad", "nycklar": ["kronika_nad"], "bild": "sover", "rubrik": "stund_nad" },
+        { "id": "klocka", "nycklar": ["kronika_klocka"], "bild": "klocka", "rubrik": "stund_klocka" },
+        { "id": "kammaren", "nycklar": ["kronika_kammaren"], "bild": "guld", "rubrik": "stund_kammaren" },
+        { "id": "varelse", "nycklar": ["kronika_varelse"], "bild": "fackla", "rubrik": "stund_varelse" },
+        { "id": "namndel", "nycklar": ["kronika_namndel"], "bild": "namndel", "rubrik": "kort_namndel" },
+        { "id": "forlorad", "nycklar": ["kronika_forlorad"], "bild": "sol", "rubrik": "kort_forlorad" }
+      ]
+    }
   },
   "texter": {
+    "stund_vinnare": [
+      "Vinnaren"
+    ],
+    "stund_vaknade": [
+      "Ormen vaknar"
+    ],
+    "stund_nad": [
+      "Tornets nåd"
+    ],
+    "stund_klocka": [
+      "Klockan slår"
+    ],
+    "stund_kammaren": [
+      "Första näven"
+    ],
+    "stund_varelse": [
+      "En varelse faller"
+    ],
     "kort_ut": [
       "Ute"
     ],

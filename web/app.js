@@ -705,6 +705,7 @@ function renderChron() {
   // ~ förklaras under resultaten, som i resultatrutan på kartan.
   if (end && (state.results || []).some((r) => r.ai)) results.push({ text: t("slut_ai"), c: "dim" });
   rows("chronResults", results);
+  renderMoments(end ? state.stunder || [] : []);
   rows("chronEpilog", end ? state.epilog : []);
   rows("chronAll", end ? (state.kronika || []).filter((l) => l.c !== "rubrik").map((l) => ({ text: l.text, c: l.c, kort: l.kort })) : []);
   if (end && state.kronika && state.kronika[0]) {
@@ -790,6 +791,29 @@ function renderChron() {
   $("chronStats").textContent = end ? "" : v.siffror;
   if (!end && v.kort && v.kort.length) $("chronStats").appendChild(cardRow(v.kort));
   $("chronWait").textContent = end ? (touch ? "" : t("slut_nytt_torn")) : t("vandring_vantar");
+}
+// renderMoments lägger vandringens största stunder (stunder.go) som en rad
+// stora kort, med rundan överst. De vänds upp ett i taget, en gång, inte
+// vid varje nytt läge.
+function renderMoments(list) {
+  const box = $("chronMoments");
+  const key = JSON.stringify(list);
+  if (box.dataset.key === key) return;
+  box.dataset.key = key;
+  box.innerHTML = "";
+  list.forEach((m, i) => {
+    const el = document.createElement("div");
+    el.className = "okort stund";
+    el.style.setProperty("--vand-efter", i * 0.35 + "s");
+    box.appendChild(el);
+    const front = buildCard(el, m.kort);
+    const r = document.createElement("div");
+    r.className = "ok-runda";
+    r.textContent = t("rundkort_rubrik", { runda: m.runda });
+    front.prepend(r);
+  });
+  box.hidden = !list.length;
+  $("chronMomentsHead").hidden = !list.length;
 }
 $("chronNext").addEventListener("click", () => send({ t: "ready" }));
 $("chronHost").addEventListener("click", goHost);

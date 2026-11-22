@@ -125,6 +125,20 @@ func (d *Data) validate() []string {
 	}
 	unique("texter.json", "rumstypen", ids)
 
+	// Vandringens största stunder: motiven, rubrikerna och krönikans nycklar
+	// måste finnas.
+	for _, k := range d.Spelkort.Stunder.Slag {
+		cardImageOK("texter.json", "stunden "+k.ID, k.Bild)
+		if len(d.Texter[k.Rubrik]) == 0 {
+			bad("texter.json", "stunden %q: rubriken %q finns inte bland texterna", k.ID, k.Rubrik)
+		}
+		for _, n := range k.Nycklar {
+			if len(d.Texter[n]) == 0 {
+				bad("texter.json", "stunden %q: krönikans nyckel %q finns inte bland texterna", k.ID, n)
+			}
+		}
+	}
+
 	ids = nil
 	for _, t := range d.Fallor {
 		ids = append(ids, t.ID)

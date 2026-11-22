@@ -9,10 +9,16 @@ import (
 	"strings"
 )
 
-// chronEvent är en händelse i krönikan, redan skriven som text.
+// chronEvent är en händelse i krönikan, redan skriven som text. key är
+// textens nyckel, who vandraren den handlar om och bild ett motiv som
+// händelsen själv bär (en varelse), för vandringens största stunder
+// (stunder.go).
 type chronEvent struct {
 	round int
 	text  string
+	key   string
+	who   string
+	bild  string
 }
 
 // chronStats räknar det som bara blir en siffra per vandrare i krönikan.
@@ -45,9 +51,19 @@ func (g *Game) cardTags(p *Player) []cardTag {
 	return out
 }
 
-// chronicle skriver ner en händelse från den här rundan.
+// chronicle skriver ner en händelse från den här rundan. Bland vars kan
+// "namn" säga vem den handlar om och "bild" dess motiv på spelkortet.
 func (g *Game) chronicle(key string, vars ...string) {
-	g.chron = append(g.chron, chronEvent{round: g.round, text: g.data.Text(key, vars...)})
+	e := chronEvent{round: g.round, text: g.data.Text(key, vars...), key: key}
+	for i := 0; i+1 < len(vars); i += 2 {
+		switch vars[i] {
+		case "namn":
+			e.who = vars[i+1]
+		case "bild":
+			e.bild = vars[i+1]
+		}
+	}
+	g.chron = append(g.chron, e)
 }
 
 // hurt säger vad som skadar vandraren, så att krönikan vet vad som dödade

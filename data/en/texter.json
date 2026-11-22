@@ -356,6 +356,24 @@
     }
   ],
   "texter": {
+    "stund_vinnare": [
+      "The winner"
+    ],
+    "stund_vaknade": [
+      "The serpent wakes"
+    ],
+    "stund_nad": [
+      "The tower's mercy"
+    ],
+    "stund_klocka": [
+      "The bell tolls"
+    ],
+    "stund_kammaren": [
+      "The first handful"
+    ],
+    "stund_varelse": [
+      "A creature falls"
+    ],
     "kort_ut": [
       "Outside"
     ],

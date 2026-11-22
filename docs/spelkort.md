@@ -162,3 +162,14 @@ Annorlunda än förslaget:
 - Facklan är bilden för en runda utan eget kort.
 - `verktyg/kortbilder.html` visar alla motiv, och kontrollen av
   datafilerna säger till om en bild i `bild` inte finns.
+
+## Efteråt: vandringens största stunder
+
+Byggt 2026-11-22 efter ett förslag om spelkorten i krönikan i slutet (D
+av fem: minikort vid krönikans händelser, resultaten som kort, var och
+ens lek, största stunderna och att klicka upp ett minikort). Krönikans
+händelser vet sin nyckel, vem de gällde och sin bild (`chronEvent`), och
+`stunder.go` väljer högst fem: de viktigaste slagen först, högst två av
+samma slag, lagda i den ordning de hände. Slagen står under
+`spelkort.stunder` i `data/texter.json`. De andra fyra delarna är inte
+byggda.

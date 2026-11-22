@@ -594,6 +594,14 @@ och varelser har sin korta beskrivning som rubrik, aldrig namnet.
   bara på ett annat stort kort.
 - **Vandringens sista kort**, ute, död eller kvar när solen gick ner,
   står överst i Din vandring.
+- **Vandringens största stunder**: i krönikan i slutet läggs högst fem
+  av krönikans händelser fram som stora kort under resultaten och vänds
+  upp ett i taget: vinnaren, uppvaknanden, de som dog, den som blev
+  invigd, portar som stängdes, tornets nåd, klockan, den första näven,
+  en varelse som föll, namnets delar och den som blev kvar när solen
+  gick ner, i den ordningen, högst två av samma slag. De står i den
+  ordning de hände. Slagen och antalet står under `spelkort.stunder` i
+  `data/texter.json`.
 - **Minikorten**: en rad i loggen som hör till ett kort får ett litet
   kort framför sig, och varje runda i Din vandring har rundans kort som
   små kort bredvid rubriken.

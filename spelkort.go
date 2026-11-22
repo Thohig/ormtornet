@@ -15,6 +15,8 @@ import (
 type CardData struct {
 	// Ordning är korten efter hur viktiga de är; det första vänds upp.
 	Ordning []string `json:"ordning"`
+	// Stunder är vandringens största stunder i krönikan (stunder.go).
+	Stunder MomentData `json:"stunder"`
 }
 
 // gameCard är ett spelkort. Slag är sorten, för ordningen (falla, varelse,

@@ -121,6 +121,7 @@ Så här skiljer vi på sakerna när användaren ger instruktioner:
   `addJourney` i `summary.go`), med vandringens sista kort överst, vad
   skadan kom av, tysta rundor
   ihopslagna och märket "tornet styrde". I slutet ser alla resultaten,
+  **vandringens största stunder** (stora spelkort, `stunder.go`),
   epilogen, hela krönikan och sin vandring.
   Spelledaren har där också Till värdsidan bredvid Nytt torn.
 - **tangenterna vid dörrarna**: piltangenterna som står vid dörrarna i ens

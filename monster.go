@@ -313,7 +313,7 @@ func (g *Game) defeat(p *Player, m *Monster) {
 	p.Treasure += t.Guld
 	p.stats.kills++
 	p.roundKill = t.KortBestamd
-	g.chronicle("kronika_varelse", "namn", p.Name, "varelse", t.Kort)
+	g.chronicle("kronika_varelse", "namn", p.Name, "varelse", t.Kort, "bild", cardImage(t.Bild, t.ID))
 	g.soundTo(p, "monster_dor")
 	dor := pick(t.Dor)
 	g.logTo(p, dor, "")

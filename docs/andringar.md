@@ -6,6 +6,14 @@ eller leder tornet.
 
 ## 2026-11-22
 
+### Vandringens största stunder
+
+- Krönikan i slutet lägger fram vandringens största stunder som stora
+  spelkort under resultaten, högst fem, som vänds upp ett i taget:
+  vinnaren, uppvaknanden, de som dog, den som blev invigd, portar som
+  stängdes och annat, i den ordning de hände. Vilka händelser som räknas
+  och hur många står under `spelkort.stunder` i `data/texter.json`.
+
 ### Spelkortet
 
 - Rundans kort och ormkortet är ett kort: **spelkortet**, som vänds upp
