@@ -6,6 +6,30 @@ eller leder tornet.
 
 ## 2026-11-22
 
+### Provspelet 2026-11-22
+
+Rättat efter en timmes provspel (se
+[provspel-2026-11-22.md](provspel-2026-11-22.md)):
+
+- Spelkortet: ett litet kort från en äldre runda, som Tre tecken eller ett
+  varsel, visas inte längre efter en nyare rundas kort.
+- Loggen: en stöt i muren, en tom port eller "Här finns ingen skatt att ta"
+  börjar inte längre en ny runda i loggen. Raden hamnar under rundan som
+  står i bild, så att rummet man står i inte försvinner under "tidigare"
+  på telefonen.
+- Knappen Drick syns bara när man har en dryck.
+- Tangenterna vid dörrarna krymper när rummet är litet på skärmen och
+  ligger inte längre över varandra på telefonen.
+- Resultatet: den som gick ut tomhänt står före de döda och förlorade.
+- Texterna: "Du sitter fast en runda" (inte "1 rundor"), "kammaren en
+  gång", och föremålen med en eller ett: "Sigge hittade en extra veke",
+  "Här ligger en krita … och får lämna fyndet kvar". På engelska står inte
+  längre "−1 lives".
+- Slutet: den som laddar om sidan, eller vars telefon somnar, står kvar i
+  resultatet och får tillbaka sin vandring när hen kommer tillbaka.
+- Minikorten i loggen på kartan går att klicka på, och efter ett klick
+  väljer mellanslag och Enter draget igen i stället för att öppna kortet.
+
 ### Länken först
 
 - README leder nu först till länken på GitHub Pages: spelledaren öppnar

@@ -199,6 +199,9 @@ Skriv dit när ett steg är klart.
   2026-11-21, vad som hittades och byggdes, och vad som inte är provat.
   Robotarna som provspelar finns i `verktyg/provspelare.mjs` (README,
   Provspela med robotar).
+- [docs/provspel-2026-11-22.md](docs/provspel-2026-11-22.md): provspelet
+  2026-11-22, felen som rättades och sex saker att fråga om (mörkret som
+  visar dörrarna, Kartritaren, AI:n och kammaren med flera).
 - [docs/ormkorten.md](docs/ormkorten.md): att ormkorten syns, med kortet
   som vänds upp, sömnmätaren, uppvaknandet, leken bredvid guldhögen och
   korten i krönikan. Allt är byggt.
