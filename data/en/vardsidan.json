@@ -115,6 +115,7 @@
     "stang_fraga_sida": "Close the tower? All players are disconnected and the wandering is over.",
     "stang_svarar_inte": "The tower did not answer. Perhaps it is already closed.",
     "server_kan_inte_starta": "Cannot start now. At least one human must be in the tower, and no wandering may be under way.",
+    "server_fro_fel": "The seed must be a whole number from 1 to {max}.",
     "server_ta_over": "The AI can only take over a wanderer whose player is away, in the middle of a wandering.",
     "server_las_om_ej": "The content cannot be reloaded here.",
     "server_las_om_fel": "The content was not loaded; the tower keeps the old. {fel}",

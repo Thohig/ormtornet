@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"log"
 	"math/rand/v2"
 	"slices"
 	"sort"
@@ -322,6 +321,7 @@ type Game struct {
 	nextMonsterID int
 	rng           *rand.Rand // tornets slump; samma frö ger samma torn
 	seed          uint64     // fröet för den pågående vandringen
+	nextSeed      uint64     // fröet nästa vandring får (seed.go)
 
 	usedClues map[string]bool // ledtrådar som redan har delats ut
 
@@ -353,31 +353,12 @@ func NewGame(d *Data, cfg Config) *Game {
 	g.rooms = newGrid[Room](g.size)
 	g.sunMax = g.scaledSun()
 	g.sun = g.sunMax
-	if cfg.Seed != 0 {
-		g.reseed(cfg.Seed) // också portarna i lobbyn följer fröet
-	} else {
-		g.reseed(rand.Uint64())
+	g.nextSeed = cfg.Seed
+	if g.nextSeed == 0 {
+		g.nextSeed = randomSeed()
 	}
+	g.reseed(g.nextSeed) // också portarna i lobbyn följer fröet
 	return g
-}
-
-// reseed ger tornet en ny slump med fröet seed.
-func (g *Game) reseed(seed uint64) {
-	g.seed = seed
-	g.rng = rand.New(rand.NewPCG(seed, seed^0x9e3779b97f4a7c15))
-}
-
-// seedWandering väljer fröet när en vandring börjar: det från -fro för den
-// första vandringen, annars ett slumpat. Samma frö och samma drag ger samma
-// rum, fällor, varelser och utfall.
-func (g *Game) seedWandering() {
-	seed := g.cfg.Seed
-	g.cfg.Seed = 0
-	if seed == 0 {
-		seed = rand.Uint64() % 1000000000
-	}
-	g.reseed(seed)
-	log.Printf("Vandringen börjar. Frö: %d (starta med -fro %d för samma torn)", seed, seed)
 }
 
 func (g *Game) inBounds(x, y int) bool { return x >= 0 && y >= 0 && x < g.size && y < g.size }
@@ -1166,7 +1147,7 @@ func (g *Game) checkStart() bool {
 		return true
 	}
 	if g.phase == phaseEnd {
-		g.newTower()
+		g.towerForNext()
 	}
 	g.begin()
 	return true
@@ -1205,7 +1186,7 @@ func (g *Game) toLobby() {
 			p.Ready = false // newTower behåller den som var redo
 		}
 	}
-	g.newTower()
+	g.towerForNext()
 	g.sun = g.sunMax
 	for _, p := range g.players {
 		if p != nil && p.client != nil {

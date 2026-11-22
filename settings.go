@@ -152,7 +152,7 @@ func (g *Game) ForceStart() bool {
 		return true
 	}
 	if g.phase == phaseEnd {
-		g.newTower()
+		g.towerForNext()
 	}
 	g.begin()
 	return true

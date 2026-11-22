@@ -124,6 +124,7 @@
     "stang_svarar_inte": "Tornet svarade inte. Kanske är det redan stängt.",
     "_server": "Besked och fel som tornet (Go-koden) skickar till värdsidan.",
     "server_kan_inte_starta": "Det går inte att starta nu. Minst en människa måste vara i tornet, och ingen vandring får pågå.",
+    "server_fro_fel": "Fröet ska vara ett heltal från 1 till {max}.",
     "server_ta_over": "AI:n kan bara ta över en vandrare vars spelare är borta, mitt i en vandring.",
     "server_las_om_ej": "Innehållet kan inte läsas om här.",
     "server_las_om_fel": "Innehållet lästes inte in, tornet behåller det gamla. {fel}",

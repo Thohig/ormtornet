@@ -10,6 +10,7 @@ import (
 	"io/fs"
 	"net"
 	"net/http"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -47,6 +48,7 @@ type hostView struct {
 	Bots       int          `json:"bots"`             // datorspelare som är med just nu
 	Size       int          `json:"size"`             // tornets storlek i rum
 	Seed       uint64       `json:"seed,omitempty"`   // vandringens frö, under och efter vandringen
+	NextSeed   uint64       `json:"nextSeed"`         // fröet nästa vandring får
 	Paused     bool         `json:"paused,omitempty"` // rundan är pausad
 
 	Svarigheter []difficultyView `json:"svarigheter"` // förvalen att välja bland
@@ -69,7 +71,7 @@ func (g *Game) HostView(visible bool) hostView {
 		MaxPlayers: maxPlayers, Reveal: g.cfg.Reveal, Players: []hostPlayer{},
 		Settings: settingsFrom(g.cfg), Bots: g.botCount(), Size: g.size,
 		Svarigheter: g.base.difficulties(), Sprak: g.base.Lang,
-		Paused: g.paused,
+		Paused: g.paused, NextSeed: g.nextSeed,
 	}
 	if g.phase == phasePlay || g.phase == phaseEnd {
 		v.Seed = g.seed
@@ -231,6 +233,24 @@ func addHostRoutes(mux *http.ServeMux, web fs.FS, game *Game, addrs hostAddrs, h
 			text = "server_las_om_sen"
 		}
 		writeJSON(w, http.StatusOK, map[string]string{"text": game.HostText(text)})
+	}))
+	// Fröet för nästa vandring: ett tal, eller slumpa ett nytt.
+	mux.HandleFunc("POST /spelledare/fro", hostAction(func(w http.ResponseWriter, r *http.Request) {
+		var req struct {
+			Fro    uint64 `json:"fro"`
+			Slumpa bool   `json:"slumpa"`
+		}
+		err := json.NewDecoder(http.MaxBytesReader(w, r.Body, 256)).Decode(&req)
+		if err == nil && req.Slumpa {
+			req.Fro = 0
+		} else if err == nil && req.Fro == 0 {
+			err = errBadSeed
+		}
+		if err != nil || !game.SetNextSeed(req.Fro) {
+			writeJSON(w, http.StatusBadRequest, map[string]string{"fel": game.HostText("server_fro_fel", "max", strconv.Itoa(maxSeed))})
+			return
+		}
+		w.WriteHeader(http.StatusNoContent)
 	}))
 	mux.HandleFunc("POST /spelledare/installningar", hostAction(func(w http.ResponseWriter, r *http.Request) {
 		var s Settings
