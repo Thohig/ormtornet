@@ -321,6 +321,7 @@ function handle(msg) {
       break;
     case "vaknar":
       MapView.wake();
+      showWakeCard(msg);
       break;
     case "ormkort":
       showSerpentCard(msg);
@@ -960,7 +961,9 @@ function serpentSpiral(cx, cy, turns, r0, grow) {
 function serpentArt(id, wakes) {
   const kind = wakes || id === "vaknar" ? "vaknar" : id === "ror_sig" ? "ror_sig" : "sover";
   const f = (n) => n.toFixed(1);
-  const pts = serpentSpiral(50, 60, kind === "ror_sig" ? 2.3 : 2.6, 4, 4.6);
+  const pts = kind === "vaknar"
+    ? serpentSpiral(50, 50, 2.6, 3, 2.5) // slingorna i mörkret, innanför rutan
+    : serpentSpiral(50, 60, kind === "ror_sig" ? 2.3 : 2.6, 4, 4.6);
   const d = "M" + pts.map(([x, y]) => f(x) + " " + f(y)).join("L");
   const [hx, hy] = pts[pts.length - 1];
   const [px, py] = pts[pts.length - 4];
@@ -1041,6 +1044,36 @@ function hideSerpentCard() {
   }, 400);
 }
 $("ormkort").addEventListener("click", hideSerpentCard);
+
+// showWakeCard visar för alla att ormen har vaknat: kortet "Ormen vaknar"
+// stort mitt på kartan, med det du märkte och, om du stod i kammaren, vad
+// du förlorade.
+const WAKE_CARD_MS = 5000;
+let wakeTimer = null;
+function showWakeCard(msg) {
+  if (!msg.namn) return;
+  hideSerpentCard();
+  const el = $("vakenkort");
+  let extra = null;
+  if (msg.inne) {
+    extra = document.createElement("div");
+    extra.className = "ok-forlust";
+    extra.textContent = t("vakenkort_forlust", { guld: msg.forlust || 0, liv: msg.skada || 0 });
+  }
+  buildSerpentCard(el, { kort: "vaknar", vaknar: true, namn: msg.namn, text: msg.text }, extra);
+  clearTimeout(wakeTimer);
+  wakeTimer = setTimeout(hideWakeCard, WAKE_CARD_MS);
+}
+function hideWakeCard() {
+  const el = $("vakenkort");
+  if (el.hidden || el.classList.contains("leaving")) return;
+  clearTimeout(wakeTimer);
+  el.classList.add("leaving");
+  setTimeout(() => {
+    if (el.classList.contains("leaving")) el.hidden = true;
+  }, 400);
+}
+$("vakenkort").addEventListener("click", hideWakeCard);
 
 // Teckenförklaringen uppe till vänster på kartan: de tecken som står i
 // rummen just nu, under varandra. Betydelsen syns när musen är över ett

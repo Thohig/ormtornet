@@ -44,3 +44,24 @@ func TestTakeShowsCard(t *testing.T) {
 		t.Fatalf("Bo fick %d kort", n)
 	}
 }
+
+// När ormen vaknar får alla kortet: den i kammaren med vad den förlorade,
+// den utanför med det den hörde.
+func TestWakeShowsCardToAll(t *testing.T) {
+	g, a, b := startTwo(t)
+	pa, pb := a.player, b.player
+	pa.X, pa.Y = g.center(), g.center()
+	g.reveal(pa.X, pa.Y)
+	putInRoom(g, pb, 0, 0)
+	pa.Treasure, pa.HP = 40, 9
+	messagesOf[wakeMsg](a, "vaknar")
+	messagesOf[wakeMsg](b, "vaknar")
+	g.wakeSerpent()
+	ga, gb := messagesOf[wakeMsg](a, "vaknar"), messagesOf[wakeMsg](b, "vaknar")
+	if len(ga) != 1 || !ga[0].Inne || ga[0].Forlust != 40-pa.Treasure || ga[0].Skada == 0 || ga[0].Namn != "Ormen vaknar" || ga[0].Text == "" {
+		t.Fatalf("i kammaren: %+v", ga)
+	}
+	if len(gb) != 1 || gb[0].Inne || gb[0].Forlust != 0 || gb[0].Namn != "Ormen vaknar" || gb[0].Text == "" {
+		t.Fatalf("utanför: %+v", gb)
+	}
+}

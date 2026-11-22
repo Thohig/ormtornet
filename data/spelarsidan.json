@@ -120,6 +120,7 @@
     "ormkort_guld": "+{antal} guld",
     "nu_ormen": "Ormen",
     "nu_vaknakort": "{antal} vakna-kort kvar i leken",
+    "vakenkort_forlust": "−{guld} guld · −{liv} liv",
     "zoom_nara": "Nära",
     "zoom_mellan": "Mellan",
     "zoom_langt": "Långt",

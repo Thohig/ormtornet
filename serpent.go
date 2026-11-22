@@ -8,8 +8,16 @@ import (
 	"strconv"
 )
 
+// wakeMsg säger till alla att ormen har vaknat, med kortet som vänds upp
+// för alla: namnet, det var och en märker, och för den som stod i kammaren
+// vad den förlorade.
 type wakeMsg struct {
-	T string `json:"t"`
+	T       string `json:"t"`
+	Namn    string `json:"namn"`
+	Text    string `json:"text"`
+	Inne    bool   `json:"inne,omitempty"` // stod i kammaren och kastades ut
+	Forlust int    `json:"forlust,omitempty"`
+	Skada   int    `json:"skada,omitempty"`
 }
 
 // cardMsg är ormkortet vandraren drog, som vänds upp på kartan.
@@ -190,11 +198,17 @@ func (g *Game) take(p *Player) {
 func (g *Game) wakeSerpent() {
 	o := &g.data.Ormen
 	g.soundAll("vasning")
-	for _, p := range g.players {
-		if p != nil {
-			g.send(p.client, wakeMsg{T: "vaknar"})
+	name := ""
+	for _, c := range o.Kort {
+		if c.Vaknar {
+			name = c.Namn
+			break
 		}
 	}
+	// Var och en får kortet när det är klart vad som hände: alla i tornet
+	// det de märker, de i kammaren vad de förlorade.
+	msgs := map[*Player]wakeMsg{}
+	general := pick(o.VaknarAndra)
 	var inside []*Player
 	for _, p := range g.players {
 		if p == nil || p.Status != statusIn || p.Cellar > 0 {
@@ -203,7 +217,9 @@ func (g *Game) wakeSerpent() {
 		if g.rooms[p.Y][p.X].Kind == "kammare" {
 			inside = append(inside, p)
 		} else {
-			g.logTo(p, pick(o.VaknarAndra), "varn")
+			text := pick(o.VaknarAndra)
+			g.logTo(p, text, "varn")
+			msgs[p] = wakeMsg{T: "vaknar", Namn: name, Text: text}
 		}
 	}
 	for _, p := range inside {
@@ -211,7 +227,9 @@ func (g *Game) wakeSerpent() {
 		lost := g.hiddenShare(p, int(float64(p.Treasure)*share+0.5))
 		p.Treasure -= lost
 		dmg := max(0, o.Skada-int(g.classVal(p, "ormskada", 0)))
-		g.logTo(p, fill(pick(o.KastasUt), "forlust", strconv.Itoa(lost), "skada", strconv.Itoa(dmg)), "varn")
+		text := fill(pick(o.KastasUt), "forlust", strconv.Itoa(lost), "skada", strconv.Itoa(dmg))
+		g.logTo(p, text, "varn")
+		msgs[p] = wakeMsg{T: "vaknar", Namn: name, Text: text, Inne: true, Forlust: lost, Skada: dmg}
 		p.hurt("ormen", "")
 		g.damage(p, dmg, true)
 		if p.Status != statusIn {
@@ -231,4 +249,14 @@ func (g *Game) wakeSerpent() {
 	g.wakes++
 	g.buildDeck()
 	g.logAll(pick(o.SomnarOm), "dim")
+	for _, p := range g.players {
+		if p == nil {
+			continue
+		}
+		m, ok := msgs[p]
+		if !ok {
+			m = wakeMsg{T: "vaknar", Namn: name, Text: general} // ute, död eller i källarvalven
+		}
+		g.send(p.client, m)
+	}
 }

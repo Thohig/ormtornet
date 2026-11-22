@@ -1053,6 +1053,8 @@ body.touch .card .num { display: none; }
 .isoram[hidden] { display: none; }
 /* Ormkortet: kortet du drog i skattkammaren (showSerpentCard i app.js).
    Det vänds upp från baksidan, som ett kort ur en lek. */
+/* Korten har samma framsida och baksida (.okort); ormkortet står till
+   höger på kartan och uppvaknandet stort i mitten. */
 #ormkort {
   position: absolute;
   right: 18px;
@@ -1065,9 +1067,9 @@ body.touch .card .num { display: none; }
   cursor: pointer;
   transition: opacity 0.4s;
 }
-#ormkort[hidden] { display: none; }
-#ormkort.leaving { opacity: 0; }
-#ormkort .ok-inner {
+.okort[hidden] { display: none; }
+.okort.leaving { opacity: 0; }
+.okort .ok-inner {
   position: relative;
   width: 100%;
   height: 100%;
@@ -1075,8 +1077,8 @@ body.touch .card .num { display: none; }
   transform: rotateY(180deg) translateY(-30px);
   transition: transform 0.7s cubic-bezier(0.2, 0.7, 0.3, 1);
 }
-#ormkort.vand .ok-inner { transform: rotateY(0deg); }
-#ormkort .ok-back, #ormkort .ok-front {
+.okort.vand .ok-inner { transform: rotateY(0deg); }
+.okort .ok-back, .okort .ok-front {
   position: absolute;
   inset: 0;
   backface-visibility: hidden;
@@ -1084,7 +1086,7 @@ body.touch .card .num { display: none; }
   box-shadow: 0 6px 22px rgba(0, 0, 0, 0.75);
 }
 /* Baksidan: mörkt läder med en ring av fjäll. */
-#ormkort .ok-back {
+.okort .ok-back {
   transform: rotateY(180deg);
   background:
     radial-gradient(circle at 50% 50%, transparent 0 28px, #c9a24f 29px 31px, transparent 32px 44px, #c9a24f 45px 46px, transparent 47px),
@@ -1094,7 +1096,7 @@ body.touch .card .num { display: none; }
   outline-offset: -8px;
 }
 /* Framsidan: pergament med en ram, namnet, bilden och texten. */
-#ormkort .ok-front {
+.okort .ok-front {
   display: flex;
   flex-direction: column;
   padding: 10px 10px 8px;
@@ -1105,8 +1107,8 @@ body.touch .card .num { display: none; }
   color: #2a1e12;
   text-shadow: none;
 }
-#ormkort .ok-front.vaknar { background: radial-gradient(ellipse at 50% 40%, #e8c8b0, #b88068); }
-#ormkort .ok-namn {
+.okort .ok-front.vaknar { background: radial-gradient(ellipse at 50% 40%, #e8c8b0, #b88068); }
+.okort .ok-namn {
   text-align: center;
   font-size: 11px;
   letter-spacing: 0.18em;
@@ -1114,15 +1116,44 @@ body.touch .card .num { display: none; }
   border-bottom: 1px solid #8a6a3a;
   padding-bottom: 4px;
 }
-#ormkort .ok-bild { flex: 0 0 auto; margin: 4px auto 2px; width: 120px; height: 104px; }
-#ormkort .ok-bild svg { width: 100%; height: 100%; display: block; }
-#ormkort .ok-text { font-size: 10.5px; line-height: 1.35; flex: 1 1 auto; overflow: hidden; }
-#ormkort .ok-guld { text-align: right; font-size: 12px; color: #7a5a10; font-weight: bold; }
+.okort .ok-bild { flex: 0 0 auto; margin: 4px auto 2px; width: 120px; height: 104px; }
+.okort .ok-bild svg { width: 100%; height: 100%; display: block; }
+.okort .ok-text { font-size: 10.5px; line-height: 1.35; flex: 1 1 auto; overflow: hidden; }
+.okort .ok-guld { text-align: right; font-size: 12px; color: #7a5a10; font-weight: bold; }
+/* Uppvaknandet: ett större kort mitt på kartan, som skakar till när det
+   har vänts, med mörker runt omkring. */
+#vakenkort {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 4;
+  width: 220px;
+  height: 322px;
+  margin: -161px 0 0 -110px;
+  perspective: 800px;
+  cursor: pointer;
+  transition: opacity 0.4s;
+  box-shadow: 0 0 0 100vmax rgba(0, 0, 0, 0.45);
+  border-radius: 10px;
+}
+#vakenkort.vand .ok-inner { animation: skaka 0.5s 0.7s; }
+@keyframes skaka {
+  20% { translate: -6px 0; }
+  40% { translate: 6px 0; }
+  60% { translate: -4px 0; }
+  80% { translate: 3px 0; }
+}
+#vakenkort .ok-namn { font-size: 13px; color: #6a1408; }
+#vakenkort .ok-bild { width: 160px; height: 140px; }
+#vakenkort .ok-text { font-size: 11.5px; }
+#vakenkort .ok-forlust { text-align: right; font-size: 12px; color: #8a1a08; font-weight: bold; }
 @media (max-width: 700px) {
   #ormkort { transform: scale(0.8); transform-origin: right center; }
+  #vakenkort { transform: scale(0.85); }
 }
 @media (prefers-reduced-motion: reduce) {
-  #ormkort .ok-inner { transition: none; }
+  .okort .ok-inner { transition: none; }
+  #vakenkort.vand .ok-inner { animation: none; }
 }
 /* Sömnmätaren i panelen Nu, i skattkammaren (sleepMeter i app.js): tre
    steg som andas, långsamt när ormen sover djupt och fort när den är nära
