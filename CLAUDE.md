@@ -73,17 +73,20 @@ Så här skiljer vi på sakerna när användaren ger instruktioner:
     det första rumsblocket) och Runda 1, 2 … Bara den
     senaste rundan står i bild; de äldre ligger under strecket "tidigare".
     Det första rumsblocket har porten man kliver in genom, solen och
-    portarna man hör de andra gå in genom (`atTheGate` i `here.go`).
+    portarna man hör de andra gå in genom (`atTheGate` i `here.go`), och
+    står sist under Vandringen börjar.
     Överst i rundan står **rumsblocket**, som löpande text utan ruta och
     utan namn: beskrivningen när rummet är nytt, det man
     ser (beskrivet, inte förklarat) och sist det man hörde (`here.go`,
     `har_` i `data/texter.json`, `spar_efter` i `data/fallor.json`).
+    Ett känt, tomt rum ger inget block, och en strid som pågår hörs bara
+    första rundan (`hearFight` i `sounds.go`).
     Teckenförklaringen togs bort 2026-11-22.
 - **namnen**: rum, fällor och varelser har inga namn för spelarna, bara
   beskrivningar. `namn` i `data/` syns bara på värdsidan; där en text
   behöver nämna något står den **korta beskrivningen** (`kort`, och
-  `kort_bestamd` för varelserna). Ormen, skattkammaren och föremålen har
-  namn.
+  `kort_bestamd` för varelserna, och `kort_igen` när striden har pågått
+  en runda). Ormen, skattkammaren och föremålen har namn.
 - **frånvarande vandrare**: inställningen Frånvarande vandrare säger efter
   hur många rundor AI:n tar över en vandrare vars människa har lämnat
   eller står still, alltså inte väljer något drag (`takeover.go`). Ett eget
@@ -104,8 +107,10 @@ Så här skiljer vi på sakerna när användaren ger instruktioner:
 - **stormen**: introts moln, regn, blixtar, åska och musik.
 - **krönikan** (skärmen): vyn `chronscreen` på spelarsidan (`renderChron` i
   `web/app.js`). Den som dör ser **Din vandring**, rundans kort runda för
-  runda (`vandring` i tillståndet, `journeyOf` i `chronicle.go`), och i
-  slutet ser alla resultaten, epilogen, hela krönikan och sin vandring.
+  runda (`vandring` i tillståndet, `journeyOf` i `chronicle.go`,
+  `addJourney` i `summary.go`), med vad skadan kom av, tysta rundor
+  ihopslagna och märket "tornet styrde". I slutet ser alla resultaten,
+  epilogen, hela krönikan och sin vandring.
   Spelledaren har där också Till värdsidan bredvid Nytt torn.
 - **tangenterna vid dörrarna**: piltangenterna som står vid dörrarna i ens
   rum på kartan snett ovanifrån (`ritaTangenter` i `klient/src/karta.ts`).

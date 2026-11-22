@@ -622,7 +622,8 @@ visar sedan för alla att något har hänt där.
 | Mörker          | lyktan slocknar i 4 rundor; du ser bara ditt eget rum |
 | Eko             | alla får veta var du är                             |
 
-Du har 6 liv. Den som når noll liv dör.
+Du har 6 liv på svårigheten Normal, och klassen kan ge fler (legoknekten
+har 7). Den som når noll liv dör.
 
 Ett vanligt rum kan sökas igenom en gång (S). Man kan hitta skatt, en dryck,
 ett föremål, en hemlig gång till ett grannrum, eller utlösa en fälla. En
@@ -792,9 +793,10 @@ Rum, fällor och varelser har inga namn för spelarna. `namn` syns bara på
 värdsidan. Spelarna får beskrivningen och det de ser och hör, och där en
 text behöver nämna något står dess korta beskrivning: `kort` för rummen
 ("en smal gång under låga valv") och fällorna ("ett galler av spetsiga
-järnstänger"), och `kort` och `kort_bestamd` för varelserna ("något blekt
-och mångbent", "det bleka mångbenta"). Ett test kräver att alla har dem
-på båda språken.
+järnstänger"), och `kort`, `kort_bestamd` och `kort_igen` för varelserna
+("något blekt och mångbent", "det bleka mångbenta", "det mångbenta").
+`kort_igen` används i striden från andra rundan. Ett test kräver att alla
+har dem på båda språken.
 
 - `texter.json` rum, beskrivningar, allmänna texter och introts väntetid. Varje rumstyp har sin inredning på kartan under `modell.inredning`, med namnen i `klient/src/inredning.ts`
 - `fallor.json` regler (liv, chans för händelse, drycker, hur länge spåren syns), fällor och sökresultat
