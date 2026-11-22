@@ -1047,6 +1047,7 @@ body.touch #side { overflow-y: auto; }
   gap: 14px;
   text-align: left;
 }
+/* Klasskorten har spelkortens pergament, ram och mörka text (.okort). */
 .card {
   position: relative;
   display: flex;
@@ -1054,34 +1055,44 @@ body.touch #side { overflow-y: auto; }
   gap: 8px;
   min-height: 300px;
   padding: 14px 14px 30px;
-  border: 1px solid var(--dim);
+  border: 3px solid #3a2414;
   border-radius: 10px;
-  outline: 1px solid var(--faint);
-  outline-offset: -6px;
-  background: linear-gradient(170deg, #1a150c, #0b0905 70%);
-  color: var(--fg);
+  outline: 1px solid #8a6a3a;
+  outline-offset: -7px;
+  background: radial-gradient(ellipse at 50% 40%, #f1e6c8, #d9c79c);
+  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.75);
+  color: #2a1e12;
+  text-shadow: none;
   font: inherit;
   text-align: left;
   cursor: pointer;
-  transition: transform 0.15s, border-color 0.15s, box-shadow 0.15s;
+  transition: transform 0.15s, box-shadow 0.15s, opacity 0.3s, filter 0.3s;
 }
 .card:hover:not(:disabled), .card:focus-visible {
   transform: translateY(-3px);
-  border-color: var(--hi);
-  box-shadow: 0 0 14px var(--glow);
-  outline-color: var(--dim);
+  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.75), 0 0 16px var(--glow);
+  outline-color: #3a2414;
 }
-.card .num { position: absolute; top: 10px; right: 14px; color: var(--fg); }
+.card .num { position: absolute; top: 10px; right: 14px; color: #6b4a24; }
 .card .num.low { top: auto; bottom: 10px; transform: rotate(180deg); }
-.card .cname { color: var(--hi); font-size: 16px; padding-right: 20px; }
-.card .desc { color: var(--fg); font-style: italic; font-size: 13px; }
-.card .stats { color: var(--info); font-size: 13px; }
-.card .good, .card .bad { font-size: 13px; line-height: 1.4; }
-.card .bad { color: #c99a7a; }
-.card .owner { margin-top: auto; color: var(--fg); }
-.card:disabled { cursor: default; opacity: 0.4; }
-.card.mine { opacity: 1; border-color: var(--hi); box-shadow: 0 0 18px var(--glow); }
-.card.mine .owner { color: var(--hi); }
+.card .cname {
+  color: #2a1e12;
+  font-size: 13px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  text-align: center;
+  padding: 0 16px 5px;
+  border-bottom: 1px solid #8a6a3a;
+}
+.card .desc { color: #5a4a36; font-style: italic; font-size: 12.5px; }
+.card .stats { color: #2a4a5e; font-size: 12.5px; }
+.card .good, .card .bad { font-size: 12.5px; line-height: 1.4; }
+.card .good { color: #2e4a1a; }
+.card .bad { color: #8a2a18; }
+.card .owner { margin-top: auto; color: #6b4a24; text-align: center; }
+.card:disabled { cursor: default; opacity: 0.45; filter: grayscale(0.7); }
+.card.mine { opacity: 1; filter: none; box-shadow: 0 6px 22px rgba(0, 0, 0, 0.75), 0 0 20px var(--glow); outline-color: #c9a24f; }
+.card.mine .owner { color: #7a5a10; font-weight: bold; }
 body.touch .card .num { display: none; }
 @media (max-width: 700px) {
   /* Telefon: korten två och två, utan den kursiva beskrivningen, och
@@ -1103,7 +1114,7 @@ body.touch .card .num { display: none; }
   #cards { grid-template-columns: 1fr 1fr; gap: 8px; }
   .card { min-height: 0; gap: 6px; padding: 10px 9px 12px; border-radius: 8px; }
   .card:hover:not(:disabled), .card:focus-visible { transform: none; }
-  .card .cname { font-size: 14px; padding-right: 0; }
+  .card .cname { font-size: 11.5px; letter-spacing: 0.12em; padding: 0 0 4px; }
   .card .desc { display: none; }
   .card .stats, .card .good, .card .bad { font-size: 12px; line-height: 1.35; }
 }

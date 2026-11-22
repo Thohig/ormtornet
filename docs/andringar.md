@@ -6,6 +6,12 @@ eller leder tornet.
 
 ## 2026-11-22
 
+### Klasskorten som spelkort
+
+- Klasskorten i klassvalet har spelkortens pergament, ram och mörka
+  text, med namnet i versaler överst, styrkan i grönt och svagheten i
+  rött.
+
 ### Vandringens största stunder
 
 - Krönikan i slutet lägger fram vandringens största stunder som stora
