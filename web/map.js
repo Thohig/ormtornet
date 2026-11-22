@@ -15,10 +15,13 @@ const MapView = (() => {
   // Kartan följer det rum vandraren står i, som står i mitten med lika
   // många rum åt varje håll. Vandraren väljer själv hur nära kartan går,
   // eller att den visar allt man känner till. Nivåernas namn är nycklar
-  // till spelarsidans texter.
+  // till spelarsidans texter. Zoomen är ett tal från 0 (Nära) till 3
+  // (Allt): knapparna och Z går hela steg, medan hjulet och två fingrar
+  // glider gradvis mellan nivåerna.
   const MIN_SPAN = 3; // så nära går kartan som mest, i rum
   const ZOOM_MS = 1100; // en ny nivå: en lång, mjuk zoom
   const PAN_MS = 400; // samma nivå i ett nytt rum: kartan glider snabbt efter
+  const GLIDE_MS = 160; // hjulet och fingrarna: kartan följer med direkt
   const LEVELS = [
     { name: "zoom_nara", span: 3 },
     { name: "zoom_mellan", span: 5 },
@@ -28,54 +31,66 @@ const MapView = (() => {
   const ALL = LEVELS.length - 1;
   const ZOOM_KEY = "ormtornet.zoom";
   let level = loadLevel();
-  let before = level === ALL ? 1 : level; // nivån som knappen för allt går tillbaka till
+  let before = level >= ALL ? 1 : level; // nivån som knappen för allt går tillbaka till
   let onZoom = null;
   let towerSize = 0;
   // target är rutan kartan ska visa, i rum: x, y, bredd och höjd. Kartan
   // glider dit från from, med start vid zoomAt.
-  let from = null, target = null, zoomAt = -Infinity, zoomMs = ZOOM_MS;
+  let from = null, target = null, zoomAt = -Infinity, zoomMs = ZOOM_MS, glide = false;
+  let nextGlide = false; // nästa nya ruta nås med en kort glidning
 
   // loadLevel ger nivån som valdes senast på den här enheten, annars Nära
   // på en smal skärm och Mellan på en större, så att tecknen går att läsa.
   function loadLevel() {
     try {
-      const n = parseInt(localStorage.getItem(ZOOM_KEY), 10);
-      if (n >= 0 && n < LEVELS.length) return n;
+      const n = parseFloat(localStorage.getItem(ZOOM_KEY));
+      if (n >= 0 && n <= ALL) return n;
     } catch {}
     return window.matchMedia("(max-width: 700px)").matches ? 0 : 1;
   }
 
-  function setLevel(n) {
+  // setLevel sätter zoomen. smooth betyder att den kommer från hjulet eller
+  // fingrarna, så att kartan följer med direkt i stället för en lång zoom.
+  function setLevel(n, smooth) {
     n = Math.max(0, Math.min(ALL, n));
-    if (n !== ALL) before = n;
+    if (Math.abs(n - Math.round(n)) < 0.02) n = Math.round(n);
+    if (n < ALL) before = n;
     if (n === level) return;
     level = n;
     try {
-      localStorage.setItem(ZOOM_KEY, String(level));
+      localStorage.setItem(ZOOM_KEY, String(Math.round(level * 1000) / 1000));
     } catch {}
-    if (onZoom) onZoom(LEVELS[level].name, level);
+    if (onZoom) onZoom(LEVELS[Math.round(level)].name, level);
+    nextGlide = !!smooth;
     if (lastState) draw(lastState);
+    nextGlide = false;
   }
 
-  // zoom går närmare (d < 0) eller längre ut (d > 0) ett steg.
+  // zoom går närmare (d < 0) eller längre ut (d > 0) till nästa hela nivå.
   function zoom(d) {
-    setLevel(level + d);
+    setLevel(d < 0 ? Math.ceil(level - 0.05) - 1 : Math.floor(level + 0.05) + 1);
+  }
+
+  // zoomBy glider närmare (d < 0) eller längre ut (d > 0) en bit av en
+  // nivå, för hjulet och två fingrar.
+  function zoomBy(d) {
+    setLevel(level + d, true);
   }
 
   // cycle går runt mellan nivåerna: Nära, Mellan, Långt, Allt och Nära igen
   // (tangenten Z).
   function cycle() {
-    setLevel((level + 1) % LEVELS.length);
+    setLevel(level >= ALL - 0.05 ? 0 : Math.floor(level + 0.05) + 1);
   }
 
   // toggleWhole växlar mellan den valda nivån och allt man känner till.
   function toggleWhole() {
-    setLevel(level === ALL ? before : ALL);
+    setLevel(level >= ALL ? before : ALL);
   }
 
   function setZoomListener(fn) {
     onZoom = fn;
-    fn(LEVELS[level].name, level);
+    fn(LEVELS[Math.round(level)].name, level);
   }
 
   // focus ger den egna vandraren, så länge den är inne och syns.
@@ -104,9 +119,23 @@ const MapView = (() => {
     if (x0 === Infinity) return { x: 0, y: 0, w: towerSize, h: towerSize };
     const all = grow({ x: x0, y: y0, w: x1 - x0, h: y1 - y0 }, MIN_SPAN);
     const me = focus(state);
-    const n = LEVELS[level].span;
-    if (!n || !me) return all;
-    return around(me, n);
+    if (!me || level >= ALL) return all;
+    if (level <= ALL - 1) return around(me, spanAt(level));
+    // Mellan Långt och Allt glider rutan från rummet man står i ut till
+    // allt man känner till.
+    const a = around(me, LEVELS[ALL - 1].span);
+    const f = level - (ALL - 1);
+    const v = {};
+    ["x", "y", "w", "h"].forEach((k) => (v[k] = a[k] + (all[k] - a[k]) * f));
+    return v;
+  }
+
+  // spanAt ger hur många rum som syns vid zoomen z mellan Nära och Långt,
+  // med lika stora steg i förstoring mellan nivåerna.
+  function spanAt(z) {
+    const i = Math.min(ALL - 2, Math.floor(z));
+    const a = LEVELS[i].span, b = LEVELS[i + 1].span;
+    return a * Math.pow(b / a, z - i);
   }
 
   // around ger en ruta på n × n rum med rummet där p står i mitten. Vid
@@ -140,7 +169,8 @@ const MapView = (() => {
     }
     if (same(t, target)) return;
     from = viewAt(now);
-    zoomMs = Math.abs(t.w - from.w) < 0.01 && Math.abs(t.h - from.h) < 0.01 ? PAN_MS : ZOOM_MS;
+    glide = nextGlide;
+    zoomMs = glide ? GLIDE_MS : Math.abs(t.w - from.w) < 0.01 && Math.abs(t.h - from.h) < 0.01 ? PAN_MS : ZOOM_MS;
     target = t;
     zoomAt = now;
   }
@@ -155,7 +185,9 @@ const MapView = (() => {
       zoomAt = -Infinity;
       return target;
     }
-    const e = f < 0.5 ? 2 * f * f : 1 - (-2 * f + 2) ** 2 / 2;
+    // Glidningen från hjulet börjar i full fart, eftersom den ofta tar
+    // över mitt i en annan; de långa zoomerna börjar och slutar mjukt.
+    const e = glide ? 1 - (1 - f) ** 3 : f < 0.5 ? 2 * f * f : 1 - (-2 * f + 2) ** 2 / 2;
     const v = {};
     ["x", "y", "w", "h"].forEach((k) => (v[k] = from[k] + (target[k] - from[k]) * e));
     return v;
@@ -209,5 +241,5 @@ const MapView = (() => {
     if (iso) iso.vakna();
   }
 
-  return { setup, draw, resize, ping, wake, zoom, cycle, toggleWhole, setZoomListener, PLAYER_COLORS };
+  return { setup, draw, resize, ping, wake, zoom, zoomBy, cycle, toggleWhole, setZoomListener, PLAYER_COLORS };
 })();

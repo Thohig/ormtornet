@@ -393,8 +393,9 @@ en tunn ram i din färg. Vid tornets kanter går rutan bara lite utanför
 tornet, så att portarna syns och ett rum i hörnet inte hamnar under
 knapparna. Hur nära kartan går väljer du själv: Nära
 (3 × 3 rum), Mellan (5 × 5), Långt (9 × 9) eller Allt du känner till. Z
-går runt mellan dem. Det går också med scrollhjulet, med två fingrar på en
-pekskärm eller med knapparna nere till höger på kartan, och ett klick på
+går runt mellan dem, och knapparna nere till höger på kartan går en nivå
+närmare eller längre ut. Scrollhjulet och två fingrar på en pekskärm zoomar gradvis, så att
+du kan stanna mellan nivåerna, och ett klick på
 nivåns namn växlar mellan din nivå och Allt. En smal skärm börjar på Nära och en
 större på Mellan, och sidan kommer ihåg ditt val på den enheten. Ligger
 en port eller kammaren du känner till, eller en vandrare du ser, utanför

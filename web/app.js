@@ -1796,31 +1796,30 @@ function padArrows() {
   });
 }
 
-// Zoomen: knapparna i kartans hörn, scrollhjulet och två fingrar väljer hur
-// nära kartan går. Z på tangentbordet går runt mellan nivåerna genom
-// pressKey.
+// Zoomen: knapparna i kartans hörn och Z på tangentbordet (genom pressKey)
+// går en hel nivå i taget, medan scrollhjulet och två fingrar zoomar
+// gradvis.
 let zoomKey = ""; // nyckeln till zoomnivåns namn
 MapView.setZoomListener((name, n) => {
   zoomKey = name;
   $("zoomName").textContent = t(name);
-  $("zoomIn").disabled = n === 0;
-  $("zoomOut").disabled = n === 3;
+  $("zoomIn").disabled = n <= 0;
+  $("zoomOut").disabled = n >= 3;
 });
 $("zoomIn").addEventListener("click", () => MapView.zoom(-1));
 $("zoomOut").addEventListener("click", () => MapView.zoom(1));
 $("zoomName").addEventListener("click", () => MapView.toggleWhole());
 {
-  // Ett hjul ger många små steg; ett steg i taget räcker.
-  let wheelAt = 0;
+  // Ett hack på hjulet (100 bildpunkter) är en knapp tredjedels nivå; en
+  // styrplatta ger många små steg som blir en jämn zoom.
   $("mapbox").addEventListener("wheel", (e) => {
-    if (!state || state.phase !== "spel" || Math.abs(e.deltaY) < 1) return;
+    if (!state || state.phase !== "spel" || !e.deltaY) return;
     e.preventDefault();
-    const now = performance.now();
-    if (now - wheelAt < 250) return;
-    wheelAt = now;
-    MapView.zoom(e.deltaY > 0 ? 1 : -1);
+    const px = e.deltaMode === 1 ? e.deltaY * 33 : e.deltaMode === 2 ? e.deltaY * 400 : e.deltaY;
+    MapView.zoomBy(Math.max(-0.5, Math.min(0.5, px / 300)));
   }, { passive: false });
-  // Två fingrar: isär går närmare, ihop går längre ut.
+  // Två fingrar: isär går närmare, ihop går längre ut. Att dra isär
+  // fingrarna till dubbla avståndet är ungefär en och en halv nivå.
   let pinch = 0;
   const dist = (t) => Math.hypot(t[0].clientX - t[1].clientX, t[0].clientY - t[1].clientY);
   $("mapbox").addEventListener("touchstart", (e) => {
@@ -1830,11 +1829,8 @@ $("zoomName").addEventListener("click", () => MapView.toggleWhole());
     if (e.touches.length !== 2 || !pinch) return;
     e.preventDefault();
     const d = dist(e.touches);
-    if (d > pinch * 1.35) {
-      MapView.zoom(-1);
-      pinch = d;
-    } else if (d < pinch / 1.35) {
-      MapView.zoom(1);
+    if (d > 0) {
+      MapView.zoomBy(-Math.log(d / pinch) * 2);
       pinch = d;
     }
   }, { passive: false });

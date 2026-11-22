@@ -6,6 +6,13 @@ eller leder tornet.
 
 ## 2026-11-22
 
+### Zoomen glider
+
+- Scrollhjulet och två fingrar zoomar kartan gradvis i stället för att
+  hoppa mellan Nära, Mellan, Långt och Allt. Ett hack på hjulet är en
+  tredjedels nivå, och en styrplatta ger en jämn zoom. Knapparna och Z går
+  fortfarande en hel nivå i taget, och namnet visar den närmaste nivån.
+
 ### Loggen och krönikan, efter en genomläsning
 
 - Rättat: spåret efter en fälla som nyss slog till står inte längre före
