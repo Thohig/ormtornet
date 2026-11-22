@@ -241,6 +241,7 @@ type Player struct {
 	told       told            // vad vandraren senast fick veta om sitt rum (here.go)
 	roundRoom  *roomMsg        // rumsblocket den här rundan, för Din vandring
 	heard      []string        // det vandraren har hört under rundan (sounds.go)
+	trapNow    string          // fällan som slog till mot vandraren under rundan; loggen har redan sagt det (here.go)
 	known      [][]bool        // rum vandraren själv har varit i, det enda den ser på kartan
 	bot        *botBrain       // satt för datorstyrda vandrare
 
@@ -285,7 +286,8 @@ type Client struct {
 }
 
 type Game struct {
-	hearing  bool // rundan avgörs, och ljuden samlas till rumsblocken (sounds.go)
+	slain    map[int]int // varelser som har fällts den här vandringen, och av vem (here.go)
+	hearing  bool        // rundan avgörs, och ljuden samlas till rumsblocken (sounds.go)
 	mu       sync.Mutex
 	base     *Data // datafilerna som de är
 	nextData *Data // nyss inlästa datafiler som gäller från nästa torn
@@ -1282,6 +1284,7 @@ func (g *Game) startGame() {
 	g.usedClues = map[string]bool{}
 	g.pickSerpentName()
 	g.resetChronicle()
+	g.slain = map[int]int{}
 	for _, p := range g.players {
 		if p != nil {
 			p.Ready = p.bot != nil
@@ -1297,7 +1300,12 @@ func (g *Game) startGame() {
 	}
 	g.soundAll("start")
 	if s := g.data.difficulty(g.cfg.Difficulty); s != nil {
-		g.logAll(g.data.Text("svarighet", "namn", s.Namn, "liv", strconv.Itoa(g.data.Regler.Liv)), "dim")
+		// Livet efter klassen, så att legoknekten får höra att hen har ett extra.
+		for _, p := range g.players {
+			if p != nil {
+				g.logTo(p, g.data.Text("svarighet", "namn", s.Namn, "liv", strconv.Itoa(g.maxHP(p))), "dim")
+			}
+		}
 	}
 	g.logAll(g.data.Text("synlighet_egen"), "dim")
 	g.revealPorts()

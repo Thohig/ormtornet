@@ -1074,6 +1074,7 @@ body.touch .card .num { display: none; }
 #chronResults { text-align: center; font-size: 15px; }
 #chronResults .win { color: var(--hi); }
 #chronResults .lost { color: var(--warn); }
+#chronResults .dim { color: var(--chalk); font-size: 13px; }
 #chronEpilog { color: #e3b8f0; font-style: italic; }
 #chronEpilog .varn { color: var(--warn); }
 #chronEpilog .info { color: var(--fg); }

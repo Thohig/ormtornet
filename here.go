@@ -68,11 +68,19 @@ func (g *Game) tellRoom(p *Player) {
 		}
 		return
 	}
-	cur := g.hereParts(p)
+	all := g.hereParts(p)
 	now := map[string]herePart{}
-	for _, part := range cur {
+	var cur []herePart
+	for _, part := range all {
 		now[part.key] = part
+		// Spåret efter en fälla som nyss slog till mot vandraren står inte
+		// i blocket: loggen har redan sagt vad som hände, och blocket står
+		// överst i rundan, före den raden.
+		if p.trapNow == "" || part.key != "falla:"+p.trapNow {
+			cur = append(cur, part)
+		}
 	}
+	p.trapNow = ""
 	moved := !p.told.ok || p.told.x != p.X || p.told.y != p.Y
 	msg := roomMsg{T: "rum", Kvar: !moved, Hor: strings.Join(heard, " ")}
 	if moved {
@@ -87,9 +95,21 @@ func (g *Game) tellRoom(p *Player) {
 		}
 		var gone []string
 		for key, part := range p.told.parts {
-			if _, ok := now[key]; !ok && part.gone != "" {
-				gone = append(gone, part.gone)
+			if _, ok := now[key]; ok || part.gone == "" {
+				continue
 			}
+			if part.kind == "varelse" {
+				// En fälld varelse är inte borta: den som fällde den har
+				// redan läst det i loggen, och de andra ser den ligga där.
+				id, _ := strconv.Atoi(strings.TrimPrefix(key, "varelse:"))
+				if by, ok := g.slain[id]; ok {
+					if by != p.ID {
+						gone = append(gone, g.data.Text("har_varelse_falld", "varelse", upperFirst(part.name)))
+					}
+					continue
+				}
+			}
+			gone = append(gone, part.gone)
 		}
 		if len(added) == 0 && len(gone) == 0 && len(heard) == 0 {
 			return

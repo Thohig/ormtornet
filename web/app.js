@@ -628,7 +628,10 @@ function renderChron() {
   $("chronLead").textContent = end ? "" : v.dod || "";
   $("chronStatus").textContent = end ? "" : t("vandring_pagar", { runda: state.round, sol: state.sun, inne: v.inne, ute: v.ute });
   // Resultaten: vem som kom ut med hur mycket, vinnaren först.
-  rows("chronResults", end ? (state.results || []).map((r) => ({ text: (r.winner ? "★ " : "") + r.name + (r.ai ? " ~" : "") + " · " + resultWord(r), c: r.winner ? "win" : r.status !== "ute" ? "lost" : "" })) : []);
+  const results = end ? (state.results || []).map((r) => ({ text: (r.winner ? "★ " : "") + r.name + (r.ai ? " ~" : "") + " · " + resultWord(r), c: r.winner ? "win" : r.status !== "ute" ? "lost" : "" })) : [];
+  // ~ förklaras under resultaten, som i resultatrutan på kartan.
+  if (end && (state.results || []).some((r) => r.ai)) results.push({ text: t("slut_ai"), c: "dim" });
+  rows("chronResults", results);
   rows("chronEpilog", end ? state.epilog : []);
   rows("chronAll", end ? (state.kronika || []).filter((l) => l.c !== "rubrik").map((l) => ({ text: l.text, c: l.c, kort: l.kort })) : []);
   if (end && state.kronika && state.kronika[0]) {

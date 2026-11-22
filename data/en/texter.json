@@ -406,6 +406,9 @@
     "har_varelse_borta": [
       "{varelse} is gone."
     ],
+    "har_varelse_falld": [
+      "{varelse} lies slain on the floor."
+    ],
     "har_vandrare": [
       "{namn} is in the room, watching you."
     ],

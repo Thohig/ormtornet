@@ -268,3 +268,57 @@ func TestMonstersHaveNoNamesForPlayers(t *testing.T) {
 		}
 	}
 }
+
+// Spåret efter en fälla som nyss slog till mot vandraren står inte i
+// blocket, eftersom blocket står före loggens rad om fällan.
+func TestRoomBlockSkipsTrapThatJustHit(t *testing.T) {
+	g, a, _ := startTwo(t)
+	pa := a.player
+	pa.HP = 99
+	putInRoom(g, pa, 3, 3)
+	pa.told = told{}
+	trap := g.data.trap("roterande")
+	g.trigger(pa, trap, 0)
+	rooms(a)
+	g.tellRoom(pa)
+	for _, m := range rooms(a) {
+		if strings.Contains(m.Har, trap.SparEfter[0]) {
+			t.Fatalf("spåret stod i blocket samma runda: %+v", m)
+		}
+	}
+	// Nästa runda har inget ändrats, och spåret sägs inte i efterhand.
+	g.tellRoom(pa)
+	if got := rooms(a); len(got) != 0 {
+		t.Fatalf("spåret kom i efterhand: %+v", got)
+	}
+}
+
+// En fälld varelse är inte "borta": den som fällde den får inget, de
+// andra i rummet ser den ligga där.
+func TestRoomBlockSlainMonster(t *testing.T) {
+	g, a, b := startTwo(t)
+	pa, pb := a.player, b.player
+	putInRoom(g, pa, 4, 4)
+	putInRoom(g, pb, 4, 4)
+	m := &Monster{ID: 5, Type: g.data.Monster.Typer[0].ID, X: 4, Y: 4, HP: 1}
+	g.monsters = append(g.monsters, m)
+	g.tellRoom(pa)
+	g.tellRoom(pb)
+	rooms(a)
+	rooms(b)
+	g.defeat(pa, m)
+	g.tellRoom(pa)
+	g.tellRoom(pb)
+	mt := g.data.monsterType(m.Type)
+	borta := g.data.Text("har_varelse_borta", "varelse", upperFirst(mt.KortBestamd))
+	for _, got := range rooms(a) {
+		if strings.Contains(got.Har, borta) {
+			t.Errorf("den som fällde varelsen fick %q", got.Har)
+		}
+	}
+	want := g.data.Text("har_varelse_falld", "varelse", upperFirst(mt.KortBestamd))
+	got := rooms(b)
+	if len(got) != 1 || got[0].Har != want {
+		t.Errorf("den andra väntades se %q, fick %+v", want, got)
+	}
+}

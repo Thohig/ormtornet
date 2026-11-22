@@ -261,6 +261,9 @@ func (g *Game) freeAttack(p *Player, m *Monster, key string) {
 func (g *Game) defeat(p *Player, m *Monster) {
 	t := g.data.monsterType(m.Type)
 	g.removeMonster(m)
+	if g.slain != nil {
+		g.slain[m.ID] = p.ID
+	}
 	p.Treasure += t.Guld
 	p.stats.kills++
 	g.chronicle("kronika_varelse", "namn", p.Name, "varelse", t.Kort)

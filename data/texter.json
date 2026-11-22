@@ -422,6 +422,9 @@
     "har_varelse_borta": [
       "{varelse} är borta."
     ],
+    "har_varelse_falld": [
+      "{varelse} ligger fälld på golvet."
+    ],
     "har_vandrare": [
       "{namn} står i rummet och ser på dig."
     ],

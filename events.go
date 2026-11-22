@@ -54,6 +54,7 @@ func (g *Game) trigger(p *Player, t *Trap, depth int) {
 		return
 	}
 	p.Seen[t.ID] = true
+	p.trapNow = t.ID
 	p.stats.traps++
 	p.hurt("falla", t.Kort)
 
