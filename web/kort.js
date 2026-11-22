@@ -371,6 +371,36 @@ ${[[30, 72], [44, 76], [58, 74], [72, 72], [38, 66], [52, 68], [66, 66], [46, 60
   const FORBANNAD = `<rect x="4" y="4" width="92" height="92" rx="6" fill="#4a0a06" opacity="0.35"/>
 <path d="M12 20l14 10 -4 12 12 8M88 80l-12 -8 4 -14 -10 -6M70 12l-6 12 8 6" fill="none" stroke="#2a0604" stroke-width="1.4" opacity="0.8"/>`;
 
+  // ---- Källarvalven och avslöjandet ----
+
+  // Valv som går in i mörkret under tornet.
+  BILDER.kallare = () => `<rect x="4" y="4" width="92" height="92" rx="6" fill="#1e1610" opacity="0.8"/>
+${[0, 1, 2, 3].map((i) => { const w = 76 - i * 16, x = 50 - w / 2, y = 18 + i * 9, h = 80 - i * 14; return `<path d="M${x} ${y + h}V${y + w / 2}a${w / 2} ${w / 2} 0 0 1 ${w} 0V${y + h}" fill="none" stroke="${STEN}" stroke-width="${4 - i * 0.8}" opacity="${0.9 - i * 0.2}"/>`; }).join("")}
+<path d="M14 94l14 -10h44l14 10" fill="none" stroke="${MORK_STEN}" stroke-width="2"/>`;
+
+  // Ett varsel: ett öga i dimman.
+  BILDER.varsel = () => `${[[26, 64, 18], [52, 70, 22], [76, 62, 16], [40, 40, 14], [66, 38, 12]].map(([x, y, r]) => `<circle cx="${x}" cy="${y}" r="${r}" fill="#b8b0a0" opacity="0.35"/>`).join("")}
+<path d="M24 50q26 -26 52 0q-26 26 -52 0z" fill="#efe6d0" stroke="${BRUN}" stroke-width="1.6"/>
+<circle cx="50" cy="50" r="10" fill="#6a7a4a"/><circle cx="50" cy="50" r="4.5" fill="${BLAECK}"/>
+<circle cx="47" cy="47" r="1.8" fill="#fff"/>`;
+
+  // En del av namnet: tre tecken ristade i sten, och ett som syns.
+  BILDER.namndel = () => `${vagg()}
+<rect x="16" y="30" width="68" height="40" rx="4" fill="${STEN}" opacity="0.5" stroke="${MORK_STEN}" stroke-width="1.4"/>
+<path d="M26 38v24M26 44l8 -6M26 52l8 6" fill="none" stroke="${GULD}" stroke-width="2.6" stroke-linecap="round"/>
+<path d="M46 38l8 24M54 38l-8 24M44 50h12" fill="none" stroke="${MORK_STEN}" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+<path d="M68 38q-6 12 0 24M72 38q6 12 0 24" fill="none" stroke="${MORK_STEN}" stroke-width="2" stroke-linecap="round" opacity="0.6"/>`;
+
+  // Tornet lyssnar: en viskning som går in i en slinga.
+  BILDER.invigd = () => {
+    const pts = serpentSpiral(62, 52, 2.2, 2, 3.4);
+    const d = "M" + pts.map(([x, y]) => f(x) + " " + f(y)).join("L");
+    return `${vagg()}
+<path d="${d}" fill="none" stroke="#5a3a6a" stroke-width="3" stroke-linecap="round" opacity="0.8"/>
+<path d="M14 40q6 -6 12 0q-6 8 -12 0z" fill="${BRUN}"/>
+<path d="M28 38q6 2 10 0M28 44q8 2 12 0M28 50q6 2 10 0" fill="none" stroke="${BRUN}" stroke-width="1.4" stroke-linecap="round"/>`;
+  };
+
   const ORM = ["sover", "ror_sig", "vaknar"];
 
   return {

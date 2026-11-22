@@ -46,6 +46,24 @@ func (g *Game) addCard(p *Player, c gameCard) {
 	p.roundCards = append(p.roundCards, c)
 }
 
+// cardMsg är ett spelkort som kommer mellan rundorna, till exempel ett
+// varsel eller viskningen. Klienten visar det som ett eget spelkort, efter
+// det som står uppe.
+type cardMsg struct {
+	T     string   `json:"t"`
+	Round int      `json:"round"`
+	Kort  gameCard `json:"kort"`
+}
+
+// sendCard visar ett spelkort genast, utanför rundans sammanfattning.
+func (g *Game) sendCard(p *Player, c gameCard) {
+	if p == nil || p.client == nil {
+		return
+	}
+	c.Rubrik = upperFirst(c.Rubrik)
+	g.send(p.client, cardMsg{T: "kort", Round: g.round, Kort: c})
+}
+
 // roundCardsOf ger rundans kort i ordningen ur data, det viktigaste först.
 // Kort av en sort som ordningen inte känner kommer sist.
 func (g *Game) roundCardsOf(p *Player) []gameCard {
@@ -69,6 +87,7 @@ var cardImages = []string{
 	"krypare", "yngel", "fjallvakt", "gallgast", "benvaktare", "vandrare",
 	"rep", "amulett", "veke", "skold", "vaska", "kompass", "rokpulver", "spegel", "kastkniv", "krita",
 	"flojt", "timglas", "svart_parla", "mynt_hal", "rostkrona", "brev", "dryck", "guld",
+	"kallare", "varsel", "namndel", "invigd",
 }
 
 // cardImage är motivet för innehåll i data/: fältet bild, annars id:t.

@@ -582,6 +582,11 @@ och varelser har sin korta beskrivning som rubrik, aldrig namnet.
   sin baksida vänds kortet en gång till och blir mörkt.
 - **Drycker** och **guld** du hittar när du söker, och drycken du
   dricker, ger var sitt kort. Siffrorna står på kortets rader.
+- **Källarvalven** ger ett kort när du faller ner och när du kommer upp,
+  och ett **brev** ett kort med brevets text.
+- **Varslen**, **namnets delar** och att du blir **invigd** kommer mellan
+  rundorna och visas genast som ett eget kort (meddelandet `kort`). Står
+  ett kort redan uppe väntar det nya tills det första har gått undan.
 
 ### Skattkammaren och ormen
 

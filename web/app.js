@@ -422,6 +422,9 @@ function handle(msg) {
     case "runda":
       showRoundCard(msg);
       break;
+    case "kort":
+      showRoundCard({ round: msg.round, kort: [msg.kort] });
+      break;
     case "sound":
       Sound.play(msg.s);
       break;
@@ -1007,19 +1010,21 @@ function renderNow(me) {
 // bild. Kortet glider undan när du väljer nästa drag, efter en stund eller
 // vid ett klick. Står ett stort kort mitt på kartan väntar spelkortet tills
 // det har gått undan.
+// Ett spelkort som kommer medan ett annat står uppe (ett varsel efter
+// rundans kort) väntar i kön tills det första har gått undan.
 const CARD_MS = 8000;
 let cardTimer = null;
 let cardAction = "";
-let cardWaiting = null;
+const cardQueue = [];
 function showRoundCard(msg) {
   const lines = msg.lines || [];
   const cards = msg.kort || [];
   if (!lines.length && !cards.length) return;
-  if (!$("vakenkort").hidden) {
-    cardWaiting = msg;
+  const el = $("spelkort");
+  if (!$("vakenkort").hidden || (!el.hidden && !el.classList.contains("leaving"))) {
+    cardQueue.push(msg);
     return;
   }
-  const el = $("spelkort");
   const main = cards[0];
   const round = t("rundkort_rubrik", { runda: msg.round });
   const front = buildCard(el, main ? main : { bild: "fackla", rubrik: round });
@@ -1055,7 +1060,7 @@ function showRoundCard(msg) {
     more.setAttribute("aria-label", cards.slice(1).map((c) => c.rubrik).join(", "));
     front.appendChild(more);
   }
-  cardAction = "";
+  cardAction = (state && state.action) || "";
   clearTimeout(cardTimer);
   cardTimer = setTimeout(hideRoundCard, CARD_MS);
 }
@@ -1065,13 +1070,19 @@ function hideRoundCard() {
   clearTimeout(cardTimer);
   card.classList.add("leaving");
   setTimeout(() => {
-    if (card.classList.contains("leaving")) card.hidden = true;
+    if (!card.classList.contains("leaving")) return;
+    card.hidden = true;
+    nextCard();
   }, 400);
+}
+// nextCard visar nästa kort i kön, om inget stort kort står uppe.
+function nextCard() {
+  if (cardQueue.length && $("vakenkort").hidden && $("spelkort").hidden) showRoundCard(cardQueue.shift());
 }
 // checkRoundCard döljer kortet när ett nytt drag är valt eller vandringen
 // är slut.
 function checkRoundCard() {
-  if (state.phase !== "spel") cardWaiting = null;
+  if (state.phase !== "spel") cardQueue.length = 0;
   if ($("spelkort").hidden) return;
   if (state.phase !== "spel") {
     $("spelkort").hidden = true;
@@ -1162,11 +1173,7 @@ function hideWakeCard() {
   setTimeout(() => {
     if (!el.classList.contains("leaving")) return;
     el.hidden = true;
-    if (cardWaiting) {
-      const msg = cardWaiting;
-      cardWaiting = null;
-      showRoundCard(msg);
-    }
+    nextCard();
   }, 400);
 }
 $("vakenkort").addEventListener("click", hideWakeCard);

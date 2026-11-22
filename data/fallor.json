@@ -232,6 +232,15 @@
     "kort_guld": [
       "Guld"
     ],
+    "kort_kallare": [
+      "Källarvalven"
+    ],
+    "kort_kallare_ner": [
+      "Du faller ner i mörkret under tornet."
+    ],
+    "kort_kallare_upp": [
+      "Upp ur källarvalven"
+    ],
     "kort_forbi": [
       "Du klev förbi."
     ],

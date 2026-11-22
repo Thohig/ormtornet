@@ -107,6 +107,7 @@ func (g *Game) dealOmens() {
 		}
 		text := strings.NewReplacer("{avstand}", avstand, "{riktning}", g.data.Horn[hornIndex(x-p.X, y-p.Y)]).Replace(pick(list))
 		g.logTo(p, text, "info")
+		g.sendCard(p, gameCard{Slag: "varsel", Bild: "varsel", Rubrik: g.data.Text("kort_varsel"), Text: text})
 		g.omens = append(g.omens, omenNote{X: x, Y: y, What: r.omen, To: p.Name, Round: g.round})
 	}
 }

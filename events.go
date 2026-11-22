@@ -108,6 +108,7 @@ func (g *Game) trigger(p *Player, t *Trap, depth int) {
 		if p.Status == statusIn && !g.useItem(p, "rep") {
 			p.Cellar = max(1, t.Rundor)
 			p.Stuck = 0
+			g.addCard(p, gameCard{Slag: "kallare", Bild: "kallare", Rubrik: g.data.Text("kort_kallare"), Text: g.data.Text("kort_kallare_ner")})
 		}
 	case "roterande":
 		var doors []Dir
@@ -161,7 +162,9 @@ func (g *Game) leaveCellar(p *Player) {
 	room.Walked = true
 	g.noteRoom(p)
 	g.newRoomSound(p)
-	g.logTo(p, g.data.Text("kallare_ut", "rum", g.roomShort(room)), "info")
+	text := g.data.Text("kallare_ut", "rum", g.roomShort(room))
+	g.logTo(p, text, "info")
+	g.addCard(p, gameCard{Slag: "kallare", Bild: "kallare", Rubrik: g.data.Text("kort_kallare_upp"), Text: text})
 	g.describeLater(p, room, p.X, p.Y)
 	g.noticeTrail(p)
 	g.pickUp(p)

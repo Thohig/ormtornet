@@ -30,6 +30,9 @@ eller leder tornet.
   säger bara att du hittade det. Ett förbannat föremål vänds en gång till
   när det visar sin baksida. Drycker och guld får egna kort, och raderna
   om dem i loggen säger inte längre hur mycket du har.
+- Källarvalven, brevet, varslen, namnets delar och att bli invigd har
+  egna kort. Det som kommer mellan rundorna visas genast, efter kortet
+  som står uppe.
 
 ### Fröet, hela bredden och loggen på kartan
 

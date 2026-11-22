@@ -401,7 +401,11 @@ func (g *Game) readLetter(p *Player) {
 	for l := level; l >= 1; l-- {
 		if list := g.data.Foremal.Brev[strconv.Itoa(l)]; len(list) > 0 {
 			g.logTo(p, g.data.Text("brev_hittar"), "syn")
-			g.logTo(p, pick(list), "rost")
+			text := pick(list)
+			g.logTo(p, text, "rost")
+			if t := g.data.itemType("brev"); t != nil {
+				g.addCard(p, gameCard{Slag: "brev", Bild: cardImage(t.Bild, t.ID), Rubrik: t.Namn, Text: text})
+			}
 			p.stats.items++
 			return
 		}

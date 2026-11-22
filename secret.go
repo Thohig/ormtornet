@@ -131,7 +131,9 @@ func (g *Game) dealNameParts() {
 				}
 			}
 			p.parts[best] = true
-			g.logTo(p, g.namePartText(best), "info")
+			text := g.namePartText(best)
+			g.logTo(p, text, "info")
+			g.sendCard(p, gameCard{Slag: "namn", Bild: "namndel", Rubrik: g.data.Text("kort_namndel"), Text: text})
 		}
 	}
 }
@@ -218,7 +220,9 @@ func (g *Game) Whisper(c *Client, text string) {
 	}
 	p.initiated = true
 	g.soundTo(p, "rost")
-	g.logTo(p, g.data.Text("invigd"), "rost")
+	said := g.data.Text("invigd")
+	g.logTo(p, said, "rost")
+	g.sendCard(p, gameCard{Slag: "viska", Bild: "invigd", Rubrik: g.data.Text("kort_invigd"), Text: said})
 	g.logOthers(p, g.data.Text("invigd_andra"), "dim")
 	g.chronicle("kronika_invigd", "namn", p.Name, "runda", strconv.Itoa(g.round))
 	g.checkMercy()
@@ -240,7 +244,9 @@ func (g *Game) takeNameParts(killer, victim *Player) {
 	if len(got) == 0 {
 		return
 	}
-	g.logTo(killer, g.data.Text("namndel_byte", "offer", victim.Name, "delar", strings.Join(got, ", ")), "rost")
+	text := g.data.Text("namndel_byte", "offer", victim.Name, "delar", strings.Join(got, ", "))
+	g.logTo(killer, text, "rost")
+	g.addCard(killer, gameCard{Slag: "namn", Bild: "namndel", Rubrik: g.data.Text("kort_namndel"), Text: text})
 	g.chronicle("kronika_namndel", "namn", killer.Name, "offer", victim.Name)
 }
 

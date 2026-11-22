@@ -240,6 +240,15 @@
   },
 
   "texter": {
+    "kort_varsel": [
+      "Något väntar"
+    ],
+    "kort_namndel": [
+      "Tre tecken"
+    ],
+    "kort_invigd": [
+      "Tornet lyssnar"
+    ],
     "invigd": [
       "Tornet blir tyst. Dunket i väggarna stannar ett ögonblick, som om något lyssnar. Det vet att du vet."
     ],

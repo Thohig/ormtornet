@@ -146,3 +146,4 @@ uppdateras i varje steg.
 | B | ja |
 | C | ja; också varelsernas texter förlorade sina siffror |
 | D | ja, med ett kort för guld man hittar när man söker |
+| E | ja; varslen, namnets delar och viskningen kommer mellan rundorna som ett eget kort |

@@ -243,6 +243,15 @@
   },
 
   "texter": {
+    "kort_varsel": [
+      "Something waits"
+    ],
+    "kort_namndel": [
+      "Three signs"
+    ],
+    "kort_invigd": [
+      "The tower listens"
+    ],
     "invigd": [
       "The tower falls silent. The thudding in the walls stops for a moment, as if something is listening. It knows that you know."
     ],

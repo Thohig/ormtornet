@@ -150,3 +150,41 @@ func TestItemCards(t *testing.T) {
 		t.Fatalf("drycken: %+v", cards)
 	}
 }
+
+// Ett varsel kommer mellan rundorna och visas genast som ett eget kort.
+func TestOmenCardComesAtOnce(t *testing.T) {
+	g, a, _ := startTwo(t)
+	g.level = 2
+	messagesOf[cardMsg](a, "kort")
+	g.dealOmens()
+	got := messagesOf[cardMsg](a, "kort")
+	if len(got) != 1 || got[0].Kort.Slag != "varsel" || got[0].Kort.Text == "" || got[0].Round != g.round {
+		t.Fatalf("varslet: %+v", got)
+	}
+}
+
+// Den som faller ner i källarvalven får fällans kort och källarens, och
+// den som kommer upp får ett kort om det. Ett brev ger ett kort med texten.
+func TestCellarAndLetterCards(t *testing.T) {
+	g, a, _ := startTwo(t)
+	p := a.player
+	putInRoom(g, p, 4, 4)
+	p.HP = 9
+	g.trigger(p, g.data.trap("rasande_golv"), 0)
+	cards := g.roundCardsOf(p)
+	if len(cards) != 2 || cards[0].Slag != "falla" || cards[1].Slag != "kallare" {
+		t.Fatalf("ner i källaren: %+v", cards)
+	}
+	p.roundCards = nil
+	g.leaveCellar(p)
+	cards = g.roundCardsOf(p)
+	if len(cards) == 0 || cards[0].Slag != "kallare" || cards[0].Text == "" {
+		t.Fatalf("upp ur källaren: %+v", cards)
+	}
+	p.roundCards = nil
+	g.readLetter(p)
+	cards = g.roundCardsOf(p)
+	if len(cards) != 1 || cards[0].Slag != "brev" || cards[0].Text == "" {
+		t.Fatalf("brevet: %+v", cards)
+	}
+}
