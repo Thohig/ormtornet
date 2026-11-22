@@ -217,6 +217,22 @@ function portbage(stangd: boolean, kott: boolean): THREE.Group {
   return g;
 }
 
+// dunklaShader gör en shader mörkare ju längre bort från fokus den ritar:
+// rummet kartan följer ligger i facklans sken, grannrummen i dunkel och
+// rummen längre bort nästan i mörker.
+function dunklaShader(sh: THREE.WebGLProgramParametersWithUniforms, u: { uFokus: { value: THREE.Vector2 }; uRadie: { value: number } }): void {
+  Object.assign(sh.uniforms, u);
+  sh.vertexShader = sh.vertexShader
+    .replace("#include <common>", "#include <common>\nvarying vec3 vDunk;")
+    .replace("#include <begin_vertex>", "#include <begin_vertex>\nvDunk = (modelMatrix * vec4(transformed, 1.0)).xyz;");
+  sh.fragmentShader = sh.fragmentShader
+    .replace("#include <common>", "#include <common>\nvarying vec3 vDunk;\nuniform vec2 uFokus;\nuniform float uRadie;")
+    .replace(
+      "#include <dithering_fragment>",
+      "gl_FragColor.rgb *= mix(1.0, 0.22, smoothstep(uRadie * 0.7, uRadie * 2.4, distance(vDunk.xz, uFokus)));\n#include <dithering_fragment>",
+    );
+}
+
 // varldsUv låter en shader läsa sin textur efter platsen i världen i stället
 // för efter ytans egna koordinater, så att murverket har lika stora block
 // på alla murar, oavsett hur långa de är. skala är hur många enheter ett
@@ -238,7 +254,12 @@ export class IsoKarta {
   private renderer: THREE.WebGLRenderer;
   private scene = new THREE.Scene();
   private cam = new THREE.OrthographicCamera(-1, 1, 1, -1, 1, 400);
-  private sol = new THREE.DirectionalLight(0xfff0dc, 2.2);
+  private sol = new THREE.DirectionalLight(0xc8d2ea, 1.25); // svagt månljus genom gluggarna
+  // Facklan i rummet kartan följer: ett varmt, fladdrande ljus.
+  private fackla = new THREE.PointLight(0xffa64a, 0, 12, 1.5);
+  // Rum längre bort från rummet kartan följer ligger i dunkel (dunkla).
+  private dunkel = { uFokus: { value: new THREE.Vector2() }, uRadie: { value: 1e5 } };
+  private ram: HTMLDivElement; // pergamentkanten runt kartan
   private torn = new THREE.Group(); // golv, väggar och portar
   private rorligt = new THREE.Group(); // allt som ändras med varje tillstånd
   private ekon = new THREE.Group();
@@ -288,11 +309,11 @@ export class IsoKarta {
     this.val = val;
     this.renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-    this.renderer.setClearColor(0x15171a);
+    this.renderer.setClearColor(0x0f0c09);
     this.renderer.shadowMap.enabled = true;
     this.renderer.shadowMap.type = THREE.PCFShadowMap;
 
-    this.scene.add(new THREE.HemisphereLight(0xc9cfdc, 0x1a1c20, 1.1));
+    this.scene.add(new THREE.HemisphereLight(0x9a9284, 0x0c0a08, 0.8), this.fackla);
     this.sol.castShadow = true;
     this.sol.shadow.mapSize.set(2048, 2048);
     this.sol.shadow.bias = -0.0006;
@@ -325,7 +346,11 @@ export class IsoKarta {
       this.tangenter.appendChild(t);
       this.tangent.push(t);
     });
-    canvas.after(this.kompass, this.kant, this.tangenter);
+    this.ram = document.createElement("div");
+    this.ram.className = "isoram";
+    this.ram.setAttribute("aria-hidden", "true");
+    this.ram.hidden = true;
+    canvas.after(this.ram, this.kompass, this.kant, this.tangenter);
 
     new ResizeObserver(() => this.anpassa()).observe(canvas.parentElement!);
     const nav = navigator as Navigator & { deviceMemory?: number };
@@ -343,6 +368,7 @@ export class IsoKarta {
     this.aktiv = pa;
     this.canvas.hidden = !pa;
     this.kompass.hidden = !pa;
+    this.ram.hidden = !pa;
     this.kant.hidden = !pa;
     this.tangenter.hidden = !pa;
     if (pa) this.anpassa();
@@ -443,6 +469,27 @@ export class IsoKarta {
     const stangda: THREE.BufferGeometry[] = [];
     const tra: THREE.BufferGeometry[] = [];
     const jarn: THREE.BufferGeometry[] = [];
+    const flammor: THREE.BufferGeometry[] = [];
+    const sken: THREE.BufferGeometry[] = [];
+    // En fackla på muren vid (x, z), som pekar in i rummet åt (nx, nz):
+    // ett järnfäste, en käpp, en låga och ett sken på golvet.
+    const fackla = (x: number, z: number, nx: number, nz: number) => {
+      const b = new THREE.BoxGeometry(0.13, 0.13, 0.13);
+      b.translate(x + nx * 0.05, 0.95, z + nz * 0.05);
+      jarn.push(b);
+      const st = new THREE.CylinderGeometry(0.04, 0.028, 0.4, 6);
+      if (nz) st.rotateX(0.4 * nz);
+      else st.rotateZ(-0.4 * nx);
+      st.translate(x + nx * 0.14, 1.12, z + nz * 0.14);
+      tra.push(st);
+      const fl = new THREE.ConeGeometry(0.1, 0.32, 7);
+      fl.translate(x + nx * 0.22, 1.46, z + nz * 0.22);
+      flammor.push(fl);
+      const p = new THREE.PlaneGeometry(2.8, 2.8);
+      p.rotateX(-Math.PI / 2);
+      p.translate(x + nx * 1.1, 0.03, z + nz * 1.1);
+      sken.push(p);
+    };
     const kanter = new Map<string, { oppen: boolean; port: boolean; stangd: boolean; h: boolean; x: number; z: number }>();
 
     const kant = (nyckel: string, h: boolean, x: number, z: number) => {
@@ -482,6 +529,9 @@ export class IsoKarta {
         }
       });
       if (r.k === "kammare") this.byggKammare(r);
+      // Facklorna sitter på murarna som vetter mot kameran, norra och västra.
+      fackla(r.x * S + S * 0.22, r.y * S + VT / 2, 0, 1);
+      fackla(r.x * S + VT / 2, r.y * S + S * 0.78, 1, 0);
     });
 
     const lada = (lista: THREE.BufferGeometry[], w: number, h: number, d: number, x: number, y: number, z: number) => {
@@ -550,6 +600,11 @@ export class IsoKarta {
     lagg(stangda, this.enkelt("stangd", FARG.stangd), true);
     lagg(tra, this.traMaterial(), true);
     lagg(jarn, this.enkelt("jarn", FARG.jarn), true);
+    lagg(flammor, this.flammaMaterial, false);
+    lagg(sken, this.skenMaterial, false);
+    this.torn.children.forEach((o) => {
+      if (o instanceof THREE.Mesh && o.material === this.skenMaterial) o.renderOrder = 1;
+    });
   }
 
   // mun ger en öppen port tänder, som syns och tuggar på nivå 4.
@@ -575,11 +630,17 @@ export class IsoKarta {
     this.munnar.push({ upper, lower });
   }
   private tandGeo: THREE.ConeGeometry | null = null;
+  private flammaMaterial = new THREE.MeshBasicMaterial({ color: 0xffb04a });
+  private skenMaterial = new THREE.MeshBasicMaterial({
+    map: K.sken(), color: 0xff8a30, transparent: true, opacity: 0.3, depthWrite: false, blending: THREE.AdditiveBlending,
+  });
 
   private golvMaterial(): THREE.Material {
     let m = this.material.get("golv");
     if (!m) {
-      m = new THREE.MeshLambertMaterial({ map: K.stengolv() });
+      const mat = new THREE.MeshLambertMaterial({ map: K.stengolv() });
+      mat.onBeforeCompile = (sh) => dunklaShader(sh, this.dunkel);
+      m = mat;
       this.material.set("golv", m);
     }
     return m;
@@ -615,6 +676,7 @@ float puls() {
           )
           .replace("vec4 diffuseColor = vec4( diffuse, opacity );", "vec4 diffuseColor = vec4( mix(uVagg, uHi, puls()), opacity );");
         varldsUv(sh, 1.6); // efter, så att vVarld står först
+        dunklaShader(sh, this.dunkel);
       };
       m = mat;
       this.material.set("vagg", m);
@@ -627,7 +689,10 @@ float puls() {
     let m = this.material.get(nyckel);
     if (!m) {
       const mat = new THREE.MeshLambertMaterial({ map: K.murverk(), color: farg });
-      mat.onBeforeCompile = (sh) => varldsUv(sh, 1.6);
+      mat.onBeforeCompile = (sh) => {
+        varldsUv(sh, 1.6);
+        dunklaShader(sh, this.dunkel);
+      };
       m = mat;
       this.material.set(nyckel, m);
     }
@@ -637,7 +702,9 @@ float puls() {
   private traMaterial(): THREE.Material {
     let m = this.material.get("tra");
     if (!m) {
-      m = new THREE.MeshLambertMaterial({ map: K.tra() });
+      const mat = new THREE.MeshLambertMaterial({ map: K.tra() });
+      mat.onBeforeCompile = (sh) => dunklaShader(sh, this.dunkel);
+      m = mat;
       this.material.set("tra", m);
     }
     return m;
@@ -646,7 +713,9 @@ float puls() {
   private enkelt(nyckel: string, farg: string): THREE.Material {
     let m = this.material.get(nyckel);
     if (!m) {
-      m = new THREE.MeshLambertMaterial({ color: farg });
+      const mat = new THREE.MeshLambertMaterial({ color: farg });
+      mat.onBeforeCompile = (sh) => dunklaShader(sh, this.dunkel);
+      m = mat;
       this.material.set(nyckel, m);
     }
     return m;
@@ -1082,6 +1151,20 @@ float puls() {
     }
 
     this.rorFigurer(t, dt);
+
+    // Facklorna fladdrar, och rummet kartan följer ligger i facklans sken.
+    const fladder = 0.82 + 0.1 * Math.sin(t / 97) + 0.08 * Math.sin(t / 41 + 1.3);
+    this.flammaMaterial.color.setRGB(1, 0.62 * fladder + 0.1, 0.22 * fladder, THREE.SRGBColorSpace);
+    this.skenMaterial.opacity = 0.26 * fladder;
+    if (f) {
+      this.fackla.position.set((f.x + 0.5) * S, 2.6, (f.y + 0.5) * S);
+      this.fackla.intensity = 34 * fladder;
+      this.dunkel.uFokus.value.set(mitt.x, mitt.z);
+      this.dunkel.uRadie.value = S * 0.9;
+    } else {
+      this.fackla.intensity = 0;
+      this.dunkel.uRadie.value = 1e5;
+    }
 
     const vaken = t - this.vaknade < VAKEN_MS;
     const blixt = vaken && Math.floor((t - this.vaknade) / 180) % 2 === 0;

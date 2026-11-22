@@ -311,3 +311,18 @@ export function tra(): THREE.Texture {
     return t;
   });
 }
+
+// sken är det varma skenet från en fackla på golvet och muren: vitt i
+// mitten och genomskinligt utåt, färgat av materialet.
+export function sken(): THREE.Texture {
+  return spara("sken", () => {
+    const [c, x] = duk(128, 128);
+    const g = x.createRadialGradient(64, 64, 0, 64, 64, 62);
+    g.addColorStop(0, "rgba(255,255,255,0.9)");
+    g.addColorStop(0.35, "rgba(255,255,255,0.4)");
+    g.addColorStop(1, "rgba(255,255,255,0)");
+    x.fillStyle = g;
+    x.fillRect(0, 0, 128, 128);
+    return textur(c);
+  });
+}

@@ -1037,3 +1037,17 @@ body.touch .card .num { display: none; }
 #chronAll .rost { color: #e3b8f0; }
 #chronResults[hidden], #chronEpilog[hidden], #chronAll[hidden], #chronOwn[hidden], #chronNext[hidden] { display: none; }
 #chronNext:disabled { opacity: 0.6; cursor: default; }
+/* Pergamentkanten runt kartan snett ovanifrån: en tunn ram och mörker
+   mot kanterna, som på ett gammalt spelbräde. */
+.isoram {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: 6px;
+  box-shadow:
+    inset 0 0 0 1px rgba(214, 186, 140, 0.5),
+    inset 0 0 0 4px rgba(15, 10, 6, 0.9),
+    inset 0 0 0 5px rgba(214, 186, 140, 0.22),
+    inset 0 0 80px 14px rgba(8, 5, 2, 0.85);
+}
+.isoram[hidden] { display: none; }
