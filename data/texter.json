@@ -607,6 +607,9 @@
     "kronika_vandrare_inget": [
       "{namn}: inget att räkna."
     ],
+    "kronika_del_kammaren_en": [
+      "kammaren en gång, {guld} guld"
+    ],
     "kronika_del_kammaren": [
       "kammaren {antal} ggr, {guld} guld"
     ],
@@ -773,6 +776,7 @@
     "sam_dryck": ["+{antal} dryck."],
     "sam_foremal": ["Du hittade {foremal}."],
     "sam_fast": ["Du sitter fast i {antal} rundor."],
+    "sam_fast_en": ["Du sitter fast en runda."],
     "sam_gift": ["Du är förgiftad."],
     "sam_morker": ["Lyktan slocknade."],
     "sam_ormen": ["Ormen vaknade."]

@@ -38,8 +38,8 @@
       "A sound like a storm through a pipe. The serpent has woken."
     ],
     "kastas_ut": [
-      "The coils lash out and you are hurled across the hall and out through an opening. You drop {forlust} gold and take {skada} wounds.",
-      "Something strikes you in the chest and you fly out of the chamber. {forlust} gold spills from your bag. You take {skada} wounds."
+      "The coils lash out and you are hurled across the hall and out through an opening. You drop {forlust} gold, and the blow costs you {skada} of your lives.",
+      "Something strikes you in the chest and you fly out of the chamber. {forlust} gold spills from your bag, and the blow costs you {skada} of your lives."
     ],
     "somnar_om": [
       "The hissing ebbs away. The breathing slows again, but it sounds more easily woken now."

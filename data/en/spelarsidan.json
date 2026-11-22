@@ -102,7 +102,7 @@
     "ormkort_guld": "+{antal} gold",
     "nu_ormen": "The serpent",
     "nu_vaknakort": "{antal} waking cards left in the deck",
-    "vakenkort_forlust": "−{guld} gold · −{liv} lives",
+    "vakenkort_forlust": "gold −{guld} · lives −{liv}",
     "zoom_nara": "Near",
     "zoom_mellan": "Middle",
     "zoom_langt": "Far",

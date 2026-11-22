@@ -42,7 +42,7 @@ func TestChronicle(t *testing.T) {
 		"Runda 2. Bo dog av pilar ur små hål i väggen.",
 		"Runda 2. Alva gick ut med " + strconv.Itoa(gold) + " guld.",
 		"Runda 1. Alva nådde skattkammaren först.",
-		"Alva: kammaren 1 ggr, " + strconv.Itoa(gold) + " guld",
+		"Alva: kammaren en gång, " + strconv.Itoa(gold) + " guld",
 		"Bo: fällor 1",
 	} {
 		if !strings.Contains(all, want) {

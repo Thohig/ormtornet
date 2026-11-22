@@ -205,7 +205,11 @@ func (g *Game) summaryFor(p *Player, b before, woke bool) []summaryLine {
 	}
 	if p.Status == statusIn {
 		if p.Stuck > 0 && b.stuck == 0 {
-			add(t("sam_fast", "antal", itoa(p.Stuck)), "varn")
+			if p.Stuck == 1 {
+				add(t("sam_fast_en"), "varn")
+			} else {
+				add(t("sam_fast", "antal", itoa(p.Stuck)), "varn")
+			}
 		}
 		if p.Poison > 0 && b.poison == 0 {
 			add(t("sam_gift"), "varn")

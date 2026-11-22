@@ -15,6 +15,7 @@ type ItemType struct {
 	Tecken       string   `json:"tecken"` // står framför namnet i väskan
 	Bild         string   `json:"bild"`   // spelkortets motiv (web/kort.js); utan bild gäller id:t
 	Kort         string   `json:"kort"`   // med liten bokstav, för texterna
+	Hittad       string   `json:"hittad"` // obestämd form för texterna: "en extra veke"
 	Beskrivning  string   `json:"beskrivning"`
 	Vikt         int      `json:"vikt"`
 	Anvandningar int      `json:"anvandningar"` // 0 = verkar hela vandringen
@@ -24,6 +25,14 @@ type ItemType struct {
 	Varde        int      `json:"varde"`     // guld det är värt när man kommer ut
 	Forbannelse  []string `json:"forbannelse"`
 	Brev         bool     `json:"brev"` // läses direkt och bärs inte
+}
+
+// found är föremålet i obestämd form, som texterna säger att någon hittar.
+func (t *ItemType) found() string {
+	if t.Hittad != "" {
+		return t.Hittad
+	}
+	return lowerFirst(t.Namn)
 }
 
 type ItemData struct {
@@ -107,7 +116,7 @@ func (g *Game) give(p *Player, id string) bool {
 	}
 	p.items = append(p.items, &Item{ID: id, uses: uses})
 	p.stats.items++
-	g.chronicle("kronika_foremal", "namn", p.Name, "foremal", lowerFirst(t.Namn))
+	g.chronicle("kronika_foremal", "namn", p.Name, "foremal", t.found())
 	return true
 }
 
@@ -126,7 +135,7 @@ func (g *Game) findItem(p *Player) {
 	if t.Forbannad && g.is(p, "pilgrim") {
 		// Pilgrimen känner att något är fel och låter det ligga.
 		room.items = append(room.items, id)
-		g.logTo(p, g.data.Text("pilgrim_forbannad", "foremal", lowerFirst(t.Namn)), "info")
+		g.logTo(p, g.data.Text("pilgrim_forbannad", "foremal", t.found()), "info")
 		return
 	}
 	if t.Brev {
@@ -134,12 +143,12 @@ func (g *Game) findItem(p *Player) {
 		return
 	}
 	if g.give(p, id) {
-		g.logTo(p, g.data.Text("foremal_hittar", "foremal", lowerFirst(t.Namn), "beskrivning", t.Beskrivning), "syn")
+		g.logTo(p, g.data.Text("foremal_hittar", "foremal", t.found(), "beskrivning", t.Beskrivning), "syn")
 		g.itemCard(p, t)
 		return
 	}
 	room.items = append(room.items, id)
-	g.logTo(p, g.data.Text("foremal_full", "foremal", lowerFirst(t.Namn), "max", strconv.Itoa(g.data.maxItems())), "info")
+	g.logTo(p, g.data.Text("foremal_full", "foremal", t.found(), "max", strconv.Itoa(g.data.maxItems())), "info")
 }
 
 // pickUp: den som kommer in i ett rum där något ligger tar det, om det får
@@ -157,15 +166,15 @@ func (g *Game) pickUp(p *Player) {
 		}
 		if t.Forbannad && g.is(p, "pilgrim") {
 			left = append(left, id)
-			g.logTo(p, g.data.Text("pilgrim_forbannad", "foremal", lowerFirst(t.Namn)), "dim")
+			g.logTo(p, g.data.Text("pilgrim_forbannad", "foremal", t.found()), "dim")
 			continue
 		}
 		if g.give(p, id) {
-			g.logTo(p, g.data.Text("foremal_ligger", "foremal", lowerFirst(t.Namn), "beskrivning", t.Beskrivning), "syn")
+			g.logTo(p, g.data.Text("foremal_ligger", "foremal", t.found(), "beskrivning", t.Beskrivning), "syn")
 			g.itemCard(p, t)
 		} else {
 			left = append(left, id)
-			g.logTo(p, g.data.Text("foremal_ligger_full", "foremal", lowerFirst(t.Namn)), "dim")
+			g.logTo(p, g.data.Text("foremal_ligger_full", "foremal", t.found()), "dim")
 		}
 	}
 	room.items = left

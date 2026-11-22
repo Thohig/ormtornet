@@ -5,6 +5,7 @@
       {
         "id": "rep",
         "namn": "A rope with its hook",
+        "hittad": "a rope with its hook",
         "kort": "the rope",
         "beskrivning": "If you fall into the cellar vaults, you climb straight back up.",
         "verkar": [
@@ -14,6 +15,7 @@
       {
         "id": "amulett",
         "namn": "The scale amulet",
+        "hittad": "the scale amulet",
         "kort": "the scale amulet",
         "beskrivning": "The next trap does not strike.",
         "verkar": [
@@ -23,6 +25,7 @@
       {
         "id": "veke",
         "namn": "A spare wick",
+        "hittad": "a spare wick",
         "kort": "the wick",
         "beskrivning": "Your lantern withstands one darkness.",
         "verkar": [
@@ -32,6 +35,7 @@
       {
         "id": "skold",
         "namn": "A dented shield",
+        "hittad": "a dented shield",
         "kort": "the shield",
         "beskrivning": "Creatures do one wound less. Breaks after three hits.",
         "verkar": [
@@ -44,6 +48,7 @@
       {
         "id": "vaska",
         "namn": "The bag with a false bottom",
+        "hittad": "the bag with a false bottom",
         "kort": "the bag",
         "beskrivning": "Half of what you lose when the serpent wakes, or when someone snatches gold, is hidden in the false bottom.",
         "verkar": [
@@ -53,6 +58,7 @@
       {
         "id": "kompass",
         "namn": "A compass without north",
+        "hittad": "a compass without north",
         "kort": "the compass",
         "beskrivning": "The needle points to the nearest gate.",
         "verkar": []
@@ -60,6 +66,7 @@
       {
         "id": "rokpulver",
         "namn": "Smoke powder",
+        "hittad": "smoke powder",
         "kort": "the smoke powder",
         "beskrivning": "If you flee a fight, the creature has no time to strike.",
         "verkar": [
@@ -69,6 +76,7 @@
       {
         "id": "spegel",
         "namn": "A mirror shard",
+        "hittad": "a mirror shard",
         "kort": "the mirror shard",
         "beskrivning": "When you enter a new room, the shard shows one of the rooms beyond its doors. Three times.",
         "verkar": [
@@ -81,6 +89,7 @@
       {
         "id": "kastkniv",
         "namn": "A throwing knife",
+        "hittad": "a throwing knife",
         "kort": "the throwing knife",
         "beskrivning": "If a creature appears, you throw the knife first.",
         "verkar": [
@@ -90,6 +99,7 @@
       {
         "id": "krita",
         "namn": "A piece of chalk",
+        "hittad": "a piece of chalk",
         "kort": "the chalk",
         "beskrivning": "When you leave a room you draw an arrow the way you go. Everyone who comes in sees it, but not who drew it. Five rooms.",
         "verkar": [
@@ -102,6 +112,7 @@
       {
         "id": "flojt",
         "namn": "A lulling flute",
+        "hittad": "a lulling flute",
         "kort": "the flute",
         "beskrivning": "If you draw a card that wakes the serpent, you may draw again, once.",
         "verkar": [
@@ -111,6 +122,7 @@
       {
         "id": "timglas",
         "namn": "An hourglass of bone",
+        "hittad": "an hourglass of bone",
         "kort": "the hourglass",
         "beskrivning": "When the sun has three hand-widths left it turns by itself, and the sun stands still for a round for everyone.",
         "verkar": [
@@ -120,6 +132,7 @@
       {
         "id": "svart_parla",
         "namn": "The black pearl",
+        "hittad": "the black pearl",
         "kort": "the pearl",
         "beskrivning": "Large as a dove's egg and worth 40 gold when you get out.",
         "forbannelse": [
@@ -129,6 +142,7 @@
       {
         "id": "mynt_hal",
         "namn": "The holed coin",
+        "hittad": "the holed coin",
         "kort": "the coin",
         "beskrivning": "A heavy gold coin with a hole in the middle. Worth 25 gold when you get out.",
         "forbannelse": [
@@ -138,6 +152,7 @@
       {
         "id": "rostkrona",
         "namn": "The crown of rust",
+        "hittad": "the crown of rust",
         "kort": "the crown",
         "beskrivning": "A small crown that someone has dropped. Worth 30 gold when you get out.",
         "forbannelse": [
@@ -147,6 +162,7 @@
       {
         "id": "brev",
         "namn": "A letter",
+        "hittad": "a letter",
         "kort": "the letter",
         "beskrivning": "From someone who was here before."
       }

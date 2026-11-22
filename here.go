@@ -196,7 +196,7 @@ func (g *Game) hereParts(p *Player) []herePart {
 	}
 	for i, id := range r.items {
 		if t := g.data.itemType(id); t != nil {
-			other("foremal:"+strconv.Itoa(i)+":"+id, g.data.Text("har_foremal", "foremal", lowerFirst(t.Namn)))
+			other("foremal:"+strconv.Itoa(i)+":"+id, g.data.Text("har_foremal", "foremal", t.found()))
 		}
 	}
 	return parts

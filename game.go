@@ -672,6 +672,10 @@ type logMsg struct {
 	T    string `json:"t"`
 	Text string `json:"text"`
 	C    string `json:"c,omitempty"`
+	// Svar är sant för svaret på ett drag som inte blev av, som en vägg.
+	// Spelarsidan lägger det i rundan som står i bild i stället för att
+	// börja en ny, så att rummet man står i inte försvinner ur bild.
+	Svar bool `json:"svar,omitempty"`
 }
 
 type soundMsg struct {
@@ -698,6 +702,13 @@ func (g *Game) send(c *Client, v any) {
 func (g *Game) logTo(p *Player, text, class string) {
 	if p != nil && text != "" {
 		g.send(p.client, logMsg{T: "log", Text: text, C: class})
+	}
+}
+
+// answerTo svarar på ett drag som inte blev av (se logMsg.Svar).
+func (g *Game) answerTo(p *Player, text, class string) {
+	if p != nil && text != "" {
+		g.send(p.client, logMsg{T: "log", Text: text, C: class, Svar: true})
 	}
 }
 
@@ -864,7 +875,8 @@ func (g *Game) broadcastState() {
 	}
 }
 
-// results sorterar spelarna: de som kom ut med skatt först, mest skatt överst.
+// results sorterar spelarna: de som kom ut med skatt först, mest skatt överst,
+// sedan de som kom ut tomhänta och sist de döda och förlorade.
 func (g *Game) results() []resultView {
 	var res []resultView
 	for _, p := range g.players {
@@ -874,8 +886,8 @@ func (g *Game) results() []resultView {
 		res = append(res, resultView{Name: p.Name, Slot: p.Slot, Treasure: p.Treasure, Status: p.Status, AI: p.aiPlayed})
 	}
 	score := func(r resultView) int {
-		if r.Status == statusOut && r.Treasure > 0 {
-			return r.Treasure
+		if r.Status == statusOut {
+			return r.Treasure // tomhänt ger 0, före de döda och förlorade
 		}
 		return -1
 	}
@@ -1406,10 +1418,10 @@ func (g *Game) actPlayer(p *Player, a string, monsterID int) {
 			case pvpYes:
 				p.target = g.pickFoe(p, -monsterID).ID
 			case pvpPeace:
-				g.logTo(p, g.data.Text("pvp_fredat"), "dim")
+				g.answerTo(p, g.data.Text("pvp_fredat"), "dim")
 				return
 			default:
-				g.logTo(p, g.data.MonsterText("inget_monster_har"), "dim")
+				g.answerTo(p, g.data.MonsterText("inget_monster_har"), "dim")
 				return
 			}
 		}
@@ -1419,7 +1431,7 @@ func (g *Game) actPlayer(p *Player, a string, monsterID int) {
 		// dörrarna och får pröva sig fram som förut.
 		if d, ok := dirCodes[a]; ok && p.Dark == 0 && !(room.HasExit && room.Exit == d) && !room.Doors[d] {
 			g.soundTo(p, "vagg")
-			g.logTo(p, g.data.Text("vagg", "riktning", g.data.Riktningar[d]), "dim")
+			g.answerTo(p, g.data.Text("vagg", "riktning", g.data.Riktningar[d]), "dim")
 			return
 		}
 		if g.askEmptyExit(p, room, a) {
@@ -1427,21 +1439,21 @@ func (g *Game) actPlayer(p *Player, a string, monsterID int) {
 		}
 	case actTake:
 		if room.Kind != "kammare" {
-			g.logTo(p, g.data.Text("ingen_skatt_har"), "dim")
+			g.answerTo(p, g.data.Text("ingen_skatt_har"), "dim")
 			return
 		}
 	case actSearch:
 		if room.Kind != "rum" {
-			g.logTo(p, g.data.SearchText("inte_har"), "dim")
+			g.answerTo(p, g.data.SearchText("inte_har"), "dim")
 			return
 		}
 		if room.Searched {
-			g.logTo(p, g.data.SearchText("redan"), "dim")
+			g.answerTo(p, g.data.SearchText("redan"), "dim")
 			return
 		}
 	case actDrink:
 		if p.Potions <= 0 {
-			g.logTo(p, g.data.Text("ingen_dryck"), "dim")
+			g.answerTo(p, g.data.Text("ingen_dryck"), "dim")
 			return
 		}
 	default:
@@ -1469,7 +1481,7 @@ func (g *Game) askEmptyExit(p *Player, room *Room, a string) bool {
 		return false
 	}
 	p.exitAsked = g.round
-	g.logTo(p, g.data.Text("port_tomhant"), "varn")
+	g.answerTo(p, g.data.Text("port_tomhant"), "varn")
 	return true
 }
 

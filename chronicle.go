@@ -147,7 +147,11 @@ func (g *Game) statsLine(p *Player) string {
 			parts = append(parts, g.data.Text(key, append([]string{"antal", strconv.Itoa(n)}, vars...)...))
 		}
 	}
-	part(s.takes, "kronika_del_kammaren", "guld", strconv.Itoa(s.takeGold))
+	if s.takes == 1 {
+		part(s.takes, "kronika_del_kammaren_en", "guld", strconv.Itoa(s.takeGold))
+	} else {
+		part(s.takes, "kronika_del_kammaren", "guld", strconv.Itoa(s.takeGold))
+	}
 	part(s.kills, "kronika_del_varelser")
 	part(s.traps, "kronika_del_fallor")
 	part(s.searched, "kronika_del_sokt")

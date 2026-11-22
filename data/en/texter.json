@@ -569,6 +569,9 @@
     "kronika_vandrare_inget": [
       "{namn}: nothing to count."
     ],
+    "kronika_del_kammaren_en": [
+      "the chamber once, {guld} gold"
+    ],
     "kronika_del_kammaren": [
       "the chamber {antal} times, {guld} gold"
     ],
@@ -710,7 +713,7 @@
     "sam_kallare": ["You fell down into the cellar vaults."],
     "sam_ute": ["You went out of the tower with {skatt} gold."],
     "sam_dod_av": ["{Vad} killed you."],
-    "sam_liv_minus_av": ["{Vad}: −{antal} lives. You have {liv} left."],
+    "sam_liv_minus_av": ["{Vad}: lives −{antal}. You have {liv} left."],
     "sam_orsak_gift": ["The poison"],
     "sam_orsak_ormen": ["The serpent"],
     "sam_falde": ["You slew {varelse}."],
@@ -727,14 +730,15 @@
     "sam_anfall_vandrare": ["You attacked {namn}."],
     "sam_parera_vandrare": ["You parried {namn}."],
     "sam_undan_vandrare": ["You evaded {namn}."],
-    "sam_liv_minus": ["−{antal} lives. You have {liv} left."],
-    "sam_liv_plus": ["+{antal} lives. You have {liv}."],
+    "sam_liv_minus": ["Lives −{antal}. You have {liv} left."],
+    "sam_liv_plus": ["Lives +{antal}. You have {liv}."],
     "sam_ormkort": ["The serpent card: {kort}."],
     "sam_guld_plus": ["+{antal} gold. You carry {skatt}."],
     "sam_guld_minus": ["−{antal} gold. You carry {skatt}."],
     "sam_dryck": ["+{antal} potion."],
     "sam_foremal": ["You found {foremal}."],
     "sam_fast": ["You are stuck for {antal} rounds."],
+    "sam_fast_en": ["You are stuck for one round."],
     "sam_gift": ["You are poisoned."],
     "sam_morker": ["Your lantern went out."],
     "sam_ormen": ["The serpent woke."]
