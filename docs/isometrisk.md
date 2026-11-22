@@ -4,8 +4,8 @@ Status: förslaget skrevs 2026-11-21. Skisserna visade två alternativ,
 platta kritfigurer (A) och 3D-modeller (B). Användaren valde B. Alla fyra
 stegen är byggda, och kartan snett ovanifrån är förval sedan 2026-11-21.
 Sedan 2026-11-22 är den den enda kartan: den platta kartan i krita och
-inställningen Kartan är borttagna. `web/map.js` räknar bara ut utsnittet,
-zoomen och teckenförklaringen, och där WebGL saknas visar spelarsidan en
+inställningen Kartan är borttagna. `web/map.js` räknar bara ut utsnittet
+och zoomen (teckenförklaringen togs bort 2026-11-22), och där WebGL saknas visar spelarsidan en
 text i stället för kartan. Resten av dokumentet beskriver hur det var när
 den platta kartan fanns kvar.
 

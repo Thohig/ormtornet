@@ -52,14 +52,30 @@ En riktig kväll behövs för att se:
   slåss, och är raden med siffror för lång på en telefon?
 - Rumsblocket i loggen (2026-11-22): förstår spelarna vad figurerna på
   kartan är utan teckenförklaringen, när bara texten säger vad som finns
-  i rummet? Blir rumsbeskrivningarna för långa på en telefon?
+  i rummet? Blir rumsbeskrivningarna för långa på en telefon, och hittar
+  man "mer ↓"?
+- Det nya gränssnittet (2026-11-22, [nytt-granssnitt.md](nytt-granssnitt.md)):
+  läser man raden Nu under kartan mitt i en strid? Är loggen i hela
+  högerkolumnen bra på dator? På telefon: skymmer den fasta översta raden
+  och knapparna längst ner något, och fungerar det att loggen rullar med
+  sidan? Bara provat i en emulerad telefon.
+- Föremålen som verkar av sig själva (2026-11-22,
+  [passiva-foremal.md](passiva-foremal.md)): märker man när rökpulvret,
+  spegelskärvan, kastkniven, kritan och timglaset verkar? Blir kritans
+  fem pilar för många, och liknar spegelskärvan Kartritaren för mycket?
+  Bara provat med tester.
+- Namnen som tornet ger (2026-11-22, [slumpade-namn.md](slumpade-namn.md)):
+  tycker spelarna om namnen, eller saknar de att skriva sitt eget? Får
+  den som byter telefon eller webbläsare mitt i kvällen ett nytt namn, och
+  gör det något?
 - Bara den egna porten: hittar spelarna ut, eller går de vilse när de
   inte ser de andra portarna?
 - Tecknen på kartan (2026-11-19): går de att förstå, och skymmer de
   kartan när den har vuxit?
-- Loggen (2026-11-19): är takten lagom, ungefär tre rader i sekunden?
-  Hittar man knappen "↑ nya rader", och är det bra att den senaste
-  rundan står överst och äldre rundor fälls ihop?
+- Loggen (2026-11-19, ändrad 2026-11-22): är takten lagom, ungefär tre
+  rader i sekunden? Hittar man knappen "↑ nya rader"? Sedan 2026-11-22
+  står bara den senaste rundan i bild och de äldre under strecket
+  "tidigare"; saknar någon att se förra rundan utan att rulla?
 - Kortet efter rundan (2026-11-19): säger det det viktiga, är sju sekunder
   lagom, och skymmer det något på kartan?
 - Prickarna och namnen i färg (2026-11-19): syns vem som väljer? Den vita
@@ -114,8 +130,6 @@ En riktig kväll behövs för att se:
 
 Sett 2026-11-21 men inte ändrat:
 
-- Rundans rad med `≡` står inte alltid sist i rundan i loggen; ledtrådar
-  och ljud som kommer efter sammanfattningen hamnar under den.
 - "Solen har vandrat halva vägen" kan sägas vid 19 handsbredder kvar när
   klockan har skyndat på solen.
 - I mörker visar kartan snett ovanifrån fortfarande pilarna vid dörrarna.
@@ -146,6 +160,17 @@ Från [spelledaren.md](spelledaren.md):
 Från [foremal-och-hemligheten.md](foremal-och-hemligheten.md):
 
 - Släppa ett föremål med flit, eller byta föremål med en annan vandrare.
+
+Från [slumpade-namn.md](slumpade-namn.md):
+
+- Knappen Nytt namn i lobbyn, som lottar ett nytt namn (steg 3). Valdes
+  bort 2026-11-22, men kan tas upp igen efter ett provspel.
+
+Från [isometrisk.md](isometrisk.md):
+
+- `bild` i `klient/src/karta.ts`, som ritade bilderna i
+  teckenförklaringen, används inte längre och kan tas bort nästa gång
+  kartan byggs om.
 
 ## Nya idéer
 

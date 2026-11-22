@@ -19,8 +19,8 @@ fungerar under "Föremål" och "Att viska hemligheten" (spoilervarning).
 - Man hittar föremål när man söker (`foremal` under `sok` → `vikter` i
   `fallor.json`), och den som dör tappar sina.
 - Föremålen följer inte med till nästa torn.
-- Aktiva föremål är rundans drag. Mitt i en strid får varelsen ett fritt
-  drag, utom mot rökpulvret.
+- Alla föremål verkar av sig själva sedan 2026-11-22; inget används med
+  1–3 längre (se [passiva-foremal.md](passiva-foremal.md)).
 - Förbannade föremål visar sin baksida första gången den verkar.
 - "Kartan som ljuger" i förslaget blev Kronan av rost, eftersom falska rum
   inte går att göra på ett enkelt sätt.

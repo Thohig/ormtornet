@@ -1,7 +1,7 @@
 # Slumpade namn (förslag)
 
 Förslag 2026-11-22. Steg 1 och 2 är byggda, med förnamn och tillnamn och
-samma namn hela kvällen. Steg 3, Nytt namn i lobbyn, är inte byggt.
+samma namn hela kvällen. Steg 3, Nytt namn i lobbyn, valdes bort 2026-11-22.
 Robotarna skickar fortfarande sina egna namn, så att deras loggar går att
 läsa.
 

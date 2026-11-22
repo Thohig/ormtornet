@@ -158,3 +158,12 @@ Skriv dit när ett steg är klart.
   ändring i `klient/src/`. Avsnittet Stegen säger vad som är byggt, och
   Spelbrädet hur kartan fick sten, facklor, inredning, miniatyrer och
   brickor 2026-11-22.
+- [docs/nytt-granssnitt.md](docs/nytt-granssnitt.md): det nya
+  gränssnittet på dator och telefon 2026-11-22: lobbyn utan listan över
+  vandrare, rumsblocket i loggen i stället för teckenförklaringen, bara
+  den senaste rundan i bild, raden Nu under kartan och en kolumn på
+  telefonen. Allt är byggt.
+- [docs/passiva-foremal.md](docs/passiva-foremal.md): alla föremål verkar
+  av sig själva och 1–3 är borta. Allt är byggt.
+- [docs/slumpade-namn.md](docs/slumpade-namn.md): tornet ger namnen och
+  namnrutan är borta. Steg 1–2 är byggda; Nytt namn i lobbyn valdes bort.
