@@ -1,18 +1,28 @@
-# Den dödes guld (förslag)
+# Den dödes guld
 
-Förslag 2026-11-22. Alla fyra stegen är byggda. I en simulering med 300 vandringar och tre
-AI-spelare låg det guld kvar efter 86 döda, och AI-spelarna tog upp det
-två gånger. De flesta dör med skatt på väg ut, när de andra också är på
-väg ut, och hör bara skriket från en del av tornet. AI-spelarna tar en
-omväg på väg ut bara när de vet exakt vilket rum det är. Spårfinnaren hör ingenting genom väggarna, så i
-stället för att höra hur mycket som rasslar ser hen guldet på kartan och
-vem som tog det.
+Förslag och bygge 2026-11-22. Allt är byggt.
 
-Sedan 2026-11-22 ligger guldet kvar där en vandrare dog. Den som går in
-i rummet, eller står kvar där när rundan är slut, tar det (`guld.go`).
-Men ingen får veta var det ligger, och inte heller om det ligger något
-alls. När någon dör säger tornet bara: "Ett skrik hörs och dör bort. Alva
-är död." Det enda sättet att hitta guldet är att råka gå in i rummet.
+## Läget
+
+Den som dör tappar sitt guld i rummet, och den som går in där, eller står
+kvar där när rundan är slut, tar det (`guld.go`). Förut gick guldet
+förlorat, och när någon dog sa tornet bara: "Ett skrik hörs och dör bort.
+Alva är död." Det enda sättet att hitta guldet var att råka gå in i rummet.
+Stegen nedan gör att man får veta att det finns guld och ungefär var.
+
+Avvikelser från förslaget:
+
+- Spårfinnaren hör ingenting genom väggarna, så i stället för att höra
+  hur mycket som rasslar (steg 3) ser hen guldet på kartan, som
+  föremålen, och läser i dammet vem som tog det.
+- AI-spelarna tar också en omväg på högst två steg på väg ut, när de vet
+  exakt vilket rum det är.
+
+I en simulering med 300 vandringar och tre AI-spelare låg det guld kvar
+efter 86 döda, och AI-spelarna tog upp det två gånger. De flesta dör med
+skatt på väg ut, när de andra också är på väg ut, och hör bara skriket
+från en del av tornet. Om AI:n ska söka mer aktivt bestäms efter ett
+provspel med människor (se [att-gora.md](att-gora.md)).
 
 ## Vad som önskas
 

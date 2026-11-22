@@ -27,7 +27,9 @@ eller leder tornet.
 - AI-spelarna går efter guldet när skriket lät som mynt, med samma
   ledtrådar som en människa får, om de har minst halva livet kvar och gott
   om tid. Plundraren går oftast (`guldlust` 0,8), den djärva ibland (0,5)
-  och den försiktiga sällan (0,15).
+  och den försiktiga sällan (0,15). På väg ut tar de en omväg på högst
+  två steg till guldet, när de vet exakt vilket rum det ligger i.
+- Se [den-dodes-guld.md](den-dodes-guld.md).
 
 ### Ormtornet.app i ~/Applications
 
