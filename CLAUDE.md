@@ -126,6 +126,11 @@ Så här skiljer vi på sakerna när användaren ger instruktioner:
   Spelledaren har där också Till värdsidan bredvid Nytt torn.
 - **tangenterna vid dörrarna**: piltangenterna som står vid dörrarna i ens
   rum på kartan snett ovanifrån (`ritaTangenter` i `klient/src/karta.ts`).
+- **minikort**: ett litet spelkort framför en rad i loggen, på
+  spelkortet och i krönikan (`Kort.mini` i `web/kort.js`). Ett klick
+  visar det stort i **kortvisningen**, ett lager över hela sidan
+  (`showCardPopup` i `web/app.js`). I Din vandring står rundans kort som
+  små spelkort med bild och rubrik.
 - **väskan**: föremålen under tecknen, med en plats för varje föremål man
   kan bära (`tecken` i `data/foremal.json`).
 - **klassvalet**: skärmen efter lobbyn med ett **klasskort** för varje
@@ -222,7 +227,8 @@ Skriv dit när ett steg är klart.
   lådan med hela loggen, och märket som öppnar värdsidan i en ny flik.
   Allt är byggt.
 - [docs/spelkort.md](docs/spelkort.md): spelkort för alla situationer,
-  med spelkortet som ersätter rundans kort och ormkortet. Allt är byggt;
+  med spelkortet som ersätter rundans kort och ormkortet, och efteråt
+  vandringens största stunder, klasskorten och minikorten. Allt är byggt;
   bilderna ritas i `web/kort.js` och syns i `verktyg/kortbilder.html`.
 - [docs/balans-2026-11-22.md](docs/balans-2026-11-22.md): simuleringen av
   sex strategier, och hur klasserna, den grönaktiga skepnaden och

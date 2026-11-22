@@ -121,7 +121,8 @@ En riktig kväll behövs för att se:
   rader i sekunden? Hittar man knappen "↑ nya rader"? Sedan 2026-11-22
   står bara den senaste rundan i bild och de äldre under strecket
   "tidigare"; saknar någon att se förra rundan utan att rulla?
-- Kortet efter rundan (2026-11-19): säger det det viktiga, är sju sekunder
+- Kortet efter rundan (2026-11-19, sedan 2026-11-22 spelkortet, som står
+  åtta sekunder): säger det det viktiga, är sju sekunder
   lagom, och skymmer det något på kartan?
 - Prickarna och namnen i färg (2026-11-19): syns vem som väljer? Den vita
   färgen (plats 8) syns knappt bland den vanliga texten i loggen. Hjälper tecknen i loggens marginal, eller

@@ -278,7 +278,8 @@ den som dör och för alla i slutet (se slutet nedan och Strider):
      `data/texter.json`, till exempel "en smal gång under låga valv").
      Uppe till vänster på kartan står bara Mörker eller Källarvalven.
      Uppe till höger står statusen
-     som tecken: klassens tecken, liv, skatt, drycker,
+     som tecken: klassen som ett litet klasskort (ett klick visar det
+     stort), liv, skatt, drycker,
      tillstånd som fast, gift och mörker, kompassen, dunket, viskningen och
      `⁂` med de tecken i väggarna som vandraren har hittat, och under dem
      väskan med föremålen och de tomma platserna. Håll musen över ett tecken, eller tryck på
@@ -992,7 +993,9 @@ Beskrivningarna för rummen ligger under nivåerna `"1"` till `"4"`.
 - `here.go` rumsblocket i loggen: rummets beskrivning och vad som finns där
 - `sounds.go` spår och ljud från grannrummen
 - `summary.go` rundans sammanfattning, raderna på spelkortet
-- `spelkort.go` spelkorten: rundans kort i ordning (bilderna i `web/kort.js`)
+- `spelkort.go` spelkorten: rundans kort i ordning, korten mellan
+  rundorna och de stora korten (bilderna i `web/kort.js`)
+- `stunder.go` vandringens största stunder i krönikan i slutet
 - `difficulty.go` förvalen för svårighet
 - `classes.go` klasserna och valet av klass
 - `items.go` föremålen
@@ -1006,6 +1009,7 @@ Beskrivningarna för rummen ligger under nivåerna `"1"` till `"4"`.
 - `simulate.go` simulerar vandringar med bara AI-spelare (`-simulera`)
 - `verktyg/provspelare.mjs` en robot som provspelar som människa över
   websocketen och samlar alla texter (se Provspela med robotar)
+- `verktyg/kortbilder.html` visar alla spelkortens och klasskortens bilder
 - `lang.go` språken: översättningarna i `data/en/` läggs över de svenska texterna
 - `web/texter.js` sidornas texter: `t()`, `applyTexts()` och språkbytet
 - `ws.go` en liten websocket-implementation utan beroenden
@@ -1032,6 +1036,8 @@ Beskrivningarna för rummen ligger under nivåerna `"1"` till `"4"`.
     rummet vandraren står i. Den skapar kartan snett ovanifrån, eller visar en
     text där WebGL saknas
   - `audio.js` allt ljud, skapat med Web Audio API, även stormen i introt
+  - `kort.js` spelkortens och klasskortens bilder, ritade som SVG, och
+    minikorten
   - `style.css` utseendet
   - `ikon.svg`, `ikon.png`, `ikon-32.png` och `favicon.ico` tornets ikon
     i flikarna och på hemskärmen. De små ritas av `verktyg/appikon`

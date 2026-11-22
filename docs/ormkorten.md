@@ -3,6 +3,12 @@
 Status: förslaget skrevs 2026-11-22, och alla fem delarna (A–E) är byggda
 samma dag. README beskriver hur det fungerar under Skattkammaren och ormen.
 
+Senare samma dag gick ormkortet och rundans kort upp i **spelkortet**
+([spelkort.md](spelkort.md)): ormkortet är rundans spelkort när man tar
+en näve, `cardMsg`, `showSerpentCard` och `#ormkort` finns inte längre,
+bilderna ritas i `web/kort.js` och uppvaknandet visas i `#storkort`. Det
+som står nedan om del A och E beskriver hur det var byggt först.
+
 ## Varför
 
 Ormleken fanns bara i servern. Den som tog en näve fick en rad i loggen,

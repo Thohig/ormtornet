@@ -2,7 +2,9 @@
 
 Status: förslag 2026-11-22, byggt samma dag, alla delar A–G. Avsnittet
 Läget säger vad som blev annorlunda än förslaget, och
-[att-gora.md](att-gora.md) vad som ska provas.
+[att-gora.md](att-gora.md) vad som ska provas. Efteråt byggdes
+vandringens största stunder, klasskorten och minikorten i krönikan; se
+avsnitten sist.
 
 ## Målet
 
@@ -171,5 +173,44 @@ ens lek, största stunderna och att klicka upp ett minikort). Krönikans
 händelser vet sin nyckel, vem de gällde och sin bild (`chronEvent`), och
 `stunder.go` väljer högst fem: de viktigaste slagen först, högst två av
 samma slag, lagda i den ordning de hände. Slagen står under
-`spelkort.stunder` i `data/texter.json`. De andra fyra delarna är inte
-byggda.
+`spelkort.stunder` i `data/texter.json`. Senare byggdes också att man kan
+klicka upp ett minikort (se Efteråt: minikorten).
+
+## Efteråt: klasskorten
+
+Byggt 2026-11-22 i fyra steg, efter ett förslag om att klasskorten skulle
+likna spelkorten:
+
+1. Klasskorten i klassvalet har spelkortens pergament, ram och mörka
+   text, med namnet i versaler, styrkan i grönt och svagheten i rött.
+2. Varje klass har en bild i `web/kort.js` och ett fält `bild` i
+   `data/klasser.json`; kontrollen säger till om bilden saknas.
+3. Klassvalet börjar med korten på baksidan, och de vänds upp ett i taget.
+   Korten byggs en gång per klassval (`renderChoose`, `buildClassCard`)
+   och uppdateras sedan. Ett kort som någon annan tar vänds tillbaka och
+   visar baksidan med namnet.
+4. Under vandringen står klassen bland tecknen som ett litet klasskort;
+   ett klick visar det stort mitt på kartan (`showClassCard`).
+
+Klasskortet står inte i Din vandring, vilket förslaget sa var möjligt.
+
+## Efteråt: minikorten
+
+Minikorten var 12 × 16 pixlar och gick inte att läsa. Byggt 2026-11-22:
+
+- **Klicka upp ett kort.** Ett minikort med rubrik (`Kort.mini` med
+  `rubrik`) bär kortet i `data-kort`. Ett klick, eller Enter, visar det
+  stort med sin text i ett lager över hela sidan (`#kortvisning`,
+  `showCardPopup` i `web/app.js`); ett klick eller Escape stänger det.
+  Det gäller i loggen, på spelkortet och i krönikan. Din vandring sparar
+  därför kortens text.
+- **Krönikans kort.** I Din vandring står rundans kort som små spelkort,
+  104 pixlar breda, med pergament, en bild på 88 × 76 och rubriken, och
+  hela kortet går att klicka upp.
+- **Ormkorten på raden med siffror** står ihopslagna med ett kort på
+  30 × 40, namnet och antalet: "Ormen sover ×3 · Ormen rör sig"
+  (`cardRow`).
+
+Inte byggt av förslagen för krönikan: minikort framför krönikans
+händelser, resultaten som kort på bordet och var och ens lek som ett
+eget avsnitt.
