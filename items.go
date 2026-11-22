@@ -321,7 +321,7 @@ func (g *Game) mirror(p *Player) {
 			}
 		}
 		if mm := g.monsterAt(x, y); mm != nil {
-			g.logTo(p, g.data.Text("spegel_varelse", "varelse", lowerFirst(g.data.monsterType(mm.Type).Namn)), "varn")
+			g.logTo(p, g.data.Text("spegel_varelse", "varelse", g.data.monsterType(mm.Type).Kort), "varn")
 		}
 		for _, o := range g.players {
 			if o != nil && o != p && o.Status == statusIn && o.Cellar == 0 && o.X == x && o.Y == y {
@@ -339,8 +339,8 @@ func (g *Game) knife(p *Player, m *Monster) {
 		return
 	}
 	mt := g.data.monsterType(m.Type)
-	g.useItem(p, "kastkniv", "varelse", lowerFirst(mt.Namn))
-	g.logTo(p, g.data.Text("kniv_traff", "varelse", lowerFirst(mt.Namn)), "syn")
+	g.useItem(p, "kastkniv", "varelse", mt.KortBestamd)
+	g.logTo(p, g.data.Text("kniv_traff", "varelse", mt.KortBestamd), "syn")
 	m.HP -= g.data.Monster.Spelarskada
 	if m.HP <= 0 {
 		g.defeat(p, m)

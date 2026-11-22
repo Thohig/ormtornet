@@ -58,6 +58,11 @@ func lowerFirst(s string) string {
 	return string(unicode.ToLower(r)) + s[n:]
 }
 
+func upperFirst(s string) string {
+	r, n := utf8.DecodeRuneInString(s)
+	return string(unicode.ToUpper(r)) + s[n:]
+}
+
 func (g *Game) monsterAt(x, y int) *Monster {
 	for _, m := range g.monsters {
 		if m.X == x && m.Y == y {
@@ -152,10 +157,11 @@ func (g *Game) seesMonsterAt(me *Player, x, y int) bool {
 	return false
 }
 
-// monsterVars ger namn och val som texterna kan använda.
+// monsterVars ger varelsen och val som texterna kan använda. Varelsen har
+// inget namn för spelarna: {monster} är "det bleka mångbenta".
 func (g *Game) monsterVars(m *Monster, extra ...string) []string {
-	name := g.data.monsterType(m.Type).Namn
-	return append([]string{"Monster", name, "monster", lowerFirst(name)}, extra...)
+	the := g.data.monsterType(m.Type).KortBestamd
+	return append([]string{"Monster", upperFirst(the), "monster", the}, extra...)
 }
 
 func (g *Game) choiceWord(a string) string {
@@ -221,7 +227,7 @@ func (g *Game) duel(p *Player, m *Monster, a string) {
 		g.logTo(p, g.data.MonsterText("inget", g.monsterVars(m)...), "dim")
 	}
 	if monsterHits {
-		p.hurt("varelse", lowerFirst(t.Namn))
+		p.hurt("varelse", t.Kort)
 		g.damage(p, g.shieldDamage(p, t.Skada), false)
 	}
 	if playerHits {
@@ -247,7 +253,7 @@ func (g *Game) freeAttack(p *Player, m *Monster, key string) {
 	g.logTo(p, g.data.MonsterText(key, g.monsterVars(m, "dess_val", g.choiceWord(mc))...), "varn")
 	if mc == actAttack {
 		g.logTo(p, g.data.MonsterText("monster_traffar", g.monsterVars(m, "skada", strconv.Itoa(t.Skada))...), "varn")
-		p.hurt("varelse", lowerFirst(t.Namn))
+		p.hurt("varelse", t.Kort)
 		g.damage(p, g.shieldDamage(p, t.Skada), false)
 	}
 }
@@ -257,7 +263,7 @@ func (g *Game) defeat(p *Player, m *Monster) {
 	g.removeMonster(m)
 	p.Treasure += t.Guld
 	p.stats.kills++
-	g.chronicle("kronika_varelse", "namn", p.Name, "varelse", lowerFirst(t.Namn))
+	g.chronicle("kronika_varelse", "namn", p.Name, "varelse", t.Kort)
 	g.soundTo(p, "monster_dor")
 	g.logTo(p, pick(t.Dor), "")
 	g.logTo(p, g.data.MonsterText("seger", g.monsterVars(m,
@@ -341,7 +347,7 @@ func (g *Game) monsterViews(me *Player, blind bool) []monsterView {
 		}
 		t := g.data.monsterType(m.Type)
 		out = append(out, monsterView{
-			ID: m.ID, Name: t.Namn, Glyph: t.Tecken, Type: m.Type, Model: t.Modell, X: m.X, Y: m.Y, HP: m.HP, MaxHP: t.Liv,
+			ID: m.ID, Name: t.KortBestamd, Glyph: t.Tecken, Type: m.Type, Model: t.Modell, X: m.X, Y: m.Y, HP: m.HP, MaxHP: t.Liv,
 		})
 	}
 	return out

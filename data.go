@@ -89,18 +89,22 @@ type Monsters struct {
 }
 
 type MonsterType struct {
-	ID       string         `json:"id"`
-	Namn     string         `json:"namn"`
-	Vikt     int            `json:"vikt"`
-	Liv      int            `json:"liv"`
-	Skada    int            `json:"skada"`
-	Guld     int            `json:"guld"`
-	Tecken   string         `json:"tecken"`
-	Modell   *ModelLook     `json:"modell,omitempty"` // färg och storlek på kartan snett ovanifrån
-	Vanor    map[string]int `json:"vanor"`
-	Vandrar  *float64       `json:"vandrar,omitempty"` // egen chans att vandra, annars vandra_chans
-	DykerUpp []string       `json:"dyker_upp"`
-	Dor      []string       `json:"dor"`
+	ID   string `json:"id"`
+	Namn string `json:"namn"` // bara på värdsidan; spelarna får inga namn
+	// Kort och KortBestamd är det spelarna får i stället: "något blekt och
+	// mångbent" och "det bleka mångbenta".
+	Kort        string         `json:"kort"`
+	KortBestamd string         `json:"kort_bestamd"`
+	Vikt        int            `json:"vikt"`
+	Liv         int            `json:"liv"`
+	Skada       int            `json:"skada"`
+	Guld        int            `json:"guld"`
+	Tecken      string         `json:"tecken"`
+	Modell      *ModelLook     `json:"modell,omitempty"` // färg och storlek på kartan snett ovanifrån
+	Vanor       map[string]int `json:"vanor"`
+	Vandrar     *float64       `json:"vandrar,omitempty"` // egen chans att vandra, annars vandra_chans
+	DykerUpp    []string       `json:"dyker_upp"`
+	Dor         []string       `json:"dor"`
 }
 
 func (d *Data) monsterType(id string) *MonsterType {

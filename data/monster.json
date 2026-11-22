@@ -15,6 +15,8 @@
       {
         "id": "krypare",
         "namn": "Blekkryparen",
+        "kort": "något blekt och mångbent",
+        "kort_bestamd": "det bleka mångbenta",
         "vikt": 3,
         "liv": 2,
         "skada": 1,
@@ -25,15 +27,17 @@
         "vanor": { "anfall": 1, "parera": 1, "undan": 3 },
         "dyker_upp": [
           "Något blekt och mångbent kryper fram ur en springa. Det har inga ögon, men det vänder sig mot dig.",
-          "En blek krypare lösgör sig från väggen, där den legat så tätt att du trodde den var en del av stenen."
+          "Något blekt lösgör sig från väggen, där det legat så tätt att du trodde det var en del av stenen."
         ],
         "dor": [
-          "Blekkryparen krullar ihop sig och blir stilla. Under den ligger några mynt."
+          "Det bleka mångbenta krullar ihop sig och blir stilla. Under den ligger några mynt."
         ]
       },
       {
         "id": "yngel",
         "namn": "Ormynglet",
+        "kort": "en lång, väsande orm",
+        "kort_bestamd": "den långa, väsande ormen",
         "vikt": 3,
         "liv": 3,
         "skada": 1,
@@ -43,16 +47,18 @@
         "vandrar": 0.3,
         "vanor": { "anfall": 3, "parera": 1, "undan": 1 },
         "dyker_upp": [
-          "Ett ormyngel, långt som en man, reser sig ur en hög av damm. Det väser och slår genast.",
-          "Ett ungt, glänsande ormyngel ligger hoprullat i hörnet. Det har redan sett dig."
+          "En orm, lång som en man, reser sig ur en hög av damm. Den väser och slår genast.",
+          "En ung, glänsande orm ligger hoprullad i hörnet. Den har redan sett dig."
         ],
         "dor": [
-          "Ormynglet slingrar sig en sista gång och ligger sedan stilla. I magen på det glimmar guld."
+          "Den långa ormen slingrar sig en sista gång och ligger sedan stilla. I magen på den glimmar guld."
         ]
       },
       {
         "id": "fjallvakt",
         "namn": "Fjällvakten",
+        "kort": "en gestalt i fjällrustning",
+        "kort_bestamd": "gestalten i fjällrustning",
         "vikt": 2,
         "liv": 4,
         "skada": 2,
@@ -63,15 +69,17 @@
         "vanor": { "anfall": 1, "parera": 3, "undan": 1 },
         "dyker_upp": [
           "En gestalt i rustning av överlappande fjäll kliver fram. Den håller en sköld framför sig och väntar.",
-          "Fjällvakten står orörlig mitt i rummet. Dess rustning ser vuxen ut snarare än smidd."
+          "En gestalt i fjällrustning står orörlig mitt i rummet. Rustningen ser vuxen ut snarare än smidd."
         ],
         "dor": [
-          "Fjällvakten faller ihop. Rustningen är tom, som ett ömsat skinn. Mynt rasslar ur den."
+          "Gestalten faller ihop. Rustningen är tom, som ett ömsat skinn. Mynt rasslar ur den."
         ]
       },
       {
         "id": "gallgast",
         "namn": "Gallgasten",
+        "kort": "en grönaktig skepnad",
+        "kort_bestamd": "den grönaktiga skepnaden",
         "vikt": 2,
         "liv": 3,
         "skada": 2,
@@ -82,15 +90,17 @@
         "vanor": { "anfall": 2, "parera": 1, "undan": 2 },
         "dyker_upp": [
           "En grönaktig skepnad glider fram. Den bär en äventyrares kläder, men de hänger i trasor och är blekta, som om de legat i syra.",
-          "En gast stiger upp ur golvet. Den tittar på din väska, som om den minns hur det var att bära en."
+          "Något stiger upp ur golvet, grönaktigt och genomskinligt. Det tittar på din väska, som om det minns hur det var att bära en."
         ],
         "dor": [
-          "Gallgasten löses upp i en bitter dimma. Kvar ligger det guld den aldrig fick med sig ut."
+          "Skepnaden löses upp i en bitter dimma. Kvar ligger det guld den aldrig fick med sig ut."
         ]
       },
       {
         "id": "benvaktare",
         "namn": "Benväktaren",
+        "kort": "ett väsen av vita ben",
+        "kort_bestamd": "väsendet av vita ben",
         "vikt": 1,
         "liv": 5,
         "skada": 2,
@@ -103,7 +113,7 @@
           "Ett väsen byggt av böjda, vita ben reser sig. Benen är alla lika, som revben från ett och samma djur."
         ],
         "dor": [
-          "Benväktaren rasar ihop till en hög med revben. Mellan dem ligger guld."
+          "Väsendet rasar ihop till en hög med revben. Mellan dem ligger guld."
         ]
       }
     ],

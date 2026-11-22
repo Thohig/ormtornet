@@ -242,7 +242,7 @@ den som dör och för alla i slutet (se slutet nedan och Strider):
      varelsens egen text, de andra vandrarna, guldet, porten, spåret
      efter en fälla som har slagit till (utan fällans namn) och föremål
      som någon har lämnat. Ett tomt rum säger ingenting. Står man kvar
-     kommer bara det som har ändrats, som "Fjällvakten är borta." Sist
+     kommer bara det som har ändrats, som "Gestalten i fjällrustning är borta." Sist
      står det man hörde under rundan, som stridsljud från ett grannrum
      eller klockan som slår i hela tornet; ljuden står inte längre som
      egna rader. I
@@ -685,7 +685,7 @@ gradvis, i fyra nivåer som följer solen:
   ledtråd. Ingen får samma som någon annan, så spelarna måste prata med
   varandra för att få hela bilden.
 - På nivå 4 får varje spelare nya förklaringar till de fällor och varelser
-  hen har mött (fallgallret var tänderna, de roterande rummen tarmarna ...).
+  hen har mött (gallret som rasade ner var tänderna, de roterande rummen tarmarna ...).
 - När spelet är slut säger tornet hemligheten rakt ut, och porten stängs.
 
 ### Att viska hemligheten
@@ -771,6 +771,14 @@ fel. Felet står i terminalen med filen och fältet, till exempel ett
 felstavat fält, en chans som inte ligger mellan 0 och 1, ett id som finns
 två gånger eller en klass i `ai.json` som inte finns i `klasser.json`.
 Fält som börjar med `_` är kommentarer och får stå var som helst.
+
+Rum, fällor och varelser har inga namn för spelarna. `namn` syns bara på
+värdsidan. Spelarna får beskrivningen och det de ser och hör, och där en
+text behöver nämna något står dess korta beskrivning: `kort` för rummen
+("en smal gång under låga valv") och fällorna ("ett galler av spetsiga
+järnstänger"), och `kort` och `kort_bestamd` för varelserna ("något blekt
+och mångbent", "det bleka mångbenta"). Ett test kräver att alla har dem
+på båda språken.
 
 - `texter.json` rum, beskrivningar, allmänna texter och introts väntetid. Varje rumstyp har sin inredning på kartan under `modell.inredning`, med namnen i `klient/src/inredning.ts`
 - `fallor.json` regler (liv, chans för händelse, drycker, hur länge spåren syns), fällor och sökresultat

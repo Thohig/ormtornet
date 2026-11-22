@@ -6,6 +6,20 @@ eller leder tornet.
 
 ## 2026-11-22
 
+### Inga namn på rum, fällor och varelser
+
+- Spelet säger inte vad rummen, fällorna och varelserna heter. Rummet
+  står i loggen som sin beskrivning, utan namn i versaler, och rutan med
+  rummets namn uppe till vänster på kartan visar bara Mörker eller
+  Källarvalven.
+- Raden med fällans namn när den slår till är borta; texten säger vad som
+  händer. Där en text behöver nämna en fälla, ett rum eller en varelse
+  står en kort beskrivning, till exempel "Strid: det bleka mångbenta",
+  "Du ser tecknen i tid: ett galler av spetsiga järnstänger" och "Bo dog
+  av pilar ur små hål i väggen".
+- Krönikan och epilogen beskriver också i stället för att använda namn.
+  Värdsidans Läs om innehållet har kvar namnen.
+
 ### Spelledaren spelar i samma flik
 
 - Gå in själv på värdsidan byter till spelarsidan i samma flik, utan

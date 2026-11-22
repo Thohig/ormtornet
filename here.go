@@ -145,8 +145,8 @@ func (g *Game) hereParts(p *Player) []herePart {
 		if t := g.data.monsterType(m.Type); t != nil && len(t.DykerUpp) > 0 {
 			// Samma text så länge varelsen står kvar, så att blocket inte
 			// tror att något har ändrats.
-			parts = append(parts, herePart{key: "varelse:" + strconv.Itoa(m.ID), kind: "varelse", name: t.Namn,
-				text: t.DykerUpp[m.ID%len(t.DykerUpp)], gone: g.data.Text("har_varelse_borta", "varelse", t.Namn)})
+			parts = append(parts, herePart{key: "varelse:" + strconv.Itoa(m.ID), kind: "varelse", name: t.KortBestamd,
+				text: t.DykerUpp[m.ID%len(t.DykerUpp)], gone: g.data.Text("har_varelse_borta", "varelse", upperFirst(t.KortBestamd))})
 		}
 	}
 	for _, o := range g.players {

@@ -11,55 +11,65 @@
       {
         "id": "krypare",
         "namn": "The Pale Crawler",
+        "kort": "something pale and many-legged",
+        "kort_bestamd": "the pale many-legged thing",
         "dyker_upp": [
           "Something pale and many-legged crawls out of a crack. It has no eyes, but it turns towards you.",
-          "A pale crawler peels itself from the wall, where it lay so close you took it for part of the stone."
+          "Something pale peels itself from the wall, where it lay so close you took it for part of the stone."
         ],
         "dor": [
-          "The Pale Crawler curls up and goes still. Beneath it lie a few coins."
+          "The pale many-legged thing curls up and goes still. Beneath it lie a few coins."
         ]
       },
       {
         "id": "yngel",
         "namn": "The Serpent Spawn",
+        "kort": "a long, hissing snake",
+        "kort_bestamd": "the long, hissing snake",
         "dyker_upp": [
-          "A serpent spawn, long as a man, rises from a heap of dust. It hisses and strikes at once.",
-          "A young, glistening serpent spawn lies coiled in the corner. It has already seen you."
+          "A snake, long as a man, rises from a heap of dust. It hisses and strikes at once.",
+          "A young, glistening snake lies coiled in the corner. It has already seen you."
         ],
         "dor": [
-          "The Serpent Spawn writhes one last time and then lies still. Gold glints in its belly."
+          "The long snake writhes one last time and then lies still. Gold glints in its belly."
         ]
       },
       {
         "id": "fjallvakt",
         "namn": "The Scale Warden",
+        "kort": "a figure in scale armour",
+        "kort_bestamd": "the figure in scale armour",
         "dyker_upp": [
           "A figure in armour of overlapping scales steps forward. It holds a shield before it and waits.",
-          "The Scale Warden stands motionless in the middle of the room. Its armour looks grown rather than forged."
+          "A figure in scale armour stands motionless in the middle of the room. Its armour looks grown rather than forged."
         ],
         "dor": [
-          "The Scale Warden collapses. The armour is empty, like a shed skin. Coins rattle out of it."
+          "The figure collapses. The armour is empty, like a shed skin. Coins rattle out of it."
         ]
       },
       {
         "id": "gallgast",
         "namn": "The Bile Ghast",
+        "kort": "a greenish shape",
+        "kort_bestamd": "the greenish shape",
         "dyker_upp": [
           "A greenish shape glides forward. It wears an adventurer's clothes, but they hang in rags and are bleached, as if they had lain in acid.",
-          "A ghast rises out of the floor. It looks at your bag, as if it remembers what it was like to carry one."
+          "Something rises out of the floor, greenish and translucent. It looks at your bag, as if it remembers what it was like to carry one."
         ],
         "dor": [
-          "The Bile Ghast dissolves into a bitter mist. Left behind is the gold it never got out with."
+          "The greenish shape dissolves into a bitter mist. Left behind is the gold it never got out with."
         ]
       },
       {
         "id": "benvaktare",
         "namn": "The Bone Keeper",
+        "kort": "a creature of white bones",
+        "kort_bestamd": "the creature of white bones",
         "dyker_upp": [
           "A being built of curved white bones rises up. The bones are all alike, like ribs from one and the same beast."
         ],
         "dor": [
-          "The Bone Keeper falls apart into a heap of ribs. Between them lies gold."
+          "The creature falls apart into a heap of ribs. Between them lies gold."
         ]
       }
     ],

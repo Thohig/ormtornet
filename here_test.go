@@ -223,8 +223,47 @@ func TestTrapsHaveNoNamesForPlayers(t *testing.T) {
 		g.trigger(p, g.data.trap(trap.ID), 0)
 		g.broadcastState()
 		for _, raw := range drainAll(a) {
+			// Fällans egna texter får använda vanliga ord som "mörkret".
+			own := false
+			for _, text := range trap.Texter {
+				own = own || strings.Contains(raw, text)
+			}
+			if own {
+				continue
+			}
 			if strings.Contains(raw, trap.Namn) || strings.Contains(raw, lowerFirst(trap.Namn)) {
 				t.Errorf("spelarsidan fick fällans namn %q: %s", trap.Namn, raw)
+			}
+		}
+	}
+}
+
+// Varelserna har inga namn för spelarna: varken i rumsblocket, striden,
+// när de dör eller i tillståndet.
+func TestMonstersHaveNoNamesForPlayers(t *testing.T) {
+	for _, mt := range testGame(t).data.Monster.Typer {
+		g, a, b := startTwo(t)
+		if mt.Kort == "" || mt.KortBestamd == "" {
+			t.Errorf("varelsen %q saknar kort beskrivning", mt.ID)
+		}
+		p := a.player
+		p.HP = 99
+		putInRoom(g, p, 4, 2)
+		putInRoom(g, b.player, 1, 1)
+		m := &Monster{ID: 77, Type: mt.ID, X: 4, Y: 2, HP: 1}
+		g.monsters = append(g.monsters, m)
+		drainAll(a)
+		g.tellRoom(p)
+		for range 6 {
+			if g.monsterAt(4, 2) == nil {
+				break
+			}
+			g.Act(a, actAttack, m.ID)
+			g.Act(b, actWait, 0)
+		}
+		for _, raw := range drainAll(a) {
+			if strings.Contains(raw, mt.Namn) || strings.Contains(raw, lowerFirst(mt.Namn)) {
+				t.Errorf("spelarsidan fick varelsens namn %q: %s", mt.Namn, raw)
 			}
 		}
 	}
