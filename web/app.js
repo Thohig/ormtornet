@@ -1376,24 +1376,27 @@ function renderTop() {
 }
 
 // renderHost visar för spelledaren, den som spelar från tornets dator, att
-// hen är det. I lobbyn och slutet är det en knapp till värdsidan; under
-// vandringen bara ordet, eftersom den som går då räknas som frånvarande.
+// hen är det. I lobbyn och slutet är det en knapp till värdsidan i samma
+// flik. Under vandringen öppnar ordet värdsidan i en ny flik, så att
+// spelarsidan är kvar och vandraren inte blir frånvarande. På Pages visar
+// skalet båda sidorna i samma ram, så där är det bara ordet.
 function renderHost() {
   const el = $("vard");
   el.hidden = !state.vard;
   el.textContent = "";
   if (!state.vard) return;
-  if (state.phase === "lobby" || state.phase === "slut") {
-    const b = document.createElement("button");
-    b.type = "button";
-    b.textContent = t("knapp_vardsidan");
-    b.title = t("knapp_vardsidan_tips");
-    b.setAttribute("aria-label", b.textContent);
-    b.addEventListener("click", goHost);
-    el.appendChild(b);
-  } else {
+  const between = state.phase === "lobby" || state.phase === "slut";
+  if (!between && window.ORMTORNET_SIDA) {
     el.textContent = t("topp_spelledare");
+    return;
   }
+  const b = document.createElement("button");
+  b.type = "button";
+  b.textContent = t(between ? "knapp_vardsidan" : "topp_spelledare");
+  b.title = t(between ? "knapp_vardsidan_tips" : "knapp_vardsidan_ny_flik");
+  b.setAttribute("aria-label", between ? b.textContent : b.title);
+  b.addEventListener("click", between ? goHost : () => window.open("spelledare.html", "ormtornet-vardsidan"));
+  el.appendChild(b);
 }
 
 // goHost går till värdsidan i samma flik. Vandraren står kvar i lobbyn en

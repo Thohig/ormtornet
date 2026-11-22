@@ -492,6 +492,33 @@ body.loggenoppen #mapbox > #side {
 body.loggenoppen #mapbox > #side #logwrap { flex: 1 1 auto; }
 body.loggenoppen #mapbox::before { display: none; }
 body:not(.logpakartan) .widelog { display: none !important; }
+/* Pekskärm med loggen på kartan (surfplattan, telefonen på bredden):
+   knapparna står nere till vänster under loggen, på en mörk botten. */
+body.touch #mapbox > #side { overflow: visible; }
+#mapbox > #side #pad { margin: 0; justify-content: flex-start; flex-wrap: nowrap; }
+#mapbox > #side #pad button { background: rgba(12, 13, 15, 0.8); }
+body.loggenoppen #mapbox > #side #pad { display: none; }
+/* Telefonen på bredden: en låg skärm. Loggen blir smalare, bara den
+   senaste rundan står där, rumsbeskrivningen kortas till tre rader med
+   "mer", knapparna blir mindre och panelen Nu blir en rad. */
+@media (min-width: 701px) and (max-height: 500px) {
+  #game { padding: 4px 10px; gap: 4px; }
+  #mapbox > #side { top: 8px; bottom: 8px; width: min(30ch, 36%); font-size: 12px; gap: 6px; }
+  body:not(.loggenoppen) #mapbox > #side #log .round:nth-child(2) { display: none; }
+  #mapbox > #side #log .roomblock:not(.open) .roomtext {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  #mapbox > #side #log .roomblock.lang .roommore { display: inline-block; pointer-events: auto; }
+  #mapbox > #side #log .roomblock.open .roommore { display: none; }
+  #mapbox > #side #pad .dirs { grid-template-columns: repeat(3, 36px); grid-template-rows: repeat(3, 36px); gap: 3px; }
+  #mapbox > #side #pad button { min-height: 36px; }
+  #mapbox > #side #pad .acts { flex: 0 1 150px; }
+  .panel.nowbar { flex-wrap: nowrap; padding: 3px 10px; overflow: hidden; white-space: nowrap; }
+  #me { flex-wrap: nowrap; overflow: hidden; }
+}
 /* Kompassen flyttar från loggens hörn till ovanför zoomen. */
 body.logpakartan .isokompass { left: auto; right: 12px; bottom: 50px; }
 

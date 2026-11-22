@@ -310,6 +310,15 @@ async function copy(text, done) {
   }
 }
 
+// Öppnade spelarsidan värdsidan i en ny flik under vandringen tar Till
+// spelet tillbaka till den fliken, där spelledaren redan är ansluten.
+$("joinSelf").addEventListener("click", (e) => {
+  if (window.name !== "ormtornet-vardsidan" || !window.opener || window.opener.closed) return;
+  e.preventDefault();
+  window.opener.focus();
+  window.close();
+});
+
 $("copyInvite").onclick = () => view && copy(inviteText(view), "kopierad_inbjudan");
 $("copyAddr").onclick = () => view && copy(view.addrs.name, onPages ? "kopierad_lanken" : "kopierad_adressen");
 

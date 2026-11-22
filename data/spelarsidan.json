@@ -200,6 +200,7 @@
     "knapp_nytt_torn": "Nytt torn",
     "knapp_vardsidan": "Värdsidan",
     "knapp_vardsidan_tips": "Du är spelledare. Värdsidan öppnas i den här fliken, och Gå in själv där tar dig tillbaka.",
+    "knapp_vardsidan_ny_flik": "Värdsidan öppnas i en ny flik. Du är kvar i spelet och räknas inte som frånvarande.",
     "topp_spelledare": "spelledare",
     "kronika_vardsidan": "Till värdsidan",
 
