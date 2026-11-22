@@ -498,6 +498,12 @@
     "har_port_stangd": [
       "Där porten var finns bara mur, varm och fuktig."
     ],
+    "har_fall": [
+      "Här föll {namn}. Det mörka på stenen visar var."
+    ],
+    "har_guld_taget": [
+      "Några mynt har legat i dammet här. Någon har redan tagit dem."
+    ],
     "har_foremal": [
       "I ett hörn ligger {foremal}."
     ],

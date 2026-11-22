@@ -18,6 +18,8 @@ eller leder tornet.
 - Skriket säger var: alla hör i vilken del av tornet någon dog, och den
   som står i ett grannrum hör det åt ett håll. Bar den döda guld hörs
   mynten rassla efter skriket, men inte hur många.
+- Rummet minns: den som kommer in där någon har dött läser "Här föll
+  Alva" i rumsblocket, och "Någon har redan tagit dem" om guldet är taget.
 
 ### Ormtornet.app i ~/Applications
 

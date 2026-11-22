@@ -206,6 +206,8 @@ type Room struct {
 	trail    trail      // den som senast gick ut ur rummet, för spåren
 	items    []string   // föremål som någon har lämnat här
 	gold     []leftGold // guld som döda vandrare bar, åt den som kommer efter
+	fell     []string   // vandrarna som har dött här, för rumsblocket
+	goldBy   int        // vandraren som senast tog upp guld här, 0 om ingen
 	chalk    Dir        // pilen någon har ritat med krita
 	hasChalk bool
 	omen     string // det ett varsel har lovat: "falla:id", "varelse:id" eller "tomt"

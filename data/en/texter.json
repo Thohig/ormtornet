@@ -460,6 +460,12 @@
     "har_port_stangd": [
       "Where the gate was there is only wall, warm and damp."
     ],
+    "har_fall": [
+      "This is where {namn} fell. The dark stain on the stone shows where."
+    ],
+    "har_guld_taget": [
+      "Coins have lain in the dust here. Someone has already taken them."
+    ],
     "har_foremal": [
       "In a corner lies {foremal}."
     ],

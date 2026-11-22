@@ -207,7 +207,7 @@
     ],
     "guld_kvar": [
       "On the floor lies what {namn} carried. You gather up {antal} gold.",
-      "This is where {namn} fell. The coins lie where they rolled, {antal} gold, and you take them."
+      "The coins {namn} carried lie where they rolled, {antal} gold, and you take them."
     ],
     "guld_kvar_ute": [
       "Your gold got out with {namn}."

@@ -265,7 +265,7 @@
     ],
     "guld_kvar": [
       "På golvet ligger det som {namn} bar. Du samlar ihop {antal} guld.",
-      "Här föll {namn}. Mynten ligger kvar där de rullade, {antal} guld, och du tar dem."
+      "Mynten som {namn} bar ligger kvar där de rullade, {antal} guld, och du tar dem."
     ],
     "guld_kvar_ute": [
       "Ditt guld kom ut med {namn}."

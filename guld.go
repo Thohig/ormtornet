@@ -57,7 +57,11 @@ func (g *Game) announceDeath(p *Player) {
 
 // dropGold lägger guldet den döda bar i rummet hen dog i.
 func (g *Game) dropGold(p *Player) {
-	if p.Treasure <= 0 || !g.inBounds(p.X, p.Y) {
+	if !g.inBounds(p.X, p.Y) {
+		return
+	}
+	g.rooms[p.Y][p.X].fell = append(g.rooms[p.Y][p.X].fell, p.Name)
+	if p.Treasure <= 0 {
 		return
 	}
 	r := &g.rooms[p.Y][p.X]
@@ -83,6 +87,9 @@ func (g *Game) pickUpGold(p *Player) {
 		if dead := g.playerByID(l.by); dead != nil {
 			dead.goldTakenBy = append(dead.goldTakenBy, p.ID)
 		}
+	}
+	if len(r.gold) > 0 {
+		r.goldBy = p.ID
 	}
 	r.gold = nil
 }

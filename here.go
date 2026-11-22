@@ -206,6 +206,13 @@ func (g *Game) hereParts(p *Player) []herePart {
 			other("falla:"+t.ID, t.SparEfter[0])
 		}
 	}
+	// Där någon har dött syns det, och att guldet är taget.
+	for _, name := range r.fell {
+		other("fall:"+name, g.data.Text("har_fall", "namn", name))
+	}
+	if r.goldBy != 0 && r.goldBy != p.ID && len(r.gold) == 0 {
+		other("guld_taget", g.data.Text("har_guld_taget"))
+	}
 	for i, id := range r.items {
 		if t := g.data.itemType(id); t != nil {
 			other("foremal:"+strconv.Itoa(i)+":"+id, g.data.Text("har_foremal", "foremal", t.found()))

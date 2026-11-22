@@ -114,3 +114,28 @@ func TestDeathScreamSaysWhere(t *testing.T) {
 		t.Fatalf("mynt utan guld: %s", far)
 	}
 }
+
+// Rummet minns den som föll, och att guldet är taget.
+func TestRoomRemembersTheFallen(t *testing.T) {
+	g, a, b := startTwo(t)
+	pa, pb := a.player, b.player
+	x, y := g.center(), g.center()-1
+	r := putInRoom(g, pa, x, y)
+	putInRoom(g, pb, x+1, y)
+	r.Doors[East] = true
+	g.rooms[y][x+1].Doors[West] = true
+	r.fell = []string{"Märta"}
+	r.goldBy = 99
+	rooms(b)
+	step(g, a, b, actWait, "W")
+	if pb.X != x {
+		t.Fatalf("Bo står i %d,%d", pb.X, pb.Y)
+	}
+	var har string
+	for _, m := range rooms(b) {
+		har += m.Har
+	}
+	if !strings.Contains(har, "Här föll Märta") || !strings.Contains(har, "redan tagit") {
+		t.Fatalf("rumsblocket: %q", har)
+	}
+}
