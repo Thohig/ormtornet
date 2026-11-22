@@ -6,6 +6,14 @@ eller leder tornet.
 
 ## 2026-11-22
 
+### Ormleken och korten i krönikan
+
+- Bredvid guldhögen ligger ormleken och de dragna korten. Står du i
+  skattkammaren ser du leken krympa och de dragna korten växa, i samma tre
+  steg som sömnmätaren. När ormen vaknar flyger korten tillbaka in i leken.
+- Rundans kort och Din vandring visar kortet du drog, och krönikan i slutet
+  visar alla kort var och en drog.
+
 ### Ormkorten syns
 
 - När du tar en näve i skattkammaren vänds kortet du drog upp på kartan:

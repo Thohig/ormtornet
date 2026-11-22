@@ -505,6 +505,14 @@ Korten syns så här:
 - **Uppvaknandet.** När ormen vaknar ser alla kortet Ormen vaknar stort mitt
   på kartan, med det de märkte. Den som stod i kammaren ser vad den
   förlorade.
+- **Leken.** Bredvid guldhögen på kartan ligger leken med baksidan upp och
+  de dragna korten med framsidan upp. Står du i kammaren krymper leken och
+  de dragna korten växer, i samma tre steg som sömnmätaren. Andra ser
+  högar som inte ändras. När ormen vaknar flyger de dragna korten tillbaka
+  in i leken.
+- **Krönikan.** Rundans kort och Din vandring visar kortet du drog med ett
+  litet kort bredvid, och i krönikan i slutet har var och en sina kort på
+  raden med siffror.
 
 Kortens namn står under `namn` i `data/ormen.json`.
 
