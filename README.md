@@ -328,7 +328,9 @@ Rummen bredvid en port har aldrig en fälla (`trygg_vid_porten` i
 `data/fallor.json`), så att ingen förlorar liv på första steget in. Varelser
 kan finnas där som förut. Två rum bredvid varandra har aldrig samma namn,
 och rumstyperna används så jämnt som möjligt, så att det går att säga till
-de andra vilket rum man står i.
+de andra vilket rum man står i. Ingen blir instängd: rummen byggs när någon
+ser in i dem, och skulle ett nytt rum stänga den del av tornet det hör till
+får det en dörr till mot ett okänt rum (`keepWayOut` i `game.go`).
 
 ### Vem ser vem
 

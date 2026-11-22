@@ -414,6 +414,7 @@ func (g *Game) build(x, y int, spawn bool) *Room {
 		} else {
 			r.Kind, r.TypeID = "kammare", "skattkammare"
 		}
+		g.keepWayOut(x, y)
 		return r
 	}
 	r.Kind = "rum"
@@ -447,6 +448,7 @@ func (g *Game) build(x, y int, spawn bool) *Room {
 		}
 		undecided = append(undecided[:i], undecided[i+1:]...)
 	}
+	g.keepWayOut(x, y)
 	// Händelse: en varelse, en fälla eller ingenting. Har ett varsel redan
 	// sagt vad som väntar blir det så.
 	if r.omen != "" {
@@ -460,6 +462,61 @@ func (g *Game) build(x, y int, spawn bool) *Room {
 		}
 	}
 	return r
+}
+
+// keepWayOut ser till att ingen blir instängd. Rummen byggs först när
+// någon ser in i dem, och ibland pekar alla öppningar i ett nytt rum bakåt
+// in i rum som redan finns, så att den del av tornet det hör till blir
+// stängd. Har den delen då ingen öppning mot ett okänt rum, och når den inte
+// kammaren, får det nya rummet en dörr till mot ett okänt grannrum, eller,
+// om det inte har något, ett annat rum i samma del.
+func (g *Game) keepWayOut(x, y int) {
+	type pos struct{ x, y int }
+	seen := map[pos]bool{{x, y}: true}
+	part := []pos{{x, y}}
+	for i := 0; i < len(part); i++ {
+		c := part[i]
+		r := &g.rooms[c.y][c.x]
+		if r.Kind == "kammare" {
+			return
+		}
+		for d := North; d <= West; d++ {
+			nx, ny := c.x+dirDX[d], c.y+dirDY[d]
+			if !r.Doors[d] || !g.inBounds(nx, ny) {
+				continue
+			}
+			if !g.rooms[ny][nx].Revealed {
+				return // en öppning mot ett okänt rum: det finns en väg vidare
+			}
+			if n := (pos{nx, ny}); !seen[n] {
+				seen[n] = true
+				part = append(part, n)
+			}
+		}
+	}
+	// Delen är stängd. Öppna en vägg mot ett okänt grannrum, helst i det
+	// nya rummet.
+	for _, c := range part {
+		r := &g.rooms[c.y][c.x]
+		if r.Kind != "rum" {
+			continue
+		}
+		var cand []Dir
+		for d := North; d <= West; d++ {
+			nx, ny := c.x+dirDX[d], c.y+dirDY[d]
+			if r.Doors[d] || !g.inBounds(nx, ny) || g.rooms[ny][nx].Revealed {
+				continue
+			}
+			if _, fixed := g.fixedDoors(nx, ny); fixed {
+				continue
+			}
+			cand = append(cand, d)
+		}
+		if len(cand) > 0 {
+			r.Doors[cand[g.rng.IntN(len(cand))]] = true
+			return
+		}
+	}
 }
 
 // roomTypeFor väljer rumstyp åt ett nytt rum: en av de typer som har

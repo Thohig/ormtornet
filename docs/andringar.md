@@ -6,6 +6,14 @@ eller leder tornet.
 
 ## 2026-11-22
 
+### Ingen blir instängd
+
+- Ibland stängde tornet in den som började vid en port, i ungefär vart
+  tjugonde torn och ofta i bara fyra rum. Då gick det bara att komma ut
+  genom en hemlig gång. Nu får ett nytt rum en dörr till mot ett okänt rum
+  när den del av tornet det hör till annars skulle bli stängd, så att man
+  alltid kan nå kammaren.
+
 ### Bara länken på värdsidan
 
 - Värdsidan på GitHub Pages visar under Bjud in bara länken, utan
