@@ -250,6 +250,16 @@
     "dod_andra": [
       "Ett skrik hörs och dör bort. {namn} är död."
     ],
+    "dod_andra_region": [
+      "Ett skrik hörs i tornets {region} del och dör bort. {namn} är död."
+    ],
+    "ljud_dod": [
+      "Genom väggen åt {riktning} hörs ett skrik, och sedan är det tyst. {namn} är död."
+    ],
+    "dod_mynt": [
+      "Efter skriket rasslar mynt mot sten.",
+      "Sedan hörs mynt som rullar över ett stengolv."
+    ],
     "guld_kvar_du": [
       "Guldet du bar, {guld} guld, ligger kvar där du föll."
     ],

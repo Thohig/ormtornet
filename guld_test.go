@@ -71,3 +71,46 @@ func TestDeadGoldTakenOnEntering(t *testing.T) {
 		t.Fatalf("Alvas guld togs av %v", pa.goldTakenBy)
 	}
 }
+
+// Skriket: den som står bredvid hör det åt ett håll, de andra i vilken del
+// av tornet, och mynten hörs när den döda bar guld.
+func TestDeathScreamSaysWhere(t *testing.T) {
+	g, cs := nameGame(t, 3)
+	if g.phase != phasePlay {
+		t.Fatalf("fas %s", g.phase)
+	}
+	a, b, c := cs[0].player, cs[1].player, cs[2].player
+	x, y := g.center(), g.center()-1
+	putInRoom(g, a, x, y)
+	putInRoom(g, b, x+1, y)
+	putInRoom(g, c, 0, g.size-1)
+	a.Treasure = 30
+	for _, cl := range cs {
+		logs(cl)
+	}
+	a.HP = 1
+	g.damage(a, 1, true)
+
+	next := strings.Join(logs(cs[1]), "\n")
+	far := strings.Join(logs(cs[2]), "\n")
+	region := g.data.region(x, y, g.size)
+	if !strings.Contains(next, "åt "+g.data.Riktningar[West]) || !strings.Contains(next, "mynt") {
+		t.Fatalf("grannen hörde: %s", next)
+	}
+	if !strings.Contains(far, region) || !strings.Contains(far, "mynt") {
+		t.Fatalf("den långt bort hörde: %s", far)
+	}
+	if len(b.deaths) != 1 || b.deaths[0].x != x || !b.deaths[0].coins {
+		t.Fatalf("grannen minns %+v", b.deaths)
+	}
+	if len(c.deaths) != 1 || c.deaths[0].x != -1 || c.deaths[0].region != region {
+		t.Fatalf("den långt bort minns %+v", c.deaths)
+	}
+
+	// Utan guld hörs inga mynt.
+	b.HP = 1
+	g.damage(b, 1, true)
+	if far := strings.Join(logs(cs[2]), "\n"); strings.Contains(far, "mynt") {
+		t.Fatalf("mynt utan guld: %s", far)
+	}
+}

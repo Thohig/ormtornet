@@ -1,6 +1,6 @@
 # Den dödes guld (förslag)
 
-Förslag 2026-11-22. Inget av det här är byggt än.
+Förslag 2026-11-22. Steg 1 är byggt.
 
 Sedan 2026-11-22 ligger guldet kvar där en vandrare dog. Den som går in
 i rummet, eller står kvar där när rundan är slut, tar det (`guld.go`).

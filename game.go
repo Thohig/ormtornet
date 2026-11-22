@@ -276,9 +276,10 @@ type Player struct {
 	// Det som skadade vandraren och varelsen hen fällde under rundan, för
 	// Din vandring (summary.go). Töms före varje runda.
 	roundHurtKind, roundHurtWhat, roundKill string
-	roundCards                              []gameCard // spelkorten för rundan (spelkort.go)
-	lastCard                                *gameCard  // vandringens sista kort: ute, död eller kvar när solen gick ner
-	goldTakenBy                             []int      // vandrarna som tog upp guldet den döda vandraren bar
+	roundCards                              []gameCard   // spelkorten för rundan (spelkort.go)
+	lastCard                                *gameCard    // vandringens sista kort: ute, död eller kvar när solen gick ner
+	goldTakenBy                             []int        // vandrarna som tog upp guldet den döda vandraren bar
+	deaths                                  []heardDeath // dödsskrik vandraren har hört (guld.go)
 }
 
 // present är sant för en spelare som deltar just nu: en människa med öppen

@@ -101,7 +101,7 @@ func (g *Game) resetChronicle() {
 			p.stats = chronStats{}
 			p.hurt("", "")
 			p.journal, p.death, p.epilog, p.lastCard = nil, "", nil, nil
-			p.goldTakenBy = nil
+			p.goldTakenBy, p.deaths = nil, nil
 		}
 	}
 }

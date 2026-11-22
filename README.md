@@ -383,7 +383,9 @@ upp, eller när en fälla slår till, men bara i vilken del av tornet och
 inte vem.
 De vaga texterna har nycklar som slutar på `_dolt` i datafilerna, och
 fällorna har `andra_dolt`. Ekofällan visar som förut var den drabbade är.
-Att någon går ut eller dör får alla veta.
+Att någon går ut eller dör får alla veta. Skriket när någon dör säger i
+vilken del av tornet det hördes, eller från vilket håll för den som står
+bredvid, och bar den döda guld hörs mynten rassla.
 
 När vandringen är slut syns alla igen. Den som har dött ser inte mer än förut.
 

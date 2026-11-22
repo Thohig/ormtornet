@@ -13,6 +13,48 @@ type leftGold struct {
 	gold int
 }
 
+// heardDeath är det en vandrare hörde när någon dog: var, så noga som hen
+// kunde höra det, och om mynt rasslade. AI-spelarna går efter det (ai.go);
+// en människa läser samma sak i loggen.
+type heardDeath struct {
+	x, y   int    // rummet, om vandraren stod där eller bredvid; annars -1
+	region string // tornets del
+	coins  bool
+}
+
+// announceDeath låter de andra höra att p dog. Den som står i rummet ser
+// det, den som står bredvid hör det genom väggen åt ett håll, och alla
+// andra hör i vilken del av tornet. Bar den döda guld hörs mynten.
+func (g *Game) announceDeath(p *Player) {
+	region := g.data.region(p.X, p.Y, g.size)
+	coins := p.Treasure > 0
+	for _, o := range g.players {
+		if o == nil || o == p {
+			continue
+		}
+		heard := heardDeath{x: -1, y: -1, region: region, coins: coins}
+		var text string
+		d, next := g.nextTo(o, p.X, p.Y)
+		switch {
+		case o.Status == statusIn && o.Cellar == 0 && o.X == p.X && o.Y == p.Y:
+			text = g.data.Text("dod_andra", "namn", p.Name)
+			heard.x, heard.y = p.X, p.Y
+		case next && !g.is(o, "sparfinnare"):
+			text = g.data.Text("ljud_dod", "namn", p.Name, "riktning", g.data.Riktningar[d])
+			heard.x, heard.y = p.X, p.Y
+		default:
+			text = g.data.Text("dod_andra_region", "namn", p.Name, "region", region)
+		}
+		if coins {
+			text += " " + g.data.Text("dod_mynt")
+		}
+		g.logTo(o, text, "varn")
+		if o.Status == statusIn {
+			o.deaths = append(o.deaths, heard)
+		}
+	}
+}
+
 // dropGold lägger guldet den döda bar i rummet hen dog i.
 func (g *Game) dropGold(p *Player) {
 	if p.Treasure <= 0 || !g.inBounds(p.X, p.Y) {

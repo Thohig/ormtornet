@@ -15,6 +15,9 @@ eller leder tornet.
   veta om guldet kom ut och med vem.
 - Den som dödar en annan vandrare tar som förut allt guldet direkt, så
   det blir inget kvar efter en strid mellan vandrare.
+- Skriket säger var: alla hör i vilken del av tornet någon dog, och den
+  som står i ett grannrum hör det åt ett håll. Bar den döda guld hörs
+  mynten rassla efter skriket, men inte hur många.
 
 ### Ormtornet.app i ~/Applications
 

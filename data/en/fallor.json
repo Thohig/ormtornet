@@ -192,6 +192,16 @@
     "dod_andra": [
       "A scream rings out and dies away. {namn} is dead."
     ],
+    "dod_andra_region": [
+      "A scream rings out in the {region} part of the tower and dies away. {namn} is dead."
+    ],
+    "ljud_dod": [
+      "Through the wall to the {riktning} comes a scream, and then silence. {namn} is dead."
+    ],
+    "dod_mynt": [
+      "After the scream, coins rattle on stone.",
+      "Then comes the sound of coins rolling across a stone floor."
+    ],
     "guld_kvar_du": [
       "The gold you carried, {guld} gold, lies where you fell."
     ],
