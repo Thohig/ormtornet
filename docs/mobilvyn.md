@@ -1,6 +1,7 @@
 # Samlat förslag: mobilvyn
 
-Förslag 2026-11-23. Inget är byggt.
+Förslag 2026-11-23. Steg 1–4 byggdes samma dag; steg 5 är inte byggt.
+Avsnittet Byggt säger var bygget skiljer sig från förslaget.
 
 ## Målet
 
@@ -112,3 +113,19 @@ de nya texterna (Vänta, namnet på nivån Rummet) går in i både
 | Ska tangenterna gå att klicka på datorn? | Ja, det kostar inget. |
 | Var står Vänta när pilarna är borta? | Först i knapparnas rad. |
 | Steg 5 nu eller senare? | Senare, efter att 1–4 har provats. |
+
+## Byggt
+
+- **Steg 1**: en högre karta visade inte rummet större av sig själv,
+  eftersom kameran passar utsnittet efter bredden. En hög, smal karta går
+  därför närmare när den följer någon (`rita` i `klient/src/karta.ts`).
+  Raden Nu står kvar under kartan i stället för på den, och kartan mäter
+  den (`measureBars` i `web/app.js`), så att den syns hel ovanför
+  knapparna också i strid.
+- **Steg 2**: rundans rader står som text, tätare, inte som en rad
+  minikort med kortare text. Rundans rubrik syns inte under kartan.
+- **Steg 3**: tecknen står på en egen rad i översta raden (`placeSide`
+  flyttar `#hud`).
+- **Steg 4**: tangenterna gick redan att trycka på en pekskärm, så
+  ändringen i `karta.ts` behövdes inte. Pilknapparna kommer tillbaka på
+  nivåerna Långt och Allt (`langtut`), inte efter tangenternas storlek.

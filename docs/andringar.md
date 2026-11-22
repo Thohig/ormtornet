@@ -4,6 +4,21 @@ Det som har ändrats i spelet, nyast först. README beskriver hur allt
 fungerar. Här står vad som är nytt och vad det betyder för den som spelar
 eller leder tornet.
 
+## 2026-11-23
+
+### Telefonen: mer karta
+
+- Kartan fyller höjden mellan översta raden och knapparna, och går lite
+  närmare när den följer dig, så att rummet du står i blir större.
+- Tecknen (klass, liv, skatt, drycker, föremål) står på en rad under
+  solmätaren, med bara tecken och tal. Ett tryck förklarar, som förut.
+- Du går genom att trycka på pilarna vid dörrarna på kartan. Pilknapparna
+  är borta, och knapparna är en rad med Vänta och det som gäller just nu.
+  Zoomar du ut till Långt eller Allt kommer pilknapparna tillbaka.
+- Under kartan står bara den senaste rundan, tätare. Knappen Loggen
+  öppnar hela loggen.
+- På datorn går pilarna vid dörrarna att klicka på med musen.
+
 ## 2026-11-22
 
 ### Benluren i stället för kritan

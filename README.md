@@ -310,11 +310,15 @@ för tangenterna, och bara de som gäller just nu: utanför strid pilarna,
 Parera, Undan och Drick; Viska när det går att viska; och i lobbyn och
 slutet bara Redo (som Enter, och Nytt torn när vandringen är slut).
 Styrningen bakom ? visar på samma sätt bara de tangenter som gäller. På kartan snett ovanifrån går det också att
-trycka på pilarna vid dörrarna. På en smal skärm står allt i en kolumn:
-översta raden fast högst upp, kartan, raden Nu och loggen, och knapparna
-fast längst ner. Sidan rullar, och loggen rullar med den. Den senaste
-rundan tar så mycket plats att de äldre bara syns när man rullar ner, och
-en lång rumsbeskrivning visar tre rader med "mer ↓" för resten. På en
+trycka på pilarna vid dörrarna (och klicka på dem med musen). På en smal
+skärm står allt i en kolumn: översta raden fast högst upp med tecknen på
+en rad under solmätaren (bara tecken och tal; ett tryck förklarar),
+kartan över resten av höjden, raden Nu och knapparna fast längst ner.
+Där går man genom att trycka på pilarna vid dörrarna, så knapparna är en
+rad med Vänta och det som gäller just nu; zoomar man ut till Långt eller
+Allt kommer pilknapparna tillbaka. Under kartan, när man rullar ner, står
+den senaste rundan, med en lång rumsbeskrivning på två rader och "mer ↓"
+för resten, och knappen Loggen öppnar hela loggen. På en
 surfplatta, och en telefon på bredden, står loggen på kartan som på en
 dator och knapparna nere till vänster under den. En låg skärm (telefonen
 på bredden) får en smalare logg med bara den senaste rundan, tre rader
