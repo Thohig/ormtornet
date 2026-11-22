@@ -335,6 +335,11 @@ function placeSide() {
   const side = $("side");
   const home = wideScreen.matches ? $("mapbox") : $("main");
   if (side.parentElement !== home) home.appendChild(side);
+  // Tecknen står på kartan på en bred skärm, och på telefonen som en rad i
+  // översta raden, så att kartan blir fri.
+  const hud = $("hud");
+  if (wideScreen.matches && hud.parentElement !== $("mapbox")) $("mapbox").insertBefore(hud, $("helpbox"));
+  if (!wideScreen.matches && hud.parentElement !== $("top")) $("top").appendChild(hud);
   document.body.classList.toggle("logpakartan", wideScreen.matches);
   MapView.resize();
 }
@@ -1080,7 +1085,12 @@ function renderHud(me) {
       g.textContent = it.tecken;
       b.appendChild(g);
     }
-    b.appendChild(document.createTextNode(it.namn + (it.kvar > 1 ? " ×" + it.kvar : "")));
+    // Namnet står i en egen span, så att telefonen kan visa bara tecknet.
+    const namn = document.createElement("span");
+    namn.className = "namn";
+    namn.textContent = it.namn;
+    b.appendChild(namn);
+    if (it.kvar > 1) b.appendChild(document.createTextNode(" ×" + it.kvar));
     b.dataset.tip = it.beskrivning;
     b.setAttribute("aria-label", it.namn + ". " + b.dataset.tip);
     bag.appendChild(b);

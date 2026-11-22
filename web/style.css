@@ -1023,7 +1023,28 @@ body.touch #side { overflow-y: auto; }
   }
   #log .roomblock.lang .roommore { display: inline-block; }
   #log .roomblock.open .roommore { display: none; }
-  #hud { max-width: 58%; }
+  /* Tecknen som en rad i översta raden (placeSide i app.js): bara tecken
+     och tal, utan föremålens namn. Raden rullar i sidled om den inte får
+     plats. */
+  #top #hud {
+    position: static;
+    flex: 1 1 100%;
+    flex-direction: row;
+    align-items: center;
+    gap: 4px;
+    max-width: none;
+    min-width: 0;
+    margin-top: 2px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  #top #hud::-webkit-scrollbar { display: none; }
+  #top #hud .hudrow { flex: 0 0 auto; gap: 4px; }
+  #top #status, #top #bag { flex-wrap: nowrap; justify-content: flex-start; }
+  #top #bag { flex: 0 0 auto; }
+  #top .hudicon { padding: 1px 5px; white-space: nowrap; }
+  #top #bag .item .namn { display: none; }
+  #top #bag .item.empty { min-width: 1.6em; }
   body.touch #game.active { padding-bottom: calc(var(--nere, 170px) + 8px); }
   body.touch #pad {
     position: fixed;
