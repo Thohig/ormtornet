@@ -51,6 +51,7 @@ func TestDataCheckFindsMistakes(t *testing.T) {
 		{"monster.json", `"farg": "#d8d0bf"`, `"farg": "blek"`, `modell.farg ska skrivas som #rrggbb`},
 		{"klasser.json", `"farg": "#7a5a32", "storlek": 1`, `"farg": "#7a5a32", "storlek": 5`, `modell.storlek ska vara mellan 0,5 och 2`},
 		{"foremal.json", `"tecken": "➰",`, ``, `föremålet "rep" saknar tecken`},
+		{"texter.json", `"inredning": ["brunn"]`, `"inredning": ["brun"]`, `inredningen "brun" finns inte`},
 	}
 	for _, c := range cases {
 		dir := dataWith(t, c.file, func(s string) string {

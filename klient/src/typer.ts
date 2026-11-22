@@ -12,6 +12,7 @@ export interface Rum {
   c: number; // pilen i krita, -1 om ingen
   f?: boolean; // ett föremål ligger här (för spårfinnaren)
   stangd?: boolean; // porten har slutit sig
+  in?: string[]; // inredningen, efter rumstypen (inredning.ts)
 }
 
 export interface Vandrare {

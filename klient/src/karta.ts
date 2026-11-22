@@ -4,6 +4,7 @@
 // räknas ut i web/map.js, som den här kartan läser utsnittet från.
 import * as THREE from "three";
 import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils.js";
+import * as I from "./inredning";
 import * as K from "./krita";
 import * as M from "./modeller";
 import type { Figur } from "./modeller";
@@ -257,6 +258,7 @@ export class IsoKarta {
   private sol = new THREE.DirectionalLight(0xc8d2ea, 1.25); // svagt månljus genom gluggarna
   // Facklan i rummet kartan följer: ett varmt, fladdrande ljus.
   private fackla = new THREE.PointLight(0xffa64a, 0, 12, 1.5);
+  private himmel = new THREE.HemisphereLight(0x9a9284, 0x0c0a08, 0.8);
   // Rum längre bort från rummet kartan följer ligger i dunkel (dunkla).
   private dunkel = { uFokus: { value: new THREE.Vector2() }, uRadie: { value: 1e5 } };
   private ram: HTMLDivElement; // pergamentkanten runt kartan
@@ -313,7 +315,7 @@ export class IsoKarta {
     this.renderer.shadowMap.enabled = true;
     this.renderer.shadowMap.type = THREE.PCFShadowMap;
 
-    this.scene.add(new THREE.HemisphereLight(0x9a9284, 0x0c0a08, 0.8), this.fackla);
+    this.scene.add(this.himmel, this.fackla);
     this.sol.castShadow = true;
     this.sol.shadow.mapSize.set(2048, 2048);
     this.sol.shadow.bias = -0.0006;
@@ -393,7 +395,7 @@ export class IsoKarta {
     const niva = this.niva();
     const slutet = niva === 4 && state.phase === "slut";
     const nyckel = this.storleken + "|" + (slutet ? 1 : 0) + "|" +
-      state.rooms.map((r) => [r.x, r.y, r.d.map(Number).join(""), r.k, r.exit, r.stangd ? 1 : 0].join(",")).join(";");
+      state.rooms.map((r) => [r.x, r.y, r.d.map(Number).join(""), r.k, r.exit, r.stangd ? 1 : 0, (r.in || []).join("+")].join(",")).join(";");
     if (nyckel !== this.tornNyckel) {
       this.tornNyckel = nyckel;
       this.byggTorn(state, slutet);
@@ -470,6 +472,12 @@ export class IsoKarta {
     const tra: THREE.BufferGeometry[] = [];
     const jarn: THREE.BufferGeometry[] = [];
     const flammor: THREE.BufferGeometry[] = [];
+    const inredning = new Map<string, THREE.BufferGeometry[]>();
+    const inreda: I.Lagg = (m, g) => {
+      const l = inredning.get(m);
+      if (l) l.push(g);
+      else inredning.set(m, [g]);
+    };
     const sken: THREE.BufferGeometry[] = [];
     // En fackla på muren vid (x, z), som pekar in i rummet åt (nx, nz):
     // ett järnfäste, en käpp, en låga och ett sken på golvet.
@@ -529,6 +537,7 @@ export class IsoKarta {
         }
       });
       if (r.k === "kammare") this.byggKammare(r);
+      (r.in || []).forEach((namn) => I.bygg(namn, inreda, r.x * S, r.y * S, S, r.x * 31 + r.y * 17 + 1));
       // Facklorna sitter på murarna som vetter mot kameran, norra och västra.
       fackla(r.x * S + S * 0.22, r.y * S + VT / 2, 0, 1);
       fackla(r.x * S + VT / 2, r.y * S + S * 0.78, 1, 0);
@@ -601,6 +610,13 @@ export class IsoKarta {
     lagg(tra, this.traMaterial(), true);
     lagg(jarn, this.enkelt("jarn", FARG.jarn), true);
     lagg(flammor, this.flammaMaterial, false);
+    inredning.forEach((lista, m) => {
+      if (m === "lys") lagg(lista, this.flammaMaterial, false);
+      else if (m === "sten") lagg(lista, this.stenMaterial("inredning", "#cfc6b4"), true);
+      else if (m === "tra") lagg(lista, this.traMaterial(), true);
+      else if (m === "jarn") lagg(lista, this.enkelt("jarn", FARG.jarn), true);
+      else lagg(lista, this.enkelt("f" + m, m), true);
+    });
     lagg(sken, this.skenMaterial, false);
     this.torn.children.forEach((o) => {
       if (o instanceof THREE.Mesh && o.material === this.skenMaterial) o.renderOrder = 1;
@@ -1161,9 +1177,15 @@ float puls() {
       this.fackla.intensity = 34 * fladder;
       this.dunkel.uFokus.value.set(mitt.x, mitt.z);
       this.dunkel.uRadie.value = S * 0.9;
+      this.himmel.intensity = 0.8;
+      this.sol.intensity = 1.25;
     } else {
+      // Ingen att följa, till exempel i slutet: hela tornet syns, i ett
+      // jämnare ljus.
       this.fackla.intensity = 0;
       this.dunkel.uRadie.value = 1e5;
+      this.himmel.intensity = 1.6;
+      this.sol.intensity = 1.9;
     }
 
     const vaken = t - this.vaknade < VAKEN_MS;

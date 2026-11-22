@@ -134,7 +134,18 @@ type RoomType struct {
 	ID            string              `json:"id"`
 	Namn          string              `json:"namn"`
 	Beskrivningar map[string][]string `json:"beskrivningar"`
+	Modell        *RoomLook           `json:"modell,omitempty"`
 }
+
+// RoomLook är hur ett rum ser ut på kartan snett ovanifrån: inredningen,
+// med namn som klient/src/inredning.ts känner till (furnitureNames).
+type RoomLook struct {
+	Inredning []string `json:"inredning,omitempty"`
+}
+
+// furnitureNames är inredningen kartan kan rita, i klient/src/inredning.ts.
+var furnitureNames = []string{"pelare", "pelare_syd", "brunn", "bank", "spjut", "altare", "trappa", "hylla", "tunnor", "sackar",
+	"lyktor", "stenblock", "assja", "stad", "bokhylla", "bord", "stenhog"}
 
 type Data struct {
 	Rumstyper        []RoomType          `json:"rumstyper"`

@@ -9,6 +9,7 @@ import (
 	"errors"
 	"fmt"
 	"regexp"
+	"slices"
 	"sort"
 	"strings"
 )
@@ -106,6 +107,14 @@ func (d *Data) validate() []string {
 	var ids []string
 	for _, r := range d.Rumstyper {
 		ids = append(ids, r.ID)
+		if r.Modell == nil {
+			continue
+		}
+		for _, f := range r.Modell.Inredning {
+			if !slices.Contains(furnitureNames, f) {
+				bad("texter.json", "rumstypen %q: inredningen %q finns inte; kartan kan rita %s", r.ID, f, strings.Join(furnitureNames, ", "))
+			}
+		}
 	}
 	unique("texter.json", "rumstypen", ids)
 

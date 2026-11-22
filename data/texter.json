@@ -83,6 +83,7 @@
     {
       "id": "valvgang",
       "namn": "Valvgången",
+      "modell": { "inredning": ["pelare"] },
       "beskrivningar": {
         "1": [
           "En smal gång under låga valv. Stenen är fuktig och svagt ljum mot handflatan.",
@@ -105,6 +106,7 @@
     {
       "id": "pelarsal",
       "namn": "Pelarsalen",
+      "modell": { "inredning": ["pelare", "pelare_syd"] },
       "beskrivningar": {
         "1": [
           "Tjocka pelare står i två rader. Mellan dem hänger en söt, tung doft som du inte kan placera.",
@@ -127,6 +129,7 @@
     {
       "id": "brunnsrum",
       "namn": "Brunnsrummet",
+      "modell": { "inredning": ["brunn"] },
       "beskrivningar": {
         "1": [
           "En brunn utan synlig botten mitt i golvet. Långt därnere droppar vatten, med långa mellanrum.",
@@ -149,6 +152,7 @@
     {
       "id": "vaktrum",
       "namn": "Vaktrummet",
+      "modell": { "inredning": ["bank", "spjut"] },
       "beskrivningar": {
         "1": [
           "En vältad bänk och ett rostigt spjut. Den som vaktade här gick i all hast.",
@@ -171,6 +175,7 @@
     {
       "id": "kapell",
       "namn": "Det tysta kapellet",
+      "modell": { "inredning": ["altare", "bank"] },
       "beskrivningar": {
         "1": [
           "Ett litet kapell utan bilder. Golvplattorna är slitna i ett mönster av små, överlappande sköldar.",
@@ -193,6 +198,7 @@
     {
       "id": "trapphall",
       "namn": "Trapphallen",
+      "modell": { "inredning": ["trappa"] },
       "beskrivningar": {
         "1": [
           "En trappa slingrar sig uppåt och tar slut rakt mot taket. Stegen är ojämnt höga.",
@@ -215,6 +221,7 @@
     {
       "id": "forrad",
       "namn": "Förrådet",
+      "modell": { "inredning": ["hylla", "tunnor", "sackar"] },
       "beskrivningar": {
         "1": [
           "Hyllor med krus och tunnor. Allt är täckt av en tunn, glansig hinna, som av fukt som aldrig torkar.",
@@ -237,6 +244,7 @@
     {
       "id": "lyktrum",
       "namn": "Lykthallen",
+      "modell": { "inredning": ["lyktor"] },
       "beskrivningar": {
         "1": [
           "Järnkrokar i taket där lyktor en gång hängde. Din egen låga fladdrar i ett drag som kommer och går, kommer och går.",
@@ -259,6 +267,7 @@
     {
       "id": "grotta",
       "namn": "Salpetergrottan",
+      "modell": { "inredning": ["stenblock"] },
       "beskrivningar": {
         "1": [
           "Väggarna här är inte murade utan släta, nästan polerade. Vita ränder löper längs dem i jämna bågar.",
@@ -281,6 +290,7 @@
     {
       "id": "smedja",
       "namn": "Den kalla smedjan",
+      "modell": { "inredning": ["assja", "stad"] },
       "beskrivningar": {
         "1": [
           "Ett städ och en släckt ässja. Ändå är det varmare här än det borde vara.",
@@ -303,6 +313,7 @@
     {
       "id": "bibliotek",
       "namn": "Det multnade biblioteket",
+      "modell": { "inredning": ["bokhylla", "bord"] },
       "beskrivningar": {
         "1": [
           "Böckerna har svällt ihop till en grå massa. Någon har ristat streck i väggen. Många streck.",
@@ -325,6 +336,7 @@
     {
       "id": "korsvag",
       "namn": "Korsvägen",
+      "modell": { "inredning": ["stenhog"] },
       "beskrivningar": {
         "1": [
           "Murarna möts i en spetsig båge. Ett avlägset ljud, som av något tungt som flyttar sig, dör bort innan du hinner lyssna.",
