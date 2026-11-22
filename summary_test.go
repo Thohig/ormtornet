@@ -53,8 +53,12 @@ func TestRoundSummary(t *testing.T) {
 		}
 	}
 	all := strings.Join(text, " ")
-	if !strings.Contains(all, "österut till "+g.roomName(n)) || !strings.Contains(all, "+15 guld") {
+	if !strings.Contains(all, "+15 guld") {
 		t.Fatalf("sammanfattningen säger inte vad som hände: %q", all)
+	}
+	// Vart vandraren gick och solen står i rumsblocket och översta raden.
+	if strings.Contains(all, "österut") || strings.Contains(all, g.roomName(n)) {
+		t.Fatalf("kortet säger vart vandraren gick: %q", all)
 	}
 	bo := summaries(b)
 	if len(bo) != 1 || strings.Contains(bo[0].Lines[0].Text, "guld") || bo[0].Lines[0].Text != g.data.Text("sam_inget") {

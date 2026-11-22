@@ -646,8 +646,6 @@
     "sam_fast": ["You are stuck for {antal} rounds."],
     "sam_gift": ["You are poisoned."],
     "sam_morker": ["Your lantern went out."],
-    "sam_varelse": ["{varelse} is in the room."],
-    "sam_ormen": ["The serpent woke."],
-    "sam_sol": ["The sun: {sol} hand-breadths left."]
+    "sam_ormen": ["The serpent woke."]
   }
 }

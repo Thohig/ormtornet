@@ -6,6 +6,16 @@ eller leder tornet.
 
 ## 2026-11-22
 
+### Rummet som ett stycke, och ett kortare kort
+
+- Rummet står som löpande text i loggen, utan ruta: namnet i versaler,
+  beskrivningen och det du ser i ett stycke, och det du hör sist. Din
+  vandring visar rummet på samma sätt under varje runda.
+- Kortet efter rundan säger bara det som ändrade dig: liv, guld,
+  ormkortet, föremål, gift, mörker, vem du slogs mot och om ormen vaknade.
+  Vart du gick och solen står inte längre där, och har inget ändrat dig
+  kommer inget kort.
+
 ### Det du hör
 
 - Ljuden under rundan, som stridsljud från ett grannrum, ekot, klockan

@@ -65,9 +65,11 @@ Så här skiljer vi på sakerna när användaren ger instruktioner:
     kartan (`#nowBlock`). Den syns bara när den har något att säga. Panelen Vandrare togs bort 2026-11-22,
   - **loggen**: raderna i högerkolumnen, grupperade per runda. Bara den
     senaste rundan står i bild; de äldre ligger under strecket "tidigare".
-    Överst i rundan står **rumsblocket**: rummets namn, beskrivningen när rummet
-    är nytt och vad som finns där (`here.go`, `har_` i
-    `data/texter.json`). Teckenförklaringen togs bort 2026-11-22.
+    Överst i rundan står **rumsblocket**, som löpande text utan ruta:
+    rummets namn i versaler, beskrivningen när rummet är nytt, det man
+    ser (beskrivet, inte förklarat) och sist det man hörde (`here.go`,
+    `har_` i `data/texter.json`, `spar_efter` i `data/fallor.json`).
+    Teckenförklaringen togs bort 2026-11-22.
 - **tornets dator**: datorn som kör servern.
 - **språket**: inställningen Språk på värdsidan (`-sprak`), svenska eller
   engelska, för hela tornet (`lang.go`). Översättningarna ligger i

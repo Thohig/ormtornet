@@ -71,14 +71,14 @@ func (g *Game) summarize(snap map[*Player]before, wakesBefore int) {
 		lines := g.summaryFor(p, b, g.wakes > wakesBefore)
 		room := p.roundRoom
 		p.roundRoom = nil
-		if len(lines) > 0 {
+		if len(lines) > 0 || room != nil {
 			jr := journeyRound{Round: g.round, Lines: lines}
 			if room != nil {
 				jr.Room, jr.Here, jr.Heard = room.Namn, room.Har, room.Hor
 			}
 			p.journal = append(p.journal, jr)
 		}
-		if p.client != nil {
+		if p.client != nil && len(lines) > 0 {
 			g.send(p.client, summaryMsg{T: "runda", Round: g.round, Lines: lines})
 		}
 	}
@@ -116,7 +116,15 @@ func (g *Game) summaryFor(p *Player, b before, woke bool) []summaryLine {
 	case b.cellar > 0:
 		add(t("sam_i_kallaren"), "")
 	default:
-		add(g.actionLine(p, b, moved, room, t), "")
+		// Vart vandraren gick står i rumsblocket. Kortet säger det bara
+		// när steget inte gick som tänkt eller i mörkret, där inget
+		// rumsblock kommer. Striden står kvar, eftersom tornet väljer
+		// motståndaren, och att man inte valde något.
+		_, step := dirCodes[b.action]
+		switch {
+		case step && (!moved || p.Dark > 0), b.action == "", isCombatAction(b.action):
+			add(g.actionLine(p, b, moved, room, t), "")
+		}
 	}
 	if p.Status == statusIn || p.Status == statusDead {
 		if d := p.HP - b.hp; d < 0 && p.Status != statusDead {
@@ -164,22 +172,11 @@ func (g *Game) summaryFor(p *Player, b before, woke bool) []summaryLine {
 		if p.Dark > 0 && b.dark == 0 {
 			add(t("sam_morker"), "varn")
 		}
-		if p.Cellar == 0 {
-			if m := g.monsterAt(p.X, p.Y); m != nil {
-				if mt := g.data.monsterType(m.Type); mt != nil {
-					add(t("sam_varelse", "varelse", mt.Namn), "varn")
-				}
-			}
-		}
 	}
 	if woke {
 		add(t("sam_ormen"), "varn")
 	}
-	out := append(danger, rest...)
-	if g.sun > 0 && p.Status == statusIn {
-		out = append(out, summaryLine{Text: g.data.Text("sam_sol", "sol", itoa(g.sun)), C: "dim"})
-	}
-	return out
+	return append(danger, rest...)
 }
 
 // actionLine säger vad vandraren valde och hur det gick.

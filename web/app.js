@@ -79,33 +79,35 @@ const Log = (() => {
     if (!busy) next();
   }
 
+  // roomBlock skriver rummet som löpande text, utan ruta: namnet i
+  // versaler, beskrivningen och det man ser i ett stycke, och det man hör
+  // sist. Står man kvar är det bara det som har ändrats.
   function roomBlock(g, msg) {
     const list = g.querySelector(".lines");
     const block = document.createElement("div");
     block.className = "roomblock" + (msg.kvar ? " kvar" : "");
-    const name = document.createElement("div");
+    const text = document.createElement("div");
+    text.className = "roomtext";
+    const name = document.createElement("span");
     name.className = "roomname";
-    name.textContent = msg.namn;
-    block.appendChild(name);
-    let desc = null;
+    name.textContent = msg.namn + ".";
+    text.appendChild(name);
+    if (msg.text) text.append(" " + msg.text);
+    if (msg.har) {
+      const h = document.createElement("span");
+      h.className = "roomhere";
+      paint(h, msg.har);
+      text.append(" ", h);
+    }
+    block.appendChild(text);
     if (msg.text) {
-      desc = document.createElement("div");
-      desc.className = "roomdesc";
-      desc.textContent = msg.text;
-      block.appendChild(desc);
-      // På en telefon visar beskrivningen tre rader; "mer" visar resten.
+      // På en telefon visar stycket tre rader; "mer" visar resten.
       const more = document.createElement("button");
       more.type = "button";
       more.className = "roommore";
       more.textContent = t("logg_mer");
       more.addEventListener("click", () => block.classList.add("open"));
       block.appendChild(more);
-    }
-    if (msg.har) {
-      const h = document.createElement("div");
-      h.className = "roomhere";
-      paint(h, msg.har);
-      block.appendChild(h);
     }
     if (msg.hor) {
       const h = document.createElement("div");
@@ -119,7 +121,7 @@ const Log = (() => {
       if (old) old.replaceWith(block);
       else list.prepend(block);
     });
-    if (desc && desc.scrollHeight > desc.clientHeight + 1) block.classList.add("lang");
+    if (msg.text && text.scrollHeight > text.clientHeight + 1) block.classList.add("lang");
     follow();
   }
 
@@ -652,13 +654,24 @@ function renderChron() {
     const d = document.createElement("div");
     d.className = "chronRound";
     const h = document.createElement("h3");
-    h.textContent = r.rum ? t("vandring_runda_rum", { runda: r.runda, rum: r.rum }) : t("vandring_runda", { runda: r.runda });
+    h.textContent = t("vandring_runda", { runda: r.runda });
     d.appendChild(h);
-    for (const [text, cls] of [[r.har, "here"], [r.hor, "hear"]]) {
-      if (!text) continue;
+    // Rummet som i loggen: namnet i versaler och det man såg, och det man
+    // hörde under.
+    if (r.rum) {
+      const p = document.createElement("div");
+      p.className = "room";
+      const n = document.createElement("span");
+      n.className = "roomname";
+      n.textContent = r.rum + ".";
+      p.appendChild(n);
+      if (r.har) p.append(" " + r.har);
+      d.appendChild(p);
+    }
+    if (r.hor) {
       const el = document.createElement("div");
-      el.className = cls;
-      el.textContent = text;
+      el.className = "hear";
+      el.textContent = r.hor;
       d.appendChild(el);
     }
     r.rader.forEach((l) => {

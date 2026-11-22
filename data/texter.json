@@ -662,8 +662,6 @@
     "sam_fast": ["Du sitter fast i {antal} rundor."],
     "sam_gift": ["Du är förgiftad."],
     "sam_morker": ["Lyktan slocknade."],
-    "sam_varelse": ["{varelse} är i rummet."],
-    "sam_ormen": ["Ormen vaknade."],
-    "sam_sol": ["Solen: {sol} handsbredder kvar."]
+    "sam_ormen": ["Ormen vaknade."]
   }
 }

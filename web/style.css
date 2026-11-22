@@ -745,24 +745,15 @@ body.touch #helpBtn { display: none; }
 #log .info { color: var(--info); }
 #log .syn { color: var(--hi); }
 #log .rubrik { color: var(--hi); letter-spacing: 0.08em; }
-/* Rumsblocket överst i rundan (here.go): rummets namn, beskrivningen och
-   vad som finns där. */
-#log .lines > .roomblock {
-  margin: 2px 0 8px;
-  padding: 6px 9px 7px;
-  text-indent: 0;
-  border: 1px solid var(--chalkline);
-  border-radius: 6px;
-  background: var(--slate);
-}
+/* Rummet överst i rundan (here.go), som löpande text utan ruta: namnet i
+   versaler, beskrivningen och det man ser i ett stycke, och det man hör
+   sist. */
+#log .lines > .roomblock { margin: 2px 0 8px; padding-left: 0; text-indent: 0; }
 #log .lines > .roomblock::before { display: none; }
-#log .roomname { color: var(--hi); letter-spacing: 0.08em; }
-#log .roomdesc { margin-top: 3px; }
-#log .roomhere { margin-top: 4px; color: var(--info); }
-#log .roomhear { margin-top: 4px; color: var(--fg); font-style: italic; }
-#log .roomblock.kvar { padding: 4px 9px 5px; }
-#log .roomblock.kvar .roomname { color: var(--fg); font-size: 12px; }
-#log .roomblock.kvar .roomhere { margin-top: 1px; }
+#log .roomname { color: var(--hi); text-transform: uppercase; letter-spacing: 0.1em; font-size: 12px; }
+#log .roomhere { color: inherit; }
+#log .roomhear { margin-top: 3px; color: var(--fg); font-style: italic; }
+#log .roomblock.kvar .roomname { color: var(--fg); }
 #log .roommore {
   display: none;
   margin-top: 2px;
@@ -876,7 +867,7 @@ body.touch #side { overflow-y: auto; }
   }
   #log .round:first-child { min-height: 60vh; min-height: 60svh; }
   /* En lång rumsbeskrivning visar tre rader, och "mer" fäller ut resten. */
-  #log .roomblock:not(.open) .roomdesc {
+  #log .roomblock:not(.open) .roomtext {
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
@@ -1051,7 +1042,8 @@ body.touch .card .num { display: none; }
 }
 .chronRound .varn { color: var(--warn); }
 .chronRound .gold { color: var(--hi); }
-.chronRound .here { color: var(--info); font-style: italic; margin-bottom: 2px; }
+.chronRound .room { margin-bottom: 2px; }
+.chronRound .roomname { color: var(--hi); text-transform: uppercase; letter-spacing: 0.1em; font-size: 12px; }
 .chronRound .hear { color: var(--fg); font-style: italic; margin-bottom: 2px; }
 #chronStats { color: var(--chalk); margin: 18px 0; font-size: 13px; }
 #chronButtons { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
