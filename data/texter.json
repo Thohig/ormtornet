@@ -364,6 +364,12 @@
     "tillbaka": [
       "Du är tillbaka. Tornet har väntat på dig."
     ],
+    "stilla_tar_over": [
+      "Du har stått stilla länge. Tornet styr dina steg tills du själv väljer ett drag."
+    ],
+    "stilla_tillbaka": [
+      "Du tar själv över dina steg igen."
+    ],
     "ansluter": [
       "{namn} kliver in genom porten i {horn}.",
       "En ny lykta tänds vid porten i {horn}. Det är {namn}."

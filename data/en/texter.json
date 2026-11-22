@@ -348,6 +348,12 @@
     "tillbaka": [
       "You are back. The tower has been waiting for you."
     ],
+    "stilla_tar_over": [
+      "You have stood still for a long time. The tower guides your steps until you choose a move yourself."
+    ],
+    "stilla_tillbaka": [
+      "You take back your own steps."
+    ],
     "ansluter": [
       "{namn} steps in through the gate in the {horn}.",
       "A new lantern is lit by the gate in the {horn}. It is {namn}."

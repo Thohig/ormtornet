@@ -139,3 +139,50 @@ func TestTowerWaitsWhenAllAreGone(t *testing.T) {
 		t.Fatal("rundan fick ingen tid kvar")
 	}
 }
+
+// Den som är kvar men står still i två rundor får AI:n som styr, och tar
+// tillbaka sina steg med nästa drag.
+func TestAITakesOverStandingStill(t *testing.T) {
+	g, a, b := twoPlaying(t, 2)
+	bo := b.player
+	g.Act(a, actWait, 0)
+	g.resolve() // tiden går ut, Bo valde inget
+	if g.round != 2 || bo.takenOver {
+		t.Fatalf("runda %d, övertagen %v: för tidigt", g.round, bo.takenOver)
+	}
+	g.Act(a, actWait, 0)
+	g.resolve()
+	if g.round != 3 || !bo.takenOver || bo.bot == nil || bo.client != b {
+		t.Fatalf("runda %d: AI:n tog inte över Bo som stod still", g.round)
+	}
+	g.Act(b, actWait, 0)
+	if bo.takenOver || bo.bot != nil || bo.still != 0 {
+		t.Fatal("Bo fick inte tillbaka sina steg med sitt drag")
+	}
+}
+
+// Den som väljer Vänta har valt ett drag, och räkningen börjar om.
+func TestWaitIsNotStandingStill(t *testing.T) {
+	g, a, b := twoPlaying(t, 2)
+	bo := b.player
+	g.Act(a, actWait, 0)
+	g.resolve() // Bo står still
+	g.Act(a, actWait, 0)
+	g.Act(b, actWait, 0) // Bo väntar
+	g.Act(a, actWait, 0)
+	g.resolve() // Bo står still igen
+	if bo.takenOver || bo.still != 1 {
+		t.Fatalf("övertagen %v, stod still %d rundor: Vänta räknades inte som ett drag", bo.takenOver, bo.still)
+	}
+}
+
+func TestNoTakeOverStandingStillWhenOff(t *testing.T) {
+	g, a, b := twoPlaying(t, 0)
+	for range 4 {
+		g.Act(a, actWait, 0)
+		g.resolve()
+	}
+	if b.player.takenOver {
+		t.Fatal("AI:n tog över fast inställningen var av")
+	}
+}

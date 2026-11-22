@@ -151,6 +151,7 @@
     "nu_fredad": "Porten är fredad",
     "nu_drag": "Drag: {drag}",
     "nu_valj_ditt": "Välj ditt drag",
+    "nu_tornet_styr": "Tornet styr dina steg. Välj ett drag så tar du tillbaka dem.",
     "nu_vantar": "Väntar på de andra",
     "nu_ute": "Du är ute med {guld} guld. Väntar på de andra.",
     "nu_ute_tom": "Du är ute, utan guld. Väntar på de andra.",

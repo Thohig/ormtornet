@@ -6,6 +6,17 @@ eller leder tornet.
 
 ## 2026-11-22
 
+### AI:n tar över den som står still
+
+- Den som är kvar i tornet men inte väljer något drag, så att tiden går
+  ut, i lika många rundor i rad som inställningen Frånvarande vandrare
+  säger (två som standard) får en AI-spelare som styr. Vänta räknas som
+  ett drag, och rundor i källaren räknas inte.
+- Spelaren ser i loggen och i panelen Nu att tornet styr stegen. Nästa
+  drag hen själv väljer ger tillbaka vandraren direkt och gäller redan i
+  samma runda.
+- Står inställningen på "står still" tar AI:n aldrig över.
+
 ### Rummet som ett stycke, och ett kortare kort
 
 - Rummet står som löpande text i loggen, utan ruta: namnet i versaler,

@@ -932,7 +932,9 @@ function renderNow(me) {
       }
     }
   }
-  if (state.phase === "spel" && me.status === "inne") {
+  if (state.phase === "spel" && me.status === "inne" && me.ai) {
+    line(t("nu_tornet_styr"), "plan");
+  } else if (state.phase === "spel" && me.status === "inne") {
     line(state.action ? t("nu_drag", { drag: actionWord(state.action) }) : t("nu_valj_ditt"), "plan");
   } else if (state.phase === "spel" && me.status === "ute") {
     line(me.treasure > 0 ? t("nu_ute", { guld: me.treasure }) : t("nu_ute_tom"), "plan");

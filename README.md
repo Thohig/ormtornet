@@ -172,6 +172,11 @@ Kommer spelaren tillbaka i samma webbläsare får den genast tillbaka sina
 steg. I resultatet märks den som AI har spelat åt med "~". Den som inte kommer
 tillbaka innan vandringen är slut är inte med i nästa.
 
+Detsamma gäller den som är kvar men står still: låter tiden gå ut utan
+att välja något drag lika många rundor i rad (Vänta är ett drag) tar
+AI:n över, och panelen Nu säger att tornet styr stegen. Nästa drag
+spelaren själv väljer ger tillbaka vandraren direkt.
+
 Är ingen människa ansluten alls, till exempel när nätet försvinner för
 alla, väntar tornet: rundan står pausad tills någon kommer tillbaka, så att
 solen inte hinner gå ner medan AI:n spelar ensam. Raden säger att rundan
@@ -845,7 +850,7 @@ Beskrivningarna för rummen ligger under nivåerna `"1"` till `"4"`.
 - `settings.go` spelledarens inställningar och hur de sparas
 - `host.go` värdsidan och dess adresser
 - `activity.go` autostopp för ett bortglömt torn
-- `takeover.go` AI tar över en frånvarande vandrare
+- `takeover.go` AI tar över en frånvarande vandrare eller en som står still
 - `pvp.go` strid mellan vandrare
 - `events.go` fällor, sökande och drycker
 - `serpent.go` skattkammaren och ormkorten

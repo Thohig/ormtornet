@@ -248,6 +248,7 @@ type Player struct {
 	takenOver bool // en AI-spelare styr vandraren medan människan är borta
 	exitAsked int  // rundan då porten frågade om vandraren ville ut tomhänt, 0 om den inte har frågat
 	aiPlayed  bool // AI:n har styrt vandraren någon gång under vandringen
+	still     int  // rundor i rad som en ansluten människa inte har valt något drag
 
 	target int // vandraren som ett stridsval den här rundan riktas mot
 	// attackedBy är vandraren som senast gick mot den här i strid, och
@@ -596,7 +597,7 @@ type playerView struct {
 	Treasure   int        `json:"treasure"` // -1 om spelaren inte får veta
 	Bot        bool       `json:"bot"`
 	Hidden     bool       `json:"hidden"`                // positionen är okänd för den som tittar
-	AI         bool       `json:"ai"`                    // en AI-spelare styr medan människan är borta
+	AI         bool       `json:"ai"`                    // en AI-spelare styr medan människan är borta eller står still
 	Class      string     `json:"klass,omitempty"`       // klassen med liten bokstav
 	ClassID    string     `json:"klassId,omitempty"`     // klassens id, för figuren på kartan snett ovanifrån
 	ClassModel *ModelLook `json:"klassModell,omitempty"` // färg och storlek på figuren
@@ -981,7 +982,7 @@ func (g *Game) Join(c *Client, rawName string) {
 				g.handBack(p, c)
 				return
 			}
-			p.awayRound = 0
+			p.awayRound, p.still = 0, 0
 			p.client, c.player = c, p
 			g.checkAwait()
 			g.broadcastState()
@@ -1284,7 +1285,7 @@ func (g *Game) startGame() {
 			p.Action = ""
 			p.HP = g.maxHP(p) // svårigheten kan ha ändrats sedan tornet byggdes
 			p.Potions = g.startPotions(p)
-			p.awayRound, p.exitAsked = 0, 0
+			p.awayRound, p.exitAsked, p.still = 0, 0, 0
 			if p.bot == nil && p.client == nil {
 				p.awayRound = 1 // lämnade under klassvalet: borta från första rundan
 			}
@@ -1376,7 +1377,11 @@ func (g *Game) allChosen() bool {
 }
 
 // Act tar emot spelarens val för rundan. Valet kan ändras tills rundan utförs.
+// Styr tornet vandraren för att människan stod still, får hen tillbaka den.
 func (g *Game) Act(c *Client, a string, monsterID int) {
+	if p := c.player; p != nil && p.takenOver && p.client == c {
+		g.reclaim(p)
+	}
 	g.actPlayer(c.player, a, monsterID)
 }
 
@@ -1482,6 +1487,7 @@ func (g *Game) resolve() {
 			active = append(active, p)
 		}
 	}
+	g.countStill(active)
 	g.rng.Shuffle(len(active), func(i, j int) { active[i], active[j] = active[j], active[i] })
 	g.resolveFights(active)
 	for _, p := range active {

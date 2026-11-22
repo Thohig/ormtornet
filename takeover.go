@@ -5,6 +5,8 @@ import "time"
 // Frånvarande vandrare: när en människa har lämnat mitt i en vandring kan en
 // AI-spelare ta över vandraren, med dess plats, skatt, liv och tillstånd.
 // Kommer människan tillbaka med samma namn får den genast tillbaka sina steg.
+// Detsamma gäller den som är kvar men står still, utan att välja något drag,
+// i lika många rundor; den får tillbaka sina steg med nästa drag.
 
 // canTakeOver är sant för en vandrare vars människa är borta och som
 // fortfarande har något att göra i tornet.
@@ -21,14 +23,18 @@ func (g *Game) takeOver(p *Player) {
 	p.bot = &botBrain{pers: &pers[p.Slot%len(pers)], habits: map[string]map[string]int{}}
 	p.takenOver = true
 	p.aiPlayed = true
+	p.still = 0
 	if len(g.data.AI.TarOver) > 0 {
-		g.logAll(fill(pick(g.data.AI.TarOver), "namn", p.Name), "info")
+		g.logOthers(p, fill(pick(g.data.AI.TarOver), "namn", p.Name), "info")
+	}
+	if p.client != nil {
+		g.logTo(p, g.data.Text("stilla_tar_over"), "syn")
 	}
 	g.scheduleBot(p)
 }
 
 // autoTakeOver körs när en runda börjar och låter AI:n ta över dem som har
-// varit borta i så många hela rundor som spelledaren har valt.
+// varit borta, eller stått still, i så många hela rundor som spelledaren har valt.
 func (g *Game) autoTakeOver() {
 	if g.cfg.AbsentRounds <= 0 {
 		return
@@ -36,8 +42,45 @@ func (g *Game) autoTakeOver() {
 	for _, p := range g.players {
 		if g.canTakeOver(p) && p.awayRound > 0 && g.round-p.awayRound >= g.cfg.AbsentRounds {
 			g.takeOver(p)
+		} else if g.standsStill(p) {
+			g.takeOver(p)
 		}
 	}
+}
+
+// countStill körs när rundan avgörs och räknar hur många rundor i rad varje
+// ansluten människa har låtit tiden gå ut utan att välja något drag. Den som
+// ligger i källaren kan inte välja och räknas inte.
+func (g *Game) countStill(active []*Player) {
+	for _, p := range active {
+		switch {
+		case p.client == nil || p.bot != nil || p.Cellar > 0:
+		case p.Action == "":
+			p.still++
+		default:
+			p.still = 0
+		}
+	}
+}
+
+// standsStill är sant för en ansluten människa som har stått still så länge
+// att AI:n ska ta över.
+func (g *Game) standsStill(p *Player) bool {
+	return g.phase == phasePlay && p != nil && p.client != nil && p.bot == nil &&
+		p.Status == statusIn && p.still >= g.cfg.AbsentRounds
+}
+
+// reclaim ger tillbaka vandraren till människan som stod still, när hen
+// själv väljer ett drag.
+func (g *Game) reclaim(p *Player) {
+	p.bot = nil
+	p.takenOver = false
+	p.still = 0
+	g.logTo(p, g.data.Text("stilla_tillbaka"), "syn")
+	if len(g.data.AI.Tillbaka) > 0 {
+		g.logOthers(p, fill(pick(g.data.AI.Tillbaka), "namn", p.Name), "info")
+	}
+	g.broadcastState()
 }
 
 // TakeOverSlot låter spelledaren be AI:n ta över en frånvarande vandrare direkt.
@@ -56,7 +99,7 @@ func (g *Game) TakeOverSlot(slot int) bool {
 func (g *Game) handBack(p *Player, c *Client) {
 	p.bot = nil
 	p.takenOver = false
-	p.awayRound = 0
+	p.awayRound, p.still = 0, 0
 	p.client, c.player = c, p
 	g.checkAwait()
 	g.broadcastState()
