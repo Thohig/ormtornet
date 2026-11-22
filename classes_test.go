@@ -173,7 +173,7 @@ func TestLegoknektShield(t *testing.T) {
 
 func TestOrtkvinna(t *testing.T) {
 	g, pa, _ := withClass(t, "ortkvinna")
-	if pa.Potions != 2 {
+	if pa.Potions != 1 {
 		t.Fatalf("%d drycker", pa.Potions)
 	}
 	putInRoom(g, pa, 4, 3)

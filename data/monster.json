@@ -88,14 +88,14 @@
         "kort_bestamd": "den grönaktiga skepnaden",
         "kort_igen": "skepnaden",
         "vikt": 2,
-        "liv": 3,
+        "liv": 2,
         "skada": 2,
         "guld": 20,
         "tecken": "g",
         "bild": "gallgast",
         "modell": { "farg": "#8ac77f", "storlek": 1 },
         "vandrar": 0.4,
-        "vanor": { "anfall": 2, "parera": 1, "undan": 2 },
+        "vanor": { "anfall": 3, "parera": 1, "undan": 1 },
         "dyker_upp": [
           "En grönaktig skepnad glider fram. Den bär en äventyrares kläder, men de hänger i trasor och är blekta, som om de legat i syra.",
           "Något stiger upp ur golvet, grönaktigt och genomskinligt. Det tittar på din väska, som om det minns hur det var att bära en."

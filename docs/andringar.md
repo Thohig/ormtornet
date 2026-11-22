@@ -6,6 +6,20 @@ eller leder tornet.
 
 ## 2026-11-22
 
+### Klasserna och den grönaktiga skepnaden jämnas ut
+
+Efter en simulering av sex strategier i 1000 vandringar (se
+[balans-2026-11-22.md](balans-2026-11-22.md)):
+
+- Kartritaren börjar utan dryck, och Örtkvinnan med en dryck i stället
+  för två. De vann oftast.
+- Lyktbäraren har ett liv extra, och Ormtjusarens svaghet är att hen
+  hittar hälften så mycket guld när hen söker, i stället för att
+  varelserna anfaller oftare. De vann mest sällan.
+- Den grönaktiga skepnaden har två liv i stället för tre och anfaller
+  oftast (anfall 3, parera 1, undan 1), så att parera är rätt svar. Den
+  stod för 30 % av dödsfallen.
+
 ### Klasskorten som spelkort
 
 - Klasskorten i klassvalet har spelkortens pergament, ram och mörka

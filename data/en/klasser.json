@@ -22,7 +22,7 @@
       "namn": "The Herbwife",
       "kort": "the Herbwife",
       "beskrivning": "Brews potions from what grows in ditches. Knows what heals and what kills.",
-      "styrka": "Starts with two potions, a potion gives three lives, and poison has no hold on her.",
+      "styrka": "Starts with one potion, a potion gives three lives, and poison has no hold on her.",
       "svaghet": "Loses far more treasure when the serpent wakes."
     },
     {
@@ -30,7 +30,7 @@
       "namn": "The Mapmaker",
       "kort": "the Mapmaker",
       "beskrivning": "Has drawn maps of caves, mines and cloisters. No one has drawn the tower. Yet.",
-      "styrka": "Sees through doors into the rooms next door. Sees every room anyone has found, and gives their map to whoever they meet. Always finds something when searching, if a secret passage can be made. Gets three extra marks from the chalk. Starts with one potion.",
+      "styrka": "Sees through doors into the rooms next door. Sees every room anyone has found, and gives their map to whoever they meet. Always finds something when searching, if a secret passage can be made. Gets three extra marks from the chalk.",
       "svaghet": "No quick feet: the evasive move never works, and then the opponent always hits."
     },
     {
@@ -39,7 +39,7 @@
       "kort": "the Snake Charmer",
       "beskrivning": "Has played for adders at markets and never been bitten. Almost never.",
       "styrka": "Sees in the chamber how many waking cards are left in the deck. The serpent does one wound less.",
-      "svaghet": "The creatures smell them and attack more often."
+      "svaghet": "Never learned to search: finds only half as much gold when searching."
     },
     {
       "id": "sparfinnare",
@@ -54,7 +54,7 @@
       "namn": "The Lantern Bearer",
       "kort": "the Lantern Bearer",
       "beskrivning": "Carries a lantern that has never gone out. No one knows what it burns on.",
-      "styrka": "The darkness has no hold on them, and they see creatures in the neighbouring rooms.",
+      "styrka": "One extra life. The darkness has no hold on them, and they see creatures in the neighbouring rooms.",
       "svaghet": "The light shows: the others see them already from the neighbouring room."
     },
     {

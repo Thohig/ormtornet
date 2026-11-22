@@ -39,10 +39,10 @@
       "namn": "Örtkvinnan",
       "kort": "örtkvinnan",
       "beskrivning": "Kokar drycker av det som växer i diken. Vet vad som läker och vad som dödar.",
-      "styrka": "Börjar med två drycker, en dryck ger tre liv, och gift biter inte på henne.",
+      "styrka": "Börjar med en dryck, en dryck ger tre liv, och gift biter inte på henne.",
       "svaghet": "Tappar mycket mer skatt när ormen vaknar.",
       "liv": 0,
-      "drycker": 2,
+      "drycker": 1,
       "varden": { "dryck_helar": 3, "extra_forlust": 0.5 }
     },
     {
@@ -53,10 +53,10 @@
       "namn": "Kartritaren",
       "kort": "kartritaren",
       "beskrivning": "Har ritat kartor över grottor, gruvor och kloster. Ingen har ritat tornet. Än.",
-      "styrka": "Ser genom dörrarna in i rummen bredvid. Ser alla rum som någon har hittat, och ger sin karta till den hen möter. Hittar alltid något när hen söker, om en hemlig gång går att göra. Får tre streck extra med kritan. Börjar med en dryck.",
+      "styrka": "Ser genom dörrarna in i rummen bredvid. Ser alla rum som någon har hittat, och ger sin karta till den hen möter. Hittar alltid något när hen söker, om en hemlig gång går att göra. Får tre streck extra med kritan.",
       "svaghet": "Inga snabba fötter: undanmanövern lyckas aldrig, och då träffar motståndaren alltid.",
       "liv": 0,
-      "drycker": 1,
+      "drycker": 0,
       "varden": { "extra_krita": 3 }
     },
     {
@@ -68,10 +68,10 @@
       "kort": "ormtjusaren",
       "beskrivning": "Har spelat för huggormar på marknader och aldrig blivit biten. Nästan aldrig.",
       "styrka": "Ser i kammaren hur många vakna-kort som finns kvar i leken. Ormen gör en skada mindre.",
-      "svaghet": "Varelserna känner lukten av henom och anfaller oftare.",
+      "svaghet": "Har aldrig lärt sig leta: hittar bara hälften så mycket guld när hen söker.",
       "liv": 0,
       "drycker": 0,
-      "varden": { "ormskada": 1, "extra_anfall": 1 }
+      "varden": { "ormskada": 1, "sok_guld": 0.5 }
     },
     {
       "id": "sparfinnare",
@@ -95,9 +95,9 @@
       "namn": "Lyktbäraren",
       "kort": "lyktbäraren",
       "beskrivning": "Bär en lykta som aldrig har slocknat. Ingen vet vad den brinner på.",
-      "styrka": "Mörkret biter inte, och hen ser varelser i grannrummen.",
+      "styrka": "Ett liv extra. Mörkret biter inte, och hen ser varelser i grannrummen.",
       "svaghet": "Ljuset syns: de andra ser henom redan från grannrummet.",
-      "liv": 0,
+      "liv": 1,
       "drycker": 0,
       "varden": {}
     },
