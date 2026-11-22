@@ -8,8 +8,8 @@ eller leder tornet.
 
 ### Minikorten går att se
 
-- I krönikan i slutet och i Din vandring är rundans kort större, med
-  rubriken under.
+- I krönikan i slutet och i Din vandring är rundans kort små spelkort,
+  104 pixlar breda, med pergament, bilden och rubriken.
 - Ett klick på ett minikort, i loggen, på spelkortet eller i krönikan,
   visar kortet stort med sin text. Ett klick till eller Escape stänger
   det.

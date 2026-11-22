@@ -759,10 +759,16 @@ function renderChron() {
       const row = document.createElement("div");
       row.className = "kortlek";
       r.kort.forEach((c) => {
+        // Ett litet spelkort: pergament, bilden och rubriken. Hela kortet
+        // går att klicka på.
         const f = document.createElement("figure");
         const cap = document.createElement("figcaption");
         cap.textContent = c.rubrik;
-        f.append(Kort.mini(c.bild, c), cap);
+        const m = Kort.mini(c.bild, c);
+        f.append(m, cap);
+        f.addEventListener("click", (e) => {
+          if (e.target !== m && !m.contains(e.target)) m.click();
+        });
         row.appendChild(f);
       });
       d.appendChild(row);
