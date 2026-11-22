@@ -291,7 +291,6 @@ fram.
 | U eller E  | undanmanöver (i strid; E för evade på engelska) |
 | Tab        | byt mål när flera vandrare står i rummet |
 | Enter      | redo / spela igen                 |
-| 1–3        | använd ett föremål i väskan       |
 | V          | viska till tornet (från nivå 2)   |
 
 ### På en telefon eller surfplatta
@@ -588,13 +587,11 @@ dryck (D) ger tillbaka 2 liv och tar bort gift.
 Man bär högst tre föremål (`max_bara` i `data/foremal.json`). De står i
 väskan uppe till höger på kartan, under tecknen: en plats för varje
 föremål man kan bära, med föremålets tecken och namn, och under vandringen
-en svag prick för varje tom plats. Föremål som används med 1–3 har sin
-siffra framför sig, och ett nytt föremål lyser en stund. Hittar man ett
+en svag prick för varje tom plats. Ett nytt föremål lyser en stund. Alla
+föremål verkar av sig själva; man använder dem aldrig. Hittar man ett
 när väskan är full blir det kvar i rummet, och den som kommer in där
 härnäst tar det. Den som dör tappar sina föremål i rummet. Föremålen följer
 inte med till nästa torn. Krönikan berättar vem som hittade vad.
-
-De här verkar av sig själva:
 
 | Föremål | Vad det gör |
 |---|---|
@@ -605,19 +602,11 @@ De här verkar av sig själva:
 | Väskan med dubbel botten | hälften av det du förlorar när ormen vaknar eller någon river guld är gömt |
 | Kompass utan nord | visar åt vilket håll närmaste port ligger |
 | Sövande flöjt | drar du ett kort som väcker ormen får du dra om (en gång) |
-
-De här används med 1, 2 eller 3 (platsen i väskan), eller ett tryck på
-föremålet i panelen. Föremål som pekar åt ett håll väntar på en pil. Att
-använda ett föremål är rundans drag, och mitt i en strid får varelsen ett
-fritt drag, utom mot rökpulvret.
-
-| Föremål | Vad det gör |
-|---|---|
-| Rökpulver | fly genom en dörr utan att varelsen hinner slå (en gång) |
-| Spegelskärva | se in i rummet bakom en dörr: fällan, varelsen och vandrarna där (tre gånger) |
-| Kastkniv | träffa en varelse i rummet bakom en dörr; missar den blir kniven liggande där |
-| Krita | rita en pil på golvet som alla som kommer in ser (fem gånger) |
-| Timglas av ben | solen står still en runda för alla (en gång) |
+| Rökpulver | flyr du ur en strid hinner varelsen inte slå (en gång) |
+| Spegelskärva | i ett nytt rum visar den ett rum bakom en dörr som du inte har sett: fällan, varelsen och vandrarna där (tre gånger) |
+| Kastkniv | dyker en varelse upp i ditt rum tar den en skada innan striden börjar (en gång) |
+| Krita | när du lämnar ett rum ritar du en pil åt det håll du går, som alla som kommer in ser (fem rum) |
+| Timglas av ben | när solen har tre handsbredder kvar står den still en runda för alla (en gång) |
 
 Förbannade föremål ser värdefulla ut och är värda guld när man kommer ut,
 men man märker baksidan först när man bär dem:

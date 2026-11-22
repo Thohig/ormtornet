@@ -66,7 +66,6 @@ function choose() {
     send({ t: "viska", name: parts.join("") || "orm" });
   }
   if (st.hp <= 2 && st.potions > 0) return { a: "drick" };
-  if (st.foremal && st.foremal.length && Math.random() < 0.15) { const i = Math.floor(Math.random() * st.foremal.length); const it = st.foremal[i]; return { a: "f" + (i + 1) + (it.riktning ? NESW[Math.floor(Math.random() * 4)] : "") }; }
   const others = st.players.filter((p) => p.id !== st.you && p.status === "inne" && !p.hidden && p.x === m.x && p.y === m.y);
   if (others.length && st.pvp === "ja" && Math.random() < 0.3) return { a: "anfall", m: -others[0].id };
   if (r && r.k === "kammare" && takes < 2 && st.sleep < 2) { takes++; return { a: "ta" }; }

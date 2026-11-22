@@ -91,8 +91,8 @@ Så här skiljer vi på sakerna när användaren ger instruktioner:
 - **klasser**: det vandrarna väljer i klassvalet (`classes.go`,
   `data/klasser.json`), till exempel Kartritaren.
 - **föremål**: det vandrarna hittar och bär, högst tre (`items.go`,
-  `data/foremal.json`). Vissa verkar av sig själva, andra används med 1–3,
-  och några är förbannade.
+  `data/foremal.json`). Alla verkar av sig själva sedan 2026-11-22; inget
+  används med 1–3. Några är förbannade.
 - **viska** och **invigd**: den som vet tornets hemlighet kan viska den
   med V och blir då invigd (`secret.go`, `svar` och `invigd` i
   `data/avslojande.json`). Bara med avslöjandet på.

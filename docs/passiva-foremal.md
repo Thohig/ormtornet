@@ -1,6 +1,8 @@
 # Passiva föremål (förslag)
 
-Förslag 2026-11-22. Inget är byggt eller bestämt.
+Förslag 2026-11-22. Allt är byggt, som det står här: kritan blev passiv,
+spegelskärvan visar ett osett grannrum och timglaset verkar vid tre
+handsbredder kvar.
 
 ## Vad som önskas
 

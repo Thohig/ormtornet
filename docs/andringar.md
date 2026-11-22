@@ -6,6 +6,22 @@ eller leder tornet.
 
 ## 2026-11-22
 
+### Föremålen verkar av sig själva
+
+- Inga föremål används längre med 1–3. Tangenterna, att sikta med pilarna
+  och att trycka på ett föremål för att använda det är borta. Ett tryck
+  eller musen över föremålet visar fortfarande vad det gör.
+- Rökpulvret tänds när du flyr ur en strid, och varelsen hinner inte slå.
+- Spegelskärvan visar ett osett grannrum när du kommer in i ett nytt rum,
+  tre gånger.
+- Kastkniven kastas när en varelse dyker upp i ditt rum, och varelsen tar
+  en skada innan striden börjar.
+- Kritan ritar en pil åt det håll du går när du lämnar ett rum, fem rum.
+- Timglaset vänds när solen har tre handsbredder kvar, och solen står
+  still en runda för alla.
+- Datorspelarna och robotarna använder inte längre föremål; föremålen
+  verkar för dem på samma sätt.
+
 ### Ny layout på telefon
 
 - Allt står i en kolumn: översta raden fast högst upp, kartan, raden Nu

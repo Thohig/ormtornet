@@ -78,7 +78,6 @@
     "tecken_invigd": "The tower has heard you.",
     "tecken_viska": "{tryck} to whisper to the tower.",
     "tecken_namndelar": "Signs you have found in the walls. The dots are the ones you are missing.",
-    "tecken_anvand": "{tryck} to use it.",
     "tecken_tom_plats": "An empty place in your bag. You can carry {max} items.",
     "tryck_tangent": "Press {tangent}",
     "tryck_knapp": "Tap {knapp}",
@@ -94,7 +93,6 @@
     "hjalp_parera": "<b>P</b>parry",
     "hjalp_undan": "<b>E</b>evade",
     "hjalp_byt": "<b>Tab</b>switch target",
-    "hjalp_foremal": "<b>1–3</b>use an item",
     "hjalp_viska": "<b>V</b>whisper to the tower",
     "hjalp_zoom": "<b>+ −</b>zoom the map",
     "hjalp_allt": "<b>M</b>all you know of",
@@ -129,8 +127,6 @@
 
     "panel_nu": "Now",
 
-    "nu_sikta": "{foremal}: which way? (arrows, esc cancels)",
-    "nu_sikta_peka": "{foremal}: which way? (arrows)",
     "nu_dod": "You are dead",
     "vandring_rubrik": "Your journey",
     "vandring_pagar": "The walk goes on: round {runda}, the sun is {sol} hand-breadths above the horizon. {inne} still in the tower, {ute} gone out.",
@@ -170,13 +166,6 @@
     "drag_parera": "parry",
     "drag_undan": "evade",
     "drag_vila": "rest",
-    "drag_anvand": "use {foremal}",
-    "drag_anvand_riktning": "use {foremal} {riktning}",
-    "drag_foremal": "item",
-    "riktning_norrut": "northwards",
-    "riktning_osterut": "eastwards",
-    "riktning_soderut": "southwards",
-    "riktning_vasterut": "westwards",
 
     "viska_ruta": "whisper to the tower",
     "viska_ruta_namn": "Whisper to the tower",

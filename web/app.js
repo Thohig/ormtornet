@@ -393,17 +393,7 @@ const ACTION_WORDS = {
   anfall: "drag_anfall", parera: "drag_parera", undan: "drag_undan",
 };
 function actionWord(a) {
-  if (/^f\d/.test(a)) {
-    const it = (state.foremal || [])[+a[1] - 1];
-    const foremal = it ? it.namn.toLowerCase() : t("drag_foremal");
-    if (a[2]) return t("drag_anvand_riktning", { foremal, riktning: dirWord(a[2]) });
-    return t("drag_anvand", { foremal });
-  }
   return ACTION_WORDS[a] ? t(ACTION_WORDS[a]) : a;
-}
-const DIR_WORDS = { N: "riktning_norrut", E: "riktning_osterut", S: "riktning_soderut", W: "riktning_vasterut" };
-function dirWord(d) {
-  return DIR_WORDS[d] ? t(DIR_WORDS[d]) : undefined;
 }
 
 // Strid mot andra vandrare: Tab väljer vem när flera står i rummet.
@@ -780,7 +770,7 @@ function renderHud(me) {
       if (id && bagIds[i] !== undefined) bagNewAt[i] = now;
       bagIds[i] = id;
     }
-    const b = document.createElement(it && it.aktiv ? "button" : "span");
+    const b = document.createElement("span");
     b.dataset.slot = "f" + i;
     if (!it) {
       b.className = "hudicon item empty";
@@ -791,17 +781,10 @@ function renderHud(me) {
       bag.appendChild(b);
       continue;
     }
-    if (it.aktiv) b.type = "button";
-    else b.tabIndex = 0;
+    b.tabIndex = 0;
     const fresh = now - (bagNewAt[i] || -Infinity);
-    b.className = "hudicon item" + (it.aktiv ? " active" : "") + (aimSlot === i ? " aiming" : "") + (fresh < BAG_NEW_MS ? " fresh" : "");
+    b.className = "hudicon item" + (fresh < BAG_NEW_MS ? " fresh" : "");
     if (fresh < BAG_NEW_MS) b.style.animationDelay = -fresh + "ms";
-    if (it.aktiv && !touch) {
-      const n = document.createElement("span");
-      n.className = "num";
-      n.textContent = String(i + 1);
-      b.appendChild(n);
-    }
     if (it.tecken) {
       const g = document.createElement("span");
       g.className = "glyph";
@@ -809,9 +792,8 @@ function renderHud(me) {
       b.appendChild(g);
     }
     b.appendChild(document.createTextNode(it.namn + (it.kvar > 1 ? " ×" + it.kvar : "")));
-    b.dataset.tip = it.beskrivning + (it.aktiv && !touch ? " " + t("tecken_anvand", { tryck: t("tryck_tangent", { tangent: i + 1 }) }) : "");
+    b.dataset.tip = it.beskrivning;
     b.setAttribute("aria-label", it.namn + ". " + b.dataset.tip);
-    if (it.aktiv) b.addEventListener("click", () => useItemSlot(i));
     bag.appendChild(b);
   }
   if (!walking && !items.length) bagIds.length = 0;
@@ -842,9 +824,6 @@ function renderNow(me) {
   if (!me) {
     $("nowBlock").hidden = $("whisper").hidden;
     return;
-  }
-  if (aimSlot !== null && state.foremal && state.foremal[aimSlot]) {
-    line(t(touch ? "nu_sikta_peka" : "nu_sikta", { foremal: state.foremal[aimSlot].namn }), "plan");
   }
   if (me.status === "dod" && state.phase === "spel") line(t("nu_dod"), "cond");
   // Tillbaka till krönikans skärm: för den som har dött, och för alla i
@@ -1767,20 +1746,6 @@ document.addEventListener("keydown", (e) => {
   if (pressKey(e.key)) e.preventDefault();
 });
 
-// Föremålen: 1–3 använder föremålet på den platsen i väskan. Ett föremål som
-// pekar åt ett håll väntar på en pil.
-let aimSlot = null;
-function useItemSlot(i) {
-  const it = state && (state.foremal || [])[i];
-  if (!it || !it.aktiv || state.phase !== "spel") return;
-  if (it.riktning) {
-    aimSlot = i;
-    renderSide();
-    return;
-  }
-  send({ t: "act", a: "f" + (i + 1) });
-}
-
 // Viskningen: en egen ruta under panelen, så att bokstäverna inte blir drag.
 function openWhisper() {
   const f = $("whisper");
@@ -1836,25 +1801,6 @@ function pressKey(key) {
       MapView.toggleWhole();
       return true;
     }
-  }
-  if (aimSlot !== null) {
-    // Ett föremål som pekar åt ett håll: nästa pil väljer riktningen.
-    const dir = { ArrowUp: "N", ArrowRight: "E", ArrowDown: "S", ArrowLeft: "W" }[key];
-    if (dir) {
-      send({ t: "act", a: "f" + (aimSlot + 1) + dir });
-      aimSlot = null;
-      renderSide();
-      return true;
-    }
-    if (key === "Escape") {
-      aimSlot = null;
-      renderSide();
-      return true;
-    }
-  }
-  if (state && state.phase === "spel" && /^[1-9]$/.test(key)) {
-    useItemSlot(+key - 1);
-    return true;
   }
   if (state && state.phase === "klassval") {
     // Siffrorna väljer kort. Tab och Enter får göra som vanligt bland knapparna.

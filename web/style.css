@@ -555,7 +555,6 @@ body.touch .isotangenter span {
 .hudicon.klass .glyph { color: var(--hi); }
 #bag .item { font-size: 13px; display: inline-flex; align-items: baseline; gap: 5px; }
 #bag .item .glyph { color: var(--hi); }
-#bag .item .num { opacity: 0.6; font-size: 11px; }
 #bag .item.empty { opacity: 0.35; min-width: 2.2em; justify-content: center; }
 #bag .item.fresh { animation: bagNew 2.6s ease-out both; }
 @keyframes bagNew {
@@ -563,8 +562,6 @@ body.touch .isotangenter span {
   100% { box-shadow: 0 0 0 rgba(255, 211, 107, 0); }
 }
 @media (prefers-reduced-motion: reduce) { #bag .item.fresh { animation: none; border-color: var(--hi); } }
-#bag .item.active { cursor: pointer; color: var(--fg); }
-#bag .item.aiming { opacity: 1; border-color: var(--hi); color: var(--hi); }
 #helpBtn {
   width: 26px;
   height: 26px;
@@ -949,8 +946,6 @@ body.touch #side { overflow-y: auto; }
   outline: none;
 }
 #me .rost { color: #e3b8f0; }
-.item.active { cursor: pointer; }
-.item.active:hover { color: var(--hi); }
 
 /* Klassvalet: ett spelkort för varje klass. */
 #classscreen { align-items: center; justify-content: center; overflow-y: auto; }
