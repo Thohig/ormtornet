@@ -227,23 +227,25 @@ type Player struct {
 	classID string  // vald klass, tom om ingen
 	items   []*Item // föremål i väskan
 
-	initiated  bool    // vandraren har viskat tornets hemlighet
-	guessLevel int     // nivån då vandraren senast viskade
-	parts      [3]bool // delarna av ormens namn som vandraren har fått
-	calmed     bool    // den invigde har lugnat ormen under vandringen
-	X, Y       int
-	client     *Client
-	Ready      bool
-	Action     string
-	Treasure   int
-	Status     string
-	Seen       map[string]bool // fällor och varelser spelaren har mött
-	told       told            // vad vandraren senast fick veta om sitt rum (here.go)
-	roundRoom  *roomMsg        // rumsblocket den här rundan, för Din vandring
-	heard      []string        // det vandraren har hört under rundan (sounds.go)
-	trapNow    string          // fällan som slog till mot vandraren under rundan; loggen har redan sagt det (here.go)
-	known      [][]bool        // rum vandraren själv har varit i, det enda den ser på kartan
-	bot        *botBrain       // satt för datorstyrda vandrare
+	initiated    bool    // vandraren har viskat tornets hemlighet
+	guessLevel   int     // nivån då vandraren senast viskade
+	parts        [3]bool // delarna av ormens namn som vandraren har fått
+	calmed       bool    // den invigde har lugnat ormen under vandringen
+	X, Y         int
+	client       *Client
+	Ready        bool
+	Action       string
+	Treasure     int
+	Status       string
+	Seen         map[string]bool // fällor och varelser spelaren har mött
+	told         told            // vad vandraren senast fick veta om sitt rum (here.go)
+	roundRoom    *roomMsg        // rumsblocket den här rundan, för Din vandring
+	heard        []string        // det vandraren har hört under rundan (sounds.go)
+	fights       map[string]bool // strider vandraren har hört den här rundan (sounds.go)
+	fightsBefore map[string]bool // och förra rundan
+	trapNow      string          // fällan som slog till mot vandraren under rundan; loggen har redan sagt det (here.go)
+	known        [][]bool        // rum vandraren själv har varit i, det enda den ser på kartan
+	bot          *botBrain       // satt för datorstyrda vandrare
 
 	awayRound int  // rundan då människan lämnade mitt i vandringen, 0 om den är här
 	takenOver bool // en AI-spelare styr vandraren medan människan är borta

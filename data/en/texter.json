@@ -447,8 +447,7 @@
       "The sun has {sol} hand-breadths left to travel."
     ],
     "tvekade": [
-      "You hesitated and stayed where you were.",
-      "Time ran away from you. You stay where you stand."
+      "You hesitated and stayed where you were."
     ],
     "ingen_skatt_har": [
       "There is no treasure here to take."
@@ -654,7 +653,7 @@
     "sam_kallare": ["You fell down into the cellar vaults."],
     "sam_ute": ["You went out of the tower with {skatt} gold."],
     "sam_dod": ["You died."],
-    "sam_inget": ["You chose no move and stayed where you were."],
+    "sam_inget": ["You hesitated and stayed where you were."],
     "sam_vanta": ["You waited."],
     "sam_ta": ["You reached for the treasure."],
     "sam_sok": ["You searched the room."],

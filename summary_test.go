@@ -60,9 +60,13 @@ func TestRoundSummary(t *testing.T) {
 	if strings.Contains(all, "österut") || strings.Contains(all, g.roomShort(n)) {
 		t.Fatalf("kortet säger vart vandraren gick: %q", all)
 	}
-	bo := summaries(b)
-	if len(bo) != 1 || strings.Contains(bo[0].Lines[0].Text, "guld") || bo[0].Lines[0].Text != g.data.Text("sam_inget") {
-		t.Fatalf("Bos sammanfattning: %+v", bo)
+	// Bo valde inget. Det säger loggen, så något kort kommer inte, men
+	// raden står i Din vandring.
+	if bo := summaries(b); len(bo) != 0 {
+		t.Fatalf("Bo fick ett kort fast inget hände: %+v", bo)
+	}
+	if j := b.player.journal; len(j) == 0 || len(j[len(j)-1].Lines) != 1 || j[len(j)-1].Lines[0].Text != g.data.Text("sam_inget") {
+		t.Fatalf("Bos vandring: %+v", j)
 	}
 }
 

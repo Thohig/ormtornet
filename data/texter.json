@@ -463,8 +463,7 @@
       "Solen har {sol} handsbredder kvar att vandra."
     ],
     "tvekade": [
-      "Du tvekade och blev stående.",
-      "Tiden rann ifrån dig. Du står kvar."
+      "Du tvekade och blev stående."
     ],
     "ingen_skatt_har": [
       "Här finns ingen skatt att ta."
@@ -670,7 +669,7 @@
     "sam_kallare": ["Du föll ner i källarvalven."],
     "sam_ute": ["Du gick ut ur tornet med {skatt} guld."],
     "sam_dod": ["Du dog."],
-    "sam_inget": ["Du valde inget drag och blev stående."],
+    "sam_inget": ["Du tvekade och blev stående."],
     "sam_vanta": ["Du väntade."],
     "sam_ta": ["Du sträckte dig efter skatten."],
     "sam_sok": ["Du sökte i rummet."],

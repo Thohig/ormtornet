@@ -13,6 +13,7 @@
         "namn": "The Pale Crawler",
         "kort": "something pale and many-legged",
         "kort_bestamd": "the pale many-legged thing",
+        "kort_igen": "the many-legged thing",
         "dyker_upp": [
           "Something pale and many-legged crawls out of a crack. It has no eyes, but it turns towards you.",
           "Something pale peels itself from the wall, where it lay so close you took it for part of the stone."
@@ -26,6 +27,7 @@
         "namn": "The Serpent Spawn",
         "kort": "a long, hissing snake",
         "kort_bestamd": "the long, hissing snake",
+        "kort_igen": "the hissing thing",
         "dyker_upp": [
           "A snake, long as a man, rises from a heap of dust. It hisses and strikes at once.",
           "A young, glistening snake lies coiled in the corner. It has already seen you."
@@ -39,6 +41,7 @@
         "namn": "The Scale Warden",
         "kort": "a figure in scale armour",
         "kort_bestamd": "the figure in scale armour",
+        "kort_igen": "the figure",
         "dyker_upp": [
           "A figure in armour of overlapping scales steps forward. It holds a shield before it and waits.",
           "A figure in scale armour stands motionless in the middle of the room. Its armour looks grown rather than forged."
@@ -52,6 +55,7 @@
         "namn": "The Bile Ghast",
         "kort": "a greenish shape",
         "kort_bestamd": "the greenish shape",
+        "kort_igen": "the shape",
         "dyker_upp": [
           "A greenish shape glides forward. It wears an adventurer's clothes, but they hang in rags and are bleached, as if they had lain in acid.",
           "Something rises out of the floor, greenish and translucent. It looks at your bag, as if it remembers what it was like to carry one."
@@ -65,6 +69,7 @@
         "namn": "The Bone Keeper",
         "kort": "a creature of white bones",
         "kort_bestamd": "the creature of white bones",
+        "kort_igen": "the bone creature",
         "dyker_upp": [
           "A being built of curved white bones rises up. The bones are all alike, like ribs from one and the same beast."
         ],

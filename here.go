@@ -61,6 +61,7 @@ func (g *Game) tellRooms() {
 func (g *Game) tellRoom(p *Player) {
 	heard := p.heard
 	p.heard = nil
+	p.fightsBefore, p.fights = p.fights, nil
 	if p.Status != statusIn || p.Cellar > 0 || p.Dark > 0 || !g.inBounds(p.X, p.Y) {
 		// Utan rumsblock blir ljuden egna rader, som förut.
 		for _, h := range heard {

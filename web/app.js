@@ -74,9 +74,9 @@ const Log = (() => {
     if (!busy) next();
   }
 
-  // room lägger rumsblocket (here.go) överst i rundan: rummets namn,
-  // beskrivningen när rummet är nytt och vad som finns där. Ett nytt block
-  // i samma runda ersätter det förra.
+  // room lägger rumsblocket (here.go) överst i rundan (under Vandringen
+  // börjar sist): beskrivningen när rummet är nytt och vad som finns där.
+  // Ett nytt block i samma runda ersätter det förra.
   function room(msg) {
     queue.push({ room: msg, key: keyNow() });
     if (!busy) next();
@@ -116,9 +116,13 @@ const Log = (() => {
       block.appendChild(h);
     }
     block.classList.add("appear");
+    // Under Vandringen börjar står porten sist, efter klasserna och
+    // svårigheten, närmast det som händer sedan.
+    const last = g.dataset.key === "start";
     keep(() => {
       const old = list.querySelector(":scope > .roomblock");
       if (old) old.replaceWith(block);
+      else if (last) list.append(block);
       else list.prepend(block);
     });
     if (msg.text && text.scrollHeight > text.clientHeight + 1) block.classList.add("lang");

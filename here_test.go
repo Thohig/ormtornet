@@ -322,3 +322,57 @@ func TestRoomBlockSlainMonster(t *testing.T) {
 		t.Errorf("den andra väntades se %q, fick %+v", want, got)
 	}
 }
+
+// En strid som pågår hörs bara första rundan, inte runda efter runda.
+func TestOngoingFightHeardOnce(t *testing.T) {
+	g, a, b := startTwo(t)
+	pa, pb := a.player, b.player
+	putInRoom(g, pa, 1, 1)
+	putInRoom(g, pb, 5, 5)
+	g.tellRoom(pa)
+	rooms(a)
+	heard := func() string {
+		g.hearing = true
+		g.hearFight(5, 5, pb)
+		g.hearing = false
+		g.tellRoom(pa)
+		got := rooms(a)
+		if len(got) == 0 {
+			return ""
+		}
+		return got[0].Hor
+	}
+	if heard() == "" {
+		t.Fatal("striden hördes inte första rundan")
+	}
+	if h := heard(); h != "" {
+		t.Fatalf("samma strid hördes igen: %q", h)
+	}
+	// En runda tyst, sedan börjar det om och hörs igen.
+	g.tellRoom(pa)
+	if heard() == "" {
+		t.Fatal("en ny strid hördes inte")
+	}
+}
+
+// Varelsen beskrivs helt första stridsrundan och kort rundorna efter.
+func TestMonsterShortAfterFirstRound(t *testing.T) {
+	g, a, _ := startTwo(t)
+	for _, mt := range g.data.Monster.Typer {
+		if mt.KortIgen == "" {
+			t.Errorf("varelsen %q saknar kort_igen", mt.ID)
+		}
+	}
+	m := &Monster{ID: 9, Type: g.data.Monster.Typer[0].ID}
+	mt := g.data.monsterType(m.Type)
+	if v := g.monsterVars(m, a.player); v[3] != mt.KortBestamd {
+		t.Fatalf("första rundan väntades %q, fick %q", mt.KortBestamd, v[3])
+	}
+	if v := g.monsterVars(m, a.player); v[3] != mt.KortBestamd {
+		t.Fatalf("samma runda väntades %q, fick %q", mt.KortBestamd, v[3])
+	}
+	g.round++
+	if v := g.monsterVars(m, a.player); v[3] != mt.KortIgen {
+		t.Fatalf("rundan efter väntades %q, fick %q", mt.KortIgen, v[3])
+	}
+}

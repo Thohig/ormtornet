@@ -28,6 +28,9 @@ type Monster struct {
 	Type string
 	X, Y int
 	HP   int
+	// named är rundan då varje vandrare (på ID) först fick höra varelsen
+	// beskriven i striden. Rundorna efter räcker den korta formen.
+	named map[int]int
 }
 
 type monsterView struct {
@@ -158,9 +161,21 @@ func (g *Game) seesMonsterAt(me *Player, x, y int) bool {
 }
 
 // monsterVars ger varelsen och val som texterna kan använda. Varelsen har
-// inget namn för spelarna: {monster} är "det bleka mångbenta".
-func (g *Game) monsterVars(m *Monster, extra ...string) []string {
-	the := g.data.monsterType(m.Type).KortBestamd
+// inget namn för spelarna: {monster} är "det bleka mångbenta". Första
+// rundan p slåss mot den står hela beskrivningen, sedan den korta formen
+// (kort_igen), så att samma långa beskrivning inte upprepas runda efter
+// runda.
+func (g *Game) monsterVars(m *Monster, p *Player, extra ...string) []string {
+	t := g.data.monsterType(m.Type)
+	the := t.KortBestamd
+	if m.named == nil {
+		m.named = map[int]int{}
+	}
+	if r, ok := m.named[p.ID]; !ok {
+		m.named[p.ID] = g.round
+	} else if r < g.round && t.KortIgen != "" {
+		the = t.KortIgen
+	}
 	return append([]string{"Monster", upperFirst(the), "monster", the}, extra...)
 }
 
@@ -193,9 +208,9 @@ func (g *Game) duel(p *Player, m *Monster, a string) {
 	if p.bot != nil {
 		p.bot.saw(m.Type, mc)
 	}
-	g.logTo(p, g.data.MonsterText("duell", g.monsterVars(m,
+	g.logTo(p, g.data.MonsterText("duell", g.monsterVars(m, p,
 		"ditt_val", g.choiceWord(a), "dess_val", g.choiceWord(mc))...), "")
-	g.hear(p.X, p.Y, "ljud_strid", g.data.MonsterText("strid_andra", "region", g.data.region(p.X, p.Y, g.size)), "dim", p)
+	g.hearFight(p.X, p.Y, p)
 
 	playerHits := beats(a, mc) || (a == actAttack && mc == actAttack)
 	monsterHits := beats(mc, a) || (a == actAttack && mc == actAttack)
@@ -210,10 +225,10 @@ func (g *Game) duel(p *Player, m *Monster, a string) {
 	switch {
 	case playerHits && monsterHits:
 		g.soundTo(p, "hugg")
-		g.logTo(p, g.data.MonsterText("bada_traffar", g.monsterVars(m, "skada", strconv.Itoa(t.Skada))...), "varn")
+		g.logTo(p, g.data.MonsterText("bada_traffar", g.monsterVars(m, p, "skada", strconv.Itoa(t.Skada))...), "varn")
 	case playerHits:
 		g.soundTo(p, "hugg")
-		g.logTo(p, g.data.MonsterText("du_traffar", g.monsterVars(m)...), "syn")
+		g.logTo(p, g.data.MonsterText("du_traffar", g.monsterVars(m, p)...), "syn")
 	case monsterHits:
 		// Texten följer det du valde, så att den inte säger att du vek undan
 		// när du anföll.
@@ -221,10 +236,10 @@ func (g *Game) duel(p *Player, m *Monster, a string) {
 		if len(g.data.Monster.Texter[key]) == 0 {
 			key = "monster_traffar"
 		}
-		g.logTo(p, g.data.MonsterText(key, g.monsterVars(m, "skada", strconv.Itoa(t.Skada))...), "varn")
+		g.logTo(p, g.data.MonsterText(key, g.monsterVars(m, p, "skada", strconv.Itoa(t.Skada))...), "varn")
 	default:
 		g.soundTo(p, choiceSound(a))
-		g.logTo(p, g.data.MonsterText("inget", g.monsterVars(m)...), "dim")
+		g.logTo(p, g.data.MonsterText("inget", g.monsterVars(m, p)...), "dim")
 	}
 	if monsterHits {
 		p.hurt("varelse", t.Kort)
@@ -250,9 +265,9 @@ func choiceSound(a string) string {
 func (g *Game) freeAttack(p *Player, m *Monster, key string) {
 	t := g.data.monsterType(m.Type)
 	mc := g.monsterChoiceVs(m, p)
-	g.logTo(p, g.data.MonsterText(key, g.monsterVars(m, "dess_val", g.choiceWord(mc))...), "varn")
+	g.logTo(p, g.data.MonsterText(key, g.monsterVars(m, p, "dess_val", g.choiceWord(mc))...), "varn")
 	if mc == actAttack {
-		g.logTo(p, g.data.MonsterText("monster_traffar", g.monsterVars(m, "skada", strconv.Itoa(t.Skada))...), "varn")
+		g.logTo(p, g.data.MonsterText("monster_traffar", g.monsterVars(m, p, "skada", strconv.Itoa(t.Skada))...), "varn")
 		p.hurt("varelse", t.Kort)
 		g.damage(p, g.shieldDamage(p, t.Skada), false)
 	}
@@ -269,7 +284,7 @@ func (g *Game) defeat(p *Player, m *Monster) {
 	g.chronicle("kronika_varelse", "namn", p.Name, "varelse", t.Kort)
 	g.soundTo(p, "monster_dor")
 	g.logTo(p, pick(t.Dor), "")
-	g.logTo(p, g.data.MonsterText("seger", g.monsterVars(m,
+	g.logTo(p, g.data.MonsterText("seger", g.monsterVars(m, p,
 		"guld", strconv.Itoa(t.Guld), "skatt", strconv.Itoa(p.Treasure))...), "syn")
 }
 

@@ -257,7 +257,7 @@ func (g *Game) chronicleHit(a, b *Player, gold int, bakhall bool) {
 
 // fightNoise låter resten av tornet höra striden.
 func (g *Game) fightNoise(a, b *Player) {
-	g.hear(a.X, a.Y, "ljud_strid", g.data.MonsterText("strid_andra", "region", g.data.region(a.X, a.Y, g.size)), "dim", a, b)
+	g.hearFight(a.X, a.Y, a, b)
 }
 
 // fightStirsSerpent: tornet känner när det blöder inuti det. Högst ett nytt

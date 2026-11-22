@@ -21,6 +21,9 @@ type summaryLine struct {
 	C    string `json:"c,omitempty"` // "varn", "gold" eller tomt
 	// Ormkort är id:t på ormkortet vandraren drog, för bilden bredvid raden.
 	Ormkort string `json:"ormkort,omitempty"`
+	// journey: raden står bara i Din vandring, inte på kortet, eftersom
+	// loggen redan har sagt det (att man inte valde något drag).
+	journey bool
 }
 
 type summaryMsg struct {
@@ -79,8 +82,14 @@ func (g *Game) summarize(snap map[*Player]before, wakesBefore int) {
 			}
 			p.journal = append(p.journal, jr)
 		}
-		if p.client != nil && len(lines) > 0 {
-			g.send(p.client, summaryMsg{T: "runda", Round: g.round, Lines: lines})
+		var card []summaryLine
+		for _, l := range lines {
+			if !l.journey {
+				card = append(card, l)
+			}
+		}
+		if p.client != nil && len(card) > 0 {
+			g.send(p.client, summaryMsg{T: "runda", Round: g.round, Lines: card})
 		}
 	}
 }
@@ -123,7 +132,11 @@ func (g *Game) summaryFor(p *Player, b before, woke bool) []summaryLine {
 		// motståndaren, och att man inte valde något.
 		_, step := dirCodes[b.action]
 		switch {
-		case step && (!moved || p.Dark > 0), b.action == "", isCombatAction(b.action):
+		case b.action == "":
+			l := g.actionLine(p, b, moved, room, t)
+			l.journey = !moved
+			add(l, "")
+		case step && (!moved || p.Dark > 0), isCombatAction(b.action):
 			add(g.actionLine(p, b, moved, room, t), "")
 		}
 	}

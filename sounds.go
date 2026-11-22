@@ -22,6 +22,32 @@ func (g *Game) hear(x, y int, key, general, class string, skip ...*Player) {
 	}
 }
 
+// hearFight låter de andra höra en strid i rummet (x, y), som hear. En
+// strid som pågår hörs bara första rundan: den som hörde samma strid förra
+// rundan hör den inte igen förrän den har tystnat och börjat om.
+func (g *Game) hearFight(x, y int, skip ...*Player) {
+	general := g.data.MonsterText("strid_andra", "region", g.data.region(x, y, g.size))
+	key := "strid:" + itoa(x) + "," + itoa(y)
+	for _, o := range g.players {
+		if o == nil || slices.Contains(skip, o) {
+			continue
+		}
+		if o.fights == nil {
+			o.fights = map[string]bool{}
+		}
+		heard := o.fights[key] || o.fightsBefore[key]
+		o.fights[key] = true
+		if heard {
+			continue
+		}
+		if d, ok := g.nextTo(o, x, y); ok && !g.is(o, "sparfinnare") {
+			g.hearTo(o, g.data.Text("ljud_strid", "riktning", g.data.Riktningar[d]), "dim")
+		} else {
+			g.hearTo(o, general, "dim")
+		}
+	}
+}
+
 // hearTo låter o höra text. Under rundan samlas ljuden och står sist i
 // rumsblocket (here.go); annars blir de en egen rad i loggen.
 func (g *Game) hearTo(o *Player, text, class string) {
