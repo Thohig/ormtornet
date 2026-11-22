@@ -190,7 +190,8 @@ en annan flik ("Gå in själv", som leder till introt och sedan namnrutan). Andr
    spelar med `-avslojande=false`. Väntetiden står under `intro` → `vanta`
    och uppmaningen att klicka under `intro_ljud`.
 2. Skriv ditt namn och tryck Enter.
-3. Tryck Enter igen när du är redo. Vandringen börjar när alla är redo.
+3. Tryck Enter igen, eller Redo i översta raden, när du är redo.
+   Vandringen börjar när alla är redo.
 
 ### Vad en spelare ser
 
@@ -204,8 +205,8 @@ den som dör och för alla i slutet (se slutet nedan och Strider):
 2. **Namnrutan**: "Vad heter du, vandrare?" Är tornet fullt eller namnet
    upptaget står felet här.
 3. **Spelet**, där spelaren stannar resten av kvällen. Det går igenom fyra faser:
-   - **lobbyn**: vandrarna och "Tryck Enter när du är redo" (Redo på en
-     pekskärm),
+   - **lobbyn**: vandrarna som prickar med namn i översta raden, och
+     knappen Redo där (Enter, eller Redo längst ner på en pekskärm),
    - **klassvalet**: en egen skärm med ett spelkort för varje klass, med
      styrka och svaghet. Välj med 1–8 eller ett klick. Kort som andra har
      tagit är gråa. Den som inte har valt när tiden är slut får ett av de
@@ -214,8 +215,10 @@ den som dör och för alla i slutet (se slutet nedan och Strider):
      i översta raden, och högerkolumnen med panelen Nu och loggen, som
      fyller resten av höjden. En prick är fylld när vandraren har valt drag
      (i lobbyn när den är redo), ✕ är död och ◌ ute; håll musen över den,
-     eller tryck, för namn, klass och läge. Panelen Vandrare syns i lobbyn
-     och i slutet. I loggen står vandrarnas namn i deras färg. Uppe till
+     eller tryck, för namn, klass och läge. I lobbyn och slutet står namnet
+     bredvid pricken, och knappen Redo (Nytt torn i slutet) står till
+     höger i översta raden. Panelen Nu syns bara när den har något att
+     säga. I loggen står vandrarnas namn i deras färg. Uppe till
      vänster på kartan står rummets namn, och under det
      teckenförklaringen: de tecken som står i rummen just nu, som
      vandrarna, varelserna och fällorna, kammaren, portarna, krita och
@@ -256,7 +259,7 @@ den som dör och för alla i slutet (se slutet nedan och Strider):
      vandringen och den egna vandringen runda för runda. Visa kartan går
      till kartan med resultatrutan och loggen, där epilogen också står, och
      Visa krönikan i panelen Nu går tillbaka.
-     Enter (Nytt torn) leder tillbaka till lobbyn när alla
+     Enter eller Nytt torn i översta raden leder tillbaka till lobbyn när alla
      har tryckt, med ett nytt torn. Därefter kommer ett nytt klassval.
      Starta nu på
      värdsidan går från lobbyn till klassvalet, och under klassvalet
@@ -459,8 +462,8 @@ go run . -ai 3
 ```
 
 Datorspelarna står redo vid portarna. Omgången börjar när alla människor har
-tryckt Enter; minst en människa måste vara med. I listan över vandrare står
-de som "(dator)".
+tryckt Enter; minst en människa måste vara med. I prickarnas förklaringar
+står de som "(dator)".
 
 - De ser bara det en människa skulle se: kända rum, varelser i kända rum och
   sin egen skatt. De ser inte okända rum, ormkorten eller andras skatt.

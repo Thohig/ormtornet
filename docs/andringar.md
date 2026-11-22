@@ -6,6 +6,16 @@ eller leder tornet.
 
 ## 2026-11-22
 
+### Lobbyn utan listan över vandrare
+
+- Panelen Vandrare är borta. I lobbyn och slutet står vandrarna som
+  prickar med namn i översta raden, och en fylld prick betyder redo.
+- Raden "Tryck Enter när du är redo" i panelen Nu är borta. I stället står
+  knappen Redo i översta raden (Nytt torn i slutet), och den visar Redo ✓
+  när du har tryckt. Enter fungerar som förut, och på en pekskärm är det
+  knappen längst ner, som också visar Redo ✓.
+- Panelen Nu syns bara när den har något att säga.
+
 ### Tecknen från kartan i krönikan
 
 - Raderna i krönikan har samma bilder som teckenförklaringen: varelsen som

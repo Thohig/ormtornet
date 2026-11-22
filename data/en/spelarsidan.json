@@ -128,7 +128,6 @@
     "slut_ai": "~ AI played part of the way",
     "slut_nytt_torn": "Enter: new tower",
 
-    "panel_vandrare": "Wanderers",
     "panel_nu": "Now",
 
     "nu_sikta": "{foremal}: which way? (arrows, esc cancels)",
@@ -151,8 +150,6 @@
     "nu_fredad": "The gate is sanctuary",
     "nu_drag": "Move: {drag}",
     "nu_valj_ditt": "Choose your move",
-    "nu_redo": "You are ready. Waiting for the others",
-    "nu_tryck_redo": "{tryck} when you are ready",
     "nu_vantar": "Waiting for the others",
     "nu_ute": "You are out with {guld} gold. Waiting for the others.",
     "nu_ute_tom": "You are out, without gold. Waiting for the others.",
@@ -200,6 +197,7 @@
     "knapp_byt": "Switch",
     "knapp_viska": "Whisper",
     "knapp_redo": "Ready",
+    "knapp_redo_klar": "Ready ✓",
     "knapp_nytt_torn": "New tower",
 
     "logg_nya": "↑ new lines",

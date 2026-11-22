@@ -269,8 +269,10 @@ body[data-niva="4"] #crt::after { animation: throb 0.95s infinite; }
 
 #top {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   align-items: baseline;
+  gap: 4px 14px;
   flex: 0 0 auto;
 }
 .title { letter-spacing: 0.4em; color: var(--fg); }
@@ -301,7 +303,30 @@ body[data-niva="4"] #crt::after { animation: throb 0.95s infinite; }
 #crew .dot:hover, #crew .dot:focus-visible { background: var(--slate); outline: none; }
 #crew .dot.me { text-decoration: underline; text-underline-offset: 4px; }
 #crew .dot.off { opacity: 0.35; }
-#playersBlock[hidden] { display: none; }
+#nowBlock[hidden] { display: none; }
+/* I lobbyn och slutet står namnet bredvid pricken. */
+#crew { flex-wrap: wrap; flex: 1 1 auto; justify-content: center; }
+#turn { white-space: nowrap; }
+#crew .dot.named { display: inline-flex; align-items: baseline; gap: 5px; padding: 0 6px 0 3px; }
+#crew .dotname { color: var(--fg); font-size: 13px; }
+#crew .dot.me .dotname { color: var(--hi); }
+#crew .dot.me.named { text-decoration: none; }
+#crew .dot.me.named .dotname { text-decoration: underline; text-underline-offset: 4px; }
+/* Knappen Redo i översta raden, i lobbyn och slutet. */
+#readyBtn {
+  font: inherit;
+  color: var(--hi);
+  background: none;
+  border: 1px solid var(--dim);
+  border-radius: 4px;
+  padding: 2px 10px;
+  cursor: pointer;
+  align-self: center;
+}
+#readyBtn:hover, #readyBtn:focus-visible { background: var(--slate); outline: none; }
+#readyBtn .key { margin-left: 8px; color: var(--chalk); font-size: 11px; letter-spacing: 0.1em; }
+#readyBtn.done { color: var(--fg); border-color: var(--faint); cursor: default; }
+#readyBtn[hidden] { display: none; }
 #turn.urgent { color: var(--warn); }
 
 #main {
@@ -640,10 +665,6 @@ body.touch #helpBtn { display: none; }
   margin: 0 0 5px;
   text-transform: uppercase;
 }
-#players { list-style: none; margin: 0; padding: 0; }
-#players li { margin: 3px 0; }
-#players .off { opacity: 0.4; }
-#players .me { color: var(--hi); }
 #here { color: var(--fg); }
 #me div { margin: 2px 0; }
 #me .plan { color: var(--hi); }
@@ -655,7 +676,6 @@ body.touch #helpBtn { display: none; }
 /* Det egna draget står sist, avskilt med ett streck. */
 #me .plan { margin-top: 6px; padding-top: 5px; border-top: 1px dashed var(--chalkline); }
 #me .dimline { color: var(--fg); }
-#players .tag { color: var(--fg); }
 #help { color: var(--fg); }
 #help b { display: inline-block; width: 11ch; font-weight: normal; color: var(--fg); }
 
@@ -831,7 +851,7 @@ body.touch #side { overflow-y: auto; }
     gap: 0 16px;
     overflow: visible;
   }
-  #side > :not(.block), #playersBlock[hidden] + .block { grid-column: 1 / -1; }
+  #side > * { grid-column: 1 / -1; }
   #side h2 { margin: 0 0 4px; }
   #logwrap { margin-top: 8px; grid-column: 1 / -1; }
   #log { height: 14em; flex: 0 0 auto; }

@@ -46,7 +46,7 @@
     "topp_pausad": "runda {runda}  pausad",
     "topp_runda": "runda {runda}  {sekunder} s",
 
-    "_vandrare": "Vandrarna i panelen Vandrare och i prickarnas förklaringar.",
+    "_vandrare": "Vandrarna i prickarnas förklaringar.",
     "vandrare_namn_du": "{namn} (du)",
     "vandrare_namn_ai": "{namn} (AI)",
     "vandrare_namn_ai_spelar": "{namn} (AI spelar)",
@@ -141,7 +141,6 @@
     "slut_nytt_torn": "Enter: nytt torn",
 
     "_panel": "Panelerna Vandrare och Nu.",
-    "panel_vandrare": "Vandrare",
     "panel_nu": "Nu",
 
     "_nu": "Panelen Nu. {tangent} är en tangent eller, på en pekskärm, en knapp.",
@@ -165,8 +164,6 @@
     "nu_fredad": "Porten är fredad",
     "nu_drag": "Drag: {drag}",
     "nu_valj_ditt": "Välj ditt drag",
-    "nu_redo": "Du är redo. Väntar på de andra",
-    "nu_tryck_redo": "{tryck} när du är redo",
     "nu_vantar": "Väntar på de andra",
     "nu_ute": "Du är ute med {guld} guld. Väntar på de andra.",
     "nu_ute_tom": "Du är ute, utan guld. Väntar på de andra.",
@@ -217,6 +214,7 @@
     "knapp_byt": "Byt",
     "knapp_viska": "Viska",
     "knapp_redo": "Redo",
+    "knapp_redo_klar": "Redo ✓",
     "knapp_nytt_torn": "Nytt torn",
 
     "_logg": "Loggen i högerkolumnen.",

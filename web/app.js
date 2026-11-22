@@ -669,30 +669,7 @@ function updateChooseStatus() {
 }
 
 function renderSide() {
-  setEnterLabel(t(state.phase === "slut" ? "knapp_nytt_torn" : "knapp_redo"));
-  // Under vandringen står vandrarna som prickar i översta raden.
-  $("playersBlock").hidden = state.phase === "spel";
-  const ul = $("players");
-  ul.innerHTML = "";
-  state.players.forEach((p) => {
-    const li = document.createElement("li");
-    const mark = document.createElement("span");
-    mark.textContent = "@ ";
-    mark.style.color = MapView.PLAYER_COLORS[p.slot];
-    li.appendChild(mark);
-    const who = playerName(p, "vandrare_namn_ai");
-    li.appendChild(document.createTextNode(p.klass ? t("vandrare_med_klass", { vem: who, klass: p.klass }) : who));
-    const tag = playerTag(p);
-    if (tag) {
-      const tg = document.createElement("span");
-      tg.className = "tag";
-      tg.textContent = " " + tag;
-      li.appendChild(tg);
-    }
-    if (p.id === state.you) li.classList.add("me");
-    if (!p.online) li.classList.add("off");
-    ul.appendChild(li);
-  });
+  renderReady();
   const me = myPlayer();
   const room = me && state.rooms.find((r) => r.x === me.x && r.y === me.y);
   let here = me && me.status === "inne" && room ? room.name : "";
@@ -840,7 +817,10 @@ function renderNow(me) {
     if (cls) d.className = cls;
     box.appendChild(d);
   };
-  if (!me) return;
+  if (!me) {
+    $("nowBlock").hidden = $("whisper").hidden;
+    return;
+  }
   if (aimSlot !== null && state.foremal && state.foremal[aimSlot]) {
     line(t(touch ? "nu_sikta_peka" : "nu_sikta", { foremal: state.foremal[aimSlot].namn }), "plan");
   }
@@ -886,11 +866,9 @@ function renderNow(me) {
     line(state.action ? t("nu_drag", { drag: actionWord(state.action) }) : t("nu_valj_ditt"), "plan");
   } else if (state.phase === "spel" && me.status === "ute") {
     line(me.treasure > 0 ? t("nu_ute", { guld: me.treasure }) : t("nu_ute_tom"), "plan");
-  } else if (state.phase === "lobby") {
-    line(me.ready ? t("nu_redo") : t("nu_tryck_redo", { tryck: pressWord("knapp_redo", "Enter") }), "plan");
-  } else if (state.phase === "slut") {
-    line(me.ready ? t("nu_vantar") : newTowerWord(), "plan");
   }
+  // Panelen Nu syns bara när den har något att säga.
+  $("nowBlock").hidden = box.childElementCount === 0 && $("whisper").hidden;
 }
 
 // Rundans sammanfattning: ett kort över kartan med vad som hände dig, det
@@ -1319,6 +1297,28 @@ function setEnterLabel(text) {
   if (b.textContent !== text) b.textContent = text;
 }
 
+// Knappen Redo i översta raden, i lobbyn och slutet (Nytt torn). Enter gör
+// samma sak. På en pekskärm är det knappen längst ner som gäller.
+function renderReady() {
+  const me = myPlayer();
+  const waiting = state.phase === "lobby" || state.phase === "slut";
+  const done = !!(me && me.ready);
+  const label = done ? t("knapp_redo_klar") : t(state.phase === "slut" ? "knapp_nytt_torn" : "knapp_redo");
+  setEnterLabel(waiting ? label : t("knapp_redo"));
+  const b = $("readyBtn");
+  b.hidden = !waiting || !me;
+  b.disabled = done;
+  b.classList.toggle("done", done);
+  b.textContent = label;
+  if (!done) {
+    const k = document.createElement("span");
+    k.className = "key";
+    k.textContent = "Enter";
+    b.appendChild(k);
+  }
+}
+$("readyBtn").addEventListener("click", () => send({ t: "ready" }));
+
 function hpMeter(hp, maxHp) {
   return meter("hp", t("matare_liv"), hp, maxHp);
 }
@@ -1359,6 +1359,14 @@ function renderCrew() {
     else glyph = (state.phase === "spel" ? p.chosen : p.ready) ? "●" : "○";
     d.textContent = glyph;
     d.style.color = MapView.PLAYER_COLORS[p.slot];
+    // I lobbyn och slutet står namnet bredvid pricken.
+    if (state.phase !== "spel") {
+      d.classList.add("named");
+      const n = document.createElement("span");
+      n.className = "dotname";
+      n.textContent = p.name;
+      d.appendChild(n);
+    }
     const who = playerName(p, "vandrare_namn_ai_spelar");
     const tag = playerTag(p);
     d.dataset.tip = (p.klass ? t("vandrare_med_klass", { vem: who, klass: p.klass }) : who) + (tag ? "\n" + tag : "");

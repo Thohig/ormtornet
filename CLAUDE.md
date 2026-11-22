@@ -45,7 +45,8 @@ Så här skiljer vi på sakerna när användaren ger instruktioner:
   vad en spelare möter.
 - **spelskärmen**: vyn spelet på spelarsidan. Delarna heter:
   - **översta raden**: solmätaren, **prickarna** (vandrarna i sin färg,
-    fyllda när de har valt drag) och tiden,
+    fyllda när de har valt drag eller är redo, med namn i lobbyn och
+    slutet), tiden och knappen Redo (Nytt torn i slutet),
   - **teckenförklaringen**: listan uppe till vänster på kartan, under
     rummets namn, med de tecken som står i rummen just nu (`tecken_` i
     `data/texter.json`),
@@ -59,8 +60,8 @@ Så här skiljer vi på sakerna när användaren ger instruktioner:
     stort mitt på kartan (`showSerpentCard` och `showWakeCard` i
     `web/app.js`),
   - **sömnmätaren**: hur djupt ormen sover, i panelen Nu i skattkammaren,
-  - **panelen Nu**: draget, striden och vad som väntar,
-  - **panelen Vandrare**: listan över vandrarna, bara i lobbyn och slutet,
+  - **panelen Nu**: draget, striden och vad som väntar. Den syns bara när
+    den har något att säga. Panelen Vandrare togs bort 2026-11-22,
   - **loggen**: raderna i högerkolumnen, grupperade per runda.
 - **tornets dator**: datorn som kör servern.
 - **språket**: inställningen Språk på värdsidan (`-sprak`), svenska eller
