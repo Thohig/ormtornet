@@ -831,13 +831,9 @@ body.touch .keys { display: none; }
   max-width: 260px;
 }
 #pad .wide { grid-column: span 2; color: var(--hi); border-color: var(--dim); }
-/* Viska och Redo delar samma plats i tredje raden: Viska under vandringen,
-   Redo i lobbyn och slutet. Viska är osynlig men tar plats tills den går
-   att använda, så att knapparna inte flyttar sig. */
-#pad #padWhisper { grid-column: 2; grid-row: 3; }
-#pad #padEnter { grid-column: 2 / span 2; grid-row: 3; }
-#pad #padWhisper.off { visibility: hidden; }
-#pad button[hidden] { display: none; }
+/* Bara de knappar som gäller just nu syns (renderPad i app.js). */
+#pad button[hidden], #pad .dirs[hidden], #help [hidden] { display: none; }
+#pad #padEnter { grid-column: 1 / -1; }
 body.touch #side { overflow-y: auto; }
 
 /* Smal skärm, som en telefon på höjden: en kolumn med översta raden fast

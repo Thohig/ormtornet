@@ -139,18 +139,18 @@
           <div id="helpbox" class="keys" hidden>
             <h2 data-t="hjalp_rubrik"></h2>
             <div id="help">
-              <div data-t-html="hjalp_ga"></div>
-              <div data-t-html="hjalp_vanta"></div>
-              <div data-t-html="hjalp_sok"></div>
-              <div data-t-html="hjalp_drick"></div>
-              <div data-t-html="hjalp_anfall"></div>
-              <div data-t-html="hjalp_parera"></div>
-              <div data-t-html="hjalp_undan"></div>
-              <div data-t-html="hjalp_byt"></div>
-              <div data-t-html="hjalp_viska"></div>
-              <div data-t-html="hjalp_zoom"></div>
-              <div data-t-html="hjalp_allt"></div>
-              <div data-t-html="hjalp_redo"></div>
+              <div data-lage="fri strid" data-t-html="hjalp_ga"></div>
+              <div data-lage="fri strid" data-t-html="hjalp_vanta"></div>
+              <div data-lage="fri" data-t-html="hjalp_sok"></div>
+              <div data-lage="fri strid" data-t-html="hjalp_drick"></div>
+              <div data-lage="strid" data-t-html="hjalp_anfall"></div>
+              <div data-lage="strid" data-t-html="hjalp_parera"></div>
+              <div data-lage="strid" data-t-html="hjalp_undan"></div>
+              <div data-lage="byt" data-t-html="hjalp_byt"></div>
+              <div data-lage="viska" data-t-html="hjalp_viska"></div>
+              <div data-lage="fri strid annat" data-t-html="hjalp_zoom"></div>
+              <div data-lage="fri strid annat" data-t-html="hjalp_allt"></div>
+              <div data-lage="redo" data-t-html="hjalp_redo"></div>
               <div data-t-html="hjalp_visa"></div>
             </div>
             <p class="hint" data-t="hjalp_tips"></p>
@@ -177,8 +177,9 @@
         </div>
       </div>
       <aside id="side">
+        <!-- Knapparna följer läget (data-lage, renderPad i app.js). -->
         <div id="pad" class="touchonly" data-t-aria="knappar">
-          <div class="dirs">
+          <div class="dirs" data-lage="fri strid">
             <button type="button" data-key="ArrowUp" class="n" data-t-aria="knapp_norrut">↑</button>
             <button type="button" data-key="ArrowLeft" class="w" data-t-aria="knapp_vasterut">←</button>
             <button type="button" data-key=" " class="c" data-t-aria="knapp_vanta">·</button>
@@ -186,14 +187,14 @@
             <button type="button" data-key="ArrowDown" class="s" data-t-aria="knapp_soderut">↓</button>
           </div>
           <div class="acts">
-            <button type="button" data-key="s" data-t="knapp_sok"></button>
-            <button type="button" data-key="d" data-t="knapp_drick"></button>
-            <button type="button" data-key="a" data-t="knapp_anfall"></button>
-            <button type="button" data-key="p" data-t="knapp_parera"></button>
-            <button type="button" data-key="u" data-t="knapp_undan"></button>
-            <button type="button" data-key="Tab" data-t="knapp_byt"></button>
-            <button type="button" data-key="v" id="padWhisper" hidden data-t="knapp_viska"></button>
-            <button type="button" data-key="Enter" id="padEnter" class="wide" data-t="knapp_redo"></button>
+            <button type="button" data-key="a" data-lage="strid" data-t="knapp_anfall"></button>
+            <button type="button" data-key="p" data-lage="strid" data-t="knapp_parera"></button>
+            <button type="button" data-key="u" data-lage="strid" data-t="knapp_undan"></button>
+            <button type="button" data-key="s" data-lage="fri" data-t="knapp_sok"></button>
+            <button type="button" data-key="d" data-lage="fri strid" data-t="knapp_drick"></button>
+            <button type="button" data-key="Tab" data-lage="byt" data-t="knapp_byt"></button>
+            <button type="button" data-key="v" id="padWhisper" data-lage="viska" data-t="knapp_viska"></button>
+            <button type="button" data-key="Enter" id="padEnter" class="wide" data-lage="redo" data-t="knapp_redo"></button>
           </div>
         </div>
         <div id="logwrap">

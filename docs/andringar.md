@@ -6,6 +6,13 @@ eller leder tornet.
 
 ## 2026-11-22
 
+### Knapparna följer läget
+
+- På en pekskärm syns bara de knappar som går att använda just nu: Sök
+  och Drick utanför strid, Anfall, Parera, Undan och Drick i strid, Viska
+  när det går att viska och bara Redo i lobbyn och slutet. Styrningen
+  bakom ? visar på samma sätt bara de tangenter som gäller.
+
 ### Sök tar också skatt
 
 - S (knappen Sök) tar en näve ur högen i kammaren och söker i andra rum.

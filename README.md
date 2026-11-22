@@ -303,11 +303,11 @@ och går den trögt slår den av skuggorna och ritar med lägre upplösning.
 
 En iPhone, iPad eller Android-telefon i samma nätverk kan vara med. Öppna
 samma adress i Safari eller Chrome. På en pekskärm visas knappar i stället
-för tangenterna: pilarna och `·` (vänta), och Ta, Sök, Drick, Anfall,
-Parera, Undan, Byt (som Tab), Viska och Redo (som Enter, och Nytt torn när
-vandringen är slut). Viska har en fast plats och syns när den går att
-använda, och Redo syns bara i lobbyn och i slutet, så att knapparna inte
-flyttar sig under vandringen. På kartan snett ovanifrån går det också att
+för tangenterna, och bara de som gäller just nu: utanför strid pilarna,
+`·` (vänta), Sök och Drick; i strid pilarna (att gå är att fly), Anfall,
+Parera, Undan och Drick; Viska när det går att viska; och i lobbyn och
+slutet bara Redo (som Enter, och Nytt torn när vandringen är slut).
+Styrningen bakom ? visar på samma sätt bara de tangenter som gäller. På kartan snett ovanifrån går det också att
 trycka på pilarna vid dörrarna. På en smal skärm står allt i en kolumn:
 översta raden fast högst upp, kartan, raden Nu och loggen, och knapparna
 fast längst ner. Sidan rullar, och loggen rullar med den. Den senaste

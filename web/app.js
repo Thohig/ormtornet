@@ -432,6 +432,39 @@ function actionWord(a) {
   return ACTION_WORDS[a] ? t(ACTION_WORDS[a]) : a;
 }
 
+// padModes säger vilka lägen som gäller just nu, för knapparna och
+// styrningen bakom ?: fri utanför strid, strid när en varelse eller en
+// vandrare man kan slåss mot står i rummet, redo i lobbyn och slutet, viska
+// när det går att viska, byt när flera vandrare står i rummet och annat
+// när man inte kan göra något drag (död, ute eller i källaren).
+function padModes(me) {
+  const modes = new Set();
+  if (!state || !me) return modes;
+  if (state.phase === "lobby" || state.phase === "slut") {
+    modes.add("redo");
+    return modes;
+  }
+  if (state.phase !== "spel") return modes;
+  if (me.status !== "inne" || state.cellar > 0) {
+    modes.add("annat");
+    return modes;
+  }
+  const monster = (state.monsters || []).some((m) => m.x === me.x && m.y === me.y);
+  const foes = state.pvp === "ja" ? foesHere() : [];
+  modes.add(monster || foes.length ? "strid" : "fri");
+  if (!monster && foes.length > 1) modes.add("byt");
+  if (state.kanViska) modes.add("viska");
+  return modes;
+}
+
+// renderPad visar bara de knappar och rader i styrningen som gäller nu.
+function renderPad(me) {
+  const modes = padModes(me);
+  document.querySelectorAll("#pad [data-lage], #help [data-lage]").forEach((el) => {
+    el.hidden = !el.dataset.lage.split(" ").some((m) => modes.has(m));
+  });
+}
+
 // Strid mot andra vandrare: Tab väljer vem när flera står i rummet.
 let selectedFoe = 0;
 function foesHere() {
@@ -780,17 +813,7 @@ function renderHud(me) {
   if (state.kanViska) icon("V", "", t("tecken_viska", { tryck: pressWord("knapp_viska", "V") }), "rost");
   // Delarna av ormens namn som vandraren har fått, med prickar för resten.
   if (state.namndelar) icon("⁂", state.namndelar.map((p) => p || "·").join(" "), t("tecken_namndelar"), "rost");
-  // Viska har en fast plats bland knapparna under vandringen och är osynlig
-  // tills den går att använda, så att inga andra knappar flyttar sig när den
-  // dyker upp. Redo behövs bara i lobbyn och i slutet och tar då platsen.
-  const playing = state.phase === "spel";
-  const pw = $("padWhisper");
-  if (pw) {
-    pw.hidden = !playing;
-    pw.classList.toggle("off", !state.kanViska);
-  }
-  const pe = $("padEnter");
-  if (pe) pe.hidden = playing;
+  renderPad(me);
 
   // Väskan: en plats för varje föremål man kan bära, med föremålets tecken
   // och namn. Under vandringen står de tomma platserna som en prick, så att
