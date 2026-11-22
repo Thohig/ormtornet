@@ -81,6 +81,25 @@ sin enda kolumn med loggen under kartan.
 - **Surfplattan:** knapparna från högerkolumnen står nere till vänster på
   kartan, under loggen, och loggen blir kortare för att ge plats.
 
+**Telefonen:**
+
+- **På höjden** (smalare än 700 punkter) blir allt som i dag: översta
+  raden fast högst upp, kartan, raden Nu, loggen under kartan och
+  knapparna fast längst ner. Loggen får inte plats på kartan där; 40
+  tecken är hela kartans bredd.
+- **På bredden** är en telefon bredare än 700 punkter men bara 350–430
+  hög, och får i dag samma två kolumner som en dator. Med förslaget får
+  den kartan över hela bredden, men på en låg skärm (lägre än 500 punkter)
+  blir loggen på kartan smalare (cirka 30 tecken), rumsbeskrivningen kortas
+  till tre rader med "mer" som på telefonen på höjden, och bara den
+  senaste rundan står där, utan den förra. Lådan med hela loggen finns
+  som på datorn.
+- **Knapparna** står på telefonen på bredden nere till vänster på kartan,
+  som på surfplattan, och panelen Nu blir en enda rad.
+- **Värdsidan** på en telefon (tornet från Pages) har redan en kolumn, och
+  Fröet står där i avsnittens ordning. Märket ändras inte, eftersom Pages
+  inte kan öppna värdsidan i en ny flik.
+
 | Fråga | Svar |
 | --- | --- |
 | Uppe till vänster eller nere till vänster? | Uppe, eftersom man läser uppifrån och knapparna på en surfplatta behöver det nedre hörnet. |
@@ -116,7 +135,7 @@ Varje steg blir en commit, och sedan stannar jag så att det kan provas.
    den förra rundan svag.
 4. **Lådan med hela loggen** (knappen och L) och kameran som flyttas åt
    höger. Bygg om `web/iso/iso.js`.
-5. **Surfplattan** med knapparna på kartan, och **märket** som öppnar
+5. **Surfplattan och telefonen på bredden** med knapparna på kartan och den lägre loggen, och **märket** som öppnar
    värdsidan i en ny flik under vandringen.
 6. **Dokumentationen:** README, CLAUDE.md (värdsidans avsnitt och
    spelskärmens delar), `docs/andringar.md` och det här dokumentet.
