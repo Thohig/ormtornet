@@ -245,10 +245,17 @@ den som dör och för alla i slutet (se slutet nedan och Strider):
      varelsens egen text, de andra vandrarna, guldet, porten, spåret
      efter en fälla som har slagit till (utan fällans namn) och föremål
      som någon har lämnat. Ett tomt rum säger ingenting. Står man kvar
-     kommer bara det som har ändrats, som "Gestalten i fjällrustning är borta." Sist
+     kommer bara det som har ändrats, som "Gestalten i fjällrustning är borta."
+     En varelse som någon annan fällde "ligger fälld på golvet"; den som
+     fällde den har redan läst det. Spåret efter en fälla som nyss slog
+     till mot en själv står inte i blocket, eftersom loggen säger vad som
+     hände. Sist
      står det man hörde under rundan, som stridsljud från ett grannrum
      eller klockan som slår i hela tornet; ljuden står inte längre som
-     egna rader. I
+     egna rader. En strid som pågår hörs bara första rundan. I
+     striden beskrivs varelsen helt första rundan och sedan kort
+     (`kort_igen` i `data/monster.json`), som "det mångbenta". Under
+     Vandringen börjar står porten sist, efter klasserna och svårigheten. I
      mörkret och i källarvalven väntar blocket tills man ser igen.
      Texterna står under `har_*` i `data/texter.json` och `spar_efter` i
      `data/fallor.json`. Rummen har inga namn för spelarna; där en text
@@ -435,12 +442,15 @@ gemensam. De valen är borttagna; se [docs/synlighet.md](docs/synlighet.md).
 
 När vandringen är slut står krönikan på en egen skärm, under resultaten och
 epilogen. Först kommer det
-som hände, runda för runda: vem som gick ut och med hur mycket, vem som dog
-och av vad, vem som fällde vilken varelse, vem som slog vem och tog hur
-mycket guld, och när ormen vaknade. Sedan kommer en rad för varje vandrare
-med hur många nävar den tog ur kammaren och hur mycket guld de gav, och hur
-många fällor, fällda varelser och sökta rum den fick. Den som har träffat
-andra vandrare får också träffarna och det stulna guldet på sin rad.
+som hände, runda för runda: vem som gick ut och med hur mycket, vem som dog,
+av vad och hur mycket guld som gick förlorat, vem som fällde vilken
+varelse, vem som slog vem och tog hur mycket guld, vem som nådde
+skattkammaren först, när klockan fick solen att sjunka fortare och när
+ormen vaknade. Sedan kommer en rad för varje vandrare
+med hur många nävar den tog ur kammaren och hur mycket guld de gav, hur
+många varelser den fällde, fällor den gick i och rum den sökte, och för
+den som har träffat andra vandrare träffarna och det stulna guldet. Bara
+det som inte är noll står med.
 Texterna står i `data/texter.json` under `kronika_*`. Under krönikan står
 den egna vandringen, samma som den som dör ser under vandringen.
 
@@ -587,7 +597,10 @@ Varelserna sköts alltid av tornet. Den som dör väntar rundan inte på.
 Den som dör får en egen skärm, **Din vandring**: rundans kort runda för
 runda, med rummet som i loggen: beskrivningen, det hen såg och det hen
 hörde, hur hen dog och sina siffror, och hur många som är kvar i tornet och
-har gått ut. Var de andra är och vad de gör står inte där, så att den döda
+har gått ut. Där kortet bara säger "−2 liv" säger Din vandring vad det kom
+av ("Pilar ur små hål i väggen: −2 liv"), och vad som dödade en och
+vilken varelse man fällde står med. Rundor där man bara stod kvar slås
+ihop ("Runda 10–12"), och det står när tornet styrde vandraren. Var de andra är och vad de gör står inte där, så att den döda
 inte kan avslöja något för de levande. Visa kartan går tillbaka till
 spelet, och Din vandring i panelen Nu hit igen.
 

@@ -87,6 +87,12 @@ En riktig kväll behövs för att se:
   inte ser de andra portarna?
 - Tecknen på kartan (2026-11-19): går de att förstå, och skymmer de
   kartan när den har vuxit?
+- Loggen och krönikan efter genomläsningen (2026-11-22): märks det att
+  en pågående strid bara hörs första rundan, eller tror man att den har
+  slutat? Läser man "det mångbenta" som samma varelse? Blir Din vandring
+  och krönikan för mycket att läsa, nu när orsakerna och vändpunkterna
+  står med? Att visa förra rundan nedtonad när den senaste är kort valdes
+  bort, för att inte visa för mycket på en gång.
 - Loggen (2026-11-19, ändrad 2026-11-22): är takten lagom, ungefär tre
   rader i sekunden? Hittar man knappen "↑ nya rader"? Sedan 2026-11-22
   står bara den senaste rundan i bild och de äldre under strecket

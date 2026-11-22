@@ -80,6 +80,15 @@ func (g *Game) summarize(snap map[*Player]before, wakesBefore int) {
 		lines := g.summaryFor(p, b, g.wakes > wakesBefore)
 		room := p.roundRoom
 		p.roundRoom = nil
+		// Utan rumsblock säger Din vandring vart vandraren gick, som kortet
+		// gör i mörkret, så att rundan inte står tom.
+		if _, step := dirCodes[b.action]; room == nil && step && p.Status == statusIn && b.cellar == 0 && p.Dark == 0 && (p.X != b.x || p.Y != b.y) {
+			l := g.actionLine(p, b, true, g.roomShort(&g.rooms[p.Y][p.X]), func(key string, vars ...string) summaryLine {
+				return summaryLine{Text: g.data.Text(key, vars...)}
+			})
+			l.journey = true
+			lines = append(lines, l)
+		}
 		g.addJourney(p, lines, room, b.tower)
 		var card []summaryLine
 		for _, l := range lines {

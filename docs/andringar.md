@@ -6,6 +6,28 @@ eller leder tornet.
 
 ## 2026-11-22
 
+### Loggen och krönikan, efter en genomläsning
+
+- Rättat: spåret efter en fälla som nyss slog till står inte längre före
+  fällan i rumsblocket. En varelse man fällde "är" inte "borta"; den som
+  fällde den får inget, de andra i rummet ser den ligga fälld. Raden om
+  svårigheten säger livet efter klassen (legoknekten har 7). ~ i
+  resultaten förklaras också på krönikans skärm.
+- Loggen upprepar mindre: en strid som pågår hörs bara första rundan,
+  varelsen beskrivs helt första stridsrundan och sedan kort ("det
+  mångbenta"), och att man tvekade sägs en gång, i loggen, och inte på
+  kortet. Ett känt, tomt rum ger inget block och ingen tom rubrik. Under
+  Vandringen börjar står porten sist.
+- Din vandring säger vad skadan kom av, vad som dödade en och vilken
+  varelse man fällde. Rundor där man bara stod kvar slås ihop till
+  "Runda 10–12", och rundor då tornet styrde märks "tornet styrde".
+- Krönikan säger hur mycket guld som gick förlorat när någon dog, vem
+  som nådde skattkammaren först och när klockan fick solen att sjunka
+  fortare. Raden med siffror visar bara det som inte är noll.
+- Varelsen som väser heter "något långt och väsande" i de korta formerna,
+  så att den inte blandas ihop med Ormen. När den dyker upp är den
+  fortfarande en orm, lång som en man.
+
 ### Ljudet för spelledaren som går in själv
 
 - Spelledaren som går in med Gå in själv hoppar över introt, och då

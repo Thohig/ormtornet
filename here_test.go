@@ -50,7 +50,7 @@ func TestRoomBlockAtStart(t *testing.T) {
 	// Solen sägs bara i det första blocket.
 	putInRoom(g, a.player, 4, 4)
 	g.tellRoom(a.player)
-	if got := rooms(a); len(got) != 1 || strings.Contains(got[0].Har, strconv.Itoa(g.sun)+" ") {
+	if got := rooms(a); len(got) > 0 && strings.Contains(got[0].Har, strconv.Itoa(g.sun)+" ") {
 		t.Errorf("solen kom med i nästa block: %+v", got)
 	}
 }
@@ -107,14 +107,13 @@ func TestRoomBlockShowsNotTells(t *testing.T) {
 	pa.told = told{}
 	rooms(a)
 	g.tellRoom(pa)
-	got := rooms(a)
-	if len(got) != 1 || got[0].Har != "" {
-		t.Fatalf("ett tomt rum ska inte säga något, fick %+v", got)
+	if got := rooms(a); len(got) != 0 {
+		t.Fatalf("ett känt, tomt rum ska inte ge något block, fick %+v", got)
 	}
 	trap := g.data.trap("roterande")
 	r.Mark = trap.Tecken
 	g.tellRoom(pa)
-	got = rooms(a)
+	got := rooms(a)
 	if len(got) != 1 || got[0].Har != trap.SparEfter[0] {
 		t.Fatalf("väntade spåret %q, fick %+v", trap.SparEfter[0], got)
 	}

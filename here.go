@@ -118,9 +118,12 @@ func (g *Game) tellRoom(p *Player) {
 		slices.Sort(gone)
 		msg.Har = strings.TrimSpace(strings.Join(append(gone, g.sayHere(added)), " "))
 	}
+	p.told = told{ok: true, x: p.X, y: p.Y, parts: now}
+	if msg.Text == "" && msg.Har == "" && msg.Hor == "" {
+		return // ett känt, tomt rum: blocket skulle inte säga något
+	}
 	g.send(p.client, msg)
 	p.roundRoom = &msg
-	p.told = told{ok: true, x: p.X, y: p.Y, parts: now}
 }
 
 // atTheGate gör början av vandringen till en del av det första rumsblocket:
