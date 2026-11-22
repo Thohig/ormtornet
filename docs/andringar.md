@@ -6,6 +6,12 @@ eller leder tornet.
 
 ## 2026-11-22
 
+### Ljudet för spelledaren som går in själv
+
+- Spelledaren som går in med Gå in själv hoppar över introt, och då
+  startade ljudet aldrig. Nu startar det direkt, eller vid första tryck
+  eller tangent om webbläsaren kräver det.
+
 ### Inga namn på rum, fällor och varelser
 
 - Spelet säger inte vad rummen, fällorna och varelserna heter. Rummet

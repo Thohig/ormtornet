@@ -1660,6 +1660,17 @@ const Intro = (() => {
     $("listen").classList.add("gone");
   }
 
+  // wakeSoundOnTouch startar ljudet vid första tangent, tryck eller klick.
+  function wakeSoundOnTouch() {
+    Sound.start(); // går om webbläsaren redan tillåter ljud
+    const wake = () => {
+      Sound.start();
+      if (!Sound.running()) return;
+      ["pointerdown", "keydown"].forEach((e) => removeEventListener(e, wake, true));
+    };
+    ["pointerdown", "keydown"].forEach((e) => addEventListener(e, wake, true));
+  }
+
   function startStorm() {
     Rain.start();
     scheduleFlash();
@@ -1674,7 +1685,10 @@ const Intro = (() => {
       if (!reveal) $("intro").classList.add("invigd");
       toHostPage = info.vard && !wantsToPlay;
       // Spelledaren som kommer från värdsidan har redan sett introt.
+      // Ljudet startar då vid första tryck eller klick, eftersom
+      // webbläsaren bara släpper fram ljud efter något man själv gör.
       if (info.vard && wantsToPlay) {
+        wakeSoundOnTouch();
         finish();
         return;
       }
