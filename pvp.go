@@ -72,19 +72,33 @@ func (g *Game) botFoe(p *Player) *Player {
 	return nil
 }
 
-// pickFoe väljer motståndare: den spelaren pekade ut om den står här,
-// annars den första i rummet.
+// pickFoe väljer motståndare. Spelarna väljer inte själva: tornet tar den
+// som anföll vandraren förra rundan, annars den som kom först in i tornet.
+// Skatten avgör inte, eftersom den är hemlig. Datorspelarna kan peka ut
+// någon (wanted), som de alltid har gjort.
 func (g *Game) pickFoe(p *Player, wanted int) *Player {
 	foes := g.foesHere(p)
-	for _, o := range foes {
-		if o.ID == wanted {
-			return o
+	if p.bot != nil {
+		for _, o := range foes {
+			if o.ID == wanted {
+				return o
+			}
 		}
 	}
-	if len(foes) > 0 {
-		return foes[0]
+	if p.attackedRound >= g.round-1 {
+		for _, o := range foes {
+			if o.ID == p.attackedBy {
+				return o
+			}
+		}
 	}
-	return nil
+	var best *Player
+	for _, o := range foes {
+		if best == nil || o.ID < best.ID {
+			best = o
+		}
+	}
+	return best
 }
 
 // resolveFights avgör alla strider mellan vandrare innan någon går eller tar
@@ -105,6 +119,7 @@ func (g *Game) resolveFights(active []*Player) {
 		}
 		fought = true
 		done[p] = true
+		foe.attackedBy, foe.attackedRound = p.ID, g.round
 		if isCombatAction(foe.Action) && foe.target == p.ID && !done[foe] {
 			done[foe] = true
 			g.exchange(p, foe)

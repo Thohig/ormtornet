@@ -6,6 +6,15 @@ eller leder tornet.
 
 ## 2026-11-22
 
+### Tornet väljer motståndare, och Z för kartan
+
+- Står flera vandrare i rummet väljer tornet vem du slåss mot: den som
+  anföll dig förra rundan, annars den som kom först in i tornet. Panelen
+  Nu säger vem. Tab och knappen Byt är borta. Skatten avgör inte, eftersom
+  den är hemlig.
+- Z går runt mellan kartans nivåer: Nära, Mellan, Långt och Allt. + − och
+  M är borta; knapparna på kartan och scrollhjulet finns kvar.
+
 ### Knapparna följer läget
 
 - På en pekskärm syns bara de knappar som går att använda just nu: Sök

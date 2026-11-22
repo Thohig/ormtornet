@@ -291,7 +291,7 @@ fram.
 | A          | anfall (i strid)                  |
 | P          | parera (i strid)                  |
 | U eller E  | undanmanöver (i strid; E för evade på engelska) |
-| Tab        | byt mål när flera vandrare står i rummet |
+| Z          | byt zoom på kartan: Nära, Mellan, Långt, Allt |
 | Enter      | redo / spela igen                 |
 | V          | viska till tornet (från nivå 2)   |
 
@@ -357,10 +357,10 @@ Kartan följer rummet du står i: det står i mitten, med ljusare golv och
 en tunn ram i din färg. Vid tornets kanter går rutan bara lite utanför
 tornet, så att portarna syns och ett rum i hörnet inte hamnar under
 knapparna. Hur nära kartan går väljer du själv: Nära
-(3 × 3 rum), Mellan (5 × 5), Långt (9 × 9) eller Allt du känner till. Byt
-med + och −, med scrollhjulet, med två fingrar på en pekskärm eller med
-knapparna nere till höger på kartan. M, eller ett klick på nivåns namn,
-växlar mellan din nivå och Allt. En smal skärm börjar på Nära och en
+(3 × 3 rum), Mellan (5 × 5), Långt (9 × 9) eller Allt du känner till. Z
+går runt mellan dem. Det går också med scrollhjulet, med två fingrar på en
+pekskärm eller med knapparna nere till höger på kartan, och ett klick på
+nivåns namn växlar mellan din nivå och Allt. En smal skärm börjar på Nära och en
 större på Mellan, och sidan kommer ihåg ditt val på den enheten. Ligger
 en port eller kammaren du känner till, eller en vandrare du ser, utanför
 rutan pekar en liten pil vid kanten åt det hållet, med samma tecken som
@@ -447,8 +447,9 @@ spelet händer. Klasserna går inte att stänga av.
 ### Strid mellan vandrare
 
 Står två vandrare i samma rum utan någon varelse kan de slåss med samma
-sten-sax-påse som mot varelserna (A, P, U eller E, och Tab för att välja motståndare
-när flera står där). Den som inte försvarar sig blir träffad om den andra
+sten-sax-påse som mot varelserna (A, P, U eller E). Står flera där väljer
+tornet motståndaren: den som anföll dig förra rundan, annars den som kom
+först in i tornet. Panelen Nu säger vem. Den som inte försvarar sig blir träffad om den andra
 anfaller, även om den går ut ur rummet. Varje träff kostar 1 liv och river
 åt sig en tredjedel av motståndarens guld (minst 1). Den som dödar tar allt.
 Hur mycket någon bär syns inte, men man får en vink när man möter dem.

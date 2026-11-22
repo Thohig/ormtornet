@@ -28,7 +28,7 @@ const MapView = (() => {
   const ALL = LEVELS.length - 1;
   const ZOOM_KEY = "ormtornet.zoom";
   let level = loadLevel();
-  let before = level === ALL ? 1 : level; // nivån som M går tillbaka till
+  let before = level === ALL ? 1 : level; // nivån som knappen för allt går tillbaka till
   let onZoom = null;
   let towerSize = 0;
   // target är rutan kartan ska visa, i rum: x, y, bredd och höjd. Kartan
@@ -60,6 +60,12 @@ const MapView = (() => {
   // zoom går närmare (d < 0) eller längre ut (d > 0) ett steg.
   function zoom(d) {
     setLevel(level + d);
+  }
+
+  // cycle går runt mellan nivåerna: Nära, Mellan, Långt, Allt och Nära igen
+  // (tangenten Z).
+  function cycle() {
+    setLevel((level + 1) % LEVELS.length);
   }
 
   // toggleWhole växlar mellan den valda nivån och allt man känner till.
@@ -203,5 +209,5 @@ const MapView = (() => {
     if (iso) iso.vakna();
   }
 
-  return { setup, draw, resize, ping, wake, zoom, toggleWhole, setZoomListener, PLAYER_COLORS };
+  return { setup, draw, resize, ping, wake, zoom, cycle, toggleWhole, setZoomListener, PLAYER_COLORS };
 })();

@@ -248,8 +248,11 @@ type Player struct {
 	exitAsked int  // rundan då porten frågade om vandraren ville ut tomhänt, 0 om den inte har frågat
 	aiPlayed  bool // AI:n har styrt vandraren någon gång under vandringen
 
-	target int    // vandraren som ett stridsval den här rundan riktas mot
-	met    string // vilka andra vandrare som stod i rummet förra gången, så att det bara sägs en gång
+	target int // vandraren som ett stridsval den här rundan riktas mot
+	// attackedBy är vandraren som senast gick mot den här i strid, och
+	// attackedRound rundan det hände, så att tornet kan välja motståndare.
+	attackedBy, attackedRound int
+	met                       string // vilka andra vandrare som stod i rummet förra gången, så att det bara sägs en gång
 
 	HP      int
 	Potions int
@@ -647,24 +650,26 @@ type stateMsg struct {
 	Sleep      int           `json:"sleep"` // -1 utanför kammaren
 	Monsters   []monsterView `json:"monsters"`
 	PvP        string        `json:"pvp"` // om det går att strida mot andra vandrare här
-	Paused     bool          `json:"paused,omitempty"`
-	SleepText  string        `json:"sleepText,omitempty"`
-	WakeCards  *int          `json:"vaknaKort,omitempty"` // vakna-korten kvar i leken, bara för ormtjusaren
-	Class      *classView    `json:"klass,omitempty"`
-	Items      []itemView    `json:"foremal,omitempty"`
-	MaxItems   int           `json:"maxForemal,omitempty"` // så många föremål man kan bära
-	Compass    string        `json:"kompass,omitempty"`
-	Heart      string        `json:"hjartslag,omitempty"`
-	Initiated  bool          `json:"invigd,omitempty"`
-	CanWhisper bool          `json:"kanViska,omitempty"`
-	NameParts  []string      `json:"namndelar,omitempty"` // delarna av ormens namn, tomma där vandraren inte vet
-	Offer      []*classView  `json:"erbjudande,omitempty"`
-	Players    []playerView  `json:"players"`
-	Rooms      []roomView    `json:"rooms"`
-	Results    []resultView  `json:"results,omitempty"`
-	Journey    *journeyView  `json:"vandring,omitempty"` // den egna vandringen, för den som har dött och för alla i slutet
-	Chronicle  []chronLine   `json:"kronika,omitempty"`  // hela krönikan, när vandringen är slut
-	Epilogue   []chronLine   `json:"epilog,omitempty"`   // epilogen, när vandringen är slut
+	// Motstandare är vandraren tornet väljer om du slåss här (pickFoe).
+	Motstandare string       `json:"motstandare,omitempty"`
+	Paused      bool         `json:"paused,omitempty"`
+	SleepText   string       `json:"sleepText,omitempty"`
+	WakeCards   *int         `json:"vaknaKort,omitempty"` // vakna-korten kvar i leken, bara för ormtjusaren
+	Class       *classView   `json:"klass,omitempty"`
+	Items       []itemView   `json:"foremal,omitempty"`
+	MaxItems    int          `json:"maxForemal,omitempty"` // så många föremål man kan bära
+	Compass     string       `json:"kompass,omitempty"`
+	Heart       string       `json:"hjartslag,omitempty"`
+	Initiated   bool         `json:"invigd,omitempty"`
+	CanWhisper  bool         `json:"kanViska,omitempty"`
+	NameParts   []string     `json:"namndelar,omitempty"` // delarna av ormens namn, tomma där vandraren inte vet
+	Offer       []*classView `json:"erbjudande,omitempty"`
+	Players     []playerView `json:"players"`
+	Rooms       []roomView   `json:"rooms"`
+	Results     []resultView `json:"results,omitempty"`
+	Journey     *journeyView `json:"vandring,omitempty"` // den egna vandringen, för den som har dött och för alla i slutet
+	Chronicle   []chronLine  `json:"kronika,omitempty"`  // hela krönikan, när vandringen är slut
+	Epilogue    []chronLine  `json:"epilog,omitempty"`   // epilogen, när vandringen är slut
 }
 
 type logMsg struct {
@@ -834,6 +839,11 @@ func (g *Game) stateFor(me *Player) stateMsg {
 	st.Monsters = g.monsterViews(me, blind)
 	if g.phase == phasePlay {
 		st.PvP = g.pvpStatus(me)
+		if st.PvP == pvpYes && g.monsterAt(me.X, me.Y) == nil {
+			if f := g.pickFoe(me, 0); f != nil {
+				st.Motstandare = f.Name
+			}
+		}
 	}
 	if g.phase == phaseEnd {
 		st.Results = g.results()
@@ -1382,8 +1392,8 @@ func (g *Game) actPlayer(p *Player, a string, monsterID int) {
 	switch a {
 	case actAttack, actParry, actDodge:
 		if g.monsterAt(p.X, p.Y) == nil {
-			// Ingen varelse: kanske en annan vandrare. Ett negativt id pekar
-			// ut vandraren man vill slåss mot.
+			// Ingen varelse: kanske en annan vandrare. Tornet väljer vem;
+			// en datorspelare kan peka ut någon med ett negativt id.
 			switch g.pvpStatus(p) {
 			case pvpYes:
 				p.target = g.pickFoe(p, -monsterID).ID

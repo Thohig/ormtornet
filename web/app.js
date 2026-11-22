@@ -435,8 +435,8 @@ function actionWord(a) {
 // padModes säger vilka lägen som gäller just nu, för knapparna och
 // styrningen bakom ?: fri utanför strid, strid när en varelse eller en
 // vandrare man kan slåss mot står i rummet, redo i lobbyn och slutet, viska
-// när det går att viska, byt när flera vandrare står i rummet och annat
-// när man inte kan göra något drag (död, ute eller i källaren).
+// när det går att viska och annat när man inte kan göra något drag (död,
+// ute eller i källaren).
 function padModes(me) {
   const modes = new Set();
   if (!state || !me) return modes;
@@ -452,7 +452,6 @@ function padModes(me) {
   const monster = (state.monsters || []).some((m) => m.x === me.x && m.y === me.y);
   const foes = state.pvp === "ja" ? foesHere() : [];
   modes.add(monster || foes.length ? "strid" : "fri");
-  if (!monster && foes.length > 1) modes.add("byt");
   if (state.kanViska) modes.add("viska");
   return modes;
 }
@@ -465,8 +464,7 @@ function renderPad(me) {
   });
 }
 
-// Strid mot andra vandrare: Tab väljer vem när flera står i rummet.
-let selectedFoe = 0;
+// Strid mot andra vandrare: tornet väljer vem (motstandare i läget).
 function foesHere() {
   const me = myPlayer();
   if (!me || me.status !== "inne") return [];
@@ -475,14 +473,7 @@ function foesHere() {
 function currentFoe() {
   const foes = foesHere();
   if (!foes.length) return null;
-  return foes.find((p) => p.id === selectedFoe) || foes[0];
-}
-function cycleFoe() {
-  const foes = foesHere();
-  if (!foes.length) return;
-  const i = foes.findIndex((p) => p.id === (currentFoe() || {}).id);
-  selectedFoe = foes[(i + 1) % foes.length].id;
-  renderSide();
+  return foes.find((p) => p.name === state.motstandare) || foes[0];
 }
 
 // Mätare med fast bredd i kod, ett tecken per liv.
@@ -913,8 +904,7 @@ function renderNow(me) {
       const names = others.map((p) => p.name).join(" " + t("nu_och") + " ");
       const f = currentFoe();
       if (state.pvp === "ja") {
-        if (others.length > 1) line(t("nu_strid_byt", { namn: f.name, tangent: keyName("Tab") }), "foe");
-        else line(t("nu_strid", { namn: f.name }), "foe");
+        line(t("nu_strid", { namn: f.name }), "foe");
         if (!touch) line(t("nu_strid_tangenter"), "dimline");
       } else {
         line(t("nu_har_star", { namn: names }), "dimline");
@@ -1232,7 +1222,7 @@ function firstHelp() {
 
 // Namnet på en tangent så som spelaren ser den: tangenten på en dator,
 // knappen på en pekskärm.
-const TOUCH_NAMES = { Tab: "knapp_byt", Enter: "knapp_redo" };
+const TOUCH_NAMES = { Enter: "knapp_redo" };
 function keyName(k) {
   return touch && TOUCH_NAMES[k] ? t(TOUCH_NAMES[k]) : k;
 }
@@ -1723,8 +1713,8 @@ function padArrows() {
 }
 
 // Zoomen: knapparna i kartans hörn, scrollhjulet och två fingrar väljer hur
-// nära kartan går. + och − på tangentbordet, och M för allt man känner till,
-// går genom pressKey.
+// nära kartan går. Z på tangentbordet går runt mellan nivåerna genom
+// pressKey.
 let zoomKey = ""; // nyckeln till zoomnivåns namn
 MapView.setZoomListener((name, n) => {
   zoomKey = name;
@@ -1841,16 +1831,8 @@ function pressKey(key) {
     return true;
   }
   if (state && state.phase === "spel") {
-    if (key === "+" || key === "=") {
-      MapView.zoom(-1);
-      return true;
-    }
-    if (key === "-") {
-      MapView.zoom(1);
-      return true;
-    }
-    if (key === "m" || key === "M") {
-      MapView.toggleWhole();
+    if (key === "z" || key === "Z") {
+      MapView.cycle();
       return true;
     }
   }
@@ -1870,21 +1852,10 @@ function pressKey(key) {
     send({ t: "ready" });
     return true;
   }
-  if (key === "Tab" && foesHere().length) {
-    cycleFoe();
-    return true;
-  }
   const a = KEYS[key];
   if (!a) return false;
   if (!state || state.phase !== "spel") return true;
-  const me = myPlayer();
-  const monsterHere = me && (state.monsters || []).some((m) => m.x === me.x && m.y === me.y);
-  const foe = currentFoe();
-  if (["anfall", "parera", "undan"].includes(a) && !monsterHere && foe) {
-    send({ t: "act", a, m: -foe.id }); // negativt id: en annan vandrare
-  } else {
-    send({ t: "act", a });
-  }
+  send({ t: "act", a }); // mot en annan vandrare väljer tornet vem
   return true;
 }
 

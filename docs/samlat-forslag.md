@@ -1,6 +1,8 @@
 # Samlat förslag: stycken i krönikan och färre kommandon
 
-Förslag 2026-11-22. Inget är byggt eller bestämt. Det här samlar
+Förslag 2026-11-22. Byggt samma dag, steg för steg. Tornet väljer
+motståndare efter den som anföll, annars den som kom först in i tornet,
+eftersom skatten är hemlig. Det här samlar
 [kronikans-stycken.md](kronikans-stycken.md) och
 [farre-kommandon.md](farre-kommandon.md), med ett svar på varje öppen
 fråga och en ordning att bygga i. Detaljerna står i de två dokumenten.

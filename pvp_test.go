@@ -176,3 +176,38 @@ func TestPvPStatsLine(t *testing.T) {
 		t.Fatalf("Bos rad har strider fast Bo inte slog: %q", g.statsLine(bo))
 	}
 }
+
+// Tornet väljer motståndare: den som anföll en förra rundan, annars den som
+// kom först in i tornet. En människa kan inte peka ut någon själv, och den
+// som bär mest guld väljs inte för det, eftersom skatten är hemlig.
+func TestTowerPicksTheFoe(t *testing.T) {
+	g := testGame(t)
+	a, b, c := testClient(), testClient(), testClient()
+	g.Join(a, "Alva")
+	g.Join(b, "Bo")
+	g.Join(c, "Cia")
+	g.Ready(a)
+	g.Ready(b)
+	g.Ready(c)
+	if g.phase != phasePlay {
+		t.Fatal("vandringen startade inte")
+	}
+	g.cfg.PvP = pvpOn
+	alva, bo, cia := a.player, b.player, c.player
+	for _, p := range []*Player{alva, bo, cia} {
+		putInRoom(g, p, 4, 1)
+	}
+	cia.Treasure = 99
+
+	if f := g.pickFoe(bo, -cia.ID); f != alva {
+		t.Fatalf("Bo fick %s, ville ha Alva (först in i tornet)", f.Name)
+	}
+	bo.attackedBy, bo.attackedRound = cia.ID, g.round
+	if f := g.pickFoe(bo, 0); f != cia {
+		t.Fatalf("Bo fick %s, ville ha Cia som anföll", f.Name)
+	}
+	bo.attackedRound = g.round - 2
+	if f := g.pickFoe(bo, 0); f != alva {
+		t.Fatalf("Bo fick %s, ville ha Alva när anfallet var länge sedan", f.Name)
+	}
+}
