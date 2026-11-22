@@ -275,6 +275,7 @@ type Player struct {
 	// Det som skadade vandraren och varelsen hen fällde under rundan, för
 	// Din vandring (summary.go). Töms före varje runda.
 	roundHurtKind, roundHurtWhat, roundKill string
+	roundCards                              []gameCard // spelkorten för rundan (spelkort.go)
 }
 
 // present är sant för en spelare som deltar just nu: en människa med öppen

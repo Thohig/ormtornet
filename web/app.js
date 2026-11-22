@@ -434,9 +434,6 @@ function handle(msg) {
       MapView.wake();
       showWakeCard(msg);
       break;
-    case "ormkort":
-      showSerpentCard(msg);
-      break;
     case "ping":
       MapView.ping(msg.x, msg.y, msg.slot);
       break;
@@ -462,8 +459,11 @@ async function changeLanguage(lang, againIntro) {
   Log.relabel();
   if (zoomKey) $("zoomName").textContent = t(zoomKey);
   toggleLog(document.body.classList.contains("loggenoppen"));
-  const head = document.querySelector("#roundcard .cardhead");
-  if (head) head.textContent = t("rundkort_rubrik", { runda: head.dataset.round });
+  const round = $("spelkort").dataset.round;
+  if (round) {
+    const head = document.querySelector("#spelkort .ok-runda, #spelkort .ok-runda-namn");
+    if (head) head.textContent = t("rundkort_rubrik", { runda: round });
+  }
   if (state) {
     renderSide();
     renderTop();
@@ -1000,37 +1000,67 @@ function renderNow(me) {
   $("nowBlock").hidden = box.childElementCount === 0 && $("whisper").hidden;
 }
 
-// Rundans sammanfattning: ett kort över kartan med vad som hände dig, det
-// farliga först. Kortet försvinner när du väljer
-// nästa drag, efter en stund, eller vid ett klick.
-const CARD_MS = 7000;
+// Spelkortet (docs/spelkort.md): rundans viktigaste kort vänds upp till
+// höger på kartan med bild, rubrik och text. Under texten står rundans
+// rader (liv, guld, det som ändrade dig) och resten av rundans kort som
+// minikort. En runda utan eget kort får Runda N som rubrik och facklan som
+// bild. Kortet glider undan när du väljer nästa drag, efter en stund eller
+// vid ett klick. Står ett stort kort mitt på kartan väntar spelkortet tills
+// det har gått undan.
+const CARD_MS = 8000;
 let cardTimer = null;
 let cardAction = "";
+let cardWaiting = null;
 function showRoundCard(msg) {
   const lines = msg.lines || [];
-  if (!lines.length) return;
-  const card = $("roundcard");
-  card.innerHTML = "";
-  const h = document.createElement("div");
-  h.className = "cardhead";
-  h.dataset.round = msg.round;
-  h.textContent = t("rundkort_rubrik", { runda: msg.round });
-  card.appendChild(h);
-  lines.forEach((l) => {
-    const d = document.createElement("div");
-    d.textContent = l.text;
-    if (l.ormkort) d.prepend(miniCard(l.ormkort));
-    if (l.c) d.className = l.c;
-    card.appendChild(d);
-  });
-  card.hidden = false;
-  card.classList.remove("leaving");
+  const cards = msg.kort || [];
+  if (!lines.length && !cards.length) return;
+  if (!$("vakenkort").hidden) {
+    cardWaiting = msg;
+    return;
+  }
+  const el = $("spelkort");
+  const main = cards[0];
+  const round = t("rundkort_rubrik", { runda: msg.round });
+  const front = buildCard(el, main ? main : { bild: "fackla", rubrik: round });
+  el.dataset.round = msg.round;
+  if (main) {
+    const r = document.createElement("div");
+    r.className = "ok-runda";
+    r.textContent = round;
+    front.prepend(r);
+  } else {
+    front.querySelector(".ok-namn").classList.add("ok-runda-namn");
+  }
+  if (lines.length) {
+    const rows = document.createElement("div");
+    rows.className = "ok-rader";
+    lines.forEach((l) => {
+      const d = document.createElement("div");
+      d.textContent = l.text;
+      if (l.ormkort) d.prepend(miniCard(l.ormkort));
+      if (l.c) d.className = l.c;
+      rows.appendChild(d);
+    });
+    front.appendChild(rows);
+  }
+  if (cards.length > 1) {
+    const more = document.createElement("div");
+    more.className = "ok-fler";
+    cards.slice(1).forEach((c) => {
+      const m = Kort.mini(c.bild);
+      m.title = c.rubrik;
+      more.appendChild(m);
+    });
+    more.setAttribute("aria-label", cards.slice(1).map((c) => c.rubrik).join(", "));
+    front.appendChild(more);
+  }
   cardAction = "";
   clearTimeout(cardTimer);
   cardTimer = setTimeout(hideRoundCard, CARD_MS);
 }
 function hideRoundCard() {
-  const card = $("roundcard");
+  const card = $("spelkort");
   if (card.hidden || card.classList.contains("leaving")) return;
   clearTimeout(cardTimer);
   card.classList.add("leaving");
@@ -1041,80 +1071,20 @@ function hideRoundCard() {
 // checkRoundCard döljer kortet när ett nytt drag är valt eller vandringen
 // är slut.
 function checkRoundCard() {
-  if ($("roundcard").hidden) return;
+  if (state.phase !== "spel") cardWaiting = null;
+  if ($("spelkort").hidden) return;
   if (state.phase !== "spel") {
-    $("roundcard").hidden = true;
+    $("spelkort").hidden = true;
     return;
   }
   if (state.action && state.action !== cardAction) hideRoundCard();
   cardAction = state.action || "";
 }
-$("roundcard").addEventListener("click", hideRoundCard);
+$("spelkort").addEventListener("click", hideRoundCard);
 
-// Ormkortet: kortet du drog när du tog en näve i skattkammaren. Det vänds
-// upp på kartan med en bild av ormen, kortets text och guldet, och glider
-// undan efter en stund eller vid ett klick. Bilderna ritas här som SVG.
-const SERPENT_MS = 6500;
-let serpentTimer = null;
-
-// serpentSpiral ger slingorna som en bana: en spiral från mitten och ut,
-// med huvudet i änden.
-function serpentSpiral(cx, cy, turns, r0, grow) {
-  const pts = [];
-  for (let a = 0; a <= turns * Math.PI * 2; a += 0.15) {
-    const r = r0 + grow * a;
-    pts.push([cx + Math.cos(a) * r, cy + Math.sin(a) * r * 0.62]);
-  }
-  return pts;
-}
-
-// serpentArt ritar bilden på kortet: ormen som sover hoprullad, som rör
-// sig med ett öga på glänt, eller två gula ögon i mörkret.
-function serpentArt(id, wakes) {
-  const kind = wakes || id === "vaknar" ? "vaknar" : id === "ror_sig" ? "ror_sig" : "sover";
-  const f = (n) => n.toFixed(1);
-  const pts = kind === "vaknar"
-    ? serpentSpiral(50, 50, 2.6, 3, 2.5) // slingorna i mörkret, innanför rutan
-    : serpentSpiral(50, 60, kind === "ror_sig" ? 2.3 : 2.6, 4, 4.6);
-  const d = "M" + pts.map(([x, y]) => f(x) + " " + f(y)).join("L");
-  const [hx, hy] = pts[pts.length - 1];
-  const [px, py] = pts[pts.length - 4];
-  const ang = (Math.atan2(hy - py, hx - px) * 180) / Math.PI;
-  const head = `<g transform="translate(${f(hx)} ${f(hy)}) rotate(${f(ang)})">
-<ellipse rx="8" ry="5.5" fill="#4f5e2f" stroke="#1d2410" stroke-width="1.2"/>
-${kind === "sover"
-    ? `<path d="M0 -2.2q2.5 1.6 5 0" fill="none" stroke="#1d2410" stroke-width="1.1"/>`
-    : `<ellipse cx="2.4" cy="-1.6" rx="1.8" ry="1.1" fill="#e8c040"/><path d="M0.6 -2.6q1.8 -0.8 3.6 0" fill="none" stroke="#1d2410" stroke-width="1"/>`}
-</g>`;
-  if (kind === "vaknar") {
-    return `<svg viewBox="0 0 100 100" aria-hidden="true">
-<rect x="4" y="4" width="92" height="92" rx="6" fill="#1a0b08"/>
-<path d="${d}" fill="none" stroke="#3a1410" stroke-width="11" stroke-linecap="round" opacity="0.8"/>
-${[34, 66].map((x) => `<ellipse cx="${x}" cy="46" rx="11" ry="7" fill="#ffd23a"/><ellipse cx="${x}" cy="46" rx="2" ry="6.5" fill="#1a0b08"/>`).join("")}
-<circle cx="50" cy="46" r="40" fill="none" stroke="#a8402c" stroke-width="1.5" opacity="0.6"/>
-</svg>`;
-  }
-  const moves = kind === "ror_sig"
-    ? `<path d="M10 34q6 -6 12 0M78 30q6 -6 12 0M84 80q4 -5 8 0" fill="none" stroke="#6b4a24" stroke-width="1.6" stroke-linecap="round"/>`
-    : `<text x="78" y="28" font-size="9" fill="#6b4a24" font-family="serif">z</text><text x="84" y="20" font-size="7" fill="#6b4a24" font-family="serif">z</text>`;
-  return `<svg viewBox="0 0 100 100" aria-hidden="true">
-<ellipse cx="50" cy="62" rx="40" ry="22" fill="#c9a24f" opacity="0.35"/>
-${[[38, 70], [56, 74], [66, 64], [30, 60]].map(([x, y]) => `<ellipse cx="${x}" cy="${y}" rx="3.2" ry="1.6" fill="#d9a63a" stroke="#7a5a1a" stroke-width="0.6"/>`).join("")}
-<path d="${d}" fill="none" stroke="#1d2410" stroke-width="11.5" stroke-linecap="round"/>
-<path d="${d}" fill="none" stroke="#5b6b34" stroke-width="9" stroke-linecap="round"/>
-<path d="${d}" fill="none" stroke="#8a9a52" stroke-width="2" stroke-linecap="round" stroke-dasharray="1.5 3"/>
-${head}
-${moves}
-</svg>`;
-}
-
-// miniCard är ett litet ormkort bredvid en rad i rundans kort och krönikan:
-// sover (en sovande slinga), rör sig (en våg) eller vaknar (gula ögon).
-function miniCard(id) {
-  const s = document.createElement("span");
-  s.className = "minikort " + (id === "vaknar" ? "vaknar" : id === "ror_sig" ? "ror_sig" : "sover");
-  s.setAttribute("aria-hidden", "true");
-  return s;
+// miniCard är ett litet kort bredvid en rad i Din vandring och krönikan.
+function miniCard(motiv) {
+  return Kort.mini(motiv);
 }
 
 // cardRow är en rad små ormkort, med namnen när musen är över dem.
@@ -1130,26 +1100,30 @@ function cardRow(list) {
   return r;
 }
 
-// buildSerpentCard bygger ett kort med baksidan och framsidan, så att det
-// kan vändas.
-function buildSerpentCard(el, msg, extra) {
+// buildCard bygger ett kort med baksidan och framsidan, så att det kan
+// vändas: rubriken, bilden och texten, och extra längst ner. Den svarar
+// med framsidan, så att den som anropar kan lägga till mer.
+function buildCard(el, c, extra) {
   el.innerHTML = "";
   const inner = document.createElement("div");
   inner.className = "ok-inner";
   const back = document.createElement("div");
   back.className = "ok-back";
   const front = document.createElement("div");
-  front.className = "ok-front" + (msg.vaknar || msg.kort === "vaknar" ? " vaknar" : "");
+  front.className = "ok-front" + (c.bild === "vaknar" ? " vaknar" : "");
   const name = document.createElement("div");
   name.className = "ok-namn";
-  name.textContent = msg.namn || "";
+  name.textContent = c.rubrik || "";
   const art = document.createElement("div");
   art.className = "ok-bild";
-  art.innerHTML = serpentArt(msg.kort, msg.vaknar);
-  const text = document.createElement("div");
-  text.className = "ok-text";
-  text.textContent = msg.text || "";
-  front.append(name, art, text);
+  art.innerHTML = Kort.bild(c.bild, { svag: c.svag });
+  front.append(name, art);
+  if (c.text) {
+    const text = document.createElement("div");
+    text.className = "ok-text";
+    text.textContent = c.text;
+    front.appendChild(text);
+  }
   if (extra) front.appendChild(extra);
   inner.append(back, front);
   el.appendChild(inner);
@@ -1157,27 +1131,8 @@ function buildSerpentCard(el, msg, extra) {
   el.classList.remove("leaving", "vand");
   void el.offsetWidth; // börja med baksidan upp
   el.classList.add("vand");
+  return front;
 }
-
-function showSerpentCard(msg) {
-  const el = $("ormkort");
-  const gold = document.createElement("div");
-  gold.className = "ok-guld";
-  gold.textContent = t("ormkort_guld", { antal: msg.guld });
-  buildSerpentCard(el, msg, gold);
-  clearTimeout(serpentTimer);
-  serpentTimer = setTimeout(hideSerpentCard, SERPENT_MS);
-}
-function hideSerpentCard() {
-  const el = $("ormkort");
-  if (el.hidden || el.classList.contains("leaving")) return;
-  clearTimeout(serpentTimer);
-  el.classList.add("leaving");
-  setTimeout(() => {
-    if (el.classList.contains("leaving")) el.hidden = true;
-  }, 400);
-}
-$("ormkort").addEventListener("click", hideSerpentCard);
 
 // showWakeCard visar för alla att ormen har vaknat: kortet "Ormen vaknar"
 // stort mitt på kartan, med det du märkte och, om du stod i kammaren, vad
@@ -1186,7 +1141,7 @@ const WAKE_CARD_MS = 5000;
 let wakeTimer = null;
 function showWakeCard(msg) {
   if (!msg.namn) return;
-  hideSerpentCard();
+  hideRoundCard();
   const el = $("vakenkort");
   let extra = null;
   if (msg.inne) {
@@ -1194,7 +1149,7 @@ function showWakeCard(msg) {
     extra.className = "ok-forlust";
     extra.textContent = t("vakenkort_forlust", { guld: msg.forlust || 0, liv: msg.skada || 0 });
   }
-  buildSerpentCard(el, { kort: "vaknar", vaknar: true, namn: msg.namn, text: msg.text }, extra);
+  buildCard(el, { bild: "vaknar", rubrik: msg.namn, text: msg.text }, extra);
   clearTimeout(wakeTimer);
   wakeTimer = setTimeout(hideWakeCard, WAKE_CARD_MS);
 }
@@ -1204,7 +1159,13 @@ function hideWakeCard() {
   clearTimeout(wakeTimer);
   el.classList.add("leaving");
   setTimeout(() => {
-    if (el.classList.contains("leaving")) el.hidden = true;
+    if (!el.classList.contains("leaving")) return;
+    el.hidden = true;
+    if (cardWaiting) {
+      const msg = cardWaiting;
+      cardWaiting = null;
+      showRoundCard(msg);
+    }
   }, 400);
 }
 $("vakenkort").addEventListener("click", hideWakeCard);

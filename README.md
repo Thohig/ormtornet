@@ -304,13 +304,16 @@ den som dör och för alla i slutet (se slutet nedan och Strider):
      rad i taget. Har man rullat ner för att läsa ligger texten kvar där,
      och "↑ nya rader" tar en tillbaka upp. Ligger loggen efter
      skrivs rader från rundor som redan är förbi ikapp fort. Efter varje
-     runda kommer ett kort nere på kartan med det som ändrade dig, det
-     farliga först: liv och guld du vann eller förlorade, ormkortet,
-     föremål du hittade, gift, mörker, vem du slogs mot och om ormen
-     vaknade. Vart du gick står i loggen, och solen i översta raden, så
-     kortet säger det bara när ett steg inte gick eller i mörkret. Har
-     inget ändrat dig kommer inget kort. Kortet försvinner när du väljer nästa drag, efter sju
-     sekunder eller vid ett klick. Texterna
+     runda vänds ett **spelkort** upp till höger på kartan med det som
+     ändrade dig (se Spelkorten): en bild och en rubrik för rundans
+     viktigaste händelse, dess text och under den rundans rader, det
+     farliga först: liv och guld du vann eller förlorade, föremål du
+     hittade, gift, mörker, vem du slogs mot och om ormen vaknade. Resten
+     av rundans kort står som små kort längst ner. Vart du gick står i
+     loggen, och solen i översta raden, så kortet säger det bara när ett
+     steg inte gick eller i mörkret. Har inget ändrat dig kommer inget
+     kort. Kortet glider undan när du väljer nästa drag, efter åtta
+     sekunder eller vid ett klick. Rundans rader
      står i `data/texter.json` under `sam_`,
    - **slutet**: en egen skärm med resultaten, epilogen, krönikan över hela
      vandringen och den egna vandringen runda för runda. Visa kartan går
@@ -551,6 +554,19 @@ står de som "(dator)".
 
 Namn, personligheter och betänketid ligger i `data/ai.json`.
 
+### Spelkorten
+
+Det som händer dig under en runda blir ett kort ur samma lek som
+ormkorten (`spelkort.go`, bilderna i `web/kort.js`). Efter rundan vänds
+det viktigaste upp till höger på kartan med en bild, en rubrik och
+händelsens text, och under den står rundans rader. Händer flera saker
+samma runda står resten som små kort längst ner på kortet. Ordningen,
+det viktigaste först, står under `spelkort` i `data/texter.json`. En
+runda utan eget kort har Runda N som rubrik och en fackla som bild.
+
+Korten visar bara det som hände dig, och säger inte mer än loggen. Fällor
+och varelser har sin korta beskrivning som rubrik, aldrig namnet.
+
 ### Skattkammaren och ormen
 
 I kammaren mitt i tornet kan du ta skatt (S) en gång per runda. Varje gång
@@ -569,10 +585,9 @@ sover och hör andetagen bli tätare.
 
 Korten syns så här:
 
-- **Ormkortet.** Kortet du drar vänds upp till höger på kartan: namnet
-  (Ormen sover, Ormen rör sig), en bild av ormen, kortets text och
-  guldet. Bara du ser det. Det glider undan efter en stund eller vid ett
-  klick.
+- **Ormkortet.** Kortet du drar är rundans spelkort till höger på
+  kartan: namnet (Ormen sover, Ormen rör sig), en bild av ormen, kortets
+  text och guldet. Bara du ser det.
 - **Sömnmätaren.** I kammaren visar panelen Nu en mätare i tre steg för
   hur djupt ormen sover, som andas långsamt när den sover djupt och fort
   när den är nära att vakna. Ormtjusaren ser också vakna-korten som är
@@ -585,8 +600,8 @@ Korten syns så här:
   de dragna korten växer, i samma tre steg som sömnmätaren. Andra ser
   högar som inte ändras. När ormen vaknar flyger de dragna korten tillbaka
   in i leken.
-- **Krönikan.** Rundans kort och Din vandring visar kortet du drog med ett
-  litet kort bredvid, och i krönikan i slutet har var och en sina kort på
+- **Krönikan.** Din vandring visar kortet du drog med ett litet kort
+  bredvid, och i krönikan i slutet har var och en sina kort på
   raden med siffror.
 
 Kortens namn står under `namn` i `data/ormen.json`.
@@ -924,7 +939,8 @@ Beskrivningarna för rummen ligger under nivåerna `"1"` till `"4"`.
 - `chronicle.go` krönikan över vandringen
 - `here.go` rumsblocket i loggen: rummets beskrivning och vad som finns där
 - `sounds.go` spår och ljud från grannrummen
-- `summary.go` rundans sammanfattning, kortet efter varje runda
+- `summary.go` rundans sammanfattning, raderna på spelkortet
+- `spelkort.go` spelkorten: rundans kort i ordning (bilderna i `web/kort.js`)
 - `difficulty.go` förvalen för svårighet
 - `classes.go` klasserna och valet av klass
 - `items.go` föremålen

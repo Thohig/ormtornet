@@ -181,6 +181,7 @@ type Data struct {
 	KlassvalSekunder int                 `json:"klassval_sekunder"` // hur länge klassvalet får ta
 	Foremal          ItemData            `json:"foremal"`
 	Vandrarnamn      NameData            `json:"vandrarnamn"` // namnen tornet ger vandrarna (namn.json)
+	Spelkort         CardData            `json:"spelkort"`    // spelkortens ordning (texter.json)
 	// Spelarsidan och Vardsidan är sidornas egna texter, på nyckel. Sidorna
 	// hämtar dem från /texter/ (se web/texter.js).
 	Spelarsidan map[string]string `json:"spelarsidan"`

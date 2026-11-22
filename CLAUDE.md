@@ -60,12 +60,14 @@ Så här skiljer vi på sakerna när användaren ger instruktioner:
   - **tecknen**: statusen uppe till höger på kartan (klass, liv, skatt,
     drycker, tillstånd) och föremålen under dem, med förklaringar,
   - **frågetecknet**: styrningen, som ligger bakom ? på kartan,
-  - **kortet**: rundans sammanfattning nere på kartan (`summary.go`,
-    `sam_` i `data/texter.json`),
-  - **ormkortet**: ormkortet du drog i skattkammaren, som vänds upp till
-    höger på kartan, och **uppvaknandet**, kortet Ormen vaknar som alla ser
-    stort mitt på kartan (`showSerpentCard` och `showWakeCard` i
-    `web/app.js`),
+  - **spelkortet**: rundans kort, som vänds upp till höger på kartan
+    med bild, rubrik och text för rundans viktigaste händelse, rundans
+    rader under (`summary.go`, `sam_` i `data/texter.json`) och resten
+    av rundans kort som **minikort** (`spelkort.go`, `showRoundCard` i
+    `web/app.js`, bilderna i `web/kort.js`, ordningen under `spelkort` i
+    `data/texter.json`). **Ormkortet** är spelkortet när du tar en näve,
+  - **uppvaknandet**: kortet Ormen vaknar som alla ser stort mitt på
+    kartan (`showWakeCard` i `web/app.js`),
   - **sömnmätaren**: hur djupt ormen sover, i panelen Nu i skattkammaren,
   - **panelen Nu**: draget, striden och vad som väntar, som en rad under
     kartan (`#nowBlock`). Den syns bara när den har något att säga. Panelen Vandrare togs bort 2026-11-22,
@@ -212,5 +214,8 @@ Skriv dit när ett steg är klart.
   på värdsidan, spelskärmen över hela bredden med loggen på kartan och
   lådan med hela loggen, och märket som öppnar värdsidan i en ny flik.
   Allt är byggt.
+- [docs/spelkort.md](docs/spelkort.md): spelkort för alla situationer,
+  med spelkortet som ersätter rundans kort och ormkortet. Avsnittet
+  Läget säger vilka delar som är byggda.
 - [docs/slumpade-namn.md](docs/slumpade-namn.md): tornet ger namnen och
   namnrutan är borta. Steg 1–2 är byggda; Nytt namn i lobbyn valdes bort.

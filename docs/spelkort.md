@@ -1,7 +1,7 @@
 # Samlat förslag: spelkort för alla situationer
 
-Status: förslag 2026-11-22. Inget är byggt. Fråga vilka delar som ska
-byggas innan något börjar.
+Status: förslag 2026-11-22, byggt samma dag i delarna nedan. Avsnittet
+Läget säger vad som är byggt.
 
 ## Målet
 
@@ -137,3 +137,9 @@ uppdateras i varje steg.
 - Kort för det man ser hos andra vandrare.
 - Ljud när ett kort vänds.
 - Kort i lobbyn och klassvalet; klassvalets kort finns redan.
+
+## Läget
+
+| Del | Byggd |
+| --- | --- |
+| A | ja |

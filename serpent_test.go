@@ -24,24 +24,30 @@ func messagesOf[M any](c *Client, typ string) []M {
 	}
 }
 
-// Den som tar en näve får kortet den drog, med namn, text och guld. De
-// andra får inget kort.
+// Den som tar en näve får ormkortet som spelkort i rundans sammanfattning,
+// med namn och text. De andra får inget kort.
 func TestTakeShowsCard(t *testing.T) {
 	g, a, b := startTwo(t)
 	pa := a.player
 	pa.X, pa.Y = g.center(), g.center()
 	g.reveal(pa.X, pa.Y)
 	g.deck = []string{"sover"}
-	messagesOf[cardMsg](a, "ormkort")
-	messagesOf[cardMsg](b, "ormkort")
-	before := pa.Treasure
+	summaries(a)
+	summaries(b)
+	snap := g.snapshot()
 	g.take(pa)
-	got := messagesOf[cardMsg](a, "ormkort")
-	if len(got) != 1 || got[0].ID != "sover" || got[0].Namn != "Ormen sover" || got[0].Guld != pa.Treasure-before || got[0].Text == "" {
-		t.Fatalf("kortet: %+v", got)
+	g.summarize(snap, g.wakes)
+	got := summaries(a)
+	if len(got) != 1 || len(got[0].Kort) != 1 {
+		t.Fatalf("rundan: %+v", got)
 	}
-	if n := len(messagesOf[cardMsg](b, "ormkort")); n != 0 {
-		t.Fatalf("Bo fick %d kort", n)
+	if c := got[0].Kort[0]; c.Slag != "ormen" || c.Bild != "sover" || c.Rubrik != "Ormen sover" || c.Text == "" {
+		t.Fatalf("kortet: %+v", c)
+	}
+	for _, s := range summaries(b) {
+		if len(s.Kort) != 0 {
+			t.Fatalf("Bo fick kort: %+v", s.Kort)
+		}
 	}
 }
 
@@ -66,7 +72,7 @@ func TestWakeShowsCardToAll(t *testing.T) {
 	}
 }
 
-// Kortet vandraren drog står i rundans sammanfattning, och krönikan har
+// Kortet vandraren drog är spelkortet i rundans sammanfattning, och krönikan har
 // alla kort vandraren drog på raden med siffror.
 func TestDrawnCardsInSummaryAndChronicle(t *testing.T) {
 	g, a, _ := startTwo(t)
@@ -80,8 +86,8 @@ func TestDrawnCardsInSummaryAndChronicle(t *testing.T) {
 	g.summarize(snap, g.wakes)
 	found := false
 	for _, s := range summaries(a) {
-		for _, l := range s.Lines {
-			if l.Ormkort != "" {
+		for _, c := range s.Kort {
+			if c.Slag == "ormen" {
 				found = true
 			}
 		}

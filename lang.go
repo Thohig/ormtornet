@@ -154,7 +154,7 @@ func overlay(o, t any, path string) (any, error) {
 // isCode svarar om fältet på path ser ut som text men är ett val som koden
 // läser, till exempel förvalet bland svårigheterna.
 func isCode(path string) bool {
-	if path == ".svarighet.standard" {
+	if path == ".svarighet.standard" || path == ".spelkort.ordning" {
 		return true
 	}
 	return strings.HasPrefix(path, ".ai.personligheter[") && strings.HasSuffix(path, "].klasser")
@@ -227,7 +227,7 @@ func (r *translationReport) compare(o, t any, path string) {
 	case map[string]any:
 		tm, _ := t.(map[string]any)
 		for k, e := range ov {
-			if strings.HasPrefix(k, "_") || k == "id" || k == "tecken" || k == "modell" || isCode(path+"."+k) || path+"."+k == ".ai.namn" || path+"."+k == ".vandrarnamn.fornamn" || path+"."+k == ".avslojande.namn" {
+			if strings.HasPrefix(k, "_") || k == "id" || k == "tecken" || k == "modell" || k == "bild" || isCode(path+"."+k) || path+"."+k == ".ai.namn" || path+"."+k == ".vandrarnamn.fornamn" || path+"."+k == ".avslojande.namn" {
 				continue // inget att översätta: id, tecken och modeller på kartan, val i koden, AI-namnen och ormens namn
 			}
 			var te any

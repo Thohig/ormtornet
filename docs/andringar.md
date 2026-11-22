@@ -6,6 +6,18 @@ eller leder tornet.
 
 ## 2026-11-22
 
+### Spelkortet
+
+- Rundans kort och ormkortet är ett kort: **spelkortet**, som vänds upp
+  till höger på kartan efter varje runda där något ändrade dig. Det har
+  en bild och en rubrik för rundans viktigaste händelse, händelsens text
+  och rundans rader under. Resten av rundans kort står som små kort
+  längst ner. Utan eget kort står Runda N överst med en fackla.
+- Tar du en näve är ormkortet rundans spelkort. Raden "Du bär nu på …
+  guld" står inte längre i loggen; den står på kortet.
+- Kommer uppvaknandet samma runda väntar spelkortet tills det stora
+  kortet har gått undan.
+
 ### Fröet, hela bredden och loggen på kartan
 
 - Värdsidan har ett nytt avsnitt, **Fröet**, efter Inför nästa vandring.

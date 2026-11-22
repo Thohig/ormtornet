@@ -717,40 +717,6 @@ body.touch #helpBtn { display: none; }
   cursor: pointer;
 }
 #helpbox[hidden] { display: none; }
-/* Rundans sammanfattning, nere på kartan. */
-#roundcard {
-  position: absolute;
-  left: 50%;
-  bottom: 14px;
-  transform: translateX(-50%);
-  z-index: 2;
-  min-width: 260px;
-  max-width: min(420px, 92%);
-  padding: 8px 14px 10px;
-  border: 1px solid var(--chalkline);
-  border-radius: 8px;
-  background: rgba(14, 15, 18, 0.93);
-  box-shadow: 0 0 18px rgba(0, 0, 0, 0.7);
-  font-size: 13px;
-  line-height: 1.45;
-  cursor: pointer;
-  animation: cardin 0.3s ease-out;
-  transition: opacity 0.4s;
-}
-#roundcard[hidden] { display: none; }
-#roundcard.leaving { opacity: 0; }
-@keyframes cardin { from { opacity: 0; transform: translate(-50%, 8px); } }
-#roundcard .cardhead {
-  margin-bottom: 4px;
-  color: var(--chalk);
-  font-size: 11px;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-}
-#roundcard .varn { color: var(--warn); }
-#roundcard .varn::before { content: "! "; }
-#roundcard .gold { color: #ffd36b; }
-#roundcard .dim { color: var(--fg); }
 #helpbox h2 {
   font-size: 11px;
   font-weight: normal;
@@ -1221,22 +1187,44 @@ body.touch .card .num { display: none; }
     inset 0 0 80px 14px rgba(8, 5, 2, 0.85);
 }
 .isoram[hidden] { display: none; }
-/* Ormkortet: kortet du drog i skattkammaren (showSerpentCard i app.js).
-   Det vänds upp från baksidan, som ett kort ur en lek. */
-/* Korten har samma framsida och baksida (.okort); ormkortet står till
-   höger på kartan och uppvaknandet stort i mitten. */
-#ormkort {
+/* Korten har samma framsida och baksida (.okort) och vänds upp från
+   baksidan, som ur en lek (buildCard i app.js, bilderna i kort.js).
+   Spelkortet står till höger på kartan och uppvaknandet stort i mitten. */
+/* Spelkortet: rundans kort (showRoundCard). Framsidan bestämmer höjden. */
+#spelkort {
   position: absolute;
   right: 18px;
   top: 50%;
   z-index: 3;
-  width: 172px;
-  height: 252px;
-  margin-top: -126px;
-  perspective: 700px;
+  width: 190px;
+  transform: translateY(-50%);
+  perspective: 800px;
   cursor: pointer;
   transition: opacity 0.4s;
 }
+#spelkort .ok-inner { height: auto; }
+#spelkort .ok-front { position: relative; }
+#spelkort .ok-runda {
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #7a6040;
+  text-align: center;
+  margin-bottom: 2px;
+}
+#spelkort .ok-text { flex: 0 0 auto; }
+#spelkort .ok-rader {
+  margin-top: 6px;
+  padding-top: 4px;
+  border-top: 1px solid #b89a68;
+  font-size: 10.5px;
+  line-height: 1.35;
+}
+#spelkort .ok-rader .varn { color: #8a1a08; }
+#spelkort .ok-rader .gold { color: #7a5a10; font-weight: bold; }
+#spelkort .ok-rader .dim { color: #5a4a36; }
+#spelkort .ok-fler { display: flex; flex-wrap: wrap; gap: 3px; margin-top: 5px; justify-content: flex-end; }
+#spelkort .ok-fler .minikort { width: 16px; height: 22px; margin: 0; }
 .okort[hidden] { display: none; }
 .okort.leaving { opacity: 0; }
 .okort .ok-inner {
@@ -1289,7 +1277,6 @@ body.touch .card .num { display: none; }
 .okort .ok-bild { flex: 0 0 auto; margin: 4px auto 2px; width: 120px; height: 104px; }
 .okort .ok-bild svg { width: 100%; height: 100%; display: block; }
 .okort .ok-text { font-size: 10.5px; line-height: 1.35; flex: 1 1 auto; overflow: hidden; }
-.okort .ok-guld { text-align: right; font-size: 12px; color: #7a5a10; font-weight: bold; }
 /* Uppvaknandet: ett större kort mitt på kartan, som skakar till när det
    har vänts, med mörker runt omkring. */
 #vakenkort {
@@ -1318,7 +1305,7 @@ body.touch .card .num { display: none; }
 #vakenkort .ok-text { font-size: 11.5px; }
 #vakenkort .ok-forlust { text-align: right; font-size: 12px; color: #8a1a08; font-weight: bold; }
 @media (max-width: 700px) {
-  #ormkort { transform: scale(0.8); transform-origin: right center; }
+  #spelkort { transform: translateY(-50%) scale(0.8); transform-origin: right center; }
   #vakenkort { transform: scale(0.85); }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -1385,5 +1372,7 @@ body.touch .card .num { display: none; }
   background: radial-gradient(circle at 32% 45%, #ffd23a 0 1.6px, transparent 2px), radial-gradient(circle at 68% 45%, #ffd23a 0 1.6px, transparent 2px), #2a120c;
   border-color: #a8402c;
 }
+.minikort.bild { width: 12px; height: 16px; background: #e9dcc0; overflow: hidden; }
+.minikort.bild svg { display: block; width: 100%; height: 100%; }
 .kortrad { display: inline-flex; flex-wrap: wrap; gap: 2px; margin-left: 8px; vertical-align: middle; }
 .kortrad .minikort { margin-right: 0; }

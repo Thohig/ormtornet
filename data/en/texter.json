@@ -452,9 +452,6 @@
     "ingen_skatt_har": [
       "There is no treasure here to take."
     ],
-    "skatt_totalt": [
-      "You now carry {skatt} gold."
-    ],
     "ut_med_skatt": [
       "You step out into the evening light with {skatt} gold. Behind you the gate sighs.",
       "You are out. {skatt} gold weighs in your bag, and the air is cold and clean."

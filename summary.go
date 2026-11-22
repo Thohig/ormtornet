@@ -35,6 +35,7 @@ type summaryMsg struct {
 	T     string        `json:"t"`
 	Round int           `json:"round"`
 	Lines []summaryLine `json:"lines"`
+	Kort  []gameCard    `json:"kort,omitempty"` // spelkorten, det viktigaste först (spelkort.go)
 }
 
 // snapshot sparar allas läge innan rundan avgörs.
@@ -55,6 +56,7 @@ func (g *Game) snapshot() map[*Player]before {
 			foe: g.foeName(p), tower: p.takenOver,
 		}
 		p.roundHurtKind, p.roundHurtWhat, p.roundKill = "", "", ""
+		p.roundCards = nil
 	}
 	return m
 }
@@ -96,8 +98,10 @@ func (g *Game) summarize(snap map[*Player]before, wakesBefore int) {
 				card = append(card, l)
 			}
 		}
-		if p.client != nil && len(card) > 0 {
-			g.send(p.client, summaryMsg{T: "runda", Round: g.round, Lines: card})
+		cards := g.roundCardsOf(p)
+		p.roundCards = nil
+		if p.client != nil && (len(card) > 0 || len(cards) > 0) {
+			g.send(p.client, summaryMsg{T: "runda", Round: g.round, Lines: card, Kort: cards})
 		}
 	}
 }
@@ -171,6 +175,8 @@ func (g *Game) summaryFor(p *Player, b before, woke bool) []summaryLine {
 			class := ""
 			if c.Vaknar {
 				class = "varn"
+			} else {
+				l.journey = true // spelkortet visar det; Din vandring har raden
 			}
 			add(l, class)
 		}
