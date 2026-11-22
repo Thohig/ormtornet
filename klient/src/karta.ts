@@ -279,6 +279,14 @@ export class IsoKarta {
   private landar = new Map<string, { at: number; bricka: THREE.Group }>();
   private brickor = new THREE.Group();
   private brickGeo: THREE.BoxGeometry | null = null;
+  // Ormleken bredvid guldhögen: leken med baksidan upp och de dragna korten
+  // med framsidan upp (byggLeken).
+  private leken = new THREE.Group();
+  private lekNyckel = "";
+  private lekNiva = -1;
+  private lekDragna: THREE.Mesh[] = [];
+  private lekTopp = new THREE.Vector3();
+  private blandar = -Infinity;
   private state: Tillstand | null = null;
   private storleken = 0;
   private aktiv = false;
@@ -330,7 +338,7 @@ export class IsoKarta {
     this.sol.castShadow = true;
     this.sol.shadow.mapSize.set(2048, 2048);
     this.sol.shadow.bias = -0.0006;
-    this.scene.add(this.sol, this.sol.target, this.torn, this.rorligt, this.ekon, this.figurer, this.brickor);
+    this.scene.add(this.sol, this.sol.target, this.torn, this.rorligt, this.ekon, this.figurer, this.brickor, this.leken);
 
     this.kompass = document.createElement("div");
     this.kompass.className = "isokompass";
@@ -492,6 +500,8 @@ export class IsoKarta {
 
   vakna(): void {
     this.vaknade = performance.now();
+    // De dragna korten flyger tillbaka in i leken, som blandas om.
+    if (this.lekDragna.length && this.lekNiva >= 0) this.blandar = this.vaknade;
   }
 
   private niva(): number {
@@ -854,6 +864,69 @@ float puls() {
     this.torn.add(hog);
   }
 
+  // ---- Ormleken ----
+
+  // byggLeken lägger ormleken bredvid guldhögen. Den som står i kammaren
+  // (niva 0–2, hur djupt ormen sover) ser leken krympa och de dragna korten
+  // växa, i tre steg som sömnmätaren, så att högarna inte avslöjar mer än
+  // den. Andra ser en hög som inte ändras.
+  private byggLeken(r: Rum | undefined, niva: number): void {
+    const nyckel = r ? r.x + "," + r.y + "," + niva : "";
+    if (nyckel === this.lekNyckel || this.blandar > -Infinity) return;
+    this.lekNyckel = nyckel;
+    this.lekNiva = niva;
+    this.leken.clear();
+    this.lekDragna = [];
+    if (!r) return;
+    const cx = r.x * S + S / 2, cz = r.y * S + S / 2;
+    const lek = niva < 0 ? 8 : [14, 8, 3][Math.min(2, niva)];
+    const dragna = niva < 0 ? 3 : [2, 7, 12][Math.min(2, niva)];
+    const kort = this.kortGeo || (this.kortGeo = new THREE.BoxGeometry(0.66, 0.028, 0.94));
+    const kant = this.enkelt("kortkant", "#d8c8a0");
+    const bak = this.material.get("kortbak") || new THREE.MeshLambertMaterial({ map: K.kortbaksida() });
+    const fram = this.material.get("kortfram") || new THREE.MeshLambertMaterial({ map: K.kortframsida() });
+    this.material.set("kortbak", bak);
+    this.material.set("kortfram", fram);
+    const lagg = (n: number, x: number, z: number, topp: THREE.Material, dragen: boolean) => {
+      let s = (x * 13 + z * 7) | 0;
+      const rnd = () => ((s = (s * 16807 + 11) % 2147483647) / 2147483647);
+      for (let i = 0; i < n; i++) {
+        // Lådans sidor: +x, -x, +y (ovansidan), -y, +z, -z.
+        const m = new THREE.Mesh(kort, [kant, kant, i === n - 1 || dragen ? topp : bak, kant, kant, kant]);
+        m.position.set(x + (rnd() - 0.5) * 0.05, 0.015 + i * 0.03, z + (rnd() - 0.5) * 0.05);
+        m.rotation.y = Math.PI / 4 + (rnd() - 0.5) * (dragen ? 0.5 : 0.08);
+        m.castShadow = i === n - 1;
+        this.leken.add(m);
+        if (dragen) this.lekDragna.push(m);
+      }
+      return new THREE.Vector3(x, 0.015 + n * 0.03, z);
+    };
+    this.lekTopp = lagg(lek, cx - 0.7, cz + 1.35, bak, false);
+    lagg(dragna, cx + 0.75, cz + 1.35, fram, true);
+  }
+  private kortGeo: THREE.BoxGeometry | null = null;
+
+  // blanda låter de dragna korten flyga i en båge tillbaka in i leken när
+  // ormen har vaknat. Sedan byggs högarna om efter den nya leken.
+  private blanda(t: number): void {
+    if (this.blandar === -Infinity) return;
+    const tid = t - this.blandar;
+    const n = this.lekDragna.length;
+    this.lekDragna.forEach((m, i) => {
+      if (!m.userData.fran) m.userData.fran = m.position.clone();
+      const f = Math.max(0, Math.min(1, (tid - (n - 1 - i) * 60) / 450));
+      const fran = m.userData.fran as THREE.Vector3;
+      m.position.lerpVectors(fran, this.lekTopp, f);
+      m.position.y += Math.sin(f * Math.PI) * 0.8;
+      m.rotation.z = f * Math.PI;
+    });
+    if (tid > (n - 1) * 60 + 500) {
+      this.blandar = -Infinity;
+      this.lekNyckel = "";
+      if (this.state) this.byggRorligt(this.state);
+    }
+  }
+
   // ---- Teckenförklaringen ----
 
   private typer = new Map<string, { typ: string; farg?: string; storlek?: number }>(); // varelsernas tecken → id och modell
@@ -940,6 +1013,8 @@ float puls() {
   private byggRorligt(state: Tillstand): void {
     this.rorligt.clear();
     const g = this.rorligt;
+    const kammare = state.rooms.find((r) => r.k === "kammare" && !this.landar.has(r.x + "," + r.y));
+    this.byggLeken(kammare, state.sleep ?? -1);
     const landar = (r: Rum) => this.landar.has(r.x + "," + r.y);
     const kanda = new Set(state.rooms.map((r) => r.x + "," + r.y));
 
@@ -1265,6 +1340,7 @@ float puls() {
 
     this.rorFigurer(t, dt);
     this.landa(t);
+    this.blanda(t);
 
     // Facklorna fladdrar, och rummet kartan följer ligger i facklans sken.
     const fladder = 0.82 + 0.1 * Math.sin(t / 97) + 0.08 * Math.sin(t / 41 + 1.3);

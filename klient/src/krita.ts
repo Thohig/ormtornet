@@ -326,3 +326,57 @@ export function sken(): THREE.Texture {
     return textur(c);
   });
 }
+
+// kortbaksida är ormkortens baksida: mörkt läder med en ring av guld,
+// samma som på ormkortet på spelarsidan.
+export function kortbaksida(): THREE.Texture {
+  return spara("kortbaksida", () => {
+    const [c, x] = duk(64, 96);
+    x.fillStyle = "#3a2414";
+    x.fillRect(0, 0, 64, 96);
+    x.strokeStyle = "#2a180c";
+    x.lineWidth = 3;
+    for (let i = -96; i < 96; i += 8) {
+      x.beginPath();
+      x.moveTo(i, 0);
+      x.lineTo(i + 96, 96);
+      x.stroke();
+    }
+    x.strokeStyle = "#c9a24f";
+    x.lineWidth = 2;
+    x.strokeRect(5, 5, 54, 86);
+    x.beginPath();
+    x.arc(32, 48, 16, 0, Math.PI * 2);
+    x.stroke();
+    x.beginPath();
+    x.arc(32, 48, 9, 0, Math.PI * 2);
+    x.stroke();
+    return textur(c);
+  });
+}
+
+// kortframsida är ett draget ormkort: pergament med ormen hoprullad.
+export function kortframsida(): THREE.Texture {
+  return spara("kortframsida", () => {
+    const [c, x] = duk(64, 96);
+    x.fillStyle = "#e9dcc0";
+    x.fillRect(0, 0, 64, 96);
+    x.strokeStyle = "#3a2414";
+    x.lineWidth = 3;
+    x.strokeRect(2, 2, 60, 92);
+    x.strokeStyle = "#4f5e2f";
+    x.lineWidth = 5;
+    x.lineCap = "round";
+    x.beginPath();
+    for (let a = 0; a <= Math.PI * 4.6; a += 0.15) {
+      const r = 2 + a * 1.4;
+      const px = 32 + Math.cos(a) * r, py = 52 + Math.sin(a) * r * 0.7;
+      if (a) x.lineTo(px, py);
+      else x.moveTo(px, py);
+    }
+    x.stroke();
+    x.fillStyle = "#3a2414";
+    x.fillRect(12, 14, 40, 2);
+    return textur(c);
+  });
+}

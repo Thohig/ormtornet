@@ -57,6 +57,7 @@ export interface Tillstand {
   players: Vandrare[];
   monsters?: Varelse[];
   lastSeen?: Record<string, { x: number; y: number; slot: number }>;
+  sleep?: number; // hur djupt ormen sover, 0–2, bara för den som står i kammaren (annars -1)
 }
 
 // Utsnittet som kartan visar, i rum: x och y är hörnet uppe till vänster
