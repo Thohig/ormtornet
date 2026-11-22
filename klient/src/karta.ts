@@ -1394,6 +1394,7 @@ float puls() {
   private ritaTangenter(): void {
     const r = this.tangentRum;
     const v = new THREE.Vector3();
+    const pos: [number, number][] = [];
     this.tangent.forEach((el, d) => {
       if (!r || !r.oppen[d]) {
         el.hidden = true;
@@ -1403,15 +1404,33 @@ float puls() {
       // Lite längre in i rummet än pilen, så att tangenten inte täcker dörren.
       const mx = r.x * S + S / 2, mz = r.y * S + S / 2;
       v.set(x + (mx - x) * 0.25, 0.1, z + (mz - z) * 0.25).project(this.cam);
+      const tx = ((v.x + 1) / 2) * this.bredd, ty = ((1 - v.y) / 2) * this.hojd;
+      pos.push([tx, ty]);
       el.hidden = false;
-      el.style.left = ((v.x + 1) / 2) * this.bredd + "px";
-      el.style.top = ((1 - v.y) / 2) * this.hojd + "px";
+      el.style.left = tx + "px";
+      el.style.top = ty + "px";
       const vald = r.vald === d;
       el.classList.toggle("vald", vald);
       el.style.color = vald ? r.farg : "";
       el.style.borderColor = vald ? r.farg : "";
     });
+    // Är rummet litet på skärmen krymper tangenterna, så att de inte hamnar
+    // över varandra (på telefonen, och när kartan är utzoomad).
+    let narmast = Infinity;
+    for (let a = 0; a < pos.length; a++) {
+      for (let b = a + 1; b < pos.length; b++) {
+        narmast = Math.min(narmast, Math.hypot(pos[a][0] - pos[b][0], pos[a][1] - pos[b][1]));
+      }
+    }
+    const synlig = this.tangent.find((el) => !el.hidden);
+    const storlek = synlig ? Math.max(synlig.offsetWidth, synlig.offsetHeight) + 4 : 0;
+    const skala = storlek && narmast < storlek ? Math.max(0.5, narmast / storlek) : 1;
+    const flytt = skala < 1 ? `translate(-50%, -50%) scale(${skala.toFixed(2)})` : "";
+    this.tangent.forEach((el) => {
+      if (el.style.transform !== flytt) el.style.transform = flytt;
+    });
   }
+
 
   // ritaKanten sätter en liten pil vid kanten för det som ligger utanför
   // bilden, åt det håll det ligger, med samma tecken som i

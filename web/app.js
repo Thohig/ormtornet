@@ -86,9 +86,18 @@ const Log = (() => {
     line.prepend(Kort.mini(c.bild, c));
   }
 
-  function push(text, cls) {
+  // Svaret på ett drag som inte blev av (svar, som en vägg) läggs i förra
+  // rundan när den står i bild, så att rummet man står i inte hamnar under
+  // "tidigare" innan rundan har hänt.
+  function push(text, cls, svar) {
     if (!text) return;
-    queue.push({ text, cls, key: keyNow() });
+    let key = keyNow();
+    if (svar) {
+      const top = box().firstElementChild;
+      const prev = queue.length ? queue[queue.length - 1].key : top && top.dataset.key;
+      if (prev === (state.round === 1 ? "start" : "r" + (state.round - 1))) key = prev;
+    }
+    queue.push({ text, cls, key });
     if (!busy) next();
   }
 
@@ -435,7 +444,7 @@ function handle(msg) {
       restoreTip();
       break;
     case "log":
-      Log.push(msg.text, msg.c);
+      Log.push(msg.text, msg.c, msg.svar);
       break;
     case "rum":
       Log.room(msg);
@@ -544,6 +553,8 @@ function renderPad(me) {
   const modes = padModes(me);
   document.querySelectorAll("#pad [data-lage], #help [data-lage]").forEach((el) => {
     el.hidden = !el.dataset.lage.split(" ").some((m) => modes.has(m));
+    // Drick bara med en dryck i väskan.
+    if (el.hasAttribute("data-dryck") && !(state.potions > 0)) el.hidden = true;
   });
 }
 
@@ -1166,6 +1177,13 @@ function showRoundCard(msg, now) {
     spel.hidden = true;
     spel.classList.remove("leaving");
     msg.ny = true;
+    // Små kort från äldre rundor som fortfarande väntar visas inte efter
+    // den nya rundans kort; de står kvar som minikort i loggen.
+    for (let i = cardQueue.length - 1; i >= 0; i--) {
+      const q = cardQueue[i];
+      const qMain = (q.kort || [])[0];
+      if (q.round < msg.round && !(qMain && qMain.stor)) cardQueue.splice(i, 1);
+    }
     cardQueue.unshift(msg);
   } else {
     cardQueue.push(msg);
