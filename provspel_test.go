@@ -139,3 +139,25 @@ func TestLeftOnEndScreenDroppedFromNextTower(t *testing.T) {
 		}
 	}
 }
+
+// Den som laddar om sidan mitt i vandringen får rummet hen står i igen.
+func TestReloadMidGameRetellsRoom(t *testing.T) {
+	g, a, _ := startTwo(t)
+	pa := a.player
+	g.Leave(a)
+	a2 := testClient()
+	g.Join(a2, "Alva")
+	if a2.player != pa {
+		t.Fatal("Alva fick inte tillbaka sin vandrare")
+	}
+	found := false
+	for len(a2.send) > 0 {
+		var m roomMsg
+		if json.Unmarshal(<-a2.send, &m) == nil && m.T == "rum" && m.Text != "" {
+			found = true
+		}
+	}
+	if !found {
+		t.Fatal("rummet skickades inte igen")
+	}
+}

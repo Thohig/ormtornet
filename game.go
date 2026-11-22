@@ -995,6 +995,7 @@ func (g *Game) Join(c *Client, rawName string) {
 			g.checkAwait()
 			g.broadcastState()
 			g.logTo(p, g.data.Text("tillbaka"), "syn")
+			g.retellRoom(p)
 			g.logOthers(p, g.data.Text("atervander", "namn", p.Name), "info")
 			return
 		}

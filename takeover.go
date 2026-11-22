@@ -105,6 +105,7 @@ func (g *Game) handBack(p *Player, c *Client) {
 	g.checkAwait()
 	g.broadcastState()
 	g.logTo(p, g.data.Text("tillbaka"), "syn")
+	g.retellRoom(p)
 	if len(g.data.AI.Tillbaka) > 0 {
 		g.logOthers(p, fill(pick(g.data.AI.Tillbaka), "namn", p.Name), "info")
 	}

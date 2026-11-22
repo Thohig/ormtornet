@@ -126,6 +126,18 @@ func (g *Game) tellRoom(p *Player) {
 	p.roundRoom = &msg
 }
 
+// retellRoom skickar rummet vandraren står i en gång till, när hen kommer
+// tillbaka mitt i vandringen efter att ha laddat om sidan: loggen börjar
+// om, och utan blocket vet hen inte var hen är.
+func (g *Game) retellRoom(p *Player) {
+	if g.phase != phasePlay || p.Status != statusIn || p.Cellar > 0 || p.Dark > 0 || !g.inBounds(p.X, p.Y) {
+		return
+	}
+	r := &g.rooms[p.Y][p.X]
+	msg := roomMsg{T: "rum", Text: g.describe(p, r, p.X, p.Y), Har: g.sayHere(g.hereParts(p))}
+	g.send(p.client, msg)
+}
+
 // atTheGate gör början av vandringen till en del av det första rumsblocket:
 // vid vilken port vandraren kliver in står först i beskrivningen, solen
 // hör till det man ser, och portarna där de andra går in är det man hör.
