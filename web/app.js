@@ -967,9 +967,22 @@ function renderHud(me) {
     }
     d.setAttribute("aria-label", tip);
     box.appendChild(d);
+    return d;
   };
   const c = state.klass;
-  if (c) icon(c.tecken || c.namn[0], "", t("tecken_klass", { namn: c.namn, beskrivning: c.beskrivning, styrka: c.styrka, svaghet: c.svaghet }), "klass");
+  if (c) {
+    // Klassen står som ett litet klasskort; ett klick visar kortet stort.
+    const tip = t("tecken_klass", { namn: c.namn, beskrivning: c.beskrivning, styrka: c.styrka, svaghet: c.svaghet });
+    const old = icon("", "", tip, "klass");
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = old.className;
+    b.dataset.tip = tip;
+    b.setAttribute("aria-label", tip);
+    b.appendChild(Kort.mini(c.bild));
+    b.addEventListener("click", () => showClassCard(c));
+    old.replaceWith(b);
+  }
   if (me.status === "dod") {
     icon("✕", "", t("tecken_dod"), "warn");
   } else {
@@ -1314,6 +1327,24 @@ function showWakeCard(msg) {
   bigTimer = setTimeout(hideBigCard, BIG_MS);
 }
 $("storkort").addEventListener("click", hideBigCard);
+
+// showClassCard visar det egna klasskortet stort mitt på kartan: bilden,
+// beskrivningen, styrkan och svagheten.
+const CLASS_CARD_MS = 12000;
+function showClassCard(c) {
+  hideTip();
+  const extra = document.createElement("div");
+  extra.className = "ok-rader";
+  [["good", t("klasskort_styrka", { styrka: c.styrka })], ["bad", t("klasskort_svaghet", { svaghet: c.svaghet })]].forEach(([cls, text]) => {
+    const d = document.createElement("div");
+    d.className = cls;
+    d.textContent = text;
+    extra.appendChild(d);
+  });
+  buildCard($("storkort"), { bild: c.bild, rubrik: c.namn, text: c.beskrivning }, extra);
+  clearTimeout(bigTimer);
+  bigTimer = setTimeout(hideBigCard, CLASS_CARD_MS);
+}
 
 // Förklaringen till ett tecken på kartan. Den läggs under tecknet, inom
 // kartans ruta.

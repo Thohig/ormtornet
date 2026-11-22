@@ -61,6 +61,9 @@ En riktig kväll behövs för att se:
   döden i Din vandring är bara sedda i tester och med påhittade
   meddelanden; solen, varelserna, namnets delar och vandringens sista
   kort är sedda med AI-spelare.
+- Klasskorten (2026-11-22): går det att läsa pergamentet på en telefon,
+  och tar vändningen i klassvalet för lång tid av de 30 sekunderna? Ett
+  kort som någon annan tar är bara sett med ett påhittat läge.
 - Vandringens största stunder (2026-11-22): väljs rätt stunder, och är
   fem lagom? Bara sedda med påhittade stunder; en kort vandring med AI
   gav inga.

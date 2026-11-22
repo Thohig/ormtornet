@@ -16,6 +16,9 @@ eller leder tornet.
 - Klassvalet börjar med korten på baksidan, och de vänds upp ett i taget.
   Ett kort som någon annan tar vänds tillbaka och visar baksidan med
   namnet på den som tog det.
+- Under vandringen står klassen uppe till höger som ett litet klasskort.
+  Ett klick visar klasskortet stort mitt på kartan, med bilden,
+  beskrivningen, styrkan och svagheten.
 
 ### Vandringens största stunder
 

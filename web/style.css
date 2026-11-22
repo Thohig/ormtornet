@@ -664,6 +664,11 @@ body.touch .isotangenter span {
 }
 .hudicon:hover, .hudicon:focus-visible { border-color: var(--chalkline); outline: none; }
 .hudicon .glyph { font-size: 15px; }
+/* Klassen som ett litet klasskort (showClassCard i app.js). */
+button.hudicon.klass { font: inherit; color: inherit; cursor: pointer; }
+.hudicon.klass .minikort { width: 14px; height: 19px; margin: 0; vertical-align: middle; }
+.okort .ok-rader .good { color: #2e4a1a; }
+.okort .ok-rader .bad { color: #8a2a18; }
 .hudicon.hp .glyph { color: #e07a6a; }
 .hudicon.gold { color: #ffd36b; }
 .hudicon.warn { color: var(--warn); }

@@ -128,8 +128,12 @@ Så här skiljer vi på sakerna när användaren ger instruktioner:
   rum på kartan snett ovanifrån (`ritaTangenter` i `klient/src/karta.ts`).
 - **väskan**: föremålen under tecknen, med en plats för varje föremål man
   kan bära (`tecken` i `data/foremal.json`).
-- **klassvalet**: skärmen efter lobbyn med ett spelkort för varje klass
-  och en tidsgräns (`klassval_sekunder` i `data/klasser.json`).
+- **klassvalet**: skärmen efter lobbyn med ett **klasskort** för varje
+  klass och en tidsgräns (`klassval_sekunder` i `data/klasser.json`).
+  Klasskorten är spelkort med bild och baksida, som vänds upp ett i taget
+  (`renderChoose` och `buildClassCard` i `web/app.js`). Under vandringen
+  står klassen bland tecknen som ett litet klasskort; ett klick visar det
+  stort (`showClassCard`).
 - **klasser**: det vandrarna väljer i klassvalet (`classes.go`,
   `data/klasser.json`), till exempel Kartritaren.
 - **föremål**: det vandrarna hittar och bär, högst tre (`items.go`,

@@ -604,6 +604,8 @@ och varelser har sin korta beskrivning som rubrik, aldrig namnet.
   gick ner, i den ordningen, högst två av samma slag. De står i den
   ordning de hände. Slagen och antalet står under `spelkort.stunder` i
   `data/texter.json`.
+- **Klasskortet**: klassen står uppe till höger på kartan som ett litet
+  klasskort. Ett klick visar det stort, med styrkan och svagheten.
 - **Minikorten**: en rad i loggen som hör till ett kort får ett litet
   kort framför sig, och varje runda i Din vandring har rundans kort som
   små kort bredvid rubriken.
