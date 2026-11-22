@@ -208,6 +208,18 @@ Sett 2026-11-22 men inte ändrat:
 - Pages lokalt: spelledarens Gå in själv fastnade en gång på introt när
   den lokala filservern tappade filer. Prova på riktiga Pages.
 
+Sett efter provspelet 2026-11-22, med förslag men inte ändrat:
+
+- **Mörkret ser ut som ett rum utan dörrar.** När lyktan är släckt ritar
+  kartan hela murar runt rummet, och man går rakt igenom dem. Förslag:
+  rita inga murar alls runt rummet i mörkret, så att kanterna ser okända
+  ut i stället för stängda. Ordet Mörker och ◐ står kvar.
+- **Timglaset märks knappt.** Solen står still en runda, men det är bara
+  en rad i loggen. Förslag: ett stort kort för alla inne, som solkortet,
+  till exempel "Solen står still".
+- **Kompassen kan peka mot en stängd port.** Den räknar inte med att
+  portarna sluter sig på nivå 4 (`compass` i `items.go`).
+
 Från förut:
 
 - De vaga `_dolt`-texterna och originalen finns båda kvar i `data/`. Sedan
@@ -262,6 +274,96 @@ Från [isometrisk.md](isometrisk.md):
   väggarna "irriterade", med fler fällor och varelser som rör sig.
 - **Kvällens krönika:** en sammanställning efter flera vandringar samma
   kväll: vem som vann flest gånger, flest invigda och flest döda.
+
+Spelmekaniker (förslag 2026-11-22):
+
+- **Märken på väggen:** var och en kan rita ett av tre märken i rummet:
+  fara, skatt eller vägen ut. Den som kommer in efteråt ser det i
+  rumsblocket och på kartan. Ett sätt att hjälpa, eller lura, varandra med
+  egen karta.
+- **Spakar och dörrar:** en spak i ett rum öppnar en stängd dörr i ett
+  annat, bara medan någon står vid spaken. Samarbete på avstånd; passar
+  med portarna som sluter sig på nivå 4.
+- **Smyga eller springa:** smyga ett rum utan att höras eller väcka något,
+  gå som i dag, eller springa två rum i ett drag som hörs i hela tornet,
+  väcker varelser och gör ormens sömn lättare.
+- **Altaret:** offra guld för ett liv, ett varsel eller en handsbredd sol.
+  Ju djupare in, desto bättre byte.
+- **Gå tillsammans:** vandrare i samma rum kan hålla ihop och flytta som
+  en grupp; fällans skada delas, de slåss sida vid sida, men gruppen hörs
+  mer.
+- **Bonus vid porten:** kommer alla levande ut får var och en en
+  guldbonus, men bara om ingen dör. Ett socialt dilemma utan strid.
+- (Den dödes väska byggdes 2026-11-22, se
+  [den-dodes-guld.md](den-dodes-guld.md).)
+
+Nya fällor (förslag 2026-11-22). Fällornas verkan styrs av id:t i
+`events.go`, så varje ny fälla behöver en rad kod, en kortbild och texter
+på båda språken:
+
+- **Den sura pölen** ("en pöl som fräser"): fräter bort ungefär en
+  femtedel av skatten men inget liv.
+- **Svalget** ("ett golv som lutar inåt"): du glider ett rum närmare
+  skattkammaren.
+- **Hjärtslaget** ("ett dovt dunkande"): ormen sover lättare, sömnmätaren
+  sjunker ett steg, och alla hör det.
+- **Tänderna** ("två rader spetsiga stenar"): −1 liv och fast 1 runda, en
+  mildare ormgrop för de första nivåerna.
+- **Den täta dimman** ("en vit dimma som suddar ut"): kartan glömmer de
+  två–tre senaste rummen.
+- **Rösterna** ("viskningar i väggarna"): ett falskt ljud från ett
+  grannrum, kanske bara från nivå 3.
+
+Nya varelser (förslag 2026-11-22). 1–4 går att lägga till med bara data,
+plus en form i `klient/src/modeller.ts` och en kortbild:
+
+1. **Fladdrarna** ("något litet och fjällvingat"): liv 1, skada 1, guld
+   5, vandrar ofta (0,6), mest undanmanöver.
+2. **Fjällhunden** ("något lågt som springer på fyra ben"): liv 3, skada
+   1, guld 15, vandrar ofta (0,5), anfaller nästan alltid.
+3. **Tungan** ("en kluven tunga ur väggen"): liv 3, skada 2, guld 20,
+   vandrar aldrig.
+4. **Ruvaren** ("något stort som ligger på ägg"): liv 4, skada 1, guld
+   50, vandrar aldrig, parerar mest.
+5. **Tjuvormen** ("en smal, svart orm med guld i munnen"): stjäl 10–20
+   guld per träff i stället för liv och flyr; dödar man den får man
+   guldet tillbaka. Kräver en ny regel i `monster.go`.
+
+Chanskort vid sökning (förslag 2026-11-22):
+
+- I stället för att slumpa utfallet efter vikter drar den som söker ett
+  kort ur en lek som hela tornet delar, som ormkorten, och kortet visas
+  som ett spelkort. Ett draget kort är borta, så den som söker först tar
+  det bästa. Mörkare kort blandas in på nivå 2 och 3. Leken ligger i
+  `data/` med vikt, nivå, verkan och texter.
+- Dagens utfall blir kort: skatt, dryck, hemlig gång, fälla och inget
+  (med fler texter).
+- Föremålen blir egna kort, lika många som deras vikt i `foremal.json`.
+  Varje föremål finns då bara så många gånger per torn; i dag kan samma
+  föremål hittas hur många gånger som helst.
+- Nya kort som hjälper: kartbiten (visar två–tre rum runt dig), gluggen
+  (solen backar en handsbredd, sällsynt), det lösa fjället (ormen sover
+  djupare), spåren (åt vilket håll närmaste vandrare gick), ristningen (en
+  del av ormens namn du saknar, från nivå 2, sällsynt) och varslet.
+- Nya kort som stjälper: den lösa stenen (ett vakna-kort i leken), boet
+  (en varelse kryper fram), falluckan (ner i källarvalven) och det kalla
+  guldet (40 guld, men ormen blir oroligare och alla hör det).
+- Kort som påverkar andra: röret i väggen (du hör ett rum långt bort, och
+  de där hör dig) och gömstället (lämna guld som bara du kan hämta; dör du
+  hittar nästa som söker det).
+- Klasserna behåller sina fördelar: tjuven drar om ett inget-kort,
+  Kartritaren får den hemliga gången om den finns kvar.
+- Frågor: gemensam lek eller en per vandrare? Ska man se hur många kort
+  som är kvar? Ska ristningen och gluggen vara med, när de rör
+  invigningen och solen? Är röret och gömstället värda nya regler?
+
+Andra föremål som föreslogs när kritan ersattes av benluren
+(2026-11-22):
+
+- **Slagrutan:** säger när du kommer in i ett osökt rum om det lönar sig
+  att söka (skatt eller föremål). Åtta rum. Går bäst ihop med
+  chanskorten, där utfallet bestäms i förväg.
+- **Ormtanden:** dina träffar mot varelser tar två liv, tre gånger.
 
 ### Tekniskt
 
