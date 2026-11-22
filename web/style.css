@@ -779,6 +779,18 @@ body.touch #helpBtn { display: none; }
 #log .roomblock.kvar { padding: 4px 9px 5px; }
 #log .roomblock.kvar .roomname { color: var(--fg); font-size: 12px; }
 #log .roomblock.kvar .roomhere { margin-top: 1px; }
+#log .roommore {
+  display: none;
+  margin-top: 2px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--chalk);
+  font: inherit;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+}
 #log .varn { color: var(--warn); }
 #log .rost { color: #e3b8f0; letter-spacing: 0.04em; text-shadow: 0 0 6px rgba(227, 184, 240, 0.35); }
 #log .cursor::after {
@@ -847,8 +859,10 @@ body.touch .keys { display: none; }
 #pad button[hidden] { display: none; }
 body.touch #side { overflow-y: auto; }
 
-/* Smal skärm, som en telefon på höjden: kartan överst, sedan läget och
-   loggen, och knapparna fast längst ner. Sidan rullar. */
+/* Smal skärm, som en telefon på höjden: en kolumn med översta raden fast
+   högst upp, kartan, raden Nu och loggen, och knapparna fast längst ner.
+   Sidan rullar, och loggen rullar med sidan. Den senaste rundan tar så
+   mycket plats att de äldre bara syns när man rullar ner. */
 @media (max-width: 700px) {
   html, body { overflow-x: hidden; overflow-y: auto; }
   #crt { height: auto; min-height: 100%; }
@@ -856,23 +870,42 @@ body.touch #side { overflow-y: auto; }
      var som helst räknas. */
   #start.active, #namescreen.active { min-height: 100vh; min-height: 100svh; }
   #game.active { display: block; height: auto; padding: 8px 12px; }
-  #top { flex-wrap: wrap; gap: 2px 12px; }
+  #top {
+    position: sticky;
+    top: 0;
+    z-index: 6;
+    flex-wrap: wrap;
+    gap: 2px 12px;
+    margin: -8px -12px 0;
+    padding: 8px 12px 6px;
+    background: var(--bg);
+    border-bottom: 1px solid var(--faint);
+  }
   #top .title { display: none; }
   #turn { min-width: 0; }
   #main { display: block; }
   #mapcol { display: block; }
   #nowBlock { margin-bottom: 8px; }
   #mapbox { width: 100%; aspect-ratio: 0.95; margin: 6px 0; }
-  #side {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0 16px;
+  #side { display: block; overflow: visible; }
+  #logwrap { margin-top: 4px; }
+  #log {
+    height: auto;
     overflow: visible;
+    padding-right: 0;
+    -webkit-mask-image: none;
+    mask-image: none;
   }
-  #side > * { grid-column: 1 / -1; }
-  #side h2 { margin: 0 0 4px; }
-  #logwrap { margin-top: 8px; grid-column: 1 / -1; }
-  #log { height: 14em; flex: 0 0 auto; }
+  #log .round:first-child { min-height: 60vh; min-height: 60svh; }
+  /* En lång rumsbeskrivning visar tre rader, och "mer" fäller ut resten. */
+  #log .roomblock:not(.open) .roomdesc {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  #log .roomblock.lang .roommore { display: inline-block; }
+  #log .roomblock.open .roommore { display: none; }
   #hud { max-width: 58%; }
   body.touch #game.active { padding-bottom: calc(170px + env(safe-area-inset-bottom)); }
   body.touch #pad {

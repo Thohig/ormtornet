@@ -6,6 +6,14 @@ eller leder tornet.
 
 ## 2026-11-22
 
+### Ny layout på telefon
+
+- Allt står i en kolumn: översta raden fast högst upp, kartan, raden Nu
+  och loggen, och knapparna fast längst ner.
+- Loggen rullar med sidan i stället för i en egen liten ruta. Den senaste
+  rundan tar så mycket plats att de äldre bara syns när du rullar ner.
+- En lång rumsbeskrivning visar tre rader, och "mer ↓" visar resten.
+
 ### Ny layout på dator
 
 - Panelen Nu är en smal rad under kartan: läget och striden till vänster,

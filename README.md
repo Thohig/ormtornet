@@ -307,8 +307,11 @@ Parera, Undan, Byt (som Tab), Viska och Redo (som Enter, och Nytt torn när
 vandringen är slut). Viska har en fast plats och syns när den går att
 använda, och Redo syns bara i lobbyn och i slutet, så att knapparna inte
 flyttar sig under vandringen. På kartan snett ovanifrån går det också att
-trycka på pilarna vid dörrarna. På en smal skärm ligger knapparna fast
-längst ner och sidan rullar. Introt fyller skärmen, så ett tryck var som
+trycka på pilarna vid dörrarna. På en smal skärm står allt i en kolumn:
+översta raden fast högst upp, kartan, raden Nu och loggen, och knapparna
+fast längst ner. Sidan rullar, och loggen rullar med den. Den senaste
+rundan tar så mycket plats att de äldre bara syns när man rullar ner, och
+en lång rumsbeskrivning visar tre rader med "mer ↓" för resten. Introt fyller skärmen, så ett tryck var som
 helst räknas. I klassvalet står korten två och två och nedräkningen fast
 överst. Står telefonen på ljudlöst hörs inget ljud.
 

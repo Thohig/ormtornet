@@ -64,11 +64,19 @@ const Log = (() => {
     name.className = "roomname";
     name.textContent = msg.namn;
     block.appendChild(name);
+    let desc = null;
     if (msg.text) {
-      const d = document.createElement("div");
-      d.className = "roomdesc";
-      d.textContent = msg.text;
-      block.appendChild(d);
+      desc = document.createElement("div");
+      desc.className = "roomdesc";
+      desc.textContent = msg.text;
+      block.appendChild(desc);
+      // På en telefon visar beskrivningen tre rader; "mer" visar resten.
+      const more = document.createElement("button");
+      more.type = "button";
+      more.className = "roommore";
+      more.textContent = t("logg_mer");
+      more.addEventListener("click", () => block.classList.add("open"));
+      block.appendChild(more);
     }
     if (msg.har) {
       const h = document.createElement("div");
@@ -82,6 +90,7 @@ const Log = (() => {
       if (old) old.replaceWith(block);
       else list.prepend(block);
     });
+    if (desc && desc.scrollHeight > desc.clientHeight + 1) block.classList.add("lang");
     follow();
   }
 
