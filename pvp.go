@@ -200,6 +200,8 @@ func (g *Game) hit(a, b *Player, gold int, bakhall bool) {
 	gold = g.hiddenShare(b, min(gold, b.Treasure))
 	b.Treasure -= gold
 	a.Treasure += gold
+	a.stats.hits++
+	a.stats.stolen += gold
 	g.soundTo(a, "hugg")
 	killing := b.HP <= pvpSkada
 	switch {

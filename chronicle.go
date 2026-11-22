@@ -23,6 +23,8 @@ type chronStats struct {
 	kills    int      // varelser som vandraren har fällt
 	searched int      // rum som vandraren har sökt igenom
 	items    int      // föremål som vandraren har hittat
+	hits     int      // slag som träffade en annan vandrare
+	stolen   int      // guld som vandraren har tagit från andra vandrare
 	draws    []string // ormkorten vandraren har dragit, i tur och ordning
 }
 
@@ -116,10 +118,16 @@ func (g *Game) chronicleLines() []chronLine {
 // statsLine är vandrarens rad med siffror i krönikan.
 func (g *Game) statsLine(p *Player) string {
 	s := p.stats
-	return g.data.Text("kronika_vandrare", "namn", p.Name,
+	line := g.data.Text("kronika_vandrare", "namn", p.Name,
 		"naver", strconv.Itoa(s.takes), "kammarguld", strconv.Itoa(s.takeGold),
 		"fallor", strconv.Itoa(s.traps), "varelser", strconv.Itoa(s.kills),
 		"sokt", strconv.Itoa(s.searched))
+	// Striderna mot andra vandrare står bara med hos den som har slagits.
+	if s.hits > 0 {
+		line += g.data.Text("kronika_vandrare_strid",
+			"traffar", strconv.Itoa(s.hits), "stulet", strconv.Itoa(s.stolen))
+	}
+	return line
 }
 
 // journeyRound är det som hände vandraren under en runda: rundans kort.

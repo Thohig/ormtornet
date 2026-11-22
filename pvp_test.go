@@ -1,6 +1,9 @@
 package main
 
-import "testing"
+import (
+	"strings"
+	"testing"
+)
 
 // fightReady ger två vandrare i samma vanliga rum, med strid påslagen.
 func fightReady(t *testing.T) (*Game, *Client, *Client) {
@@ -153,5 +156,23 @@ func TestPvPKillOnlyOnceInChronicle(t *testing.T) {
 		if s == g.data.Text("kronika_bakhall_byte", "namn", a.player.Name, "offer", bo.Name, "guld", "50") {
 			t.Fatalf("slaget som dödade stod också som ett slag: %q", chronTexts(g))
 		}
+	}
+}
+
+func TestPvPStatsLine(t *testing.T) {
+	g, a, b := fightReady(t)
+	alva, bo := a.player, b.player
+	bo.Treasure = 30
+	g.Act(a, actAttack, -bo.ID)
+	g.Act(b, actWait, 0)
+	if alva.stats.hits != 1 || alva.stats.stolen != 10 {
+		t.Fatalf("Alva: %d träffar, %d stulet", alva.stats.hits, alva.stats.stolen)
+	}
+	strid := g.data.Text("kronika_vandrare_strid", "traffar", "1", "stulet", "10")
+	if !strings.HasSuffix(g.statsLine(alva), strid) {
+		t.Fatalf("Alvas rad saknar striderna: %q", g.statsLine(alva))
+	}
+	if strings.Contains(g.statsLine(bo), strid) {
+		t.Fatalf("Bos rad har strider fast Bo inte slog: %q", g.statsLine(bo))
 	}
 }

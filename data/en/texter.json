@@ -487,6 +487,9 @@
     "kronika_vandrare": [
       "{namn}: the chamber {naver} times, {kammarguld} gold · traps {fallor} · creatures felled {varelser} · rooms searched {sokt}"
     ],
+    "kronika_vandrare_strid": [
+      " · blows on wanderers {traffar} · stolen {stulet} gold"
+    ],
     "kronika_ut": [
       "{namn} went out with {guld} gold."
     ],

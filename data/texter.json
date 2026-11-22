@@ -503,6 +503,9 @@
     "kronika_vandrare": [
       "{namn}: kammaren {naver} ggr, {kammarguld} guld · fällor {fallor} · fällda varelser {varelser} · sökta rum {sokt}"
     ],
+    "kronika_vandrare_strid": [
+      " · träffar på vandrare {traffar} · stulet {stulet} guld"
+    ],
     "kronika_ut": [
       "{namn} gick ut med {guld} guld."
     ],
