@@ -176,3 +176,36 @@ func TestPvPStatsLine(t *testing.T) {
 		t.Fatalf("Bos rad har strider fast Bo inte slog: %q", g.statsLine(bo))
 	}
 }
+
+func TestChronicleSigns(t *testing.T) {
+	g, a, b := fightReady(t)
+	alva, bo := a.player, b.player
+	bo.HP = 1
+	g.Act(a, actAttack, -bo.ID)
+	g.Act(b, actWait, 0)
+	var death *chronEvent
+	for i := range g.chron {
+		if len(g.chron[i].signs) > 0 {
+			death = &g.chron[i]
+		}
+	}
+	if death == nil || len(death.signs) != 2 {
+		t.Fatalf("dödsfallet saknar tecknen: %+v", g.chron)
+	}
+	if s := death.signs[1]; s.Key != "vandrare" || s.Slot == nil || *s.Slot != alva.Slot || s.Name != alva.Name {
+		t.Fatalf("dödaren står inte som sin prick: %+v", s)
+	}
+	if v := g.journeyOf(bo); len(v.DeathSigns) != 2 {
+		t.Fatalf("Bos vandring saknar tecknen för döden: %+v", v.DeathSigns)
+	}
+	lines := g.chronicleLines()
+	found := false
+	for _, l := range lines {
+		if len(l.Signs) == 2 {
+			found = true
+		}
+	}
+	if !found {
+		t.Fatal("krönikans rader saknar tecknen")
+	}
+}

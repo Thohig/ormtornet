@@ -13,6 +13,7 @@ import (
 type chronEvent struct {
 	round int
 	text  string
+	signs []mapSign // tecknen från kartan bredvid raden
 }
 
 // chronStats räknar det som bara blir en siffra per vandrare i krönikan.
@@ -47,14 +48,19 @@ func (g *Game) cardTags(p *Player) []cardTag {
 
 // chronicle skriver ner en händelse från den här rundan.
 func (g *Game) chronicle(key string, vars ...string) {
-	g.chron = append(g.chron, chronEvent{round: g.round, text: g.data.Text(key, vars...)})
+	g.chronicleSigns(nil, key, vars...)
+}
+
+// chronicleSigns skriver ner en händelse med tecknen från kartan bredvid.
+func (g *Game) chronicleSigns(s []mapSign, key string, vars ...string) {
+	g.chron = append(g.chron, chronEvent{round: g.round, text: g.data.Text(key, vars...), signs: s})
 }
 
 // hurt säger vad som skadar vandraren, så att krönikan vet vad som dödade
 // den om skadan blir den sista. kind är falla, varelse, vandrare, ormen,
-// gift eller tornet.
-func (p *Player) hurt(kind, what string) {
-	p.hurtKind, p.hurtWhat = kind, what
+// gift eller tornet. s är tecknet för det som skadade, om det finns ett.
+func (p *Player) hurt(kind, what string, s ...mapSign) {
+	p.hurtKind, p.hurtWhat, p.hurtSign = kind, what, s
 }
 
 // chronicleDeath skriver ner hur vandraren dog.
@@ -66,8 +72,13 @@ func (g *Game) chronicleDeath(p *Player) {
 	if len(g.data.Texter[key]) == 0 {
 		key = "kronika_dod"
 	}
-	g.chronicle(key, "namn", p.Name, "vad", p.hurtWhat)
+	s := p.hurtSign
+	if p.hurtKind == "vandrare" {
+		s = append(signs(playerSign(p)), s...)
+	}
+	g.chronicleSigns(s, key, "namn", p.Name, "vad", p.hurtWhat)
 	p.death = g.data.Text("kronika_rad", "runda", strconv.Itoa(g.round), "text", g.chron[len(g.chron)-1].text)
+	p.deathSigns = s
 }
 
 // resetChronicle börjar en ny krönika inför en vandring.
@@ -78,7 +89,7 @@ func (g *Game) resetChronicle() {
 		if p != nil {
 			p.stats = chronStats{}
 			p.hurt("", "")
-			p.journal, p.death, p.epilog = nil, "", nil
+			p.journal, p.death, p.epilog, p.deathSigns = nil, "", nil, nil
 		}
 	}
 }
@@ -88,6 +99,7 @@ type chronLine struct {
 	Text  string    `json:"text"`
 	Class string    `json:"c,omitempty"`
 	Kort  []cardTag `json:"kort,omitempty"` // ormkorten vandraren drog, på raden med siffror
+	Signs []mapSign `json:"tecken,omitempty"`
 }
 
 // chronicleLines är krönikan: rubriken, händelserna i tur och ordning och
@@ -95,7 +107,7 @@ type chronLine struct {
 func (g *Game) chronicleLines() []chronLine {
 	lines := []chronLine{{Text: g.data.Text("kronika_rubrik"), Class: "rubrik"}}
 	for _, e := range g.chron {
-		lines = append(lines, chronLine{Text: g.data.Text("kronika_rad", "runda", strconv.Itoa(e.round), "text", e.text)})
+		lines = append(lines, chronLine{Text: g.data.Text("kronika_rad", "runda", strconv.Itoa(e.round), "text", e.text), Signs: e.signs})
 	}
 	// De invigda som kom ut lyfts fram, bredvid den som vann på guld.
 	var knew []string
@@ -142,19 +154,20 @@ type journeyRound struct {
 // inte kan avslöja något för de levande. När vandringen är slut får alla
 // sin vandring, bredvid hela krönikan.
 type journeyView struct {
-	Rounds []journeyRound `json:"rundor"`
-	Death  string         `json:"dod,omitempty"`
-	Stats  string         `json:"siffror"`
-	Cards  []cardTag      `json:"kort,omitempty"` // ormkorten vandraren har dragit
-	In     int            `json:"inne"`           // vandrare kvar i tornet
-	Out    int            `json:"ute"`            // vandrare som har gått ut
+	Rounds     []journeyRound `json:"rundor"`
+	Death      string         `json:"dod,omitempty"`
+	DeathSigns []mapSign      `json:"dodTecken,omitempty"`
+	Stats      string         `json:"siffror"`
+	Cards      []cardTag      `json:"kort,omitempty"` // ormkorten vandraren har dragit
+	In         int            `json:"inne"`           // vandrare kvar i tornet
+	Out        int            `json:"ute"`            // vandrare som har gått ut
 }
 
 func (g *Game) journeyOf(me *Player) *journeyView {
 	if me == nil {
 		return nil
 	}
-	v := &journeyView{Rounds: me.journal, Death: me.death, Stats: g.statsLine(me), Cards: g.cardTags(me)}
+	v := &journeyView{Rounds: me.journal, Death: me.death, DeathSigns: me.deathSigns, Stats: g.statsLine(me), Cards: g.cardTags(me)}
 	if v.Rounds == nil {
 		v.Rounds = []journeyRound{}
 	}

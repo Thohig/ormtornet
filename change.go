@@ -63,7 +63,7 @@ func (g *Game) closePorts() {
 		horn := g.data.Horn[g.portNext]
 		g.tellInside(g.data.Text("port_stangs", "horn", horn), "varn")
 		g.soundAll("niva")
-		g.chronicle("kronika_port", "horn", horn)
+		g.chronicleSigns(signs(placeSign("port_stangd")), "kronika_port", "horn", horn)
 		g.portNext, g.portClock = -1, 0
 		return
 	}

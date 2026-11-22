@@ -279,6 +279,21 @@ const MapView = (() => {
     return iso ? iso.bild(e.key, e.glyph, e.color) : null;
   }
 
+  // signLook ger bilden, tecknet och färgen för ett tecken från tornet på en
+  // rad i krönikan eller på rundans kort (signs.go): samma bild som i
+  // teckenförklaringen, eller tecknet i sin färg där ingen bild går att rita.
+  const SIGN_COLORS = { varelse: COLORS.monster, falla: COLORS.mark, foremal: COLORS.gold, kammare: COLORS.gold, port: COLORS.exit, port_stangd: COLORS.shut };
+  function signLook(s) {
+    const slag = s.key.split(":")[0];
+    const color = s.slot !== undefined ? PLAYER_COLORS[s.slot] || "#fff" : SIGN_COLORS[slag] || COLORS.chalk;
+    let img = null;
+    if (iso && slag !== "foremal") {
+      if (s.id) iso.lar(s.key, s.glyph || "", s.id, s.modell);
+      img = iso.bild(s.key, s.glyph || "", color);
+    }
+    return { img, glyph: s.glyph || "", color };
+  }
+
   // ---- Kartan ----
 
   let canvas = null;
@@ -335,5 +350,5 @@ const MapView = (() => {
     later(WAKE_MS);
   }
 
-  return { setup, draw, resize, ping, wake, zoom, toggleWhole, setZoomListener, setLegend, legendImage, PLAYER_COLORS };
+  return { setup, draw, resize, ping, wake, zoom, toggleWhole, setZoomListener, setLegend, legendImage, signLook, PLAYER_COLORS };
 })();

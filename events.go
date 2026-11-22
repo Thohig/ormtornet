@@ -55,7 +55,7 @@ func (g *Game) trigger(p *Player, t *Trap, depth int) {
 	}
 	p.Seen[t.ID] = true
 	p.stats.traps++
-	p.hurt("falla", lowerFirst(t.Namn))
+	p.hurt("falla", lowerFirst(t.Namn), trapSign(t))
 
 	g.logTo(p, t.Namn+"!", "varn")
 	g.logTo(p, pick(t.Texter), "")

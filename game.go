@@ -256,12 +256,14 @@ type Player struct {
 	Poison  int // rundor kvar med gift i kroppen
 	Dark    int // rundor kvar utan ljus
 
-	stats    chronStats     // det krönikan räknar
-	journal  []journeyRound // rundans kort, runda för runda, för krönikan på egen skärm
-	death    string         // hur vandraren dog, för krönikan på egen skärm
-	epilog   []chronLine    // epilogens rader för just den här vandraren
-	hurtKind string         // vad som skadade vandraren senast, för krönikan
-	hurtWhat string         // namnet på fällan, varelsen eller vandraren
+	stats      chronStats     // det krönikan räknar
+	journal    []journeyRound // rundans kort, runda för runda, för krönikan på egen skärm
+	death      string         // hur vandraren dog, för krönikan på egen skärm
+	epilog     []chronLine    // epilogens rader för just den här vandraren
+	hurtKind   string         // vad som skadade vandraren senast, för krönikan
+	hurtWhat   string         // namnet på fällan, varelsen eller vandraren
+	hurtSign   []mapSign      // tecknet för det som skadade vandraren, för krönikan
+	deathSigns []mapSign      // tecknen på raden death
 }
 
 // present är sant för en spelare som deltar just nu: en människa med öppen
@@ -1595,9 +1597,9 @@ func (g *Game) move(p *Player, d Dir, depth int) {
 			}
 		}
 		if p.Treasure > 0 {
-			g.chronicle("kronika_ut", "namn", p.Name, "guld", strconv.Itoa(p.Treasure))
+			g.chronicleSigns(signs(placeSign("port")), "kronika_ut", "namn", p.Name, "guld", strconv.Itoa(p.Treasure))
 		} else {
-			g.chronicle("kronika_ut_tom", "namn", p.Name)
+			g.chronicleSigns(signs(placeSign("port")), "kronika_ut_tom", "namn", p.Name)
 		}
 		if p.Treasure > 0 {
 			g.logTo(p, g.data.Text("ut_med_skatt", "skatt", strconv.Itoa(p.Treasure)), "syn")

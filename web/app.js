@@ -541,6 +541,7 @@ function renderChron() {
       const d = document.createElement("div");
       d.textContent = l.text;
       if (l.c) d.className = l.c;
+      if (l.tecken) d.prepend(signRow(l.tecken));
       if (l.kort && l.kort.length) d.appendChild(cardRow(l.kort));
       box.appendChild(d);
     });
@@ -548,11 +549,12 @@ function renderChron() {
   };
   $("chronTitle").textContent = end ? endTitle() : t("vandring_rubrik");
   $("chronLead").textContent = end ? "" : v.dod || "";
+  if (!end && v.dod && v.dodTecken) $("chronLead").prepend(signRow(v.dodTecken));
   $("chronStatus").textContent = end ? "" : t("vandring_pagar", { runda: state.round, sol: state.sun, inne: v.inne, ute: v.ute });
   // Resultaten: vem som kom ut med hur mycket, vinnaren först.
   rows("chronResults", end ? (state.results || []).map((r) => ({ text: (r.winner ? "★ " : "") + r.name + (r.ai ? " ~" : "") + " · " + resultWord(r), c: r.winner ? "win" : r.status !== "ute" ? "lost" : "" })) : []);
   rows("chronEpilog", end ? state.epilog : []);
-  rows("chronAll", end ? (state.kronika || []).filter((l) => l.c !== "rubrik").map((l) => ({ text: l.text, c: l.c, kort: l.kort })) : []);
+  rows("chronAll", end ? (state.kronika || []).filter((l) => l.c !== "rubrik").map((l) => ({ text: l.text, c: l.c, kort: l.kort, tecken: l.tecken })) : []);
   if (end && state.kronika && state.kronika[0]) {
     const h = document.createElement("h2");
     h.textContent = state.kronika[0].text;
@@ -1009,6 +1011,37 @@ function miniCard(id) {
   return s;
 }
 
+// signRow är tecknen från kartan framför en rad i krönikan (signs.go):
+// samma bilder som i teckenförklaringen, med samma förklaring när musen är
+// över dem eller efter ett tryck.
+let signCount = 0;
+function signRow(list) {
+  const r = document.createElement("span");
+  r.className = "tecknrad";
+  list.forEach((s) => {
+    const look = MapView.signLook(s);
+    const g = document.createElement("span");
+    g.className = "sign glyph";
+    if (look.img) {
+      const i = document.createElement("img");
+      i.src = look.img;
+      i.alt = "";
+      g.classList.add("model");
+      g.appendChild(i);
+    } else g.textContent = look.glyph;
+    g.style.color = look.color;
+    const text = s.namn || signTexts[s.key.split(":")[0]] || "";
+    if (text) {
+      g.dataset.tip = text;
+      g.dataset.slot = "rad:" + signCount++;
+      g.tabIndex = 0;
+      g.setAttribute("aria-label", text);
+    } else g.setAttribute("aria-hidden", "true");
+    r.appendChild(g);
+  });
+  return r;
+}
+
 // cardRow är en rad små ormkort, med namnen när musen är över dem.
 function cardRow(list) {
   const r = document.createElement("span");
@@ -1163,13 +1196,13 @@ function showTip(el) {
   // Under tecknet, inom fönstret. Tecknen på kartan står till höger, så
   // förklaringen slutar där tecknet slutar; prickarna börjar där de börjar.
   // Teckenförklaringen står till vänster, så där hamnar förklaringen
-  // bredvid tecknet.
+  // bredvid tecknet. I krönikan börjar den där tecknet börjar.
   if (el.closest("#legend")) {
     tip.style.top = r.top - 4 + "px";
     tip.style.left = Math.min(window.innerWidth - w - 4, r.right + 8) + "px";
     return;
   }
-  const left = el.closest("#crew") ? r.left : r.right - w;
+  const left = el.closest("#crew, #chron") ? r.left : r.right - w;
   tip.style.top = r.bottom + 6 + "px";
   tip.style.left = Math.max(4, Math.min(window.innerWidth - w - 4, left)) + "px";
 }
@@ -1178,7 +1211,7 @@ function hideTip() {
   tipKey = "";
 }
 // Tecknen på kartan och prickarna i översta raden har samma förklaringar.
-for (const id of ["hud", "crew", "legend"]) {
+for (const id of ["hud", "crew", "legend", "chron"]) {
   const area = $(id);
   area.addEventListener("mouseover", (e) => {
     if (touch) return; // på en pekskärm är det trycket som räknas
@@ -1208,15 +1241,21 @@ for (const id of ["hud", "crew", "legend"]) {
     else showTip(el);
   });
 }
+// Förklaringen står still på skärmen, så den göms när krönikan skrollar.
+const hideRowTip = () => {
+  if (tipKey.startsWith("rad:")) hideTip();
+};
+$("chronscreen").addEventListener("scroll", hideRowTip, { passive: true });
+window.addEventListener("scroll", hideRowTip, { passive: true });
 // Ett tryck någon annanstans döljer förklaringen.
 document.addEventListener("click", (e) => {
-  if (tipKey && !e.target.closest("#hud, #crew, #legend")) hideTip();
+  if (tipKey && !e.target.closest("#hud, #crew, #legend, #chron")) hideTip();
 });
 
 // restoreTip visar förklaringen igen efter att läget har ritats om.
 function restoreTip() {
   if (!tipKey) return;
-  const el = [...document.querySelectorAll("#hud [data-tip], #crew [data-tip], #legend [data-tip]")].find((x) => keyOf(x) === tipKey);
+  const el = [...document.querySelectorAll("#hud [data-tip], #crew [data-tip], #legend [data-tip], #chron [data-tip]")].find((x) => keyOf(x) === tipKey);
   if (el) showTip(el);
   else hideTip();
 }

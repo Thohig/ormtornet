@@ -995,6 +995,11 @@ body.touch .card .num { display: none; }
 #chronLead { color: var(--warn); text-align: center; margin: 0 0 6px; }
 #chronStatus, #chronWait { color: var(--fg); opacity: 0.75; text-align: center; margin: 0 0 18px; font-size: 13px; }
 #chronRounds { display: grid; gap: 10px; }
+/* Tecknen från kartan framför krönikans rader (signRow i app.js). */
+.tecknrad { display: inline-flex; gap: 2px; margin-right: 6px; vertical-align: middle; }
+.tecknrad .sign { min-width: 1.2em; padding: 0; font-size: 14px; line-height: 1; cursor: default; }
+.tecknrad .sign.model { line-height: 0; }
+.tecknrad .sign.model img { width: 24px; height: 24px; display: block; }
 .chronRound h3 {
   margin: 0 0 2px;
   font-size: 11px;
