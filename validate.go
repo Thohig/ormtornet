@@ -156,6 +156,7 @@ func (d *Data) validate() []string {
 
 	ids = nil
 	for _, it := range d.Foremal.Lista {
+		cardImageOK("foremal.json", "föremålet "+it.ID, cardImage(it.Bild, it.ID))
 		ids = append(ids, it.ID)
 		if it.Tecken == "" && !it.Brev {
 			bad("foremal.json", "föremålet %q saknar tecken (det står framför namnet i väskan)", it.ID)

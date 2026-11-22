@@ -188,7 +188,9 @@ func (g *Game) search(p *Player) {
 		n = max(1, int(float64(n)*g.classVal(p, "sok_guld", 1)))
 		p.Treasure += n
 		g.soundTo(p, "skatt")
-		g.logTo(p, g.data.SearchText("skatt", "antal", strconv.Itoa(n), "skatt", strconv.Itoa(p.Treasure)), "syn")
+		text := g.data.SearchText("skatt", "antal", strconv.Itoa(n), "skatt", strconv.Itoa(p.Treasure))
+		g.logTo(p, text, "syn")
+		g.addCard(p, gameCard{Slag: "guld", Bild: "guld", Rubrik: g.data.Text("kort_guld"), Text: text})
 	case "dryck":
 		if g.classVal(p, "inga_drycker", 0) > 0 {
 			g.soundTo(p, "inget")
@@ -197,7 +199,9 @@ func (g *Game) search(p *Player) {
 		}
 		p.Potions++
 		g.soundTo(p, "hitta")
-		g.logTo(p, g.data.SearchText("dryck"), "syn")
+		text := g.data.SearchText("dryck")
+		g.logTo(p, text, "syn")
+		g.addCard(p, gameCard{Slag: "dryck", Bild: "dryck", Rubrik: g.data.Text("kort_dryck_hittad"), Text: text})
 	case "gang":
 		if d, ok := g.secretPassage(p.X, p.Y); ok {
 			g.soundAll("gang")
@@ -258,7 +262,9 @@ func (g *Game) drink(p *Player) {
 	p.Potions--
 	p.HP = min(g.maxHP(p), p.HP+int(g.classVal(p, "dryck_helar", float64(g.data.Regler.DryckHelar))))
 	g.soundTo(p, "drick")
-	g.logTo(p, g.data.Text("drick", "liv", strconv.Itoa(p.HP)), "info")
+	text := g.data.Text("drick", "liv", strconv.Itoa(p.HP))
+	g.logTo(p, text, "info")
+	g.addCard(p, gameCard{Slag: "dryck", Bild: "dryck", Rubrik: g.data.Text("kort_drack"), Text: text})
 	g.hear(p.X, p.Y, "ljud_drick", "", "dim", p)
 	if p.Poison > 0 {
 		p.Poison = 0

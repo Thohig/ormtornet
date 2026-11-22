@@ -577,6 +577,11 @@ och varelser har sin korta beskrivning som rubrik, aldrig namnet.
   och då kommer inget kort när den dyker upp.
 - **Striden mot en vandrare** ger båda ett kort med två skuggor och den
   andras namn. Liv och guld står på kortets rader, inte i loggen.
+- **Föremålen** har var sin bild. Kortet har föremålets namn och vad det
+  gör; loggen säger bara att du hittade det. Visar ett förbannat föremål
+  sin baksida vänds kortet en gång till och blir mörkt.
+- **Drycker** och **guld** du hittar när du söker, och drycken du
+  dricker, ger var sitt kort. Siffrorna står på kortets rader.
 
 ### Skattkammaren och ormen
 

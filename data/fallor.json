@@ -189,8 +189,8 @@
     },
     "texter": {
       "skatt": [
-        "Under en lös sten ligger några mynt. {antal} guld. Du har nu {skatt}.",
-        "I en springa i väggen glimmar något. {antal} guld, lite klibbiga. Du har nu {skatt}."
+        "Under en lös sten ligger några mynt. {antal} guld.",
+        "I en springa i väggen glimmar något. {antal} guld, lite klibbiga."
       ],
       "dryck": [
         "Bakom en hylla hittar du en liten flaska med en röd dryck. Den läker sår.",
@@ -222,6 +222,15 @@
   "texter": {
     "skada": [
       "Du förlorar {skada} liv. Du har {liv} kvar."
+    ],
+    "kort_dryck_hittad": [
+      "En röd dryck"
+    ],
+    "kort_drack": [
+      "Du dricker"
+    ],
+    "kort_guld": [
+      "Guld"
     ],
     "kort_forbi": [
       "Du klev förbi."
@@ -261,7 +270,7 @@
       "Giftet har gått ur kroppen."
     ],
     "drick": [
-      "Du dricker. Värmen sprider sig och såren drar ihop sig. Du har {liv} liv."
+      "Du dricker. Värmen sprider sig och såren drar ihop sig."
     ],
     "drick_gift": [
       "Drycken driver ut giftet."

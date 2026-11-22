@@ -373,7 +373,7 @@
   ],
   "spelkort": {
     "_om": "Spelkorten (docs/spelkort.md): ordningen säger vilket kort som vänds upp när flera saker händer samma runda. Det första i listan är viktigast; resten blir minikort.",
-    "ordning": ["dod", "ut", "ormen", "varelse", "vandrare", "falla", "forbannelse", "foremal", "kallare", "varsel", "namn", "viska", "brev", "dryck"]
+    "ordning": ["dod", "ut", "ormen", "varelse", "vandrare", "falla", "forbannelse", "foremal", "guld", "kallare", "varsel", "namn", "viska", "brev", "dryck"]
   },
   "texter": {
     "valkommen": [

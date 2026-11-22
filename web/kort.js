@@ -4,8 +4,8 @@
 // motivet (bild i data/ eller id:t); ett motiv som saknas här ritas som
 // facklan.
 //
-//   Kort.bild(motiv, { svag, fallen })  SVG-text för kortets bild
-//   Kort.mini(motiv, { svag, fallen })  ett litet kort framför en rad
+//   Kort.bild(motiv, { svag, fallen, forbannad })  SVG-text för kortets bild
+//   Kort.mini(motiv, { svag, fallen, forbannad })  ett litet kort framför en rad
 
 const Kort = (() => {
   const f = (n) => n.toFixed(1);
@@ -229,6 +229,148 @@ ${skugga(30, 1)}${skugga(70, -1)}
   // Krysset över en varelse som har fallit.
   const KRYSS = `<path d="M18 18L82 82M82 18L18 82" stroke="${ROD}" stroke-width="5" stroke-linecap="round" opacity="0.75"/>`;
 
+  // ---- Föremålen, dryckerna och guldet ----
+
+  // Föremålen ligger på en fläck ljus, som på ett bord.
+  const ljus = `<circle cx="50" cy="52" r="38" fill="#fff6dc" opacity="0.35"/>`;
+
+  // Rep med kroken kvar.
+  BILDER.rep = () => `${ljus}
+${[0, 1, 2].map((i) => `<ellipse cx="44" cy="${62 - i * 4}" rx="${22 - i * 3}" ry="${10 - i}" fill="none" stroke="#a8823a" stroke-width="4.5"/>`).join("")}
+${[0, 1, 2].map((i) => `<ellipse cx="44" cy="${62 - i * 4}" rx="${22 - i * 3}" ry="${10 - i}" fill="none" stroke="${BRUN}" stroke-width="1" stroke-dasharray="2 2"/>`).join("")}
+<path d="M64 56q10 -10 12 -26" fill="none" stroke="#a8823a" stroke-width="4"/>
+<path d="M76 30v-8q0 -6 -6 -6q-6 0 -6 6" fill="none" stroke="${JARN}" stroke-width="3.5" stroke-linecap="round"/>
+<path d="M64 22l-3 4" stroke="${JARN}" stroke-width="3" stroke-linecap="round"/>`;
+
+  // Fjällamuletten i en snodd.
+  BILDER.amulett = () => `${ljus}
+<path d="M30 14q20 30 20 30q0 0 20 -30" fill="none" stroke="${BRUN}" stroke-width="1.6"/>
+<ellipse cx="50" cy="60" rx="17" ry="21" fill="#5b6b34" stroke="${BLAECK}" stroke-width="1.4"/>
+${[0, 1, 2, 3].map((r) => [0, 1, 2].map((c) => `<path d="M${38 + c * 8 + (r % 2) * 4} ${48 + r * 7}q4 5 8 0" fill="none" stroke="#a8b47a" stroke-width="1"/>`).join("")).join("")}
+<circle cx="50" cy="40" r="3.5" fill="none" stroke="${GULD}" stroke-width="1.6"/>`;
+
+  // En extra veke, hoprullad, och en gnista.
+  BILDER.veke = () => {
+    const spiral = "M50 60m-16 0a16 16 0 1 0 32 0a12 12 0 1 0 -24 0a8 8 0 1 0 16 0a4 4 0 1 0 -8 0";
+    return `${ljus}
+<path d="${spiral}" fill="none" stroke="${BRUN}" stroke-width="6"/>
+<path d="M34 60q-6 -16 6 -30" fill="none" stroke="${BRUN}" stroke-width="6" stroke-linecap="round"/>
+<path d="${spiral}" fill="none" stroke="#e6d8b8" stroke-width="3.6"/>
+<path d="M34 60q-6 -16 6 -30" fill="none" stroke="#e6d8b8" stroke-width="3.6" stroke-linecap="round"/>
+<path d="M40 30l0 -3" stroke="${BLAECK}" stroke-width="2"/>
+${laga(40, 28, 14)}`;
+  };
+
+  // En bucklig sköld.
+  BILDER.skold = () => `${ljus}
+<path d="M50 14l30 10q0 40 -30 62q-30 -22 -30 -62z" fill="#8a7a5a" stroke="${BLAECK}" stroke-width="1.6"/>
+<path d="M50 20l24 8q0 32 -24 50q-24 -18 -24 -50z" fill="#a8946a"/>
+<path d="M50 22v54M28 40h44" stroke="${BRUN}" stroke-width="2"/>
+<ellipse cx="38" cy="54" rx="5" ry="3" fill="#6a5a3a" opacity="0.6"/><ellipse cx="62" cy="34" rx="4" ry="2.5" fill="#6a5a3a" opacity="0.6"/>
+<path d="M60 58l6 4" stroke="${BLAECK}" stroke-width="1"/>`;
+
+  // Väskan med dubbel botten.
+  BILDER.vaska = () => `${ljus}
+<path d="M24 40h52l-4 46H28z" fill="#7a5a34" stroke="${BLAECK}" stroke-width="1.4"/>
+<path d="M24 40q26 -16 52 0" fill="#8a6a40" stroke="${BLAECK}" stroke-width="1.4"/>
+<path d="M36 34q14 -22 28 0" fill="none" stroke="${BRUN}" stroke-width="3"/>
+<path d="M28 74h44" stroke="${GULD}" stroke-width="1.4" stroke-dasharray="3 2"/>
+<ellipse cx="44" cy="80" rx="3" ry="1.4" fill="${GULD}"/><ellipse cx="54" cy="81" rx="3" ry="1.4" fill="${GULD}"/>
+<rect x="46" y="44" width="8" height="6" rx="1" fill="${GULD}"/>`;
+
+  // En kompass utan nord: nålen pekar snett.
+  BILDER.kompass = () => `${ljus}
+<circle cx="50" cy="52" r="28" fill="#a8823a" stroke="${BLAECK}" stroke-width="1.6"/>
+<circle cx="50" cy="52" r="23" fill="#efe6d0"/>
+${[0, 1, 2, 3, 4, 5, 6, 7].map((i) => { const a = (i * Math.PI) / 4; return `<path d="M${f(50 + Math.cos(a) * 19)} ${f(52 + Math.sin(a) * 19)}L${f(50 + Math.cos(a) * 22)} ${f(52 + Math.sin(a) * 22)}" stroke="${BRUN}" stroke-width="1.2"/>`; }).join("")}
+<path d="M50 52l14 -12 -10 15z" fill="${ROD}"/><path d="M50 52l-14 12 10 -15z" fill="${JARN}"/>
+<circle cx="50" cy="52" r="2" fill="${BLAECK}"/>
+<path d="M44 22h12" stroke="#a8823a" stroke-width="4" stroke-linecap="round"/>`;
+
+  // Rökpulver: en liten pung och rök.
+  BILDER.rokpulver = () => `${ljus}
+<path d="M34 86q-10 -20 6 -32h20q16 12 6 32z" fill="#8a7a64" stroke="${BLAECK}" stroke-width="1.2"/>
+<path d="M40 54q10 -6 20 0" fill="none" stroke="${BRUN}" stroke-width="2.4"/>
+${[[46, 40, 9], [58, 30, 11], [42, 22, 8], [62, 14, 7]].map(([x, y, r]) => `<circle cx="${x}" cy="${y}" r="${r}" fill="#b8b0a0" opacity="0.6"/>`).join("")}`;
+
+  // En spegelskärva.
+  BILDER.spegel = () => `${ljus}
+<path d="M30 80l12 -60 30 18 -8 46z" fill="#c8d0d4" stroke="${BLAECK}" stroke-width="1.4"/>
+<path d="M38 70l8 -40 20 12" fill="none" stroke="#fff" stroke-width="2" opacity="0.7"/>
+<path d="M46 60l12 -6M44 68l10 -4" stroke="#8a9aa4" stroke-width="1.2"/>`;
+
+  // En kastkniv.
+  BILDER.kastkniv = () => `${ljus}
+<path d="M24 80l40 -44 10 -10 -6 14 -40 42z" fill="#b8b4ac" stroke="${BLAECK}" stroke-width="1.2"/>
+<path d="M30 76l40 -44" stroke="#efece6" stroke-width="1" opacity="0.8"/>
+<path d="M20 70l14 14" stroke="${BRUN}" stroke-width="3" stroke-linecap="round"/>
+<path d="M12 90l12 -12" stroke="${BRUN}" stroke-width="5" stroke-linecap="round"/>
+<circle cx="12" cy="90" r="3.5" fill="none" stroke="${JARN}" stroke-width="1.6"/>`;
+
+  // Krita och märken på stenen.
+  BILDER.krita = () => `${vagg()}
+<path d="M24 30l10 10M34 30l-10 10M60 24v16M54 32h12M30 64q10 -8 20 0t20 0" fill="none" stroke="#f6f2e8" stroke-width="2.4" stroke-linecap="round"/>
+<path d="M52 78l26 -14 4 6 -26 14z" fill="#f6f2e8" stroke="${STEN}" stroke-width="1"/>`;
+
+  // En sövande flöjt av ben.
+  BILDER.flojt = () => `${ljus}
+<path d="M18 74l60 -40" stroke="${BRUN}" stroke-width="10" stroke-linecap="round"/>
+<path d="M18 74l60 -40" stroke="#e6d8b8" stroke-width="7" stroke-linecap="round"/>
+${[0, 1, 2, 3].map((i) => `<circle cx="${32 + i * 10}" cy="${f(65 - i * 6.7)}" r="1.8" fill="${BLAECK}"/>`).join("")}
+<text x="64" y="70" font-size="12" fill="${BRUN}" font-family="serif">z</text><text x="74" y="62" font-size="9" fill="${BRUN}" font-family="serif">z</text>`;
+
+  // Ett timglas av ben.
+  BILDER.timglas = () => `${ljus}
+<path d="M32 18h36M32 86h36" stroke="#efe6d0" stroke-width="5" stroke-linecap="round"/>
+<path d="M34 20v4M66 20v4M34 84v-4M66 84v-4" stroke="#efe6d0" stroke-width="3"/>
+<path d="M38 22q0 20 12 30q-12 10 -12 30h24q0 -20 -12 -30q12 -10 12 -30z" fill="#e6eef0" opacity="0.6" stroke="${STEN}" stroke-width="1.2"/>
+<path d="M42 30q8 10 16 0z" fill="#c9a24f"/><path d="M40 82q10 -12 20 0z" fill="#c9a24f"/>
+<path d="M50 52v24" stroke="#c9a24f" stroke-width="1"/>`;
+
+  // Den svarta pärlan i ett skal.
+  BILDER.svart_parla = () => `${ljus}
+<path d="M18 66q32 22 64 0q-32 -6 -64 0z" fill="#d8cfc0" stroke="${BLAECK}" stroke-width="1.2"/>
+<path d="M22 64q28 -40 56 0" fill="#e6ddcc" stroke="${BLAECK}" stroke-width="1.2"/>
+${[0, 1, 2, 3, 4].map((i) => `<path d="M50 30L${26 + i * 12} 64" stroke="${STEN}" stroke-width="0.8"/>`).join("")}
+<circle cx="50" cy="62" r="10" fill="#1a1820"/><circle cx="46" cy="58" r="3" fill="#6a6a7a" opacity="0.8"/>`;
+
+  // Myntet med hål.
+  BILDER.mynt_hal = () => `${ljus}
+<circle cx="50" cy="52" r="26" fill="${GULD}" stroke="#7a5a1a" stroke-width="1.6"/>
+<circle cx="50" cy="52" r="20" fill="none" stroke="#7a5a1a" stroke-width="1" stroke-dasharray="2 2"/>
+<circle cx="50" cy="52" r="7" fill="#efe6d0" stroke="#7a5a1a" stroke-width="1.4"/>
+<path d="M50 26q-4 -12 4 -16" fill="none" stroke="${BRUN}" stroke-width="1.4"/>`;
+
+  // Kronan av rost.
+  BILDER.rostkrona = () => `${ljus}
+<path d="M22 72V36l14 16 14 -22 14 22 14 -16v36z" fill="#8a4a24" stroke="${BLAECK}" stroke-width="1.4"/>
+<rect x="22" y="70" width="56" height="10" fill="#7a3a1a" stroke="${BLAECK}" stroke-width="1.4"/>
+${[[30, 62], [46, 48], [62, 58], [70, 44], [38, 76]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="2.6" fill="#b8642a" opacity="0.8"/>`).join("")}
+${[36, 50, 64].map((x) => `<circle cx="${x}" cy="75" r="2.6" fill="#5a2a5a"/>`).join("")}`;
+
+  // Ett brev från en tidigare vandrare, med ett sigill.
+  BILDER.brev = () => `${ljus}
+<path d="M20 32h60v42H20z" fill="#efe6d0" stroke="${BRUN}" stroke-width="1.4"/>
+<path d="M20 32l30 24 30 -24" fill="none" stroke="${BRUN}" stroke-width="1.4"/>
+<path d="M20 74l22 -20M80 74l-22 -20" stroke="${STEN}" stroke-width="1"/>
+<circle cx="50" cy="56" r="6" fill="${ROD}"/><circle cx="50" cy="56" r="3" fill="none" stroke="#c0503a" stroke-width="1"/>`;
+
+  // En liten flaska med en röd dryck.
+  BILDER.dryck = () => `${ljus}
+<path d="M44 16h12v6h-12z" fill="#8a6a40"/>
+<path d="M46 22h8v14q16 8 16 26a20 20 0 0 1 -40 0q0 -18 16 -26z" fill="#e6eef0" opacity="0.7" stroke="${BLAECK}" stroke-width="1.4"/>
+<path d="M32 62a18 18 0 0 0 36 0q-18 -6 -36 0z" fill="#b8282a"/>
+<path d="M38 52q2 -8 8 -10" fill="none" stroke="#fff" stroke-width="2" opacity="0.7"/>`;
+
+  // Några mynt.
+  BILDER.guld = () => `${ljus}
+${[[30, 72], [44, 76], [58, 74], [72, 72], [38, 66], [52, 68], [66, 66], [46, 60], [58, 60], [52, 54]].map(([x, y]) => `<ellipse cx="${x}" cy="${y}" rx="9" ry="4" fill="${GULD}" stroke="#7a5a1a" stroke-width="1"/>`).join("")}
+<path d="M64 36l3 -6 3 6 -3 6z" fill="#fff0b0"/>`;
+
+  // Ett förbannat föremål: mörkt, med sprickor.
+  const FORBANNAD = `<rect x="4" y="4" width="92" height="92" rx="6" fill="#4a0a06" opacity="0.35"/>
+<path d="M12 20l14 10 -4 12 12 8M88 80l-12 -8 4 -14 -10 -6M70 12l-6 12 8 6" fill="none" stroke="#2a0604" stroke-width="1.4" opacity="0.8"/>`;
+
   const ORM = ["sover", "ror_sig", "vaknar"];
 
   return {
@@ -237,6 +379,7 @@ ${skugga(30, 1)}${skugga(70, -1)}
       let inner = rita();
       if (opt.svag) inner = `<g opacity="0.45" style="filter: grayscale(1)">${inner}</g>`;
       if (opt.fallen) inner = `<g opacity="0.6">${inner}</g>${KRYSS}`;
+      if (opt.forbannad) inner = `${inner}${FORBANNAD}`;
       return svg(inner);
     },
     // mini ger ett litet kort. Ormkorten har egna små bilder i CSS:en;

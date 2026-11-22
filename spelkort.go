@@ -28,6 +28,9 @@ type gameCard struct {
 	// Svag: kortet visar något som inte hände, till exempel en fälla man
 	// klev förbi. Bilden tonas ned.
 	Svag bool `json:"svag,omitempty"`
+	// Forbannad: ett föremål som visar sin baksida. Kortet vänds en gång
+	// till och blir mörkt.
+	Forbannad bool `json:"forbannad,omitempty"`
 	// Fallen: en varelse som vandraren fällde. Bilden är överkorsad.
 	Fallen bool `json:"fallen,omitempty"`
 	// Stor: kortet vänds upp stort mitt på kartan, som uppvaknandet.
@@ -64,6 +67,8 @@ var cardImages = []string{
 	"fackla", "sover", "ror_sig", "vaknar",
 	"fallgaller", "rasande_golv", "roterande", "pilar", "dimma", "ormgrop", "skinn", "klocka", "morker", "eko",
 	"krypare", "yngel", "fjallvakt", "gallgast", "benvaktare", "vandrare",
+	"rep", "amulett", "veke", "skold", "vaska", "kompass", "rokpulver", "spegel", "kastkniv", "krita",
+	"flojt", "timglas", "svart_parla", "mynt_hal", "rostkrona", "brev", "dryck", "guld",
 }
 
 // cardImage är motivet för innehåll i data/: fältet bild, annars id:t.

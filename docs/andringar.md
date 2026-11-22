@@ -26,6 +26,10 @@ eller leder tornet.
   ger båda ett kort. Fältet `bild` finns nu också i `data/monster.json`.
 - Stridens rader i loggen säger inte längre "Du förlorar 1 liv" eller
   "Du har nu 140"; det står på spelkortet.
+- Föremålen har var sin bild. Kortet säger vad föremålet gör, och loggen
+  säger bara att du hittade det. Ett förbannat föremål vänds en gång till
+  när det visar sin baksida. Drycker och guld får egna kort, och raderna
+  om dem i loggen säger inte längre hur mycket du har.
 
 ### Fröet, hela bredden och loggen på kartan
 

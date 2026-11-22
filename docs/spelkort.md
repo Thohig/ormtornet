@@ -145,3 +145,4 @@ uppdateras i varje steg.
 | A | ja |
 | B | ja |
 | C | ja; också varelsernas texter förlorade sina siffror |
+| D | ja, med ett kort för guld man hittar när man söker |

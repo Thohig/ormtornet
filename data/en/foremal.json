@@ -173,14 +173,14 @@
 
   "texter": {
     "foremal_hittar": [
-      "Under a loose stone lies something: {foremal}. {beskrivning}",
-      "Deep in a niche, wrapped in a rag: {foremal}. {beskrivning}"
+      "Under a loose stone lies something: {foremal}.",
+      "Deep in a niche, wrapped in a rag: {foremal}."
     ],
     "foremal_full": [
       "Here lies {foremal}, but you cannot carry more than {max} things. You leave it."
     ],
     "foremal_ligger": [
-      "Someone has left {foremal} here. You take it. {beskrivning}"
+      "Someone has left {foremal} here. You take it."
     ],
     "foremal_ligger_full": [
       "Here lies {foremal}, but your bag is full."

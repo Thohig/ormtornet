@@ -119,3 +119,34 @@ func TestPvpCards(t *testing.T) {
 		t.Fatalf("den som blev slagen: %+v", cb)
 	}
 }
+
+// Ett föremål man tar ger ett kort med namnet och vad det gör, och det
+// står inte i loggen. Ett förbannat föremål som visar sin baksida ger ett
+// förbannat kort. En dryck man dricker ger ett kort utan siffror.
+func TestItemCards(t *testing.T) {
+	g, a, _ := startTwo(t)
+	p := a.player
+	r := putInRoom(g, p, 4, 4)
+	r.items = []string{"kompass"}
+	g.pickUp(p)
+	cards := g.roundCardsOf(p)
+	typ := g.data.itemType("kompass")
+	if len(cards) != 1 || cards[0].Slag != "foremal" || cards[0].Rubrik != typ.Namn || cards[0].Text != typ.Beskrivning {
+		t.Fatalf("föremålet: %+v", cards)
+	}
+	p.roundCards = nil
+	g.give(p, "svart_parla")
+	g.curse(p, "svart_parla")
+	g.curse(p, "svart_parla") // baksidan visas bara en gång
+	cards = g.roundCardsOf(p)
+	if len(cards) != 1 || cards[0].Slag != "forbannelse" || !cards[0].Forbannad || cards[0].Bild != "svart_parla" {
+		t.Fatalf("förbannelsen: %+v", cards)
+	}
+	p.roundCards = nil
+	p.Potions, p.HP = 1, 2
+	g.drink(p)
+	cards = g.roundCardsOf(p)
+	if len(cards) != 1 || cards[0].Slag != "dryck" || strings.ContainsAny(cards[0].Text, "0123456789") {
+		t.Fatalf("drycken: %+v", cards)
+	}
+}

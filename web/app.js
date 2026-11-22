@@ -1110,7 +1110,7 @@ function buildCard(el, c, extra) {
   const back = document.createElement("div");
   back.className = "ok-back";
   const front = document.createElement("div");
-  front.className = "ok-front" + (c.bild === "vaknar" ? " vaknar" : "");
+  front.className = "ok-front" + (c.bild === "vaknar" ? " vaknar" : "") + (c.forbannad ? " forbannad" : "");
   const name = document.createElement("div");
   name.className = "ok-namn";
   name.textContent = c.rubrik || "";
@@ -1128,9 +1128,10 @@ function buildCard(el, c, extra) {
   inner.append(back, front);
   el.appendChild(inner);
   el.hidden = false;
-  el.classList.remove("leaving", "vand");
+  el.classList.remove("leaving", "vand", "igen");
   void el.offsetWidth; // börja med baksidan upp
   el.classList.add("vand");
+  if (c.forbannad) el.classList.add("igen"); // vänds en gång till och visar baksidan
   return front;
 }
 

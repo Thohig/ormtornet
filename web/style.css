@@ -1265,6 +1265,10 @@ body.touch .card .num { display: none; }
   color: #2a1e12;
   text-shadow: none;
 }
+/* Ett förbannat föremål: kortet vänds en gång till och blir mörkt. */
+.okort.vand.igen .ok-inner { animation: vand-igen 0.9s 1.1s ease-in-out; }
+@keyframes vand-igen { 50% { transform: rotateY(180deg); } 100% { transform: rotateY(360deg); } }
+.okort .ok-front.forbannad { background: radial-gradient(ellipse at 50% 40%, #d8b8a0, #9a6a58); }
 .okort .ok-front.vaknar { background: radial-gradient(ellipse at 50% 40%, #e8c8b0, #b88068); }
 .okort .ok-namn {
   text-align: center;
@@ -1310,7 +1314,7 @@ body.touch .card .num { display: none; }
 }
 @media (prefers-reduced-motion: reduce) {
   .okort .ok-inner { transition: none; }
-  #vakenkort.vand .ok-inner { animation: none; }
+  #vakenkort.vand .ok-inner, .okort.vand.igen .ok-inner { animation: none; }
 }
 /* Sömnmätaren i panelen Nu, i skattkammaren (sleepMeter i app.js): tre
    steg som andas, långsamt när ormen sover djupt och fort när den är nära

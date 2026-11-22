@@ -13,6 +13,7 @@ type ItemType struct {
 	ID           string   `json:"id"`
 	Namn         string   `json:"namn"`
 	Tecken       string   `json:"tecken"` // står framför namnet i väskan
+	Bild         string   `json:"bild"`   // spelkortets motiv (web/kort.js); utan bild gäller id:t
 	Kort         string   `json:"kort"`   // med liten bokstav, för texterna
 	Beskrivning  string   `json:"beskrivning"`
 	Vikt         int      `json:"vikt"`
@@ -134,6 +135,7 @@ func (g *Game) findItem(p *Player) {
 	}
 	if g.give(p, id) {
 		g.logTo(p, g.data.Text("foremal_hittar", "foremal", lowerFirst(t.Namn), "beskrivning", t.Beskrivning), "syn")
+		g.itemCard(p, t)
 		return
 	}
 	room.items = append(room.items, id)
@@ -160,6 +162,7 @@ func (g *Game) pickUp(p *Player) {
 		}
 		if g.give(p, id) {
 			g.logTo(p, g.data.Text("foremal_ligger", "foremal", lowerFirst(t.Namn), "beskrivning", t.Beskrivning), "syn")
+			g.itemCard(p, t)
 		} else {
 			left = append(left, id)
 			g.logTo(p, g.data.Text("foremal_ligger_full", "foremal", lowerFirst(t.Namn)), "dim")
@@ -405,6 +408,12 @@ func (g *Game) readLetter(p *Player) {
 	}
 }
 
+// itemCard lägger föremålets spelkort: namnet och vad det gör, som inte
+// står i loggen.
+func (g *Game) itemCard(p *Player, t *ItemType) {
+	g.addCard(p, gameCard{Slag: "foremal", Bild: cardImage(t.Bild, t.ID), Rubrik: t.Namn, Text: t.Beskrivning})
+}
+
 // curse: ett förbannat föremål visar sin baksida första gången den verkar.
 func (g *Game) curse(p *Player, id string) bool {
 	it := p.has(id)
@@ -414,9 +423,11 @@ func (g *Game) curse(p *Player, id string) bool {
 	if !it.cursed {
 		it.cursed = true
 		if t := g.data.itemType(id); t != nil {
-			if text := pick(t.Forbannelse); text != "" {
+			text := pick(t.Forbannelse)
+			if text != "" {
 				g.logTo(p, text, "varn")
 			}
+			g.addCard(p, gameCard{Slag: "forbannelse", Bild: cardImage(t.Bild, t.ID), Rubrik: t.Namn, Text: text, Forbannad: true})
 		}
 	}
 	return true

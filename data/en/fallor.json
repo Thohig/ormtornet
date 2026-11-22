@@ -131,8 +131,8 @@
   "sok": {
     "texter": {
       "skatt": [
-        "Under a loose stone lie a few coins. {antal} gold. You now have {skatt}.",
-        "Something glints in a crack in the wall. {antal} gold, a little sticky. You now have {skatt}."
+        "Under a loose stone lie a few coins. {antal} gold.",
+        "Something glints in a crack in the wall. {antal} gold, a little sticky."
       ],
       "dryck": [
         "Behind a shelf you find a small flask of red potion. It heals wounds.",
@@ -164,6 +164,15 @@
   "texter": {
     "skada": [
       "You lose {skada} of your lives. You have {liv} left."
+    ],
+    "kort_dryck_hittad": [
+      "A red potion"
+    ],
+    "kort_drack": [
+      "You drink"
+    ],
+    "kort_guld": [
+      "Gold"
     ],
     "kort_forbi": [
       "You stepped past it."
@@ -203,7 +212,7 @@
       "The poison has left your body."
     ],
     "drick": [
-      "You drink. Warmth spreads and the wounds draw together. You are up to {liv} lives."
+      "You drink. Warmth spreads and the wounds draw together."
     ],
     "drick_gift": [
       "The potion drives out the poison."
