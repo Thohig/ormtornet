@@ -1044,8 +1044,7 @@ func (g *Game) Join(c *Client, rawName string) {
 	g.soundAll("ansluter")
 	g.logTo(p, g.data.Text("namn_givet", "namn", name), "rost")
 	g.logTo(p, g.hiddenText("valkommen", "namn", name, "horn", horn), "syn")
-	g.describeLater(p, &g.rooms[p.Y][p.X], p.X, p.Y)
-	g.tellRoom(p)
+	// Portrummet beskrivs först när vandringen börjar (atTheGate i here.go).
 	for _, b := range g.players {
 		if b != nil && b.bot != nil {
 			g.logTo(p, fill(pick(g.aiTexts(g.data.AI.Ansluter, g.data.AI.AnsluterDolt)), "namn", b.Name, "horn", g.data.Horn[b.Corner]), "info")
@@ -1253,7 +1252,6 @@ func (g *Game) drawCorners() {
 		p.X, p.Y = cn.x, cn.y
 		p.known = newGrid[bool](g.size)
 		g.reveal(cn.x, cn.y)
-		g.logTo(p, g.data.Text("start_port", "horn", g.data.Horn[p.Corner]), "syn")
 	}
 }
 
@@ -1293,7 +1291,6 @@ func (g *Game) startGame() {
 		}
 	}
 	g.soundAll("start")
-	g.logAll(g.data.Text("start", "sol", strconv.Itoa(g.sun)), "syn")
 	if s := g.data.difficulty(g.cfg.Difficulty); s != nil {
 		g.logAll(g.data.Text("svarighet", "namn", s.Namn, "liv", strconv.Itoa(g.data.Regler.Liv)), "dim")
 	}
@@ -1305,6 +1302,7 @@ func (g *Game) startGame() {
 			g.noteRoom(p) // efter klassvalet: kartritaren ser in i grannrummen
 			p.forgetRoom()
 			g.describeLater(p, &g.rooms[p.Y][p.X], p.X, p.Y)
+			g.atTheGate(p)
 			g.tellRoom(p)
 		}
 	}

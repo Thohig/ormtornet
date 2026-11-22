@@ -6,6 +6,17 @@ eller leder tornet.
 
 ## 2026-11-22
 
+### Vandringen börjar i det du ser och hör
+
+- Portrummet beskrivs inte längre i lobbyn. När vandringen börjar kommer
+  det första rumsblocket under en egen rubrik, Vandringen börjar: vid
+  vilken port du kliver in står först i beskrivningen, solen står bland
+  det du ser, och portarna där de andra går in är det du hör ("Långt
+  borta, åt flera håll, knarrar portar").
+- De lösa raderna om porten och solen är borta, och "Välj era drag" sägs
+  bara i panelen Nu. Svårigheten och raden om synligheten står kvar under
+  blocket.
+
 ### Adressen under Bjud in syns bara när man ber om den
 
 - Värdsidan skriver inte ut adressen (på GitHub Pages länken) under Bjud

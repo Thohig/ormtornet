@@ -365,8 +365,14 @@
     "valkommen_dolt": [
       "{namn}, you stand in the dusk at the foot of the tower. Somewhere in the middle, they say, a serpent sleeps around its treasure. Take what you dare, and come out before the sun goes down. Which gate you enter by, you will learn when the wandering begins."
     ],
+    "start_hor_en": [
+      "Far away, another gate creaks."
+    ],
+    "start_hor_flera": [
+      "Far away, in several directions, gates creak."
+    ],
     "start_port": [
-      "You step in through the gate in the tower's {horn}. None of the others know where you are."
+      "You step in through the gate in the tower's {horn}."
     ],
     "atervander": [
       "{namn} has found their way back into the tower."
@@ -420,8 +426,8 @@
       "You wait for the others by the gate."
     ],
     "start": [
-      "The sun stands {sol} hand-breadths above the horizon. Choose your moves. All moves are made at the same time.",
-      "The gate stands open behind you. The sun has {sol} hand-breadths left to travel. Go."
+      "The sun stands {sol} hand-breadths above the horizon.",
+      "The sun has {sol} hand-breadths left to travel."
     ],
     "tvekade": [
       "You hesitated and stayed where you were.",

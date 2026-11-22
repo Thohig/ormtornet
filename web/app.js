@@ -60,7 +60,10 @@ const Log = (() => {
   }
 
   function keyNow() {
-    if (!state || state.phase === "lobby" || state.phase === "klassval") return "lobby";
+    if (!state || state.phase === "lobby") return "lobby";
+    // Klassvalet och början av vandringen, med portrummet, står för sig:
+    // portrummets block kommer innan rundan har börjat (atTheGate i here.go).
+    if (state.phase === "klassval") return "start";
     if (state.phase === "slut") return "slut";
     return "r" + state.round;
   }
@@ -169,6 +172,7 @@ const Log = (() => {
     const key = g.dataset.key;
     let text;
     if (key === "lobby") text = t("logg_fore");
+    else if (key === "start") text = t("logg_start");
     else if (key === "slut") text = t("logg_slut");
     else text = t("logg_runda", { runda: key.slice(1) });
     g.querySelector(".roundhead").textContent = text;

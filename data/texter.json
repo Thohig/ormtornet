@@ -381,8 +381,14 @@
     "valkommen_dolt": [
       "{namn}, du står i skymningen vid tornets fot. Någonstans i mitten sägs en orm sova kring sin skatt. Ta vad du vågar och kom ut innan solen går ner. Vilken port du går in genom får du veta när vandringen börjar."
     ],
+    "start_hor_en": [
+      "Långt borta knarrar en annan port."
+    ],
+    "start_hor_flera": [
+      "Långt borta, åt flera håll, knarrar portar."
+    ],
     "start_port": [
-      "Du kliver in genom porten i tornets {horn}. Ingen av de andra vet var du är."
+      "Du kliver in genom porten i tornets {horn}."
     ],
     "atervander": [
       "{namn} har hittat tillbaka in i tornet."
@@ -436,8 +442,8 @@
       "Du väntar på de andra vid porten."
     ],
     "start": [
-      "Solen står {sol} handsbredder över horisonten. Välj era drag. Alla drag utförs samtidigt.",
-      "Porten står öppen bakom er. Solen har {sol} handsbredder kvar att vandra. Gå."
+      "Solen står {sol} handsbredder över horisonten.",
+      "Solen har {sol} handsbredder kvar att vandra."
     ],
     "tvekade": [
       "Du tvekade och blev stående.",

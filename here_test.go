@@ -2,6 +2,8 @@ package main
 
 import (
 	"encoding/json"
+	"strconv"
+	"strings"
 	"testing"
 )
 
@@ -32,6 +34,24 @@ func TestRoomBlockAtStart(t *testing.T) {
 	got := rooms(a)
 	if len(got) != 1 || got[0].Text == "" || got[0].Har == "" || got[0].Kvar {
 		t.Fatalf("vid starten väntades ett rumsblock med beskrivning, fick %+v", got)
+	}
+	// Början av vandringen står i blocket: porten först, solen bland det
+	// man ser och den andra vandrarens port bland det man hör.
+	port := g.data.Text("start_port", "horn", g.data.Horn[a.player.Corner])
+	if !strings.HasPrefix(got[0].Text, port+" ") {
+		t.Errorf("beskrivningen började inte med porten: %q", got[0].Text)
+	}
+	if !strings.Contains(got[0].Har, strconv.Itoa(g.sun)) {
+		t.Errorf("solen stod inte bland det man ser: %q", got[0].Har)
+	}
+	if got[0].Hor != g.data.Text("start_hor_en") {
+		t.Errorf("väntade att höra den andra porten, hörde %q", got[0].Hor)
+	}
+	// Solen sägs bara i det första blocket.
+	putInRoom(g, a.player, 4, 4)
+	g.tellRoom(a.player)
+	if got := rooms(a); len(got) != 1 || strings.Contains(got[0].Har, strconv.Itoa(g.sun)+" ") {
+		t.Errorf("solen kom med i nästa block: %+v", got)
 	}
 }
 

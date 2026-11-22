@@ -29,6 +29,7 @@ type told struct {
 	x, y  int
 	parts map[string]herePart // det som syntes, på nyckel
 	desc  string              // beskrivningen som väntar på nästa block
+	extra string              // det man också ser, bara i nästa block (atTheGate)
 }
 
 // herePart är en sak man ser i rummet: en varelse, en vandrare eller
@@ -77,7 +78,7 @@ func (g *Game) tellRoom(p *Player) {
 	msg := roomMsg{T: "rum", Namn: g.roomName(r), Kvar: !moved, Hor: strings.Join(heard, " ")}
 	if moved {
 		msg.Text = p.told.desc
-		msg.Har = g.sayHere(cur)
+		msg.Har = strings.TrimSpace(g.sayHere(cur) + " " + p.told.extra)
 	} else {
 		var added []herePart
 		for _, part := range cur {
@@ -100,6 +101,26 @@ func (g *Game) tellRoom(p *Player) {
 	g.send(p.client, msg)
 	p.roundRoom = &msg
 	p.told = told{ok: true, x: p.X, y: p.Y, parts: now}
+}
+
+// atTheGate gör början av vandringen till en del av det första rumsblocket:
+// vid vilken port vandraren kliver in står först i beskrivningen, solen
+// hör till det man ser, och portarna där de andra går in är det man hör.
+func (g *Game) atTheGate(p *Player) {
+	p.told.desc = strings.TrimSpace(g.data.Text("start_port", "horn", g.data.Horn[p.Corner]) + " " + p.told.desc)
+	p.told.extra = g.data.Text("start", "sol", strconv.Itoa(g.sun))
+	others := 0
+	for _, o := range g.players {
+		if o != nil && o != p {
+			others++
+		}
+	}
+	switch {
+	case others == 1:
+		p.heard = append(p.heard, g.data.Text("start_hor_en"))
+	case others > 1:
+		p.heard = append(p.heard, g.data.Text("start_hor_flera"))
+	}
 }
 
 // forgetRoom gör att nästa rumsblock börjar om, som när vandraren ställs vid

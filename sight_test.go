@@ -296,7 +296,12 @@ func TestDrawnCorners(t *testing.T) {
 				t.Fatalf("%s står inte vid sin port: %d,%d", p.Name, p.X, p.Y)
 			}
 		}
-		if !containsPart(logs(a), g.data.Horn[pa.Corner]) {
+		// Porten står först i det första rumsblocket (atTheGate).
+		told := false
+		for _, r := range rooms(a) {
+			told = told || strings.Contains(r.Text, g.data.Horn[pa.Corner])
+		}
+		if !told {
 			t.Fatal("Alva fick inte veta sin port")
 		}
 		seen[pa.Corner] = true
