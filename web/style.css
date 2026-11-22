@@ -406,6 +406,57 @@ body[data-niva="4"] #crt::after { animation: throb 0.95s infinite; }
 #me .plan, #me .plan:first-child { margin: 0 0 0 auto; padding: 0; border: 0; }
 #nowBlock #whisper { flex: 1 1 100%; margin: 2px 0 0; }
 
+/* Loggen på kartan (en bred skärm): placeSide i app.js flyttar #side in
+   på kartan. Texten står utan ruta, nere till vänster, med en mörk skugga
+   runt bokstäverna så att den går att läsa på ljusa golv, och en svag
+   toning längst till vänster. Den senaste rundan står nederst i full
+   styrka, den förra svagt ovanför, och de äldre syns inte. Texten släpper
+   igenom musen till kartan. */
+body.logpakartan #mapbox::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: min(48ch, 46%);
+  background: linear-gradient(to right, rgba(8, 9, 11, 0.55), rgba(8, 9, 11, 0.3) 60%, transparent);
+  pointer-events: none;
+  z-index: 1;
+  border-radius: 6px 0 0 6px;
+}
+#mapbox > #side {
+  position: absolute;
+  left: 12px;
+  top: 40px;
+  bottom: 12px;
+  width: min(42ch, 40%);
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 10px;
+  pointer-events: none;
+  text-shadow: 0 0 2px #000, 0 0 5px #000, 0 1px 3px #000;
+}
+#mapbox > #side #logwrap { flex: 0 1 auto; min-height: 0; }
+#mapbox > #side #log {
+  display: flex;
+  flex-direction: column-reverse;
+  overflow: hidden;
+  padding-right: 0;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 3em);
+  mask-image: linear-gradient(to bottom, transparent 0, #000 3em);
+}
+#mapbox > #side #log .round { margin-top: 0; margin-bottom: 10px; flex: 0 0 auto; }
+#mapbox > #side #log .round:first-child { min-height: 0; margin-bottom: 0; }
+#mapbox > #side #log .round:nth-child(2) { opacity: 0.4; }
+#mapbox > #side #log .round:nth-child(n + 3) { display: none; }
+#mapbox > #side #log .round:first-child + .round::before { display: none; }
+#mapbox > #side #log .roundhead { border-top: 0; padding-top: 0; }
+#mapbox > #side #logNew { display: none; }
+#mapbox > #side #pad { order: 2; pointer-events: auto; text-shadow: none; }
+#mapbox > #side #log .who { text-shadow: 0 0 2px #000, 0 0 5px #000; }
+/* Kompassen flyttar från loggens hörn till ovanför zoomen. */
+body.logpakartan .isokompass { left: auto; right: 12px; bottom: 50px; }
+
 /* Rummets namn uppe till vänster, statusen uppe till höger på kartan. */
 #mapleft {
   position: absolute;

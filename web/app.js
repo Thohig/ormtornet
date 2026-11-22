@@ -297,6 +297,20 @@ const Log = (() => {
 })();
 Log.init();
 
+// placeSide: på en bred skärm står loggen (och knapparna på en pekskärm)
+// på kartan, som text utan ruta, och kartan får hela bredden. På en smal
+// skärm står de under kartan som förut.
+const wideScreen = window.matchMedia("(min-width: 701px)");
+function placeSide() {
+  const side = $("side");
+  const home = wideScreen.matches ? $("mapbox") : $("main");
+  if (side.parentElement !== home) home.appendChild(side);
+  document.body.classList.toggle("logpakartan", wideScreen.matches);
+  MapView.resize();
+}
+wideScreen.addEventListener("change", placeSide);
+placeSide();
+
 function send(obj) {
   if (ws && ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify(obj));
 }
