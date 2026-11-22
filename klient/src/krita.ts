@@ -1,6 +1,5 @@
-// Krita på canvas: texturerna för golvet, väggarna och tecknen på golvet.
-// De ritas vita och färgas av materialet, så att en textur räcker för alla
-// färger.
+// Texturer ritade på canvas: tecknen i krita på golvet, som ritas vita och
+// färgas av materialet, och golvets sten, murverket och träet.
 import * as THREE from "three";
 
 // Ett eget frö, så att kritan ser likadan ut varje gång.
@@ -153,45 +152,6 @@ export function revben(): THREE.Texture {
   });
 }
 
-export function skiffer(): THREE.Texture {
-  return spara("skiffer", () => {
-    const [c, x] = duk(256, 256);
-    x.fillStyle = "#1c1f23";
-    x.fillRect(0, 0, 256, 256);
-    for (let i = 0; i < 6; i++) {
-      const g = x.createRadialGradient(slump() * 256, slump() * 256, 0, slump() * 256, slump() * 256, 120);
-      g.addColorStop(0, "rgba(255,255,255,0.035)");
-      g.addColorStop(1, "rgba(255,255,255,0)");
-      x.fillStyle = g;
-      x.fillRect(0, 0, 256, 256);
-    }
-    for (let i = 0; i < 2600; i++) {
-      const v = 40 + slump() * 60;
-      x.fillStyle = `rgba(${v},${v + 3},${v + 6},${0.25 + slump() * 0.3})`;
-      x.fillRect(slump() * 256, slump() * 256, 1, 1);
-    }
-    x.strokeStyle = "rgba(255,255,255,0.05)";
-    x.lineWidth = 2;
-    x.strokeRect(2, 2, 252, 252);
-    return textur(c);
-  });
-}
-
-export function vagg(): THREE.Texture {
-  return spara("vagg", () => {
-    const [c, x] = duk(128, 128);
-    x.fillStyle = "#fff";
-    x.fillRect(0, 0, 128, 128);
-    for (let i = 0; i < 1800; i++) {
-      x.fillStyle = `rgba(60,60,60,${slump() * 0.28})`;
-      x.fillRect(slump() * 128, slump() * 128, 1 + slump() * 2, 1);
-    }
-    const t = textur(c);
-    t.wrapS = t.wrapT = THREE.RepeatWrapping;
-    return t;
-  });
-}
-
 export function skugga(): THREE.Texture {
   return spara("skugga", () => {
     const [c, x] = duk(64, 64);
@@ -201,5 +161,153 @@ export function skugga(): THREE.Texture {
     x.fillStyle = g;
     x.fillRect(0, 0, 64, 64);
     return textur(c);
+  });
+}
+
+// ---- Sten och trä ----
+//
+// Golvet, murarna och dörrarna är målade som spelbrickor: huggna
+// stenplattor, murverk och plankor. De ritas en gång, med samma frö varje
+// gång, och färgas av materialet där tornet förändras med avslöjandet.
+
+// varie ger en färg nära bas, där varje kanal kan gå upp eller ner med spann.
+function varie(bas: number[], spann: number): string {
+  const d = (slump() - 0.5) * spann;
+  return `rgb(${bas.map((v) => Math.max(0, Math.min(255, Math.round(v + d + (slump() - 0.5) * spann * 0.3)))).join(",")})`;
+}
+
+// sten fyller rutan (x, y, w, h) med en huggen sten: grundfärg, fläckar,
+// en ljusare övre kant och en mörkare undre, som om ljuset kom snett uppifrån.
+function sten(x: CanvasRenderingContext2D, rx: number, ry: number, w: number, h: number, bas: number[], fog: number): void {
+  const r = Math.min(w, h) * 0.12;
+  x.save();
+  x.beginPath();
+  x.roundRect(rx + fog, ry + fog, w - fog * 2, h - fog * 2, r);
+  x.clip();
+  x.fillStyle = varie(bas, 34);
+  x.fillRect(rx, ry, w, h);
+  for (let i = 0; i < (w * h) / 18; i++) {
+    const v = slump() < 0.5 ? 0 : 255;
+    x.fillStyle = `rgba(${v},${v},${v},${slump() * 0.07})`;
+    const s = 1 + slump() * 3;
+    x.fillRect(rx + slump() * w, ry + slump() * h, s, s);
+  }
+  const g = x.createLinearGradient(rx, ry, rx + w * 0.3, ry + h);
+  g.addColorStop(0, "rgba(255,240,215,0.16)");
+  g.addColorStop(0.5, "rgba(0,0,0,0)");
+  g.addColorStop(1, "rgba(0,0,0,0.28)");
+  x.fillStyle = g;
+  x.fillRect(rx, ry, w, h);
+  // En spricka ibland.
+  if (slump() < 0.3) {
+    x.strokeStyle = "rgba(20,16,12,0.55)";
+    x.lineWidth = 1.2;
+    x.beginPath();
+    let px = rx + slump() * w, py = ry + slump() * h * 0.3;
+    x.moveTo(px, py);
+    for (let i = 0; i < 4; i++) {
+      px += (slump() - 0.5) * w * 0.3;
+      py += h * 0.2;
+      x.lineTo(px, py);
+    }
+    x.stroke();
+  }
+  x.restore();
+}
+
+// stengolv är ett rums golv: oregelbundna stenplattor i rader, med fogar,
+// lite mossa i fogarna och en mörkare kant längs väggarna.
+export function stengolv(): THREE.Texture {
+  return spara("stengolv", () => {
+    const N = 512;
+    const [c, x] = duk(N, N);
+    x.fillStyle = "#2b2520";
+    x.fillRect(0, 0, N, N);
+    let y = 0;
+    while (y < N - 4) {
+      const h = Math.min(N - y, 70 + slump() * 50);
+      let xx = -slump() * 60;
+      while (xx < N) {
+        const w = 80 + slump() * 90;
+        sten(x, xx, y, w, h, [112, 102, 88], 3);
+        xx += w;
+      }
+      y += h;
+    }
+    // Mossa i fogarna.
+    for (let i = 0; i < 900; i++) {
+      x.fillStyle = `rgba(${70 + slump() * 30},${90 + slump() * 40},${40 + slump() * 20},${slump() * 0.35})`;
+      x.fillRect(slump() * N, slump() * N, 2, 2);
+    }
+    // Mörkare mot väggarna, där ingen går.
+    const g = x.createRadialGradient(N / 2, N / 2, N * 0.3, N / 2, N / 2, N * 0.72);
+    g.addColorStop(0, "rgba(0,0,0,0)");
+    g.addColorStop(1, "rgba(0,0,0,0.45)");
+    x.fillStyle = g;
+    x.fillRect(0, 0, N, N);
+    return textur(c);
+  });
+}
+
+// murverk är murarnas stenblock i förband. Den upprepas efter murens
+// storlek i världen (se varldsUv i karta.ts), så att blocken är lika
+// stora överallt.
+export function murverk(): THREE.Texture {
+  return spara("murverk", () => {
+    const N = 256;
+    const [c, x] = duk(N, N);
+    x.fillStyle = "#3a332c";
+    x.fillRect(0, 0, N, N);
+    const rad = N / 4;
+    // Ett block som går över kanten ritas också på andra sidan, med samma
+    // frö, så att muren går ihop när mönstret upprepas.
+    const block = (bx: number, by: number, w: number) => {
+      const s0 = seed;
+      sten(x, bx, by, w, rad, [176, 166, 150], 2.5);
+      if (bx + w > N) {
+        seed = s0;
+        sten(x, bx - N, by, w, rad, [176, 166, 150], 2.5);
+      }
+    };
+    for (let r = 0; r < 4; r++) {
+      let bx = r % 2 ? N / 4 : 0;
+      const slut = bx + N;
+      // Fyra block per rad, olika långa, så att mönstret inte blir rutigt.
+      for (let i = 0; i < 4; i++) {
+        const w = i === 3 ? slut - bx : (N / 4) * (0.75 + slump() * 0.5);
+        block(bx, r * rad, w);
+        bx += w;
+      }
+    }
+    const t = textur(c);
+    t.wrapS = t.wrapT = THREE.RepeatWrapping;
+    return t;
+  });
+}
+
+// tra är plankor med ådring, för dörrarna och inredningen.
+export function tra(): THREE.Texture {
+  return spara("tra", () => {
+    const N = 128;
+    const [c, x] = duk(N, N);
+    const plank = N / 4;
+    for (let i = 0; i < 4; i++) {
+      x.fillStyle = varie([120, 78, 44], 26);
+      x.fillRect(i * plank, 0, plank, N);
+      for (let j = 0; j < 14; j++) {
+        x.strokeStyle = `rgba(40,22,10,${0.15 + slump() * 0.25})`;
+        x.lineWidth = 0.6 + slump();
+        x.beginPath();
+        const px = i * plank + slump() * plank;
+        x.moveTo(px, 0);
+        x.bezierCurveTo(px + (slump() - 0.5) * 8, N * 0.3, px + (slump() - 0.5) * 8, N * 0.7, px + (slump() - 0.5) * 6, N);
+        x.stroke();
+      }
+      x.fillStyle = "rgba(20,10,4,0.7)";
+      x.fillRect(i * plank, 0, 1.5, N);
+    }
+    const t = textur(c);
+    t.wrapS = t.wrapT = THREE.RepeatWrapping;
+    return t;
   });
 }

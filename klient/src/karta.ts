@@ -10,8 +10,8 @@ import type { Figur } from "./modeller";
 import type { Rum, Tillstand, Utsnitt, Val } from "./typer";
 
 const S = 6; // ett rum i världen
-const VH = 0.7; // väggarnas höjd
-const VT = 0.26; // väggarnas tjocklek
+const VH = 0.8; // murarnas höjd
+const VT = 0.4; // murarnas tjocklek
 const LUCKA = 1.9; // dörrarnas bredd
 
 // Ett rum delas i celler, 7 på bredden och 4 på höjden, för vandrarnas
@@ -22,7 +22,7 @@ const SLOTS = [[2, 1], [5, 1], [2, 3], [5, 3], [1, 2], [6, 2], [3, 1], [4, 3]];
 
 const FARG = {
   okand: "#6a6e76",
-  port: "#8d8a82",
+  port: "#d8cfbf",
   stangd: "#d0503a",
   guld: "#ffd36b",
   forlorad: "#a04a3c",
@@ -32,6 +32,7 @@ const FARG = {
   krita: "#f2f0e8",
   borta: "#5a5d63",
   vagg: "#c9c6bc",
+  jarn: "#2e2a27",
 };
 const RING = ["#c9a24f", "#c9a24f", "#c9a24f", "#c98a5a", "#c4483a"]; // per nivå
 
@@ -41,10 +42,10 @@ const RING = ["#c9a24f", "#c9a24f", "#c9a24f", "#c98a5a", "#c4483a"]; // per niv
 // golv golvets ton, period hur länge ett andetag eller hjärtslag tar och
 // revben hur tydliga revbenen på golvet är.
 const LOOK: Record<number, { vagg: number[]; hi: number[]; golv: number[]; period: number; revben: number }> = {
-  1: { vagg: [201, 198, 188], hi: [201, 198, 188], golv: [255, 255, 255], period: 0, revben: 0 },
-  2: { vagg: [196, 192, 182], hi: [240, 234, 220], golv: [255, 248, 236], period: 4200, revben: 0 },
-  3: { vagg: [196, 160, 140], hi: [240, 170, 140], golv: [230, 170, 160], period: 1250, revben: 0.35 },
-  4: { vagg: [176, 92, 74], hi: [255, 118, 88], golv: [210, 130, 120], period: 950, revben: 0.55 },
+  1: { vagg: [236, 228, 214], hi: [236, 228, 214], golv: [255, 255, 255], period: 0, revben: 0 },
+  2: { vagg: [228, 220, 206], hi: [255, 246, 230], golv: [255, 248, 236], period: 4200, revben: 0 },
+  3: { vagg: [220, 172, 152], hi: [255, 182, 152], golv: [230, 170, 160], period: 1250, revben: 0.35 },
+  4: { vagg: [196, 102, 84], hi: [255, 118, 88], golv: [210, 130, 120], period: 950, revben: 0.55 },
 };
 const PORT_KOTT = "#a4483a";
 const MS_PER_ENHET = 16; // hjärtslaget sprider sig från tornets mitt så här fort
@@ -161,22 +162,76 @@ function guldhog(): THREE.Mesh {
   return hog;
 }
 
-// portbage är en port för teckenförklaringen: två stolpar och en
-// överliggare, med en mur om den har slutit sig och kött på nivå 4.
+// En port i ytterväggen är ett portvalv: två torn med spetsiga tak, en
+// överliggare med krön och två dörrar av trä. Öppen står dörrarna utåt;
+// stängd fyller de valvet, med röda järnband. portGeometri bygger den med
+// mitten i origo, längs x, och utsidan åt -z.
+interface PortDelar {
+  sten: THREE.BufferGeometry[];
+  tra: THREE.BufferGeometry[];
+  jarn: THREE.BufferGeometry[];
+  rott: THREE.BufferGeometry[];
+}
+function portGeometri(stangd: boolean): PortDelar {
+  const d: PortDelar = { sten: [], tra: [], jarn: [], rott: [] };
+  const lada = (lista: THREE.BufferGeometry[], w: number, h: number, dj: number, x: number, y: number, z: number) => {
+    const g = new THREE.BoxGeometry(w, h, dj);
+    g.translate(x, y, z);
+    lista.push(g);
+  };
+  const torn = LUCKA / 2 + 0.35;
+  [-1, 1].forEach((s) => {
+    lada(d.sten, 0.7, 1.9, 0.75, s * torn, 0.95, 0);
+    const tak = new THREE.ConeGeometry(0.52, 0.55, 4);
+    tak.rotateY(Math.PI / 4);
+    tak.translate(s * torn, 2.17, 0);
+    d.sten.push(tak);
+  });
+  lada(d.sten, LUCKA + 0.2, 0.45, 0.6, 0, 1.55, 0);
+  [-0.6, 0, 0.6].forEach((x) => lada(d.sten, 0.3, 0.22, 0.6, x, 1.885, 0));
+  if (stangd) {
+    lada(d.tra, LUCKA, 1.3, 0.12, 0, 0.65, 0);
+    [0.3, 1.0].forEach((y) => lada(d.rott, LUCKA + 0.02, 0.1, 0.18, 0, y, 0));
+  } else {
+    [-1, 1].forEach((s) => {
+      const x = s * (LUCKA / 2 - 0.04), z = -(0.38 + LUCKA / 4);
+      lada(d.tra, 0.08, 1.3, LUCKA / 2, x, 0.65, z);
+      [0.3, 1.0].forEach((y) => lada(d.jarn, 0.11, 0.08, LUCKA / 2, x, y, z));
+    });
+  }
+  return d;
+}
+
+// portbage är en port för teckenförklaringen, stängd eller öppen, och av
+// kött på nivå 4.
 function portbage(stangd: boolean, kott: boolean): THREE.Group {
   const g = new THREE.Group();
-  const mat = new THREE.MeshLambertMaterial({ color: kott ? PORT_KOTT : FARG.port });
-  const lada = (w: number, h: number, d: number, x: number, y: number, m: THREE.Material = mat) => {
-    const o = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), m);
-    o.position.set(x, y, 0);
-    g.add(o);
-  };
-  lada(VT * 1.5, 1.4, VT * 1.5, -LUCKA / 2, 0.7);
-  lada(VT * 1.5, 1.4, VT * 1.5, LUCKA / 2, 0.7);
-  lada(LUCKA + VT * 1.5, 0.3, VT * 1.6, 0, 1.5);
-  if (stangd) lada(LUCKA, 1.36, VT, 0, 0.68, new THREE.MeshLambertMaterial({ color: FARG.stangd }));
+  const d = portGeometri(stangd);
+  const lagg = (lista: THREE.BufferGeometry[], farg: string) =>
+    lista.forEach((geo) => g.add(new THREE.Mesh(geo, new THREE.MeshLambertMaterial({ color: farg }))));
+  lagg(d.sten, kott ? PORT_KOTT : FARG.port);
+  lagg(d.tra, "#7a4e2c");
+  lagg(d.jarn, FARG.jarn);
+  lagg(d.rott, FARG.stangd);
   g.rotation.y = Math.PI / 4; // vänd mot kameran
   return g;
+}
+
+// varldsUv låter en shader läsa sin textur efter platsen i världen i stället
+// för efter ytans egna koordinater, så att murverket har lika stora block
+// på alla murar, oavsett hur långa de är. skala är hur många enheter ett
+// helt mönster täcker.
+function varldsUv(sh: THREE.WebGLProgramParametersWithUniforms, skala: number): void {
+  sh.vertexShader = sh.vertexShader
+    .replace("#include <common>", "#include <common>\nvarying vec3 vVarld;\nvarying vec3 vNormV;")
+    .replace("#include <begin_vertex>", "#include <begin_vertex>\nvVarld = (modelMatrix * vec4(transformed, 1.0)).xyz;\nvNormV = normalize(mat3(modelMatrix) * objectNormal);");
+  sh.fragmentShader = sh.fragmentShader
+    .replace("#include <common>", "#include <common>\nvarying vec3 vVarld;\nvarying vec3 vNormV;")
+    .replace(
+      "#include <map_fragment>",
+      `vec2 wuv = abs(vNormV.y) > 0.5 ? vVarld.xz : vec2(abs(vNormV.x) > 0.5 ? vVarld.z : vVarld.x, vVarld.y);
+diffuseColor *= texture2D(map, wuv / ${skala.toFixed(2)});`,
+    );
 }
 
 export class IsoKarta {
@@ -386,6 +441,8 @@ export class IsoKarta {
     const vaggar: THREE.BufferGeometry[] = [];
     const portar: THREE.BufferGeometry[] = [];
     const stangda: THREE.BufferGeometry[] = [];
+    const tra: THREE.BufferGeometry[] = [];
+    const jarn: THREE.BufferGeometry[] = [];
     const kanter = new Map<string, { oppen: boolean; port: boolean; stangd: boolean; h: boolean; x: number; z: number }>();
 
     const kant = (nyckel: string, h: boolean, x: number, z: number) => {
@@ -400,6 +457,7 @@ export class IsoKarta {
     state.rooms.forEach((r: Rum) => {
       const g = new THREE.PlaneGeometry(S, S);
       g.rotateX(-Math.PI / 2);
+      g.rotateY(((r.x * 7 + r.y * 3) % 4) * (Math.PI / 2)); // plattorna ligger olika i olika rum
       g.translate(r.x * S + S / 2, 0, r.y * S + S / 2);
       golv.push(g);
       // Revbenen syns genom golvet från nivå 3.
@@ -431,28 +489,50 @@ export class IsoKarta {
       g.translate(x, y, z);
       lista.push(g);
     };
-    // Ett väggstycke längs kanten från a till b (längs x om h, annars z).
+    // at lägger en låda längs kanten k: u längs muren (0 till S), v ut från
+    // den, åt -z eller -x.
+    const at = (k: { h: boolean; x: number; z: number }, lista: THREE.BufferGeometry[], u: number, y: number, w: number, h: number, d: number, v = 0) =>
+      k.h ? lada(lista, w, h, d, k.x + u, y, k.z + v) : lada(lista, d, h, w, k.x + v, y, k.z + u);
+    // Ett murstycke längs kanten från a till b, med krön ovanpå.
     const stycke = (k: { h: boolean; x: number; z: number }, a: number, b: number) => {
       const len = b - a + VT;
-      if (k.h) lada(vaggar, len, VH, VT, k.x + (a + b) / 2, VH / 2, k.z);
-      else lada(vaggar, VT, VH, len, k.x, VH / 2, k.z + (a + b) / 2);
+      at(k, vaggar, (a + b) / 2, VH / 2, len, VH, VT);
+      const antal = Math.floor((len - 0.2) / 0.9);
+      for (let i = 0; i < antal; i++) at(k, vaggar, a - VT / 2 + 0.35 + i * 0.9 + (len - 0.2 - antal * 0.9) / 2, VH + 0.11, 0.42, 0.22, VT);
     };
-    kanter.forEach((k) => {
+    kanter.forEach((k, nyckel) => {
       if (!k.oppen && !k.port) {
         stycke(k, 0, S);
         return;
       }
       stycke(k, 0, S / 2 - LUCKA / 2);
       stycke(k, S / 2 + LUCKA / 2, S);
-      if (!k.port) return;
-      // Porten: två stolpar och en överliggare, och en mur när den har slutit sig.
-      const at = (u: number, y: number, w: number, h: number, d: number, lista = portar) =>
-        k.h ? lada(lista, w, h, d, k.x + u, y, k.z) : lada(lista, d, h, w, k.x, y, k.z + u);
-      at(S / 2 - LUCKA / 2 + VT * 0.2, 0.7, VT * 1.5, 1.4, VT * 1.5);
-      at(S / 2 + LUCKA / 2 - VT * 0.2, 0.7, VT * 1.5, 1.4, VT * 1.5);
-      at(S / 2, 1.5, LUCKA + VT * 1.2, 0.3, VT * 1.6);
-      if (k.stangd) at(S / 2, 0.68, LUCKA, 1.36, VT, stangda);
-      else this.mun(k);
+      if (!k.port) {
+        // En dörr mellan två rum: dörrposter, och en dörr av trä som står
+        // uppslagen mot muren i det ena rummet.
+        [-1, 1].forEach((sida) => at(k, vaggar, S / 2 + sida * (LUCKA / 2 + 0.06), (VH + 0.3) / 2, 0.3, VH + 0.3, VT + 0.12));
+        let h = 0;
+        for (const c of nyckel) h = (h * 31 + c.charCodeAt(0)) | 0;
+        const sida = h & 1 ? 1 : -1;
+        const u = S / 2 + LUCKA / 2 + 0.25 + 0.85;
+        at(k, tra, u, 0.39, 1.7, 0.78, 0.07, sida * (VT / 2 + 0.05));
+        [0.2, 0.6].forEach((y) => at(k, jarn, u, y, 1.7, 0.07, 0.03, sida * (VT / 2 + 0.1)));
+        return;
+      }
+      // Porten: ett portvalv med dörrar av trä, se portGeometri.
+      const d = portGeometri(k.stangd);
+      const ut = k.h ? (k.z === 0 ? 0 : Math.PI) : k.x === 0 ? Math.PI / 2 : -Math.PI / 2;
+      const flytta = (lista: THREE.BufferGeometry[], till: THREE.BufferGeometry[]) =>
+        lista.forEach((g) => {
+          g.rotateY(ut);
+          g.translate(k.h ? k.x + S / 2 : k.x, 0, k.h ? k.z : k.z + S / 2);
+          till.push(g);
+        });
+      flytta(d.sten, portar);
+      flytta(d.tra, tra);
+      flytta(d.jarn, jarn);
+      flytta(d.rott, stangda);
+      if (!k.stangd) this.mun(k);
     });
 
     const lagg = (lista: THREE.BufferGeometry[], mat: THREE.Material, skugga: boolean) => {
@@ -466,8 +546,10 @@ export class IsoKarta {
     };
     lagg(golv, this.golvMaterial(), false);
     lagg(vaggar, this.vaggMaterial(), true);
-    lagg(portar, this.enkelt("port", FARG.port), true);
+    lagg(portar, this.stenMaterial("port", FARG.port), true);
     lagg(stangda, this.enkelt("stangd", FARG.stangd), true);
+    lagg(tra, this.traMaterial(), true);
+    lagg(jarn, this.enkelt("jarn", FARG.jarn), true);
   }
 
   // mun ger en öppen port tänder, som syns och tuggar på nivå 4.
@@ -497,7 +579,7 @@ export class IsoKarta {
   private golvMaterial(): THREE.Material {
     let m = this.material.get("golv");
     if (!m) {
-      m = new THREE.MeshLambertMaterial({ map: K.skiffer() });
+      m = new THREE.MeshLambertMaterial({ map: K.stengolv() });
       this.material.set("golv", m);
     }
     return m;
@@ -508,18 +590,14 @@ export class IsoKarta {
     if (!m) {
       // Väggarnas färg räknas ut i shadern, så att hjärtslaget kan gå som en
       // våg från tornets mitt: samma puls som i puls(), för varje punkt.
-      const mat = new THREE.MeshLambertMaterial({ map: K.vagg(), color: FARG.vagg });
+      const mat = new THREE.MeshLambertMaterial({ map: K.murverk(), color: FARG.vagg });
       const u = this.vaggar;
       mat.onBeforeCompile = (sh) => {
         Object.assign(sh.uniforms, u);
-        sh.vertexShader = sh.vertexShader
-          .replace("#include <common>", "#include <common>\nvarying vec3 vVarld;")
-          .replace("#include <begin_vertex>", "#include <begin_vertex>\nvVarld = (modelMatrix * vec4(transformed, 1.0)).xyz;");
         sh.fragmentShader = sh.fragmentShader
           .replace(
             "#include <common>",
             `#include <common>
-varying vec3 vVarld;
 uniform float uTid;
 uniform float uPeriod;
 uniform float uNiva;
@@ -536,9 +614,31 @@ float puls() {
 }`,
           )
           .replace("vec4 diffuseColor = vec4( diffuse, opacity );", "vec4 diffuseColor = vec4( mix(uVagg, uHi, puls()), opacity );");
+        varldsUv(sh, 1.6); // efter, så att vVarld står först
       };
       m = mat;
       this.material.set("vagg", m);
+    }
+    return m;
+  }
+
+  // stenMaterial är murverk i färgen farg, för portvalven.
+  private stenMaterial(nyckel: string, farg: string): THREE.Material {
+    let m = this.material.get(nyckel);
+    if (!m) {
+      const mat = new THREE.MeshLambertMaterial({ map: K.murverk(), color: farg });
+      mat.onBeforeCompile = (sh) => varldsUv(sh, 1.6);
+      m = mat;
+      this.material.set(nyckel, m);
+    }
+    return m;
+  }
+
+  private traMaterial(): THREE.Material {
+    let m = this.material.get("tra");
+    if (!m) {
+      m = new THREE.MeshLambertMaterial({ map: K.tra() });
+      this.material.set("tra", m);
     }
     return m;
   }
@@ -903,7 +1003,7 @@ float puls() {
     this.revbenMat.opacity = look.revben * (niva >= 3 ? 0.7 + 0.3 * p : 1);
     this.revbenMat.visible = look.revben > 0;
 
-    (this.enkelt("port", FARG.port) as THREE.MeshLambertMaterial).color.set(niva === 4 ? PORT_KOTT : FARG.port);
+    (this.stenMaterial("port", FARG.port) as THREE.MeshLambertMaterial).color.set(niva === 4 ? PORT_KOTT : FARG.port);
     const tugga = (Math.sin(t / 260) + 1) / 2;
     this.munnar.forEach(({ upper, lower }) => {
       upper.parent!.visible = niva === 4;
