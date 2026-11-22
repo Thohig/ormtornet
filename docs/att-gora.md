@@ -1,7 +1,8 @@
 # Att göra och idéer
 
-Status: samlat 2026-11-18, kompletterat efter provspelet 2026-11-21 (se
-[provspel-2026-11-21.md](provspel-2026-11-21.md)). Inget här är bestämt. Användaren väljer vad som
+Status: samlat 2026-11-18, kompletterat efter provspelen 2026-11-21 och
+2026-11-22 (se [provspel-2026-11-21.md](provspel-2026-11-21.md) och
+[provspel-2026-11-22.md](provspel-2026-11-22.md)). Inget här är bestämt. Användaren väljer vad som
 byggs, och förslag tas fram innan något byggs.
 
 ## Att göra
@@ -167,10 +168,17 @@ En riktig kväll behövs för att se:
   i stället för 2,5. Känns början lagom med människor?
 
 - Göra Normal mildare om den är för hård, i `data/svarighet.json` (färre
-  fällor eller ett liv till). Uppdatera då tabellen i README.
+  fällor eller ett liv till). Uppdatera då tabellen i README. I provspelet
+  2026-11-22 tog fällorna 3–6 av 6 liv inom 7–10 rundor i tre vandringar
+  av fyra, och den söta dimman kostade 3 liv (−1 och två rundor gift).
+- Kartritaren är fortfarande svagast i simuleringen 2026-11-22 (300
+  vandringar, 3 AI-spelare): 49 % överlever och 22 % vinner, mot
+  Legoknektens 79 % och 41 %.
 - AI-spelarna når sällan kammaren (13–23 % i simuleringarna) och söker
   nästan aldrig, så vandringar med bara AI-spelare blir tama. De kan bli
-  modigare, söka oftare och följa vägar som andra redan har gått.
+  modigare, söka oftare och följa vägar som andra redan har gått. I
+  provspelet 2026-11-22 kom ingen av två AI-spelare till kammaren på 40
+  rundor i en vandring.
 
 ### Småsaker från provspelet
 
@@ -178,7 +186,23 @@ Sett 2026-11-21 men inte ändrat:
 
 - "Solen har vandrat halva vägen" kan sägas vid 19 handsbredder kvar när
   klockan har skyndat på solen.
-- I mörker visar kartan snett ovanifrån fortfarande pilarna vid dörrarna.
+Sett 2026-11-22 men inte ändrat:
+
+- Introt säger "din karta visar bara rum du själv har gått igenom" också
+  till Kartritaren, som ser alla rum som någon har hittat.
+- Har förra rundan ingenting i loggen (ett känt, tomt rum) börjar en stöt
+  i muren ändå en ny runda, och står där före rumsblocket när rundan
+  sedan händer.
+- Lådan med loggen börjar med den senaste rundan över hela höjden, så den
+  ser tom ut under den första rundan.
+- Spelkortet täcker rummet på telefonen en stund efter varje runda.
+- Värdsidans avsnitt Inför nästa vandring är låst under vandringen, utom
+  Fröet.
+- Pages lokalt: spelledarens Gå in själv fastnade en gång på introt när
+  den lokala filservern tappade filer. Prova på riktiga Pages.
+
+Från förut:
+
 - De vaga `_dolt`-texterna och originalen finns båda kvar i `data/`. Sedan
   egen karta är det enda läget kan de slås ihop, så att varje text finns
   en gång.
