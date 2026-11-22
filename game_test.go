@@ -871,3 +871,20 @@ func TestRoomTypesAndSafePorts(t *testing.T) {
 		t.Fatalf("ojämnt fördelade rumstyper: %v", count)
 	}
 }
+
+// Sök i kammaren tar en näve, så att spelarna bara behöver en tangent.
+func TestSearchTakesInTheChamber(t *testing.T) {
+	g, a, b := startTwo(t)
+	pa := a.player
+	g.reveal(g.center(), g.center())
+	pa.X, pa.Y = g.center(), g.center()
+	g.deck = []string{"sover"}
+	g.Act(a, actSearch, 0)
+	if pa.Action != actTake {
+		t.Fatalf("sök i kammaren blev %q, inte en näve", pa.Action)
+	}
+	g.Act(b, actWait, 0)
+	if pa.Treasure <= 0 {
+		t.Fatal("ingen skatt togs")
+	}
+}

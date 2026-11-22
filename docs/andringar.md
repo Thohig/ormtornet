@@ -6,6 +6,11 @@ eller leder tornet.
 
 ## 2026-11-22
 
+### Sök tar också skatt
+
+- S (knappen Sök) tar en näve ur högen i kammaren och söker i andra rum.
+  T och knappen Ta är borta.
+
 ### Värdsidan i två kolumner
 
 - På en skärm som är minst 1100 punkter bred står värdsidan i två

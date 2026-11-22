@@ -237,7 +237,7 @@ den som dör och för alla i slutet (se slutet nedan och Strider):
      det på en pekskärm, så står det vad det betyder. Styrningen ligger
      bakom **?** (eller tangenten `?` eller `H`) och visas en gång första
      vandringen, tills den tar slut. Panelen Nu visar det valda draget, striden, ormen i
-     kammaren (och att T tar skatt), hur länge man sitter fast och vad som
+     kammaren (och att S tar skatt), hur länge man sitter fast och vad som
      väntar, och viskningen skrivs i en egen ruta där. Den som har gått ut
      ser där hur mycket guld hen bar ut medan de andra är kvar.
      Ingen text på spelskärmen är dämpad; bara det som inte går att
@@ -286,8 +286,7 @@ fram.
 |------------|-----------------------------------|
 | Pilar      | gå åt det hållet                  |
 | Mellanslag | vänta                             |
-| T          | ta skatt (bara i skattkammaren)   |
-| S          | sök igenom rummet                 |
+| S          | sök igenom rummet, eller ta skatt i skattkammaren |
 | D          | drick en dryck                    |
 | A          | anfall (i strid)                  |
 | P          | parera (i strid)                  |
@@ -489,7 +488,7 @@ Namn, personligheter och betänketid ligger i `data/ai.json`.
 
 ### Skattkammaren och ormen
 
-I kammaren mitt i tornet kan du ta skatt (T) en gång per runda. Varje gång
+I kammaren mitt i tornet kan du ta skatt (S) en gång per runda. Varje gång
 dras ett ormkort ur en lek:
 
 - **Sover** eller **rör sig**: du får 15–45 guld och kortet tas bort ur leken.

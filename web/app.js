@@ -878,7 +878,7 @@ function renderNow(me) {
     const foe = (state.monsters || []).find((m) => m.x === me.x && m.y === me.y);
     const here = (state.rooms || []).find((r) => r.x === me.x && r.y === me.y);
     if (!foe && state.cellar === 0 && here && here.k === "kammare" && state.phase === "spel") {
-      line(t("nu_kammare", { tryck: pressWord("knapp_ta", "T") }), "dimline");
+      line(t("nu_kammare", { tryck: pressWord("knapp_sok", "S") }), "dimline");
     }
     if (foe && state.cellar === 0) {
       line(t("nu_strid", { namn: foe.name }), "foe");
@@ -1764,7 +1764,7 @@ $("back").addEventListener("click", () => pressKey("Escape"));
 
 const KEYS = {
   ArrowUp: "N", ArrowRight: "E", ArrowDown: "S", ArrowLeft: "W",
-  " ": "vanta", t: "ta", T: "ta", s: "sok", S: "sok", d: "drick", D: "drick",
+  " ": "vanta", s: "sok", S: "sok", d: "drick", D: "drick",
   a: "anfall", A: "anfall", p: "parera", P: "parera", u: "undan", U: "undan",
   // E (evade) är undanmanövern på engelska; båda bokstäverna fungerar på båda språken.
   e: "undan", E: "undan",

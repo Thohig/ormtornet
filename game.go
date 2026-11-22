@@ -1374,6 +1374,11 @@ func (g *Game) actPlayer(p *Player, a string, monsterID int) {
 		return
 	}
 	room := &g.rooms[p.Y][p.X]
+	// Sök tar en näve i kammaren: där finns inget annat att söka efter, och
+	// spelarna behöver bara en tangent för båda.
+	if a == actSearch && room.Kind == "kammare" {
+		a = actTake
+	}
 	switch a {
 	case actAttack, actParry, actDodge:
 		if g.monsterAt(p.X, p.Y) == nil {
