@@ -547,6 +547,7 @@ type roomView struct {
 	Name  string   `json:"name"`
 	Mark  string   `json:"mark,omitempty"`
 	MarkN string   `json:"markn,omitempty"`  // fällans namn, för teckenförklaringen
+	MarkI string   `json:"marki,omitempty"`  // fällans id, för modellen på kartan snett ovanifrån
 	S     bool     `json:"s,omitempty"`      // genomsökt
 	C     int      `json:"c"`                // pilen i krita, -1 om ingen
 	F     bool     `json:"f,omitempty"`      // här ligger ett föremål (bara för spårfinnaren)
@@ -751,6 +752,9 @@ func (g *Game) stateFor(me *Player) stateMsg {
 				continue
 			}
 			rv := roomView{X: x, Y: y, D: r.Doors, K: r.Kind, Exit: -1, Name: g.roomName(r), Mark: r.Mark, MarkN: g.data.trapName(r.Mark), S: r.Searched, C: -1}
+			if t := g.data.trapByMark(r.Mark); t != nil {
+				rv.MarkI = t.ID
+			}
 			if t := g.data.roomType(r.TypeID); r.Kind == "rum" && t.Modell != nil {
 				rv.In = t.Modell.Inredning
 			}

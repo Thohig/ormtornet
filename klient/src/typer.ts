@@ -9,6 +9,7 @@ export interface Rum {
   exit: number; // porten ut: 0–3 (N, Ö, S, V), -1 om ingen
   name: string;
   mark?: string; // fällans tecken
+  marki?: string; // fällans id i fallor.json, för modellen
   c: number; // pilen i krita, -1 om ingen
   f?: boolean; // ett föremål ligger här (för spårfinnaren)
   stangd?: boolean; // porten har slutit sig

@@ -382,12 +382,20 @@ func (d *Data) trap(id string) *Trap {
 // trapName ger namnet på fällan som har tecknet mark, för teckenförklaringen
 // på kartan.
 func (d *Data) trapName(mark string) string {
-	for i := range d.Fallor {
-		if mark != "" && d.Fallor[i].Tecken == mark {
-			return d.Fallor[i].Namn
-		}
+	if t := d.trapByMark(mark); t != nil {
+		return t.Namn
 	}
 	return ""
+}
+
+// trapByMark ger fällan med tecknet mark, eller nil.
+func (d *Data) trapByMark(mark string) *Trap {
+	for i := range d.Fallor {
+		if mark != "" && d.Fallor[i].Tecken == mark {
+			return &d.Fallor[i]
+		}
+	}
+	return nil
 }
 
 // signs ger förklaringarna till kartans tecken, från texterna tecken_*.

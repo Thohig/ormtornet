@@ -35,6 +35,7 @@ const FARG = {
   vagg: "#c9c6bc",
   jarn: "#2e2a27",
 };
+const KANT_VARELSE = "#7a2418"; // varelsernas socklar har en mörkröd kant
 const RING = ["#c9a24f", "#c9a24f", "#c9a24f", "#c98a5a", "#c4483a"]; // per nivå
 
 // Avslöjandet: tornets utseende följer nivån. På
@@ -780,6 +781,7 @@ float puls() {
   // ---- Teckenförklaringen ----
 
   private typer = new Map<string, { typ: string; farg?: string; storlek?: number }>(); // varelsernas tecken → id och modell
+  private fallTyper = new Map<string, string>(); // fällornas tecken → id
   private bilder = new Map<string, string | null>();
   private bildScen: THREE.Scene | null = null;
   private bildMal: THREE.WebGLRenderTarget | null = null;
@@ -790,11 +792,18 @@ float puls() {
   bild(nyckel: string, glyph: string, farg: string): string | null {
     const slag = nyckel.split(":")[0];
     let gor: (() => THREE.Object3D | null) | null = null;
-    if (slag === "du" || slag === "vandrare" || slag === "borta") gor = () => M.vandrare("", farg).grupp;
+    if (slag === "du" || slag === "vandrare" || slag === "borta") gor = () => M.miniatyr(M.vandrare("", farg), farg).grupp;
     else if (slag === "varelse") {
       const v = this.typer.get(glyph);
       if (!v) return null;
-      gor = () => M.varelse(v.typ, v.farg)?.grupp || null;
+      gor = () => {
+        const f = M.varelse(v.typ, v.farg);
+        return f ? M.miniatyr(f, KANT_VARELSE).grupp : null;
+      };
+    } else if (slag === "falla") {
+      const id = this.fallTyper.get(glyph);
+      if (!id) return null;
+      gor = () => M.falla(id);
     } else if (slag === "kammare") gor = () => guldhog();
     else if (slag === "port" || slag === "port_stangd") gor = () => portbage(slag === "port_stangd" || (this.niva() === 4 && this.state?.phase === "slut"), this.niva() === 4);
     if (!gor) return null;
@@ -870,8 +879,16 @@ float puls() {
 
     state.rooms.forEach((r) => {
       if (r.mark) {
+        // En fälla som har slagit till syns som en modell, eller som sitt
+        // tecken i krita om den saknar modell.
         const [x, z] = plats(r.x, r.y, 3, 2);
-        this.golvkrita(g, K.tecken(r.mark), "t" + r.mark, FARG.mark, 1.5, x, z);
+        const modell = r.marki ? M.falla(r.marki) : null;
+        if (modell) {
+          this.fallTyper.set(r.mark, r.marki!);
+          modell.position.set(x, 0, z);
+          modell.rotation.y = Math.PI / 4;
+          g.add(modell);
+        } else this.golvkrita(g, K.tecken(r.mark), "t" + r.mark, FARG.mark, 1.5, x, z);
       }
       if (r.f) {
         const [x, z] = plats(r.x, r.y, RW - 1, 1);
@@ -916,7 +933,7 @@ float puls() {
       const a = this.flytta(
         "v" + p.id,
         klass + farg + "|" + foremal.join(",") + "|" + (km.farg || "") + "|" + (km.storlek || 1),
-        () => skala(M.vandrare(klass, farg, foremal, km.farg), km.storlek),
+        () => M.miniatyr(skala(M.vandrare(klass, farg, foremal, km.farg), km.storlek), farg, km.storlek),
         p.x, p.y, x, z,
       );
       a.dod = dod;
@@ -931,7 +948,7 @@ float puls() {
       this.flytta(
         "m" + m.id,
         "m" + typ + m.glyph + "|" + (mm.farg || "") + "|" + (mm.storlek || 1),
-        () => skala(M.varelse(typ, mm.farg) || this.tecknad(m.glyph), mm.storlek),
+        () => M.miniatyr(skala(M.varelse(typ, mm.farg) || this.tecknad(m.glyph), mm.storlek), KANT_VARELSE, mm.storlek),
         m.x, m.y, x, z,
       );
       sedda.add("m" + m.id);
@@ -1050,8 +1067,10 @@ float puls() {
       let dv = a.vinkel - a.hall.rotation.y;
       dv = Math.atan2(Math.sin(dv), Math.cos(dv));
       a.hall.rotation.y += dv * Math.min(1, dt / 90);
-      a.fig.grupp.rotation.z = a.dod ? Math.PI / 2 : 0;
-      a.fig.grupp.position.y = a.dod ? 0.2 : 0;
+      // Den döda läggs ner på sin sockel.
+      const modell = (a.fig.grupp.userData.modell as THREE.Object3D | undefined) || a.fig.grupp;
+      modell.rotation.z = a.dod ? Math.PI / 2 : 0;
+      modell.position.y = a.dod ? M.SOCKEL + 0.2 : M.SOCKEL;
       if (!a.dod) a.fig.steg(t, gar);
       if (a.ring) a.ring.scale.set(p, p, 1);
     });

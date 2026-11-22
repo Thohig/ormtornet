@@ -77,6 +77,32 @@ function del(g: THREE.BufferGeometry, m: THREE.Material, x = 0, y = 0, z = 0): T
   return o;
 }
 
+// ---- Socklarna ----
+
+// miniatyr ställer figuren på en rund sockel av tenn, som en målad
+// spelfigur: en mörk fot, en kant målad i färgen kant och en jordfärgad
+// ovansida. Själva modellen ligger i grupp.userData.modell, så att kartan
+// kan lägga ner den när vandraren dör medan sockeln står kvar. storlek är
+// figurens storlek (modell.storlek), och en stor figur får en större sockel.
+export function miniatyr(f: Figur, kant: THREE.ColorRepresentation, storlek = 1): Figur {
+  const g = new THREE.Group();
+  const fot = new THREE.Group();
+  fot.add(del(geo("sockel", () => new THREE.CylinderGeometry(0.45, 0.5, 0.09, 24)), lam(0x3b3733), 0, 0.045, 0));
+  fot.add(del(geo("sockelkant", () => new THREE.CylinderGeometry(0.505, 0.505, 0.035, 24)), lam(kant), 0, 0.03, 0));
+  fot.add(del(geo("sockeltopp", () => new THREE.CylinderGeometry(0.44, 0.44, 0.012, 24)), lam(0x4a4034), 0, 0.093, 0));
+  fot.scale.setScalar(Math.max(0.85, Math.min(1.6, storlek)));
+  fot.children.forEach((o) => (o.receiveShadow = true));
+  const modell = new THREE.Group();
+  modell.add(f.grupp);
+  modell.position.y = SOCKEL;
+  g.add(fot, modell);
+  g.userData.modell = modell;
+  return { grupp: g, steg: f.steg };
+}
+
+// SOCKEL är sockelns höjd, där figuren står.
+export const SOCKEL = 0.1;
+
 // ---- Vandrarna ----
 
 const HUD = 0xe4cfb2;
@@ -477,4 +503,133 @@ function benvaktare(farg?: string): Figur {
       armar.forEach((a, i) => (a.rotation.x = -0.3 + Math.sin(t / 600 + i * 2) * 0.15));
     },
   };
+}
+
+// ---- Fällorna ----
+
+// falla bygger fällan id (id i data/fallor.json) som den ser ut när den
+// har slagit till, med mitten i origo. En fälla utan modell visas med sitt
+// tecken i krita (se karta.ts).
+export function falla(id: string): THREE.Group | null {
+  const g = new THREE.Group();
+  const jarn = lam(0x4a4744);
+  const hal = lam(0x060504);
+  const sten = lam(0x6e665a);
+  switch (id) {
+    case "fallgaller": {
+      // Ett galler av spetsiga järnstänger som har rasat ner.
+      [-1, 1].forEach((s) => g.add(del(geo("gallerstolpe", () => new THREE.BoxGeometry(0.09, 1.15, 0.09)), jarn, s * 0.62, 0.575, 0)));
+      g.add(del(geo("galleroverstang", () => new THREE.BoxGeometry(1.33, 0.09, 0.09)), jarn, 0, 1.12, 0));
+      g.add(del(geo("gallertvarstang", () => new THREE.BoxGeometry(1.25, 0.05, 0.05)), jarn, 0, 0.55, 0));
+      for (let i = 0; i < 6; i++) {
+        const x = -0.45 + i * 0.18;
+        g.add(del(geo("gallerstang", () => new THREE.CylinderGeometry(0.025, 0.025, 1.0, 5)), jarn, x, 0.6, 0));
+        const spets = del(geo("gallerspets", () => new THREE.ConeGeometry(0.04, 0.12, 5)), jarn, x, 0.06, 0);
+        spets.rotation.x = Math.PI;
+        g.add(spets);
+      }
+      break;
+    }
+    case "rasande_golv": {
+      // Ett hål i golvet, med lösa plattor runt kanten.
+      g.add(del(geo("hal", () => new THREE.CylinderGeometry(0.62, 0.62, 0.02, 18)), hal, 0, 0.012, 0));
+      for (let i = 0; i < 6; i++) {
+        const a = i * 1.05 + 0.3;
+        const p = del(geo("platta", () => new THREE.BoxGeometry(0.34, 0.07, 0.26)), sten, Math.cos(a) * 0.72, 0.05, Math.sin(a) * 0.72);
+        p.rotation.set(0.25 * Math.sin(i * 2.1), a, 0.3 * Math.cos(i * 1.7));
+        g.add(p);
+      }
+      break;
+    }
+    case "roterande": {
+      // En stor kvarnsten i golvet som har vridit sig.
+      g.add(del(geo("kvarnsten", () => new THREE.CylinderGeometry(0.8, 0.82, 0.08, 22)), lam(0x7d756a), 0, 0.04, 0));
+      g.add(del(geo("kvarnnav", () => new THREE.CylinderGeometry(0.13, 0.13, 0.14, 10)), jarn, 0, 0.08, 0));
+      for (let i = 0; i < 6; i++) {
+        const r = del(geo("kvarnranna", () => new THREE.BoxGeometry(0.62, 0.02, 0.05)), hal, 0, 0.085, 0);
+        r.rotation.y = (i * Math.PI) / 3;
+        r.translateX(0.42);
+        g.add(r);
+      }
+      break;
+    }
+    case "pilar": {
+      // Benvita pilar som sitter i golvet.
+      const ben = lam(0xe8e0cc);
+      [[-0.35, -0.2, 0.3, 0.2], [0.25, -0.35, -0.4, 0.1], [0.1, 0.3, 0.2, -0.3], [-0.4, 0.35, -0.2, -0.2], [0.45, 0.15, 0.35, 0.25]].forEach(([x, z, rx, rz]) => {
+        const pil = new THREE.Group();
+        pil.add(del(geo("pilskaft", () => new THREE.CylinderGeometry(0.018, 0.018, 0.55, 5)), ben, 0, 0.27, 0));
+        pil.add(del(geo("pilfjader", () => new THREE.BoxGeometry(0.1, 0.12, 0.01)), lam(0x8a2a22), 0, 0.5, 0));
+        pil.position.set(x, 0, z);
+        pil.rotation.set(rx, 0, rz);
+        g.add(pil);
+      });
+      break;
+    }
+    case "dimma": {
+      // Gulgrön dimma som ligger kvar över golvet.
+      const dimma = lam(0xa8cf5a, { emissive: 0x1e2a08, opacity: 0.38 });
+      [[0, 0.22, 0, 0.55], [0.4, 0.18, 0.25, 0.4], [-0.35, 0.16, -0.2, 0.42], [0.1, 0.32, -0.35, 0.33]].forEach(([x, y, z, r]) => {
+        const m = new THREE.Mesh(geo("dimboll", () => new THREE.IcosahedronGeometry(1, 1)), dimma);
+        m.scale.set(r, r * 0.45, r);
+        m.position.set(x, y, z);
+        g.add(m);
+      });
+      break;
+    }
+    case "ormgrop": {
+      // En grop full av små ormar.
+      g.add(del(geo("hal", () => new THREE.CylinderGeometry(0.62, 0.62, 0.02, 18)), hal, 0, 0.012, 0));
+      const orm = lam(0x5a7a34);
+      for (let i = 0; i < 5; i++) {
+        const o = del(geo("smaorm", () => new THREE.TorusGeometry(0.13, 0.028, 4, 10, Math.PI * 1.5)), orm, Math.cos(i * 1.3) * 0.35, 0.04, Math.sin(i * 1.3) * 0.32);
+        o.rotation.set(Math.PI / 2, 0, i * 1.1);
+        g.add(o);
+      }
+      break;
+    }
+    case "skinn": {
+      // Ett ömsat ormskinn, blekt och genomskinligt.
+      const skinn = lam(0xd8d2b8, { opacity: 0.7 });
+      const s = del(geo("ormskinn", () => new THREE.TorusGeometry(0.45, 0.1, 6, 18, Math.PI * 1.6)), skinn, 0, 0.06, 0);
+      s.rotation.x = Math.PI / 2;
+      s.scale.set(1, 1, 0.5);
+      g.add(s);
+      break;
+    }
+    case "klocka": {
+      // En klocka i en ställning av trä.
+      const tra = lam(TRA);
+      [-1, 1].forEach((s) => g.add(del(geo("klockstolpe", () => new THREE.BoxGeometry(0.09, 1.45, 0.09)), tra, s * 0.5, 0.72, 0)));
+      g.add(del(geo("klockbjalke", () => new THREE.BoxGeometry(1.15, 0.1, 0.12)), tra, 0, 1.45, 0));
+      g.add(del(geo("klocka", () => new THREE.CylinderGeometry(0.12, 0.34, 0.45, 14)), lam(0xb0803a), 0, 1.15, 0));
+      g.add(del(geo("kolv", () => new THREE.SphereGeometry(0.07, 8, 6)), jarn, 0, 0.9, 0));
+      break;
+    }
+    case "morker": {
+      // Svart rök som har släckt ljuset.
+      const rok = lam(0x0a0908, { opacity: 0.72 });
+      [[0, 0.3, 0, 0.45], [0.3, 0.55, 0.15, 0.32], [-0.25, 0.5, -0.1, 0.35], [0.05, 0.8, -0.05, 0.25]].forEach(([x, y, z, r]) => {
+        const m = new THREE.Mesh(geo("rokboll", () => new THREE.IcosahedronGeometry(1, 1)), rok);
+        m.scale.setScalar(r);
+        m.position.set(x, y, z);
+        g.add(m);
+      });
+      break;
+    }
+    case "eko": {
+      // Ringar i golvet, som ljudet som sprider sig.
+      const ring = lam(0xc8c0b0, { opacity: 0.6 });
+      [0.3, 0.55, 0.8].forEach((r, i) => {
+        const m = new THREE.Mesh(geo("ekoring" + i, () => new THREE.TorusGeometry(r, 0.025, 4, 28)), ring);
+        m.rotation.x = Math.PI / 2;
+        m.position.y = 0.03;
+        g.add(m);
+      });
+      break;
+    }
+    default:
+      return null;
+  }
+  return g;
 }
