@@ -6,9 +6,10 @@ provspel över internet. README beskriver under Spela från en länk hur det
 används.
 
 Målet är att man ska kunna spela Ormtornet från en länk, utan att
-installera något och även när vandrarna sitter på olika nät. Tornet som
-Go-program på tornets dator finns kvar som i dag; Pages blir ett andra
-sätt att öppna tornet, byggt av samma kod.
+installera något och även när vandrarna sitter på olika nät. Sedan
+2026-11-22 är länken det vanliga sättet att spela, och README leder dit
+först. Tornet som Go-program på tornets dator finns kvar, byggt av samma
+kod, för när länken inte räcker.
 
 ## Så fungerar det
 

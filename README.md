@@ -1,7 +1,8 @@
 # Ormtornet
 
-En dungeon crawler för 2–8 spelare i webbläsaren, på ett lokalt nätverk
-eller från en länk på GitHub Pages (se Spela från en länk).
+En dungeon crawler för 2–8 spelare i webbläsaren. Spelledaren öppnar
+<https://thohig.github.io/ormtornet/> och skickar länken till de andra.
+Inget behöver installeras, och alla kan sitta på olika nät (se Starta).
 Mitt i ett torn på 9x9 rum (11x11 för fem eller sex, 13x13 för sju eller
 åtta) sägs en jättelik orm sova kring en skatt.
 Ta så mycket du vågar och kom ut innan solen går ner.
@@ -12,90 +13,19 @@ Vad som är nytt står i [docs/andringar.md](docs/andringar.md).
 
 ## Starta
 
-Kräver en Mac och Go (`brew install go`). Det är bara den som kör tornet
-som behöver spelet. De andra öppnar en adress i webbläsaren, på vilken
-dator, telefon eller surfplatta som helst.
+Spelet spelas från en länk på GitHub Pages. Ingen behöver installera
+något eller vara på samma wifi.
 
-Att ladda ner spelet och köra tornet själv fungerar bara på en Mac. Med en
-Windows-dator spelar man i stället från länken på GitHub Pages (se Spela
-från en länk); där kan en Windows-dator både vara spelledarens och en
-spelares.
+1. Spelledaren öppnar <https://thohig.github.io/ormtornet/> i Chrome,
+   Edge eller Safari på en dator, Mac eller Windows.
+2. Introt leder till värdsidan. Där kopierar knapparna under Bjud in en
+   inbjudan med länken, att skicka till spelarna.
+3. Spelarna öppnar länken på en dator, telefon eller surfplatta, var de
+   än är. Spelledaren spelar med genom "Gå in själv".
 
-```bash
-./starta.sh
-```
-
-Skriptet bygger spelet, öppnar introt i webbläsaren och håller datorn vaken
-så länge tornet är öppet. På datorn som kör tornet leder introt till
-värdsidan. Flaggor skickas vidare, till exempel `./starta.sh -ai 2`.
-Är tornet redan igång öppnas bara introt.
-
-Det går också att starta direkt med `go run .`.
-
-### Ormtornet.app
-
-```bash
-./skapa-app.sh
-```
-
-skapar `~/Projekt/Lokalt/Ormtornet.app` med tornets ikon. Mappen skapas om
-den saknas; ange en annan mapp som argument om du vill, till exempel
-`./skapa-app.sh ~/Applications`. Ikonen ritas av `verktyg/appikon`, så
-appen går att ta bort och skapa igen när som helst. Dubbelklick på appen bygger spelet från den här mappen,
-startar tornet i bakgrunden och öppnar introt, som leder till värdsidan. Inget terminalfönster behövs. Loggen hamnar i `/tmp/ormtornet.log`.
-Appen behöver bara skapas om när den här mappen flyttas.
-
-Servern lyssnar på `0.0.0.0:8080` och skriver ut adressen spelarna ska
-öppna, till exempel `http://Din-Mac.local:8080`. Alla Macar i samma nätverk
-kan öppna den i Safari eller Chrome.
-
-Stäng tornet med Ctrl+C i terminalen eller knappen "Stäng tornet" på
-värdsidan. Spelarna får då ett meddelande om att tornet stänger.
-
-Ett bortglömt torn stänger av sig självt, hur det än har startats:
-
-- efter 10 minuter utan någon ansluten spelare och utan att introt eller
-  värdsidan har synts på skärmen på tornets dator (en flik som ligger
-  gömd bakom andra räknas inte), och
-- senast när ingen har gjort något på 12 timmar, även om flikar står öppna.
-
-En minut innan får alla som är anslutna en varning. Tiderna ändras med
-`-autostopp` och `-autostopp-max`, och `0` stänger av regeln.
-
-Inställningarna ändras enklast på värdsidan (se nedan) och sparas
-till nästa gång. Flaggorna nedan gäller före det sparade, men bara den gången.
-
-Flaggor:
-
-- `-addr 0.0.0.0:8080` adress och port
-- `-data data` mapp med datafilerna
-- `-sol 0` antal rundor innan solen går ner; `0` är automatiskt efter tornets storlek (40 på 9 × 9, 50 på 11 × 11, 60 på 13 × 13). Inte en inställning på värdsidan; för den som provar
-- `-turtid 0` längsta tid att välja drag per runda; `0` är automatiskt efter antalet människor (30–40 sekunder). Inte en inställning på värdsidan; för den som provar
-- `-min 2` minsta antal spelare för att börja, datorspelare inräknade (sätt `-min 1` för att prova ensam). Inte en inställning på värdsidan; för den som provar
-- `-ai 2` antal datorstyrda vandrare (0–7)
-- `-svarighet normal` svårighet: `latt`, `normal`, `svar` eller `mardrom`
-- `-sprak en` språket i spelet och på värdsidan: `sv` eller `en`. Det som inte är översatt visas på svenska (se Språk nedan)
-- `-simulera 500` spelar 500 vandringar med bara AI-spelare och skriver hur det gick, utan att öppna tornet (se Simulera nedan)
-- `-kontrollera` kontrollerar datafilerna och avslutar, utan att öppna tornet
-- `-sida mapp` skriver sidorna för GitHub Pages till mappen och avslutar. Använd hellre `verktyg/bygg-sida.sh`, som också bygger tornet (se Tornet i webbläsaren nedan)
-- `-fro 0` frö för den första vandringen. Varje vandring skriver sitt frö i terminalen och under Fröet på värdsidan, där nästa vandrings frö också går att skriva in eller slumpa. Startar du med samma frö och vandrarna gör samma drag blir tornet detsamma, rum för rum, så att en konstig vandring kan spelas upp igen. `0` ger ett slumpat frö
-- `-avslojande=false` stänger av avslöjandet: ingen berättelse, inga varsel, ingen invigning och inget tornet som förändras
-- `-oppna` öppnar introt i webbläsaren när servern har startat; på den här datorn leder det till värdsidan
-- `-vaken` håller datorn vaken så länge servern är igång
-- `-autostopp 10m` stänger tornet när ingen spelare är ansluten och ingen sida har synts på tornets dator så länge (`0` = aldrig)
-- `-autostopp-max 12h` stänger tornet när ingen har gjort något så länge, även om flikar står öppna (`0` = aldrig)
-- `-installningar fil` var spelledarens inställningar sparas (standard `~/Library/Application Support/Ormtornet/installningar.json`, tom för att inte spara)
-
-### Spela från en länk
-
-Utan Go, utan Mac och utan att vara på samma wifi: spelledaren öppnar
-<https://thohig.github.io/ormtornet/> i Chrome, Edge eller Safari på en
-dator, Mac eller Windows.
-Tornet körs då i den fliken, med samma spel som programmet. Värdsidan
-visas i samma flik och har under Bjud in en länk. Spelarna
-öppnar länken, var de än är, och ansluter direkt till
-spelledarens webbläsare. Den som har länken kommer in, så ge den bara
-till dem som ska spela.
+Tornet körs i spelledarens flik, med samma spel som programmet man kan
+ladda ner. Spelarna ansluter direkt till spelledarens webbläsare. Den som
+har länken kommer in, så ge den bara till dem som ska spela.
 
 - Tornets flik måste vara öppen hela vandringen. Stängs den eller laddas
   den om stängs tornet. "Gå in själv" byter sida i fliken, så spelledaren
@@ -112,15 +42,16 @@ till dem som ska spela.
 - Inställningarna sparas i spelledarens webbläsare. Läs om innehållet
   läser bara det innehåll som följde med bygget; ändringar i `data/` kommer
   ut när de pushas till `main`.
+- Kommer ni inte in alls går tornet att ladda ner och köra på en Mac (se
+  Ladda ner och kör tornet själv).
 
 Hur det är byggt står under Tornet i webbläsaren och i
 [docs/github-pages.md](docs/github-pages.md).
 
 ### Värdsidan
 
-Öppna `http://localhost:8080/spelledare` på datorn som kör servern. Dit
-kommer man också efter introt på den datorn. Där står
-adressen spelarna ska öppna, med knappar som kopierar en färdig inbjudan att
+Värdsidan är det spelledaren ser i tornets flik efter introt. Där står
+länken spelarna ska öppna, med knappar som kopierar en färdig inbjudan att
 skicka i en gruppchatt. Sidan visar också vilka som har anslutit och är redo,
 och vad man kan göra om någon inte kommer in.
 
@@ -211,7 +142,9 @@ spelet i den fliken går tillbaka till spelets flik. Har spelledaren en
 vandrare under vandringen heter knappen på värdsidan Till spelet. På
 GitHub Pages byter ramen i skalet sida, så tornets flik står kvar, och
 under vandringen är "spelledare" bara ordet, eftersom den som går till
-värdsidan då räknas som frånvarande. Andra datorer i nätverket kommer inte åt sidan.
+värdsidan då räknas som frånvarande. I ett nedladdat torn ligger värdsidan
+på `http://localhost:8080/spelledare`, och andra datorer i nätverket
+kommer inte åt den.
 
 ## Spela
 
@@ -536,7 +469,7 @@ Striden går inte att stänga av.
 
 ### Spela mot datorn
 
-Välj antal AI-spelare på värdsidan, eller med `-ai`:
+Välj antal AI-spelare på värdsidan, eller med `-ai` i ett nedladdat torn:
 
 ```bash
 go run . -ai 3
@@ -868,9 +801,95 @@ Med `-avslojande=false` stannar tornet på nivå 1: inget dunk, inga
 pulserande väggar, inga varsel och ingen epilog. Då går det inte heller att
 viska, ingen blir invigd och tornet förändras inte.
 
+## Ladda ner och kör tornet själv
+
+Det vanliga är att spela från länken (se Starta). Att ladda ner spelet och
+köra tornet på en egen dator behövs bara när länken inte räcker:
+
+- länken kommer inte fram, till exempel på ett nät som stoppar
+  anslutningen (det finns ingen reläserver, TURN, än),
+- ni sitter på samma wifi och vill klara er utan internet,
+- du ändrar i `data/` och vill prova direkt, utan att pusha till `main`,
+- du vill använda flaggorna nedan, till exempel `-sol`, `-turtid` eller
+  `-simulera`.
+
+Det kräver en Mac och Go (`brew install go`). Med en Windows-dator spelar
+man från länken. Det är bara den som kör tornet som behöver spelet. De
+andra öppnar en adress i webbläsaren, på vilken dator, telefon eller
+surfplatta som helst, i samma nätverk.
+
+```bash
+./starta.sh
+```
+
+Skriptet bygger spelet, öppnar introt i webbläsaren och håller datorn vaken
+så länge tornet är öppet. På datorn som kör tornet leder introt till
+värdsidan. Flaggor skickas vidare, till exempel `./starta.sh -ai 2`.
+Är tornet redan igång öppnas bara introt.
+
+Det går också att starta direkt med `go run .`.
+
+### Ormtornet.app
+
+```bash
+./skapa-app.sh
+```
+
+skapar `~/Projekt/Lokalt/Ormtornet.app` med tornets ikon. Mappen skapas om
+den saknas; ange en annan mapp som argument om du vill, till exempel
+`./skapa-app.sh ~/Applications`. Ikonen ritas av `verktyg/appikon`, så
+appen går att ta bort och skapa igen när som helst. Dubbelklick på appen bygger spelet från den här mappen,
+startar tornet i bakgrunden och öppnar introt, som leder till värdsidan. Inget terminalfönster behövs. Loggen hamnar i `/tmp/ormtornet.log`.
+Appen behöver bara skapas om när den här mappen flyttas.
+
+Servern lyssnar på `0.0.0.0:8080` och skriver ut adressen spelarna ska
+öppna, till exempel `http://Din-Mac.local:8080`. Alla Macar i samma nätverk
+kan öppna den i Safari eller Chrome.
+
+Stäng tornet med Ctrl+C i terminalen eller knappen "Stäng tornet" på
+värdsidan. Spelarna får då ett meddelande om att tornet stänger.
+
+Ett bortglömt torn stänger av sig självt, hur det än har startats:
+
+- efter 10 minuter utan någon ansluten spelare och utan att introt eller
+  värdsidan har synts på skärmen på tornets dator (en flik som ligger
+  gömd bakom andra räknas inte), och
+- senast när ingen har gjort något på 12 timmar, även om flikar står öppna.
+
+En minut innan får alla som är anslutna en varning. Tiderna ändras med
+`-autostopp` och `-autostopp-max`, och `0` stänger av regeln.
+
+Inställningarna ändras enklast på värdsidan (se Värdsidan) och sparas
+till nästa gång. Flaggorna nedan gäller före det sparade, men bara den gången.
+
+### Flaggor
+
+- `-addr 0.0.0.0:8080` adress och port
+- `-data data` mapp med datafilerna
+- `-sol 0` antal rundor innan solen går ner; `0` är automatiskt efter tornets storlek (40 på 9 × 9, 50 på 11 × 11, 60 på 13 × 13). Inte en inställning på värdsidan; för den som provar
+- `-turtid 0` längsta tid att välja drag per runda; `0` är automatiskt efter antalet människor (30–40 sekunder). Inte en inställning på värdsidan; för den som provar
+- `-min 2` minsta antal spelare för att börja, datorspelare inräknade (sätt `-min 1` för att prova ensam). Inte en inställning på värdsidan; för den som provar
+- `-ai 2` antal datorstyrda vandrare (0–7)
+- `-svarighet normal` svårighet: `latt`, `normal`, `svar` eller `mardrom`
+- `-sprak en` språket i spelet och på värdsidan: `sv` eller `en`. Det som inte är översatt visas på svenska (se Språk nedan)
+- `-simulera 500` spelar 500 vandringar med bara AI-spelare och skriver hur det gick, utan att öppna tornet (se Simulera nedan)
+- `-kontrollera` kontrollerar datafilerna och avslutar, utan att öppna tornet
+- `-sida mapp` skriver sidorna för GitHub Pages till mappen och avslutar. Använd hellre `verktyg/bygg-sida.sh`, som också bygger tornet (se Tornet i webbläsaren nedan)
+- `-fro 0` frö för den första vandringen. Varje vandring skriver sitt frö i terminalen och under Fröet på värdsidan, där nästa vandrings frö också går att skriva in eller slumpa. Startar du med samma frö och vandrarna gör samma drag blir tornet detsamma, rum för rum, så att en konstig vandring kan spelas upp igen. `0` ger ett slumpat frö
+- `-avslojande=false` stänger av avslöjandet: ingen berättelse, inga varsel, ingen invigning och inget tornet som förändras
+- `-oppna` öppnar introt i webbläsaren när servern har startat; på den här datorn leder det till värdsidan
+- `-vaken` håller datorn vaken så länge servern är igång
+- `-autostopp 10m` stänger tornet när ingen spelare är ansluten och ingen sida har synts på tornets dator så länge (`0` = aldrig)
+- `-autostopp-max 12h` stänger tornet när ingen har gjort något så länge, även om flikar står öppna (`0` = aldrig)
+- `-installningar fil` var spelledarens inställningar sparas (standard `~/Library/Application Support/Ormtornet/installningar.json`, tom för att inte spara)
+
+
 ## Ändra innehåll
 
-Allt innehåll ligger i mappen `data/`. Filerna läses när servern startar.
+Allt innehåll ligger i mappen `data/`. På länken gäller innehållet i
+`main` när sidan senast byggdes, så en ändring syns där först efter en
+push. Det som står nedan om att läsa om filerna gäller ett nedladdat torn
+(se Ladda ner och kör tornet själv), där filerna läses när servern startar.
 Efter en ändring räcker det att fälla ut "Läs om innehållet" längst ner
 på värdsidan och trycka på knappen. I lobbyn gäller det nya genast och tornet
 byggs på nytt; under och efter en vandring gäller det från nästa torn. Är
@@ -1070,8 +1089,8 @@ Beskrivningarna för rummen ligger under nivåerna `"1"` till `"4"`.
 
 ## Testa lokalt
 
-Starta servern och öppna `http://localhost:8080` i två flikar med olika
-namn. För ett snabbt test passar `go run . -sol 8 -turtid 10s`.
+Starta servern (se Ladda ner och kör tornet själv) och öppna
+`http://localhost:8080` i två flikar. För ett snabbt test passar `go run . -sol 8 -turtid 10s`.
 
 Spellogiken har tester:
 

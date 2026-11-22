@@ -1,7 +1,8 @@
 # Ormtornet
 
-En dungeon crawler för 2–8 spelare i webbläsaren, på ett lokalt nätverk
-eller från en länk på GitHub Pages (<https://thohig.github.io/ormtornet/>).
+En dungeon crawler för 2–8 spelare i webbläsaren, främst från en länk på
+GitHub Pages (<https://thohig.github.io/ormtornet/>), eller nedladdad på
+en Mac i ett lokalt nätverk när länken inte räcker.
 README beskriver spelet, flaggorna och filerna.
 
 ## Arbetssätt

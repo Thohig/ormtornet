@@ -6,6 +6,13 @@ eller leder tornet.
 
 ## 2026-11-22
 
+### Länken först
+
+- README leder nu först till länken på GitHub Pages: spelledaren öppnar
+  den och skickar inbjudan till de andra. Att ladda ner spelet och köra
+  tornet på en Mac står i ett eget avsnitt längre ner, för när länken inte
+  räcker, till exempel på ett nät som stoppar anslutningen.
+
 ### Mac och Windows
 
 - README säger nu att det krävs en Mac för att ladda ner spelet och köra
