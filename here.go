@@ -13,10 +13,10 @@ import (
 // rundan, så att en fälla som flyttar vandraren hinner göra det först, och
 // spelarsidan ställer dem överst i rundan.
 
-// roomMsg är ett rumsblock till spelarsidan.
+// roomMsg är ett rumsblock till spelarsidan. Rummet har inget namn: det är
+// beskrivningen och det man ser och hör.
 type roomMsg struct {
 	T    string `json:"t"`
-	Namn string `json:"namn"`
 	Text string `json:"text,omitempty"` // beskrivningen, bara när rummet är nytt
 	Har  string `json:"har,omitempty"`  // det som finns i rummet
 	Kvar bool   `json:"kvar,omitempty"` // vandraren står kvar och något har ändrats
@@ -68,14 +68,13 @@ func (g *Game) tellRoom(p *Player) {
 		}
 		return
 	}
-	r := &g.rooms[p.Y][p.X]
 	cur := g.hereParts(p)
 	now := map[string]herePart{}
 	for _, part := range cur {
 		now[part.key] = part
 	}
 	moved := !p.told.ok || p.told.x != p.X || p.told.y != p.Y
-	msg := roomMsg{T: "rum", Namn: g.roomName(r), Kvar: !moved, Hor: strings.Join(heard, " ")}
+	msg := roomMsg{T: "rum", Kvar: !moved, Hor: strings.Join(heard, " ")}
 	if moved {
 		msg.Text = p.told.desc
 		msg.Har = strings.TrimSpace(g.sayHere(cur) + " " + p.told.extra)

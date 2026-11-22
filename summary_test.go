@@ -57,7 +57,7 @@ func TestRoundSummary(t *testing.T) {
 		t.Fatalf("sammanfattningen säger inte vad som hände: %q", all)
 	}
 	// Vart vandraren gick och solen står i rumsblocket och översta raden.
-	if strings.Contains(all, "österut") || strings.Contains(all, g.roomName(n)) {
+	if strings.Contains(all, "österut") || strings.Contains(all, g.roomShort(n)) {
 		t.Fatalf("kortet säger vart vandraren gick: %q", all)
 	}
 	bo := summaries(b)

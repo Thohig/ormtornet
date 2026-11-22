@@ -137,6 +137,7 @@ func TestJourneyRoundHasRoom(t *testing.T) {
 	pa := a.player
 	putInRoom(g, pa, 4, 4)
 	putInRoom(g, b.player, 2, 2)
+	g.describeLater(pa, &g.rooms[4][4], 4, 4)
 	step(g, a, b, actWait, actWait)
 	if len(pa.journal) == 0 {
 		t.Fatal("ingen runda i vandringen")
@@ -167,5 +168,42 @@ func TestRoomBlockCarriesWhatIsHeard(t *testing.T) {
 	got := rooms(a)
 	if len(got) != 1 || !got[0].Kvar || got[0].Hor != "Stridsljud från norr." {
 		t.Fatalf("väntade ett block med ljudet en gång, fick %+v", got)
+	}
+}
+
+// Rummen har inga namn för spelarna: rumsblocket och texterna har bara
+// beskrivningen, och varje rum har en kort beskrivning på båda språken.
+func TestRoomsHaveNoNamesForPlayers(t *testing.T) {
+	g := testGame(t)
+	types := append([]RoomType{g.data.Ingang, g.data.Skattkammare}, g.data.Rumstyper...)
+	for _, rt := range types {
+		if rt.Kort == "" {
+			t.Errorf("rummet %q har ingen kort beskrivning", rt.ID)
+		}
+	}
+	a, b := testClient(), testClient()
+	g.Join(a, "Alva")
+	g.Join(b, "Bo")
+	g.Ready(a)
+	g.Ready(b)
+	for _, raw := range drainAll(a) {
+		for _, rt := range types {
+			if rt.Namn != "" && strings.Contains(raw, rt.Namn) {
+				t.Errorf("spelarsidan fick rummets namn %q: %s", rt.Namn, raw)
+			}
+		}
+	}
+}
+
+// drainAll ger allt klienten har fått, som text.
+func drainAll(c *Client) []string {
+	var out []string
+	for {
+		select {
+		case b := <-c.send:
+			out = append(out, string(b))
+		default:
+			return out
+		}
 	}
 }

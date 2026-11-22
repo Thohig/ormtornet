@@ -75,7 +75,7 @@ func (g *Game) summarize(snap map[*Player]before, wakesBefore int) {
 			// Lines är aldrig nil, så att spelarsidan alltid får en lista.
 			jr := journeyRound{Round: g.round, Lines: append([]summaryLine{}, lines...)}
 			if room != nil {
-				jr.Room, jr.Here, jr.Heard = room.Namn, room.Har, room.Hor
+				jr.Room, jr.Here, jr.Heard = room.Text, room.Har, room.Hor
 			}
 			p.journal = append(p.journal, jr)
 		}
@@ -100,7 +100,7 @@ func (g *Game) summaryFor(p *Player, b before, woke bool) []summaryLine {
 	}
 	room := ""
 	if g.inBounds(p.X, p.Y) {
-		room = g.roomName(&g.rooms[p.Y][p.X])
+		room = g.roomShort(&g.rooms[p.Y][p.X])
 	}
 	moved := p.X != b.x || p.Y != b.y
 

@@ -314,7 +314,7 @@ func (g *Game) mirror(p *Player) {
 		g.useItem(p, "spegel", "riktning", g.data.Riktningar[d])
 		r := g.reveal(x, y)
 		p.known[y][x] = true
-		g.logTo(p, g.data.Text("spegel_ser", "rum", g.roomName(r)), "info")
+		g.logTo(p, g.data.Text("spegel_ser", "rum", g.roomShort(r)), "info")
 		if r.Event != "" {
 			if trap := g.data.trap(r.Event); trap != nil {
 				g.logTo(p, g.data.Text("spegel_falla", "falla", lowerFirst(trap.Namn)), "varn")

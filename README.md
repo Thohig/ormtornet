@@ -236,8 +236,8 @@ den som dör och för alla i slutet (se slutet nedan och Strider):
      bredvid pricken, och knappen Redo (Nytt torn i slutet) står till
      höger i översta raden. Panelen Nu syns bara när den har något att
      säga. I loggen står vandrarnas namn i deras färg. Överst i
-     varje runda står rummet som löpande text, utan ruta: namnet i
-     versaler, beskrivningen när
+     varje runda står rummet som löpande text, utan ruta och utan namn:
+     beskrivningen när
      rummet är nytt, och det man ser där, beskrivet och inte förklarat:
      varelsens egen text, de andra vandrarna, guldet, porten, spåret
      efter en fälla som har slagit till (utan fällans namn) och föremål
@@ -248,7 +248,10 @@ den som dör och för alla i slutet (se slutet nedan och Strider):
      egna rader. I
      mörkret och i källarvalven väntar blocket tills man ser igen.
      Texterna står under `har_*` i `data/texter.json` och `spar_efter` i
-     `data/fallor.json`. Uppe till vänster på kartan står rummets namn.
+     `data/fallor.json`. Rummen har inga namn för spelarna; där en text
+     behöver nämna ett rum står dess korta beskrivning (`kort` i
+     `data/texter.json`, till exempel "en smal gång under låga valv").
+     Uppe till vänster på kartan står bara Mörker eller Källarvalven.
      Uppe till höger står statusen
      som tecken: klassens tecken, liv, skatt, drycker,
      tillstånd som fast, gift och mörker, kompassen, dunket, viskningen och
@@ -579,7 +582,7 @@ gallgasten ofta).
 Varelserna sköts alltid av tornet. Den som dör väntar rundan inte på.
 
 Den som dör får en egen skärm, **Din vandring**: rundans kort runda för
-runda, med rummet som i loggen: namnet i versaler, det hen såg och det hen
+runda, med rummet som i loggen: beskrivningen, det hen såg och det hen
 hörde, hur hen dog och sina siffror, och hur många som är kvar i tornet och
 har gått ut. Var de andra är och vad de gör står inte där, så att den döda
 inte kan avslöja något för de levande. Visa kartan går tillbaka till
@@ -866,7 +869,7 @@ Beskrivningarna för rummen ligger under nivåerna `"1"` till `"4"`.
 - `monster.go` varelser, strider och hur varelserna vandrar
 - `reveal.go` avslöjandet: nivåer, ledtrådar och epilog
 - `chronicle.go` krönikan över vandringen
-- `here.go` rumsblocket i loggen: rummets namn, beskrivning och vad som finns där
+- `here.go` rumsblocket i loggen: rummets beskrivning och vad som finns där
 - `sounds.go` spår och ljud från grannrummen
 - `summary.go` rundans sammanfattning, kortet efter varje runda
 - `difficulty.go` förvalen för svårighet

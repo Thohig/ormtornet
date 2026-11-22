@@ -136,7 +136,8 @@ func (d *Data) card(id string) *Card {
 
 type RoomType struct {
 	ID            string              `json:"id"`
-	Namn          string              `json:"namn"`
+	Namn          string              `json:"namn"` // bara på värdsidan; spelarna får inga namn
+	Kort          string              `json:"kort"` // det spelarna får i stället: "en smal gång under låga valv"
 	Beskrivningar map[string][]string `json:"beskrivningar"`
 	Modell        *RoomLook           `json:"modell,omitempty"`
 }

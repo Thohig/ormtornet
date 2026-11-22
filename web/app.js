@@ -82,25 +82,22 @@ const Log = (() => {
     if (!busy) next();
   }
 
-  // roomBlock skriver rummet som löpande text, utan ruta: namnet i
-  // versaler, beskrivningen och det man ser i ett stycke, och det man hör
-  // sist. Står man kvar är det bara det som har ändrats.
+  // roomBlock skriver rummet som löpande text, utan ruta och utan namn:
+  // beskrivningen och det man ser i ett stycke, och det man hör sist. Står
+  // man kvar är det bara det som har ändrats.
   function roomBlock(g, msg) {
     const list = g.querySelector(".lines");
     const block = document.createElement("div");
     block.className = "roomblock" + (msg.kvar ? " kvar" : "");
     const text = document.createElement("div");
     text.className = "roomtext";
-    const name = document.createElement("span");
-    name.className = "roomname";
-    name.textContent = msg.namn + ".";
-    text.appendChild(name);
-    if (msg.text) text.append(" " + msg.text);
+    if (msg.text) text.append(msg.text);
     if (msg.har) {
       const h = document.createElement("span");
       h.className = "roomhere";
       paint(h, msg.har);
-      text.append(" ", h);
+      if (msg.text) text.append(" ");
+      text.append(h);
     }
     block.appendChild(text);
     if (msg.text) {
@@ -661,16 +658,12 @@ function renderChron() {
     const h = document.createElement("h3");
     h.textContent = t("vandring_runda", { runda: r.runda });
     d.appendChild(h);
-    // Rummet som i loggen: namnet i versaler och det man såg, och det man
+    // Rummet som i loggen: beskrivningen och det man såg, och det man
     // hörde under.
-    if (r.rum) {
+    if (r.rum || r.har) {
       const p = document.createElement("div");
       p.className = "room";
-      const n = document.createElement("span");
-      n.className = "roomname";
-      n.textContent = r.rum + ".";
-      p.appendChild(n);
-      if (r.har) p.append(" " + r.har);
+      p.textContent = [r.rum, r.har].filter(Boolean).join(" ");
       d.appendChild(p);
     }
     if (r.hor) {
@@ -769,10 +762,11 @@ function updateChooseStatus() {
 function renderSide() {
   renderReady();
   const me = myPlayer();
-  const room = me && state.rooms.find((r) => r.x === me.x && r.y === me.y);
-  let here = me && me.status === "inne" && room ? room.name : "";
-  if (state.cellar > 0) here = t("rum_kallarvalven");
-  else if (state.dark > 0 && room) here = t("rum_morker");
+  // Rummen har inga namn för spelarna; här står bara om man är i
+  // källarvalven eller i mörkret.
+  let here = "";
+  if (me && me.status === "inne" && state.cellar > 0) here = t("rum_kallarvalven");
+  else if (me && me.status === "inne" && state.dark > 0) here = t("rum_morker");
   $("roomname").textContent = here;
   renderHud(me);
   renderNow(me);

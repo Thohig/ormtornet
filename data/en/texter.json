@@ -35,6 +35,7 @@
   ],
   "ingang": {
     "namn": "The Tower Gate",
+    "kort": "a vaulted gateway",
     "beskrivningar": {
       "1": [
         "The gate is a tall, vaulted opening in the wall. The threshold is worn smooth by all who went in before you. The air inside is warmer than the evening outside.",
@@ -56,6 +57,7 @@
   },
   "skattkammare": {
     "namn": "The Treasure Chamber",
+    "kort": "the treasure chamber",
     "beskrivningar": {
       "1": [
         "The hall is round and sinks towards the middle. There, gold glimmers in a heap, and around the heap lies something vast in heavy, slow coils. It is too dark to see where it begins or ends.",
@@ -79,6 +81,7 @@
     {
       "id": "valvgang",
       "namn": "The Vaulted Passage",
+      "kort": "a narrow passage under low vaults",
       "beskrivningar": {
         "1": [
           "A narrow passage under low vaults. The stone is damp and faintly warm against your palm.",
@@ -101,6 +104,7 @@
     {
       "id": "pelarsal",
       "namn": "The Pillared Hall",
+      "kort": "a hall of thick pillars",
       "beskrivningar": {
         "1": [
           "Thick pillars stand in two rows. Between them hangs a sweet, heavy scent you cannot place.",
@@ -123,6 +127,7 @@
     {
       "id": "brunnsrum",
       "namn": "The Well Chamber",
+      "kort": "a room with a bottomless well",
       "beskrivningar": {
         "1": [
           "A well with no visible bottom in the middle of the floor. Far below, water drips, at long intervals.",
@@ -145,6 +150,7 @@
     {
       "id": "vaktrum",
       "namn": "The Guardroom",
+      "kort": "a room with an overturned bench and a rusty spear",
       "beskrivningar": {
         "1": [
           "An overturned bench and a rusty spear. Whoever kept watch here left in great haste.",
@@ -167,6 +173,7 @@
     {
       "id": "kapell",
       "namn": "The Silent Chapel",
+      "kort": "a small chapel without images",
       "beskrivningar": {
         "1": [
           "A small chapel without images. The floor tiles are worn in a pattern of small, overlapping shields.",
@@ -189,6 +196,7 @@
     {
       "id": "trapphall",
       "namn": "The Stair Hall",
+      "kort": "a hall with a stair that ends at the ceiling",
       "beskrivningar": {
         "1": [
           "A staircase winds upwards and ends flat against the ceiling. The steps are of uneven height.",
@@ -211,6 +219,7 @@
     {
       "id": "forrad",
       "namn": "The Storeroom",
+      "kort": "a room of shelves, jugs and barrels",
       "beskrivningar": {
         "1": [
           "Shelves of jugs and barrels. Everything is covered in a thin, glossy film, as of damp that never dries.",
@@ -233,6 +242,7 @@
     {
       "id": "lyktrum",
       "namn": "The Lantern Hall",
+      "kort": "a hall with iron hooks in the ceiling",
       "beskrivningar": {
         "1": [
           "Iron hooks in the ceiling where lanterns once hung. Your own flame flickers in a draught that comes and goes, comes and goes.",
@@ -255,6 +265,7 @@
     {
       "id": "grotta",
       "namn": "The Saltpetre Cave",
+      "kort": "a cave with smooth, white-striped walls",
       "beskrivningar": {
         "1": [
           "The walls here are not built but smooth, almost polished. White stripes run along them in even arcs.",
@@ -277,6 +288,7 @@
     {
       "id": "smedja",
       "namn": "The Cold Forge",
+      "kort": "a room with an anvil and a dead hearth",
       "beskrivningar": {
         "1": [
           "An anvil and a dead hearth. Even so, it is warmer here than it should be.",
@@ -299,6 +311,7 @@
     {
       "id": "bibliotek",
       "namn": "The Mouldering Library",
+      "kort": "a room full of swollen grey books",
       "beskrivningar": {
         "1": [
           "The books have swollen together into a grey mass. Someone has scratched lines in the wall. Many lines.",
@@ -321,6 +334,7 @@
     {
       "id": "korsvag",
       "namn": "The Crossways",
+      "kort": "a place where the walls meet in a pointed arch",
       "beskrivningar": {
         "1": [
           "The walls meet in a pointed arch. A distant sound, as of something heavy shifting, dies away before you can listen.",

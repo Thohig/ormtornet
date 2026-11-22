@@ -38,6 +38,7 @@
   "ingang": {
     "id": "ingang",
     "namn": "Tornets port",
+    "kort": "ett välvt portrum",
     "beskrivningar": {
       "1": [
         "Porten är ett högt, välvt hål i muren. Tröskeln är sliten blank av alla som gått in före dig. Luften därinne är varmare än kvällen utanför.",
@@ -60,6 +61,7 @@
   "skattkammare": {
     "id": "skattkammare",
     "namn": "Skattkammaren",
+    "kort": "skattkammaren",
     "beskrivningar": {
       "1": [
         "Salen är rund och sänker sig mot mitten. Där glimmar guld i en hög, och runt högen ligger något väldigt i tunga, långsamma slingor. Det är för mörkt för att se var det börjar eller slutar.",
@@ -83,6 +85,7 @@
     {
       "id": "valvgang",
       "namn": "Valvgången",
+      "kort": "en smal gång under låga valv",
       "modell": { "inredning": ["pelare"] },
       "beskrivningar": {
         "1": [
@@ -106,6 +109,7 @@
     {
       "id": "pelarsal",
       "namn": "Pelarsalen",
+      "kort": "en sal med tjocka pelare",
       "modell": { "inredning": ["pelare", "pelare_syd"] },
       "beskrivningar": {
         "1": [
@@ -129,6 +133,7 @@
     {
       "id": "brunnsrum",
       "namn": "Brunnsrummet",
+      "kort": "ett rum med en brunn utan botten",
       "modell": { "inredning": ["brunn"] },
       "beskrivningar": {
         "1": [
@@ -152,6 +157,7 @@
     {
       "id": "vaktrum",
       "namn": "Vaktrummet",
+      "kort": "ett rum med en vältad bänk och ett rostigt spjut",
       "modell": { "inredning": ["bank", "spjut"] },
       "beskrivningar": {
         "1": [
@@ -175,6 +181,7 @@
     {
       "id": "kapell",
       "namn": "Det tysta kapellet",
+      "kort": "ett litet kapell utan bilder",
       "modell": { "inredning": ["altare", "bank"] },
       "beskrivningar": {
         "1": [
@@ -198,6 +205,7 @@
     {
       "id": "trapphall",
       "namn": "Trapphallen",
+      "kort": "en hall med en trappa som slutar i taket",
       "modell": { "inredning": ["trappa"] },
       "beskrivningar": {
         "1": [
@@ -221,6 +229,7 @@
     {
       "id": "forrad",
       "namn": "Förrådet",
+      "kort": "ett rum med hyllor, krus och tunnor",
       "modell": { "inredning": ["hylla", "tunnor", "sackar"] },
       "beskrivningar": {
         "1": [
@@ -244,6 +253,7 @@
     {
       "id": "lyktrum",
       "namn": "Lykthallen",
+      "kort": "en hall med järnkrokar i taket",
       "modell": { "inredning": ["lyktor"] },
       "beskrivningar": {
         "1": [
@@ -267,6 +277,7 @@
     {
       "id": "grotta",
       "namn": "Salpetergrottan",
+      "kort": "en grotta med släta, vitrandiga väggar",
       "modell": { "inredning": ["stenblock"] },
       "beskrivningar": {
         "1": [
@@ -290,6 +301,7 @@
     {
       "id": "smedja",
       "namn": "Den kalla smedjan",
+      "kort": "ett rum med ett städ och en släckt ässja",
       "modell": { "inredning": ["assja", "stad"] },
       "beskrivningar": {
         "1": [
@@ -313,6 +325,7 @@
     {
       "id": "bibliotek",
       "namn": "Det multnade biblioteket",
+      "kort": "ett rum fullt av svullna, grå böcker",
       "modell": { "inredning": ["bokhylla", "bord"] },
       "beskrivningar": {
         "1": [
@@ -336,6 +349,7 @@
     {
       "id": "korsvag",
       "namn": "Korsvägen",
+      "kort": "en plats där murarna möts i en spetsig båge",
       "modell": { "inredning": ["stenhog"] },
       "beskrivningar": {
         "1": [

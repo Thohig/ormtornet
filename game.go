@@ -574,8 +574,10 @@ func (g *Game) nextToPort(x, y int) bool {
 	return false
 }
 
-func (g *Game) roomName(r *Room) string {
-	return g.data.roomType(r.TypeID).Namn
+// roomShort är rummet som spelarna får det, beskrivet och utan namn: "en
+// smal gång under låga valv". Rummen har namn bara på värdsidan.
+func (g *Game) roomShort(r *Room) string {
+	return g.data.roomType(r.TypeID).Kort
 }
 
 // describe ger spelaren en beskrivning av rummet för tornets nuvarande nivå.
@@ -610,7 +612,6 @@ type roomView struct {
 	D     [4]bool  `json:"d"`
 	K     string   `json:"k"`
 	Exit  int      `json:"exit"`
-	Name  string   `json:"name"`
 	Mark  string   `json:"mark,omitempty"`
 	MarkN string   `json:"markn,omitempty"`  // fällans namn, för teckenförklaringen
 	MarkI string   `json:"marki,omitempty"`  // fällans id, för modellen på kartan snett ovanifrån
@@ -824,7 +825,7 @@ func (g *Game) stateFor(me *Player) stateMsg {
 			if !g.knowsRoom(me, x, y) || (blind && (x != me.X || y != me.Y)) {
 				continue
 			}
-			rv := roomView{X: x, Y: y, D: r.Doors, K: r.Kind, Exit: -1, Name: g.roomName(r), Mark: r.Mark, MarkN: g.data.trapName(r.Mark), S: r.Searched, C: -1}
+			rv := roomView{X: x, Y: y, D: r.Doors, K: r.Kind, Exit: -1, Mark: r.Mark, MarkN: g.data.trapName(r.Mark), S: r.Searched, C: -1}
 			if t := g.data.trapByMark(r.Mark); t != nil {
 				rv.MarkI = t.ID
 			}

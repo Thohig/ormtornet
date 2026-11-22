@@ -47,7 +47,7 @@ func (g *Game) trigger(p *Player, t *Trap, depth int) {
 	}
 	room := &g.rooms[p.Y][p.X]
 	region := g.data.region(p.X, p.Y, g.size)
-	roomName := g.roomName(room)
+	roomName := g.roomShort(room)
 	room.Mark = t.Tecken
 	// Fjällamuletten tar nästa fälla. Tecknet syns ändå.
 	if g.useItem(p, "amulett", "falla", t.Namn) {
@@ -150,7 +150,7 @@ func (g *Game) leaveCellar(p *Player) {
 	room.Walked = true
 	g.noteRoom(p)
 	g.newRoomSound(p)
-	g.logTo(p, g.data.Text("kallare_ut", "rum", g.roomName(room)), "info")
+	g.logTo(p, g.data.Text("kallare_ut", "rum", g.roomShort(room)), "info")
 	g.describeLater(p, room, p.X, p.Y)
 	g.noticeTrail(p)
 	g.pickUp(p)
