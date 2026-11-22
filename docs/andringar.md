@@ -13,6 +13,9 @@ eller leder tornet.
   rött.
 - Varje klass har en bild på kortet, i samma stil som spelkorten. Fältet
   `bild` finns nu också i `data/klasser.json`.
+- Klassvalet börjar med korten på baksidan, och de vänds upp ett i taget.
+  Ett kort som någon annan tar vänds tillbaka och visar baksidan med
+  namnet på den som tog det.
 
 ### Vandringens största stunder
 

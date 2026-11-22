@@ -236,10 +236,12 @@ den som dör och för alla i slutet (se slutet nedan och Strider):
 2. **Spelet**, där spelaren stannar resten av kvällen. Det går igenom fyra faser:
    - **lobbyn**: vandrarna som prickar med namn i översta raden, och
      knappen Redo där (Enter, eller Redo längst ner på en pekskärm),
-   - **klassvalet**: en egen skärm med ett spelkort för varje klass, med
-     styrka och svaghet. Välj med 1–8 eller ett klick. Kort som andra har
-     tagit är gråa. Den som inte har valt när tiden är slut får ett av de
-     lediga korten,
+   - **klassvalet**: en egen skärm med ett kort för varje klass, i samma
+     stil som spelkorten, med bild, styrka och svaghet. Korten ligger på
+     baksidan och vänds upp ett i taget. Välj med 1–8 eller ett klick. Ett
+     kort som någon annan har tagit vänds tillbaka och visar baksidan med
+     namnet; när du har valt tonas de andra ned. Den som inte har valt när
+     tiden är slut får ett av de lediga korten,
    - **vandringen**: kartan, solmätaren, vandrarna som prickar i sin färg
      i översta raden, panelen Nu som en rad under kartan, och loggen. På en
      bred skärm fyller kartan hela bredden och loggen står på kartan, nere

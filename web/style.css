@@ -1047,29 +1047,69 @@ body.touch #side { overflow-y: auto; }
   gap: 14px;
   text-align: left;
 }
-/* Klasskorten har spelkortens pergament, ram och mörka text (.okort). */
+/* Klasskorten är spelkort (.okort): baksidan av läder, framsidan av
+   pergament med ram och mörk text. De vänds upp ett i taget (.vand), och
+   ett kort som någon annan har tagit visar baksidan med namnet. */
 .card {
   position: relative;
   display: flex;
-  flex-direction: column;
-  gap: 8px;
   min-height: 300px;
-  padding: 14px 14px 30px;
-  border: 3px solid #3a2414;
-  border-radius: 10px;
-  outline: 1px solid #8a6a3a;
-  outline-offset: -7px;
-  background: radial-gradient(ellipse at 50% 40%, #f1e6c8, #d9c79c);
-  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.75);
+  padding: 0;
+  border: 0;
+  background: none;
   color: #2a1e12;
   text-shadow: none;
   font: inherit;
   text-align: left;
   cursor: pointer;
-  transition: transform 0.15s, box-shadow 0.15s, opacity 0.3s, filter 0.3s;
+  perspective: 900px;
+  transition: transform 0.15s;
 }
-.card:hover:not(:disabled), .card:focus-visible {
-  transform: translateY(-3px);
+.card .kk-inner {
+  position: relative;
+  flex: 1;
+  display: flex;
+  transform-style: preserve-3d;
+  transform: rotateY(180deg);
+  transition: transform 0.7s cubic-bezier(0.2, 0.7, 0.3, 1) var(--vand-efter, 0s);
+}
+.card.vand .kk-inner { transform: rotateY(0deg); }
+.card .kk-front, .card .kk-back {
+  backface-visibility: hidden;
+  border-radius: 10px;
+  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.75);
+  transition: box-shadow 0.15s, opacity 0.3s, filter 0.3s;
+}
+.card .kk-front {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 14px 14px 30px;
+  border: 3px solid #3a2414;
+  outline: 1px solid #8a6a3a;
+  outline-offset: -7px;
+  background: radial-gradient(ellipse at 50% 40%, #f1e6c8, #d9c79c);
+}
+.card .kk-back {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 0 10px 22px;
+  transform: rotateY(180deg);
+  background:
+    radial-gradient(circle at 50% 45%, transparent 0 28px, #c9a24f 29px 31px, transparent 32px 44px, #c9a24f 45px 46px, transparent 47px),
+    repeating-linear-gradient(45deg, #3a2414 0 6px, #331f11 6px 12px);
+  border: 3px solid #1a0f08;
+  outline: 1px solid #c9a24f;
+  outline-offset: -8px;
+}
+.card .kk-tagen { color: #e8d8b0; text-align: center; font-size: 13px; }
+.card:hover:not(:disabled), .card:focus-visible { transform: translateY(-3px); outline: none; }
+.card:hover:not(:disabled) .kk-front, .card:focus-visible .kk-front {
   box-shadow: 0 6px 22px rgba(0, 0, 0, 0.75), 0 0 16px var(--glow);
   outline-color: #3a2414;
 }
@@ -1091,11 +1131,14 @@ body.touch #side { overflow-y: auto; }
 .card .good, .card .bad { font-size: 12.5px; line-height: 1.4; }
 .card .good { color: #2e4a1a; }
 .card .bad { color: #8a2a18; }
-.card .owner { margin-top: auto; color: #6b4a24; text-align: center; }
-.card:disabled { cursor: default; opacity: 0.45; filter: grayscale(0.7); }
-.card.mine { opacity: 1; filter: none; box-shadow: 0 6px 22px rgba(0, 0, 0, 0.75), 0 0 20px var(--glow); outline-color: #c9a24f; }
-.card.mine .owner { color: #7a5a10; font-weight: bold; }
+.card .owner { margin-top: auto; color: #7a5a10; font-weight: bold; text-align: center; }
+.card:disabled { cursor: default; }
+.card.vand:disabled:not(.mine) .kk-front { opacity: 0.45; filter: grayscale(0.7); }
+.card.mine .kk-front { box-shadow: 0 6px 22px rgba(0, 0, 0, 0.75), 0 0 20px var(--glow); outline-color: #c9a24f; }
 body.touch .card .num { display: none; }
+@media (prefers-reduced-motion: reduce) {
+  .card .kk-inner { transition: none; }
+}
 @media (max-width: 700px) {
   /* Telefon: korten två och två, utan den kursiva beskrivningen, och
      nedräkningen fast överst på skärmen. */
@@ -1114,7 +1157,9 @@ body.touch .card .num { display: none; }
     border-bottom: 1px solid var(--faint);
   }
   #cards { grid-template-columns: 1fr 1fr; gap: 8px; }
-  .card { min-height: 0; gap: 6px; padding: 10px 9px 12px; border-radius: 8px; }
+  .card { min-height: 0; }
+  .card .kk-front { gap: 6px; padding: 10px 9px 12px; border-radius: 8px; }
+  .card .kk-back { border-radius: 8px; }
   .card:hover:not(:disabled), .card:focus-visible { transform: none; }
   .card .cname { font-size: 11.5px; letter-spacing: 0.12em; padding: 0 0 4px; }
   .card .desc { display: none; }

@@ -492,6 +492,7 @@ async function changeLanguage(lang, againIntro) {
     if (head) head.textContent = t("rundkort_rubrik", { runda: round });
   }
   if (state) {
+    chooseKey = ""; // klasskorten byggs om på det nya språket
     renderSide();
     renderTop();
     renderOverlay();
@@ -826,43 +827,80 @@ function showChron() {
   showPhase();
 }
 
-// Korten: ett för varje klass. Ett kort som någon annan har tagit går inte
-// att välja, och när man själv har valt ligger de andra kvar som de är.
+// Korten: ett för varje klass, som spelkort med en baksida. De byggs en
+// gång per klassval och vänds upp ett i taget. Ett kort som någon annan
+// har tagit vänds tillbaka och visar baksidan med namnet, och går inte att
+// välja. När man själv har valt ligger de andra kvar som de är.
+let chooseKey = "";
 function renderChoose() {
-  if (state.phase !== "klassval") return;
+  if (state.phase !== "klassval") {
+    chooseKey = "";
+    return;
+  }
   const cards = state.erbjudande || [];
   const box = $("cards");
+  const key = cards.map((c) => c.id).join(",");
+  if (key !== chooseKey) {
+    chooseKey = key;
+    box.innerHTML = "";
+    cards.forEach((c, i) => box.appendChild(buildClassCard(c, i)));
+    void box.offsetWidth;
+  }
   const mine = cards.find((c) => c.din);
-  box.innerHTML = "";
   cards.forEach((c, i) => {
-    const b = document.createElement("button");
-    b.type = "button";
-    b.className = "card" + (c.din ? " mine" : "");
-    b.setAttribute("role", "listitem");
+    const b = box.children[i];
+    if (!b) return;
+    b.classList.toggle("mine", !!c.din);
+    b.classList.toggle("vand", !c.tagen);
     b.disabled = !!c.tagen || !!mine;
-    const add = (cls, text) => {
-      const d = document.createElement("div");
-      d.className = cls;
-      d.textContent = text;
-      b.appendChild(d);
-      return d;
-    };
-    add("num", String(i + 1));
-    add("num low", String(i + 1));
-    add("cname", (c.tecken ? c.tecken + " " : "") + c.namn);
-    add("cbild", "").innerHTML = Kort.bild(c.bild);
-    add("desc", c.beskrivning);
-    const stats = [];
-    if (c.liv) stats.push(t(c.liv > 0 ? "klasskort_liv_mer" : "klasskort_liv_mindre", { n: Math.abs(c.liv) }));
-    if (c.drycker) stats.push(t(c.drycker === 1 ? "klasskort_dryck_en" : "klasskort_dryck_flera", { n: c.drycker }));
-    if (stats.length) add("stats", stats.join(" · "));
-    add("good", t("klasskort_styrka", { styrka: c.styrka }));
-    add("bad", t("klasskort_svaghet", { svaghet: c.svaghet }));
-    add("owner", c.din ? t("klasskort_ditt") : c.tagen ? t("klasskort_tagen", { namn: c.tagen }) : "");
-    b.addEventListener("click", () => chooseCard(i));
-    box.appendChild(b);
+    b.querySelector(".owner").textContent = c.din ? t("klasskort_ditt") : "";
+    b.querySelector(".kk-tagen").textContent = c.tagen ? t("klasskort_tagen", { namn: c.tagen }) : "";
   });
   updateChooseStatus();
+}
+
+// buildClassCard bygger ett klasskort med baksida och framsida: namnet,
+// bilden, beskrivningen, liv och drycker, styrkan och svagheten.
+function buildClassCard(c, i) {
+  const b = document.createElement("button");
+  b.type = "button";
+  b.className = "card";
+  b.setAttribute("role", "listitem");
+  b.style.setProperty("--vand-efter", 0.15 + i * 0.12 + "s");
+  const inner = document.createElement("div");
+  inner.className = "kk-inner";
+  const back = document.createElement("div");
+  back.className = "kk-back";
+  const taken = document.createElement("div");
+  taken.className = "kk-tagen";
+  back.appendChild(taken);
+  const front = document.createElement("div");
+  front.className = "kk-front";
+  const add = (cls, text) => {
+    const d = document.createElement("div");
+    d.className = cls;
+    d.textContent = text;
+    front.appendChild(d);
+    return d;
+  };
+  add("num", String(i + 1));
+  add("num low", String(i + 1));
+  add("cname", (c.tecken ? c.tecken + " " : "") + c.namn);
+  add("cbild", "").innerHTML = Kort.bild(c.bild);
+  add("desc", c.beskrivning);
+  const stats = [];
+  if (c.liv) stats.push(t(c.liv > 0 ? "klasskort_liv_mer" : "klasskort_liv_mindre", { n: Math.abs(c.liv) }));
+  if (c.drycker) stats.push(t(c.drycker === 1 ? "klasskort_dryck_en" : "klasskort_dryck_flera", { n: c.drycker }));
+  if (stats.length) add("stats", stats.join(" · "));
+  add("good", t("klasskort_styrka", { styrka: c.styrka }));
+  add("bad", t("klasskort_svaghet", { svaghet: c.svaghet }));
+  add("owner", "");
+  inner.append(back, front);
+  b.appendChild(inner);
+  b.addEventListener("click", () => chooseCard(i));
+  // Fördröjningen gäller bara när korten läggs fram första gången.
+  inner.addEventListener("transitionend", () => b.style.setProperty("--vand-efter", "0s"), { once: true });
+  return b;
 }
 
 function chooseCard(i) {
