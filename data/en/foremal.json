@@ -61,18 +61,18 @@
         "id": "rokpulver",
         "namn": "Smoke powder",
         "kort": "the smoke powder",
-        "beskrivning": "Flee a fight before the creature can strike. Choose the way with the arrows.",
+        "beskrivning": "If you flee a fight, the creature has no time to strike.",
         "verkar": [
-          "You throw the powder at the floor. The room fills with grey smoke, and you are gone to the {riktning} before anything can react."
+          "You dash the powder at the floor as you turn. The room fills with grey smoke, and you are gone to the {riktning} before anything can react."
         ]
       },
       {
         "id": "spegel",
         "namn": "A mirror shard",
         "kort": "the mirror shard",
-        "beskrivning": "Look into the room beyond a door. Three times.",
+        "beskrivning": "When you enter a new room, the shard shows one of the rooms beyond its doors. Three times.",
         "verkar": [
-          "You hold the shard out through the doorway to the {riktning} and tilt it."
+          "The shard in your bag catches something in the doorway to the {riktning}."
         ],
         "slut": [
           "The shard turns dull, as if something has breathed on it."
@@ -82,18 +82,18 @@
         "id": "kastkniv",
         "namn": "A throwing knife",
         "kort": "the throwing knife",
-        "beskrivning": "Throw it through a door at a creature in the next room.",
+        "beskrivning": "If a creature appears, you throw the knife first.",
         "verkar": [
-          "You throw the knife through the doorway to the {riktning}."
+          "You throw the knife before {varelse} is on you."
         ]
       },
       {
         "id": "krita",
         "namn": "A piece of chalk",
         "kort": "the chalk",
-        "beskrivning": "Draw an arrow on the floor. Everyone who comes in sees it, but not who drew it. Five times.",
+        "beskrivning": "When you leave a room you draw an arrow the way you go. Everyone who comes in sees it, but not who drew it. Five rooms.",
         "verkar": [
-          "You draw an arrow on the floor pointing to the {riktning}."
+          "Before you go, you draw an arrow on the floor pointing to the {riktning}."
         ],
         "slut": [
           "The chalk is used up. The last of the dust blows away."
@@ -112,9 +112,9 @@
         "id": "timglas",
         "namn": "An hourglass of bone",
         "kort": "the hourglass",
-        "beskrivning": "Turn it, and the sun stands still for a round for everyone.",
+        "beskrivning": "When the sun has three hand-widths left it turns by itself, and the sun stands still for a round for everyone.",
         "verkar": [
-          "You turn the hourglass. The sand stands still. The light through the slits stops moving."
+          "The hourglass turns over in your bag. The sand stands still. The light through the slits stops moving."
         ]
       },
       {
@@ -191,9 +191,6 @@
     "kompass_har": [
       "The compass spins. You are standing in a gate."
     ],
-    "spegel_vagg": [
-      "There is no door to the {riktning}. The shard shows only stone."
-    ],
     "spegel_ser": [
       "In the shard you see {rum}."
     ],
@@ -205,9 +202,6 @@
     ],
     "spegel_vandrare": [
       "In there stands {namn}."
-    ],
-    "kniv_miss": [
-      "The knife clatters against the stone to the {riktning}. There is nothing there to hit."
     ],
     "kniv_traff": [
       "The knife hits {varelse}."

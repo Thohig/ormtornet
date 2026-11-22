@@ -1360,9 +1360,7 @@ func (g *Game) actPlayer(p *Player, a string, monsterID int) {
 			return
 		}
 	default:
-		if _, _, _, ok := g.parseItemAction(p, a); !ok {
-			return
-		}
+		return
 	}
 	p.Action = a
 	g.soundTo(p, "val")
@@ -1424,6 +1422,7 @@ func (g *Game) resolve() {
 	if g.sun < 0 {
 		g.sun = 0
 	}
+	g.hourglass()
 	g.summarize(snap, wakes)
 	g.soundAll("runda")
 	inside := 0
@@ -1535,8 +1534,6 @@ func (g *Game) playTurn(p *Player) {
 		}
 	}
 	switch {
-	case isItemAction(a):
-		g.useActive(p, a)
 	case g.combatTurn(p, a):
 	case isCombatAction(a):
 		// Striden mot en annan vandrare är redan avgjord i resolveFights.
@@ -1627,6 +1624,7 @@ func (g *Game) move(p *Player, d Dir, depth int) {
 	isNew := !target.Walked // ett rum som någon bara har sett in i är fortfarande nytt
 	g.reveal(nx, ny)
 	target.Walked = true
+	g.chalkLeaving(p, room, d)
 	p.X, p.Y = nx, ny
 	g.noteRoom(p)
 
@@ -1636,6 +1634,7 @@ func (g *Game) move(p *Player, d Dir, depth int) {
 			g.logTo(p, g.data.Text("morker_nytt"), "dim")
 		} else {
 			g.describeLater(p, target, nx, ny)
+			g.mirror(p)
 		}
 		if target.Event != "" {
 			ev := target.Event

@@ -1,9 +1,6 @@
 package main
 
-import (
-	"strings"
-	"testing"
-)
+import "testing"
 
 func TestCarryThreeAndLeaveInRoom(t *testing.T) {
 	g, a, b := startTwo(t)
@@ -144,58 +141,83 @@ func TestSmokeFleesWithoutBlow(t *testing.T) {
 	g.monsters = append(g.monsters, &Monster{ID: 60, Type: typ.ID, X: 4, Y: 3, HP: 9})
 	g.give(p, "rokpulver")
 	hp := p.HP
-	g.actPlayer(p, "f1E", 0)
-	if p.Action != "f1E" {
-		t.Fatalf("draget togs inte emot: %q", p.Action)
-	}
+	g.actPlayer(p, "E", 0)
 	g.playTurn(p)
 	if p.HP != hp || p.X != 5 || p.has("rokpulver") != nil {
 		t.Fatalf("liv %d av %d, står på %d", p.HP, hp, p.X)
 	}
 }
 
-func TestMirrorKnifeChalkHourglass(t *testing.T) {
-	g, a, b := startTwo(t)
-	p, o := a.player, b.player
-	openRoom(g, p, 4, 3)
-	g.rooms[3][5].Event = "pilar"
-	g.monsters = append(g.monsters, &Monster{ID: 61, Type: g.data.Monster.Typer[0].ID, X: 3, Y: 3, HP: 1})
+func TestItemActionsAreGone(t *testing.T) {
+	g, a, _ := startTwo(t)
+	p := a.player
+	g.give(p, "krita")
+	g.actPlayer(p, "f1E", 0)
+	if p.Action != "" {
+		t.Fatalf("draget med föremål togs emot: %q", p.Action)
+	}
+}
 
+func TestMirrorShowsANewRoom(t *testing.T) {
+	g, a, _ := startTwo(t)
+	p := a.player
+	openRoom(g, p, 4, 3)
+	p.known = newGrid[bool](g.size)
+	for d := North; d <= West; d++ {
+		p.known[3+dirDY[d]][4+dirDX[d]] = d != East
+	}
+	g.rooms[3][5].Event = "pilar"
 	g.give(p, "spegel")
 	logs(a)
-	g.useActive(p, "f1E")
-	if !containsPart(logs(a), "pilfällan") && !containsPart(logs(a), strings.ToLower(g.data.trap("pilar").Namn)) {
-		t.Fatal("spegeln visade inte fällan")
+	g.mirror(p)
+	if !p.known[3][5] || !containsPart(logs(a), g.data.Text("spegel_falla", "falla", lowerFirst(g.data.trap("pilar").Namn))) {
+		t.Fatal("spegeln visade inte rummet österut med fällan")
 	}
 	if p.has("spegel").uses != 2 {
 		t.Fatal("spegeln förbrukades inte")
 	}
-	p.items = nil
+	g.mirror(p)
+	if p.has("spegel").uses != 2 {
+		t.Fatal("spegeln verkade fast alla grannrum var kända")
+	}
+}
 
+func TestKnifeChalkHourglass(t *testing.T) {
+	g, a, b := startTwo(t)
+	p, o := a.player, b.player
+
+	openRoom(g, p, 4, 3)
+	g.monsters = append(g.monsters, &Monster{ID: 61, Type: g.data.Monster.Typer[0].ID, X: 4, Y: 3, HP: 1})
 	g.give(p, "kastkniv")
 	gold := p.Treasure
-	g.useActive(p, "f1W")
-	if g.monsterAt(3, 3) != nil || p.Treasure <= gold {
+	g.announceMonster(p)
+	if g.monsterAt(4, 3) != nil || p.Treasure <= gold || p.has("kastkniv") != nil {
 		t.Fatal("kniven fällde inte varelsen")
 	}
 
+	openRoom(g, p, 4, 3)
 	g.give(p, "krita")
-	g.useActive(p, "f1N")
-	if r := g.rooms[3][4]; !r.hasChalk || r.chalk != North {
-		t.Fatal("ingen pil")
+	g.move(p, North, 0)
+	if r := g.rooms[3][4]; !r.hasChalk || r.chalk != North || p.has("krita").uses != 4 {
+		t.Fatal("ingen pil när vandraren gick norrut")
 	}
-	openRoom(g, o, 4, 2)
+	openRoom(g, o, 4, 4)
 	logs(b)
-	g.move(o, South, 0)
+	g.move(o, North, 0)
 	if !containsPart(logs(b), "krita") {
 		t.Fatal("Bo såg inte pilen")
 	}
 	p.items = nil
 
 	g.give(p, "timglas")
-	sun := g.sun
-	g.useActive(p, "f1")
-	if g.sun != sun+1 {
+	g.sun = 5
+	g.hourglass()
+	if g.sun != 5 || p.has("timglas") == nil {
+		t.Fatal("timglaset vändes för tidigt")
+	}
+	g.sun = 3
+	g.hourglass()
+	if g.sun != 4 || p.has("timglas") != nil {
 		t.Fatal("timglaset stoppade inte solen")
 	}
 }

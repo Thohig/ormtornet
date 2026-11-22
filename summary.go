@@ -4,11 +4,7 @@ package main
 // vad som hände just henom, byggt av skillnaden mellan före och efter.
 // Det farliga står först. Texterna står i data/texter.json under "sam_".
 
-import (
-	"slices"
-	"strconv"
-	"strings"
-)
+import "slices"
 
 // before är det som behövs för att se vad rundan ändrade.
 type before struct {
@@ -202,14 +198,6 @@ func (g *Game) actionLine(p *Player, b before, moved bool, room string, t func(s
 	}
 	if moved {
 		return t("sam_hamnade", "rum", room)
-	}
-	if strings.HasPrefix(a, "f") && len(a) >= 2 {
-		i, err := strconv.Atoi(a[1:2])
-		if err == nil && i >= 1 && i <= len(b.items) {
-			if ty := g.data.itemType(b.items[i-1]); ty != nil {
-				return t("sam_anvande", "foremal", ty.Kort)
-			}
-		}
 	}
 	switch a {
 	case "":

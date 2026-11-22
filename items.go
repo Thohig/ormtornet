@@ -19,8 +19,6 @@ type ItemType struct {
 	Anvandningar int      `json:"anvandningar"` // 0 = verkar hela vandringen
 	Verkar       []string `json:"verkar"`
 	Slut         []string `json:"slut"`
-	Aktiv        bool     `json:"aktiv"`     // används med 1–3 i stället för att verka av sig självt
-	Riktning     bool     `json:"riktning"`  // pekar åt ett håll, som väljs med pilarna
 	Forbannad    bool     `json:"forbannad"` // ser värdefullt ut, men har en baksida
 	Varde        int      `json:"varde"`     // guld det är värt när man kommer ut
 	Forbannelse  []string `json:"forbannelse"`
@@ -47,8 +45,6 @@ type itemView struct {
 	Namn        string `json:"namn"`
 	Beskrivning string `json:"beskrivning"`
 	Kvar        int    `json:"kvar,omitempty"`
-	Aktiv       bool   `json:"aktiv,omitempty"`
-	Riktning    bool   `json:"riktning,omitempty"`
 }
 
 func (d *Data) itemType(id string) *ItemType {
@@ -263,7 +259,7 @@ func (g *Game) itemViews(p *Player) []itemView {
 	var out []itemView
 	for _, it := range p.items {
 		if t := g.data.itemType(it.ID); t != nil {
-			out = append(out, itemView{ID: t.ID, Tecken: t.Tecken, Namn: t.Namn, Beskrivning: t.Beskrivning, Kvar: it.uses, Aktiv: t.Aktiv, Riktning: t.Riktning})
+			out = append(out, itemView{ID: t.ID, Tecken: t.Tecken, Namn: t.Namn, Beskrivning: t.Beskrivning, Kvar: it.uses})
 		}
 	}
 	return out
@@ -278,37 +274,10 @@ func (g *Game) itemIDs(p *Player) []string {
 	return out
 }
 
-// Föremål som vandraren använder själv. Draget skrivs "f" och platsen i
-// väskan (1–3), och för föremål som pekar åt ett håll en riktning efter:
-// "f2E" kastar det andra föremålet österut.
-
-func isItemAction(a string) bool {
-	return len(a) >= 2 && a[0] == 'f' && a[1] >= '1' && a[1] <= '9'
-}
-
-// parseItemAction ger föremålet och riktningen i ett drag, eller nil.
-func (g *Game) parseItemAction(p *Player, a string) (*Item, *ItemType, Dir, bool) {
-	if !isItemAction(a) {
-		return nil, nil, 0, false
-	}
-	slot := int(a[1] - '1')
-	if slot >= len(p.items) {
-		return nil, nil, 0, false
-	}
-	it := p.items[slot]
-	t := g.data.itemType(it.ID)
-	if t == nil || !t.Aktiv {
-		return nil, nil, 0, false
-	}
-	if !t.Riktning {
-		return it, t, 0, len(a) == 2
-	}
-	if len(a) != 3 {
-		return nil, nil, 0, false
-	}
-	d, ok := dirCodes[a[2:]]
-	return it, t, d, ok
-}
+// De fem föremål som förr användes med 1–3 verkar nu av sig själva, som de
+// andra: rökpulvret när vandraren lämnar en strid, spegelskärvan när hen
+// kommer in i ett nytt rum, kastkniven när en varelse dyker upp, kritan när
+// hen lämnar ett rum och timglaset när solen är nästan nere.
 
 // neighbor ger rummet åt hållet d, om det finns en dörr dit.
 func (g *Game) neighbor(p *Player, d Dir) (int, int, bool) {
@@ -319,36 +288,30 @@ func (g *Game) neighbor(p *Player, d Dir) (int, int, bool) {
 	return x, y, g.inBounds(x, y)
 }
 
-// useActive utför ett föremål som vandraren har valt att använda.
-func (g *Game) useActive(p *Player, a string) {
-	it, t, d, ok := g.parseItemAction(p, a)
-	if !ok {
+// smoke: den som flyr ur en strid med rökpulver i väskan kommer undan utan
+// att varelsen hinner slå. Svarar true när pulvret verkade.
+func (g *Game) smoke(p *Player, d Dir) bool {
+	if p.has("rokpulver") == nil {
+		return false
+	}
+	if _, _, ok := g.neighbor(p, d); !ok {
+		return false
+	}
+	return g.useItem(p, "rokpulver", "riktning", g.data.Riktningar[d])
+}
+
+// mirror: i ett nytt rum visar spegelskärvan ett grannrum bakom en dörr,
+// ett som vandraren inte har sett.
+func (g *Game) mirror(p *Player) {
+	if p.has("spegel") == nil || p.Dark > 0 {
 		return
 	}
-	m := g.monsterAt(p.X, p.Y)
-	if m != nil && t.ID != "rokpulver" {
-		// Den som rotar i väskan mitt i en strid ger varelsen ett fritt drag.
-		g.freeAttack(p, m, "inte_beredd")
-		if p.Status != statusIn {
-			return
+	for _, d := range g.rng.Perm(4) {
+		x, y, ok := g.neighbor(p, Dir(d))
+		if !ok || p.known[y][x] {
+			continue
 		}
-	}
-	riktning := g.data.Riktningar[d]
-	switch t.ID {
-	case "rokpulver":
-		if _, _, ok := g.neighbor(p, d); !ok {
-			g.logTo(p, g.data.Text("vagg", "riktning", riktning), "dim")
-			return
-		}
-		g.useItem(p, it.ID, "riktning", riktning)
-		g.move(p, d, 0)
-	case "spegel":
-		x, y, ok := g.neighbor(p, d)
-		if !ok {
-			g.logTo(p, g.data.Text("spegel_vagg", "riktning", riktning), "dim")
-			return
-		}
-		g.useItem(p, it.ID, "riktning", riktning)
+		g.useItem(p, "spegel", "riktning", g.data.Riktningar[d])
 		r := g.reveal(x, y)
 		p.known[y][x] = true
 		g.logTo(p, g.data.Text("spegel_ser", "rum", g.roomName(r)), "info")
@@ -365,34 +328,47 @@ func (g *Game) useActive(p *Player, a string) {
 				g.logTo(p, g.data.Text("spegel_vandrare", "namn", o.Name), "info")
 			}
 		}
-	case "kastkniv":
-		x, y, ok := g.neighbor(p, d)
-		if !ok {
-			g.logTo(p, g.data.Text("vagg", "riktning", riktning), "dim")
+		return
+	}
+}
+
+// knife: när en varelse dyker upp kastar den som har en kastkniv den
+// först, och varelsen tar en skada innan striden börjar.
+func (g *Game) knife(p *Player, m *Monster) {
+	if p.has("kastkniv") == nil {
+		return
+	}
+	mt := g.data.monsterType(m.Type)
+	g.useItem(p, "kastkniv", "varelse", lowerFirst(mt.Namn))
+	g.logTo(p, g.data.Text("kniv_traff", "varelse", lowerFirst(mt.Namn)), "syn")
+	m.HP -= g.data.Monster.Spelarskada
+	if m.HP <= 0 {
+		g.defeat(p, m)
+	}
+}
+
+// chalkLeaving: den som har krita ritar en pil åt det håll hen går när hen
+// lämnar ett rum.
+func (g *Game) chalkLeaving(p *Player, from *Room, d Dir) {
+	if p.has("krita") == nil || p.Dark > 0 || (from.hasChalk && from.chalk == d) {
+		return
+	}
+	g.useItem(p, "krita", "riktning", g.data.Riktningar[d])
+	from.chalk, from.hasChalk = d, true
+}
+
+// hourglass: när solen har tre handsbredder kvar vänds timglaset av sig
+// självt, hos den första som bär det, och solen står still en runda.
+func (g *Game) hourglass() {
+	if g.sun <= 0 || g.sun > 3 {
+		return
+	}
+	for _, p := range g.players {
+		if p != nil && p.Status == statusIn && p.Cellar == 0 && g.useItem(p, "timglas") {
+			g.sun++
+			g.logOthers(p, g.data.Text("timglas_alla"), "info")
 			return
 		}
-		g.useItem(p, it.ID, "riktning", riktning)
-		mm := g.monsterAt(x, y)
-		if mm == nil {
-			// Kniven blir liggande, åt den som hittar den.
-			g.logTo(p, g.data.Text("kniv_miss", "riktning", riktning), "dim")
-			g.rooms[y][x].items = append(g.rooms[y][x].items, "kastkniv")
-			return
-		}
-		mt := g.data.monsterType(mm.Type)
-		g.logTo(p, g.data.Text("kniv_traff", "varelse", lowerFirst(mt.Namn)), "syn")
-		mm.HP -= g.data.Monster.Spelarskada
-		if mm.HP <= 0 {
-			g.defeat(p, mm)
-		}
-	case "krita":
-		g.useItem(p, it.ID, "riktning", riktning)
-		r := &g.rooms[p.Y][p.X]
-		r.chalk, r.hasChalk = d, true
-	case "timglas":
-		g.useItem(p, it.ID)
-		g.sun++ // rundan räknar ner solen igen; den står still
-		g.logOthers(p, g.data.Text("timglas_alla"), "info")
 	}
 }
 

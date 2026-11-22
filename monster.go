@@ -177,6 +177,7 @@ func (g *Game) announceMonster(p *Player) {
 	g.logTo(p, t.Namn+"!", "varn")
 	g.logTo(p, pick(t.DykerUpp), "")
 	g.explainNow(p, m.Type)
+	g.knife(p, m)
 }
 
 // duel utför en stridsrunda mellan spelaren och varelsen.
@@ -362,7 +363,11 @@ func (g *Game) combatTurn(p *Player, a string) bool {
 		g.freeAttack(p, m, "inte_beredd")
 		return true
 	case strings.Contains("NESW", a) && len(a) == 1:
-		// Flykt: varelsen får ett fritt drag, sedan går spelaren.
+		// Flykt: varelsen får ett fritt drag, sedan går spelaren. Med
+		// rökpulver hinner den inte slå.
+		if g.smoke(p, dirCodes[a]) {
+			return false
+		}
 		g.freeAttack(p, m, "fly")
 		return p.Status != statusIn
 	default:

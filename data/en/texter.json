@@ -642,7 +642,6 @@
     "sam_anfall_vandrare": ["You attacked {namn}."],
     "sam_parera_vandrare": ["You parried {namn}."],
     "sam_undan_vandrare": ["You evaded {namn}."],
-    "sam_anvande": ["You used {foremal}."],
     "sam_liv_minus": ["−{antal} lives. You have {liv} left."],
     "sam_liv_plus": ["+{antal} lives. You have {liv}."],
     "sam_ormkort": ["The serpent card: {kort}."],

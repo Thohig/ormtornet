@@ -658,7 +658,6 @@
     "sam_anfall_vandrare": ["Du anföll {namn}."],
     "sam_parera_vandrare": ["Du parerade mot {namn}."],
     "sam_undan_vandrare": ["Du gjorde en undanmanöver för {namn}."],
-    "sam_anvande": ["Du använde {foremal}."],
     "sam_liv_minus": ["−{antal} liv. Du har {liv} kvar."],
     "sam_liv_plus": ["+{antal} liv. Du har {liv}."],
     "sam_ormkort": ["Ormkortet: {kort}."],
