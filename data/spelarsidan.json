@@ -138,6 +138,8 @@
     "vandring_rubrik": "Din vandring",
     "vandring_pagar": "Vandringen pågår: runda {runda}, solen står {sol} handsbredder över horisonten. {inne} kvar i tornet, {ute} har gått ut.",
     "vandring_runda": "Runda {runda}",
+    "vandring_rundor": "Runda {runda}–{till}",
+    "vandring_tornet": "tornet styrde",
     "vandring_tom": "Inget hände som tornet minns.",
     "vandring_karta": "Visa kartan",
     "vandring_visa": "Din vandring",

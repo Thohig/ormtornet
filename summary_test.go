@@ -110,3 +110,42 @@ func TestJourneyRoundHasLines(t *testing.T) {
 		t.Fatal("ingen runda i vandringen")
 	}
 }
+
+// Tysta rundor slås ihop i Din vandring, och skadan säger vad den kom av.
+func TestJourneyQuietRoundsAndCause(t *testing.T) {
+	g, a, _ := startTwo(t)
+	p := a.player
+	p.journal = nil
+	stood := []summaryLine{{Text: g.data.Text("sam_inget"), journey: true}}
+	for r := 10; r <= 12; r++ {
+		g.round = r
+		g.addJourney(p, stood, nil, false)
+	}
+	if len(p.journal) != 1 || p.journal[0].Round != 10 || p.journal[0].To != 12 {
+		t.Fatalf("tre tysta rundor väntades bli en, fick %+v", p.journal)
+	}
+	// Tornet styrde nästa runda: en egen rad, med märket.
+	g.round = 13
+	g.addJourney(p, nil, nil, true)
+	if len(p.journal) != 2 || !p.journal[1].Tower {
+		t.Fatalf("rundan då tornet styrde väntades stå för sig: %+v", p.journal)
+	}
+
+	trap := g.data.trap("pilar")
+	if trap == nil {
+		t.Skip("ingen fälla med pilar")
+	}
+	g.round = 14
+	before := g.snapshot()[p]
+	p.HP -= 2
+	p.hurt("falla", trap.Kort)
+	lines := g.summaryFor(p, before, false)
+	g.addJourney(p, lines, nil, false)
+	last := p.journal[len(p.journal)-1]
+	if len(last.Lines) == 0 || !strings.HasPrefix(last.Lines[0].Text, upperFirst(trap.Kort)) {
+		t.Fatalf("skadan sa inte vad den kom av: %+v", last)
+	}
+	if strings.HasPrefix(lines[0].Text, upperFirst(trap.Kort)) {
+		t.Fatalf("kortet fick orsaken också: %+v", lines)
+	}
+}

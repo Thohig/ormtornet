@@ -662,8 +662,16 @@ function renderChron() {
   v.rundor.forEach((r) => {
     const d = document.createElement("div");
     d.className = "chronRound";
+    // Tysta rundor står ihop ("Runda 10–12"), och det står när tornet
+    // styrde vandraren.
     const h = document.createElement("h3");
-    h.textContent = t("vandring_runda", { runda: r.runda });
+    h.textContent = r.till ? t("vandring_rundor", { runda: r.runda, till: r.till }) : t("vandring_runda", { runda: r.runda });
+    if (r.tornet) {
+      const s = document.createElement("span");
+      s.className = "tower";
+      s.textContent = " · " + t("vandring_tornet");
+      h.appendChild(s);
+    }
     d.appendChild(h);
     // Rummet som i loggen: beskrivningen och det man såg, och det man
     // hörde under.

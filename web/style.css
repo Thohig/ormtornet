@@ -1052,6 +1052,7 @@ body.touch .card .num { display: none; }
   text-transform: uppercase;
   color: var(--chalk);
 }
+.chronRound h3 .tower { letter-spacing: 0.08em; text-transform: none; font-style: italic; }
 .chronRound .varn { color: var(--warn); }
 .chronRound .gold { color: var(--hi); }
 .chronRound .room { margin-bottom: 2px; }

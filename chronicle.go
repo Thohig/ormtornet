@@ -55,6 +55,7 @@ func (g *Game) chronicle(key string, vars ...string) {
 // gift eller tornet.
 func (p *Player) hurt(kind, what string) {
 	p.hurtKind, p.hurtWhat = kind, what
+	p.roundHurtKind, p.roundHurtWhat = kind, what
 }
 
 // chronicleDeath skriver ner hur vandraren dog.
@@ -134,9 +135,12 @@ func (g *Game) statsLine(p *Player) string {
 type journeyRound struct {
 	Round int           `json:"runda"`
 	Lines []summaryLine `json:"rader"`
-	Room  string        `json:"rum,omitempty"` // rummets beskrivning, när ett nytt rum kom den rundan
-	Here  string        `json:"har,omitempty"` // vad som fanns där
-	Heard string        `json:"hor,omitempty"` // vad vandraren hörde
+	Room  string        `json:"rum,omitempty"`    // rummets beskrivning, när ett nytt rum kom den rundan
+	Here  string        `json:"har,omitempty"`    // vad som fanns där
+	Heard string        `json:"hor,omitempty"`    // vad vandraren hörde
+	To    int           `json:"till,omitempty"`   // sista rundan, när tysta rundor har slagits ihop
+	Tower bool          `json:"tornet,omitempty"` // tornet (AI:n) styrde vandraren
+	quiet bool          // inget hände, eller vandraren stod bara kvar
 }
 
 // journeyView är vandrarens egen vandring, som den som har dött ser på en

@@ -14,6 +14,7 @@ type before struct {
 	items                       []string
 	draws                       int    // ormkort dragna före rundan
 	foe                         string // vandraren som stridsvalet riktades mot
+	tower                       bool   // tornet (AI:n) styrde vandraren
 }
 
 type summaryLine struct {
@@ -22,8 +23,12 @@ type summaryLine struct {
 	// Ormkort är id:t på ormkortet vandraren drog, för bilden bredvid raden.
 	Ormkort string `json:"ormkort,omitempty"`
 	// journey: raden står bara i Din vandring, inte på kortet, eftersom
-	// loggen redan har sagt det (att man inte valde något drag).
+	// loggen redan har sagt det (att man inte valde något drag, eller
+	// vilken varelse man fällde).
 	journey bool
+	// why är raden i Din vandring när den säger mer än kortet: vad som
+	// skadade eller dödade vandraren.
+	why string
 }
 
 type summaryMsg struct {
@@ -47,8 +52,9 @@ func (g *Game) snapshot() map[*Player]before {
 			x: p.X, y: p.Y, hp: p.HP, treasure: p.Treasure, potions: p.Potions,
 			stuck: p.Stuck, poison: p.Poison, dark: p.Dark, cellar: p.Cellar,
 			status: p.Status, action: p.Action, items: items, draws: len(p.stats.draws),
-			foe: g.foeName(p),
+			foe: g.foeName(p), tower: p.takenOver,
 		}
+		p.roundHurtKind, p.roundHurtWhat, p.roundKill = "", "", ""
 	}
 	return m
 }
@@ -74,14 +80,7 @@ func (g *Game) summarize(snap map[*Player]before, wakesBefore int) {
 		lines := g.summaryFor(p, b, g.wakes > wakesBefore)
 		room := p.roundRoom
 		p.roundRoom = nil
-		if len(lines) > 0 || room != nil {
-			// Lines är aldrig nil, så att spelarsidan alltid får en lista.
-			jr := journeyRound{Round: g.round, Lines: append([]summaryLine{}, lines...)}
-			if room != nil {
-				jr.Room, jr.Here, jr.Heard = room.Text, room.Har, room.Hor
-			}
-			p.journal = append(p.journal, jr)
-		}
+		g.addJourney(p, lines, room, b.tower)
 		var card []summaryLine
 		for _, l := range lines {
 			if !l.journey {
@@ -118,7 +117,11 @@ func (g *Game) summaryFor(p *Player, b before, woke bool) []summaryLine {
 	case p.Status == statusOut:
 		add(t("sam_ute", "skatt", itoa(p.Treasure)), "gold")
 	case p.Status == statusDead && b.status != statusDead:
-		add(t("sam_dod"), "varn")
+		l := t("sam_dod")
+		if w := g.hurtBy(p); w != "" {
+			l.why = g.data.Text("sam_dod_av", "Vad", w)
+		}
+		add(l, "varn")
 	case p.Cellar > 0 && b.cellar == 0:
 		add(t("sam_kallare"), "varn")
 	case b.cellar > 0 && p.Cellar == 0:
@@ -142,7 +145,11 @@ func (g *Game) summaryFor(p *Player, b before, woke bool) []summaryLine {
 	}
 	if p.Status == statusIn || p.Status == statusDead {
 		if d := p.HP - b.hp; d < 0 && p.Status != statusDead {
-			add(t("sam_liv_minus", "antal", itoa(-d), "liv", itoa(max(0, p.HP))), "varn")
+			l := t("sam_liv_minus", "antal", itoa(-d), "liv", itoa(max(0, p.HP)))
+			if w := g.hurtBy(p); w != "" {
+				l.why = g.data.Text("sam_liv_minus_av", "Vad", w, "antal", itoa(-d), "liv", itoa(max(0, p.HP)))
+			}
+			add(l, "varn")
 		} else if d > 0 {
 			add(t("sam_liv_plus", "antal", itoa(d), "liv", itoa(p.HP)), "")
 		}
@@ -158,6 +165,11 @@ func (g *Game) summaryFor(p *Player, b before, woke bool) []summaryLine {
 			}
 			add(l, class)
 		}
+	}
+	if p.roundKill != "" {
+		l := t("sam_falde", "varelse", p.roundKill)
+		l.journey = true
+		add(l, "")
 	}
 	if p.Status != statusOut {
 		if d := p.Treasure - b.treasure; d > 0 {
@@ -222,4 +234,54 @@ func (g *Game) actionLine(p *Player, b before, moved bool, room string, t func(s
 		return t("sam_" + a)
 	}
 	return t("sam_vanta")
+}
+
+// hurtBy säger vad som skadade vandraren under rundan, med stor bokstav,
+// eller tomt om det inte är känt.
+func (g *Game) hurtBy(p *Player) string {
+	switch p.roundHurtKind {
+	case "falla", "varelse", "vandrare":
+		return upperFirst(p.roundHurtWhat)
+	case "gift", "ormen":
+		return g.data.Text("sam_orsak_" + p.roundHurtKind)
+	}
+	return ""
+}
+
+// addJourney lägger rundan till Din vandring. Rader med en orsak (why)
+// får den texten. En runda där inget hände, eller där vandraren bara stod
+// kvar, slås ihop med en sådan runda just före: "Runda 10–12".
+func (g *Game) addJourney(p *Player, lines []summaryLine, room *roomMsg, tower bool) {
+	quiet := room == nil
+	for _, l := range lines {
+		if !l.journey || l.why != "" || l.Text != g.data.Text("sam_inget") {
+			quiet = false
+		}
+	}
+	if quiet {
+		n := len(p.journal)
+		if n > 0 {
+			last := &p.journal[n-1]
+			end := max(last.Round, last.To)
+			if last.quiet && last.Tower == tower && end == g.round-1 {
+				last.To = g.round
+				return
+			}
+		}
+		p.journal = append(p.journal, journeyRound{Round: g.round, Tower: tower, quiet: true,
+			Lines: []summaryLine{{Text: g.data.Text("sam_tyst")}}})
+		return
+	}
+	// Lines är aldrig nil, så att spelarsidan alltid får en lista.
+	jr := journeyRound{Round: g.round, Tower: tower, Lines: []summaryLine{}}
+	for _, l := range lines {
+		if l.why != "" {
+			l.Text = l.why
+		}
+		jr.Lines = append(jr.Lines, l)
+	}
+	if room != nil {
+		jr.Room, jr.Here, jr.Heard = room.Text, room.Har, room.Hor
+	}
+	p.journal = append(p.journal, jr)
 }

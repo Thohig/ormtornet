@@ -273,6 +273,9 @@ type Player struct {
 	epilog   []chronLine    // epilogens rader för just den här vandraren
 	hurtKind string         // vad som skadade vandraren senast, för krönikan
 	hurtWhat string         // namnet på fällan, varelsen eller vandraren
+	// Det som skadade vandraren och varelsen hen fällde under rundan, för
+	// Din vandring (summary.go). Töms före varje runda.
+	roundHurtKind, roundHurtWhat, roundKill string
 }
 
 // present är sant för en spelare som deltar just nu: en människa med öppen

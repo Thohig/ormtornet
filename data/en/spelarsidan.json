@@ -124,6 +124,8 @@
     "vandring_rubrik": "Your journey",
     "vandring_pagar": "The walk goes on: round {runda}, the sun is {sol} hand-breadths above the horizon. {inne} still in the tower, {ute} gone out.",
     "vandring_runda": "Round {runda}",
+    "vandring_rundor": "Rounds {runda}–{till}",
+    "vandring_tornet": "the tower steered",
     "vandring_tom": "Nothing happened that the tower remembers.",
     "vandring_karta": "Show the map",
     "vandring_visa": "Your journey",
