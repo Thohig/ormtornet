@@ -69,6 +69,10 @@ function srgb(c: number[]): THREE.Color {
   return new THREE.Color().setRGB(c[0] / 255, c[1] / 255, c[2] / 255, THREE.SRGBColorSpace);
 }
 const EKO_MS = 4500;
+const LANDA_MS = 650; // så länge en ny bricka faller
+const BRICKA = 0.3; // brickans tjocklek
+// Den som har bett om mindre rörelse får rummen utan fallande brickor.
+const LUGN = typeof matchMedia === "function" && matchMedia("(prefers-reduced-motion: reduce)").matches;
 const FART = 3.4; // så fort figurerna går, i världens enheter per sekund
 const VAKEN_MS = 3500;
 
@@ -269,6 +273,12 @@ export class IsoKarta {
   private figurer = new THREE.Group();
   private aktorer = new Map<string, Aktor>();
   private tornNyckel = "";
+  // Brickorna: rummen som har upptäckts, och de som faller just nu.
+  private kanda = new Set<string>();
+  private kandaStorlek = 0;
+  private landar = new Map<string, { at: number; bricka: THREE.Group }>();
+  private brickor = new THREE.Group();
+  private brickGeo: THREE.BoxGeometry | null = null;
   private state: Tillstand | null = null;
   private storleken = 0;
   private aktiv = false;
@@ -320,7 +330,7 @@ export class IsoKarta {
     this.sol.castShadow = true;
     this.sol.shadow.mapSize.set(2048, 2048);
     this.sol.shadow.bias = -0.0006;
-    this.scene.add(this.sol, this.sol.target, this.torn, this.rorligt, this.ekon, this.figurer);
+    this.scene.add(this.sol, this.sol.target, this.torn, this.rorligt, this.ekon, this.figurer, this.brickor);
 
     this.kompass = document.createElement("div");
     this.kompass.className = "isokompass";
@@ -393,15 +403,81 @@ export class IsoKarta {
   visaTillstand(state: Tillstand): void {
     this.state = state;
     if (state.size) this.storleken = state.size;
+
+    // Nya rum läggs som brickor (laggBricka). Ett nytt torn, eller många
+    // rum på en gång, som när vandringen är slut och allt syns, läggs utan.
+    const nu = new Set(state.rooms.map((r) => r.x + "," + r.y));
+    const nyttTorn = this.kandaStorlek !== this.storleken || [...this.kanda].some((k) => !nu.has(k));
+    if (nyttTorn) {
+      this.kanda.clear();
+      this.landar.forEach((l) => this.brickor.remove(l.bricka));
+      this.landar.clear();
+      this.kandaStorlek = this.storleken;
+    }
+    const nya = state.rooms.filter((r) => !this.kanda.has(r.x + "," + r.y));
+    const lagg = !nyttTorn && this.kanda.size > 0 && nya.length <= 3 && !LUGN;
+    nya.forEach((r) => {
+      this.kanda.add(r.x + "," + r.y);
+      if (lagg) this.laggBricka(r);
+    });
+    this.byggOm();
+    this.byggRorligt(state);
+  }
+
+  // byggOm bygger tornet på nytt om något har ändrats, utan rummen vars
+  // brickor ännu inte har landat.
+  private byggOm(): void {
+    const state = this.state;
+    if (!state) return;
     const niva = this.niva();
     const slutet = niva === 4 && state.phase === "slut";
+    const rum = state.rooms.filter((r) => !this.landar.has(r.x + "," + r.y));
     const nyckel = this.storleken + "|" + (slutet ? 1 : 0) + "|" +
-      state.rooms.map((r) => [r.x, r.y, r.d.map(Number).join(""), r.k, r.exit, r.stangd ? 1 : 0, (r.in || []).join("+")].join(",")).join(";");
+      rum.map((r) => [r.x, r.y, r.d.map(Number).join(""), r.k, r.exit, r.stangd ? 1 : 0, (r.in || []).join("+")].join(",")).join(";");
     if (nyckel !== this.tornNyckel) {
       this.tornNyckel = nyckel;
-      this.byggTorn(state, slutet);
+      this.byggTorn({ ...state, rooms: rum }, slutet);
     }
-    this.byggRorligt(state);
+  }
+
+  // laggBricka låter ett nytt rum falla ner som en spelbricka: den kommer
+  // uppifrån med baksidan upp, vänds i luften och landar på sin plats. När
+  // den har landat byggs rummet, med murar och inredning.
+  private laggBricka(r: Rum): void {
+    const g = this.brickGeo || (this.brickGeo = new THREE.BoxGeometry(S * 0.98, BRICKA, S * 0.98));
+    const kant = this.enkelt("brickkant", "#3a2c20");
+    const bak = this.enkelt("brickbak", "#c9b48a");
+    // Lådans sidor: +x, -x, +y (ovansidan), -y (baksidan), +z, -z.
+    const m = new THREE.Mesh(g, [kant, kant, this.golvMaterial(), bak, kant, kant]);
+    m.castShadow = true;
+    const bricka = new THREE.Group();
+    bricka.add(m);
+    bricka.position.set(r.x * S + S / 2, 6, r.y * S + S / 2);
+    bricka.rotation.x = Math.PI;
+    this.brickor.add(bricka);
+    this.landar.set(r.x + "," + r.y, { at: performance.now(), bricka });
+  }
+
+  // landa flyttar brickorna som faller, och bygger rummen vars brickor har landat.
+  private landa(t: number): void {
+    if (!this.landar.size) return;
+    let klara = false;
+    this.landar.forEach((l, k) => {
+      const f = Math.min(1, (t - l.at) / LANDA_MS);
+      if (f >= 1) {
+        this.brickor.remove(l.bricka);
+        this.landar.delete(k);
+        klara = true;
+        return;
+      }
+      const fall = f * f; // faller fortare och fortare
+      l.bricka.position.y = 6 * (1 - fall) - BRICKA / 2 * fall;
+      l.bricka.rotation.x = Math.PI * (1 - Math.min(1, f * 1.4)); // vänds innan den landar
+    });
+    if (klara && this.state) {
+      this.byggOm();
+      this.byggRorligt(this.state);
+    }
   }
 
   eko(x: number, y: number, slot: number): void {
@@ -864,6 +940,7 @@ float puls() {
   private byggRorligt(state: Tillstand): void {
     this.rorligt.clear();
     const g = this.rorligt;
+    const landar = (r: Rum) => this.landar.has(r.x + "," + r.y);
     const kanda = new Set(state.rooms.map((r) => r.x + "," + r.y));
 
     // Okända rum är en svag prick. En vandrare ser bara prickarna bredvid
@@ -878,6 +955,7 @@ float puls() {
     }
 
     state.rooms.forEach((r) => {
+      if (landar(r)) return; // brickan har inte landat än
       if (r.mark) {
         // En fälla som har slagit till syns som en modell, eller som sitt
         // tecken i krita om den saknar modell.
@@ -1186,6 +1264,7 @@ float puls() {
     }
 
     this.rorFigurer(t, dt);
+    this.landa(t);
 
     // Facklorna fladdrar, och rummet kartan följer ligger i facklans sken.
     const fladder = 0.82 + 0.1 * Math.sin(t / 97) + 0.08 * Math.sin(t / 41 + 1.3);
