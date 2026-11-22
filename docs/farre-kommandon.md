@@ -1,6 +1,9 @@
 # Färre kommandon (förslag)
 
-Förslag 2026-11-22. Inget är byggt eller bestämt.
+Förslag 2026-11-22. Byggt samma dag, med svaren i
+[samlat-forslag.md](samlat-forslag.md). Tornet väljer motståndare efter
+den som anföll, annars den som kom först in i tornet, eftersom skatten
+är hemlig.
 
 ## Läget i dag
 

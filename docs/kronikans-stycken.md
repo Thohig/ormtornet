@@ -1,6 +1,7 @@
 # Rummet i krönikan som ett stycke (förslag)
 
-Förslag 2026-11-22. Inget är byggt eller bestämt.
+Förslag 2026-11-22. Byggt samma dag, med svaren i
+[samlat-forslag.md](samlat-forslag.md).
 
 ## Vad som önskas
 

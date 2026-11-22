@@ -64,6 +64,12 @@ En riktig kväll behövs för att se:
   spegelskärvan, kastkniven, kritan och timglaset verkar? Blir kritans
   fem pilar för många, och liknar spegelskärvan Kartritaren för mycket?
   Bara provat med tester.
+- Stycken och färre kommandon (2026-11-22,
+  [samlat-forslag.md](samlat-forslag.md)): går det att förstå rummen när
+  de bara beskrivs, och känner man igen spåren efter fällorna? Hörs
+  ljuden, eller försvinner de sist i stycket? Saknar någon att välja
+  motståndare själv, eller att se vart man gick på kortet? Hittar man Z
+  för kartan? Bara provat med tester och i webbläsaren.
 - Namnen som tornet ger (2026-11-22, [slumpade-namn.md](slumpade-namn.md)):
   tycker spelarna om namnen, eller saknar de att skriva sitt eget? Får
   den som byter telefon eller webbläsare mitt i kvällen ett nytt namn, och

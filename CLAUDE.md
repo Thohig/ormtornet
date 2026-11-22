@@ -170,5 +170,12 @@ Skriv dit när ett steg är klart.
   telefonen. Allt är byggt.
 - [docs/passiva-foremal.md](docs/passiva-foremal.md): alla föremål verkar
   av sig själva och 1–3 är borta. Allt är byggt.
+- [docs/samlat-forslag.md](docs/samlat-forslag.md): rummet som ett
+  stycke i krönikan (det du ser och hör) och färre kommandon (S tar skatt,
+  knapparna följer läget, tornet väljer motståndare, Z för kartan). Allt
+  är byggt; detaljerna står i kronikans-stycken.md och
+  farre-kommandon.md.
+- [docs/vardsida-tva-kolumner.md](docs/vardsida-tva-kolumner.md):
+  värdsidan i två kolumner på en bred skärm. Allt är byggt.
 - [docs/slumpade-namn.md](docs/slumpade-namn.md): tornet ger namnen och
   namnrutan är borta. Steg 1–2 är byggda; Nytt namn i lobbyn valdes bort.
