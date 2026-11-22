@@ -1051,3 +1051,76 @@ body.touch .card .num { display: none; }
     inset 0 0 80px 14px rgba(8, 5, 2, 0.85);
 }
 .isoram[hidden] { display: none; }
+/* Ormkortet: kortet du drog i skattkammaren (showSerpentCard i app.js).
+   Det vänds upp från baksidan, som ett kort ur en lek. */
+#ormkort {
+  position: absolute;
+  right: 18px;
+  top: 50%;
+  z-index: 3;
+  width: 172px;
+  height: 252px;
+  margin-top: -126px;
+  perspective: 700px;
+  cursor: pointer;
+  transition: opacity 0.4s;
+}
+#ormkort[hidden] { display: none; }
+#ormkort.leaving { opacity: 0; }
+#ormkort .ok-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transform: rotateY(180deg) translateY(-30px);
+  transition: transform 0.7s cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+#ormkort.vand .ok-inner { transform: rotateY(0deg); }
+#ormkort .ok-back, #ormkort .ok-front {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  border-radius: 10px;
+  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.75);
+}
+/* Baksidan: mörkt läder med en ring av fjäll. */
+#ormkort .ok-back {
+  transform: rotateY(180deg);
+  background:
+    radial-gradient(circle at 50% 50%, transparent 0 28px, #c9a24f 29px 31px, transparent 32px 44px, #c9a24f 45px 46px, transparent 47px),
+    repeating-linear-gradient(45deg, #3a2414 0 6px, #331f11 6px 12px);
+  border: 3px solid #1a0f08;
+  outline: 1px solid #c9a24f;
+  outline-offset: -8px;
+}
+/* Framsidan: pergament med en ram, namnet, bilden och texten. */
+#ormkort .ok-front {
+  display: flex;
+  flex-direction: column;
+  padding: 10px 10px 8px;
+  background: radial-gradient(ellipse at 50% 40%, #f1e6c8, #d9c79c);
+  border: 3px solid #3a2414;
+  outline: 1px solid #8a6a3a;
+  outline-offset: -7px;
+  color: #2a1e12;
+  text-shadow: none;
+}
+#ormkort .ok-front.vaknar { background: radial-gradient(ellipse at 50% 40%, #e8c8b0, #b88068); }
+#ormkort .ok-namn {
+  text-align: center;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  border-bottom: 1px solid #8a6a3a;
+  padding-bottom: 4px;
+}
+#ormkort .ok-bild { flex: 0 0 auto; margin: 4px auto 2px; width: 120px; height: 104px; }
+#ormkort .ok-bild svg { width: 100%; height: 100%; display: block; }
+#ormkort .ok-text { font-size: 10.5px; line-height: 1.35; flex: 1 1 auto; overflow: hidden; }
+#ormkort .ok-guld { text-align: right; font-size: 12px; color: #7a5a10; font-weight: bold; }
+@media (max-width: 700px) {
+  #ormkort { transform: scale(0.8); transform-origin: right center; }
+}
+@media (prefers-reduced-motion: reduce) {
+  #ormkort .ok-inner { transition: none; }
+}

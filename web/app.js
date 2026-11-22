@@ -322,6 +322,9 @@ function handle(msg) {
     case "vaknar":
       MapView.wake();
       break;
+    case "ormkort":
+      showSerpentCard(msg);
+      break;
     case "ping":
       MapView.ping(msg.x, msg.y, msg.slot);
       break;
@@ -899,6 +902,110 @@ function checkRoundCard() {
   cardAction = state.action || "";
 }
 $("roundcard").addEventListener("click", hideRoundCard);
+
+// Ormkortet: kortet du drog när du tog en näve i skattkammaren. Det vänds
+// upp på kartan med en bild av ormen, kortets text och guldet, och glider
+// undan efter en stund eller vid ett klick. Bilderna ritas här som SVG.
+const SERPENT_MS = 6500;
+let serpentTimer = null;
+
+// serpentSpiral ger slingorna som en bana: en spiral från mitten och ut,
+// med huvudet i änden.
+function serpentSpiral(cx, cy, turns, r0, grow) {
+  const pts = [];
+  for (let a = 0; a <= turns * Math.PI * 2; a += 0.15) {
+    const r = r0 + grow * a;
+    pts.push([cx + Math.cos(a) * r, cy + Math.sin(a) * r * 0.62]);
+  }
+  return pts;
+}
+
+// serpentArt ritar bilden på kortet: ormen som sover hoprullad, som rör
+// sig med ett öga på glänt, eller två gula ögon i mörkret.
+function serpentArt(id, wakes) {
+  const kind = wakes || id === "vaknar" ? "vaknar" : id === "ror_sig" ? "ror_sig" : "sover";
+  const f = (n) => n.toFixed(1);
+  const pts = serpentSpiral(50, 60, kind === "ror_sig" ? 2.3 : 2.6, 4, 4.6);
+  const d = "M" + pts.map(([x, y]) => f(x) + " " + f(y)).join("L");
+  const [hx, hy] = pts[pts.length - 1];
+  const [px, py] = pts[pts.length - 4];
+  const ang = (Math.atan2(hy - py, hx - px) * 180) / Math.PI;
+  const head = `<g transform="translate(${f(hx)} ${f(hy)}) rotate(${f(ang)})">
+<ellipse rx="8" ry="5.5" fill="#4f5e2f" stroke="#1d2410" stroke-width="1.2"/>
+${kind === "sover"
+    ? `<path d="M0 -2.2q2.5 1.6 5 0" fill="none" stroke="#1d2410" stroke-width="1.1"/>`
+    : `<ellipse cx="2.4" cy="-1.6" rx="1.8" ry="1.1" fill="#e8c040"/><path d="M0.6 -2.6q1.8 -0.8 3.6 0" fill="none" stroke="#1d2410" stroke-width="1"/>`}
+</g>`;
+  if (kind === "vaknar") {
+    return `<svg viewBox="0 0 100 100" aria-hidden="true">
+<rect x="4" y="4" width="92" height="92" rx="6" fill="#1a0b08"/>
+<path d="${d}" fill="none" stroke="#3a1410" stroke-width="11" stroke-linecap="round" opacity="0.8"/>
+${[34, 66].map((x) => `<ellipse cx="${x}" cy="46" rx="11" ry="7" fill="#ffd23a"/><ellipse cx="${x}" cy="46" rx="2" ry="6.5" fill="#1a0b08"/>`).join("")}
+<circle cx="50" cy="46" r="40" fill="none" stroke="#a8402c" stroke-width="1.5" opacity="0.6"/>
+</svg>`;
+  }
+  const moves = kind === "ror_sig"
+    ? `<path d="M10 34q6 -6 12 0M78 30q6 -6 12 0M84 80q4 -5 8 0" fill="none" stroke="#6b4a24" stroke-width="1.6" stroke-linecap="round"/>`
+    : `<text x="78" y="28" font-size="9" fill="#6b4a24" font-family="serif">z</text><text x="84" y="20" font-size="7" fill="#6b4a24" font-family="serif">z</text>`;
+  return `<svg viewBox="0 0 100 100" aria-hidden="true">
+<ellipse cx="50" cy="62" rx="40" ry="22" fill="#c9a24f" opacity="0.35"/>
+${[[38, 70], [56, 74], [66, 64], [30, 60]].map(([x, y]) => `<ellipse cx="${x}" cy="${y}" rx="3.2" ry="1.6" fill="#d9a63a" stroke="#7a5a1a" stroke-width="0.6"/>`).join("")}
+<path d="${d}" fill="none" stroke="#1d2410" stroke-width="11.5" stroke-linecap="round"/>
+<path d="${d}" fill="none" stroke="#5b6b34" stroke-width="9" stroke-linecap="round"/>
+<path d="${d}" fill="none" stroke="#8a9a52" stroke-width="2" stroke-linecap="round" stroke-dasharray="1.5 3"/>
+${head}
+${moves}
+</svg>`;
+}
+
+// buildSerpentCard bygger ett kort med baksidan och framsidan, så att det
+// kan vändas.
+function buildSerpentCard(el, msg, extra) {
+  el.innerHTML = "";
+  const inner = document.createElement("div");
+  inner.className = "ok-inner";
+  const back = document.createElement("div");
+  back.className = "ok-back";
+  const front = document.createElement("div");
+  front.className = "ok-front" + (msg.vaknar || msg.kort === "vaknar" ? " vaknar" : "");
+  const name = document.createElement("div");
+  name.className = "ok-namn";
+  name.textContent = msg.namn || "";
+  const art = document.createElement("div");
+  art.className = "ok-bild";
+  art.innerHTML = serpentArt(msg.kort, msg.vaknar);
+  const text = document.createElement("div");
+  text.className = "ok-text";
+  text.textContent = msg.text || "";
+  front.append(name, art, text);
+  if (extra) front.appendChild(extra);
+  inner.append(back, front);
+  el.appendChild(inner);
+  el.hidden = false;
+  el.classList.remove("leaving", "vand");
+  void el.offsetWidth; // börja med baksidan upp
+  el.classList.add("vand");
+}
+
+function showSerpentCard(msg) {
+  const el = $("ormkort");
+  const gold = document.createElement("div");
+  gold.className = "ok-guld";
+  gold.textContent = t("ormkort_guld", { antal: msg.guld });
+  buildSerpentCard(el, msg, gold);
+  clearTimeout(serpentTimer);
+  serpentTimer = setTimeout(hideSerpentCard, SERPENT_MS);
+}
+function hideSerpentCard() {
+  const el = $("ormkort");
+  if (el.hidden || el.classList.contains("leaving")) return;
+  clearTimeout(serpentTimer);
+  el.classList.add("leaving");
+  setTimeout(() => {
+    if (el.classList.contains("leaving")) el.hidden = true;
+  }, 400);
+}
+$("ormkort").addEventListener("click", hideSerpentCard);
 
 // Teckenförklaringen uppe till vänster på kartan: de tecken som står i
 // rummen just nu, under varandra. Betydelsen syns när musen är över ett

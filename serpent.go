@@ -12,6 +12,16 @@ type wakeMsg struct {
 	T string `json:"t"`
 }
 
+// cardMsg är ormkortet vandraren drog, som vänds upp på kartan.
+type cardMsg struct {
+	T      string `json:"t"`
+	ID     string `json:"kort"`
+	Namn   string `json:"namn"`
+	Text   string `json:"text"`
+	Guld   int    `json:"guld"`
+	Vaknar bool   `json:"vaknar,omitempty"`
+}
+
 // buildDeck blandar en ny lek. Varje gång ormen har vaknat blir det färre
 // sovkort, så att den vaknar lättare nästa gång.
 func (g *Game) buildDeck() {
@@ -161,7 +171,9 @@ func (g *Game) take(p *Player) {
 	p.stats.takes++
 	p.stats.takeGold += n
 	g.soundTo(p, "skatt")
-	g.logTo(p, fill(pick(c.Texter), "antal", strconv.Itoa(n)), "syn")
+	text := fill(pick(c.Texter), "antal", strconv.Itoa(n))
+	g.logTo(p, text, "syn")
+	g.send(p.client, cardMsg{T: "ormkort", ID: c.ID, Namn: c.Namn, Text: text, Guld: n})
 	g.logTo(p, g.data.Text("skatt_totalt", "skatt", strconv.Itoa(p.Treasure)), "dim")
 	if other := pick(c.Andra); other != "" {
 		if g.is(p, "tjuv") {

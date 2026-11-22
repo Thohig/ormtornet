@@ -4,6 +4,7 @@
     "kort": [
       {
         "id": "sover",
+        "namn": "The serpent sleeps",
         "texter": [
           "You reach into the hoard and take {antal} gold. The serpent sleeps on.",
           "The coins are lukewarm and sticky. You take {antal} gold. Nothing stirs.",
@@ -12,6 +13,7 @@
       },
       {
         "id": "ror_sig",
+        "namn": "The serpent stirs",
         "texter": [
           "You take {antal} gold. A coil slides aside and the floor beneath you sways. Then all is still again.",
           "{antal} gold. A vast breath draws through the hall, and the whole room seems to go with it. The serpent sleeps. For now."
@@ -23,6 +25,7 @@
       },
       {
         "id": "vaknar",
+        "namn": "The serpent wakes",
         "texter": [
           "A coin slips from your hand and clinks against the others. The breathing stops. Two yellow eyes open in the dark.",
           "You pull at a chain that is stuck fast. The whole hoard shifts, and what lies around it wakes."

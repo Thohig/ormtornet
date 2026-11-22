@@ -117,6 +117,7 @@
     "zoom_in": "Närmare",
     "zoom_vaxla": "Växla till allt du känner till (M)",
     "karta_utan_webgl": "Kartan kan inte ritas här, eftersom webbläsaren saknar WebGL. Loggen och panelen Nu fungerar som vanligt.",
+    "ormkort_guld": "+{antal} guld",
     "zoom_nara": "Nära",
     "zoom_mellan": "Mellan",
     "zoom_langt": "Långt",

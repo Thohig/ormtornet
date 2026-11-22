@@ -115,6 +115,7 @@ func (d *Data) MonsterText(key string, vars ...string) string {
 
 type Card struct {
 	ID     string   `json:"id"`
+	Namn   string   `json:"namn"` // kortets namn när det vänds upp, till exempel Ormen sover
 	Antal  int      `json:"antal"`
 	Vaknar bool     `json:"vaknar"`
 	Texter []string `json:"texter"`
