@@ -227,7 +227,10 @@ den som dör och för alla i slutet (se slutet nedan och Strider):
      varelsens egen text, de andra vandrarna, guldet, porten, spåret
      efter en fälla som har slagit till (utan fällans namn) och föremål
      som någon har lämnat. Ett tomt rum säger ingenting. Står man kvar
-     kommer bara det som har ändrats, som "Fjällvakten är borta." I
+     kommer bara det som har ändrats, som "Fjällvakten är borta." Sist
+     står det man hörde under rundan, som stridsljud från ett grannrum
+     eller klockan som slår i hela tornet; ljuden står inte längre som
+     egna rader. I
      mörkret och i källarvalven väntar blocket tills man ser igen.
      Texterna står under `har_*` i `data/texter.json` och `spar_efter` i
      `data/fallor.json`. Uppe till vänster på kartan står rummets namn.

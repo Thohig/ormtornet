@@ -6,6 +6,14 @@ eller leder tornet.
 
 ## 2026-11-22
 
+### Det du hör
+
+- Ljuden under rundan, som stridsljud från ett grannrum, ekot, klockan
+  och ormen som rör sig, står sist i rumsblocket i stället för som egna
+  rader i loggen. Samma ljud sägs bara en gång, och står du kvar kommer
+  ett block också när du bara har hört något. Din vandring visar dem
+  också.
+
 ### Det du ser beskrivs, det förklaras inte
 
 - Rumsblocket beskriver det du ser: varelsens egen text, "Sigge står i

@@ -126,3 +126,26 @@ func TestJourneyRoundHasRoom(t *testing.T) {
 		t.Fatalf("rundan i vandringen saknar rummet: %+v", last)
 	}
 }
+
+// Det vandraren hör under rundan står sist i rumsblocket och inte som egna
+// rader; står hen kvar kommer ett block bara med ljuden.
+func TestRoomBlockCarriesWhatIsHeard(t *testing.T) {
+	g, a, _ := startTwo(t)
+	pa := a.player
+	putInRoom(g, pa, 3, 3)
+	pa.told = told{}
+	g.tellRoom(pa)
+	rooms(a)
+	g.hearing = true
+	g.hearTo(pa, "Stridsljud från norr.", "dim")
+	g.hearTo(pa, "Stridsljud från norr.", "dim")
+	g.hearing = false
+	if l := logs(a); len(l) != 0 {
+		t.Fatalf("ljudet kom som egna rader: %v", l)
+	}
+	g.tellRoom(pa)
+	got := rooms(a)
+	if len(got) != 1 || !got[0].Kvar || got[0].Hor != "Stridsljud från norr." {
+		t.Fatalf("väntade ett block med ljudet en gång, fick %+v", got)
+	}
+}

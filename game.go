@@ -240,6 +240,7 @@ type Player struct {
 	Seen       map[string]bool // fällor och varelser spelaren har mött
 	told       told            // vad vandraren senast fick veta om sitt rum (here.go)
 	roundRoom  *roomMsg        // rumsblocket den här rundan, för Din vandring
+	heard      []string        // det vandraren har hört under rundan (sounds.go)
 	known      [][]bool        // rum vandraren själv har varit i, det enda den ser på kartan
 	bot        *botBrain       // satt för datorstyrda vandrare
 
@@ -282,6 +283,7 @@ type Client struct {
 }
 
 type Game struct {
+	hearing  bool // rundan avgörs, och ljuden samlas till rumsblocken (sounds.go)
 	mu       sync.Mutex
 	base     *Data // datafilerna som de är
 	nextData *Data // nyss inlästa datafiler som gäller från nästa torn
@@ -1472,6 +1474,7 @@ func (g *Game) resolve() {
 	}
 	sunBefore := g.sun
 	snap, wakes := g.snapshot(), g.wakes
+	g.hearing = true // ljuden samlas till rumsblocken
 	g.wanderMonsters()
 	var active []*Player
 	for _, p := range g.players {
@@ -1493,6 +1496,7 @@ func (g *Game) resolve() {
 		}
 	}
 	g.tellRooms()
+	g.hearing = false
 	g.checkMercy()
 
 	g.sun--

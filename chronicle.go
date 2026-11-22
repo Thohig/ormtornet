@@ -136,6 +136,7 @@ type journeyRound struct {
 	Lines []summaryLine `json:"rader"`
 	Room  string        `json:"rum,omitempty"` // rummet från rumsblocket, när ett kom den rundan
 	Here  string        `json:"har,omitempty"` // vad som fanns där
+	Heard string        `json:"hor,omitempty"` // vad vandraren hörde
 }
 
 // journeyView är vandrarens egen vandring, som den som har dött ser på en

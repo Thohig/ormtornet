@@ -70,7 +70,7 @@ func (g *Game) trigger(p *Player, t *Trap, depth int) {
 	if t.ID == "eko" || t.ID == "klocka" {
 		// Ekot och klockan hörs lika i hela tornet.
 		if general != "" {
-			g.logOthers(p, general, "info")
+			g.hearOthers(p, general, "info")
 		}
 	} else {
 		g.hear(p.X, p.Y, "ljud_falla", general, "info", p)

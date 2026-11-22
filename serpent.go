@@ -188,7 +188,7 @@ func (g *Game) take(p *Player) {
 		if g.is(p, "tjuv") {
 			g.logTo(p, g.data.Text("klass_tjuv_tyst"), "dim")
 		} else {
-			g.logOthers(p, other, "info")
+			g.hearOthers(p, other, "info")
 			g.soundAll("ormen_ror")
 		}
 	}

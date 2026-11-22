@@ -15,9 +15,33 @@ func (g *Game) hear(x, y int, key, general, class string, skip ...*Player) {
 			continue
 		}
 		if d, ok := g.nextTo(o, x, y); ok && !g.is(o, "sparfinnare") {
-			g.logTo(o, g.data.Text(key, "riktning", g.data.Riktningar[d]), class)
+			g.hearTo(o, g.data.Text(key, "riktning", g.data.Riktningar[d]), class)
 		} else if general != "" {
-			g.logTo(o, general, class)
+			g.hearTo(o, general, class)
+		}
+	}
+}
+
+// hearTo låter o höra text. Under rundan samlas ljuden och står sist i
+// rumsblocket (here.go); annars blir de en egen rad i loggen.
+func (g *Game) hearTo(o *Player, text, class string) {
+	if o == nil || text == "" {
+		return
+	}
+	if g.hearing && o.Status == statusIn {
+		if !slices.Contains(o.heard, text) {
+			o.heard = append(o.heard, text)
+		}
+		return
+	}
+	g.logTo(o, text, class)
+}
+
+// hearOthers låter alla utom p höra text, som hearTo.
+func (g *Game) hearOthers(p *Player, text, class string) {
+	for _, o := range g.players {
+		if o != nil && o != p {
+			g.hearTo(o, text, class)
 		}
 	}
 }

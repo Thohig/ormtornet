@@ -74,7 +74,7 @@ func (g *Game) summarize(snap map[*Player]before, wakesBefore int) {
 		if len(lines) > 0 {
 			jr := journeyRound{Round: g.round, Lines: lines}
 			if room != nil {
-				jr.Room, jr.Here = room.Namn, room.Har
+				jr.Room, jr.Here, jr.Heard = room.Namn, room.Har, room.Hor
 			}
 			p.journal = append(p.journal, jr)
 		}

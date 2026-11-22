@@ -759,6 +759,7 @@ body.touch #helpBtn { display: none; }
 #log .roomname { color: var(--hi); letter-spacing: 0.08em; }
 #log .roomdesc { margin-top: 3px; }
 #log .roomhere { margin-top: 4px; color: var(--info); }
+#log .roomhear { margin-top: 4px; color: var(--fg); font-style: italic; }
 #log .roomblock.kvar { padding: 4px 9px 5px; }
 #log .roomblock.kvar .roomname { color: var(--fg); font-size: 12px; }
 #log .roomblock.kvar .roomhere { margin-top: 1px; }
@@ -1051,6 +1052,7 @@ body.touch .card .num { display: none; }
 .chronRound .varn { color: var(--warn); }
 .chronRound .gold { color: var(--hi); }
 .chronRound .here { color: var(--info); font-style: italic; margin-bottom: 2px; }
+.chronRound .hear { color: var(--fg); font-style: italic; margin-bottom: 2px; }
 #chronStats { color: var(--chalk); margin: 18px 0; font-size: 13px; }
 #chronButtons { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
 #chronButtons button, .chronBack {

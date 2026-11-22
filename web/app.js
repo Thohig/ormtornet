@@ -107,6 +107,12 @@ const Log = (() => {
       paint(h, msg.har);
       block.appendChild(h);
     }
+    if (msg.hor) {
+      const h = document.createElement("div");
+      h.className = "roomhear";
+      paint(h, msg.hor);
+      block.appendChild(h);
+    }
     block.classList.add("appear");
     keep(() => {
       const old = list.querySelector(":scope > .roomblock");
@@ -648,11 +654,12 @@ function renderChron() {
     const h = document.createElement("h3");
     h.textContent = r.rum ? t("vandring_runda_rum", { runda: r.runda, rum: r.rum }) : t("vandring_runda", { runda: r.runda });
     d.appendChild(h);
-    if (r.har) {
-      const here = document.createElement("div");
-      here.className = "here";
-      here.textContent = r.har;
-      d.appendChild(here);
+    for (const [text, cls] of [[r.har, "here"], [r.hor, "hear"]]) {
+      if (!text) continue;
+      const el = document.createElement("div");
+      el.className = cls;
+      el.textContent = text;
+      d.appendChild(el);
     }
     r.rader.forEach((l) => {
       const p = document.createElement("div");

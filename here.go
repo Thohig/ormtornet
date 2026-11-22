@@ -20,6 +20,7 @@ type roomMsg struct {
 	Text string `json:"text,omitempty"` // beskrivningen, bara när rummet är nytt
 	Har  string `json:"har,omitempty"`  // det som finns i rummet
 	Kvar bool   `json:"kvar,omitempty"` // vandraren står kvar och något har ändrats
+	Hor  string `json:"hor,omitempty"`  // det vandraren hörde under rundan
 }
 
 // told är vad en vandrare senast fick veta om sitt rum.
@@ -57,7 +58,13 @@ func (g *Game) tellRooms() {
 // gått. I mörkret och i källarvalven ser vandraren inget, och då väntar
 // blocket.
 func (g *Game) tellRoom(p *Player) {
+	heard := p.heard
+	p.heard = nil
 	if p.Status != statusIn || p.Cellar > 0 || p.Dark > 0 || !g.inBounds(p.X, p.Y) {
+		// Utan rumsblock blir ljuden egna rader, som förut.
+		for _, h := range heard {
+			g.logTo(p, h, "dim")
+		}
 		return
 	}
 	r := &g.rooms[p.Y][p.X]
@@ -67,7 +74,7 @@ func (g *Game) tellRoom(p *Player) {
 		now[part.key] = part
 	}
 	moved := !p.told.ok || p.told.x != p.X || p.told.y != p.Y
-	msg := roomMsg{T: "rum", Namn: g.roomName(r), Kvar: !moved}
+	msg := roomMsg{T: "rum", Namn: g.roomName(r), Kvar: !moved, Hor: strings.Join(heard, " ")}
 	if moved {
 		msg.Text = p.told.desc
 		msg.Har = g.sayHere(cur)
@@ -84,7 +91,7 @@ func (g *Game) tellRoom(p *Player) {
 				gone = append(gone, part.gone)
 			}
 		}
-		if len(added) == 0 && len(gone) == 0 {
+		if len(added) == 0 && len(gone) == 0 && len(heard) == 0 {
 			return
 		}
 		slices.Sort(gone)
