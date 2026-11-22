@@ -4,7 +4,10 @@ package main
 // och den som kommer dit, eller står kvar där, tar det. Föremålen ligger
 // redan kvar (dropAll i items.go).
 
-import "strconv"
+import (
+	"slices"
+	"strconv"
+)
 
 // leftGold är guld som en död vandrare bar.
 type leftGold struct {
@@ -20,6 +23,13 @@ type heardDeath struct {
 	x, y   int    // rummet, om vandraren stod där eller bredvid; annars -1
 	region string // tornets del
 	coins  bool
+	name   string // den döda, som rumsblocket säger "Här föll" om
+	round  int
+
+	// För AI-spelaren: om den går dit (1), inte går (-1) eller inte har
+	// bestämt sig (0), och rummen den har stått i sedan skriket.
+	chase   int
+	checked map[pos]bool
 }
 
 // announceDeath låter de andra höra att p dog. Den som står i rummet ser
@@ -32,7 +42,7 @@ func (g *Game) announceDeath(p *Player) {
 		if o == nil || o == p {
 			continue
 		}
-		heard := heardDeath{x: -1, y: -1, region: region, coins: coins}
+		heard := heardDeath{x: -1, y: -1, region: region, coins: coins, name: p.Name, round: g.round}
 		var text string
 		d, next := g.nextTo(o, p.X, p.Y)
 		switch {
@@ -114,4 +124,58 @@ func (g *Game) goldEpilogue() {
 			p.epilog = append(p.epilog, chronLine{Text: text, Class: "dim"})
 		}
 	}
+}
+
+// botChaseRounds är hur många rundor en AI-spelare letar efter guldet
+// innan den ger upp.
+const botChaseRounds = 10
+
+// botTowardGold ger AI-spelarens första steg mot guldet där någon dog, om
+// den vill gå dit. Den vet bara det en människa vet: skriket (rummet, om
+// den stod bredvid, annars tornets del), om mynt rasslade, och rummen den
+// har sett. Den går bara med gott om liv och tid, och personligheten
+// avgör hur gärna (guldlust i data/ai.json).
+func (g *Game) botTowardGold(p *Player, bm *botMap, st *stateMsg, pers *Personality, plenty bool) (Dir, bool) {
+	here := pos{p.X, p.Y}
+	room := &g.rooms[p.Y][p.X]
+	var target *heardDeath
+	for i := range p.deaths {
+		h := &p.deaths[i]
+		if h.chase < 0 {
+			continue
+		}
+		if h.checked == nil {
+			h.checked = map[pos]bool{}
+		}
+		h.checked[here] = true
+		// Rumsblocket säger "Här föll" i rummet: där var det, och guldet är
+		// taget nu (pickUp), av den här vandraren eller någon annan.
+		if !h.coins || slices.Contains(room.fell, h.name) || g.round-h.round > botChaseRounds {
+			h.chase = -1
+			continue
+		}
+		if h.chase == 0 {
+			h.chase = -1
+			if g.rng.Float64() < pers.Guldlust {
+				h.chase = 1
+			}
+		}
+		if h.chase > 0 && target == nil {
+			target = h
+		}
+	}
+	if target == nil || !plenty || st.HP*2 < st.MaxHP {
+		return 0, false
+	}
+	want := func(q pos) bool {
+		if target.x >= 0 {
+			return q.x == target.x && q.y == target.y
+		}
+		return !target.checked[q] && g.data.region(q.x, q.y, g.size) == target.region
+	}
+	d, ok := bm.toward(want, func(pos) int { return 0 })
+	if !ok {
+		target.chase = -1 // ingen väg dit som den känner till
+	}
+	return d, ok
 }

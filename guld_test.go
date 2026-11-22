@@ -178,3 +178,47 @@ func TestClassesSeeTheFallen(t *testing.T) {
 		t.Fatal("spårfinnaren ser inte vem som tog guldet")
 	}
 }
+
+// En AI-spelare som hör mynt rassla bakom väggen går dit, om den vill och
+// har liv och tid. Utan mynt, eller med låg guldlust, går den mot kammaren.
+func TestBotGoesForTheGold(t *testing.T) {
+	setup := func(lust float64, coins bool) (*Game, *Player) {
+		g, a, _ := startTwo(t)
+		p := a.player
+		pers := g.data.AI.Personligheter[0]
+		pers.Guldlust = lust
+		p.bot = &botBrain{pers: &pers, habits: map[string]map[string]int{}}
+		for y := range g.size {
+			for x := range g.size {
+				g.rooms[y][x].Revealed, g.rooms[y][x].Walked = false, false
+			}
+		}
+		r := putInRoom(g, p, 2, g.center())
+		r.Doors = [4]bool{false, true, false, true}
+		r.Searched = true
+		g.sun = 4 * g.size
+		p.deaths = []heardDeath{{x: 1, y: g.center(), coins: coins, name: "Bo", round: g.round}}
+		return g, p
+	}
+	if g, p := setup(1, true); true {
+		if a, _ := g.botDecide(p); a != "W" {
+			t.Fatalf("gick %q, ville ha W mot guldet", a)
+		}
+	}
+	if g, p := setup(1, false); true {
+		if a, _ := g.botDecide(p); a != "E" {
+			t.Fatalf("utan mynt gick den %q, ville ha E mot kammaren", a)
+		}
+	}
+	if g, p := setup(0, true); true {
+		if a, _ := g.botDecide(p); a != "E" {
+			t.Fatalf("utan guldlust gick den %q, ville ha E", a)
+		}
+	}
+	// Skadad går den inte.
+	g, p := setup(1, true)
+	p.HP = 1
+	if a, _ := g.botDecide(p); a == "W" {
+		t.Fatal("gick efter guldet med 1 liv")
+	}
+}

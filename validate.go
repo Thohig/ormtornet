@@ -210,6 +210,7 @@ func (d *Data) validate() []string {
 	for _, p := range d.AI.Personligheter {
 		chance("ai.json", p.ID+": sok_chans", p.SokChans)
 		chance("ai.json", p.ID+": stridslust", p.Stridslust)
+		chance("ai.json", p.ID+": guldlust", p.Guldlust)
 		for _, c := range p.Klasser {
 			if len(d.Klasser) > 0 && !classes[c] {
 				bad("ai.json", "%s: klassen %q finns inte i klasser.json", p.ID, c)

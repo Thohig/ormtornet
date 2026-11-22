@@ -1,6 +1,6 @@
 {
   "ai": {
-    "_om": "Datorstyrda vandrare. Personligheterna turas om: den första datorspelaren får den första personligheten, nästa den andra och så vidare. Namnen väljs i tur och ordning. ga_hem_vid_liv och drick_vid_liv gäller för liven i fallor.json och räknas om efter vandrarens egna liv, så att de passar både klasser och svårigheter.",
+    "_om": "Datorstyrda vandrare. Personligheterna turas om: den första datorspelaren får den första personligheten, nästa den andra och så vidare. Namnen väljs i tur och ordning. ga_hem_vid_liv och drick_vid_liv gäller för liven i fallor.json och räknas om efter vandrarens egna liv, så att de passar både klasser och svårigheter. guldlust är chansen att gå efter guldet där någon dog, när skriket lät som mynt.",
     "namn": ["Ingrid", "Sigge", "Ylva", "Tore", "Märta", "Gösta", "Hedvig", "Folke", "Sigrid", "Alrik"],
 
     "personligheter": [
@@ -14,7 +14,7 @@
         "fly_marginal": 0,
         "ga_hem_vid_liv": 2,
         "drick_vid_liv": 2,
-        "stridslust": 0.6,
+        "stridslust": 0.6, "guldlust": 0.5,
         "klasser": ["legoknekt", "tjuv", "ormtjusare", "lyktbarare"]
       },
       {
@@ -27,7 +27,7 @@
         "fly_marginal": 1,
         "ga_hem_vid_liv": 3,
         "drick_vid_liv": 3,
-        "stridslust": 0.25,
+        "stridslust": 0.25, "guldlust": 0.15,
         "klasser": ["ortkvinna", "kartritare", "sparfinnare", "lyktbarare"]
       },
       {
@@ -40,7 +40,7 @@
         "fly_marginal": 1,
         "ga_hem_vid_liv": 3,
         "drick_vid_liv": 3,
-        "stridslust": 0.2,
+        "stridslust": 0.2, "guldlust": 0.8,
         "klasser": ["kartritare", "sparfinnare", "tjuv", "pilgrim"]
       }
     ],

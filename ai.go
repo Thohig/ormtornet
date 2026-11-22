@@ -375,6 +375,11 @@ func (g *Game) botDecide(p *Player) (string, int) {
 		return actSearch, 0
 	}
 
+	// Guldet där någon dog, om skriket lät som mynt.
+	if d, ok := g.botTowardGold(p, bm, &st, pers, plenty); ok {
+		return dirLetter[d], 0
+	}
+
 	// Mot kammaren om vägen är känd, annars utforska närmaste okända rum.
 	isCenter := func(q pos) bool { return q.x == g.center() && q.y == g.center() }
 	none := func(pos) int { return 0 }

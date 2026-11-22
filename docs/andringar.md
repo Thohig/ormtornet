@@ -24,6 +24,10 @@ eller leder tornet.
   hörn. Spårfinnaren ser guldet som ligger kvar, som föremålen, och läser
   i dammet vem som tog det. Hen hör fortfarande ingenting genom väggarna,
   så skriket säger henom bara del av tornet.
+- AI-spelarna går efter guldet när skriket lät som mynt, med samma
+  ledtrådar som en människa får, om de har minst halva livet kvar och gott
+  om tid. Plundraren går oftast (`guldlust` 0,8), den djärva ibland (0,5)
+  och den försiktiga sällan (0,15).
 
 ### Ormtornet.app i ~/Applications
 

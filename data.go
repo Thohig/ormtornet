@@ -495,6 +495,7 @@ type Personality struct {
 	Klasser     []string  `json:"klasser"`        // klasserna personligheten helst väljer, i tur och ordning
 	DrickVidLiv int       `json:"drick_vid_liv"`  // dricker vid så här lite liv, räknat på samma sätt
 	Stridslust  float64   `json:"stridslust"`     // chans att slåss med en vandrare i samma rum
+	Guldlust    float64   `json:"guldlust"`       // chans att gå efter guldet där någon dog (guld.go)
 }
 
 // Reveal styr hur tornet avslöjas i fyra nivåer.

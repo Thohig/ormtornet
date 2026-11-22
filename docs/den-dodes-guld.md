@@ -1,6 +1,6 @@
 # Den dödes guld (förslag)
 
-Förslag 2026-11-22. Steg 1–3 är byggda. Spårfinnaren hör ingenting genom väggarna, så i
+Förslag 2026-11-22. Alla fyra stegen är byggda. Spårfinnaren hör ingenting genom väggarna, så i
 stället för att höra hur mycket som rasslar ser hen guldet på kartan och
 vem som tog det.
 

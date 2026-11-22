@@ -110,7 +110,8 @@ En riktig kväll behövs för att se:
   gör det något?
 - Den dödes guld (2026-11-22): går någon dit en annan har dött för att
   hämta guldet, och blir det för lätt att plocka upp en hel kammares
-  skatt? AI-spelarna går inte dit med flit.
+  skatt? Hör man var skriket kom ifrån, och går någon dit? AI-spelarna går
+  dit efter `guldlust` i `data/ai.json`; är det lagom?
 - Bara den egna porten: hittar spelarna ut, eller går de vilse när de
   inte ser de andra portarna?
 - Tecknen på kartan (2026-11-19): går de att förstå, och skymmer de

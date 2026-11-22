@@ -496,7 +496,12 @@ står de som "(dator)".
   försiktig vandrare med få liv på Mardröm inte vänder redan i porten.
 - I strid gissar de varelsens vanor utifrån dess beskrivning och lär sig av
   det de ser. De flyr när nästa slag kan döda dem.
-- Det finns två personligheter som turas om: en djärv och en försiktig.
+- Hör de mynt rassla när någon dör går de ibland dit, till rummet om de
+  stod bredvid och annars till den del av tornet skriket kom från, men
+  bara med minst halva livet kvar och gott om tid. Hur gärna står som
+  `guldlust` i `data/ai.json`. De ger upp efter tio rundor.
+- Det finns tre personligheter som turas om: en djärv, en försiktig och
+  en plundrare.
 - Ledtrådarna om tornets hemlighet går bara till människor.
 
 Namn, personligheter och betänketid ligger i `data/ai.json`.
