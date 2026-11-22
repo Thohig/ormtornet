@@ -1084,11 +1084,16 @@ func (g *Game) Leave(c *Client) {
 		if g.checkChosen() {
 			return
 		}
+	} else if g.phase == phaseEnd {
+		// I slutet står man kvar i resultatet och krönikan, så att den som
+		// laddar om sidan, eller vars telefon somnar, kommer tillbaka till
+		// sin egen vandring. Den som inte kommer tillbaka tas bort när nästa
+		// torn byggs (dropAbsent). Det nya tornet väntar en stund på hen.
+		g.startAfterLeave()
 	} else if g.phase != phasePlay {
-		// I lobbyn och slutet lämnar man sin plats helt, och en datorspelare
-		// kan ta den om spelledaren vill ha fler. Vandringen startar inte
-		// genast även om alla som är kvar är redo: den som laddar om sidan
-		// ska hinna tillbaka.
+		// I lobbyn lämnar man sin plats helt, och en datorspelare kan ta den
+		// om spelledaren vill ha fler. Vandringen startar inte genast även om
+		// alla som är kvar är redo: den som laddar om sidan ska hinna tillbaka.
 		g.players[p.Slot] = nil
 		g.fitTower(nil)
 		g.syncBots(true)

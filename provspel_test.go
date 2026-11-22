@@ -87,3 +87,55 @@ func TestStuckOneRound(t *testing.T) {
 		t.Fatalf("sam_fast_en: %q", txt)
 	}
 }
+
+// Den som laddar om sidan i slutet står kvar i resultatet och kommer
+// tillbaka till sin egen vandring, inte som en nykomling.
+func TestReloadOnEndScreenKeepsResult(t *testing.T) {
+	g, a, b := startTwo(t)
+	g.leaveWait = 0
+	pa := a.player
+	pa.X, pa.Y = 0, 0
+	g.endGame()
+	g.Leave(a)
+	named := func() bool {
+		for _, r := range g.results() {
+			if r.Name == "Alva" {
+				return true
+			}
+		}
+		return false
+	}
+	if !named() {
+		t.Fatal("Alva försvann ur resultatet när sidan laddades om")
+	}
+	// Bo trycker Enter medan Alva är borta: det nya tornet väntar inte på
+	// den som har gått, men Alva står kvar tills tornet byggs.
+	a2 := testClient()
+	g.Join(a2, "Alva")
+	if a2.player != pa || pa.Status == statusNew {
+		t.Fatalf("Alva kom tillbaka som en ny vandrare: %+v", a2.player)
+	}
+	if st := g.stateFor(pa); st.Journey == nil {
+		t.Fatal("Alva fick inte tillbaka sin vandring")
+	}
+	g.Ready(a2)
+	g.Ready(b)
+	if g.phase == phaseEnd {
+		t.Fatal("nästa torn startade inte")
+	}
+}
+
+// Den som lämnar i slutet och inte kommer tillbaka är inte med i nästa torn.
+func TestLeftOnEndScreenDroppedFromNextTower(t *testing.T) {
+	g, a, b := startTwo(t)
+	g.leaveWait = 0
+	g.cfg.MinPlayers = 1
+	g.endGame()
+	g.Leave(a)
+	g.Ready(b)
+	for _, p := range g.players {
+		if p != nil && p.Name == "Alva" {
+			t.Fatalf("Alva är kvar i fas %s", g.phase)
+		}
+	}
+}
