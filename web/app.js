@@ -361,12 +361,13 @@ if (window.ResizeObserver) {
 window.addEventListener("resize", measureBars);
 measureBars();
 
-// toggleLog öppnar och stänger hela loggen när den står på kartan: en låda
-// där de äldre rundorna går att läsa och rulla i (knappen Loggen, L, Esc).
+// toggleLog öppnar och stänger hela loggen: en låda där de äldre rundorna
+// går att läsa och rulla i (knappen Loggen, L, Esc). På en bred skärm står
+// den på kartan, på telefonen över skärmen mellan översta raden och
+// knapparna.
 function toggleLog(open) {
   const was = document.body.classList.contains("loggenoppen");
   if (open === undefined) open = !was;
-  if (!wideScreen.matches) open = false;
   document.body.classList.toggle("loggenoppen", open);
   const b = $("logToggle");
   b.setAttribute("aria-expanded", open ? "true" : "false");
