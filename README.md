@@ -212,8 +212,8 @@ den som dör och för alla i slutet (se slutet nedan och Strider):
      tagit är gråa. Den som inte har valt när tiden är slut får ett av de
      lediga korten,
    - **vandringen**: kartan, solmätaren, vandrarna som prickar i sin färg
-     i översta raden, och högerkolumnen med panelen Nu och loggen, som
-     fyller resten av höjden. En prick är fylld när vandraren har valt drag
+     i översta raden, panelen Nu som en rad under kartan, och loggen, som
+     fyller hela högerkolumnen. En prick är fylld när vandraren har valt drag
      (i lobbyn när den är redo), ✕ är död och ◌ ute; håll musen över den,
      eller tryck, för namn, klass och läge. I lobbyn och slutet står namnet
      bredvid pricken, och knappen Redo (Nytt torn i slutet) står till

@@ -6,6 +6,13 @@ eller leder tornet.
 
 ## 2026-11-22
 
+### Ny layout på dator
+
+- Panelen Nu är en smal rad under kartan: läget och striden till vänster,
+  ditt drag till höger. Viskningens ruta öppnas i samma rad.
+- Loggen fyller hela högerkolumnen, som är något bredare på stora skärmar
+  (30 procent av bredden, 300–440 punkter).
+
 ### Bara den senaste rundan i loggen
 
 - Den senaste rundan fyller hela loggen. De äldre ligger under strecket

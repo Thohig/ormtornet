@@ -57,8 +57,8 @@ Så här skiljer vi på sakerna när användaren ger instruktioner:
     stort mitt på kartan (`showSerpentCard` och `showWakeCard` i
     `web/app.js`),
   - **sömnmätaren**: hur djupt ormen sover, i panelen Nu i skattkammaren,
-  - **panelen Nu**: draget, striden och vad som väntar. Den syns bara när
-    den har något att säga. Panelen Vandrare togs bort 2026-11-22,
+  - **panelen Nu**: draget, striden och vad som väntar, som en rad under
+    kartan (`#nowBlock`). Den syns bara när den har något att säga. Panelen Vandrare togs bort 2026-11-22,
   - **loggen**: raderna i högerkolumnen, grupperade per runda. Bara den
     senaste rundan står i bild; de äldre ligger under strecket "tidigare".
     Överst i rundan står **rumsblocket**: rummets namn, beskrivningen när rummet

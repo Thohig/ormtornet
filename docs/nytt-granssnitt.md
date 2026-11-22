@@ -1,6 +1,6 @@
 # Nytt gränssnitt på dator och mobil (förslag)
 
-Förslag 2026-11-22. Steg 1–3 är byggda; resten är inte bestämt.
+Förslag 2026-11-22. Steg 1–4 är byggda; resten är inte bestämt.
 
 ## Vad som önskas
 

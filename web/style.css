@@ -335,6 +335,15 @@ body[data-niva="4"] #crt::after { animation: throb 0.95s infinite; }
   gap: 16px;
   min-height: 0;
 }
+/* Kartan med raden Nu under, och krönikan till höger. */
+#mapcol {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+  min-height: 0;
+}
 #mapbox {
   position: relative;
   flex: 1 1 auto;
@@ -371,16 +380,31 @@ body[data-niva="4"] #crt::after { animation: throb 0.95s infinite; }
 #overlay .win { color: var(--hi); }
 #overlay .lost { color: var(--warn); }
 
-/* Högerkolumnen: vandrarna, det som gäller nu och loggen, som fyller
-   resten av höjden. */
+/* Högerkolumnen: loggen i hela höjden (och knapparna på en pekskärm). */
 #side {
-  flex: 0 0 340px;
+  flex: 0 0 clamp(300px, 30%, 440px);
   display: flex;
   flex-direction: column;
   font-size: 13px;
   min-height: 0;
 }
-#side > .block { flex: 0 0 auto; }
+/* Panelen Nu är en rad under kartan: läget och striden till vänster,
+   ditt drag till höger. */
+#nowBlock { flex: 0 0 auto; font-size: 13px; }
+.panel.nowbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 16px;
+  margin: 0;
+  padding: 6px 12px;
+}
+.nowbar h2 { margin: 0 !important; }
+#me { flex: 1 1 auto; display: flex; flex-wrap: wrap; align-items: center; gap: 4px 18px; }
+#me div { margin: 0; }
+#me .meter, #me .somn { margin: 0; }
+#me .plan, #me .plan:first-child { margin: 0 0 0 auto; padding: 0; border: 0; }
+#nowBlock #whisper { flex: 1 1 100%; margin: 2px 0 0; }
 
 /* Rummets namn uppe till vänster, statusen uppe till höger på kartan. */
 #mapleft {
@@ -631,7 +655,7 @@ body.touch #helpBtn { display: none; }
   padding: 6px 9px 8px;
   margin-bottom: 8px;
 }
-#side h2 {
+#side h2, .nowbar h2 {
   font-size: 11px;
   font-weight: normal;
   letter-spacing: 0.3em;
@@ -646,9 +670,6 @@ body.touch #helpBtn { display: none; }
 #me .sleep { color: var(--info); }
 #me .foe { color: #f0a080; }
 #me .gold { color: #ffd36b; }
-#me .meter { margin: 4px 0; }
-/* Det egna draget står sist, avskilt med ett streck. */
-#me .plan { margin-top: 6px; padding-top: 5px; border-top: 1px dashed var(--chalkline); }
 #me .dimline { color: var(--fg); }
 #help { color: var(--fg); }
 #help b { display: inline-block; width: 11ch; font-weight: normal; color: var(--fg); }
@@ -839,6 +860,8 @@ body.touch #side { overflow-y: auto; }
   #top .title { display: none; }
   #turn { min-width: 0; }
   #main { display: block; }
+  #mapcol { display: block; }
+  #nowBlock { margin-bottom: 8px; }
   #mapbox { width: 100%; aspect-ratio: 0.95; margin: 6px 0; }
   #side {
     display: grid;
@@ -990,7 +1013,6 @@ body.touch .card .num { display: none; }
   .card .desc { display: none; }
   .card .stats, .card .good, .card .bad { font-size: 12px; line-height: 1.35; }
 }
-#me .plan:first-child { margin-top: 0; padding-top: 0; border-top: none; }
 
 /* Krönikan på egen skärm (renderChron i app.js). */
 #chronscreen { align-items: flex-start; justify-content: center; overflow-y: auto; }
@@ -1034,6 +1056,7 @@ body.touch .card .num { display: none; }
 }
 #chronButtons button:hover, #chronButtons button:focus-visible, .chronBack:hover, .chronBack:focus-visible { color: var(--hi); border-color: var(--hi); outline: none; }
 .chronBack { margin-top: 6px; font-size: 13px; }
+#me .chronBack { margin: 0; }
 #chronResults, #chronEpilog, #chronAll { margin: 0 0 18px; display: grid; gap: 4px; }
 #chronResults { text-align: center; font-size: 15px; }
 #chronResults .win { color: var(--hi); }

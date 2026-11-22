@@ -124,53 +124,53 @@
       <span id="conn"></span>
     </header>
     <div id="main">
-      <div id="mapbox">
-        <canvas id="map"></canvas>
-        <p id="mapNone" data-t="karta_utan_webgl" hidden></p>
-        <div id="mapleft">
-          <div id="roomname" aria-live="polite"></div>
-        </div>
-        <div id="hud">
-          <div class="hudrow">
-            <div id="status" data-t-aria="tecken_du"></div>
-            <button type="button" id="helpBtn" class="keys" data-t-aria="hjalp_knapp" aria-expanded="false">?</button>
+      <div id="mapcol">
+        <div id="mapbox">
+          <canvas id="map"></canvas>
+          <p id="mapNone" data-t="karta_utan_webgl" hidden></p>
+          <div id="mapleft">
+            <div id="roomname" aria-live="polite"></div>
           </div>
-          <div id="bag" data-t-aria="tecken_foremal"></div>
-        </div>
-        <div id="helpbox" class="keys" hidden>
-          <h2 data-t="hjalp_rubrik"></h2>
-          <div id="help">
-            <div data-t-html="hjalp_ga"></div>
-            <div data-t-html="hjalp_vanta"></div>
-            <div data-t-html="hjalp_ta"></div>
-            <div data-t-html="hjalp_sok"></div>
-            <div data-t-html="hjalp_drick"></div>
-            <div data-t-html="hjalp_anfall"></div>
-            <div data-t-html="hjalp_parera"></div>
-            <div data-t-html="hjalp_undan"></div>
-            <div data-t-html="hjalp_byt"></div>
-            <div data-t-html="hjalp_foremal"></div>
-            <div data-t-html="hjalp_viska"></div>
-            <div data-t-html="hjalp_zoom"></div>
-            <div data-t-html="hjalp_allt"></div>
-            <div data-t-html="hjalp_redo"></div>
-            <div data-t-html="hjalp_visa"></div>
+          <div id="hud">
+            <div class="hudrow">
+              <div id="status" data-t-aria="tecken_du"></div>
+              <button type="button" id="helpBtn" class="keys" data-t-aria="hjalp_knapp" aria-expanded="false">?</button>
+            </div>
+            <div id="bag" data-t-aria="tecken_foremal"></div>
           </div>
-          <p class="hint" data-t="hjalp_tips"></p>
+          <div id="helpbox" class="keys" hidden>
+            <h2 data-t="hjalp_rubrik"></h2>
+            <div id="help">
+              <div data-t-html="hjalp_ga"></div>
+              <div data-t-html="hjalp_vanta"></div>
+              <div data-t-html="hjalp_ta"></div>
+              <div data-t-html="hjalp_sok"></div>
+              <div data-t-html="hjalp_drick"></div>
+              <div data-t-html="hjalp_anfall"></div>
+              <div data-t-html="hjalp_parera"></div>
+              <div data-t-html="hjalp_undan"></div>
+              <div data-t-html="hjalp_byt"></div>
+              <div data-t-html="hjalp_foremal"></div>
+              <div data-t-html="hjalp_viska"></div>
+              <div data-t-html="hjalp_zoom"></div>
+              <div data-t-html="hjalp_allt"></div>
+              <div data-t-html="hjalp_redo"></div>
+              <div data-t-html="hjalp_visa"></div>
+            </div>
+            <p class="hint" data-t="hjalp_tips"></p>
+          </div>
+          <div id="zoom" data-t-aria="zoom_rad">
+            <button type="button" id="zoomOut" data-t-aria="zoom_ut">−</button>
+            <button type="button" id="zoomName" data-t-title="zoom_vaxla"></button>
+            <button type="button" id="zoomIn" data-t-aria="zoom_in">+</button>
+          </div>
+          <div id="roundcard" hidden aria-live="polite"></div>
+          <div id="ormkort" class="okort" hidden aria-live="polite"></div>
+          <div id="vakenkort" class="okort" hidden aria-live="assertive"></div>
+          <pre id="overlay" hidden></pre>
         </div>
-        <div id="zoom" data-t-aria="zoom_rad">
-          <button type="button" id="zoomOut" data-t-aria="zoom_ut">−</button>
-          <button type="button" id="zoomName" data-t-title="zoom_vaxla"></button>
-          <button type="button" id="zoomIn" data-t-aria="zoom_in">+</button>
-        </div>
-        <div id="roundcard" hidden aria-live="polite"></div>
-        <div id="ormkort" class="okort" hidden aria-live="polite"></div>
-        <div id="vakenkort" class="okort" hidden aria-live="assertive"></div>
-        <pre id="overlay" hidden></pre>
-      </div>
-      <aside id="side">
-        <div class="block" id="nowBlock">
-          <div class="panel">
+        <div id="nowBlock">
+          <div class="panel nowbar">
             <h2 data-t="panel_nu"></h2>
             <div id="me"></div>
             <form id="whisper" autocomplete="off" hidden>
@@ -179,6 +179,8 @@
             </form>
           </div>
         </div>
+      </div>
+      <aside id="side">
         <div id="pad" class="touchonly" data-t-aria="knappar">
           <div class="dirs">
             <button type="button" data-key="ArrowUp" class="n" data-t-aria="knapp_norrut">↑</button>
