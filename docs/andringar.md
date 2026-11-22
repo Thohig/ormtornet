@@ -6,6 +6,17 @@ eller leder tornet.
 
 ## 2026-11-22
 
+### Det du ser beskrivs, det förklaras inte
+
+- Rumsblocket beskriver det du ser: varelsens egen text, "Sigge står i
+  rummet och ser på dig.", "Kvällsljuset faller in genom porten." En fälla
+  som har slagit till syns som ett spår, till exempel "Golvet är repat i
+  långa cirklar.", utan fällans namn. Ett tomt rum säger ingenting.
+- Står du kvar kommer bara det som har kommit eller gått, som
+  "Fjällvakten är borta."
+- Utropet med varelsens namn och den dubbla beskrivningen när en varelse
+  dyker upp är borta.
+
 ### Tornet väljer motståndare, och Z för kartan
 
 - Står flera vandrare i rummet väljer tornet vem du slåss mot: den som

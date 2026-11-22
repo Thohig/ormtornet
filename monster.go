@@ -165,17 +165,17 @@ func (g *Game) choiceWord(a string) string {
 	return a
 }
 
-// announceMonster berättar för spelaren att en varelse finns i rummet.
+// announceMonster säger med ett ljud att en varelse finns i rummet. Vad
+// spelaren ser står i rumsblocket.
 func (g *Game) announceMonster(p *Player) {
 	m := g.monsterAt(p.X, p.Y)
 	if m == nil || p.Status != statusIn {
 		return
 	}
-	t := g.data.monsterType(m.Type)
 	p.Seen[m.Type] = true
 	g.soundTo(p, "monster")
-	g.logTo(p, t.Namn+"!", "varn")
-	g.logTo(p, pick(t.DykerUpp), "")
+	// Varelsen beskrivs i rumsblocket i slutet av rundan (here.go), med sin
+	// egen text och utan utrop.
 	g.explainNow(p, m.Type)
 	g.knife(p, m)
 }

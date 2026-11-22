@@ -39,6 +39,9 @@ type Trap struct {
 	Andra  []string `json:"andra"`
 	// AndraDolt ersätter Andra när vandrarna bara ser varandra vid möten.
 	AndraDolt []string `json:"andra_dolt"`
+	// SparEfter är det man ser i rummet efter att fällan har slagit till,
+	// i rumsblocket (here.go). Fällans namn sägs inte där.
+	SparEfter []string `json:"spar_efter"`
 }
 
 type Rules struct {

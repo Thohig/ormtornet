@@ -57,16 +57,46 @@ func TestRoomBlockTellsWhatIsHere(t *testing.T) {
 	pb.X = 5
 	g.tellRoom(pa)
 	got = rooms(a)
-	if len(got) != 1 || !got[0].Kvar || got[0].Text != "" || got[0].Har != g.data.Text("har_tomt") {
-		t.Fatalf("väntade ett kort block om att rummet är tomt, fick %+v", got)
+	want = g.data.Text("har_vandrare_borta", "namn", "Bo")
+	if len(got) != 1 || !got[0].Kvar || got[0].Text != "" || got[0].Har != want {
+		t.Fatalf("väntade bara %q, fick %+v", want, got)
 	}
 
-	g.monsters = append(g.monsters, &Monster{ID: 1, Type: g.data.Monster.Typer[0].ID, X: 4, Y: 4, HP: 1})
+	// Varelsen beskrivs med sin egen text, och samma text så länge den
+	// står kvar.
+	typ := g.data.Monster.Typer[0]
+	g.monsters = append(g.monsters, &Monster{ID: 1, Type: typ.ID, X: 4, Y: 4, HP: 1})
 	g.tellRoom(pa)
 	got = rooms(a)
-	want = g.data.Text("har_varelse", "varelse", g.data.Monster.Typer[0].Namn)
+	want = typ.DykerUpp[1%len(typ.DykerUpp)]
 	if len(got) != 1 || got[0].Har != want {
 		t.Fatalf("väntade %q, fick %+v", want, got)
+	}
+	g.tellRoom(pa)
+	if got := rooms(a); len(got) != 0 {
+		t.Fatalf("varelsen står kvar, men fick %+v", got)
+	}
+}
+
+// Ett tomt rum säger ingenting, och en fälla som har slagit till syns som
+// ett spår utan sitt namn.
+func TestRoomBlockShowsNotTells(t *testing.T) {
+	g, a, _ := startTwo(t)
+	pa := a.player
+	r := putInRoom(g, pa, 3, 3)
+	pa.told = told{}
+	rooms(a)
+	g.tellRoom(pa)
+	got := rooms(a)
+	if len(got) != 1 || got[0].Har != "" {
+		t.Fatalf("ett tomt rum ska inte säga något, fick %+v", got)
+	}
+	trap := g.data.trap("roterande")
+	r.Mark = trap.Tecken
+	g.tellRoom(pa)
+	got = rooms(a)
+	if len(got) != 1 || got[0].Har != trap.SparEfter[0] {
+		t.Fatalf("väntade spåret %q, fick %+v", trap.SparEfter[0], got)
 	}
 }
 
@@ -92,7 +122,7 @@ func TestJourneyRoundHasRoom(t *testing.T) {
 		t.Fatal("ingen runda i vandringen")
 	}
 	last := pa.journal[len(pa.journal)-1]
-	if last.Room == "" || last.Here == "" {
+	if last.Room == "" {
 		t.Fatalf("rundan i vandringen saknar rummet: %+v", last)
 	}
 }

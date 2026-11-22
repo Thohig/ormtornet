@@ -393,32 +393,29 @@
       "Kvällsljuset skär i ögonen. Inte än. Tornet har mer att ge.",
       "Du ser ut över backen nedanför. Sedan vänder du tillbaka in."
     ],
-    "har_varelse": [
-      "{varelse} är här."
+    "har_varelse_borta": [
+      "{varelse} är borta."
     ],
     "har_vandrare": [
-      "{namn} står här med dig."
+      "{namn} står i rummet och ser på dig."
     ],
     "har_vandrare_flera": [
-      "{namn} och {sista} står här med dig."
+      "{namn} och {sista} står i rummet och ser på dig."
+    ],
+    "har_vandrare_borta": [
+      "{namn} har gått."
     ],
     "har_kammare": [
-      "Här ligger ormens skatt."
+      "Guld ligger i en hög mitt i rummet, och något andas under den."
     ],
     "har_port": [
-      "Här går en port ut ur tornet."
+      "Kvällsljuset faller in genom porten."
     ],
     "har_port_stangd": [
-      "Porten här har slutit sig."
-    ],
-    "har_falla": [
-      "{falla} har redan slagit till här."
+      "Där porten var finns bara mur, varm och fuktig."
     ],
     "har_foremal": [
-      "Någon har lämnat {foremal} här."
-    ],
-    "har_tomt": [
-      "Rummet är tomt."
+      "I ett hörn ligger {foremal}."
     ],
     "sen_ankomst": [
       "{namn}, vandringen har just tagit slut. Du är med när nästa torn reser sig. Tryck Enter när du är redo (på en pekskärm: Nytt torn)."

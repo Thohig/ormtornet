@@ -13,6 +13,7 @@
     {
       "id": "fallgaller",
       "namn": "Fallgallret",
+      "spar_efter": ["Ett galler av järnstänger står uppbänt i dörröppningen."],
       "vikt": 3,
       "rundor": 2,
       "tecken": "╫",
@@ -27,6 +28,7 @@
     {
       "id": "rasande_golv",
       "namn": "Det rasande golvet",
+      "spar_efter": ["Mitt i golvet gapar ett hål, och kall luft stiger ur det."],
       "vikt": 2,
       "skada": 1,
       "rundor": 2,
@@ -45,6 +47,7 @@
     {
       "id": "roterande",
       "namn": "Det roterande rummet",
+      "spar_efter": ["Golvet är repat i långa cirklar."],
       "vikt": 2,
       "tecken": "↻",
       "texter": [
@@ -58,6 +61,7 @@
     {
       "id": "pilar",
       "namn": "Pilfällan",
+      "spar_efter": ["Små svarta hål sitter i rader längs väggen."],
       "vikt": 3,
       "skada": 2,
       "tecken": "→",
@@ -70,6 +74,7 @@
     {
       "id": "dimma",
       "namn": "Den giftiga dimman",
+      "spar_efter": ["En söt lukt hänger kvar, och springorna i golvet är gulfläckiga."],
       "vikt": 2,
       "skada": 1,
       "rundor": 2,
@@ -83,6 +88,7 @@
     {
       "id": "ormgrop",
       "namn": "Ormgropen",
+      "spar_efter": ["En grop i golvet rör sig svagt, som om något sover i den."],
       "vikt": 2,
       "skada": 2,
       "rundor": 1,
@@ -98,6 +104,7 @@
     {
       "id": "skinn",
       "namn": "Det ömsade skinnet",
+      "spar_efter": ["Trasor av ett genomskinligt skinn hänger från taket."],
       "vikt": 2,
       "rundor": 1,
       "tecken": "∫",
@@ -110,6 +117,7 @@
     {
       "id": "klocka",
       "namn": "Klockan",
+      "spar_efter": ["En väldig klocka hänger stilla i taket."],
       "vikt": 2,
       "sol": 2,
       "tecken": "♁",
@@ -124,6 +132,7 @@
     {
       "id": "morker",
       "namn": "Mörkret",
+      "spar_efter": ["Det är mörkare här än det borde vara, som om ljuset inte vill in."],
       "vikt": 2,
       "rundor": 4,
       "tecken": "●",
@@ -136,6 +145,7 @@
     {
       "id": "eko",
       "namn": "Ekokammaren",
+      "spar_efter": ["Varje ljud kommer tillbaka lite för länge."],
       "vikt": 2,
       "tecken": "◎",
       "texter": [

@@ -4,6 +4,7 @@
     {
       "id": "fallgaller",
       "namn": "The Portcullis",
+      "spar_efter": ["A grille of iron bars stands prised open in the doorway."],
       "texter": [
         "A screech above you, and a grate of spiked iron bars crashes down in the doorway behind you. It takes time to prise it open.",
         "The grate slams down. The bars curve inwards and are almost sharp at the tips. You are stuck for a while."
@@ -15,6 +16,7 @@
     {
       "id": "rasande_golv",
       "namn": "The Collapsing Floor",
+      "spar_efter": ["A hole gapes in the middle of the floor, and cold air rises from it."],
       "texter": [
         "The floor gives way beneath you. You fall into the cellar vaults, where it is dark, damp and cramped.",
         "The flagstones sink as if they were soft, and you slide down through a hole in the floor. Below there is nothing but dark, narrow vaults."
@@ -29,6 +31,7 @@
     {
       "id": "roterande",
       "namn": "The Turning Room",
+      "spar_efter": ["The floor is scratched in long circles."],
       "texter": [
         "The room begins to turn with a slow, grinding sound. You lose your footing and are pushed out through an opening.",
         "The walls draw together and twist. When it is over, you are somewhere else."
@@ -40,6 +43,7 @@
     {
       "id": "pilar",
       "namn": "The Arrow Trap",
+      "spar_efter": ["Small black holes sit in rows along the wall."],
       "texter": [
         "A click underfoot. Arrows whistle out of small holes in the wall. Two of them strike.",
         "Arrows shoot out of the wall. They are not wood but something bone-white and curved."
@@ -49,6 +53,7 @@
     {
       "id": "dimma",
       "namn": "The Poison Mist",
+      "spar_efter": ["A sweet smell lingers, and the cracks in the floor are stained yellow."],
       "texter": [
         "A yellow-green mist wells up from the cracks in the floor. It smells sweet and burns the lungs. The poison stays in the body.",
         "The mist is warm and damp, like a breath. You cough, and the bitter taste lingers long after."
@@ -58,6 +63,7 @@
     {
       "id": "ormgrop",
       "namn": "The Snake Pit",
+      "spar_efter": ["A pit in the floor stirs faintly, as if something sleeps in it."],
       "texter": [
         "You step into a pit full of small snakes. They bite and coil round your ankles before you get free.",
         "The pit teems with snakes, thin as worms. They bite, and it takes time to climb out."
@@ -69,6 +75,7 @@
     {
       "id": "skinn",
       "namn": "The Shed Skin",
+      "spar_efter": ["Shreds of a translucent skin hang from the ceiling."],
       "texter": [
         "A vast, translucent skin hangs across the room like a sail. You get tangled in it. The scales rustle against each other.",
         "A shed snakeskin, so large it fills the whole room. It clings to you and you must tear yourself free."
@@ -78,6 +85,7 @@
     {
       "id": "klocka",
       "namn": "The Bell",
+      "spar_efter": ["A huge bell hangs still from the ceiling."],
       "texter": [
         "You knock against a great bell hanging from the ceiling. The toll runs through the whole tower, and through the slits you see the sun sink swiftly.",
         "A bell tolls by itself as you step in. The light outside turns redder at once."
@@ -89,6 +97,7 @@
     {
       "id": "morker",
       "namn": "The Darkness",
+      "spar_efter": ["It is darker here than it should be, as if the light will not come in."],
       "texter": [
         "A warm gust passes through the room and your lantern goes out. You see nothing. You must grope your way.",
         "Something breathes out, and your flame flutters and dies. The darkness is complete."
@@ -98,6 +107,7 @@
     {
       "id": "eko",
       "namn": "The Echoing Hall",
+      "spar_efter": ["Every sound comes back a little too long."],
       "texter": [
         "Your step echoes, and the echo goes on and grows until the whole tower rings. Now everyone knows where you are.",
         "The room catches every sound and throws it out into the passages. Everyone in the tower hears where you stand."

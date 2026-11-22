@@ -223,12 +223,14 @@ den som dör och för alla i slutet (se slutet nedan och Strider):
      höger i översta raden. Panelen Nu syns bara när den har något att
      säga. I loggen står vandrarnas namn i deras färg. Överst i
      varje runda står rumsblocket: rummets namn, beskrivningen när
-     rummet är nytt, och i ord vad som finns där, som varelsen, de andra
-     vandrarna, skatten, porten, en fälla som har slagit till och
-     föremål som någon har lämnat. Står man kvar kommer ett kort block
-     bara när något har ändrats. I mörkret och i källarvalven väntar
-     blocket tills man ser igen. Texterna står under `har_*` i
-     `data/texter.json`. Uppe till vänster på kartan står rummets namn.
+     rummet är nytt, och det man ser där, beskrivet och inte förklarat:
+     varelsens egen text, de andra vandrarna, guldet, porten, spåret
+     efter en fälla som har slagit till (utan fällans namn) och föremål
+     som någon har lämnat. Ett tomt rum säger ingenting. Står man kvar
+     kommer bara det som har ändrats, som "Fjällvakten är borta." I
+     mörkret och i källarvalven väntar blocket tills man ser igen.
+     Texterna står under `har_*` i `data/texter.json` och `spar_efter` i
+     `data/fallor.json`. Uppe till vänster på kartan står rummets namn.
      Uppe till höger står statusen
      som tecken: klassens tecken, liv, skatt, drycker,
      tillstånd som fast, gift och mörker, kompassen, dunket, viskningen och

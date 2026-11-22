@@ -377,32 +377,29 @@
       "The evening light stings your eyes. Not yet. The tower has more to give.",
       "You look out over the slope below. Then you turn back in."
     ],
-    "har_varelse": [
-      "{varelse} is here."
+    "har_varelse_borta": [
+      "{varelse} is gone."
     ],
     "har_vandrare": [
-      "{namn} is here with you."
+      "{namn} is in the room, watching you."
     ],
     "har_vandrare_flera": [
-      "{namn} and {sista} are here with you."
+      "{namn} and {sista} are in the room, watching you."
+    ],
+    "har_vandrare_borta": [
+      "{namn} has gone."
     ],
     "har_kammare": [
-      "The serpent's treasure lies here."
+      "Gold lies heaped in the middle of the room, and something breathes beneath it."
     ],
     "har_port": [
-      "A gate leads out of the tower here."
+      "The evening light falls in through the gate."
     ],
     "har_port_stangd": [
-      "The gate here has closed."
-    ],
-    "har_falla": [
-      "{falla} has already struck here."
+      "Where the gate was there is only wall, warm and damp."
     ],
     "har_foremal": [
-      "Someone has left {foremal} here."
-    ],
-    "har_tomt": [
-      "The room is empty."
+      "In a corner lies {foremal}."
     ],
     "sen_ankomst": [
       "{namn}, the wandering has just ended. You will be part of it when the next tower rises. Press Enter when you are ready (on a touch screen: New tower)."
