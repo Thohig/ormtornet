@@ -16,8 +16,9 @@ type before struct {
 	stuck, poison, dark, cellar int
 	status, action              string
 	items                       []string
-	draws                       int    // ormkort dragna före rundan
-	foe                         string // vandraren som stridsvalet riktades mot
+	draws                       int      // ormkort dragna före rundan
+	foe                         *Player  // vandraren som stridsvalet riktades mot
+	monster                     *mapSign // varelsen i rummet före rundan
 }
 
 type summaryLine struct {
@@ -26,6 +27,8 @@ type summaryLine struct {
 	Kort string `json:"kort,omitempty"` // den korta formen för loggens rad
 	// Ormkort är id:t på ormkortet vandraren drog, för bilden bredvid raden.
 	Ormkort string `json:"ormkort,omitempty"`
+	// Tecknen från kartan framför raden, som i krönikan (signs.go).
+	Signs []mapSign `json:"tecken,omitempty"`
 }
 
 type summaryMsg struct {
@@ -49,22 +52,33 @@ func (g *Game) snapshot() map[*Player]before {
 			x: p.X, y: p.Y, hp: p.HP, treasure: p.Treasure, potions: p.Potions,
 			stuck: p.Stuck, poison: p.Poison, dark: p.Dark, cellar: p.Cellar,
 			status: p.Status, action: p.Action, items: items, draws: len(p.stats.draws),
-			foe: g.foeName(p),
+			foe: g.foeOf(p), monster: g.monsterSignAt(p.X, p.Y),
 		}
 	}
 	return m
 }
 
-// foeName är namnet på vandraren som p:s stridsval riktas mot, eller tomt
-// om p slåss mot en varelse eller inte slåss alls.
-func (g *Game) foeName(p *Player) string {
+// foeOf är vandraren som p:s stridsval riktas mot, eller nil om p slåss
+// mot en varelse eller inte slåss alls.
+func (g *Game) foeOf(p *Player) *Player {
 	if !isCombatAction(p.Action) || g.monsterAt(p.X, p.Y) != nil || g.pvpStatus(p) != pvpYes {
-		return ""
+		return nil
 	}
 	if foe := g.playerByID(p.target); foe != nil && foe != p && foe.Status == statusIn && foe.X == p.X && foe.Y == p.Y {
-		return foe.Name
+		return foe
 	}
-	return ""
+	return nil
+}
+
+// monsterSignAt är tecknet för varelsen i rummet, eller nil.
+func (g *Game) monsterSignAt(x, y int) *mapSign {
+	if m := g.monsterAt(x, y); m != nil {
+		if t := g.data.monsterType(m.Type); t != nil {
+			s := monsterSign(t)
+			return &s
+		}
+	}
+	return nil
 }
 
 // summarize skickar rundans sammanfattning till var och en som var i tornet.
@@ -105,9 +119,13 @@ func (g *Game) summaryFor(p *Player, b before, woke bool) []summaryLine {
 	// Vad vandraren gjorde, eller vad som hände med henom.
 	switch {
 	case p.Status == statusOut:
-		add(t("sam_ute", "skatt", itoa(p.Treasure)), "gold")
+		l := t("sam_ute", "skatt", itoa(p.Treasure))
+		l.Signs = signs(placeSign("port"))
+		add(l, "gold")
 	case p.Status == statusDead && b.status != statusDead:
-		add(t("sam_dod"), "varn")
+		l := t("sam_dod")
+		l.Signs = p.hurtSign
+		add(l, "varn")
 	case p.Cellar > 0 && b.cellar == 0:
 		add(t("sam_kallare"), "varn")
 	case b.cellar > 0 && p.Cellar == 0:
@@ -149,7 +167,9 @@ func (g *Game) summaryFor(p *Player, b before, woke bool) []summaryLine {
 	for _, it := range p.items {
 		if !slices.Contains(b.items, it.ID) {
 			if ty := g.data.itemType(it.ID); ty != nil {
-				add(t("sam_foremal", "foremal", ty.Kort), "gold")
+				l := t("sam_foremal", "foremal", ty.Kort)
+				l.Signs = signs(itemSign(ty))
+				add(l, "gold")
 			}
 		}
 	}
@@ -166,13 +186,17 @@ func (g *Game) summaryFor(p *Player, b before, woke bool) []summaryLine {
 		if p.Cellar == 0 {
 			if m := g.monsterAt(p.X, p.Y); m != nil {
 				if mt := g.data.monsterType(m.Type); mt != nil {
-					add(t("sam_varelse", "varelse", mt.Namn), "varn")
+					l := t("sam_varelse", "varelse", mt.Namn)
+					l.Signs = signs(monsterSign(mt))
+					add(l, "varn")
 				}
 			}
 		}
 	}
 	if woke {
-		add(t("sam_ormen"), "varn")
+		l := t("sam_ormen")
+		l.Signs = signs(placeSign("kammare"))
+		add(l, "varn")
 	}
 	out := append(danger, rest...)
 	if g.sun > 0 && p.Status == statusIn {
@@ -202,7 +226,9 @@ func (g *Game) actionLine(p *Player, b before, moved bool, room string, t func(s
 		i, err := strconv.Atoi(a[1:2])
 		if err == nil && i >= 1 && i <= len(b.items) {
 			if ty := g.data.itemType(b.items[i-1]); ty != nil {
-				return t("sam_anvande", "foremal", ty.Kort)
+				l := t("sam_anvande", "foremal", ty.Kort)
+				l.Signs = signs(itemSign(ty))
+				return l
 			}
 		}
 	}
@@ -210,10 +236,16 @@ func (g *Game) actionLine(p *Player, b before, moved bool, room string, t func(s
 	case "":
 		return t("sam_inget")
 	case actAttack, actParry, actDodge:
-		if b.foe != "" {
-			return t("sam_"+a+"_vandrare", "namn", b.foe)
+		if b.foe != nil {
+			l := t("sam_"+a+"_vandrare", "namn", b.foe.Name)
+			l.Signs = signs(playerSign(b.foe))
+			return l
 		}
-		return t("sam_" + a)
+		l := t("sam_" + a)
+		if b.monster != nil {
+			l.Signs = signs(*b.monster)
+		}
+		return l
 	case actWait, actTake, actSearch, actDrink:
 		return t("sam_" + a)
 	}

@@ -404,8 +404,11 @@ och av vad, vem som fällde vilken varelse, vem som slog vem och tog hur
 mycket guld, och när ormen vaknade. Sedan kommer en rad för varje vandrare
 med hur många nävar den tog ur kammaren och hur mycket guld de gav, och hur
 många fällor, fällda varelser och sökta rum den fick. Den som har träffat
-andra vandrare får också träffarna och det stulna guldet på sin rad. Texterna står i `data/texter.json` under `kronika_*`. Under krönikan
-står den egna vandringen, samma som den som dör ser under vandringen.
+andra vandrare får också träffarna och det stulna guldet på sin rad.
+Texterna står i `data/texter.json` under `kronika_*`. Under krönikan står
+den egna vandringen, samma som den som dör ser under vandringen. Raderna
+har samma tecken som teckenförklaringen på kartan (`signs.go`), både i
+krönikan och på rundans kort i den egna vandringen.
 
 ### Klasser
 
@@ -841,6 +844,7 @@ Beskrivningarna för rummen ligger under nivåerna `"1"` till `"4"`.
 - `monster.go` varelser, strider och hur varelserna vandrar
 - `reveal.go` avslöjandet: nivåer, ledtrådar och epilog
 - `chronicle.go` krönikan över vandringen
+- `signs.go` tecknen från kartan på krönikans rader och rundans kort
 - `sounds.go` spår och ljud från grannrummen
 - `summary.go` rundans sammanfattning, kortet efter varje runda
 - `difficulty.go` förvalen för svårighet

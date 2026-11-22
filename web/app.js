@@ -584,6 +584,7 @@ function renderChron() {
     r.rader.forEach((l) => {
       const p = document.createElement("div");
       p.textContent = l.text;
+      if (l.tecken) p.prepend(signRow(l.tecken));
       if (l.ormkort) p.prepend(miniCard(l.ormkort));
       if (l.c) p.className = l.c;
       d.appendChild(p);

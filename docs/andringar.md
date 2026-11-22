@@ -6,6 +6,18 @@ eller leder tornet.
 
 ## 2026-11-22
 
+### Tecknen från kartan i krönikan
+
+- Raderna i krönikan har samma bilder som teckenförklaringen: varelsen som
+  föll eller dödade, fällan, föremålet, skattkammaren när ormen vaknade,
+  porten när någon gick ut och prickarna i vandrarnas färger när de slogs.
+  Ett tryck på bilden, eller musen över den, visar förklaringen.
+- Rundans kort i Din vandring har samma tecken: varelsen eller vandraren
+  du slogs mot, föremålet du hittade eller använde, porten när du gick ut
+  och det som dödade dig.
+- Kartan kan rita varelser och fällor som du aldrig själv såg, så att de
+  syns i krönikan även när någon annan mötte dem.
+
 ### Striderna mellan vandrare i krönikan
 
 - Krönikan skriver ner varje slag mellan vandrare som träffar men inte
