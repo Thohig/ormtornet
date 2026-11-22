@@ -274,6 +274,20 @@ func TestLanternSeenFromNextRoom(t *testing.T) {
 	}
 }
 
+// Ormtjusaren ser i kammaren hur många vakna-kort som är kvar, också som
+// ett tal för korten på sömnmätaren. Andra ser bara hur djupt ormen sover.
+func TestOrmtjusareSeesWakeCards(t *testing.T) {
+	g, pa, pb := withClass(t, "ormtjusare")
+	pa.X, pa.Y, pb.X, pb.Y = g.center(), g.center(), g.center(), g.center()
+	g.reveal(g.center(), g.center())
+	if st := g.stateFor(pa); st.WakeCards == nil || *st.WakeCards != g.wakeCardsLeft() || st.Sleep < 0 {
+		t.Fatalf("ormtjusaren: sömn %d, vakna-kort %v", st.Sleep, st.WakeCards)
+	}
+	if st := g.stateFor(pb); st.WakeCards != nil || st.Sleep < 0 {
+		t.Fatalf("den andra: sömn %d, vakna-kort %v", st.Sleep, st.WakeCards)
+	}
+}
+
 func TestOrmtjusareLessDamage(t *testing.T) {
 	g, pa, _ := withClass(t, "ormtjusare")
 	pa.X, pa.Y = g.center(), g.center()

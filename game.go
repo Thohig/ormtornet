@@ -590,6 +590,7 @@ type stateMsg struct {
 	PvP        string        `json:"pvp"` // om det går att strida mot andra vandrare här
 	Paused     bool          `json:"paused,omitempty"`
 	SleepText  string        `json:"sleepText,omitempty"`
+	WakeCards  *int          `json:"vaknaKort,omitempty"` // vakna-korten kvar i leken, bara för ormtjusaren
 	Class      *classView    `json:"klass,omitempty"`
 	Items      []itemView    `json:"foremal,omitempty"`
 	MaxItems   int           `json:"maxForemal,omitempty"` // så många föremål man kan bära
@@ -701,7 +702,9 @@ func (g *Game) stateFor(me *Player) stateMsg {
 		st.Sleep = g.sleepLevel()
 		st.SleepText = g.data.Ormen.Somn[min(st.Sleep, len(g.data.Ormen.Somn)-1)]
 		if g.is(me, "ormtjusare") {
-			st.SleepText += " " + g.data.Text("klass_ormtjusare_kort", "antal", itoa(g.wakeCardsLeft()))
+			n := g.wakeCardsLeft()
+			st.SleepText += " " + g.data.Text("klass_ormtjusare_kort", "antal", itoa(n))
+			st.WakeCards = &n
 		}
 	}
 	st.Class = viewOfClass(g.classOf(me))

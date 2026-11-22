@@ -429,6 +429,41 @@ function meter(cls, label, value, maxValue, num) {
   return d;
 }
 
+// sleepMeter visar i skattkammaren hur djupt ormen sover, i tre steg som
+// andas: lugnt när den sover djupt och fort när den är nära att vakna.
+// Ormtjusaren ser också vakna-korten som är kvar i leken, som små kort.
+function sleepMeter(level, text, wakeCards) {
+  const d = document.createElement("div");
+  d.className = "somn somn" + Math.min(2, level);
+  const row = document.createElement("div");
+  row.className = "somnrad";
+  const l = document.createElement("span");
+  l.className = "mlabel";
+  l.textContent = t("nu_ormen");
+  const segs = document.createElement("span");
+  segs.className = "andetag";
+  segs.setAttribute("aria-hidden", "true");
+  for (let i = 0; i < 3; i++) {
+    const s = document.createElement("span");
+    s.className = i <= level ? "seg on" : "seg";
+    segs.appendChild(s);
+  }
+  row.append(l, segs);
+  if (typeof wakeCards === "number") {
+    const k = document.createElement("span");
+    k.className = "vaknakort";
+    k.title = t("nu_vaknakort", { antal: wakeCards });
+    k.setAttribute("aria-label", k.title);
+    for (let i = 0; i < wakeCards; i++) k.appendChild(document.createElement("i"));
+    row.appendChild(k);
+  }
+  const p = document.createElement("div");
+  p.className = level >= 2 ? "cond" : "sleep";
+  p.textContent = text;
+  d.append(row, p);
+  return d;
+}
+
 // Andra vandrare syns bara i samma rum. Klienten minns var och när den såg
 // var och en senast, så att kartan kan visa det.
 let lastSeen = {};
@@ -814,7 +849,7 @@ function renderNow(me) {
     box.appendChild(b);
   }
   if (me.status === "inne") {
-    if (state.sleep >= 0 && state.sleepText) line(state.sleepText, state.sleep >= 2 ? "cond" : "sleep");
+    if (state.sleep >= 0 && state.sleepText) box.appendChild(sleepMeter(state.sleep, state.sleepText, state.vaknaKort));
     if (state.stuck > 0) line(state.stuck === 1 ? t("nu_fast_en") : t("nu_fast", { n: state.stuck }), "cond");
     const foe = (state.monsters || []).find((m) => m.x === me.x && m.y === me.y);
     const here = (state.rooms || []).find((r) => r.x === me.x && r.y === me.y);

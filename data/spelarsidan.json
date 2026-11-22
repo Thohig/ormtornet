@@ -118,6 +118,8 @@
     "zoom_vaxla": "Växla till allt du känner till (M)",
     "karta_utan_webgl": "Kartan kan inte ritas här, eftersom webbläsaren saknar WebGL. Loggen och panelen Nu fungerar som vanligt.",
     "ormkort_guld": "+{antal} guld",
+    "nu_ormen": "Ormen",
+    "nu_vaknakort": "{antal} vakna-kort kvar i leken",
     "zoom_nara": "Nära",
     "zoom_mellan": "Mellan",
     "zoom_langt": "Långt",
