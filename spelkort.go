@@ -116,7 +116,7 @@ var cardImages = []string{
 	"fackla", "sover", "ror_sig", "vaknar",
 	"fallgaller", "rasande_golv", "roterande", "pilar", "dimma", "ormgrop", "skinn", "klocka", "morker", "eko",
 	"krypare", "yngel", "fjallvakt", "gallgast", "benvaktare", "vandrare",
-	"rep", "amulett", "veke", "skold", "vaska", "kompass", "rokpulver", "spegel", "kastkniv", "krita",
+	"rep", "amulett", "veke", "skold", "vaska", "kompass", "rokpulver", "spegel", "kastkniv", "benlur",
 	"flojt", "timglas", "svart_parla", "mynt_hal", "rostkrona", "brev", "dryck", "guld",
 	"kallare", "varsel", "namndel", "invigd",
 	"ut", "dod", "sol", "port",

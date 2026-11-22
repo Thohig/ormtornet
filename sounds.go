@@ -14,8 +14,8 @@ func (g *Game) hear(x, y int, key, general, class string, skip ...*Player) {
 		if o == nil || slices.Contains(skip, o) {
 			continue
 		}
-		if d, ok := g.nextTo(o, x, y); ok && !g.is(o, "sparfinnare") {
-			g.hearTo(o, g.data.Text(key, "riktning", g.data.Riktningar[d]), class)
+		if dir, ok := g.hearsFrom(o, x, y); ok {
+			g.hearTo(o, g.data.Text(key, "riktning", dir), class)
 		} else if general != "" {
 			g.hearTo(o, general, class)
 		}
@@ -40,8 +40,8 @@ func (g *Game) hearFight(x, y int, skip ...*Player) {
 		if heard {
 			continue
 		}
-		if d, ok := g.nextTo(o, x, y); ok && !g.is(o, "sparfinnare") {
-			g.hearTo(o, g.data.Text("ljud_strid", "riktning", g.data.Riktningar[d]), "dim")
+		if dir, ok := g.hearsFrom(o, x, y); ok {
+			g.hearTo(o, g.data.Text("ljud_strid", "riktning", dir), "dim")
 		} else {
 			g.hearTo(o, general, "dim")
 		}

@@ -171,6 +171,7 @@ func (g *Game) leaveCellar(p *Player) {
 	g.describeLater(p, room, p.X, p.Y)
 	g.noticeTrail(p)
 	g.pickUp(p)
+	g.hornListen(p)
 	g.logOthers(p, g.hiddenText("kallare_ut_andra", "namn", p.Name, "region", g.data.region(p.X, p.Y, g.size)), "info")
 	g.announceMonster(p)
 }

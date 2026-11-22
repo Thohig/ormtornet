@@ -134,21 +134,15 @@
         ]
       },
       {
-        "id": "krita",
-        "tecken": "✎",
-        "bild": "krita",
-        "namn": "Krita",
-        "hittad": "en krita",
-        "kort": "kritan",
-        "beskrivning": "När du lämnar ett rum ritar du en pil åt det håll du går. Alla som kommer in ser den, men inte vem som ritade. Fem rum.",
+        "id": "benlur",
+        "tecken": "☊",
+        "bild": "benlur",
+        "namn": "Benluren",
+        "hittad": "en lur av ben",
+        "kort": "benluren",
+        "beskrivning": "Ett krökt horn av ben. Du hör om något andas i rummen bredvid, och ljud två rum bort som andra bara hör genom en vägg.",
         "vikt": 2,
-        "anvandningar": 5,
-        "verkar": [
-          "Innan du går ritar du en pil på golvet som pekar åt {riktning}."
-        ],
-        "slut": [
-          "Kritan är slut. Det sista dammet blåser bort."
-        ]
+        "anvandningar": 0
       },
       {
         "id": "flojt",
@@ -291,8 +285,9 @@
     "kniv_traff": [
       "Kniven träffar {varelse}."
     ],
-    "krita_ser": [
-      "Någon har ritat en pil med krita på golvet. Den pekar åt {riktning}."
+    "benlur_varelse": [
+      "Benluren fångar en andning bakom väggen åt {riktning}. Något väntar där.",
+      "Genom benluren hör du klor mot sten åt {riktning}."
     ],
     "timglas_alla": [
       "Ett ögonblick står allt stilla. Solen rör sig inte."

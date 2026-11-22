@@ -151,7 +151,7 @@ func TestSmokeFleesWithoutBlow(t *testing.T) {
 func TestItemActionsAreGone(t *testing.T) {
 	g, a, _ := startTwo(t)
 	p := a.player
-	g.give(p, "krita")
+	g.give(p, "kompass")
 	g.actPlayer(p, "f1E", 0)
 	if p.Action != "" {
 		t.Fatalf("draget med föremål togs emot: %q", p.Action)
@@ -182,9 +182,9 @@ func TestMirrorShowsANewRoom(t *testing.T) {
 	}
 }
 
-func TestKnifeChalkHourglass(t *testing.T) {
-	g, a, b := startTwo(t)
-	p, o := a.player, b.player
+func TestKnifeAndHourglass(t *testing.T) {
+	g, a, _ := startTwo(t)
+	p := a.player
 
 	openRoom(g, p, 4, 3)
 	g.monsters = append(g.monsters, &Monster{ID: 61, Type: g.data.Monster.Typer[0].ID, X: 4, Y: 3, HP: 1})
@@ -195,18 +195,6 @@ func TestKnifeChalkHourglass(t *testing.T) {
 		t.Fatal("kniven fällde inte varelsen")
 	}
 
-	openRoom(g, p, 4, 3)
-	g.give(p, "krita")
-	g.move(p, North, 0)
-	if r := g.rooms[3][4]; !r.hasChalk || r.chalk != North || p.has("krita").uses != 4 {
-		t.Fatal("ingen pil när vandraren gick norrut")
-	}
-	openRoom(g, o, 4, 4)
-	logs(b)
-	g.move(o, North, 0)
-	if !containsPart(logs(b), "krita") {
-		t.Fatal("Bo såg inte pilen")
-	}
 	p.items = nil
 
 	g.give(p, "timglas")
@@ -304,10 +292,9 @@ func TestLetterAndDeathDrop(t *testing.T) {
 	}
 }
 
-func TestMapMakerChalk(t *testing.T) {
-	g, p, _ := withClass(t, "kartritare")
-	g.give(p, "krita")
-	if p.has("krita").uses != 8 {
-		t.Fatalf("kritan har %d streck", p.has("krita").uses)
+func TestMapMakerHasPotion(t *testing.T) {
+	_, p, o := withClass(t, "kartritare")
+	if p.Potions != o.Potions+1 {
+		t.Fatalf("kartritaren har %d drycker, de andra %d", p.Potions, o.Potions)
 	}
 }

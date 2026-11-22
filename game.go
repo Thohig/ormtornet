@@ -208,10 +208,8 @@ type Room struct {
 	gold     []leftGold // guld som döda vandrare bar, åt den som kommer efter
 	fell     []string   // vandrarna som har dött här, för rumsblocket
 	goldBy   int        // vandraren som senast tog upp guld här, 0 om ingen
-	chalk    Dir        // pilen någon har ritat med krita
-	hasChalk bool
-	omen     string // det ett varsel har lovat: "falla:id", "varelse:id" eller "tomt"
-	Shut     bool   // porten har slutit sig (tornet förändras, nivå 4)
+	omen     string     // det ett varsel har lovat: "falla:id", "varelse:id" eller "tomt"
+	Shut     bool       // porten har slutit sig (tornet förändras, nivå 4)
 }
 
 // trail är spåren efter den som senast lämnade ett rum.
@@ -610,7 +608,6 @@ type roomView struct {
 	Mark  string   `json:"mark,omitempty"`
 	MarkI string   `json:"marki,omitempty"`  // fällans id, för modellen på kartan snett ovanifrån
 	S     bool     `json:"s,omitempty"`      // genomsökt
-	C     int      `json:"c"`                // pilen i krita, -1 om ingen
 	F     bool     `json:"f,omitempty"`      // här ligger ett föremål eller guld (bara för spårfinnaren)
 	Fell  bool     `json:"dod,omitempty"`    // här har någon dött (bara för kartritaren)
 	In    []string `json:"in,omitempty"`     // inredningen på kartan snett ovanifrån
@@ -833,15 +830,12 @@ func (g *Game) stateFor(me *Player) stateMsg {
 			if !g.knowsRoom(me, x, y) || (blind && (x != me.X || y != me.Y)) {
 				continue
 			}
-			rv := roomView{X: x, Y: y, D: r.Doors, K: r.Kind, Exit: -1, Mark: r.Mark, S: r.Searched, C: -1}
+			rv := roomView{X: x, Y: y, D: r.Doors, K: r.Kind, Exit: -1, Mark: r.Mark, S: r.Searched}
 			if t := g.data.trapByMark(r.Mark); t != nil {
 				rv.MarkI = t.ID
 			}
 			if t := g.data.roomType(r.TypeID); r.Kind == "rum" && t.Modell != nil {
 				rv.In = t.Modell.Inredning
-			}
-			if r.hasChalk {
-				rv.C = int(r.chalk)
 			}
 			rv.F = (len(r.items) > 0 || len(r.gold) > 0) && g.is(me, "sparfinnare")
 			rv.Fell = len(r.fell) > 0 && g.is(me, "kartritare")
@@ -1762,7 +1756,6 @@ func (g *Game) move(p *Player, d Dir, depth int) {
 	isNew := !target.Walked // ett rum som någon bara har sett in i är fortfarande nytt
 	g.reveal(nx, ny)
 	target.Walked = true
-	g.chalkLeaving(p, room, d)
 	p.X, p.Y = nx, ny
 	g.noteRoom(p)
 
@@ -1798,12 +1791,12 @@ func (g *Game) move(p *Player, d Dir, depth int) {
 	} else {
 		g.soundTo(p, "steg")
 		g.noticeTrail(p) // i ett nytt rum har ingen gått förut
-		g.noticeChalk(p)
 	}
 	// En fälla kan ha flyttat spelaren; varelsen gäller rummet spelaren står i nu.
 	if p.X == nx && p.Y == ny {
 		g.pickUp(p)
 		g.announceMonster(p)
+		g.hornListen(p)
 	}
 }
 

@@ -10,7 +10,6 @@ export interface Rum {
   name: string;
   mark?: string; // fällans tecken
   marki?: string; // fällans id i fallor.json, för modellen
-  c: number; // pilen i krita, -1 om ingen
   f?: boolean; // ett föremål eller guld ligger här (för spårfinnaren)
   dod?: boolean; // här har någon dött (för kartritaren)
   stangd?: boolean; // porten har slutit sig

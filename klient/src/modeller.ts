@@ -279,8 +279,9 @@ function fastPa(kropp: THREE.Group, id: string): void {
     case "kastkniv":
       satt(del(geo("kniv", () => new THREE.BoxGeometry(0.03, 0.2, 0.04)), lam(METALL)), -0.12, 0.6, 0.27, 0, 0, 0.5);
       break;
-    case "krita":
-      satt(del(geo("kritbit", () => new THREE.BoxGeometry(0.04, 0.09, 0.04)), lam(0xf4f2ea)), 0.08, 0.6, 0.28);
+    case "benlur":
+      // Ett krökt horn av ben vid höften.
+      satt(del(geo("benlur", () => new THREE.TorusGeometry(0.09, 0.025, 5, 10, Math.PI)), lam(0xe8e0cc)), -0.22, 0.62, 0.18, 0, 0, 0.6);
       break;
     case "flojt":
       satt(del(geo("flöjt", () => new THREE.CylinderGeometry(0.025, 0.025, 0.36, 6)), lam(TRA)), 0.08, 0.95, -0.27, 0, 0, 0.8);

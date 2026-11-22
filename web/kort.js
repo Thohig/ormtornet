@@ -307,10 +307,12 @@ ${[[46, 40, 9], [58, 30, 11], [42, 22, 8], [62, 14, 7]].map(([x, y, r]) => `<cir
 <path d="M12 90l12 -12" stroke="${BRUN}" stroke-width="5" stroke-linecap="round"/>
 <circle cx="12" cy="90" r="3.5" fill="none" stroke="${JARN}" stroke-width="1.6"/>`;
 
-  // Krita och märken på stenen.
-  BILDER.krita = () => `${vagg()}
-<path d="M24 30l10 10M34 30l-10 10M60 24v16M54 32h12M30 64q10 -8 20 0t20 0" fill="none" stroke="#f6f2e8" stroke-width="2.4" stroke-linecap="round"/>
-<path d="M52 78l26 -14 4 6 -26 14z" fill="#f6f2e8" stroke="${STEN}" stroke-width="1"/>`;
+  // Benluren: ett krökt horn av ben, och ljudet som kommer genom väggen.
+  BILDER.benlur = () => `${vagg()}
+<path d="M20 74q6 -34 40 -44l6 8q-28 10 -34 40z" fill="#e8e0cc" stroke="${BLAECK}" stroke-width="1.4"/>
+<path d="M60 30l6 8 10 -8 -6 -10z" fill="#d8ccb0" stroke="${BLAECK}" stroke-width="1.2"/>
+<path d="M28 66q6 -22 26 -30M34 70q4 -14 16 -22" fill="none" stroke="#b8ac90" stroke-width="1"/>
+<path d="M80 18q8 6 0 14M86 12q12 12 0 26" fill="none" stroke="#f6f2e8" stroke-width="2" stroke-linecap="round" opacity="0.8"/>`;
 
   // En sövande flöjt av ben.
   BILDER.flojt = () => `${ljus}

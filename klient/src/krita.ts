@@ -92,16 +92,6 @@ export function tecken(ch: string): THREE.Texture {
   });
 }
 
-// pil pekar åt höger, mot öster, och vrids dit den ska.
-export function pil(): THREE.Texture {
-  return spara("pil", () => {
-    const [c, x] = duk(128, 128);
-    streck(x, [[16, 64], [108, 64]], 10);
-    streck(x, [[78, 38], [110, 64], [78, 90]], 10);
-    return textur(grova(c));
-  });
-}
-
 export function ring(): THREE.Texture {
   return spara("ring", () => {
     const [c, x] = duk(256, 256);

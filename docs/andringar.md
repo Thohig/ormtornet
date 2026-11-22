@@ -6,6 +6,18 @@ eller leder tornet.
 
 ## 2026-11-22
 
+### Benluren i stället för kritan
+
+- Kritan är borttagen; pilarna på golvet var till liten hjälp.
+- Det nya föremålet **Benluren** (☊) verkar av sig själv och tar aldrig
+  slut. Kommer du in i ett rum hör du om en varelse står i något av
+  grannrummen, och åt vilket håll, men inte vad det är. Ljud som andra
+  bara hör från grannrummen, som strid, fällor, en port, en dryck och
+  skriket när någon dör, hör du också två rum bort, med väderstreck. Med
+  benluren hör även Spårfinnaren genom väggarna.
+- Kartritaren har en dryck med sig i stället för de tre extra strecken
+  med kritan.
+
 ### Viskningen
 
 - Viskar man bara ormens namn känner tornet igen det: "Väggarna rycker

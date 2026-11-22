@@ -232,7 +232,7 @@ den som dör och för alla i slutet (se slutet nedan och Strider):
      Ingen text på spelskärmen är dämpad; bara det som inte går att
      använda, som frånkopplade vandrare och tagna kort, är utgråat.
      I loggen säger ett tecken i marginalen vad slags rad det är (`!` fara,
-     `›` det du ser, `·` besked, `❝` tornet talar till dig, `✎` krita).
+     `›` det du ser, `·` besked, `❝` tornet talar till dig).
      Varje runda har en rubrik. På en bred skärm står loggen som text
      utan ruta nere till vänster på kartan, med en mörk skugga runt
      bokstäverna och en svag toning, så att kartan syns mellan raderna och
@@ -448,9 +448,9 @@ igen.
 | Legoknekten | ett liv extra, tar ingen skada när båda anfaller | hittar hälften så mycket guld när hen söker |
 | Tjuven | en fjärdedel mer guld ur kammaren, hittar oftare föremål, ingen märker när ormen rör sig vid hens näve, river hälften i strid mot vandrare | hittar aldrig drycker när hen söker |
 | Örtkvinnan | börjar med en dryck, en dryck ger tre liv, tål gift | tappar mycket mer skatt när ormen vaknar |
-| Kartritaren | ser genom dörrarna in i rummen bredvid, ser alla rum som någon har hittat och var någon har dött (ett x i hörnet), ger sin karta till den hen möter, hittar alltid en hemlig gång om det går, tre streck extra med kritan | undanmanöver lyckas aldrig |
+| Kartritaren | ser genom dörrarna in i rummen bredvid, ser alla rum som någon har hittat och var någon har dött (ett x i hörnet), ger sin karta till den hen möter, hittar alltid en hemlig gång om det går, har en dryck med sig | undanmanöver lyckas aldrig |
 | Ormtjusaren | ser i kammaren hur många vakna-kort som är kvar, ormen skadar inte hen när den vaknar | hittar hälften så mycket guld när hen söker |
-| Spårfinnaren | ser spår 6 rundor bakåt och vems de är, märker hälften av fällorna i tid, ser var föremål och guld ligger och vem som tog guldet | hör inget genom väggarna |
+| Spårfinnaren | ser spår 6 rundor bakåt och vems de är, märker hälften av fällorna i tid, ser var föremål och guld ligger och vem som tog guldet | hör inget genom väggarna, utom med benluren |
 | Lyktbäraren | ett liv extra, tål mörker, ser varelser i grannrummen | syns för andra redan från grannrummet |
 | Pilgrimen | ledtrådar dubbelt så ofta, en dryck när tornet förändras, känner igen förbannade föremål | slår aldrig andra vandrare, kan bara värja sig |
 
@@ -692,7 +692,7 @@ inte med till nästa torn. Krönikan berättar vem som hittade vad.
 | Rökpulver | flyr du ur en strid hinner varelsen inte slå (en gång) |
 | Spegelskärva | i ett nytt rum visar den ett rum bakom en dörr som du inte har sett: fällan, varelsen och vandrarna där (tre gånger) |
 | Kastkniv | dyker en varelse upp i ditt rum tar den en skada innan striden börjar (en gång) |
-| Krita | när du lämnar ett rum ritar du en pil åt det håll du går, som alla som kommer in ser (fem rum) |
+| Benluren | när du kommer in i ett rum hör du om en varelse står i ett grannrum, och åt vilket håll; ljud som andra bara hör från grannrummen hör du också två rum bort, med väderstreck |
 | Timglas av ben | när solen har tre handsbredder kvar står den still en runda för alla (en gång) |
 
 Förbannade föremål ser värdefulla ut och är värda guld när man kommer ut,

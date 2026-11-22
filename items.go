@@ -111,9 +111,6 @@ func (g *Game) give(p *Player, id string) bool {
 		return false
 	}
 	uses := t.Anvandningar
-	if id == "krita" && g.is(p, "kartritare") {
-		uses += int(g.classVal(p, "extra_krita", 3))
-	}
 	p.items = append(p.items, &Item{ID: id, uses: uses})
 	p.stats.items++
 	g.chronicle("kronika_foremal", "namn", p.Name, "foremal", t.found())
@@ -287,10 +284,10 @@ func (g *Game) itemIDs(p *Player) []string {
 	return out
 }
 
-// De fem föremål som förr användes med 1–3 verkar nu av sig själva, som de
+// Föremålen som förr användes med 1–3 verkar nu av sig själva, som de
 // andra: rökpulvret när vandraren lämnar en strid, spegelskärvan när hen
-// kommer in i ett nytt rum, kastkniven när en varelse dyker upp, kritan när
-// hen lämnar ett rum och timglaset när solen är nästan nere.
+// kommer in i ett nytt rum, kastkniven när en varelse dyker upp och
+// timglaset när solen är nästan nere. Kritan togs bort 2026-11-22.
 
 // neighbor ger rummet åt hållet d, om det finns en dörr dit.
 func (g *Game) neighbor(p *Player, d Dir) (int, int, bool) {
@@ -360,16 +357,6 @@ func (g *Game) knife(p *Player, m *Monster) {
 	}
 }
 
-// chalkLeaving: den som har krita ritar en pil åt det håll hen går när hen
-// lämnar ett rum.
-func (g *Game) chalkLeaving(p *Player, from *Room, d Dir) {
-	if p.has("krita") == nil || p.Dark > 0 || (from.hasChalk && from.chalk == d) {
-		return
-	}
-	g.useItem(p, "krita", "riktning", g.data.Riktningar[d])
-	from.chalk, from.hasChalk = d, true
-}
-
 // hourglass: när solen har tre handsbredder kvar vänds timglaset av sig
 // självt, hos den första som bär det, och solen står still en runda.
 func (g *Game) hourglass() {
@@ -382,14 +369,6 @@ func (g *Game) hourglass() {
 			g.logOthers(p, g.data.Text("timglas_alla"), "info")
 			return
 		}
-	}
-}
-
-// noticeChalk: den som kommer in i ett rum med en pil i krita ser den.
-func (g *Game) noticeChalk(p *Player) {
-	r := &g.rooms[p.Y][p.X]
-	if r.hasChalk && p.Dark == 0 {
-		g.logTo(p, g.data.Text("krita_ser", "riktning", g.data.Riktningar[r.chalk]), "info")
 	}
 }
 

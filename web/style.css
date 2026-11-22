@@ -843,7 +843,6 @@ body.touch #helpBtn { display: none; }
 #log .rubrik::before { content: "▸"; }
 #log .info::before { content: "·"; }
 #log .rost::before { content: "❝"; }
-#log .krita::before { content: "✎"; color: #f2f0e8; }
 #log .dim { color: var(--fg); }
 #log .info { color: var(--info); }
 #log .syn { color: var(--hi); }

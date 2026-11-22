@@ -44,13 +44,13 @@ func (g *Game) announceDeath(p *Player) {
 		}
 		heard := heardDeath{x: -1, y: -1, region: region, coins: coins, name: p.Name, round: g.round}
 		var text string
-		d, next := g.nextTo(o, p.X, p.Y)
+		dir, hears := g.hearsFrom(o, p.X, p.Y)
 		switch {
 		case o.Status == statusIn && o.Cellar == 0 && o.X == p.X && o.Y == p.Y:
 			text = g.data.Text("dod_andra", "namn", p.Name)
 			heard.x, heard.y = p.X, p.Y
-		case next && !g.is(o, "sparfinnare"):
-			text = g.data.Text("ljud_dod", "namn", p.Name, "riktning", g.data.Riktningar[d])
+		case hears:
+			text = g.data.Text("ljud_dod", "namn", p.Name, "riktning", dir)
 			heard.x, heard.y = p.X, p.Y
 		default:
 			text = g.data.Text("dod_andra_region", "namn", p.Name, "region", region)

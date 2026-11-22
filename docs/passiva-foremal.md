@@ -2,7 +2,8 @@
 
 Förslag 2026-11-22. Allt är byggt, som det står här: kritan blev passiv,
 spegelskärvan visar ett osett grannrum och timglaset verkar vid tre
-handsbredder kvar.
+handsbredder kvar. Kritan togs senare bort och ersattes av benluren (se
+[andringar.md](andringar.md)).
 
 ## Vad som önskas
 

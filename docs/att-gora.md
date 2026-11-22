@@ -95,9 +95,12 @@ En riktig kväll behövs för att se:
   Chrome? Inte provat med ett riktigt klick.
 - Föremålen som verkar av sig själva (2026-11-22,
   [passiva-foremal.md](passiva-foremal.md)): märker man när rökpulvret,
-  spegelskärvan, kastkniven, kritan och timglaset verkar? Blir kritans
-  fem pilar för många, och liknar spegelskärvan Kartritaren för mycket?
-  Bara provat med tester.
+  spegelskärvan, kastkniven och timglaset verkar? Liknar spegelskärvan
+  Kartritaren för mycket? Bara provat med tester.
+- Benluren (2026-11-22), som ersatte kritan: hör man varelserna i
+  grannrummen i rumsblocket, och är ljuden två rum bort till hjälp eller
+  bara brus? Kartritaren har en dryck med sig i stället för kritans extra
+  streck; räcker det?
 - Stycken och färre kommandon (2026-11-22,
   [samlat-forslag.md](samlat-forslag.md)): går det att förstå rummen när
   de bara beskrivs, och känner man igen spåren efter fällorna? Hörs

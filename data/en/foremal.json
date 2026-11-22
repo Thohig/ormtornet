@@ -97,17 +97,11 @@
         ]
       },
       {
-        "id": "krita",
-        "namn": "A piece of chalk",
-        "hittad": "a piece of chalk",
-        "kort": "the chalk",
-        "beskrivning": "When you leave a room you draw an arrow the way you go. Everyone who comes in sees it, but not who drew it. Five rooms.",
-        "verkar": [
-          "Before you go, you draw an arrow on the floor pointing to the {riktning}."
-        ],
-        "slut": [
-          "The chalk is used up. The last of the dust blows away."
-        ]
+        "id": "benlur",
+        "namn": "The bone horn",
+        "hittad": "a bone horn",
+        "kort": "the bone horn",
+        "beskrivning": "A curved horn of bone. You hear whether something is breathing in the rooms next door, and sounds two rooms away that others only hear through one wall."
       },
       {
         "id": "flojt",
@@ -222,8 +216,9 @@
     "kniv_traff": [
       "The knife hits {varelse}."
     ],
-    "krita_ser": [
-      "Someone has drawn an arrow in chalk on the floor. It points to the {riktning}."
+    "benlur_varelse": [
+      "The bone horn catches breathing behind the wall to the {riktning}. Something is waiting there.",
+      "Through the bone horn you hear claws on stone to the {riktning}."
     ],
     "timglas_alla": [
       "For a moment everything stands still. The sun does not move."
