@@ -27,6 +27,9 @@ Rättat efter en timmes provspel (se
   längre "−1 lives".
 - Slutet: den som laddar om sidan, eller vars telefon somnar, står kvar i
   resultatet och får tillbaka sin vandring när hen kommer tillbaka.
+- Den som laddar om sidan mitt i vandringen får beskrivningen av rummet
+  hen står i igen, och svaret på en viskning hamnar under rundan som står
+  i bild.
 - Minikorten i loggen på kartan går att klicka på, och efter ett klick
   väljer mellanslag och Enter draget igen i stället för att öppna kortet.
 
