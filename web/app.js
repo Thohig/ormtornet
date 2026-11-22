@@ -1378,6 +1378,9 @@ function openMini(e) {
   if (!m) return false;
   e.preventDefault();
   e.stopPropagation();
+  // Efter ett musklick ska minikortet inte ha kvar fokus: då skulle
+  // mellanslag (vänta) och Enter öppna kortet igen i stället för att spela.
+  if (e.type === "click" && e.detail > 0) m.blur();
   try {
     showCardPopup(JSON.parse(m.dataset.kort));
   } catch {
