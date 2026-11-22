@@ -687,9 +687,11 @@ body.touch #helpBtn { display: none; }
   cursor: pointer;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
 }
-/* Rundorna: en rubrik som skiljer dem åt. En hopfälld runda är bara
-   rubriken, med rummen man kom till. */
+/* Rundorna: en rubrik som skiljer dem åt. Den senaste rundan fyller hela
+   loggens höjd, så att de äldre ligger under strecket "tidigare" och bara
+   syns när man rullar ner. */
 #log .round { margin-top: 6px; }
+#log .round:first-child { min-height: 100%; margin-top: 0; }
 #log .roundhead {
   display: block;
   width: 100%;
@@ -703,16 +705,20 @@ body.touch #helpBtn { display: none; }
   font-size: 11px;
   letter-spacing: 0.12em;
   text-align: left;
-  cursor: pointer;
 }
-#log .roundhead:hover { color: var(--hi); }
 #log .round:first-child .roundhead { border-top: 0; }
-/* Den aktuella rundan skiljs från de äldre med lite luft och en ljusare
-   linje. */
 #log .round:first-child + .round { margin-top: 10px; }
-#log .round:first-child + .round > .roundhead { border-top-color: var(--dim); }
-#log .folded .lines { display: none; }
-#log .folded .roundhead { margin-bottom: 0; }
+#log .round:first-child + .round::before {
+  content: attr(data-earlier);
+  display: block;
+  margin-bottom: 6px;
+  padding-top: 4px;
+  border-top: 1px solid var(--dim);
+  color: var(--chalk);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-align: right;
+}
 #log .appear { animation: logfade 0.35s ease-out; }
 @keyframes logfade { from { opacity: 0; transform: translateY(3px); } }
 
@@ -731,8 +737,6 @@ body.touch #helpBtn { display: none; }
 #log .info::before { content: "·"; }
 #log .rost::before { content: "❝"; }
 #log .krita::before { content: "✎"; color: #f2f0e8; }
-#log .sam::before { content: "≡"; color: var(--chalk); }
-#log .sam { color: var(--chalk); }
 #log .dim { color: var(--fg); }
 #log .info { color: var(--info); }
 #log .syn { color: var(--hi); }
@@ -1016,6 +1020,7 @@ body.touch .card .num { display: none; }
 }
 .chronRound .varn { color: var(--warn); }
 .chronRound .gold { color: var(--hi); }
+.chronRound .here { color: var(--info); font-style: italic; margin-bottom: 2px; }
 #chronStats { color: var(--chalk); margin: 18px 0; font-size: 13px; }
 #chronButtons { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
 #chronButtons button, .chronBack {

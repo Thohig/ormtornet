@@ -128,7 +128,6 @@
 
     "_rundkort": "Kortet: rundans sammanfattning på kartan och raden i loggen.",
     "rundkort_rubrik": "Runda {runda}",
-    "rundkort_logg": "Runda {runda}: {rader}.",
 
     "_slut": "Rutan på kartan i slutet, och när den här datorn leder tornet.",
     "slut_rubrik": "VANDRINGEN ÄR SLUT",
@@ -150,6 +149,7 @@
     "vandring_rubrik": "Din vandring",
     "vandring_pagar": "Vandringen pågår: runda {runda}, solen står {sol} handsbredder över horisonten. {inne} kvar i tornet, {ute} har gått ut.",
     "vandring_runda": "Runda {runda}",
+    "vandring_runda_rum": "Runda {runda} · {rum}",
     "vandring_tom": "Inget hände som tornet minns.",
     "vandring_karta": "Visa kartan",
     "vandring_visa": "Din vandring",
@@ -222,8 +222,7 @@
     "logg_fore": "Före vandringen",
     "logg_slut": "Slutet",
     "logg_runda": "Runda {runda}",
-    "logg_rader_en": "{n} rad",
-    "logg_rader_flera": "{n} rader",
+    "logg_tidigare": "tidigare ↓",
 
     "_anslutning": "Förbindelsen, längst till höger i översta raden.",
     "anslutning_bruten": "förbindelsen bröts, försöker igen",

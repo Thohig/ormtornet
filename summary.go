@@ -22,8 +22,7 @@ type before struct {
 
 type summaryLine struct {
 	Text string `json:"text"`
-	C    string `json:"c,omitempty"`    // "varn", "gold" eller tomt
-	Kort string `json:"kort,omitempty"` // den korta formen för loggens rad
+	C    string `json:"c,omitempty"` // "varn", "gold" eller tomt
 	// Ormkort är id:t på ormkortet vandraren drog, för bilden bredvid raden.
 	Ormkort string `json:"ormkort,omitempty"`
 }
@@ -74,8 +73,14 @@ func (g *Game) summarize(snap map[*Player]before, wakesBefore int) {
 			continue // en datorspelare behöver ingen krönika på skärmen
 		}
 		lines := g.summaryFor(p, b, g.wakes > wakesBefore)
+		room := p.roundRoom
+		p.roundRoom = nil
 		if len(lines) > 0 {
-			p.journal = append(p.journal, journeyRound{Round: g.round, Lines: lines})
+			jr := journeyRound{Round: g.round, Lines: lines}
+			if room != nil {
+				jr.Room, jr.Here = room.Namn, room.Har
+			}
+			p.journal = append(p.journal, jr)
 		}
 		if p.client != nil {
 			g.send(p.client, summaryMsg{T: "runda", Round: g.round, Lines: lines})
@@ -86,7 +91,7 @@ func (g *Game) summarize(snap map[*Player]before, wakesBefore int) {
 func (g *Game) summaryFor(p *Player, b before, woke bool) []summaryLine {
 	var danger, rest []summaryLine
 	t := func(key string, vars ...string) summaryLine {
-		return summaryLine{Text: g.data.Text(key, vars...), Kort: g.data.Text(key+"_kort", vars...)}
+		return summaryLine{Text: g.data.Text(key, vars...)}
 	}
 	add := func(l summaryLine, c string) {
 		l.C = c

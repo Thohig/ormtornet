@@ -239,6 +239,7 @@ type Player struct {
 	Status     string
 	Seen       map[string]bool // fällor och varelser spelaren har mött
 	told       told            // vad vandraren senast fick veta om sitt rum (here.go)
+	roundRoom  *roomMsg        // rumsblocket den här rundan, för Din vandring
 	known      [][]bool        // rum vandraren själv har varit i, det enda den ser på kartan
 	bot        *botBrain       // satt för datorstyrda vandrare
 

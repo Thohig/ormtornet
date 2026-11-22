@@ -59,8 +59,9 @@ Så här skiljer vi på sakerna när användaren ger instruktioner:
   - **sömnmätaren**: hur djupt ormen sover, i panelen Nu i skattkammaren,
   - **panelen Nu**: draget, striden och vad som väntar. Den syns bara när
     den har något att säga. Panelen Vandrare togs bort 2026-11-22,
-  - **loggen**: raderna i högerkolumnen, grupperade per runda. Överst i
-    rundan står **rumsblocket**: rummets namn, beskrivningen när rummet
+  - **loggen**: raderna i högerkolumnen, grupperade per runda. Bara den
+    senaste rundan står i bild; de äldre ligger under strecket "tidigare".
+    Överst i rundan står **rumsblocket**: rummets namn, beskrivningen när rummet
     är nytt och vad som finns där (`here.go`, `har_` i
     `data/texter.json`). Teckenförklaringen togs bort 2026-11-22.
 - **tornets dator**: datorn som kör servern.

@@ -134,6 +134,8 @@ func (g *Game) statsLine(p *Player) string {
 type journeyRound struct {
 	Round int           `json:"runda"`
 	Lines []summaryLine `json:"rader"`
+	Room  string        `json:"rum,omitempty"` // rummet från rumsblocket, när ett kom den rundan
+	Here  string        `json:"har,omitempty"` // vad som fanns där
 }
 
 // journeyView är vandrarens egen vandring, som den som har dött ser på en

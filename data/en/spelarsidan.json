@@ -117,7 +117,6 @@
     "zoom_allt": "All",
 
     "rundkort_rubrik": "Round {runda}",
-    "rundkort_logg": "Round {runda}: {rader}.",
 
     "slut_rubrik": "THE WANDERING IS OVER",
     "slut_rubrik_solen": "THE SUN HAS SET",
@@ -136,6 +135,7 @@
     "vandring_rubrik": "Your journey",
     "vandring_pagar": "The walk goes on: round {runda}, the sun is {sol} hand-breadths above the horizon. {inne} still in the tower, {ute} gone out.",
     "vandring_runda": "Round {runda}",
+    "vandring_runda_rum": "Round {runda} · {rum}",
     "vandring_tom": "Nothing happened that the tower remembers.",
     "vandring_karta": "Show the map",
     "vandring_visa": "Your journey",
@@ -204,8 +204,7 @@
     "logg_fore": "Before the wandering",
     "logg_slut": "The end",
     "logg_runda": "Round {runda}",
-    "logg_rader_en": "{n} line",
-    "logg_rader_flera": "{n} lines",
+    "logg_tidigare": "earlier ↓",
 
     "anslutning_bruten": "connection lost, trying again",
     "natet_letar": "Looking for the tower …",

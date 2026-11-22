@@ -58,6 +58,7 @@ func (g *Game) tellRoom(p *Player) {
 		msg.Text = p.told.desc
 	}
 	g.send(p.client, msg)
+	p.roundRoom = &msg
 	p.told = told{ok: true, x: p.X, y: p.Y, har: har}
 }
 

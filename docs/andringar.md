@@ -6,6 +6,16 @@ eller leder tornet.
 
 ## 2026-11-22
 
+### Bara den senaste rundan i loggen
+
+- Den senaste rundan fyller hela loggen. De äldre ligger under strecket
+  "tidigare ↓" och syns bara när du rullar ner. Rundorna fälls inte
+  längre ihop.
+- Den korta raden med `≡` efter rundans kort är borta; kortet på kartan
+  finns kvar.
+- Din vandring visar rummet bredvid rundan ("Runda 4 · Brunnsrummet") och
+  vad som fanns där.
+
 ### Rummet i loggen, utan teckenförklaring
 
 - Överst i varje runda står ett rumsblock: rummets namn, beskrivningen

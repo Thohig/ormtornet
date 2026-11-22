@@ -21,8 +21,8 @@ function show(id) {
 // fram tecken för tecken, resten kommer en hel rad i taget i lugn takt.
 // Ligger loggen efter skrivs rader från förbigångna rundor ikapp fort. Har
 // man rullat ner för att läsa ligger texten kvar där, och "↑ nya rader" tar
-// en tillbaka upp. När en ny runda börjar fälls rundorna före den förra
-// ihop till en rad som går att klicka upp.
+// en tillbaka upp. Bara den senaste rundan står i bild; de äldre ligger
+// under strecket "tidigare" och syns när man rullar ner.
 const Log = (() => {
   const queue = [];
   let busy = false;
@@ -40,12 +40,6 @@ const Log = (() => {
     if (!state || state.phase === "lobby" || state.phase === "klassval") return "lobby";
     if (state.phase === "slut") return "slut";
     return "r" + state.round;
-  }
-
-  function label(key) {
-    if (key === "lobby") return t("logg_fore");
-    if (key === "slut") return t("logg_slut");
-    return t("logg_runda", { runda: key.slice(1) });
   }
 
   function push(text, cls) {
@@ -88,7 +82,6 @@ const Log = (() => {
       if (old) old.replaceWith(block);
       else list.prepend(block);
     });
-    if (g.classList.contains("folded")) summarize(g);
     follow();
   }
 
@@ -110,57 +103,36 @@ const Log = (() => {
   }
 
   // group ger gruppen för key, och gör en ny överst när rundan har bytts.
+  // Den översta rundan fyller hela loggens höjd, så att de äldre hamnar
+  // under strecket "tidigare" och bara syns när man rullar ner.
   function group(key) {
     const first = box().firstElementChild;
     if (first && first.dataset.key === key) return first;
     const g = document.createElement("section");
     g.className = "round";
     g.dataset.key = key;
-    const head = document.createElement("button");
-    head.type = "button";
+    const head = document.createElement("div");
     head.className = "roundhead";
-    head.addEventListener("click", () => {
-      g.classList.toggle("folded");
-      summarize(g);
-    });
     const lines = document.createElement("div");
     lines.className = "lines";
     g.append(head, lines);
+    label(g);
     keep(() => box().prepend(g));
-    summarize(g);
-    fold();
+    trim();
+    follow();
     return g;
   }
 
-  // summarize skriver gruppens rubrik: rundan, och när den är hopfälld
-  // rummen man kom till och hur många rader den har.
-  function summarize(g) {
-    const head = g.querySelector(".roundhead");
-    const lines = g.querySelectorAll(".lines > div");
-    const folded = g.classList.contains("folded");
-    let text = (folded ? "▸ " : "▾ ") + label(g.dataset.key);
-    if (folded) {
-      const rooms = [...g.querySelectorAll(".lines > .roomblock > .roomname")].map((d) => d.textContent);
-      if (rooms.length) text += " · " + rooms.join(", ");
-      text += " · " + t(lines.length === 1 ? "logg_rader_en" : "logg_rader_flera", { n: lines.length });
-    }
-    head.textContent = text;
-    head.setAttribute("aria-expanded", String(!folded));
-  }
-
-  // fold fäller ihop alla grupper utom de två senaste. Det väntar tills man
-  // står överst, så att texten man läser inte flyttar sig.
-  function fold() {
-    if (!stick) return;
-    const groups = [...box().querySelectorAll(".round")];
-    groups.slice(2).forEach((g) => {
-      if (g.dataset.auto) return;
-      g.dataset.auto = "1";
-      g.classList.add("folded");
-      summarize(g);
-    });
-    trim();
-    follow();
+  // label skriver gruppens rubrik och strecket som står ovanför den när den
+  // inte längre är den översta.
+  function label(g) {
+    const key = g.dataset.key;
+    let text;
+    if (key === "lobby") text = t("logg_fore");
+    else if (key === "slut") text = t("logg_slut");
+    else text = t("logg_runda", { runda: key.slice(1) });
+    g.querySelector(".roundhead").textContent = text;
+    g.dataset.earlier = t("logg_tidigare");
   }
 
   function trim() {
@@ -230,7 +202,6 @@ const Log = (() => {
     const line = document.createElement("div");
     if (item.cls) line.className = item.cls;
     keep(() => list.appendChild(line));
-    if (g.classList.contains("folded")) summarize(g);
     // Rader från en runda som redan är förbi kommer ikapp fort, så att
     // loggen inte hamnar efter. Den aktuella rundan kommer i lugn takt.
     const behind = queue.some((q) => q.key !== item.key);
@@ -263,21 +234,18 @@ const Log = (() => {
 
   function init() {
     box().addEventListener("scroll", () => {
-      const was = stick;
       stick = atTop();
       if (stick) $("logNew").hidden = true;
-      if (stick && !was) fold();
     });
     $("logNew").addEventListener("click", () => {
       stick = true;
-      fold();
       follow();
     });
   }
 
   // relabel skriver om gruppernas rubriker, när språket har bytts.
   function relabel() {
-    box().querySelectorAll(".round").forEach(summarize);
+    box().querySelectorAll(".round").forEach(label);
   }
 
   return { push, room, init, relabel };
@@ -619,8 +587,14 @@ function renderChron() {
     const d = document.createElement("div");
     d.className = "chronRound";
     const h = document.createElement("h3");
-    h.textContent = t("vandring_runda", { runda: r.runda });
+    h.textContent = r.rum ? t("vandring_runda_rum", { runda: r.runda, rum: r.rum }) : t("vandring_runda", { runda: r.runda });
     d.appendChild(h);
+    if (r.har) {
+      const here = document.createElement("div");
+      here.className = "here";
+      here.textContent = r.har;
+      d.appendChild(here);
+    }
     r.rader.forEach((l) => {
       const p = document.createElement("div");
       p.textContent = l.text;
@@ -911,7 +885,7 @@ function renderNow(me) {
 }
 
 // Rundans sammanfattning: ett kort över kartan med vad som hände dig, det
-// farliga först, och en kort rad i loggen. Kortet försvinner när du väljer
+// farliga först. Kortet försvinner när du väljer
 // nästa drag, efter en stund, eller vid ett klick.
 const CARD_MS = 7000;
 let cardTimer = null;
@@ -919,8 +893,6 @@ let cardAction = "";
 function showRoundCard(msg) {
   const lines = msg.lines || [];
   if (!lines.length) return;
-  const short = lines.filter((l) => l.kort).map((l) => l.kort);
-  if (short.length) Log.push(t("rundkort_logg", { runda: msg.round, rader: short.join(", ") }), "sam");
   const card = $("roundcard");
   card.innerHTML = "";
   const h = document.createElement("div");

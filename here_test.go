@@ -81,3 +81,18 @@ func TestRoomBlockWaitsInTheDark(t *testing.T) {
 		t.Fatalf("i mörkret ska inget block komma, fick %+v", got)
 	}
 }
+
+func TestJourneyRoundHasRoom(t *testing.T) {
+	g, a, b := startTwo(t)
+	pa := a.player
+	putInRoom(g, pa, 4, 4)
+	putInRoom(g, b.player, 2, 2)
+	step(g, a, b, actWait, actWait)
+	if len(pa.journal) == 0 {
+		t.Fatal("ingen runda i vandringen")
+	}
+	last := pa.journal[len(pa.journal)-1]
+	if last.Room == "" || last.Here == "" {
+		t.Fatalf("rundan i vandringen saknar rummet: %+v", last)
+	}
+}

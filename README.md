@@ -240,21 +240,19 @@ den som dör och för alla i slutet (se slutet nedan och Strider):
      Ingen text på spelskärmen är dämpad; bara det som inte går att
      använda, som frånkopplade vandrare och tagna kort, är utgråat.
      I loggen säger ett tecken i marginalen vad slags rad det är (`!` fara,
-     `›` det du ser, `▸` rummets namn, `·` besked, `❝` tornet talar till dig,
-     `✎` krita, `≡` rundans sammanfattning). Varje runda har en rubrik, och den senaste rundan står
-     överst. Inom en runda står raderna i den ordning de hände. Den första
+     `›` det du ser, `·` besked, `❝` tornet talar till dig, `✎` krita).
+     Varje runda har en rubrik, och den senaste rundan står överst och
+     fyller hela loggens höjd. De äldre rundorna ligger under strecket
+     "tidigare ↓" och syns bara när man rullar ner. Inom en runda står raderna i den ordning de hände. Den första
      raden i en runda skrivs fram tecken för tecken, resten kommer en hel
      rad i taget. Har man rullat ner för att läsa ligger texten kvar där,
-     och "↑ nya rader" tar en tillbaka upp. Rundorna före den förra fälls
-     ihop till en rad med rummen man kom till, och ett klick fäller upp dem
-     igen. Ligger loggen efter
+     och "↑ nya rader" tar en tillbaka upp. Ligger loggen efter
      skrivs rader från rundor som redan är förbi ikapp fort. Efter varje
      runda kommer ett kort nere på kartan med vad som hände dig, det
      farliga först: vart du gick, liv och guld du vann eller förlorade,
      föremål du hittade, gift, mörker, en varelse i rummet och om ormen
      vaknade. Kortet försvinner när du väljer nästa drag, efter sju
-     sekunder eller vid ett klick, och en kort rad med `≡` står kvar i
-     loggen, till exempel "Runda 12: österut, −1 liv, +10 guld". Texterna
+     sekunder eller vid ett klick. Texterna
      står i `data/texter.json` under `sam_`,
    - **slutet**: en egen skärm med resultaten, epilogen, krönikan över hela
      vandringen och den egna vandringen runda för runda. Visa kartan går
@@ -552,7 +550,8 @@ gallgasten ofta).
 Varelserna sköts alltid av tornet. Den som dör väntar rundan inte på.
 
 Den som dör får en egen skärm, **Din vandring**: rundans kort runda för
-runda, hur hen dog och sina siffror, och hur många som är kvar i tornet och
+runda, med rummet och vad som fanns där när hen kom till ett nytt rum eller
+något ändrades, hur hen dog och sina siffror, och hur många som är kvar i tornet och
 har gått ut. Var de andra är och vad de gör står inte där, så att den döda
 inte kan avslöja något för de levande. Visa kartan går tillbaka till
 spelet, och Din vandring i panelen Nu hit igen.
