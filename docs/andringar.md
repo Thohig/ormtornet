@@ -29,7 +29,9 @@ eller leder tornet.
   med tillnamnen översatta i `data/en/namn.json`.
 - Sidan kommer ihåg namnet, i fliken och i webbläsaren. Den som laddar om
   sidan eller tappar kontakten får samma namn och sin vandrare tillbaka,
-  också till nästa torn. En andra flik i samma webbläsare får ett eget
+  också till nästa torn. Efter 12 timmar utan spel glöms namnet, så att
+  varje kväll ger ett nytt namn. Ett namn som skrevs in för hand i en
+  tidigare version glöms direkt. En andra flik i samma webbläsare får ett eget
   namn.
 - Släpper tornet inte in en, som när det är fullt eller inte svarar, står
   felet på en egen skärm med en knapp tillbaka.

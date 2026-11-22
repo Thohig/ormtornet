@@ -164,7 +164,8 @@ Från [foremal-och-hemligheten.md](foremal-och-hemligheten.md):
 Från [slumpade-namn.md](slumpade-namn.md):
 
 - Knappen Nytt namn i lobbyn, som lottar ett nytt namn (steg 3). Valdes
-  bort 2026-11-22, men kan tas upp igen efter ett provspel.
+  bort 2026-11-22; i stället glöms namnet efter 12 timmar. Kan tas upp
+  igen efter ett provspel.
 
 Från [isometrisk.md](isometrisk.md):
 

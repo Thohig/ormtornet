@@ -7,6 +7,28 @@ let ws = null;
 let state = null;
 let myName = "";
 let savedName = ""; // namnet som senast sparades i fliken och webbläsaren
+
+// Namnet tornet gav sparas med tiden det senast användes, i fliken och i
+// webbläsaren. Efter 12 timmar glöms det, så att varje kväll ger ett nytt
+// namn men samma kväll behåller man sitt.
+const NAME_KEY = "ormtornet-namn";
+const NAME_MS = 12 * 60 * 60 * 1000;
+function loadName() {
+  for (const store of [sessionStorage, localStorage]) {
+    try {
+      const v = JSON.parse(store.getItem(NAME_KEY) || "null");
+      if (v && typeof v.namn === "string" && Date.now() - v.tid < NAME_MS) return v.namn;
+    } catch {}
+  }
+  return "";
+}
+function saveName(name) {
+  const v = JSON.stringify({ namn: name, tid: Date.now() });
+  try {
+    sessionStorage.setItem(NAME_KEY, v);
+    localStorage.setItem(NAME_KEY, v);
+  } catch {}
+}
 let joined = false;
 let mapReady = false;
 let mapSize = 0; // tornets storlek när kartan ritades upp
@@ -269,6 +291,7 @@ function send(obj) {
 function connect() {
   const proto = location.protocol === "https:" ? "wss:" : "ws:";
   ws = new WebSocket(proto + "//" + location.host + "/ws");
+  savedName = ""; // spara namnet igen, med ny tid, när tornet svarar
   ws.onopen = () => {
     $("conn").textContent = "";
     send({ t: "join", name: myName });
@@ -314,10 +337,7 @@ function handle(msg) {
         const me = msg.players.find((p) => p.id === msg.you);
         if (me && me.name !== savedName) {
           myName = savedName = me.name;
-          try {
-            sessionStorage.setItem("ormtornet-namn", myName);
-            localStorage.setItem("ormtornet-namn", myName);
-          } catch {}
+          saveName(myName);
         }
       }
       showPhase();
@@ -1620,11 +1640,10 @@ const Intro = (() => {
       return;
     }
     // Tornet ger namnet. Sidan skickar det namn tornet gav förra gången,
-    // så att den som kommer tillbaka får sin vandrare.
+    // inom 12 timmar, så att den som kommer tillbaka får sin vandrare.
     // Fliken kommer ihåg sitt eget namn, så att två flikar i samma
     // webbläsare inte byter vandrare med varandra.
-    myName = "";
-    try { myName = sessionStorage.getItem("ormtornet-namn") || localStorage.getItem("ormtornet-namn") || ""; } catch {}
+    myName = loadName();
     connect();
   }
 

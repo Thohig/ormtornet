@@ -628,7 +628,8 @@ Namn, texter, hur ofta de dyker upp och hur länge de håller står i
 `sok` → `vikter` → `foremal` i `fallor.json`.
 
 Om du laddar om sidan får du tillbaka din vandrare: sidan kommer ihåg namnet
-tornet gav dig, i fliken och i webbläsaren.
+tornet gav dig, i fliken och i webbläsaren. Efter 12 timmar utan spel glöms
+namnet, så att varje kväll ger ett nytt.
 Det gäller också under klassvalet: tornet väntar på dig tills tiden är slut,
 och är du inte tillbaka då följer du med som frånvarande och kan komma in
 under vandringen.
