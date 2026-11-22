@@ -499,7 +499,8 @@ står de som "(dator)".
 - Hör de mynt rassla när någon dör går de ibland dit, till rummet om de
   stod bredvid och annars till den del av tornet skriket kom från, men
   bara med minst halva livet kvar och gott om tid. Hur gärna står som
-  `guldlust` i `data/ai.json`. De ger upp efter tio rundor.
+  `guldlust` i `data/ai.json`. De ger upp efter tio rundor. På väg ut
+  tar de en omväg på högst två steg till ett rum de vet var det ligger.
 - Det finns tre personligheter som turas om: en djärv, en försiktig och
   en plundrare.
 - Ledtrådarna om tornets hemlighet går bara till människor.

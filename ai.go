@@ -335,6 +335,14 @@ func (g *Game) botDecide(p *Player) (string, int) {
 	mustLeave := exitDist >= 0 && st.Sun <= exitDist+pers.Marginal
 	hurt := st.HP <= g.botLifeLimit(pers.GaHemVidLiv, st.MaxHP)
 	if exitDist >= 0 && (mustLeave || p.Treasure >= pers.SkattMal || hurt) {
+		// En kort omväg till guldet där någon dog, om rummet ligger nära
+		// och solen räcker till både omvägen och vägen ut.
+		const detour = 2
+		if !mustLeave && !hurt && st.Sun > exitDist+2*detour+pers.Marginal {
+			if d, ok := g.botTowardGold(p, bm, &st, pers, true, detour); ok {
+				return dirLetter[d], 0
+			}
+		}
 		return dirLetter[exitDir], 0
 	}
 
@@ -376,7 +384,7 @@ func (g *Game) botDecide(p *Player) (string, int) {
 	}
 
 	// Guldet där någon dog, om skriket lät som mynt.
-	if d, ok := g.botTowardGold(p, bm, &st, pers, plenty); ok {
+	if d, ok := g.botTowardGold(p, bm, &st, pers, plenty, 0); ok {
 		return dirLetter[d], 0
 	}
 

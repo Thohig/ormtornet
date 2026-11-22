@@ -135,7 +135,10 @@ const botChaseRounds = 10
 // den stod bredvid, annars tornets del), om mynt rasslade, och rummen den
 // har sett. Den går bara med gott om liv och tid, och personligheten
 // avgör hur gärna (guldlust i data/ai.json).
-func (g *Game) botTowardGold(p *Player, bm *botMap, st *stateMsg, pers *Personality, plenty bool) (Dir, bool) {
+//
+// maxDist > 0 är en omväg på vägen ut: då går den bara till ett känt rum
+// högst så många steg bort.
+func (g *Game) botTowardGold(p *Player, bm *botMap, st *stateMsg, pers *Personality, plenty bool, maxDist int) (Dir, bool) {
 	here := pos{p.X, p.Y}
 	room := &g.rooms[p.Y][p.X]
 	var target *heardDeath
@@ -168,13 +171,16 @@ func (g *Game) botTowardGold(p *Player, bm *botMap, st *stateMsg, pers *Personal
 		return 0, false
 	}
 	want := func(q pos) bool {
+		if maxDist > 0 {
+			return q.x == target.x && q.y == target.y && bm.dist[q] <= maxDist
+		}
 		if target.x >= 0 {
 			return q.x == target.x && q.y == target.y
 		}
 		return !target.checked[q] && g.data.region(q.x, q.y, g.size) == target.region
 	}
 	d, ok := bm.toward(want, func(pos) int { return 0 })
-	if !ok {
+	if !ok && maxDist == 0 {
 		target.chase = -1 // ingen väg dit som den känner till
 	}
 	return d, ok
