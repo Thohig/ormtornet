@@ -353,6 +353,11 @@ func (g *Game) botDecide(p *Player) (string, int) {
 		if st.Sleep >= 0 && len(pers.TaVidSomn) > 0 {
 			chance = pers.TaVidSomn[min(st.Sleep, len(pers.TaVidSomn)-1)]
 		}
+		// Ormtjusaren ser vakna-korten: utan något kvar i leken kan ormen
+		// inte vakna av nästa näve.
+		if st.WakeCards != nil && *st.WakeCards == 0 {
+			chance = 1
+		}
 		if st.HP <= g.data.Ormen.Skada {
 			chance = 0
 		}

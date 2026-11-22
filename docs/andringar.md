@@ -6,6 +6,17 @@ eller leder tornet.
 
 ## 2026-11-22
 
+### AI-spelarna och simuleringen
+
+- AI-spelarna har en tredje personlighet, plundraren, som söker igenom
+  rummen och helst låter kammaren vara. Den var den säkraste strategin i
+  simuleringen.
+- Ormtjusaren som AI tar alltid en näve när inga vakna-kort finns kvar.
+- Ormen skadar inte Ormtjusaren när den vaknar, i stället för en skada
+  mindre.
+- Simuleringen (`-simulera`) visar andelen som vann och guld per
+  vandrare, för varje personlighet och för varje klass och personlighet.
+
 ### Klasserna och den grönaktiga skepnaden jämnas ut
 
 Efter en simulering av sex strategier i 1000 vandringar (se

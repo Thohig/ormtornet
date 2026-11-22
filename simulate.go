@@ -27,6 +27,7 @@ type simWalker struct {
 	kills    int
 	traps    int
 	takes    int
+	won      bool // hade mest skatt av dem som kom ut
 }
 
 // simResult är en hel vandring.
@@ -74,11 +75,17 @@ func simulateOne(d *Data, cfg Config, n int, seed uint64) (simResult, error) {
 		}
 	}
 	res := simResult{rounds: g.round, wakes: g.wakes, size: g.size}
+	winners := map[string]bool{}
+	for _, r := range g.results() {
+		if r.Winner {
+			winners[r.Name] = true
+		}
+	}
 	for _, p := range g.players {
 		if p == nil {
 			continue
 		}
-		w := simWalker{status: p.Status, treasure: p.Treasure,
+		w := simWalker{won: winners[p.Name], status: p.Status, treasure: p.Treasure,
 			kills: p.stats.kills, traps: p.stats.traps, takes: p.stats.takes}
 		if c := g.classOf(p); c != nil {
 			w.class = c.Kort
@@ -180,11 +187,14 @@ func runSimulation(d *Data, cfg Config, count, bots int, seed uint64, out io.Wri
 type simTally struct {
 	walkers, rich, poor, dead, lost int
 	gold                            int // skatt hos dem som kom ut
-	kills, traps                    int
+	kills, traps, wins              int
 }
 
 func (t *simTally) add(w simWalker) {
 	t.walkers++
+	if w.won {
+		t.wins++
+	}
 	t.kills += w.kills
 	t.traps += w.traps
 	switch w.status {
@@ -328,10 +338,34 @@ func writeSimSummary(out io.Writer, results []simResult) {
 		}
 		writeSimRow(out, k, byClass[k], extra)
 	}
+	for _, what := range []string{"guld per vandrare", "vann"} {
+		fmt.Fprintln(out)
+		fmt.Fprintln(out, "Klass och strategi: "+what)
+		fmt.Fprintf(out, "  %-14s", "")
+		for _, pn := range persNames {
+			fmt.Fprintf(out, " %13s", pn)
+		}
+		fmt.Fprintln(out)
+		for _, k := range names {
+			fmt.Fprintf(out, "  %-14s", k)
+			for _, pn := range persNames {
+				t := byClassPers[[2]string{k, pn}]
+				if t == nil {
+					t = &simTally{}
+				}
+				v := average(t.gold, t.walkers)
+				if what == "vann" {
+					v = percent(t.wins, t.walkers)
+				}
+				fmt.Fprintf(out, " %13s", v)
+			}
+			fmt.Fprintln(out)
+		}
+	}
 }
 
 func writeSimHeader(out io.Writer, extra []string) {
-	fmt.Fprintf(out, "  %-14s %8s %10s %6s %6s %8s", "", "vandrare", "med skatt", "dog", "skatt", "varelser")
+	fmt.Fprintf(out, "  %-14s %8s %10s %6s %6s %8s %6s %8s", "", "vandrare", "med skatt", "dog", "skatt", "varelser", "vann", "guld/v")
 	for _, e := range extra {
 		fmt.Fprintf(out, " %10s", e)
 	}
@@ -339,9 +373,9 @@ func writeSimHeader(out io.Writer, extra []string) {
 }
 
 func writeSimRow(out io.Writer, name string, t *simTally, extra []string) {
-	fmt.Fprintf(out, "  %-14s %8d %10s %6s %6s %8s", name, t.walkers,
+	fmt.Fprintf(out, "  %-14s %8d %10s %6s %6s %8s %6s %8s", name, t.walkers,
 		percent(t.rich, t.walkers), percent(t.dead, t.walkers),
-		average(t.gold, t.rich), average(t.kills, t.walkers))
+		average(t.gold, t.rich), average(t.kills, t.walkers), percent(t.wins, t.walkers), average(t.gold, t.walkers))
 	for _, e := range extra {
 		fmt.Fprintf(out, " %10s", e)
 	}

@@ -29,6 +29,19 @@
         "drick_vid_liv": 3,
         "stridslust": 0.25,
         "klasser": ["ortkvinna", "kartritare", "sparfinnare", "lyktbarare"]
+      },
+      {
+        "id": "plundrare",
+        "namn": "plundrare",
+        "marginal": 3,
+        "skatt_mal": 90,
+        "ta_vid_somn": [0.3, 0.0, 0.0],
+        "sok_chans": 0.7,
+        "fly_marginal": 1,
+        "ga_hem_vid_liv": 3,
+        "drick_vid_liv": 3,
+        "stridslust": 0.2,
+        "klasser": ["kartritare", "sparfinnare", "tjuv", "pilgrim"]
       }
     ],
 

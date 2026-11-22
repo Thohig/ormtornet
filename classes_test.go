@@ -294,7 +294,7 @@ func TestOrmtjusareLessDamage(t *testing.T) {
 	g.reveal(g.center(), g.center())
 	hp := pa.HP
 	g.wakeSerpent()
-	if want := hp - max(0, g.data.Ormen.Skada-1); pa.HP != want {
+	if want := hp - max(0, g.data.Ormen.Skada-int(g.classVal(pa, "ormskada", 0))); pa.HP != want {
 		t.Fatalf("liv %d, ville ha %d", pa.HP, want)
 	}
 }

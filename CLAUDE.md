@@ -224,5 +224,8 @@ Skriv dit när ett steg är klart.
 - [docs/spelkort.md](docs/spelkort.md): spelkort för alla situationer,
   med spelkortet som ersätter rundans kort och ormkortet. Allt är byggt;
   bilderna ritas i `web/kort.js` och syns i `verktyg/kortbilder.html`.
+- [docs/balans-2026-11-22.md](docs/balans-2026-11-22.md): simuleringen av
+  sex strategier, och hur klasserna, den grönaktiga skepnaden och
+  AI-spelarna justerades efter den. Allt är byggt.
 - [docs/slumpade-namn.md](docs/slumpade-namn.md): tornet ger namnen och
   namnrutan är borta. Steg 1–2 är byggda; Nytt namn i lobbyn valdes bort.

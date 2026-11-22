@@ -3,7 +3,8 @@
   "ai": {
     "personligheter": [
       { "id": "djarv", "namn": "bold" },
-      { "id": "forsiktig", "namn": "cautious" }
+      { "id": "forsiktig", "namn": "cautious" },
+      { "id": "plundrare", "namn": "plunderer" }
     ],
 
     "ansluter": [

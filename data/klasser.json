@@ -67,11 +67,11 @@
       "namn": "Ormtjusaren",
       "kort": "ormtjusaren",
       "beskrivning": "Har spelat för huggormar på marknader och aldrig blivit biten. Nästan aldrig.",
-      "styrka": "Ser i kammaren hur många vakna-kort som finns kvar i leken. Ormen gör en skada mindre.",
+      "styrka": "Ser i kammaren hur många vakna-kort som finns kvar i leken. Ormen skadar inte henom när den vaknar.",
       "svaghet": "Har aldrig lärt sig leta: hittar bara hälften så mycket guld när hen söker.",
       "liv": 0,
       "drycker": 0,
-      "varden": { "ormskada": 1, "sok_guld": 0.5 }
+      "varden": { "ormskada": 2, "sok_guld": 0.5 }
     },
     {
       "id": "sparfinnare",

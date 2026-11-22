@@ -48,9 +48,14 @@ func TestSimDealsClassesEvenly(t *testing.T) {
 	}
 	d.AI.BetanketidMs = []int{3600000, 3600000}
 	k := len(d.Klasser)
+	// Lika många AI-spelare för varje personlighet, så att de turas om jämnt.
+	bots := len(d.AI.Personligheter)
+	for bots*2 <= maxPlayers {
+		bots *= 2
+	}
 	count := map[[2]string]int{}
 	for seed := uint64(1); seed <= uint64(2*k); seed++ {
-		r, err := simulateOne(d, Config{Reveal: true, SunMax: 40, Classes: true}, 4, seed)
+		r, err := simulateOne(d, Config{Reveal: true, SunMax: 40, Classes: true}, bots, seed)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -58,7 +63,7 @@ func TestSimDealsClassesEvenly(t *testing.T) {
 			count[[2]string{w.class, w.pers}]++
 		}
 	}
-	want := 2 * k * 4 / (k * len(d.AI.Personligheter))
+	want := 2 * k * bots / (k * len(d.AI.Personligheter))
 	for _, c := range d.Klasser {
 		for _, p := range d.AI.Personligheter {
 			if n := count[[2]string{c.Kort, p.Namn}]; n != want {

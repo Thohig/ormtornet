@@ -38,7 +38,7 @@
       "namn": "The Snake Charmer",
       "kort": "the Snake Charmer",
       "beskrivning": "Has played for adders at markets and never been bitten. Almost never.",
-      "styrka": "Sees in the chamber how many waking cards are left in the deck. The serpent does one wound less.",
+      "styrka": "Sees in the chamber how many waking cards are left in the deck. The serpent does not wound them when it wakes.",
       "svaghet": "Never learned to search: finds only half as much gold when searching."
     },
     {
