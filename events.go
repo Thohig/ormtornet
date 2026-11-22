@@ -118,6 +118,7 @@ func (g *Game) trigger(p *Player, t *Trap, depth int) {
 		}
 	case "klocka":
 		g.sun -= max(1, t.Sol)
+		g.chronicle("kronika_klocka", "namn", p.Name)
 	case "morker":
 		if g.is(p, "lyktbarare") {
 			g.logTo(p, g.data.Text("klass_lyktbarare_morker"), "info")

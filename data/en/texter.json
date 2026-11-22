@@ -534,10 +534,37 @@
       "Round {runda}. {text}"
     ],
     "kronika_vandrare": [
-      "{namn}: the chamber {naver} times, {kammarguld} gold · traps {fallor} · creatures felled {varelser} · rooms searched {sokt}"
+      "{namn}: {delar}"
     ],
-    "kronika_vandrare_strid": [
-      " · blows on wanderers {traffar} · stolen {stulet} gold"
+    "kronika_vandrare_inget": [
+      "{namn}: nothing to count."
+    ],
+    "kronika_del_kammaren": [
+      "the chamber {antal} times, {guld} gold"
+    ],
+    "kronika_del_varelser": [
+      "creatures felled {antal}"
+    ],
+    "kronika_del_fallor": [
+      "traps {antal}"
+    ],
+    "kronika_del_sokt": [
+      "rooms searched {antal}"
+    ],
+    "kronika_del_traffar": [
+      "blows on wanderers {antal}"
+    ],
+    "kronika_del_stulet": [
+      "stolen {antal} gold"
+    ],
+    "kronika_dod_guld": [
+      "{guld} gold was lost."
+    ],
+    "kronika_kammaren": [
+      "{namn} reached the treasure chamber first."
+    ],
+    "kronika_klocka": [
+      "The bell tolled as {namn} walked under it, and the sun sank faster."
     ],
     "kronika_ut": [
       "{namn} went out with {guld} gold."

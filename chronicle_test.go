@@ -41,12 +41,17 @@ func TestChronicle(t *testing.T) {
 		"Krönikan över vandringen",
 		"Runda 2. Bo dog av pilar ur små hål i väggen.",
 		"Runda 2. Alva gick ut med " + strconv.Itoa(gold) + " guld.",
-		"Alva: kammaren 1 ggr, " + strconv.Itoa(gold) + " guld · fällor 0",
-		"Bo: kammaren 0 ggr, 0 guld · fällor 1",
+		"Runda 1. Alva nådde skattkammaren först.",
+		"Alva: kammaren 1 ggr, " + strconv.Itoa(gold) + " guld",
+		"Bo: fällor 1",
 	} {
 		if !strings.Contains(all, want) {
 			t.Errorf("krönikan saknar %q:\n%s", want, all)
 		}
+	}
+	// Nollor står inte med.
+	if strings.Contains(all, " 0") {
+		t.Errorf("krönikan har nollor:\n%s", all)
 	}
 	// Krönikan står på skärmen, inte i loggen, och epilogen följer med.
 	if strings.Contains(strings.Join(logs(a), "\n"), "Krönikan över vandringen") {
@@ -95,5 +100,18 @@ func TestJourneyForTheDead(t *testing.T) {
 	}
 	if len(pa.journal) == 0 {
 		t.Error("Alvas runda med sökandet skrevs inte ner")
+	}
+}
+
+// Den som dör med guld får guldet som gick förlorat på samma rad.
+func TestChronicleDeathLosesGold(t *testing.T) {
+	g, a, _ := startTwo(t)
+	p := a.player
+	p.Treasure = 45
+	p.hurt("falla", "pilar ur små hål i väggen")
+	g.kill(p)
+	last := g.chron[len(g.chron)-1].text
+	if want := g.data.Text("kronika_dod_guld", "guld", "45"); !strings.HasSuffix(last, want) {
+		t.Fatalf("väntade %q sist i %q", want, last)
 	}
 }

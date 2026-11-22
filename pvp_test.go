@@ -168,11 +168,11 @@ func TestPvPStatsLine(t *testing.T) {
 	if alva.stats.hits != 1 || alva.stats.stolen != 10 {
 		t.Fatalf("Alva: %d träffar, %d stulet", alva.stats.hits, alva.stats.stolen)
 	}
-	strid := g.data.Text("kronika_vandrare_strid", "traffar", "1", "stulet", "10")
+	strid := g.data.Text("kronika_del_traffar", "antal", "1") + " · " + g.data.Text("kronika_del_stulet", "antal", "10")
 	if !strings.HasSuffix(g.statsLine(alva), strid) {
 		t.Fatalf("Alvas rad saknar striderna: %q", g.statsLine(alva))
 	}
-	if strings.Contains(g.statsLine(bo), strid) {
+	if strings.Contains(g.statsLine(bo), g.data.Text("kronika_del_traffar", "antal", "1")) {
 		t.Fatalf("Bos rad har strider fast Bo inte slog: %q", g.statsLine(bo))
 	}
 }

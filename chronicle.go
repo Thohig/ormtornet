@@ -68,6 +68,11 @@ func (g *Game) chronicleDeath(p *Player) {
 		key = "kronika_dod"
 	}
 	g.chronicle(key, "namn", p.Name, "vad", p.hurtWhat)
+	if p.Treasure > 0 {
+		// Guldet den döda bar går förlorat; det hör till samma händelse.
+		e := &g.chron[len(g.chron)-1]
+		e.text += " " + g.data.Text("kronika_dod_guld", "guld", strconv.Itoa(p.Treasure))
+	}
 	p.death = g.data.Text("kronika_rad", "runda", strconv.Itoa(g.round), "text", g.chron[len(g.chron)-1].text)
 }
 
@@ -116,19 +121,26 @@ func (g *Game) chronicleLines() []chronLine {
 	return lines
 }
 
-// statsLine är vandrarens rad med siffror i krönikan.
+// statsLine är vandrarens rad med siffror i krönikan. Bara det som inte är
+// noll står med, så att raden blir kort.
 func (g *Game) statsLine(p *Player) string {
 	s := p.stats
-	line := g.data.Text("kronika_vandrare", "namn", p.Name,
-		"naver", strconv.Itoa(s.takes), "kammarguld", strconv.Itoa(s.takeGold),
-		"fallor", strconv.Itoa(s.traps), "varelser", strconv.Itoa(s.kills),
-		"sokt", strconv.Itoa(s.searched))
-	// Striderna mot andra vandrare står bara med hos den som har slagits.
-	if s.hits > 0 {
-		line += g.data.Text("kronika_vandrare_strid",
-			"traffar", strconv.Itoa(s.hits), "stulet", strconv.Itoa(s.stolen))
+	var parts []string
+	part := func(n int, key string, vars ...string) {
+		if n > 0 {
+			parts = append(parts, g.data.Text(key, append([]string{"antal", strconv.Itoa(n)}, vars...)...))
+		}
 	}
-	return line
+	part(s.takes, "kronika_del_kammaren", "guld", strconv.Itoa(s.takeGold))
+	part(s.kills, "kronika_del_varelser")
+	part(s.traps, "kronika_del_fallor")
+	part(s.searched, "kronika_del_sokt")
+	part(s.hits, "kronika_del_traffar")
+	part(s.stolen, "kronika_del_stulet")
+	if len(parts) == 0 {
+		return g.data.Text("kronika_vandrare_inget", "namn", p.Name)
+	}
+	return g.data.Text("kronika_vandrare", "namn", p.Name, "delar", strings.Join(parts, " · "))
 }
 
 // journeyRound är det som hände vandraren under en runda: rundans kort.
