@@ -515,11 +515,22 @@ ${laga(50, 60, 16)}
     },
     // mini ger ett litet kort. Ormkorten har egna små bilder i CSS:en;
     // de andra får sin bild i liten skala.
+    // Med en rubrik går kortet att klicka på för att se det stort (app.js
+    // lyssnar efter .minikort[data-kort]).
     mini(motiv, opt = {}) {
       const s = document.createElement("span");
-      s.setAttribute("aria-hidden", "true");
+      if (opt.rubrik) {
+        s.dataset.kort = JSON.stringify({ bild: motiv, rubrik: opt.rubrik, text: opt.text || "", svag: opt.svag, fallen: opt.fallen, forbannad: opt.forbannad });
+        s.setAttribute("role", "button");
+        s.setAttribute("aria-label", opt.rubrik);
+        s.title = opt.rubrik;
+        s.tabIndex = 0;
+      } else {
+        s.setAttribute("aria-hidden", "true");
+      }
       if (ORM.includes(motiv)) {
         s.className = "minikort " + motiv;
+        if (opt.rubrik) s.innerHTML = this.bild(motiv); // syns när kortet är stort nog (krönikan)
       } else {
         s.className = "minikort bild";
         s.innerHTML = this.bild(motiv, opt);

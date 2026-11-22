@@ -6,6 +6,16 @@ eller leder tornet.
 
 ## 2026-11-22
 
+### Minikorten går att se
+
+- I krönikan i slutet och i Din vandring är rundans kort större, med
+  rubriken under.
+- Ett klick på ett minikort, i loggen, på spelkortet eller i krönikan,
+  visar kortet stort med sin text. Ett klick till eller Escape stänger
+  det.
+- På raden med siffror står ormkorten ihopslagna med namn och antal:
+  "Ormen sover ×3 · Ormen rör sig".
+
 ### AI-spelarna och simuleringen
 
 - AI-spelarna har en tredje personlighet, plundraren, som söker igenom

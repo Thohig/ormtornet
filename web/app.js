@@ -752,19 +752,21 @@ function renderChron() {
       s.textContent = " · " + t("vandring_tornet");
       h.appendChild(s);
     }
-    // Rundans spelkort som minikort, med rubriken när musen är över.
-    if (r.kort && r.kort.length) {
-      const row = document.createElement("span");
-      row.className = "kortrad";
-      r.kort.forEach((c) => {
-        const m = Kort.mini(c.bild, c);
-        m.title = c.rubrik;
-        row.appendChild(m);
-      });
-      row.setAttribute("aria-label", r.kort.map((c) => c.rubrik).join(", "));
-      h.appendChild(row);
-    }
     d.appendChild(h);
+    // Rundans spelkort, stora nog att se, med rubriken under. Ett klick
+    // visar kortet stort med sin text.
+    if (r.kort && r.kort.length) {
+      const row = document.createElement("div");
+      row.className = "kortlek";
+      r.kort.forEach((c) => {
+        const f = document.createElement("figure");
+        const cap = document.createElement("figcaption");
+        cap.textContent = c.rubrik;
+        f.append(Kort.mini(c.bild, c), cap);
+        row.appendChild(f);
+      });
+      d.appendChild(row);
+    }
     // Rummet som i loggen: beskrivningen och det man såg, och det man
     // hörde under.
     if (r.rum || r.har) {
@@ -1260,16 +1262,23 @@ function miniCard(motiv) {
   return Kort.mini(motiv);
 }
 
-// cardRow är en rad små ormkort, med namnen när musen är över dem.
+// cardRow är ormkorten vandraren drog, ihopslagna per kort: ett kort och
+// namnet med antalet, "Ormen sover ×4". Ett klick på kortet visar det stort.
 function cardRow(list) {
   const r = document.createElement("span");
   r.className = "kortrad";
+  const groups = [];
   list.forEach((c) => {
-    const m = miniCard(c.id);
-    m.title = c.namn;
-    r.appendChild(m);
+    const g = groups.find((x) => x.id === c.id);
+    if (g) g.n++;
+    else groups.push({ id: c.id, namn: c.namn, n: 1 });
   });
-  r.setAttribute("aria-label", list.map((c) => c.namn).join(", "));
+  groups.forEach((g) => {
+    const s = document.createElement("span");
+    s.className = "kortgrupp";
+    s.append(Kort.mini(g.id, { rubrik: g.namn }), g.namn + (g.n > 1 ? " ×" + g.n : ""));
+    r.appendChild(s);
+  });
   return r;
 }
 
@@ -1327,6 +1336,41 @@ function showWakeCard(msg) {
   bigTimer = setTimeout(hideBigCard, BIG_MS);
 }
 $("storkort").addEventListener("click", hideBigCard);
+
+// showCardPopup visar ett kort stort över hela sidan, när man klickar på
+// ett minikort i loggen, på spelkortet eller i krönikan. Ett klick eller
+// Escape stänger det.
+function showCardPopup(c) {
+  const box = $("kortvisning");
+  box.hidden = false;
+  buildCard($("kortvisningKort"), c);
+}
+function hideCardPopup() {
+  $("kortvisning").hidden = true;
+}
+$("kortvisning").addEventListener("click", hideCardPopup);
+function openMini(e) {
+  const m = e.target.closest && e.target.closest(".minikort[data-kort]");
+  if (!m) return false;
+  e.preventDefault();
+  e.stopPropagation();
+  try {
+    showCardPopup(JSON.parse(m.dataset.kort));
+  } catch {
+    return false;
+  }
+  return true;
+}
+document.addEventListener("click", openMini, true);
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape" && !$("kortvisning").hidden) {
+    e.preventDefault();
+    e.stopPropagation();
+    hideCardPopup();
+    return;
+  }
+  if ((e.key === "Enter" || e.key === " ") && openMini(e)) return;
+}, true);
 
 // showClassCard visar det egna klasskortet stort mitt på kartan: bilden,
 // beskrivningen, styrkan och svagheten.

@@ -266,7 +266,7 @@ func (g *Game) hurtBy(p *Player) string {
 // addJourney lägger rundan till Din vandring. Rader med en orsak (why)
 // får den texten. En runda där inget hände, eller där vandraren bara stod
 // kvar, slås ihop med en sådan runda just före: "Runda 10–12".
-// Rundans spelkort står som minikort, utan sin text.
+// Rundans spelkort står som minikort, med sin text för den som klickar.
 func (g *Game) addJourney(p *Player, lines []summaryLine, room *roomMsg, tower bool, cards ...gameCard) {
 	quiet := room == nil && len(cards) == 0
 	for _, l := range lines {
@@ -299,9 +299,6 @@ func (g *Game) addJourney(p *Player, lines []summaryLine, room *roomMsg, tower b
 	if room != nil {
 		jr.Room, jr.Here, jr.Heard = room.Text, room.Har, room.Hor
 	}
-	for _, c := range cards {
-		c.Text = ""
-		jr.Cards = append(jr.Cards, c)
-	}
+	jr.Cards = append(jr.Cards, cards...)
 	p.journal = append(p.journal, jr)
 }

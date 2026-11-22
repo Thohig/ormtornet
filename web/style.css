@@ -1450,5 +1450,38 @@ body.touch .card .num { display: none; }
 }
 .minikort.bild { width: 12px; height: 16px; background: #e9dcc0; overflow: hidden; }
 .minikort.bild svg { display: block; width: 100%; height: 100%; }
+/* Ett minikort med rubrik går att klicka på och visas då stort
+   (showCardPopup i app.js); det ritar sin bild i stället för tecknet. */
+.minikort[data-kort] { cursor: pointer; overflow: hidden; background: #e9dcc0; border-color: #8a6a3a; }
+.minikort[data-kort]::after { content: none; }
+.minikort svg { display: block; width: 100%; height: 100%; }
+.minikort[data-kort]:focus-visible { outline: 2px solid var(--hi); outline-offset: 1px; }
+#kortvisning {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.6);
+  cursor: pointer;
+}
+#kortvisning[hidden] { display: none; }
+#kortvisningKort { position: relative; width: 230px; perspective: 800px; }
+#kortvisningKort .ok-namn { font-size: 13px; }
+#kortvisningKort .ok-bild { width: 160px; height: 140px; }
+#kortvisningKort .ok-text { font-size: 11.5px; }
+/* Krönikan: rundans kort stora nog att se, med rubriken under, och
+   ormkorten ihopslagna med namn och antal. */
+#chron .kortlek { display: flex; flex-wrap: wrap; gap: 10px; margin: 6px 0 8px; }
+#chron .kortlek figure { margin: 0; width: 76px; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+#chron .kortlek .minikort { width: 48px; height: 64px; margin: 0; border-radius: 4px; }
+#chron .kortlek figcaption { font-size: 10.5px; line-height: 1.25; text-align: center; color: var(--fg); }
+.kortgrupp { display: inline-flex; align-items: center; gap: 6px; margin-right: 14px; white-space: nowrap; }
+.kortgrupp .minikort { width: 22px; height: 30px; margin: 0; }
+@media (max-width: 700px) {
+  #chron .kortlek figure { width: 64px; }
+  #chron .kortlek .minikort { width: 40px; height: 54px; }
+}
 .kortrad { display: inline-flex; flex-wrap: wrap; gap: 2px; margin-left: 8px; vertical-align: middle; }
 .kortrad .minikort { margin-right: 0; }

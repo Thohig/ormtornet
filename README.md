@@ -607,8 +607,10 @@ och varelser har sin korta beskrivning som rubrik, aldrig namnet.
 - **Klasskortet**: klassen står uppe till höger på kartan som ett litet
   klasskort. Ett klick visar det stort, med styrkan och svagheten.
 - **Minikorten**: en rad i loggen som hör till ett kort får ett litet
-  kort framför sig, och varje runda i Din vandring har rundans kort som
-  små kort bredvid rubriken.
+  kort framför sig, och varje runda i Din vandring har rundans kort, stora
+  nog att se, med rubriken under. Ett klick på ett minikort, eller Enter,
+  visar kortet stort med sin text; ett klick till eller Escape stänger
+  det. På raden med siffror står ormkorten ihopslagna, "Ormen sover ×3".
 
 ### Skattkammaren och ormen
 

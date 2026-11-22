@@ -233,7 +233,7 @@ func TestBigCardsInside(t *testing.T) {
 	}
 }
 
-// Din vandring får rundans spelkort som minikort, utan texten, och en
+// Din vandring får rundans spelkort som minikort, med texten, och en
 // runda med bara ett kort slås inte ihop med de tysta rundorna.
 func TestJourneyCards(t *testing.T) {
 	g, a, _ := startTwo(t)
@@ -246,7 +246,7 @@ func TestJourneyCards(t *testing.T) {
 	g.summarize(snap, g.wakes)
 	v := g.journeyOf(p)
 	last := v.Rounds[len(v.Rounds)-1]
-	if len(last.Cards) != 1 || last.Cards[0].Bild != "pilar" || last.Cards[0].Text != "" || last.quiet {
+	if len(last.Cards) != 1 || last.Cards[0].Bild != "pilar" || last.Cards[0].Text == "" || last.quiet {
 		t.Fatalf("Din vandring: %+v", last)
 	}
 }
