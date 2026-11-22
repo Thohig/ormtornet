@@ -19,12 +19,8 @@
     overflow-wrap: anywhere;
     margin: 6px 0;
   }
-  /* På GitHub Pages är adressen länken med rumskoden, och en QR-kod för
-     telefonerna står under den. */
+  /* På GitHub Pages är adressen länken med rumskoden. */
   body.sida #addr { font-size: clamp(12px, 1.8vw, 16px); }
-  #qr { width: 180px; max-width: 60vw; margin: 10px 0; background: #fff; padding: 6px; line-height: 0; }
-  #qr svg { width: 100%; height: auto; }
-  #qr[hidden] { display: none; }
   #ips { color: var(--fg); }
   #ips span { color: var(--fg); }
   #copied { color: var(--info); min-height: 1.2em; }
@@ -106,7 +102,6 @@
     <h2 data-t="bjud_in"></h2>
     <p class="full" data-t="bjud_in_text"></p>
     <div id="addr">…</div>
-    <div id="qr" class="full" role="img" hidden></div>
     <p id="ips" class="full"></p>
     <div class="buttons">
       <button class="btn main" id="copyInvite" type="button" data-t="kopiera_inbjudan"></button>
@@ -239,19 +234,6 @@ if (onPages) {
   $("help").hidden = true;
   $("helpPages").hidden = false;
   applyTexts();
-  const s = document.createElement("script");
-  s.src = "rtc/rtc.js" + window.ORMTORNET_V;
-  s.onload = () => view && showQR(view.addrs.name);
-  document.head.appendChild(s);
-}
-
-let qrFor = "";
-function showQR(link) {
-  if (!onPages || !window.TornetRTC || !link || qrFor === link) return;
-  qrFor = link;
-  $("qr").innerHTML = TornetRTC.qr(link);
-  $("qr").setAttribute("aria-label", t("qr_om"));
-  $("qr").hidden = false;
 }
 
 function inviteText(v) {
@@ -324,7 +306,6 @@ function tag(p, phase) {
 
 function render(v) {
   $("addr").textContent = v.addrs.name;
-  showQR(v.addrs.name);
   const ips = $("ips");
   ips.textContent = "";
   if (v.addrs.ips.length) {

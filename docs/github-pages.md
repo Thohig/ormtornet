@@ -92,9 +92,9 @@ flik eller på telefonen som vilken spelare som helst.
   Go-programmet gör det ingenting, och resten av skripten märker ingen
   skillnad.
 - **WebRTC** (`web/rtc/rtc.js`, byggt från `klient/src/rtc.ts` med Vite
-  tillsammans med Trystero och en QR-kodsgenerator). Det laddas bara av
-  skalet, av värdsidan för QR-koden och av spelarsidan när länken har en
-  rumskod.
+  tillsammans med Trystero). Det laddas bara av skalet och av spelarsidan
+  när länken har en rumskod. Värdsidan visade också en QR-kod, men den
+  togs bort 2026-11-22.
 - **Värdsidan** får under Bjud in länken och QR-koden med rumskoden i
   stället för tornets adress på nätet.
 - **Nya texter** för länken, för när tornet inte hittas, varningen om att

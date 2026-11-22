@@ -6,6 +6,12 @@ eller leder tornet.
 
 ## 2026-11-22
 
+### Bara länken på värdsidan
+
+- Värdsidan på GitHub Pages visar under Bjud in bara länken, utan
+  QR-kod. Spelarna får länken genom Kopiera inbjudan eller Kopiera
+  länken.
+
 ### Tornet ger namnen
 
 - Ingen skriver längre sitt namn. "Gå in i tornet" leder direkt till

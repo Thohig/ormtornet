@@ -32,7 +32,6 @@ const skript = {
     banner: [
       { namn: "Trystero", url: "https://github.com/dmotz/trystero", licens: "node_modules/@trystero-p2p/core/LICENSE" },
       { namn: "noble-secp256k1", url: "https://github.com/paulmillr/noble-secp256k1", licens: "node_modules/@noble/secp256k1/LICENSE" },
-      { namn: "QR Code Generator", url: "https://github.com/kazuhikoarase/qrcode-generator", licens: "node_modules/qrcode-generator/dist/qrcode.mjs", rader: 15 },
     ],
   },
 };

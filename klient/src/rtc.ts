@@ -6,7 +6,6 @@
 // rum med rumskoden och nyckeln från länken. Trystero hittar varandra genom
 // publika Nostr-reläer och kopplar sedan webbläsarna direkt med WebRTC.
 // Nyckeln krypterar utbytet, så reläerna ser aldrig spelet.
-import qrcode from "qrcode-generator";
 import { joinRoom } from "trystero";
 
 // Ett meddelande är samma slags objekt som går över BroadcastChannel i
@@ -60,12 +59,4 @@ export function slump(langd: number): string {
   const bytes = new Uint8Array(langd);
   crypto.getRandomValues(bytes);
   return Array.from(bytes, (b) => tecken[b % tecken.length]).join("");
-}
-
-// QR-koden för länken, som SVG.
-export function qr(text: string): string {
-  const q = qrcode(0, "M");
-  q.addData(text);
-  q.make();
-  return q.createSvgTag({ cellSize: 4, margin: 2, scalable: true });
 }

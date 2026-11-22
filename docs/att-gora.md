@@ -96,8 +96,8 @@ En riktig kväll behövs för att se:
 - Spela från en länk (2026-11-21, [github-pages.md](github-pages.md),
   steg 5): kommer alla in från mobilnät och andra nät, eller behövs TURN?
   Håller tornets flik när den har legat i bakgrunden mer än fem minuter?
-  Kommer den som tappar anslutningen tillbaka? Går QR-koden att läsa från
-  skärmen, och hur lång tid tar det att ladda tornet (9 MB)?
+  Kommer den som tappar anslutningen tillbaka? Hur lång tid tar det att
+  ladda tornet (9 MB)? Saknar någon QR-koden, som togs bort 2026-11-22?
 
 - Engelskan (2026-11-19): är tonen rätt, särskilt i introt, ledtrådarna
   och avslöjandet? Är det bättre med "the Silent Chapel" än "The Silent

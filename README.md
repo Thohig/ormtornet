@@ -85,8 +85,8 @@ Flaggor:
 Utan Go och utan att vara på samma wifi: spelledaren öppnar
 <https://thohig.github.io/ormtornet/> i Chrome eller Safari på en dator.
 Tornet körs då i den fliken, med samma spel som programmet. Värdsidan
-visas i samma flik och har under Bjud in en länk och en QR-kod. Spelarna
-öppnar länken eller läser QR-koden, var de än är, och ansluter direkt till
+visas i samma flik och har under Bjud in en länk. Spelarna
+öppnar länken, var de än är, och ansluter direkt till
 spelledarens webbläsare. Den som har länken kommer in, så ge den bara
 till dem som ska spela.
 
@@ -874,7 +874,7 @@ Beskrivningarna för rummen ligger under nivåerna `"1"` till `"4"`.
   - `natet.js` vägen till tornet från GitHub Pages, i samma webbläsare
     eller över WebRTC från länken; gör ingenting när sidorna kommer från
     tornets program
-  - `rtc/rtc.js` WebRTC med Trystero och QR-koden, byggt från `klient/`
+  - `rtc/rtc.js` WebRTC med Trystero, byggt från `klient/`
     (rör den inte för hand)
   - `map.js` räknar ut kartans utsnitt och zoom, så att kartan följer
     rummet vandraren står i. Den skapar kartan snett ovanifrån, eller visar en
@@ -922,7 +922,7 @@ spelledarens webbläsare, i en flik som heter skalet (`web/torn.html`).
 Sidorna i samma webbläsare når det över en `BroadcastChannel`
 (`web/natet.js`). Spelarna kommer med en länk med en rumskod och en nyckel,
 `…/ormtornet/#torn=<kod>&nyckel=<nyckel>`, som värdsidan visar under Bjud
-in tillsammans med en QR-kod. Deras webbläsare hittar tornets flik genom
+in. Deras webbläsare hittar tornets flik genom
 publika Nostr-reläer och ansluter sedan direkt med WebRTC
 (`web/rtc/rtc.js`, Trystero). Nyckeln krypterar utbytet, och den som har
 länken kommer in. Länken är densamma så länge tornets flik är öppen, också
