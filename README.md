@@ -492,6 +492,22 @@ Eftersom bara sovkorten tas bort ökar risken för varje näve. Leken börjar me
 färre sovkort än förra gången. Står du i kammaren ser du hur djupt ormen
 sover och hör andetagen bli tätare.
 
+Korten syns så här:
+
+- **Ormkortet.** Kortet du drar vänds upp till höger på kartan: namnet
+  (Ormen sover, Ormen rör sig), en bild av ormen, kortets text och
+  guldet. Bara du ser det. Det glider undan efter en stund eller vid ett
+  klick.
+- **Sömnmätaren.** I kammaren visar panelen Nu en mätare i tre steg för
+  hur djupt ormen sover, som andas långsamt när den sover djupt och fort
+  när den är nära att vakna. Ormtjusaren ser också vakna-korten som är
+  kvar som små kort bredvid.
+- **Uppvaknandet.** När ormen vaknar ser alla kortet Ormen vaknar stort mitt
+  på kartan, med det de märkte. Den som stod i kammaren ser vad den
+  förlorade.
+
+Kortens namn står under `namn` i `data/ormen.json`.
+
 ### Strider
 
 Ett nytt rum kan i stället för en fälla ha en varelse. Den syns på kartan för

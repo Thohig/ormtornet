@@ -6,6 +6,16 @@ eller leder tornet.
 
 ## 2026-11-22
 
+### Ormkorten syns
+
+- När du tar en näve i skattkammaren vänds kortet du drog upp på kartan:
+  Ormen sover eller Ormen rör sig, med en bild av ormen, texten och
+  guldet. Bara du ser det.
+- I skattkammaren visar panelen Nu en sömnmätare i tre steg som andas i
+  ormens takt. Ormtjusaren ser vakna-korten som är kvar som små kort.
+- När ormen vaknar ser alla kortet Ormen vaknar stort mitt på kartan, och
+  den som stod i kammaren ser vad den förlorade.
+
 ### Kartan som ett spelbräde
 
 - Kartan ser ut som ett spelbräde i fackelsken. Golven är huggna

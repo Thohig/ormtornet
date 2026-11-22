@@ -54,6 +54,11 @@ Så här skiljer vi på sakerna när användaren ger instruktioner:
   - **frågetecknet**: styrningen, som ligger bakom ? på kartan,
   - **kortet**: rundans sammanfattning nere på kartan (`summary.go`,
     `sam_` i `data/texter.json`),
+  - **ormkortet**: ormkortet du drog i skattkammaren, som vänds upp till
+    höger på kartan, och **uppvaknandet**, kortet Ormen vaknar som alla ser
+    stort mitt på kartan (`showSerpentCard` och `showWakeCard` i
+    `web/app.js`),
+  - **sömnmätaren**: hur djupt ormen sover, i panelen Nu i skattkammaren,
   - **panelen Nu**: draget, striden och vad som väntar,
   - **panelen Vandrare**: listan över vandrarna, bara i lobbyn och slutet,
   - **loggen**: raderna i högerkolumnen, grupperade per runda.
