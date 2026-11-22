@@ -293,8 +293,11 @@ func TestLetterAndDeathDrop(t *testing.T) {
 }
 
 func TestMapMakerHasPotion(t *testing.T) {
-	_, p, o := withClass(t, "kartritare")
-	if p.Potions != o.Potions+1 {
-		t.Fatalf("kartritaren har %d drycker, de andra %d", p.Potions, o.Potions)
+	// Den andra vandraren får en slumpad klass, som kan ha egna drycker,
+	// så kartritaren jämförs med en vandrare utan klass.
+	g, p, o := withClass(t, "kartritare")
+	o.classID = ""
+	if p.Potions < 1 || p.Potions != g.startPotions(o)+1 {
+		t.Fatalf("kartritaren har %d drycker, utan klass %d", p.Potions, g.startPotions(o))
 	}
 }
