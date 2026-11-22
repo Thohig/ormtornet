@@ -1,6 +1,8 @@
 # Den dödes guld (förslag)
 
-Förslag 2026-11-22. Steg 1 och 2 är byggda.
+Förslag 2026-11-22. Steg 1–3 är byggda. Spårfinnaren hör ingenting genom väggarna, så i
+stället för att höra hur mycket som rasslar ser hen guldet på kartan och
+vem som tog det.
 
 Sedan 2026-11-22 ligger guldet kvar där en vandrare dog. Den som går in
 i rummet, eller står kvar där när rundan är slut, tar det (`guld.go`).

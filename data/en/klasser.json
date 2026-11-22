@@ -30,7 +30,7 @@
       "namn": "The Mapmaker",
       "kort": "the Mapmaker",
       "beskrivning": "Has drawn maps of caves, mines and cloisters. No one has drawn the tower. Yet.",
-      "styrka": "Sees through doors into the rooms next door. Sees every room anyone has found, and gives their map to whoever they meet. Always finds something when searching, if a secret passage can be made. Gets three extra marks from the chalk.",
+      "styrka": "Sees through doors into the rooms next door. Sees every room anyone has found and where anyone has died, and gives their map to whoever they meet. Always finds something when searching, if a secret passage can be made. Gets three extra marks from the chalk.",
       "svaghet": "No quick feet: the evasive move never works, and then the opponent always hits."
     },
     {
@@ -46,7 +46,7 @@
       "namn": "The Tracker",
       "kort": "the Tracker",
       "beskrivning": "Reads the ground as others read books. Sees where someone has walked, and when.",
-      "styrka": "Sees tracks further back and whose they are, spots half the traps in time, and sees where someone has left an item.",
+      "styrka": "Sees tracks further back and whose they are, spots half the traps in time, and sees where someone has left an item or gold, and who has taken it.",
       "svaghet": "Hears nothing through the walls."
     },
     {

@@ -466,6 +466,9 @@
     "har_guld_taget": [
       "Coins have lain in the dust here. Someone has already taken them."
     ],
+    "har_guld_taget_namn": [
+      "Coins have lain in the dust here. The tracks say {namn} took them."
+    ],
     "har_foremal": [
       "In a corner lies {foremal}."
     ],

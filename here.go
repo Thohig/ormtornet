@@ -211,7 +211,12 @@ func (g *Game) hereParts(p *Player) []herePart {
 		other("fall:"+name, g.data.Text("har_fall", "namn", name))
 	}
 	if r.goldBy != 0 && r.goldBy != p.ID && len(r.gold) == 0 {
-		other("guld_taget", g.data.Text("har_guld_taget"))
+		// Spårfinnaren läser i dammet vem som tog mynten.
+		if o := g.playerByID(r.goldBy); o != nil && g.is(p, "sparfinnare") {
+			other("guld_taget", g.data.Text("har_guld_taget_namn", "namn", o.Name))
+		} else {
+			other("guld_taget", g.data.Text("har_guld_taget"))
+		}
 	}
 	for i, id := range r.items {
 		if t := g.data.itemType(id); t != nil {

@@ -611,7 +611,8 @@ type roomView struct {
 	MarkI string   `json:"marki,omitempty"`  // fällans id, för modellen på kartan snett ovanifrån
 	S     bool     `json:"s,omitempty"`      // genomsökt
 	C     int      `json:"c"`                // pilen i krita, -1 om ingen
-	F     bool     `json:"f,omitempty"`      // här ligger ett föremål (bara för spårfinnaren)
+	F     bool     `json:"f,omitempty"`      // här ligger ett föremål eller guld (bara för spårfinnaren)
+	Fell  bool     `json:"dod,omitempty"`    // här har någon dött (bara för kartritaren)
 	In    []string `json:"in,omitempty"`     // inredningen på kartan snett ovanifrån
 	Shut  bool     `json:"stangd,omitempty"` // porten har slutit sig
 }
@@ -842,7 +843,8 @@ func (g *Game) stateFor(me *Player) stateMsg {
 			if r.hasChalk {
 				rv.C = int(r.chalk)
 			}
-			rv.F = len(r.items) > 0 && g.is(me, "sparfinnare")
+			rv.F = (len(r.items) > 0 || len(r.gold) > 0) && g.is(me, "sparfinnare")
+			rv.Fell = len(r.fell) > 0 && g.is(me, "kartritare")
 			if r.HasExit {
 				rv.Exit = int(r.Exit)
 				rv.Shut = r.Shut

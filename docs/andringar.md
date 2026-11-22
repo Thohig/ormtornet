@@ -20,6 +20,10 @@ eller leder tornet.
   mynten rassla efter skriket, men inte hur många.
 - Rummet minns: den som kommer in där någon har dött läser "Här föll
   Alva" i rumsblocket, och "Någon har redan tagit dem" om guldet är taget.
+- Kartritaren ser på kartan var någon har dött, med ett litet x i rummets
+  hörn. Spårfinnaren ser guldet som ligger kvar, som föremålen, och läser
+  i dammet vem som tog det. Hen hör fortfarande ingenting genom väggarna,
+  så skriket säger henom bara del av tornet.
 
 ### Ormtornet.app i ~/Applications
 

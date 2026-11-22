@@ -139,3 +139,42 @@ func TestRoomRemembersTheFallen(t *testing.T) {
 		t.Fatalf("rumsblocket: %q", har)
 	}
 }
+
+func roomViewAt(st stateMsg, x, y int) *roomView {
+	for i := range st.Rooms {
+		if st.Rooms[i].X == x && st.Rooms[i].Y == y {
+			return &st.Rooms[i]
+		}
+	}
+	return nil
+}
+
+// Kartritaren ser var någon har dött; spårfinnaren ser guldet och vem
+// som tog det.
+func TestClassesSeeTheFallen(t *testing.T) {
+	g, a, _ := withClass(t, "kartritare")
+	x, y := g.center(), g.center()-1
+	r := putInRoom(g, a, x, y)
+	r.fell = []string{"Bo"}
+	if rv := roomViewAt(g.stateFor(a), x, y); rv == nil || !rv.Fell {
+		t.Fatalf("kartritaren ser inte var Bo dog: %+v", rv)
+	}
+
+	g, a, b := withClass(t, "sparfinnare")
+	r = putInRoom(g, a, x, y)
+	r.gold = []leftGold{{by: b.ID, name: "Bo", gold: 9}}
+	st := g.stateFor(a) // stateFor tar inte guldet
+	if rv := roomViewAt(st, x, y); rv == nil || !rv.F {
+		t.Fatalf("spårfinnaren ser inte guldet: %+v", rv)
+	}
+	r.gold, r.goldBy = nil, b.ID
+	found := false
+	for _, part := range g.hereParts(a) {
+		if part.key == "guld_taget" && strings.Contains(part.text, "Bo") {
+			found = true
+		}
+	}
+	if !found {
+		t.Fatal("spårfinnaren ser inte vem som tog guldet")
+	}
+}

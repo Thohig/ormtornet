@@ -11,7 +11,8 @@ export interface Rum {
   mark?: string; // fällans tecken
   marki?: string; // fällans id i fallor.json, för modellen
   c: number; // pilen i krita, -1 om ingen
-  f?: boolean; // ett föremål ligger här (för spårfinnaren)
+  f?: boolean; // ett föremål eller guld ligger här (för spårfinnaren)
+  dod?: boolean; // här har någon dött (för kartritaren)
   stangd?: boolean; // porten har slutit sig
   in?: string[]; // inredningen, efter rumstypen (inredning.ts)
 }

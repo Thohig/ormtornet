@@ -448,9 +448,9 @@ igen.
 | Legoknekten | ett liv extra, tar ingen skada när båda anfaller | hittar hälften så mycket guld när hen söker |
 | Tjuven | en fjärdedel mer guld ur kammaren, hittar oftare föremål, ingen märker när ormen rör sig vid hens näve, river hälften i strid mot vandrare | hittar aldrig drycker när hen söker |
 | Örtkvinnan | börjar med en dryck, en dryck ger tre liv, tål gift | tappar mycket mer skatt när ormen vaknar |
-| Kartritaren | ser genom dörrarna in i rummen bredvid, ser alla rum som någon har hittat och ger sin karta till den hen möter, hittar alltid en hemlig gång om det går, tre streck extra med kritan | undanmanöver lyckas aldrig |
+| Kartritaren | ser genom dörrarna in i rummen bredvid, ser alla rum som någon har hittat och var någon har dött (ett x i hörnet), ger sin karta till den hen möter, hittar alltid en hemlig gång om det går, tre streck extra med kritan | undanmanöver lyckas aldrig |
 | Ormtjusaren | ser i kammaren hur många vakna-kort som är kvar, ormen skadar inte hen när den vaknar | hittar hälften så mycket guld när hen söker |
-| Spårfinnaren | ser spår 6 rundor bakåt och vems de är, märker hälften av fällorna i tid, ser var föremål ligger | hör inget genom väggarna |
+| Spårfinnaren | ser spår 6 rundor bakåt och vems de är, märker hälften av fällorna i tid, ser var föremål och guld ligger och vem som tog guldet | hör inget genom väggarna |
 | Lyktbäraren | ett liv extra, tål mörker, ser varelser i grannrummen | syns för andra redan från grannrummet |
 | Pilgrimen | ledtrådar dubbelt så ofta, en dryck när tornet förändras, känner igen förbannade föremål | slår aldrig andra vandrare, kan bara värja sig |
 

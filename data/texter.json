@@ -504,6 +504,9 @@
     "har_guld_taget": [
       "Några mynt har legat i dammet här. Någon har redan tagit dem."
     ],
+    "har_guld_taget_namn": [
+      "Några mynt har legat i dammet här. Spåren säger att {namn} har tagit dem."
+    ],
     "har_foremal": [
       "I ett hörn ligger {foremal}."
     ],

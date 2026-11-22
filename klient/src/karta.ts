@@ -1048,6 +1048,11 @@ float puls() {
         const [x, z] = plats(r.x, r.y, RW - 1, 1);
         this.golvkrita(g, K.tecken("+"), "t+", FARG.guld, 0.9, x, z);
       }
+      if (r.dod) {
+        // Kartritaren ser var någon har dött: ett litet x i hörnet.
+        const [x, z] = plats(r.x, r.y, RW - 1, RH - 1);
+        this.golvkrita(g, K.tecken("x"), "tx", FARG.forlorad, 0.9, x, z);
+      }
       if (r.c >= 0 && r.c !== undefined) {
         const [x, z] = plats(r.x, r.y, 1, 1);
         this.golvkrita(g, K.pil(), "pil", FARG.krita, 1.2, x, z, [Math.PI / 2, 0, -Math.PI / 2, Math.PI][r.c]);
