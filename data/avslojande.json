@@ -203,13 +203,13 @@
     },
 
     "forklaringar": {
-      "fallgaller": "Fallgallret var tänder som slog igen.",
+      "fallgaller": "Gallret som rasade ner var tänder som slog igen.",
       "rasande_golv": "Golvet som rasade var ett svalg som öppnade sig, och källarvalven var dess strupe.",
       "roterande": "Rummen som roterade var tarmarna, som vred sig för att föra er vidare.",
       "pilar": "Pilarna var taggar, vassa fjäll som den sköt ut när något kittlade den.",
       "dimma": "Den giftiga dimman var dess andedräkt.",
-      "ormgrop": "Ormgropen var dess ungar, som den bär inom sig.",
-      "skinn": "Det ömsade skinnet var dess eget. Den bytte hud medan ni var inne i den.",
+      "ormgrop": "De små ormarna i gropen var dess ungar, som den bär inom sig.",
+      "skinn": "Skinnet som hängde i rummen var dess eget. Den bytte hud medan ni var inne i den.",
       "klocka": "Klockan var ett hjärtslag, så kraftigt att det fick dagen att rusa.",
       "morker": "Mörkret kom när den blinkade, och era lyktor slocknade i dess utandning.",
       "eko": "Ekot var dess öron. Den hörde var ni var. Den har alltid hört.",
@@ -268,7 +268,7 @@
       "Solen har gått ner, men porten väntar. Den väntar på dig. Du har en runda till."
     ],
     "invigd_falla": [
-      "Du känner igen det här, {falla}. Du vet vad väggarna vill, och kliver förbi."
+      "Du känner igen det här: {falla}. Du vet vad väggarna vill, och kliver förbi."
     ],
     "invigd_lugnar": [
       "Du lägger handen mot väggen och viskar. Andetagen runt dig blir långsammare. Ormen sover djupare."

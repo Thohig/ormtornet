@@ -317,7 +317,7 @@ func (g *Game) mirror(p *Player) {
 		g.logTo(p, g.data.Text("spegel_ser", "rum", g.roomShort(r)), "info")
 		if r.Event != "" {
 			if trap := g.data.trap(r.Event); trap != nil {
-				g.logTo(p, g.data.Text("spegel_falla", "falla", lowerFirst(trap.Namn)), "varn")
+				g.logTo(p, g.data.Text("spegel_falla", "falla", trap.Kort), "varn")
 			}
 		}
 		if mm := g.monsterAt(x, y); mm != nil {

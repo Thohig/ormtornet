@@ -170,7 +170,7 @@ func TestMirrorShowsANewRoom(t *testing.T) {
 	g.give(p, "spegel")
 	logs(a)
 	g.mirror(p)
-	if !p.known[3][5] || !containsPart(logs(a), g.data.Text("spegel_falla", "falla", lowerFirst(g.data.trap("pilar").Namn))) {
+	if !p.known[3][5] || !containsPart(logs(a), g.data.Text("spegel_falla", "falla", g.data.trap("pilar").Kort)) {
 		t.Fatal("spegeln visade inte rummet österut med fällan")
 	}
 	if p.has("spegel").uses != 2 {

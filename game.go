@@ -613,7 +613,6 @@ type roomView struct {
 	K     string   `json:"k"`
 	Exit  int      `json:"exit"`
 	Mark  string   `json:"mark,omitempty"`
-	MarkN string   `json:"markn,omitempty"`  // fällans namn, för teckenförklaringen
 	MarkI string   `json:"marki,omitempty"`  // fällans id, för modellen på kartan snett ovanifrån
 	S     bool     `json:"s,omitempty"`      // genomsökt
 	C     int      `json:"c"`                // pilen i krita, -1 om ingen
@@ -825,7 +824,7 @@ func (g *Game) stateFor(me *Player) stateMsg {
 			if !g.knowsRoom(me, x, y) || (blind && (x != me.X || y != me.Y)) {
 				continue
 			}
-			rv := roomView{X: x, Y: y, D: r.Doors, K: r.Kind, Exit: -1, Mark: r.Mark, MarkN: g.data.trapName(r.Mark), S: r.Searched, C: -1}
+			rv := roomView{X: x, Y: y, D: r.Doors, K: r.Kind, Exit: -1, Mark: r.Mark, S: r.Searched, C: -1}
 			if t := g.data.trapByMark(r.Mark); t != nil {
 				rv.MarkI = t.ID
 			}
@@ -1735,11 +1734,11 @@ func (g *Game) move(p *Player, d Dir, depth int) {
 			case t != nil && g.is(p, "sparfinnare") && g.rng.Float64() < g.classVal(p, "se_falla", 0):
 				// Spårfinnaren ser fällan i tid. Tecknet visar att den finns.
 				target.Mark = t.Tecken
-				g.logTo(p, g.data.Text("klass_sparfinnare_falla", "falla", lowerFirst(t.Namn)), "info")
+				g.logTo(p, g.data.Text("klass_sparfinnare_falla", "falla", t.Kort), "info")
 			case t != nil && p.initiated && g.rng.Float64() < g.data.Avslojande.Invigd.Falla:
 				// Den invigde känner igen fällan för vad den är.
 				target.Mark = t.Tecken
-				g.logTo(p, g.data.Text("invigd_falla", "falla", lowerFirst(t.Namn)), "rost")
+				g.logTo(p, g.data.Text("invigd_falla", "falla", t.Kort), "rost")
 			default:
 				g.trigger(p, g.data.trap(ev), depth)
 			}

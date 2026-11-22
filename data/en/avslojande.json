@@ -206,13 +206,13 @@
     },
 
     "forklaringar": {
-      "fallgaller": "The portcullis was teeth snapping shut.",
+      "fallgaller": "The grate that crashed down was teeth snapping shut.",
       "rasande_golv": "The floor that gave way was a gullet opening, and the vaults of the cellar were its throat.",
       "roterande": "The rooms that turned were the bowels, twisting to carry you onwards.",
       "pilar": "The arrows were barbs, sharp scales it shot out when something tickled it.",
       "dimma": "The poisonous mist was its breath.",
-      "ormgrop": "The snake pit was its young, which it carries within itself.",
-      "skinn": "The shed skin was its own. It changed its skin while you were inside it.",
+      "ormgrop": "The small snakes in the pit were its young, which it carries within itself.",
+      "skinn": "The skin hanging in the rooms was its own. It changed its skin while you were inside it.",
       "klocka": "The bell was a heartbeat, so mighty it made the day rush past.",
       "morker": "The darkness came when it blinked, and your lanterns went out in its breath.",
       "eko": "The echo was its ears. It heard where you were. It has always heard.",
@@ -271,7 +271,7 @@
       "The sun has gone down, but the gate is waiting. It is waiting for you. You have one more round."
     ],
     "invigd_falla": [
-      "You know this one, {falla}. You know what the walls want, and you step past."
+      "You know this one: {falla}. You know what the walls want, and you step past."
     ],
     "invigd_lugnar": [
       "You lay your hand against the wall and whisper. The breathing around you slows. The serpent sleeps more deeply."

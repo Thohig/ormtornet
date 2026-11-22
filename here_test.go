@@ -207,3 +207,25 @@ func drainAll(c *Client) []string {
 		}
 	}
 }
+
+// Fällorna har inga namn för spelarna: den som går i en fälla får texten
+// om vad som händer, men aldrig fällans namn.
+func TestTrapsHaveNoNamesForPlayers(t *testing.T) {
+	for _, trap := range testGame(t).data.Fallor {
+		g, a, _ := startTwo(t)
+		if trap.Kort == "" {
+			t.Errorf("fällan %q har ingen kort beskrivning", trap.ID)
+		}
+		p := a.player
+		p.HP = 99
+		putInRoom(g, p, 4, 4)
+		drainAll(a)
+		g.trigger(p, g.data.trap(trap.ID), 0)
+		g.broadcastState()
+		for _, raw := range drainAll(a) {
+			if strings.Contains(raw, trap.Namn) || strings.Contains(raw, lowerFirst(trap.Namn)) {
+				t.Errorf("spelarsidan fick fällans namn %q: %s", trap.Namn, raw)
+			}
+		}
+	}
+}

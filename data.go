@@ -29,7 +29,8 @@ type ModelLook struct {
 // kommer från datafilen.
 type Trap struct {
 	ID     string   `json:"id"`
-	Namn   string   `json:"namn"`
+	Namn   string   `json:"namn"` // bara på värdsidan; spelarna får inga namn
+	Kort   string   `json:"kort"` // det spelarna får i stället: "ett galler av spetsiga järnstänger"
 	Vikt   int      `json:"vikt"`
 	Skada  int      `json:"skada"`
 	Rundor int      `json:"rundor"`
@@ -392,15 +393,6 @@ func (d *Data) trap(id string) *Trap {
 		}
 	}
 	return nil
-}
-
-// trapName ger namnet på fällan som har tecknet mark, för teckenförklaringen
-// på kartan.
-func (d *Data) trapName(mark string) string {
-	if t := d.trapByMark(mark); t != nil {
-		return t.Namn
-	}
-	return ""
 }
 
 // trapByMark ger fällan med tecknet mark, eller nil.

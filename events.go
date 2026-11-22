@@ -50,15 +50,15 @@ func (g *Game) trigger(p *Player, t *Trap, depth int) {
 	roomName := g.roomShort(room)
 	room.Mark = t.Tecken
 	// Fjällamuletten tar nästa fälla. Tecknet syns ändå.
-	if g.useItem(p, "amulett", "falla", t.Namn) {
+	if g.useItem(p, "amulett", "falla", t.Kort) {
 		return
 	}
 	p.Seen[t.ID] = true
 	p.stats.traps++
-	p.hurt("falla", lowerFirst(t.Namn))
+	p.hurt("falla", t.Kort)
 
-	g.logTo(p, t.Namn+"!", "varn")
-	g.logTo(p, pick(t.Texter), "")
+	// Fällan har inget namn för spelarna: texten säger vad som händer.
+	g.logTo(p, pick(t.Texter), "varn")
 	others := t.Andra
 	if len(t.AndraDolt) > 0 {
 		others = t.AndraDolt

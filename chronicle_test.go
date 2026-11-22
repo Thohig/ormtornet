@@ -39,7 +39,7 @@ func TestChronicle(t *testing.T) {
 	gold := pa.Treasure
 	for _, want := range []string{
 		"Krönikan över vandringen",
-		"Runda 2. Bo dog av pilfällan.",
+		"Runda 2. Bo dog av pilar ur små hål i väggen.",
 		"Runda 2. Alva gick ut med " + strconv.Itoa(gold) + " guld.",
 		"Alva: kammaren 1 ggr, " + strconv.Itoa(gold) + " guld · fällor 0",
 		"Bo: kammaren 0 ggr, 0 guld · fällor 1",
@@ -81,7 +81,7 @@ func TestJourneyForTheDead(t *testing.T) {
 	if st.Journey == nil {
 		t.Fatal("den döda ser ingen vandring")
 	}
-	if !strings.Contains(st.Journey.Death, "Bo dog av pilfällan") {
+	if !strings.Contains(st.Journey.Death, "Bo dog av pilar ur små hål i väggen") {
 		t.Errorf("döden: %q", st.Journey.Death)
 	}
 	if st.Journey.In != 1 || st.Journey.Out != 0 {

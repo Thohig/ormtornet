@@ -17,7 +17,7 @@
         "kort": "the scale amulet",
         "beskrivning": "The next trap does not strike.",
         "verkar": [
-          "The amulet grows warm against your chest. {falla} strikes, but not at you. When you look, the amulet has cracked."
+          "The amulet grows warm against your chest just as {falla} strikes, but not at you. When you look, the amulet has cracked."
         ]
       },
       {
