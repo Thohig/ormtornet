@@ -6,6 +6,12 @@ eller leder tornet.
 
 ## 2026-11-22
 
+### Mac och Windows
+
+- README säger nu att det krävs en Mac för att ladda ner spelet och köra
+  tornet själv. Med en Windows-dator spelar man från länken på GitHub
+  Pages, som spelledare eller spelare.
+
 ### Minikorten går att se
 
 - I krönikan i slutet och i Din vandring är rundans kort små spelkort,

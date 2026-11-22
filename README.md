@@ -12,8 +12,14 @@ Vad som är nytt står i [docs/andringar.md](docs/andringar.md).
 
 ## Starta
 
-Kräver Go (`brew install go`). Det är bara den som kör tornet som behöver
-spelet. De andra öppnar en adress i webbläsaren.
+Kräver en Mac och Go (`brew install go`). Det är bara den som kör tornet
+som behöver spelet. De andra öppnar en adress i webbläsaren, på vilken
+dator, telefon eller surfplatta som helst.
+
+Att ladda ner spelet och köra tornet själv fungerar bara på en Mac. Med en
+Windows-dator spelar man i stället från länken på GitHub Pages (se Spela
+från en länk); där kan en Windows-dator både vara spelledarens och en
+spelares.
 
 ```bash
 ./starta.sh
@@ -82,8 +88,9 @@ Flaggor:
 
 ### Spela från en länk
 
-Utan Go och utan att vara på samma wifi: spelledaren öppnar
-<https://thohig.github.io/ormtornet/> i Chrome eller Safari på en dator.
+Utan Go, utan Mac och utan att vara på samma wifi: spelledaren öppnar
+<https://thohig.github.io/ormtornet/> i Chrome, Edge eller Safari på en
+dator, Mac eller Windows.
 Tornet körs då i den fliken, med samma spel som programmet. Värdsidan
 visas i samma flik och har under Bjud in en länk. Spelarna
 öppnar länken, var de än är, och ansluter direkt till
