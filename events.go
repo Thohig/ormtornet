@@ -51,6 +51,7 @@ func (g *Game) trigger(p *Player, t *Trap, depth int) {
 	room.Mark = t.Tecken
 	// Fjällamuletten tar nästa fälla. Tecknet syns ändå.
 	if g.useItem(p, "amulett", "falla", t.Kort) {
+		g.trapCard(p, t, g.data.Text("kort_forbi"), true)
 		return
 	}
 	p.Seen[t.ID] = true
@@ -59,7 +60,9 @@ func (g *Game) trigger(p *Player, t *Trap, depth int) {
 	p.hurt("falla", t.Kort)
 
 	// Fällan har inget namn för spelarna: texten säger vad som händer.
-	g.logTo(p, pick(t.Texter), "varn")
+	text := pick(t.Texter)
+	g.logTo(p, text, "varn")
+	g.trapCard(p, t, text, false)
 	others := t.Andra
 	if len(t.AndraDolt) > 0 {
 		others = t.AndraDolt
@@ -133,6 +136,12 @@ func (g *Game) trigger(p *Player, t *Trap, depth int) {
 		}
 	}
 	g.explainNow(p, t.ID)
+}
+
+// trapCard lägger fällans spelkort, med den korta beskrivningen som
+// rubrik. svag är en fälla vandraren klev förbi.
+func (g *Game) trapCard(p *Player, t *Trap, text string, svag bool) {
+	g.addCard(p, gameCard{Slag: "falla", Bild: cardImage(t.Bild, t.ID), Rubrik: t.Kort, Text: text, Svag: svag})
 }
 
 // leaveCellar låter spelaren klättra upp i ett slumpat rum.

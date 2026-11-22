@@ -165,6 +165,9 @@
     "skada": [
       "You lose {skada} of your lives. You have {liv} left."
     ],
+    "kort_forbi": [
+      "You stepped past it."
+    ],
     "dod": [
       "Everything goes black. The tower has taken you."
     ],

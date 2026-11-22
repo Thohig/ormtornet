@@ -143,3 +143,4 @@ uppdateras i varje steg.
 | Del | Byggd |
 | --- | --- |
 | A | ja |
+| B | ja |

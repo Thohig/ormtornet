@@ -80,6 +80,16 @@
         "sida"
       ],
       "port": 8000
+    },
+    {
+      "name": "kortbilder",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "8095"
+      ],
+      "port": 8095
     }
   ]
 }

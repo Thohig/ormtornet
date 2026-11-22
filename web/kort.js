@@ -98,13 +98,82 @@ ${moves}`;
 <circle cx="50" cy="30" r="20" fill="#e8a83a" opacity="0.15"/>
 ${laga(50, 41, 26)}`;
 
+  // ---- Fällorna ----
+
+  // Ett galler av spetsiga järnstänger som rasar ner i en dörröppning.
+  BILDER.fallgaller = () => `${vagg()}
+<path d="M24 92V40a26 26 0 0 1 52 0v52z" fill="#1e1610"/>
+${[30, 38, 46, 54, 62, 70].map((x) => `<path d="M${x - 1.6} 14h3.2V74h1.6l-3.2 9 -3.2 -9h1.6z" fill="#9a958c" stroke="${BLAECK}" stroke-width="0.7"/>`).join("")}
+<rect x="24" y="22" width="52" height="4" fill="#8a857c" stroke="${BLAECK}" stroke-width="0.6"/><rect x="24" y="50" width="52" height="3" fill="#8a857c" stroke="${BLAECK}" stroke-width="0.6"/>
+<path d="M20 10l6 4M80 10l-6 4M50 4v6" stroke="${BRUN}" stroke-width="1.6" stroke-linecap="round"/>`;
+
+  // Ett golv som ger efter: plattor som spricker och faller ner i mörker.
+  BILDER.rasande_golv = () => `${vagg(6, 40)}
+<path d="M6 46h88v48H6z" fill="${STEN}" opacity="0.35"/>
+<path d="M22 56l14 -6 24 2 16 10 -6 18 -22 8 -20 -6 -10 -14z" fill="#140e09"/>
+<path d="M30 74l6 -4 4 6zM58 60l7 2 -3 6zM44 84l6 -3 2 5z" fill="${MORK_STEN}"/>
+<path d="M6 50l16 6M76 62l18 -6M60 52l10 -6M36 50l-8 -4M76 62l6 16" stroke="${BLAECK}" stroke-width="1.2" fill="none"/>`;
+
+  // Ett golv som vrider sig: en skiva med pilar runt.
+  BILDER.roterande = () => `${vagg(6, 36)}
+<ellipse cx="50" cy="64" rx="40" ry="20" fill="${STEN}" opacity="0.3"/>
+<ellipse cx="50" cy="64" rx="30" ry="14" fill="${MORK_STEN}" opacity="0.55" stroke="${BLAECK}" stroke-width="1"/>
+<path d="M50 64l30 0M50 64l-24 8M50 64l-6 -14" stroke="${BLAECK}" stroke-width="0.8" opacity="0.6"/>
+<path d="M22 50a32 16 0 0 1 50 -6" fill="none" stroke="${BRUN}" stroke-width="2"/><path d="M72 44l-1 -6 6 3z" fill="${BRUN}"/>
+<path d="M78 80a32 16 0 0 1 -50 6" fill="none" stroke="${BRUN}" stroke-width="2"/><path d="M28 86l1 6 -6 -3z" fill="${BRUN}"/>`;
+
+  // Pilar ur små hål i väggen.
+  BILDER.pilar = () => `${vagg()}
+${[24, 46, 68].map((y) => `<circle cx="12" cy="${y}" r="3" fill="#140e09"/>`).join("")}
+${[[24, 62], [46, 82], [68, 50]].map(([y, x]) => `<path d="M${x - 34} ${y}H${x}" stroke="${BRUN}" stroke-width="1.8"/><path d="M${x} ${y}l-6 -3v6z" fill="${JARN}"/><path d="M${x - 34} ${y}l-4 -3M${x - 34} ${y}l-4 3M${x - 30} ${y}l-4 -3M${x - 30} ${y}l-4 3" stroke="${ROD}" stroke-width="1"/><path d="M${x - 40} ${y - 4}h-8M${x - 42} ${y + 4}h-6" stroke="${STEN}" stroke-width="1" opacity="0.6"/>`).join("")}`;
+
+  // En söt, gulgrön dimma som väller fram.
+  BILDER.dimma = () => `${vagg()}
+${[[30, 70, 18], [56, 64, 22], [76, 74, 14], [44, 50, 14], [64, 46, 12], [20, 54, 10]].map(([x, y, r]) => `<circle cx="${x}" cy="${y}" r="${r}" fill="#b8c24a" opacity="0.45"/>`).join("")}
+<path d="M14 82q12 -8 24 0t24 0t24 0" fill="none" stroke="#8a9a32" stroke-width="2" opacity="0.7"/>
+<path d="M20 40q8 -6 16 0M60 30q8 -6 16 0" fill="none" stroke="#8a9a32" stroke-width="1.4" opacity="0.6"/>`;
+
+  // En grop full av små ormar.
+  BILDER.ormgrop = () => `${vagg(6, 40)}
+<ellipse cx="50" cy="66" rx="40" ry="22" fill="${STEN}" opacity="0.3"/>
+<ellipse cx="50" cy="66" rx="32" ry="16" fill="#140e09"/>
+${[[30, 66], [44, 72], [56, 62], [66, 70], [40, 60], [58, 74]].map(([x, y], i) => `<path d="M${x} ${y}q3 -4 6 0t6 0t6 0" fill="none" stroke="${i % 2 ? "#7a8a3a" : GRON}" stroke-width="2.2" stroke-linecap="round"/><circle cx="${x + 18}" cy="${y}" r="1.6" fill="#e8c040"/>`).join("")}`;
+
+  // Ett väldigt, genomskinligt skinn som har fastnat runt en.
+  BILDER.skinn = () => `${vagg()}
+<path d="M14 30q20 -14 36 0t36 0v50q-18 12 -36 0t-36 0z" fill="#efe6d0" opacity="0.7" stroke="${STEN}" stroke-width="1.2"/>
+${[0, 1, 2, 3].map((r) => [0, 1, 2, 3, 4].map((c) => `<path d="M${20 + c * 14 + (r % 2) * 7} ${38 + r * 11}q4 -5 8 0" fill="none" stroke="${STEN}" stroke-width="0.9" opacity="0.8"/>`).join("")).join("")}
+<path d="M50 30v52" stroke="${STEN}" stroke-width="0.8" stroke-dasharray="2 3" opacity="0.6"/>`;
+
+  // En väldig klocka i taket som slår.
+  BILDER.klocka = () => `<rect x="6" y="6" width="88" height="8" fill="${MORK_STEN}" opacity="0.5"/>
+<path d="M50 14v8" stroke="${JARN}" stroke-width="3"/>
+<path d="M34 64q0 -40 16 -42q16 2 16 42l6 6H28z" fill="#a8823a" stroke="${BLAECK}" stroke-width="1.2"/>
+<path d="M40 60q0 -26 8 -32" fill="none" stroke="#e0c070" stroke-width="2" opacity="0.6"/>
+<circle cx="50" cy="76" r="5" fill="${JARN}"/>
+<path d="M16 46q-6 10 0 20M10 40q-9 16 0 32M84 46q6 10 0 20M90 40q9 16 0 32" fill="none" stroke="${BRUN}" stroke-width="1.6" stroke-linecap="round"/>`;
+
+  // En varm vindpust som släcker lågan.
+  BILDER.morker = () => `<rect x="4" y="4" width="92" height="92" rx="6" fill="#1a130c" opacity="0.85"/>
+<path d="M44 34h12M50 28v6" stroke="${JARN}" stroke-width="2"/>
+<path d="M40 38h20l-2 34H42z" fill="#2a2018" stroke="${JARN}" stroke-width="1.6"/>
+<path d="M40 72h20" stroke="${JARN}" stroke-width="3"/>
+<path d="M50 62q-3 -6 2 -12q-1 6 3 8" fill="none" stroke="#8a7f6e" stroke-width="1.4" opacity="0.8"/>
+<path d="M50 50q-6 -8 0 -14q4 -6 -2 -12" fill="none" stroke="#8a7f6e" stroke-width="1" opacity="0.5"/>
+<path d="M8 50q14 -4 26 0M10 58q12 -3 22 0M12 42q10 -3 18 0" fill="none" stroke="#c89a5a" stroke-width="1.4" stroke-linecap="round" opacity="0.7"/>`;
+
+  // Ett eko som inte vill tystna: ringar som går genom stenen.
+  BILDER.eko = () => `${vagg()}
+${[8, 16, 25, 35, 46].map((r, i) => `<circle cx="50" cy="54" r="${r}" fill="none" stroke="${BRUN}" stroke-width="${2.2 - i * 0.35}" opacity="${1 - i * 0.17}"/>`).join("")}
+<circle cx="50" cy="54" r="3" fill="${BLAECK}"/>`;
+
   const ORM = ["sover", "ror_sig", "vaknar"];
 
   return {
     bild(motiv, opt = {}) {
       const rita = BILDER[motiv] || BILDER.fackla;
       const inner = rita();
-      return svg(opt.svag ? `<g opacity="0.4" filter="grayscale(1)">${inner}</g>` : inner);
+      return svg(opt.svag ? `<g opacity="0.45" style="filter: grayscale(1)">${inner}</g>` : inner);
     },
     // mini ger ett litet kort. Ormkorten har egna små bilder i CSS:en;
     // de andra får sin bild i liten skala.

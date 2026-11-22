@@ -104,6 +104,13 @@ func (d *Data) validate() []string {
 		return seen
 	}
 
+	// cardImageOK: spelkortets motiv måste vara ett som web/kort.js kan rita.
+	cardImageOK := func(file, what, bild string) {
+		if !slices.Contains(cardImages, bild) {
+			bad(file, "%s: bilden %q finns inte; spelkortet kan rita %s", what, bild, strings.Join(cardImages, ", "))
+		}
+	}
+
 	var ids []string
 	for _, r := range d.Rumstyper {
 		ids = append(ids, r.ID)
@@ -121,6 +128,7 @@ func (d *Data) validate() []string {
 	ids = nil
 	for _, t := range d.Fallor {
 		ids = append(ids, t.ID)
+		cardImageOK("fallor.json", "fällan "+t.ID, cardImage(t.Bild, t.ID))
 	}
 	unique("fallor.json", "fällan", ids)
 	chance("fallor.json", "handelsechans", d.Regler.Handelsechans)

@@ -567,6 +567,11 @@ runda utan eget kort har Runda N som rubrik och en fackla som bild.
 Korten visar bara det som hände dig, och säger inte mer än loggen. Fällor
 och varelser har sin korta beskrivning som rubrik, aldrig namnet.
 
+- **Fällorna** har var sin bild: gallret, golvet som ger efter, golvet som
+  vrider sig, pilarna, dimman, ormgropen, skinnet, klockan, vindpusten
+  och ekot. Klev du förbi en fälla, med amuletten, som Spårfinnaren eller
+  som invigd, får du samma kort nedtonat.
+
 ### Skattkammaren och ormen
 
 I kammaren mitt i tornet kan du ta skatt (S) en gång per runda. Varje gång
@@ -838,6 +843,12 @@ järnstänger"), och `kort`, `kort_bestamd` och `kort_igen` för varelserna
 ("något blekt och mångbent", "det bleka mångbenta", "det mångbenta").
 `kort_igen` används i striden från andra rundan. Ett test kräver att alla
 har dem på båda språken.
+
+Fällor, varelser och föremål har ett fält `bild`: motivet på deras
+spelkort, ett av dem som `web/kort.js` kan rita. Tornet säger till om
+bilden inte finns. `verktyg/kortbilder.html` visar alla motiv; öppna den
+med `python3 -m http.server 8095` i repots rot och
+<http://localhost:8095/verktyg/kortbilder.html>.
 
 - `texter.json` rum, beskrivningar, allmänna texter och introts väntetid. Varje rumstyp har sin inredning på kartan under `modell.inredning`, med namnen i `klient/src/inredning.ts`
 - `fallor.json` regler (liv, chans för händelse, drycker, hur länge spåren syns), fällor och sökresultat

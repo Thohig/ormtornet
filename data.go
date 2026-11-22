@@ -36,6 +36,7 @@ type Trap struct {
 	Rundor int      `json:"rundor"`
 	Sol    int      `json:"sol"`
 	Tecken string   `json:"tecken"`
+	Bild   string   `json:"bild"` // spelkortets motiv (web/kort.js); utan bild gäller id:t
 	Texter []string `json:"texter"`
 	Andra  []string `json:"andra"`
 	// AndraDolt ersätter Andra när vandrarna bara ser varandra vid möten.
@@ -320,6 +321,9 @@ func mergeData(d, part *Data) {
 	}
 	if len(part.Klasser) > 0 {
 		d.Klasser = part.Klasser
+	}
+	if len(part.Spelkort.Ordning) > 0 {
+		d.Spelkort = part.Spelkort
 	}
 	if part.KlassvalSekunder > 0 {
 		d.KlassvalSekunder = part.KlassvalSekunder

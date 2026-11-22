@@ -18,6 +18,7 @@
       "vikt": 3,
       "rundor": 2,
       "tecken": "╫",
+      "bild": "fallgaller",
       "texter": [
         "Ett gnissel ovanför dig, och ett galler av spetsiga järnstänger rasar ner i dörröppningen bakom dig. Det tar tid att bända upp det.",
         "Gallret slår ner med en smäll. Stängerna är krökta inåt och nästan vassa i spetsarna. Du sitter fast en stund."
@@ -35,6 +36,7 @@
       "skada": 1,
       "rundor": 2,
       "tecken": "○",
+      "bild": "rasande_golv",
       "texter": [
         "Golvet ger efter under dig. Du faller ner i källarvalven, där det är mörkt, fuktigt och trångt.",
         "Plattorna sjunker som om de vore mjuka, och du glider ner genom ett hål i golvet. Nedanför finns bara mörka, smala valv."
@@ -53,6 +55,7 @@
       "spar_efter": ["Golvet är repat i långa cirklar."],
       "vikt": 2,
       "tecken": "↻",
+      "bild": "roterande",
       "texter": [
         "Rummet börjar vrida sig med ett långsamt, malande ljud. Du tappar fotfästet och knuffas ut genom en öppning.",
         "Väggarna drar ihop sig och vrider sig. När det är över är du någon annanstans."
@@ -69,6 +72,7 @@
       "vikt": 3,
       "skada": 2,
       "tecken": "→",
+      "bild": "pilar",
       "texter": [
         "Ett klick under foten. Pilar viner ut ur små hål i väggen. Två av dem träffar.",
         "Pilar skjuter ut ur väggen. De är inte av trä utan av något benvitt och böjt."
@@ -84,6 +88,7 @@
       "skada": 1,
       "rundor": 2,
       "tecken": "≈",
+      "bild": "dimma",
       "texter": [
         "En gulgrön dimma väller upp ur springorna i golvet. Den luktar sött och svider i lungorna. Giftet stannar i kroppen.",
         "Dimman är varm och fuktig, som en utandning. Du hostar, och det smakar bittert långt efter."
@@ -99,6 +104,7 @@
       "skada": 2,
       "rundor": 1,
       "tecken": "§",
+      "bild": "ormgrop",
       "texter": [
         "Du trampar ner i en grop full av små ormar. De biter och slingrar sig runt anklarna innan du kommer loss.",
         "Gropen kryllar av ormar, tunna som maskar. De biter, och det tar tid att ta sig upp."
@@ -115,6 +121,7 @@
       "vikt": 2,
       "rundor": 1,
       "tecken": "∫",
+      "bild": "skinn",
       "texter": [
         "Ett väldigt, genomskinligt skinn hänger över rummet som ett segel. Du trasslar in dig i det. Fjällen prasslar mot varandra.",
         "Ett ömsat ormskinn, så stort att det fyller hela rummet. Det klibbar fast vid dig och du får slita dig loss."
@@ -129,6 +136,7 @@
       "vikt": 2,
       "sol": 2,
       "tecken": "♁",
+      "bild": "klocka",
       "texter": [
         "Du stöter i en väldig klocka som hänger i taket. Klangen går genom hela tornet, och genom gluggarna ser du solen sjunka hastigt.",
         "En klocka slår av sig själv när du kliver in. Ljuset utanför blir genast rödare."
@@ -145,6 +153,7 @@
       "vikt": 2,
       "rundor": 4,
       "tecken": "●",
+      "bild": "morker",
       "texter": [
         "En varm vindpust drar genom rummet och lyktan slocknar. Du ser ingenting. Du får treva dig fram.",
         "Något andas ut, och din låga fladdrar och dör. Mörkret är totalt."
@@ -158,6 +167,7 @@
       "spar_efter": ["Varje ljud kommer tillbaka lite för länge."],
       "vikt": 2,
       "tecken": "◎",
+      "bild": "eko",
       "texter": [
         "Ditt steg ekar, och ekot fortsätter och växer tills hela tornet ljuder. Nu vet alla var du är.",
         "Rummet fångar varje ljud och kastar ut det i gångarna. Alla i tornet hör var du står."
@@ -212,6 +222,9 @@
   "texter": {
     "skada": [
       "Du förlorar {skada} liv. Du har {liv} kvar."
+    ],
+    "kort_forbi": [
+      "Du klev förbi."
     ],
     "dod": [
       "Det blir svart. Tornet har tagit dig."

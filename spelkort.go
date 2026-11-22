@@ -55,6 +55,14 @@ func (g *Game) roundCardsOf(p *Player) []gameCard {
 	return cards
 }
 
+// cardImages är motiven web/kort.js kan rita (BILDER i kort.js). Ett
+// motiv i data/ som inte finns här ritas som facklan; kontrollen av
+// datafilerna säger till (validate.go).
+var cardImages = []string{
+	"fackla", "sover", "ror_sig", "vaknar",
+	"fallgaller", "rasande_golv", "roterande", "pilar", "dimma", "ormgrop", "skinn", "klocka", "morker", "eko",
+}
+
 // cardImage är motivet för innehåll i data/: fältet bild, annars id:t.
 func cardImage(bild, id string) string {
 	if strings.TrimSpace(bild) != "" {

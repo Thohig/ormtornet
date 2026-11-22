@@ -1729,11 +1729,15 @@ func (g *Game) move(p *Player, d Dir, depth int) {
 			case t != nil && g.is(p, "sparfinnare") && g.rng.Float64() < g.classVal(p, "se_falla", 0):
 				// Spårfinnaren ser fällan i tid. Tecknet visar att den finns.
 				target.Mark = t.Tecken
-				g.logTo(p, g.data.Text("klass_sparfinnare_falla", "falla", t.Kort), "info")
+				text := g.data.Text("klass_sparfinnare_falla", "falla", t.Kort)
+				g.logTo(p, text, "info")
+				g.trapCard(p, t, text, true)
 			case t != nil && p.initiated && g.rng.Float64() < g.data.Avslojande.Invigd.Falla:
 				// Den invigde känner igen fällan för vad den är.
 				target.Mark = t.Tecken
-				g.logTo(p, g.data.Text("invigd_falla", "falla", t.Kort), "rost")
+				text := g.data.Text("invigd_falla", "falla", t.Kort)
+				g.logTo(p, text, "rost")
+				g.trapCard(p, t, text, true)
 			default:
 				g.trigger(p, g.data.trap(ev), depth)
 			}

@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Spelkortens bilder</title>
+<!--
+  Visar alla motiv som web/kort.js kan rita, stora och som minikort, för
+  den som ritar nya bilder. Öppna från repots rot med en enkel webbserver:
+    python3 -m http.server 8095
+  och gå till http://localhost:8095/verktyg/kortbilder.html
+-->
+<style>
+  body { margin: 0; padding: 16px; background: #15171a; color: #d8cfbf; font: 13px/1.4 ui-monospace, monospace; }
+  main { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+  figure { margin: 0; }
+  .kort { aspect-ratio: 1; background: radial-gradient(ellipse at 50% 40%, #f1e6c8, #d9c79c); border: 3px solid #3a2414; border-radius: 8px; }
+  .kort svg { display: block; width: 100%; height: 100%; }
+  figcaption { display: flex; align-items: center; gap: 6px; margin-top: 4px; }
+  .minikort { display: inline-block; width: 12px; height: 16px; border: 1px solid #8a6a3a; border-radius: 2px; background: #e9dcc0; overflow: hidden; }
+  .minikort svg { display: block; width: 100%; height: 100%; }
+</style>
+</head>
+<body>
+<main id="bilder"></main>
+<script src="../web/kort.js"></script>
+<script>
+  const main = document.getElementById("bilder");
+  Object.keys(Kort._.BILDER).forEach((id) => {
+    const fig = document.createElement("figure");
+    fig.innerHTML = `<div class="kort">${Kort.bild(id)}</div><figcaption><span class="minikort">${Kort.bild(id)}</span>${id}</figcaption>`;
+    main.appendChild(fig);
+  });
+</script>
+</body>
+</html>

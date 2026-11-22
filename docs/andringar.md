@@ -17,6 +17,10 @@ eller leder tornet.
   guld" står inte längre i loggen; den står på kortet.
 - Kommer uppvaknandet samma runda väntar spelkortet tills det stora
   kortet har gått undan.
+- Fällorna har var sin bild på spelkortet, med den korta beskrivningen
+  som rubrik. Klev du förbi fällan är kortet nedtonat. Fällorna har ett
+  nytt fält `bild` i `data/fallor.json`.
+- `verktyg/kortbilder.html` visar alla spelkortens bilder.
 
 ### Fröet, hela bredden och loggen på kartan
 
