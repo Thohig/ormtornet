@@ -615,11 +615,14 @@ body.logpakartan .isokompass { left: auto; right: 12px; bottom: 50px; }
 .isotangenter span::before { content: attr(data-pil); }
 /* På en pekskärm har tecknen samma pilar som knapparna och går att trycka på. */
 body.touch .isotangenter span::before { content: attr(data-pek); }
+/* Med musen går de att klicka på. */
+.isotangenter span { pointer-events: auto; cursor: pointer; }
+.isotangenter span:hover { color: var(--hi); border-color: var(--chalk); }
 body.touch .isotangenter span {
   pointer-events: auto;
   cursor: pointer;
-  min-width: 28px;
-  padding: 5px 6px;
+  min-width: 40px;
+  padding: 9px 8px;
   font-size: 15px;
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
@@ -926,6 +929,8 @@ body.touch .keys { display: none; }
 /* Bara de knappar som gäller just nu syns (renderPad i app.js). */
 #pad button[hidden], #pad .dirs[hidden], #help [hidden] { display: none; }
 #pad #padEnter { grid-column: 1 / -1; }
+/* Vänta som knapp bara på telefonen, när pilknapparna inte syns. */
+#pad .vanta { display: none; }
 body.touch #side { overflow-y: auto; }
 
 /* Smal skärm, som en telefon på höjden: en kolumn med översta raden fast
@@ -955,12 +960,12 @@ body.touch #side { overflow-y: auto; }
   #main { display: block; }
   #mapcol { display: block; }
   #nowBlock { margin-bottom: 8px; }
-  /* Kartan fyller höjden mellan översta raden och knapparna, med en rad
-     kvar för Nu. Höjderna mäts i app.js (measureBars). */
+  /* Kartan fyller höjden mellan översta raden och knapparna, med plats
+     för Nu. Höjderna mäts i app.js (measureBars). */
   #mapbox {
     width: 100%;
-    height: calc(100vh - var(--topp, 64px) - var(--nere, 0px) - 64px);
-    height: calc(100svh - var(--topp, 64px) - var(--nere, 0px) - 64px);
+    height: calc(100vh - var(--topp, 64px) - var(--nu, 38px) - var(--nere, 0px) - 28px);
+    height: calc(100svh - var(--topp, 64px) - var(--nu, 38px) - var(--nere, 0px) - 28px);
     min-height: 260px;
     margin: 6px 0;
     isolation: isolate; /* det som står på kartan hamnar under översta raden och lådan */
@@ -1060,6 +1065,17 @@ body.touch #side { overflow-y: auto; }
     border-top: 1px solid var(--faint);
   }
   #pad .acts { flex: 1 1 auto; }
+  /* Man går genom att trycka på tangenterna vid dörrarna, så knapparna är
+     en rad: Vänta och det som gäller just nu. Långt ut, där tangenterna är
+     små, kommer pilknapparna tillbaka. */
+  body.touch:not(.langtut) #pad .dirs { display: none; }
+  body.touch:not(.langtut) #pad .vanta:not([hidden]) { display: block; }
+  body.touch #pad .acts {
+    display: flex;
+    gap: 6px;
+    max-width: none;
+  }
+  body.touch #pad .acts button { flex: 1 1 0; min-width: 0; }
 }
 
 /* Valet av klass i lobbyn. */

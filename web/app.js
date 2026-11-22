@@ -349,11 +349,13 @@ wideScreen.addEventListener("change", () => {
 });
 placeSide();
 
-// measureBars mäter översta raden och knapparna längst ned på telefonen
-// (--topp och --nere), så att kartan fyller höjden mellan dem.
+// measureBars mäter översta raden, raden Nu och knapparna längst ned på
+// telefonen (--topp, --nu och --nere), så att kartan fyller höjden mellan
+// dem och Nu syns ovanför knapparna, också när striden gör den högre.
 function measureBars() {
   const root = document.documentElement.style;
   root.setProperty("--topp", $("top").offsetHeight + "px");
+  root.setProperty("--nu", $("nowBlock").offsetHeight + "px");
   const pad = $("pad");
   const fixed = pad.offsetHeight > 0 && getComputedStyle(pad).position === "fixed";
   root.setProperty("--nere", (fixed ? pad.offsetHeight : 0) + "px");
@@ -362,6 +364,7 @@ if (window.ResizeObserver) {
   const bars = new ResizeObserver(measureBars);
   bars.observe($("top"));
   bars.observe($("pad"));
+  bars.observe($("nowBlock"));
 }
 window.addEventListener("resize", measureBars);
 measureBars();
@@ -2086,6 +2089,9 @@ MapView.setZoomListener((name, n) => {
   $("zoomName").textContent = t(name);
   $("zoomIn").disabled = n <= 0;
   $("zoomOut").disabled = n >= 3;
+  // Långt ut blir tangenterna vid dörrarna små, och telefonen visar
+  // pilknapparna igen (style.css).
+  document.body.classList.toggle("langtut", n >= 1.5);
 });
 $("zoomIn").addEventListener("click", () => MapView.zoom(-1));
 $("zoomOut").addEventListener("click", () => MapView.zoom(1));
@@ -2236,11 +2242,11 @@ $("pad").addEventListener("click", (e) => {
   pressKey(b.dataset.key);
 });
 
-// Tecknen vid dörrarna på kartan snett ovanifrån går att trycka på, på en
-// pekskärm (se .isotangenter i style.css).
+// Tecknen vid dörrarna på kartan snett ovanifrån går att trycka på, och
+// att klicka på med musen (se .isotangenter i style.css).
 document.addEventListener("click", (e) => {
   const s = e.target.closest && e.target.closest(".isotangenter span[data-key]");
-  if (!s || !touch) return;
+  if (!s) return;
   e.stopPropagation();
   pressKey(s.dataset.key);
 }, true);
