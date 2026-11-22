@@ -16,12 +16,15 @@ type before struct {
 	stuck, poison, dark, cellar int
 	status, action              string
 	items                       []string
+	draws                       int // ormkort dragna före rundan
 }
 
 type summaryLine struct {
 	Text string `json:"text"`
 	C    string `json:"c,omitempty"`    // "varn", "gold" eller tomt
 	Kort string `json:"kort,omitempty"` // den korta formen för loggens rad
+	// Ormkort är id:t på ormkortet vandraren drog, för bilden bredvid raden.
+	Ormkort string `json:"ormkort,omitempty"`
 }
 
 type summaryMsg struct {
@@ -44,7 +47,7 @@ func (g *Game) snapshot() map[*Player]before {
 		m[p] = before{
 			x: p.X, y: p.Y, hp: p.HP, treasure: p.Treasure, potions: p.Potions,
 			stuck: p.Stuck, poison: p.Poison, dark: p.Dark, cellar: p.Cellar,
-			status: p.Status, action: p.Action, items: items,
+			status: p.Status, action: p.Action, items: items, draws: len(p.stats.draws),
 		}
 	}
 	return m
@@ -105,6 +108,18 @@ func (g *Game) summaryFor(p *Player, b before, woke bool) []summaryLine {
 			add(t("sam_liv_minus", "antal", itoa(-d), "liv", itoa(max(0, p.HP))), "varn")
 		} else if d > 0 {
 			add(t("sam_liv_plus", "antal", itoa(d), "liv", itoa(p.HP)), "")
+		}
+	}
+	// Ormkortet vandraren drog i kammaren, före guldet.
+	for _, id := range p.stats.draws[min(b.draws, len(p.stats.draws)):] {
+		if c := g.data.card(id); c != nil {
+			l := t("sam_ormkort", "kort", c.Namn)
+			l.Ormkort = c.ID
+			class := ""
+			if c.Vaknar {
+				class = "varn"
+			}
+			add(l, class)
 		}
 	}
 	if p.Status != statusOut {

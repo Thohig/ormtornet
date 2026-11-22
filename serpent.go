@@ -153,6 +153,7 @@ func (g *Game) take(p *Player) {
 		g.deck = append(g.deck[:i], g.deck[i+1:]...)
 		return
 	}
+	p.stats.draws = append(p.stats.draws, c.ID)
 	if c.Vaknar {
 		g.chronicle("kronika_vaknade", "namn", p.Name)
 		g.logTo(p, pick(c.Texter), "varn")

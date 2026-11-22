@@ -65,3 +65,35 @@ func TestWakeShowsCardToAll(t *testing.T) {
 		t.Fatalf("utanför: %+v", gb)
 	}
 }
+
+// Kortet vandraren drog står i rundans sammanfattning, och krönikan har
+// alla kort vandraren drog på raden med siffror.
+func TestDrawnCardsInSummaryAndChronicle(t *testing.T) {
+	g, a, _ := startTwo(t)
+	pa := a.player
+	pa.X, pa.Y = g.center(), g.center()
+	g.reveal(pa.X, pa.Y)
+	g.deck = []string{"ror_sig", "sover"}
+	summaries(a)
+	snap := g.snapshot()
+	g.take(pa)
+	g.summarize(snap, g.wakes)
+	found := false
+	for _, s := range summaries(a) {
+		for _, l := range s.Lines {
+			if l.Ormkort != "" {
+				found = true
+			}
+		}
+	}
+	if !found {
+		t.Fatal("rundans kort saknar ormkortet")
+	}
+	g.take(pa)
+	if tags := g.cardTags(pa); len(tags) != 2 || tags[0].Namn == "" {
+		t.Fatalf("krönikans kort: %+v", tags)
+	}
+	if v := g.journeyOf(pa); len(v.Cards) != 2 {
+		t.Fatalf("Din vandring: %+v", v.Cards)
+	}
+}

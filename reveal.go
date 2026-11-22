@@ -161,11 +161,11 @@ func (g *Game) epilogue() {
 	// krönikans skärm (epilog i tillståndet).
 	all := func(text, class string) {
 		g.logAll(text, class)
-		g.epilog = append(g.epilog, chronLine{text, class})
+		g.epilog = append(g.epilog, chronLine{Text: text, Class: class})
 	}
 	to := func(p *Player, text, class string) {
 		g.logTo(p, text, class)
-		p.epilog = append(p.epilog, chronLine{text, class})
+		p.epilog = append(p.epilog, chronLine{Text: text, Class: class})
 	}
 	all(pick(a.Epilog), "syn")
 	if g.usesName() && len(a.EpilogNamn) > 0 {

@@ -541,6 +541,7 @@ function renderChron() {
       const d = document.createElement("div");
       d.textContent = l.text;
       if (l.c) d.className = l.c;
+      if (l.kort && l.kort.length) d.appendChild(cardRow(l.kort));
       box.appendChild(d);
     });
     box.hidden = !box.childElementCount;
@@ -551,7 +552,7 @@ function renderChron() {
   // Resultaten: vem som kom ut med hur mycket, vinnaren först.
   rows("chronResults", end ? (state.results || []).map((r) => ({ text: (r.winner ? "★ " : "") + r.name + (r.ai ? " ~" : "") + " · " + resultWord(r), c: r.winner ? "win" : r.status !== "ute" ? "lost" : "" })) : []);
   rows("chronEpilog", end ? state.epilog : []);
-  rows("chronAll", end ? (state.kronika || []).filter((l) => l.c !== "rubrik").map((l) => ({ text: l.text, c: l.c })) : []);
+  rows("chronAll", end ? (state.kronika || []).filter((l) => l.c !== "rubrik").map((l) => ({ text: l.text, c: l.c, kort: l.kort })) : []);
   if (end && state.kronika && state.kronika[0]) {
     const h = document.createElement("h2");
     h.textContent = state.kronika[0].text;
@@ -581,12 +582,14 @@ function renderChron() {
     r.rader.forEach((l) => {
       const p = document.createElement("div");
       p.textContent = l.text;
+      if (l.ormkort) p.prepend(miniCard(l.ormkort));
       if (l.c) p.className = l.c;
       d.appendChild(p);
     });
     box.appendChild(d);
   });
   $("chronStats").textContent = end ? "" : v.siffror;
+  if (!end && v.kort && v.kort.length) $("chronStats").appendChild(cardRow(v.kort));
   $("chronWait").textContent = end ? (touch ? "" : t("slut_nytt_torn")) : t("vandring_vantar");
 }
 $("chronNext").addEventListener("click", () => send({ t: "ready" }));
@@ -908,6 +911,7 @@ function showRoundCard(msg) {
   lines.forEach((l) => {
     const d = document.createElement("div");
     d.textContent = l.text;
+    if (l.ormkort) d.prepend(miniCard(l.ormkort));
     if (l.c) d.className = l.c;
     card.appendChild(d);
   });
@@ -994,6 +998,28 @@ ${[[38, 70], [56, 74], [66, 64], [30, 60]].map(([x, y]) => `<ellipse cx="${x}" c
 ${head}
 ${moves}
 </svg>`;
+}
+
+// miniCard är ett litet ormkort bredvid en rad i rundans kort och krönikan:
+// sover (en sovande slinga), rör sig (en våg) eller vaknar (gula ögon).
+function miniCard(id) {
+  const s = document.createElement("span");
+  s.className = "minikort " + (id === "vaknar" ? "vaknar" : id === "ror_sig" ? "ror_sig" : "sover");
+  s.setAttribute("aria-hidden", "true");
+  return s;
+}
+
+// cardRow är en rad små ormkort, med namnen när musen är över dem.
+function cardRow(list) {
+  const r = document.createElement("span");
+  r.className = "kortrad";
+  list.forEach((c) => {
+    const m = miniCard(c.id);
+    m.title = c.namn;
+    r.appendChild(m);
+  });
+  r.setAttribute("aria-label", list.map((c) => c.namn).join(", "));
+  return r;
 }
 
 // buildSerpentCard bygger ett kort med baksidan och framsidan, så att det

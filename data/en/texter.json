@@ -641,6 +641,8 @@
     "sam_liv_minus_kort": ["−{antal} lives"],
     "sam_liv_plus": ["+{antal} lives. You have {liv}."],
     "sam_liv_plus_kort": ["+{antal} lives"],
+    "sam_ormkort": ["The serpent card: {kort}."],
+    "sam_ormkort_kort": ["{kort}"],
     "sam_guld_plus": ["+{antal} gold. You carry {skatt}."],
     "sam_guld_plus_kort": ["+{antal} gold"],
     "sam_guld_minus": ["−{antal} gold. You carry {skatt}."],

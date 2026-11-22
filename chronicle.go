@@ -17,12 +17,30 @@ type chronEvent struct {
 
 // chronStats räknar det som bara blir en siffra per vandrare i krönikan.
 type chronStats struct {
-	takes    int // nävar ur kammaren
-	takeGold int // guld ur kammaren
-	traps    int // fällor som slog till
-	kills    int // varelser som vandraren har fällt
-	searched int // rum som vandraren har sökt igenom
-	items    int // föremål som vandraren har hittat
+	takes    int      // nävar ur kammaren
+	takeGold int      // guld ur kammaren
+	traps    int      // fällor som slog till
+	kills    int      // varelser som vandraren har fällt
+	searched int      // rum som vandraren har sökt igenom
+	items    int      // föremål som vandraren har hittat
+	draws    []string // ormkorten vandraren har dragit, i tur och ordning
+}
+
+// cardTag är ett ormkort i krönikan: id:t för bilden och namnet.
+type cardTag struct {
+	ID   string `json:"id"`
+	Namn string `json:"namn"`
+}
+
+// cardTags gör vandrarens dragna kort till krönikans kort.
+func (g *Game) cardTags(p *Player) []cardTag {
+	var out []cardTag
+	for _, id := range p.stats.draws {
+		if c := g.data.card(id); c != nil {
+			out = append(out, cardTag{ID: c.ID, Namn: c.Namn})
+		}
+	}
+	return out
 }
 
 // chronicle skriver ner en händelse från den här rundan.
@@ -65,16 +83,17 @@ func (g *Game) resetChronicle() {
 
 // chronLine är en rad i krönikan, med sin klass i loggen.
 type chronLine struct {
-	Text  string `json:"text"`
-	Class string `json:"c,omitempty"`
+	Text  string    `json:"text"`
+	Class string    `json:"c,omitempty"`
+	Kort  []cardTag `json:"kort,omitempty"` // ormkorten vandraren drog, på raden med siffror
 }
 
 // chronicleLines är krönikan: rubriken, händelserna i tur och ordning och
 // sedan en rad för varje vandrare.
 func (g *Game) chronicleLines() []chronLine {
-	lines := []chronLine{{g.data.Text("kronika_rubrik"), "rubrik"}}
+	lines := []chronLine{{Text: g.data.Text("kronika_rubrik"), Class: "rubrik"}}
 	for _, e := range g.chron {
-		lines = append(lines, chronLine{g.data.Text("kronika_rad", "runda", strconv.Itoa(e.round), "text", e.text), ""})
+		lines = append(lines, chronLine{Text: g.data.Text("kronika_rad", "runda", strconv.Itoa(e.round), "text", e.text)})
 	}
 	// De invigda som kom ut lyfts fram, bredvid den som vann på guld.
 	var knew []string
@@ -84,11 +103,11 @@ func (g *Game) chronicleLines() []chronLine {
 		}
 	}
 	if len(knew) > 0 {
-		lines = append(lines, chronLine{g.data.Text("kronika_invigda_ute", "namn", strings.Join(knew, ", ")), "rost"})
+		lines = append(lines, chronLine{Text: g.data.Text("kronika_invigda_ute", "namn", strings.Join(knew, ", ")), Class: "rost"})
 	}
 	for _, p := range g.players {
 		if p != nil && p.Status != statusNew {
-			lines = append(lines, chronLine{g.statsLine(p), "dim"})
+			lines = append(lines, chronLine{Text: g.statsLine(p), Class: "dim", Kort: g.cardTags(p)})
 		}
 	}
 	return lines
@@ -118,15 +137,16 @@ type journeyView struct {
 	Rounds []journeyRound `json:"rundor"`
 	Death  string         `json:"dod,omitempty"`
 	Stats  string         `json:"siffror"`
-	In     int            `json:"inne"` // vandrare kvar i tornet
-	Out    int            `json:"ute"`  // vandrare som har gått ut
+	Cards  []cardTag      `json:"kort,omitempty"` // ormkorten vandraren har dragit
+	In     int            `json:"inne"`           // vandrare kvar i tornet
+	Out    int            `json:"ute"`            // vandrare som har gått ut
 }
 
 func (g *Game) journeyOf(me *Player) *journeyView {
 	if me == nil {
 		return nil
 	}
-	v := &journeyView{Rounds: me.journal, Death: me.death, Stats: g.statsLine(me)}
+	v := &journeyView{Rounds: me.journal, Death: me.death, Stats: g.statsLine(me), Cards: g.cardTags(me)}
 	if v.Rounds == nil {
 		v.Rounds = []journeyRound{}
 	}

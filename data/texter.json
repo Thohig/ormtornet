@@ -657,6 +657,8 @@
     "sam_liv_minus_kort": ["−{antal} liv"],
     "sam_liv_plus": ["+{antal} liv. Du har {liv}."],
     "sam_liv_plus_kort": ["+{antal} liv"],
+    "sam_ormkort": ["Ormkortet: {kort}."],
+    "sam_ormkort_kort": ["{kort}"],
     "sam_guld_plus": ["+{antal} guld. Du bär {skatt}."],
     "sam_guld_plus_kort": ["+{antal} guld"],
     "sam_guld_minus": ["−{antal} guld. Du bär {skatt}."],
