@@ -175,7 +175,8 @@ Varje steg är en commit, och sedan provar användaren.
    inte går, varning om att hålla tornets flik öppen, och åtgärden mot
    bakgrundsfliken om steg 1 visade att den behövs.
    Byggt: tornet körs i en Web Worker (`web/torn-arbetare.js`), eftersom
-   "Gå in själv" lägger tornets flik i bakgrunden, där Chrome efter fem
+   "Gå in själv" lade tornets flik i bakgrunden (sedan 2026-11-22 byter
+   den sida i skalets ram i stället), där Chrome efter fem
    minuter kör timers en gång i minuten när ingen WebRTC är igång. Pulsen
    till sidorna kommer också från workern. Inställningarna sparas i
    skalets `localStorage` genom workern. Värdsidan säger på Pages att

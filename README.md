@@ -91,8 +91,8 @@ spelledarens webbläsare. Den som har länken kommer in, så ge den bara
 till dem som ska spela.
 
 - Tornets flik måste vara öppen hela vandringen. Stängs den eller laddas
-  den om stängs tornet. Fliken får ligga i bakgrunden, till exempel när
-  spelledaren går in själv med "Gå in själv".
+  den om stängs tornet. "Gå in själv" byter sida i fliken, så spelledaren
+  spelar i tornets egen flik. Fliken får också ligga i bakgrunden.
 - Avsluta med "Stäng tornet" på värdsidan innan du stänger fliken. Då får
   spelarna beskedet att tornet stänger. Stängs bara fliken tror deras
   sidor att anslutningen bröts och börjar leta efter tornet igen.
@@ -235,7 +235,10 @@ den som dör och för alla i slutet (se slutet nedan och Strider):
      eller tryck, för namn, klass och läge. I lobbyn och slutet står namnet
      bredvid pricken, och knappen Redo (Nytt torn i slutet) står till
      höger i översta raden. Panelen Nu syns bara när den har något att
-     säga. I loggen står vandrarnas namn i deras färg. Överst i
+     säga. Loggen är grupperad under Före vandringen (lobbyn), Vandringen
+     börjar och Runda 1, 2 … Det första rumsblocket säger vid vilken port
+     du kliver in, hur högt solen står och att portar knarrar långt borta
+     när de andra går in. I loggen står vandrarnas namn i deras färg. Överst i
      varje runda står rummet som löpande text, utan ruta och utan namn:
      beskrivningen när
      rummet är nytt, och det man ser där, beskrivet och inte förklarat:

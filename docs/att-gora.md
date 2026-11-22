@@ -22,11 +22,20 @@ En riktig kväll behövs för att se:
   medan hon är i kammaren (85 % på Lätt). Är det för hårt? Sänk i så fall
   `extra_forlust` i `data/klasser.json` till cirka 0,35.
 - Viskningen: gissar någon rätt, och känns fördelen lagom?
+- Inga namn (2026-11-22): går det att prata om rum, fällor och varelser
+  utan namn, eller hittar spelarna på egna? Läser de korta beskrivningarna
+  (`kort` i `data/`) bra i striden, som "Det bleka mångbenta träffar
+  dig"? Alla är skrivna utan att provas.
+- AI:n tar över den som står still (2026-11-22): är två rundor lagom, och
+  märker spelaren att hen fick tillbaka vandraren med sitt drag?
+- Spelledaren i samma flik (2026-11-22): hittar spelledaren tillbaka till
+  värdsidan och spelet? Provat lokalt och i skalet, men inte på en riktig
+  kväll.
 - Kartan (2026-11-19): är Mellan på datorn och Nära på telefonen bra
   förval? Går det att zooma med två fingrar på en riktig telefon (bara
   provat med hjul, tangenter och knappar)? Hittar man M och knapparna
-  nere till höger? Hamnar pilarna vid kanten under rummets namn
-  eller tecknen i kartans övre hörn?
+  nere till höger? Hamnar pilarna vid kanten under rutan Mörker eller
+  Källarvalven, eller tecknen i kartans övre hörn?
 - Klassvalet: räcker 30 sekunder för att läsa korten? På en telefon står
   korten sedan 2026-11-21 två och två utan den kursiva beskrivningen, med
   nedräkningen fast överst. Går de att läsa på en riktig telefon?

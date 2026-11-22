@@ -15,11 +15,15 @@ Byggt (README beskriver hur det fungerar):
   storlek, klasser, invigningen, tornet förändras och kartan togs bort
   2026-11-22: de bestäms automatiskt eller gäller alltid.)
 - Starta nu, Stäng tornet, och inbjudan att kopiera till en gruppchatt.
-- AI tar över en frånvarande vandrare.
+- AI tar över en frånvarande vandrare, och sedan 2026-11-22 också en som
+  står still utan att välja drag.
+- Spelledaren spelar i samma flik (2026-11-22): Gå in själv byter till
+  spelarsidan, som visar märket spelledare och knappen Värdsidan i lobbyn
+  och slutet. Adressen under Bjud in visas bara med Visa adressen.
 - `Ormtornet.app` via `./skapa-app.sh`. Den bygger från repot och kräver Go.
 - Värdsidan på GitHub Pages (2026-11-21, [github-pages.md](github-pages.md)):
-  den visas i tornets flik, skalet, och har under Bjud in en länk och en
-  QR-kod i stället för adressen på samma wifi, en varning om att hålla
+  den visas i tornets flik, skalet, och har under Bjud in en länk i
+  stället för adressen på samma wifi (QR-koden togs bort 2026-11-22), en varning om att hålla
   fliken öppen och egna råd under Kommer någon inte in?.
 - Pekkontroller, så att telefoner och surfplattor kan spela.
 - Krönikan: en sammanfattning efter varje omgång.

@@ -30,10 +30,12 @@ Så här skiljer vi på sakerna när användaren ger instruktioner:
   som behövs just nu. Avsnitten heter Bjud in, Vid porten, Inför nästa
   vandring, Kommer någon inte in?, Läs om innehållet och Stäng tornet, och
   står alltid i den ordningen. På en bred skärm står de i två kolumner,
-  Bjud in och Vid porten till vänster och resten till höger. På Pages
-  visas den i skalet och har länken och en varning om att hålla tornets
-  flik öppen. QR-koden togs bort
-  2026-11-22.
+  Bjud in och Vid porten till vänster och resten till höger. Under Bjud
+  in står adressen (på Pages länken) inte utskriven; knapparna kopierar
+  den, och Visa adressen visar den. **Gå in själv** byter till spelarsidan
+  i samma flik och heter Till spelet när spelledaren har en vandrare under
+  vandringen. På Pages visas den i skalet och har länken och en varning
+  om att hålla tornets flik öppen. QR-koden togs bort 2026-11-22.
 - **skalet**: tornets flik när spelet kommer från GitHub Pages
   (`web/torn.html`, `web/torn.js`). Det kör tornet i en Web Worker
   (`web/torn-arbetare.js`, `wasm.go`) och visar värdsidan eller
@@ -50,7 +52,10 @@ Så här skiljer vi på sakerna när användaren ger instruktioner:
 - **spelskärmen**: vyn spelet på spelarsidan. Delarna heter:
   - **översta raden**: solmätaren, **prickarna** (vandrarna i sin färg,
     fyllda när de har valt drag eller är redo, med namn i lobbyn och
-    slutet), tiden och knappen Redo (Nytt torn i slutet),
+    slutet), tiden, knappen Redo (Nytt torn i slutet) och, för
+    spelledaren, **märket**: ordet spelledare, som i lobbyn och slutet är
+    knappen Värdsidan (`renderHost` i `web/app.js`, `vard` i tillståndet
+    för den som är ansluten från tornets dator),
   - **tecknen**: statusen uppe till höger på kartan (klass, liv, skatt,
     drycker, tillstånd) och föremålen under dem, med förklaringar,
   - **frågetecknet**: styrningen, som ligger bakom ? på kartan,
@@ -63,13 +68,26 @@ Så här skiljer vi på sakerna när användaren ger instruktioner:
   - **sömnmätaren**: hur djupt ormen sover, i panelen Nu i skattkammaren,
   - **panelen Nu**: draget, striden och vad som väntar, som en rad under
     kartan (`#nowBlock`). Den syns bara när den har något att säga. Panelen Vandrare togs bort 2026-11-22,
-  - **loggen**: raderna i högerkolumnen, grupperade per runda. Bara den
+  - **loggen**: raderna i högerkolumnen, grupperade per runda under
+    rubrikerna Före vandringen (lobbyn), Vandringen börjar (klassvalet och
+    det första rumsblocket) och Runda 1, 2 … Bara den
     senaste rundan står i bild; de äldre ligger under strecket "tidigare".
+    Det första rumsblocket har porten man kliver in genom, solen och
+    portarna man hör de andra gå in genom (`atTheGate` i `here.go`).
     Överst i rundan står **rumsblocket**, som löpande text utan ruta och
     utan namn: beskrivningen när rummet är nytt, det man
     ser (beskrivet, inte förklarat) och sist det man hörde (`here.go`,
     `har_` i `data/texter.json`, `spar_efter` i `data/fallor.json`).
     Teckenförklaringen togs bort 2026-11-22.
+- **namnen**: rum, fällor och varelser har inga namn för spelarna, bara
+  beskrivningar. `namn` i `data/` syns bara på värdsidan; där en text
+  behöver nämna något står den **korta beskrivningen** (`kort`, och
+  `kort_bestamd` för varelserna). Ormen, skattkammaren och föremålen har
+  namn.
+- **frånvarande vandrare**: inställningen Frånvarande vandrare säger efter
+  hur många rundor AI:n tar över en vandrare vars människa har lämnat
+  eller står still, alltså inte väljer något drag (`takeover.go`). Ett eget
+  drag, eller att komma tillbaka, ger vandraren tillbaka.
 - **tornets dator**: datorn som kör servern.
 - **språket**: inställningen Språk på värdsidan (`-sprak`), svenska eller
   engelska, för hela tornet (`lang.go`). Översättningarna ligger i
@@ -88,6 +106,7 @@ Så här skiljer vi på sakerna när användaren ger instruktioner:
   `web/app.js`). Den som dör ser **Din vandring**, rundans kort runda för
   runda (`vandring` i tillståndet, `journeyOf` i `chronicle.go`), och i
   slutet ser alla resultaten, epilogen, hela krönikan och sin vandring.
+  Spelledaren har där också Till värdsidan bredvid Nytt torn.
 - **tangenterna vid dörrarna**: piltangenterna som står vid dörrarna i ens
   rum på kartan snett ovanifrån (`ritaTangenter` i `klient/src/karta.ts`).
 - **väskan**: föremålen under tecknen, med en plats för varje föremål man
