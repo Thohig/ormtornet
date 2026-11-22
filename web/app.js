@@ -2084,10 +2084,10 @@ function padArrows() {
 // går en hel nivå i taget, medan scrollhjulet och två fingrar zoomar
 // gradvis.
 let zoomKey = ""; // nyckeln till zoomnivåns namn
-MapView.setZoomListener((name, n) => {
+MapView.setZoomListener((name, n, min) => {
   zoomKey = name;
   $("zoomName").textContent = t(name);
-  $("zoomIn").disabled = n <= 0;
+  $("zoomIn").disabled = n <= min;
   $("zoomOut").disabled = n >= 3;
   // Långt ut blir tangenterna vid dörrarna små, och telefonen visar
   // pilknapparna igen (style.css).

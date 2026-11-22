@@ -29,6 +29,18 @@ const MapView = (() => {
     { name: "zoom_allt", span: 0 },
   ];
   const ALL = LEVELS.length - 1;
+  // Rummet är en nivå närmare än Nära, bara på en smal skärm: rummet man
+  // står i fyller bredden och grannrummens kanter syns. Den har nummer -1,
+  // så att nivåerna som redan är sparade betyder samma sak.
+  const ROOM = { name: "zoom_rummet", span: 2 };
+  const narrow = window.matchMedia("(max-width: 700px)");
+  function minLevel() {
+    return narrow.matches ? -1 : 0;
+  }
+  function levelAt(n) {
+    const i = Math.round(n);
+    return i < 0 ? ROOM : LEVELS[i];
+  }
   const ZOOM_KEY = "ormtornet.zoom";
   let level = loadLevel();
   let before = level >= ALL ? 1 : level; // nivån som knappen för allt går tillbaka till
@@ -39,20 +51,21 @@ const MapView = (() => {
   let from = null, target = null, zoomAt = -Infinity, zoomMs = ZOOM_MS, glide = false;
   let nextGlide = false; // nästa nya ruta nås med en kort glidning
 
-  // loadLevel ger nivån som valdes senast på den här enheten, annars Nära
-  // på en smal skärm och Mellan på en större, så att tecknen går att läsa.
+  // loadLevel ger nivån som valdes senast på den här enheten, annars
+  // Rummet på en smal skärm och Mellan på en större, så att tecknen går att
+  // läsa.
   function loadLevel() {
     try {
       const n = parseFloat(localStorage.getItem(ZOOM_KEY));
-      if (n >= 0 && n <= ALL) return n;
+      if (n >= minLevel() && n <= ALL) return n;
     } catch {}
-    return window.matchMedia("(max-width: 700px)").matches ? 0 : 1;
+    return narrow.matches ? -1 : 1;
   }
 
   // setLevel sätter zoomen. smooth betyder att den kommer från hjulet eller
   // fingrarna, så att kartan följer med direkt i stället för en lång zoom.
   function setLevel(n, smooth) {
-    n = Math.max(0, Math.min(ALL, n));
+    n = Math.max(minLevel(), Math.min(ALL, n));
     if (Math.abs(n - Math.round(n)) < 0.02) n = Math.round(n);
     if (n < ALL) before = n;
     if (n === level) return;
@@ -60,7 +73,7 @@ const MapView = (() => {
     try {
       localStorage.setItem(ZOOM_KEY, String(Math.round(level * 1000) / 1000));
     } catch {}
-    if (onZoom) onZoom(LEVELS[Math.round(level)].name, level);
+    if (onZoom) onZoom(levelAt(level).name, level, minLevel());
     nextGlide = !!smooth;
     if (lastState) draw(lastState);
     nextGlide = false;
@@ -77,10 +90,10 @@ const MapView = (() => {
     setLevel(level + d, true);
   }
 
-  // cycle går runt mellan nivåerna: Nära, Mellan, Långt, Allt och Nära igen
-  // (tangenten Z).
+  // cycle går runt mellan nivåerna: (Rummet,) Nära, Mellan, Långt, Allt
+  // och den närmaste igen (tangenten Z).
   function cycle() {
-    setLevel(level >= ALL - 0.05 ? 0 : Math.floor(level + 0.05) + 1);
+    setLevel(level >= ALL - 0.05 ? minLevel() : Math.floor(level + 0.05) + 1);
   }
 
   // toggleWhole växlar mellan den valda nivån och allt man känner till.
@@ -90,8 +103,15 @@ const MapView = (() => {
 
   function setZoomListener(fn) {
     onZoom = fn;
-    fn(LEVELS[Math.round(level)].name, level);
+    fn(levelAt(level).name, level, minLevel());
   }
+
+  // Blir skärmen bredare (telefonen på bredden) finns inte Rummet längre,
+  // och kartan går till Nära.
+  narrow.addEventListener("change", () => {
+    if (level < minLevel()) setLevel(minLevel());
+    else if (onZoom) onZoom(levelAt(level).name, level, minLevel());
+  });
 
   // focus ger den egna vandraren, så länge den är inne och syns.
   function focus(state) {
@@ -133,6 +153,7 @@ const MapView = (() => {
   // spanAt ger hur många rum som syns vid zoomen z mellan Nära och Långt,
   // med lika stora steg i förstoring mellan nivåerna.
   function spanAt(z) {
+    if (z < 0) return ROOM.span * Math.pow(LEVELS[0].span / ROOM.span, z + 1);
     const i = Math.min(ALL - 2, Math.floor(z));
     const a = LEVELS[i].span, b = LEVELS[i + 1].span;
     return a * Math.pow(b / a, z - i);
