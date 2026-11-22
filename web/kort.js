@@ -401,6 +401,41 @@ ${[0, 1, 2, 3].map((i) => { const w = 76 - i * 16, x = 50 - w / 2, y = 18 + i * 
 <path d="M28 38q6 2 10 0M28 44q8 2 12 0M28 50q6 2 10 0" fill="none" stroke="${BRUN}" stroke-width="1.4" stroke-linecap="round"/>`;
   };
 
+  // ---- Tornets stora kort och slutet ----
+
+  // Ute: porten med kvällsljuset utanför och någon som går ut.
+  BILDER.ut = () => `${vagg()}
+<path d="M24 94V44a26 26 0 0 1 52 0v50z" fill="#f0c070"/>
+<circle cx="50" cy="66" r="14" fill="#f8e0a0"/>
+<path d="M24 78h52v16H24z" fill="#a8823a" opacity="0.6"/>
+<path d="M24 94V44a26 26 0 0 1 52 0v50" fill="none" stroke="${MORK_STEN}" stroke-width="3"/>
+<circle cx="50" cy="62" r="4" fill="#2a2018"/><path d="M45 88l2 -20h6l2 20z" fill="#2a2018"/>`;
+
+  // Döden: en släckt fackla med rök.
+  BILDER.dod = () => `<rect x="4" y="4" width="92" height="92" rx="6" fill="#1a130c" opacity="0.85"/>
+<path d="M44 40h12l-3 8h-6z" fill="${JARN}"/>
+<rect x="47" y="46" width="6" height="40" rx="2" fill="#4a3420"/>
+<path d="M44 40q6 -4 12 0" fill="none" stroke="#2a2018" stroke-width="2"/>
+<path d="M50 36q-6 -8 0 -14t0 -14" fill="none" stroke="#8a7f6e" stroke-width="1.6" opacity="0.7"/>
+<path d="M54 34q4 -6 0 -10" fill="none" stroke="#8a7f6e" stroke-width="1.2" opacity="0.5"/>`;
+
+  // Solen som går ner bakom horisonten.
+  BILDER.sol = () => `<rect x="4" y="4" width="92" height="92" rx="6" fill="#e8a868" opacity="0.45"/>
+<rect x="4" y="40" width="92" height="22" fill="#d87848" opacity="0.35"/>
+<path d="M22 64a28 28 0 0 1 56 0z" fill="#e8783a"/>
+${[-60, -30, 0, 30, 60].map((a) => { const r = (a - 90) * Math.PI / 180; return `<path d="M${f(50 + Math.cos(r) * 34)} ${f(64 + Math.sin(r) * 34)}L${f(50 + Math.cos(r) * 42)} ${f(64 + Math.sin(r) * 42)}" stroke="#c85a2a" stroke-width="2.4" stroke-linecap="round"/>`; }).join("")}
+<path d="M4 64h92v28a4 4 0 0 1 -4 4H8a4 4 0 0 1 -4 -4z" fill="#3a2a1c"/>
+<path d="M66 64V46h4v-4h3v4h3v-4h3v4h4v18z" fill="#2a1e14"/>`;
+
+  // En port som stängs: två dörrar som går igen.
+  BILDER.port = () => `${vagg()}
+<path d="M24 94V44a26 26 0 0 1 52 0v50z" fill="#140e09"/>
+<path d="M24 94V44a26 26 0 0 1 22 -25.7V94z" fill="#6b4a24" stroke="${BLAECK}" stroke-width="1.2"/>
+<path d="M76 94V44a26 26 0 0 0 -22 -25.7V94z" fill="#6b4a24" stroke="${BLAECK}" stroke-width="1.2"/>
+<path d="M30 40v50M38 30v60M62 30v60M70 40v50" stroke="${BLAECK}" stroke-width="0.8" opacity="0.6"/>
+<path d="M26 56h20M54 56h20M26 78h20M54 78h20" stroke="${JARN}" stroke-width="2.4"/>
+<path d="M10 66h8l-3 -3M10 66l5 3M90 66h-8l3 -3M90 66l-5 3" fill="none" stroke="${BRUN}" stroke-width="1.6" stroke-linecap="round"/>`;
+
   const ORM = ["sover", "ror_sig", "vaknar"];
 
   return {

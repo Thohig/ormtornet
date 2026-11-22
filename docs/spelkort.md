@@ -147,3 +147,4 @@ uppdateras i varje steg.
 | C | ja; också varelsernas texter förlorade sina siffror |
 | D | ja, med ett kort för guld man hittar när man söker |
 | E | ja; varslen, namnets delar och viskningen kommer mellan rundorna som ett eget kort |
+| F | ja; solen visas stort när tre rundor är kvar och när den går ner med en invigd kvar, och den som blir kvar får kortet Solen gick ner |

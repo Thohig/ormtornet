@@ -420,10 +420,13 @@ function handle(msg) {
       Log.room(msg);
       break;
     case "runda":
-      showRoundCard(msg);
+      showRoundCard(msg, true);
       break;
     case "kort":
       showRoundCard({ round: msg.round, kort: [msg.kort] });
+      break;
+    case "storkort":
+      showRoundCard({ round: state ? state.round : 0, kort: [msg.kort] });
       break;
     case "sound":
       Sound.play(msg.s);
@@ -696,6 +699,15 @@ function renderChron() {
   next.textContent = me && me.ready ? t("nu_vantar") : t("knapp_nytt_torn");
   next.disabled = !!(me && me.ready);
   $("chronHost").hidden = !end || !state.vard;
+  // Vandringens sista kort: ute, död eller kvar när solen gick ner. Det
+  // vänds upp en gång, inte vid varje nytt läge.
+  const last = $("chronCard");
+  const key = v.slutkort ? JSON.stringify(v.slutkort) : "";
+  if (last.dataset.key !== key) {
+    last.dataset.key = key;
+    if (v.slutkort) buildCard(last, v.slutkort);
+    else last.hidden = true;
+  }
   const box = $("chronRounds");
   box.innerHTML = "";
   if (!v.rundor.length) {
@@ -1008,33 +1020,54 @@ function renderNow(me) {
 // rader (liv, guld, det som ändrade dig) och resten av rundans kort som
 // minikort. En runda utan eget kort får Runda N som rubrik och facklan som
 // bild. Kortet glider undan när du väljer nästa drag, efter en stund eller
-// vid ett klick. Står ett stort kort mitt på kartan väntar spelkortet tills
-// det har gått undan.
-// Ett spelkort som kommer medan ett annat står uppe (ett varsel efter
-// rundans kort) väntar i kön tills det första har gått undan.
+// vid ett klick. Ett stort kort (stor: att komma ut, en port som stängs,
+// solen) vänds upp mitt på kartan i stället.
+// Ett kort som kommer medan ett annat står uppe väntar i kön: ett
+// spelkort på de stora korten, och ett stort kort på ett annat stort. Ett
+// stort kort väntar inte på spelkortet.
 const CARD_MS = 8000;
+const BIG_MS = 5000;
 let cardTimer = null;
+let bigTimer = null;
 let cardAction = "";
 const cardQueue = [];
-function showRoundCard(msg) {
+const busy = (el) => !el.hidden && !el.classList.contains("leaving");
+function canShow(msg) {
+  const main = (msg.kort || [])[0];
+  return !busy($("storkort")) && ((main && main.stor) || !busy($("spelkort")));
+}
+// En ny runda ersätter genast det spelkort som står uppe, så att den
+// förra rundans kort inte blir stående när rundorna går fort. Den går
+// före kort som väntar i kön.
+function showRoundCard(msg, now) {
+  if (!(msg.lines || []).length && !(msg.kort || []).length) return;
+  if (now) {
+    const spel = $("spelkort");
+    clearTimeout(cardTimer);
+    spel.hidden = true;
+    spel.classList.remove("leaving");
+    msg.ny = true;
+    cardQueue.unshift(msg);
+  } else {
+    cardQueue.push(msg);
+  }
+  nextCard();
+}
+function renderRoundCard(msg) {
   const lines = msg.lines || [];
   const cards = msg.kort || [];
-  if (!lines.length && !cards.length) return;
-  const el = $("spelkort");
-  if (!$("vakenkort").hidden || (!el.hidden && !el.classList.contains("leaving"))) {
-    cardQueue.push(msg);
-    return;
-  }
   const main = cards[0];
+  const big = !!(main && main.stor);
+  const el = big ? $("storkort") : $("spelkort");
   const round = t("rundkort_rubrik", { runda: msg.round });
   const front = buildCard(el, main ? main : { bild: "fackla", rubrik: round });
   el.dataset.round = msg.round;
-  if (main) {
+  if (main && !big) {
     const r = document.createElement("div");
     r.className = "ok-runda";
     r.textContent = round;
     front.prepend(r);
-  } else {
+  } else if (!main) {
     front.querySelector(".ok-namn").classList.add("ok-runda-namn");
   }
   if (lines.length) {
@@ -1060,29 +1093,47 @@ function showRoundCard(msg) {
     more.setAttribute("aria-label", cards.slice(1).map((c) => c.rubrik).join(", "));
     front.appendChild(more);
   }
-  cardAction = (state && state.action) || "";
+  if (big) {
+    clearTimeout(bigTimer);
+    bigTimer = setTimeout(hideBigCard, BIG_MS);
+    return;
+  }
+  // Läget har ännu inte kommit för den nya rundan, så rundans kort börjar
+  // utan drag. Ett kort som har väntat i kön följer draget som är valt.
+  cardAction = msg.ny ? "" : (state && state.action) || "";
   clearTimeout(cardTimer);
   cardTimer = setTimeout(hideRoundCard, CARD_MS);
 }
-function hideRoundCard() {
-  const card = $("spelkort");
-  if (card.hidden || card.classList.contains("leaving")) return;
-  clearTimeout(cardTimer);
-  card.classList.add("leaving");
+// fadeOut låter kortet glida undan och visar sedan nästa i kön.
+function fadeOut(el) {
+  if (el.hidden || el.classList.contains("leaving")) return;
+  el.classList.add("leaving");
   setTimeout(() => {
-    if (!card.classList.contains("leaving")) return;
-    card.hidden = true;
+    if (!el.classList.contains("leaving")) return;
+    el.hidden = true;
     nextCard();
   }, 400);
 }
-// nextCard visar nästa kort i kön, om inget stort kort står uppe.
+function hideRoundCard() {
+  clearTimeout(cardTimer);
+  fadeOut($("spelkort"));
+}
+function hideBigCard() {
+  clearTimeout(bigTimer);
+  fadeOut($("storkort"));
+}
+// nextCard visar nästa kort i kön, när det får plats.
 function nextCard() {
-  if (cardQueue.length && $("vakenkort").hidden && $("spelkort").hidden) showRoundCard(cardQueue.shift());
+  if (!cardQueue.length || !canShow(cardQueue[0])) return;
+  renderRoundCard(cardQueue.shift());
 }
 // checkRoundCard döljer kortet när ett nytt drag är valt eller vandringen
 // är slut.
 function checkRoundCard() {
-  if (state.phase !== "spel") cardQueue.length = 0;
+  if (state.phase !== "spel") {
+    cardQueue.length = 0;
+    hideBigCard();
+  }
   if ($("spelkort").hidden) return;
   if (state.phase !== "spel") {
     $("spelkort").hidden = true;
@@ -1139,22 +1190,21 @@ function buildCard(el, c, extra) {
   inner.append(back, front);
   el.appendChild(inner);
   el.hidden = false;
-  el.classList.remove("leaving", "vand", "igen");
+  el.classList.remove("leaving", "vand", "igen", "skaka");
   void el.offsetWidth; // börja med baksidan upp
   el.classList.add("vand");
+  if (c.bild === "vaknar") el.classList.add("skaka");
   if (c.forbannad) el.classList.add("igen"); // vänds en gång till och visar baksidan
   return front;
 }
 
 // showWakeCard visar för alla att ormen har vaknat: kortet "Ormen vaknar"
 // stort mitt på kartan, med det du märkte och, om du stod i kammaren, vad
-// du förlorade.
-const WAKE_CARD_MS = 5000;
-let wakeTimer = null;
+// du förlorade. Det kommer genast, före rundans kort.
 function showWakeCard(msg) {
   if (!msg.namn) return;
   hideRoundCard();
-  const el = $("vakenkort");
+  const el = $("storkort");
   let extra = null;
   if (msg.inne) {
     extra = document.createElement("div");
@@ -1162,21 +1212,10 @@ function showWakeCard(msg) {
     extra.textContent = t("vakenkort_forlust", { guld: msg.forlust || 0, liv: msg.skada || 0 });
   }
   buildCard(el, { bild: "vaknar", rubrik: msg.namn, text: msg.text }, extra);
-  clearTimeout(wakeTimer);
-  wakeTimer = setTimeout(hideWakeCard, WAKE_CARD_MS);
+  clearTimeout(bigTimer);
+  bigTimer = setTimeout(hideBigCard, BIG_MS);
 }
-function hideWakeCard() {
-  const el = $("vakenkort");
-  if (el.hidden || el.classList.contains("leaving")) return;
-  clearTimeout(wakeTimer);
-  el.classList.add("leaving");
-  setTimeout(() => {
-    if (!el.classList.contains("leaving")) return;
-    el.hidden = true;
-    nextCard();
-  }, 400);
-}
-$("vakenkort").addEventListener("click", hideWakeCard);
+$("storkort").addEventListener("click", hideBigCard);
 
 // Förklaringen till ett tecken på kartan. Den läggs under tecknet, inom
 // kartans ruta.

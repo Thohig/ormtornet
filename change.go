@@ -61,7 +61,9 @@ func (g *Game) closePorts() {
 		c := corners[g.portNext]
 		g.reveal(c.x, c.y).Shut = true
 		horn := g.data.Horn[g.portNext]
-		g.tellInside(g.data.Text("port_stangs", "horn", horn), "varn")
+		text := g.data.Text("port_stangs", "horn", horn)
+		g.tellInside(text, "varn")
+		g.bigCardInside(gameCard{Slag: "port", Bild: "port", Rubrik: g.data.Text("kort_port"), Text: text})
 		g.soundAll("niva")
 		g.chronicle("kronika_port", "horn", horn)
 		g.portNext, g.portClock = -1, 0

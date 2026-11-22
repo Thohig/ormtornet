@@ -587,6 +587,13 @@ och varelser har sin korta beskrivning som rubrik, aldrig namnet.
 - **Varslen**, **namnets delar** och att du blir **invigd** kommer mellan
   rundorna och visas genast som ett eget kort (meddelandet `kort`). Står
   ett kort redan uppe väntar det nya tills det första har gått undan.
+- **Stora kort** mitt på kartan: uppvaknandet, en port som stängs och
+  solen när tre rundor är kvar och när den går ner visas för alla som är
+  kvar inne (meddelandet `storkort`), och att du kommer ut bara för dig.
+  En ny runda ersätter spelkortet som står uppe; ett stort kort väntar
+  bara på ett annat stort kort.
+- **Vandringens sista kort**, ute, död eller kvar när solen gick ner,
+  står överst i Din vandring.
 
 ### Skattkammaren och ormen
 
@@ -656,7 +663,8 @@ gallgasten ofta).
 
 Varelserna sköts alltid av tornet. Den som dör väntar rundan inte på.
 
-Den som dör får en egen skärm, **Din vandring**: rundans kort runda för
+Den som dör får en egen skärm, **Din vandring**, med vandringens sista
+kort överst: rundans kort runda för
 runda, med rummet som i loggen: beskrivningen, det hen såg och det hen
 hörde, hur hen dog och sina siffror, och hur många som är kvar i tornet och
 har gått ut. Där kortet bara säger "−2 liv" säger Din vandring vad det kom

@@ -188,3 +188,47 @@ func TestCellarAndLetterCards(t *testing.T) {
 		t.Fatalf("brevet: %+v", cards)
 	}
 }
+
+// Den som dör eller går ut får vandringens sista kort, stort och överst i
+// Din vandring. En ny vandring börjar utan det.
+func TestEndCards(t *testing.T) {
+	g, a, b := startTwo(t)
+	pa, pb := a.player, b.player
+	putInRoom(g, pa, 4, 4)
+	g.kill(pa)
+	cards := g.roundCardsOf(pa)
+	if len(cards) != 1 || cards[0].Slag != "dod" || !cards[0].Stor {
+		t.Fatalf("döden: %+v", cards)
+	}
+	if v := g.journeyOf(pa); v.Last == nil || v.Last.Slag != "dod" {
+		t.Fatalf("Din vandring: %+v", v.Last)
+	}
+	c := g.corners()[pb.Slot%len(g.corners())]
+	pb.X, pb.Y = c.x, c.y
+	room := g.reveal(pb.X, pb.Y)
+	g.move(pb, room.Exit, 0)
+	if pb.Status != statusOut {
+		t.Fatalf("Bo kom inte ut: %s", pb.Status)
+	}
+	if pb.lastCard == nil || pb.lastCard.Slag != "ut" || !pb.lastCard.Stor {
+		t.Fatalf("ute: %+v", pb.lastCard)
+	}
+	g.resetChronicle()
+	if pa.lastCard != nil {
+		t.Fatal("det sista kortet blev kvar till nästa vandring")
+	}
+}
+
+// En port som stängs och solen som snart går ner visas stort för alla som
+// är kvar inne.
+func TestBigCardsInside(t *testing.T) {
+	g, a, b := startTwo(t)
+	messagesOf[bigMsg](a, "storkort")
+	messagesOf[bigMsg](b, "storkort")
+	g.sun = 3
+	g.sunWarning(4)
+	ga, gb := messagesOf[bigMsg](a, "storkort"), messagesOf[bigMsg](b, "storkort")
+	if len(ga) != 1 || len(gb) != 1 || ga[0].Kort.Bild != "sol" || !ga[0].Kort.Stor || ga[0].Kort.Text == "" {
+		t.Fatalf("solen: %+v %+v", ga, gb)
+	}
+}

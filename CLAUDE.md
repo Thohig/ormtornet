@@ -66,8 +66,9 @@ Så här skiljer vi på sakerna när användaren ger instruktioner:
     av rundans kort som **minikort** (`spelkort.go`, `showRoundCard` i
     `web/app.js`, bilderna i `web/kort.js`, ordningen under `spelkort` i
     `data/texter.json`). **Ormkortet** är spelkortet när du tar en näve,
-  - **uppvaknandet**: kortet Ormen vaknar som alla ser stort mitt på
-    kartan (`showWakeCard` i `web/app.js`),
+  - **det stora kortet** mitt på kartan (`#storkort`): **uppvaknandet**,
+    kortet Ormen vaknar som alla ser (`showWakeCard` i `web/app.js`), en
+    port som stängs, solen och att komma ut,
   - **sömnmätaren**: hur djupt ormen sover, i panelen Nu i skattkammaren,
   - **panelen Nu**: draget, striden och vad som väntar, som en rad under
     kartan (`#nowBlock`). Den syns bara när den har något att säga. Panelen Vandrare togs bort 2026-11-22,
@@ -117,7 +118,8 @@ Så här skiljer vi på sakerna när användaren ger instruktioner:
 - **krönikan** (skärmen): vyn `chronscreen` på spelarsidan (`renderChron` i
   `web/app.js`). Den som dör ser **Din vandring**, rundans kort runda för
   runda (`vandring` i tillståndet, `journeyOf` i `chronicle.go`,
-  `addJourney` i `summary.go`), med vad skadan kom av, tysta rundor
+  `addJourney` i `summary.go`), med vandringens sista kort överst, vad
+  skadan kom av, tysta rundor
   ihopslagna och märket "tornet styrde". I slutet ser alla resultaten,
   epilogen, hela krönikan och sin vandring.
   Spelledaren har där också Till värdsidan bredvid Nytt torn.

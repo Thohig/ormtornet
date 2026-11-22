@@ -356,6 +356,21 @@
     }
   ],
   "texter": {
+    "kort_ut": [
+      "Outside"
+    ],
+    "kort_dod": [
+      "The flame goes out"
+    ],
+    "kort_forlorad": [
+      "The sun went down"
+    ],
+    "kort_port": [
+      "A gate closes"
+    ],
+    "kort_sol": [
+      "The sun is setting"
+    ],
     "valkommen": [
       "{namn}, you stand inside the gate in the tower's {horn}. Somewhere in the middle, they say, a serpent sleeps around its treasure. Take what you dare, and come out before the sun goes down."
     ],

@@ -84,7 +84,7 @@ func (g *Game) resetChronicle() {
 		if p != nil {
 			p.stats = chronStats{}
 			p.hurt("", "")
-			p.journal, p.death, p.epilog = nil, "", nil
+			p.journal, p.death, p.epilog, p.lastCard = nil, "", nil, nil
 		}
 	}
 }
@@ -164,16 +164,17 @@ type journeyView struct {
 	Rounds []journeyRound `json:"rundor"`
 	Death  string         `json:"dod,omitempty"`
 	Stats  string         `json:"siffror"`
-	Cards  []cardTag      `json:"kort,omitempty"` // ormkorten vandraren har dragit
-	In     int            `json:"inne"`           // vandrare kvar i tornet
-	Out    int            `json:"ute"`            // vandrare som har gått ut
+	Cards  []cardTag      `json:"kort,omitempty"`     // ormkorten vandraren har dragit
+	Last   *gameCard      `json:"slutkort,omitempty"` // vandringens sista kort: ute, död eller kvar
+	In     int            `json:"inne"`               // vandrare kvar i tornet
+	Out    int            `json:"ute"`                // vandrare som har gått ut
 }
 
 func (g *Game) journeyOf(me *Player) *journeyView {
 	if me == nil {
 		return nil
 	}
-	v := &journeyView{Rounds: me.journal, Death: me.death, Stats: g.statsLine(me), Cards: g.cardTags(me)}
+	v := &journeyView{Rounds: me.journal, Death: me.death, Stats: g.statsLine(me), Cards: g.cardTags(me), Last: me.lastCard}
 	if v.Rounds == nil {
 		v.Rounds = []journeyRound{}
 	}

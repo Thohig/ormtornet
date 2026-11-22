@@ -35,7 +35,9 @@ func (g *Game) kill(p *Player) {
 	g.chronicleDeath(p)
 	p.Stuck, p.Cellar, p.Poison, p.Dark = 0, 0, 0, 0
 	p.Action = ""
-	g.logTo(p, g.data.Text("dod"), "varn")
+	text := g.data.Text("dod")
+	g.logTo(p, text, "varn")
+	g.endCard(p, gameCard{Slag: "dod", Bild: "dod", Rubrik: g.data.Text("kort_dod"), Text: text, Stor: true})
 	g.logOthers(p, g.data.Text("dod_andra", "namn", p.Name), "varn")
 	g.soundAll("dod")
 }

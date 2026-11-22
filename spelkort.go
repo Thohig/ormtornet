@@ -64,6 +64,35 @@ func (g *Game) sendCard(p *Player, c gameCard) {
 	g.send(p.client, cardMsg{T: "kort", Round: g.round, Kort: c})
 }
 
+// bigMsg är ett stort kort mitt på kartan för alla som är kvar inne, som
+// uppvaknandet: en port som stängs eller solen som går ner.
+type bigMsg struct {
+	T    string   `json:"t"`
+	Kort gameCard `json:"kort"`
+}
+
+// bigCardInside visar kortet stort för alla som är kvar i tornet.
+func (g *Game) bigCardInside(c gameCard) {
+	c.Rubrik = upperFirst(c.Rubrik)
+	c.Stor = true
+	for _, p := range g.players {
+		if p != nil && p.Status == statusIn {
+			g.send(p.client, bigMsg{T: "storkort", Kort: c})
+		}
+	}
+}
+
+// endCard är vandringens sista kort: ute, död eller kvar när solen gick
+// ner. Det står överst i Din vandring, och den som kommer ut ser det stort
+// på kartan.
+func (g *Game) endCard(p *Player, c gameCard) {
+	c.Rubrik = upperFirst(c.Rubrik)
+	p.lastCard = &c
+	if p.Status == statusOut || p.Status == statusDead {
+		g.addCard(p, c)
+	}
+}
+
 // roundCardsOf ger rundans kort i ordningen ur data, det viktigaste först.
 // Kort av en sort som ordningen inte känner kommer sist.
 func (g *Game) roundCardsOf(p *Player) []gameCard {
@@ -88,6 +117,7 @@ var cardImages = []string{
 	"rep", "amulett", "veke", "skold", "vaska", "kompass", "rokpulver", "spegel", "kastkniv", "krita",
 	"flojt", "timglas", "svart_parla", "mynt_hal", "rostkrona", "brev", "dryck", "guld",
 	"kallare", "varsel", "namndel", "invigd",
+	"ut", "dod", "sol", "port",
 }
 
 // cardImage är motivet för innehåll i data/: fältet bild, annars id:t.

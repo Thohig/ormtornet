@@ -276,6 +276,7 @@ type Player struct {
 	// Din vandring (summary.go). Töms före varje runda.
 	roundHurtKind, roundHurtWhat, roundKill string
 	roundCards                              []gameCard // spelkorten för rundan (spelkort.go)
+	lastCard                                *gameCard  // vandringens sista kort: ute, död eller kvar när solen gick ner
 }
 
 // present är sant för en spelare som deltar just nu: en människa med öppen
@@ -1520,7 +1521,9 @@ func (g *Game) resolve() {
 	case inside == 0:
 		g.endGame()
 	case g.sun <= 0 && !g.graceUsed && g.anyInitiatedInside():
-		g.logAll(g.data.Text("solnedgang"), "varn")
+		text := g.data.Text("solnedgang")
+		g.logAll(text, "varn")
+		g.bigCardInside(gameCard{Slag: "sol", Bild: "sol", Rubrik: g.data.Text("kort_sol"), Text: text})
 		g.soundAll("solnedgang")
 		g.portGrace()
 		g.round++
@@ -1554,8 +1557,12 @@ func (g *Game) sunWarning(before int) {
 		key = "sol_halv"
 	}
 	if key != "" {
-		g.logAll(g.data.Text(key, "sol", strconv.Itoa(g.sun)), "varn")
+		text := g.data.Text(key, "sol", strconv.Itoa(g.sun))
+		g.logAll(text, "varn")
 		g.soundAll("solvarning")
+		if key == "sol_snart" {
+			g.bigCardInside(gameCard{Slag: "sol", Bild: "sol", Rubrik: g.data.Text("kort_sol"), Text: text})
+		}
 	}
 }
 
@@ -1575,7 +1582,9 @@ func (g *Game) endGame() {
 		if p.Status == statusIn {
 			p.Status = statusLost
 			g.chronicle("kronika_forlorad", "namn", p.Name)
-			g.logTo(p, g.data.Text("forlorad_du"), "varn")
+			text := g.data.Text("forlorad_du")
+			g.logTo(p, text, "varn")
+			g.endCard(p, gameCard{Slag: "forlorad", Bild: "sol", Rubrik: g.data.Text("kort_forlorad"), Text: text, Stor: true})
 			g.logOthers(p, g.data.Text("forlorad", "namn", p.Name), "varn")
 		}
 	}
@@ -1689,11 +1698,15 @@ func (g *Game) move(p *Player, d Dir, depth int) {
 		} else {
 			g.chronicle("kronika_ut_tom", "namn", p.Name)
 		}
+		var text string
 		if p.Treasure > 0 {
-			g.logTo(p, g.data.Text("ut_med_skatt", "skatt", strconv.Itoa(p.Treasure)), "syn")
+			text = g.data.Text("ut_med_skatt", "skatt", strconv.Itoa(p.Treasure))
+			g.logTo(p, text, "syn")
 		} else {
-			g.logTo(p, g.data.Text("ut_utan_skatt"), "info")
+			text = g.data.Text("ut_utan_skatt")
+			g.logTo(p, text, "info")
 		}
+		g.endCard(p, gameCard{Slag: "ut", Bild: "ut", Rubrik: g.data.Text("kort_ut"), Text: text, Stor: true})
 		g.soundTo(p, "ut")
 		g.logOthers(p, g.data.Text("andra_ut", "namn", p.Name), "info")
 		g.hear(p.X, p.Y, "ljud_port", "", "dim", p)

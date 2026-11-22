@@ -33,6 +33,11 @@ eller leder tornet.
 - Källarvalven, brevet, varslen, namnets delar och att bli invigd har
   egna kort. Det som kommer mellan rundorna visas genast, efter kortet
   som står uppe.
+- En port som stängs och solen, när tre rundor är kvar och när den går
+  ner, vänds upp stort mitt på kartan för alla som är kvar inne, som
+  uppvaknandet. Den som kommer ut ser sitt sista kort stort på kartan.
+- Din vandring börjar med vandringens sista kort: ute, död eller kvar
+  när solen gick ner.
 
 ### Fröet, hela bredden och loggen på kartan
 

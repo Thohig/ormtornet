@@ -376,6 +376,21 @@
     "ordning": ["dod", "ut", "ormen", "varelse", "vandrare", "falla", "forbannelse", "foremal", "guld", "kallare", "varsel", "namn", "viska", "brev", "dryck"]
   },
   "texter": {
+    "kort_ut": [
+      "Ute"
+    ],
+    "kort_dod": [
+      "Lågan slocknar"
+    ],
+    "kort_forlorad": [
+      "Solen gick ner"
+    ],
+    "kort_port": [
+      "En port stängs"
+    ],
+    "kort_sol": [
+      "Solen går ner"
+    ],
     "valkommen": [
       "{namn}, du står innanför porten i tornets {horn}. Någonstans i mitten sägs en orm sova kring sin skatt. Ta vad du vågar och kom ut innan solen går ner."
     ],
