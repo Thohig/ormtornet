@@ -40,7 +40,8 @@ Så här skiljer vi på sakerna när användaren ger instruktioner:
   skalet över WebRTC (`web/natet.js`, `web/rtc/rtc.js` från
   `klient/src/rtc.ts`).
 - **spelarsidan**: sidan på `/` som spelarna öppnar, med vyerna introt,
-  namnrutan, klassvalet, spelet och krönikan. Spelet har faserna lobbyn,
+  klassvalet, spelet och krönikan. Namnrutan togs bort 2026-11-22; tornet
+  ger varje vandrare ett namn (`names.go`, `data/namn.json`). Spelet har faserna lobbyn,
   klassvalet, vandringen och slutet (`lobby`, `klassval`, `spel`, `slut`). README beskriver under "Vad en spelare ser"
   vad en spelare möter.
 - **spelskärmen**: vyn spelet på spelarsidan. Delarna heter:

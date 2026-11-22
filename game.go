@@ -893,17 +893,20 @@ func (g *Game) Join(c *Client, rawName string) {
 	if c.player != nil {
 		return
 	}
+	// Spelarsidan skickar namnet tornet gav den förra gången, eller inget.
+	// Utan namn lottar tornet ett (names.go).
 	name := cleanName(rawName)
 	if name == "" {
-		g.send(c, logMsg{T: "error", Text: g.data.Text("tomt_namn")})
-		return
+		name = g.randomName()
 	}
-	// Återanslutning: samma namn tar tillbaka sin vandrare.
+	// Återanslutning: samma namn tar tillbaka sin vandrare. Är namnet redan
+	// upptaget, som när två flikar i samma webbläsare öppnar tornet, får den
+	// nya ett eget namn.
 	for _, p := range g.players {
 		if p != nil && strings.EqualFold(p.Name, name) {
 			if p.client != nil || (p.bot != nil && !p.takenOver) {
-				g.send(c, logMsg{T: "error", Text: g.data.Text("namn_upptaget")})
-				return
+				name = g.randomName()
+				break
 			}
 			if p.takenOver {
 				g.handBack(p, c)
@@ -957,6 +960,7 @@ func (g *Game) Join(c *Client, rawName string) {
 		p.Status = statusNew
 		g.broadcastState()
 		g.soundAll("ansluter")
+		g.logTo(p, g.data.Text("namn_givet", "namn", name), "rost")
 		g.logTo(p, g.data.Text("sen_ankomst", "namn", name), "syn")
 		g.logOthers(p, g.hiddenText("ansluter", "namn", name, "horn", g.data.Horn[slot]), "info")
 		return
@@ -968,6 +972,7 @@ func (g *Game) Join(c *Client, rawName string) {
 
 	g.broadcastState()
 	g.soundAll("ansluter")
+	g.logTo(p, g.data.Text("namn_givet", "namn", name), "rost")
 	g.logTo(p, g.hiddenText("valkommen", "namn", name, "horn", horn), "syn")
 	g.describeLater(p, &g.rooms[p.Y][p.X], p.X, p.Y)
 	g.tellRoom(p)

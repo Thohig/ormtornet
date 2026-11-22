@@ -6,6 +6,7 @@ const $ = (id) => document.getElementById(id);
 let ws = null;
 let state = null;
 let myName = "";
+let savedName = ""; // namnet som senast sparades i fliken och webbläsaren
 let joined = false;
 let mapReady = false;
 let mapSize = 0; // tornets storlek när kartan ritades upp
@@ -282,7 +283,12 @@ function connect() {
     handle(msg);
   };
   ws.onclose = () => {
-    if (!joined) return;
+    if (!joined) {
+      // Tornet svarade inte: säg det, med en knapp tillbaka.
+      $("nameerr").textContent = t("anslutning_ingen");
+      show("namescreen");
+      return;
+    }
     if (towerClosed) {
       $("conn").textContent = t("anslutning_stangt");
       return;
@@ -302,9 +308,17 @@ function handle(msg) {
       state.receivedAt = performance.now();
       if (msg.sprak && msg.sprak !== UI.sprak) changeLanguage(msg.sprak, true);
       trackSeen(state);
-      if (!joined) {
-        joined = true;
-        try { localStorage.setItem("ormtornet-namn", myName); } catch {}
+      joined = true;
+      {
+        // Namnet tornet gav, så att sidan kommer tillbaka till samma vandrare.
+        const me = msg.players.find((p) => p.id === msg.you);
+        if (me && me.name !== savedName) {
+          myName = savedName = me.name;
+          try {
+            sessionStorage.setItem("ormtornet-namn", myName);
+            localStorage.setItem("ormtornet-namn", myName);
+          } catch {}
+        }
       }
       showPhase();
       if (!mapReady || mapSize !== msg.size) {
@@ -355,6 +369,8 @@ function handle(msg) {
     case "error":
       if (!joined) {
         $("nameerr").textContent = msg.text;
+        show("namescreen");
+        $("back").focus();
         ws.onclose = null;
         ws.close();
       } else {
@@ -1603,9 +1619,13 @@ const Intro = (() => {
       location.href = "spelledare.html";
       return;
     }
-    show("namescreen");
-    try { $("name").value = localStorage.getItem("ormtornet-namn") || ""; } catch {}
-    $("name").focus();
+    // Tornet ger namnet. Sidan skickar det namn tornet gav förra gången,
+    // så att den som kommer tillbaka får sin vandrare.
+    // Fliken kommer ihåg sitt eget namn, så att två flikar i samma
+    // webbläsare inte byter vandrare med varandra.
+    myName = "";
+    try { myName = sessionStorage.getItem("ormtornet-namn") || localStorage.getItem("ormtornet-namn") || ""; } catch {}
+    connect();
   }
 
   function enter() {
@@ -1722,16 +1742,6 @@ document.addEventListener("keydown", (e) => {
 });
 
 $("back").addEventListener("click", () => pressKey("Escape"));
-$("nameform").addEventListener("submit", (e) => {
-  e.preventDefault();
-  myName = $("name").value.trim();
-  if (!myName) {
-    $("nameerr").textContent = t("namn_saknas");
-    return;
-  }
-  $("nameerr").textContent = "";
-  connect();
-});
 
 const KEYS = {
   ArrowUp: "N", ArrowRight: "E", ArrowDown: "S", ArrowLeft: "W",
@@ -1774,7 +1784,7 @@ $("whisperText").addEventListener("keydown", (e) => {
 // skickar namnet på den tangent de står för. Svarar true om tangenten
 // betydde något.
 function pressKey(key) {
-  // Esc i namnrutan går tillbaka till startsidan.
+  // Esc på skärmen med felet går tillbaka till startsidan.
   if (key === "Escape" && $("namescreen").classList.contains("active")) {
     backToStart();
     return true;

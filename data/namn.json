@@ -1,0 +1,7 @@
+{
+  "_om": "Namnen som tornet ger vandrarna. Ett förnamn och ett tillnamn lottas, och två vandrare får aldrig samma förnamn. Förnamnen översätts inte. Namnen får vara högst 16 tecken tillsammans, med mellanslaget.",
+  "vandrarnamn": {
+    "fornamn": ["Agnes", "Algot", "Astrid", "Arvid", "Berit", "Bror", "Dagny", "Edvin", "Elof", "Embla", "Frej", "Gerda", "Gunnar", "Halvar", "Hilda", "Jorun", "Knut", "Liv", "Malte", "Nanna", "Oskar", "Ragna", "Runa", "Sten", "Tyra", "Ulf", "Valdis", "Vidar", "Åsa", "Ebbe"],
+    "tillnamn": ["Vindögd", "Askhand", "Gråkappa", "Tunnfot", "Lättfot", "Stenhals", "Kolnäve", "Mossrygg", "Sotkind", "Halmhår", "Ekfot", "Nattöga", "Lerhand", "Vargsten", "Benvit", "Rostkind", "Kråkfot", "Saltläpp"]
+  }
+}

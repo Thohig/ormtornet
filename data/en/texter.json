@@ -571,11 +571,8 @@
     "spel_pagar": [
       "The wandering has already begun. Wait until the sun has gone down."
     ],
-    "tomt_namn": [
-      "The tower wants to know your name."
-    ],
-    "namn_upptaget": [
-      "Someone by that name is already in the tower."
+    "namn_givet": [
+      "The tower calls you {namn}."
     ],
     "fullt": [
       "The tower takes no more. It is already full."

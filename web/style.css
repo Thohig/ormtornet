@@ -244,22 +244,8 @@ body[data-niva="4"] #crt::after { animation: throb 0.95s infinite; }
   align-items: center;
   gap: 14px;
 }
-#nameform label { font-size: 16px; letter-spacing: 0.1em; }
-#name {
-  background: none;
-  border: none;
-  border-bottom: 1px solid var(--dim);
-  color: var(--hi);
-  font: inherit;
-  font-size: 20px;
-  text-align: center;
-  width: 16ch;
-  outline: none;
-  caret-color: var(--hi);
-  text-shadow: 0 0 4px var(--glow);
-}
 .hint { color: var(--fg); font-size: 12px; }
-#nameerr { color: var(--warn); min-height: 1.2em; }
+#nameerr { color: var(--warn); min-height: 1.2em; max-width: 36ch; text-align: center; }
 
 #game {
   flex-direction: column;
@@ -801,8 +787,7 @@ body.touch #helpBtn { display: none; }
 body.touch .touchonly { display: flex; }
 body.touch .keys { display: none; }
 
-#nameform .touchonly { gap: 28px; }
-#nameform .touchonly button, #pad button {
+#nameform .namebuttons button, #pad button {
   background: none;
   border: 1px solid var(--faint);
   border-radius: 4px;
@@ -815,8 +800,7 @@ body.touch .keys { display: none; }
   user-select: none;
   -webkit-user-select: none;
 }
-#nameform .touchonly button { padding: 10px 18px; letter-spacing: 0.1em; }
-#nameform .touchonly button[type="submit"] { color: var(--hi); border-color: var(--dim); }
+#nameform .namebuttons button { padding: 10px 18px; letter-spacing: 0.1em; }
 
 #pad {
   flex-wrap: wrap;

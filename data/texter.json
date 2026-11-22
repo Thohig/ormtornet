@@ -587,11 +587,8 @@
     "spel_pagar": [
       "Vandringen har redan börjat. Vänta tills solen har gått ner."
     ],
-    "tomt_namn": [
-      "Tornet vill veta vad du heter."
-    ],
-    "namn_upptaget": [
-      "Någon med det namnet är redan i tornet."
+    "namn_givet": [
+      "Tornet kallar dig {namn}."
     ],
     "fullt": [
       "Tornet tar inte emot fler. Alla platser är tagna."

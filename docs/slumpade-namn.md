@@ -1,6 +1,9 @@
 # Slumpade namn (förslag)
 
-Förslag 2026-11-22. Inget är byggt eller bestämt.
+Förslag 2026-11-22. Steg 1 och 2 är byggda, med förnamn och tillnamn och
+samma namn hela kvällen. Steg 3, Nytt namn i lobbyn, är inte byggt.
+Robotarna skickar fortfarande sina egna namn, så att deras loggar går att
+läsa.
 
 ## Vad som önskas
 

@@ -97,7 +97,8 @@ till dem som ska spela.
   spelarna beskedet att tornet stänger. Stängs bara fliken tror deras
   sidor att anslutningen bröts och börjar leta efter tornet igen.
 - En dator är bäst. På en telefon kan tornet stanna när skärmen släcks.
-- Den som tappar anslutningen öppnar länken igen och skriver samma namn.
+- Den som tappar anslutningen öppnar länken igen i samma webbläsare och får
+  tillbaka sin vandrare.
 - Vissa nät stoppar anslutningen, oftast mobilnät och nät på jobb och
   skolor. Det finns ingen reläserver (TURN) än; prova då ett annat nät.
 - Spelarna kan se spelledarens publika IP-adress, som i ett videosamtal.
@@ -164,7 +165,7 @@ Om en spelare lämnar mitt i en vandring tar en AI-spelare över vandraren
 efter två rundor (ändras under "Frånvarande vandrare", eller sätts till "står
 still"). Spelledaren kan också trycka "AI tar över" direkt. AI:n fortsätter
 med vandrarens plats, skatt och liv, och de andra ser namnet märkt "(AI)".
-Kommer spelaren tillbaka och skriver samma namn får den genast tillbaka sina
+Kommer spelaren tillbaka i samma webbläsare får den genast tillbaka sina
 steg. I resultatet märks den som AI har spelat åt med "~". Den som inte kommer
 tillbaka innan vandringen är slut är inte med i nästa.
 
@@ -174,7 +175,7 @@ solen inte hinner gå ner medan AI:n spelar ensam. Raden säger att rundan
 är pausad.
 
 Värdsidan visar inga skatter, positioner eller drag, så spelledaren kan spela med i
-en annan flik ("Gå in själv", som leder till introt och sedan namnrutan). Andra datorer i nätverket kommer inte åt sidan.
+en annan flik ("Gå in själv", som leder till introt och sedan lobbyn). Andra datorer i nätverket kommer inte åt sidan.
 
 ## Spela
 
@@ -189,22 +190,21 @@ en annan flik ("Gå in själv", som leder till introt och sedan namnrutan). Andr
    `data/texter.json` under `rykten`, och under `rykten_invigda` för den som
    spelar med `-avslojande=false`. Väntetiden står under `intro` → `vanta`
    och uppmaningen att klicka under `intro_ljud`.
-2. Skriv ditt namn och tryck Enter.
-3. Tryck Enter igen, eller Redo i översta raden, när du är redo.
-   Vandringen börjar när alla är redo.
+2. Tornet ger dig ett namn, till exempel "Dagny Ekfot", och loggen säger
+   "Tornet kallar dig Dagny Ekfot." Ingen skriver något namn.
+3. Tryck Enter, eller Redo i översta raden, när du är redo. Vandringen
+   börjar när alla är redo.
 
 ### Vad en spelare ser
 
 En spelare som ansluter från en annan dator eller telefon ser bara
-spelarsidan (`/`), med tre vyer i tur och ordning, och krönikans skärm för
+spelarsidan (`/`), med två vyer i tur och ordning, och krönikans skärm för
 den som dör och för alla i slutet (se slutet nedan och Strider):
 
 1. **Introt**: tornet i stormen, ryktena och, efter en stund, "Gå in i
    tornet". Hela övergången in genom porten visas bara första gången i
    fliken.
-2. **Namnrutan**: "Vad heter du, vandrare?" Är tornet fullt eller namnet
-   upptaget står felet här.
-3. **Spelet**, där spelaren stannar resten av kvällen. Det går igenom fyra faser:
+2. **Spelet**, där spelaren stannar resten av kvällen. Det går igenom fyra faser:
    - **lobbyn**: vandrarna som prickar med namn i översta raden, och
      knappen Redo där (Enter, eller Redo längst ner på en pekskärm),
    - **klassvalet**: en egen skärm med ett spelkort för varje klass, med
@@ -270,7 +270,7 @@ försöker igen" om förbindelsen bryts.
 Värdsidan ser spelaren aldrig. Den som öppnar `/spelledare` från en annan
 dator får bara veta att sidan visas på datorn som kör tornet. Rutan "DU LEDER
 TORNET" visas bara på tornets dator. Där leder introt till värdsidan i
-stället för namnrutan. Den som vill spela där öppnar `/?spela` eller trycker
+stället för lobbyn. Den som vill spela där öppnar `/?spela` eller trycker
 "Gå in själv" på värdsidan.
 
 Spelet går i rundor. Alla väljer sitt drag samtidigt, och när alla har valt
@@ -625,7 +625,8 @@ Namn, texter, hur ofta de dyker upp och hur länge de håller står i
 `data/foremal.json`, och hur ofta man hittar ett när man söker under
 `sok` → `vikter` → `foremal` i `fallor.json`.
 
-Om du laddar om sidan och skriver samma namn igen får du tillbaka din vandrare.
+Om du laddar om sidan får du tillbaka din vandrare: sidan kommer ihåg namnet
+tornet gav dig, i fliken och i webbläsaren.
 Det gäller också under klassvalet: tornet väntar på dig tills tiden är slut,
 och är du inte tillbaka då följer du med som frånvarande och kan komma in
 under vandringen.
@@ -752,7 +753,7 @@ Fält som börjar med `_` är kommentarer och får stå var som helst.
   förklaringar till fällorna, epilogen, svaren, ormens namn och texterna
   för delarna, tornets nåd, varslen och hur tornet förändras. Rumsbeskrivningarna för varje
   nivå (`"1"` till `"4"`) ligger i `texter.json`.
-- `spelarsidan.json` spelarsidans egna texter: introt, namnrutan, klassvalet, styrningen, panelerna och knapparna
+- `spelarsidan.json` spelarsidans egna texter: introt, klassvalet, styrningen, panelerna och knapparna
 - `vardsidan.json` värdsidans texter, och tornets besked och loggrader till spelledaren (`server_*`)
 - `en/` översättningarna till engelska (se Språk nedan)
 
@@ -864,7 +865,7 @@ Beskrivningarna för rummen ligger under nivåerna `"1"` till `"4"`.
   skripten vid varje push, och `sida.yml` publicerar på GitHub Pages vid
   varje push till `main`
 - `web/` klienten: HTML, CSS och JavaScript utan ramverk
-  - `index.html` och `app.js` spelarsidan: introt, namnrutan, klassvalet
+  - `index.html` och `app.js` spelarsidan: introt, klassvalet
     och spelet
   - `spelledare.html` värdsidan
   - `spelledare.css` värdsidans stil

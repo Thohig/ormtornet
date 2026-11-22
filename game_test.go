@@ -683,10 +683,9 @@ func TestBotsNeverTakeHumanNamesOrNeedReady(t *testing.T) {
 	g.AddBots(2)
 	c := testClient()
 	g.Join(c, g.data.AI.Namn[0])
-	if c.player != nil {
+	if c.player == nil || c.player.bot != nil || c.player.Name == g.data.AI.Namn[0] {
 		t.Fatal("en människa tog över en datorspelare via namnet")
 	}
-	g.Join(c, "Alva")
 	if g.phase != phaseLobby {
 		t.Fatal("spelet startade innan människan var redo")
 	}

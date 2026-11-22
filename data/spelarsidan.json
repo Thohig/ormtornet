@@ -9,12 +9,8 @@
     "intro_bild": "Tornet i solnedgången",
     "intro_ga_in": "Gå in i tornet",
 
-    "_namn": "Namnrutan.",
-    "namn_fraga": "Vad heter du, vandrare?",
-    "namn_tips": "tryck enter · esc går tillbaka",
+    "_namn": "Skärmen när tornet inte släpper in en, som när det är fullt.",
     "namn_tillbaka": "Tillbaka",
-    "namn_ga_in": "Gå in",
-    "namn_saknas": "Tornet vill veta vad du heter.",
 
     "_klassval": "Klassvalet. {antal} är antalet kort, {s} sekunderna som är kvar.",
     "klassval_rubrik": "Vem är du?",
@@ -216,6 +212,7 @@
 
     "_anslutning": "Förbindelsen, längst till höger i översta raden.",
     "anslutning_bruten": "förbindelsen bröts, försöker igen",
+    "anslutning_ingen": "Tornet svarar inte.",
     "natet_letar": "Letar efter tornet …",
     "natet_hittar_inte": "Hittar inte tornet. Kontrollera att länken är hel och att spelledaren har tornet öppet.",
     "natet_fel": "Kunde inte ladda det som behövs för att nå tornet. Ladda om sidan.",

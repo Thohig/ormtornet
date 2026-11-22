@@ -7,11 +7,7 @@
     "intro_bild": "The tower at sunset",
     "intro_ga_in": "Enter the tower",
 
-    "namn_fraga": "What is your name, wanderer?",
-    "namn_tips": "press enter · esc goes back",
     "namn_tillbaka": "Back",
-    "namn_ga_in": "Enter",
-    "namn_saknas": "The tower wants to know your name.",
 
     "klassval_rubrik": "Who are you?",
     "klassval_inledning": "The tower lays out its cards. Choose one before the time runs out, or the tower will choose for you.",
@@ -197,6 +193,7 @@
     "logg_tidigare": "earlier ↓",
 
     "anslutning_bruten": "connection lost, trying again",
+    "anslutning_ingen": "The tower does not answer.",
     "natet_letar": "Looking for the tower …",
     "natet_hittar_inte": "Cannot find the tower. Check that the link is complete and that the Keeper has the tower open.",
     "natet_fel": "Could not load what is needed to reach the tower. Reload the page.",

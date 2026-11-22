@@ -72,17 +72,15 @@
     </div>
   </section>
 
+  <!-- Om tornet inte släpper in en, som när det är fullt: felet och en
+       knapp tillbaka. Namnet ger tornet (names.go). -->
   <section id="namescreen" class="screen">
-    <form id="nameform" autocomplete="off">
-      <label for="name" data-t="namn_fraga"></label>
-      <input id="name" maxlength="16" spellcheck="false">
-      <div class="hint keys" data-t="namn_tips"></div>
-      <div class="touchonly">
-        <button type="button" id="back" data-t="namn_tillbaka"></button>
-        <button type="submit" data-t="namn_ga_in"></button>
-      </div>
+    <div id="nameform">
       <div id="nameerr"></div>
-    </form>
+      <div class="namebuttons">
+        <button type="button" id="back" data-t="namn_tillbaka"></button>
+      </div>
+    </div>
   </section>
 
   <section id="classscreen" class="screen">

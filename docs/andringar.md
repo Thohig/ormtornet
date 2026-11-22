@@ -6,6 +6,20 @@ eller leder tornet.
 
 ## 2026-11-22
 
+### Tornet ger namnen
+
+- Ingen skriver längre sitt namn. "Gå in i tornet" leder direkt till
+  lobbyn, och tornet ger var och en ett förnamn och ett tillnamn, till
+  exempel "Dagny Ekfot". Loggen säger "Tornet kallar dig Dagny Ekfot."
+- Två vandrare får aldrig samma förnamn. Namnen står i `data/namn.json`,
+  med tillnamnen översatta i `data/en/namn.json`.
+- Sidan kommer ihåg namnet, i fliken och i webbläsaren. Den som laddar om
+  sidan eller tappar kontakten får samma namn och sin vandrare tillbaka,
+  också till nästa torn. En andra flik i samma webbläsare får ett eget
+  namn.
+- Släpper tornet inte in en, som när det är fullt eller inte svarar, står
+  felet på en egen skärm med en knapp tillbaka.
+
 ### Föremålen verkar av sig själva
 
 - Inga föremål används längre med 1–3. Tangenterna, att sikta med pilarna

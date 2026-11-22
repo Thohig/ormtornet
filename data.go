@@ -168,6 +168,7 @@ type Data struct {
 	Klasser          []Class             `json:"klasser"`
 	KlassvalSekunder int                 `json:"klassval_sekunder"` // hur länge klassvalet får ta
 	Foremal          ItemData            `json:"foremal"`
+	Vandrarnamn      NameData            `json:"vandrarnamn"` // namnen tornet ger vandrarna (namn.json)
 	// Spelarsidan och Vardsidan är sidornas egna texter, på nyckel. Sidorna
 	// hämtar dem från /texter/ (se web/texter.js).
 	Spelarsidan map[string]string `json:"spelarsidan"`
@@ -181,7 +182,7 @@ type IntroData struct {
 }
 
 // Filerna i datamappen. Alla läses in i samma struktur; "texter" slås ihop.
-var dataFiles = []string{"texter.json", "fallor.json", "ormen.json", "monster.json", "avslojande.json", "ai.json", "svarighet.json", "klasser.json", "foremal.json", "spelarsidan.json", "vardsidan.json"}
+var dataFiles = []string{"texter.json", "fallor.json", "ormen.json", "monster.json", "avslojande.json", "ai.json", "svarighet.json", "klasser.json", "foremal.json", "namn.json", "spelarsidan.json", "vardsidan.json"}
 
 // loadData läser filerna i mappen dir på svenska. Saknas en fil används den
 // inbyggda kopian.
@@ -260,6 +261,9 @@ func loadDataLang(dir, lang string) (*Data, string, error) {
 	if d.Avslojande.LedtradVarNRunda <= 0 {
 		d.Avslojande.LedtradVarNRunda = 4
 	}
+	if len(d.Vandrarnamn.Fornamn) < maxPlayers || len(d.Vandrarnamn.Tillnamn) == 0 {
+		return nil, "", fmt.Errorf("namn.json: minst %d förnamn och ett tillnamn behövs", maxPlayers)
+	}
 	if len(d.Monster.Typer) == 0 {
 		return nil, "", fmt.Errorf("monster.json: inga monster")
 	}
@@ -294,6 +298,12 @@ func mergeData(d, part *Data) {
 	}
 	if part.Intro.Vanta > 0 {
 		d.Intro = part.Intro
+	}
+	if len(part.Vandrarnamn.Fornamn) > 0 {
+		d.Vandrarnamn.Fornamn = part.Vandrarnamn.Fornamn
+	}
+	if len(part.Vandrarnamn.Tillnamn) > 0 {
+		d.Vandrarnamn.Tillnamn = part.Vandrarnamn.Tillnamn
 	}
 	if len(part.Klasser) > 0 {
 		d.Klasser = part.Klasser
