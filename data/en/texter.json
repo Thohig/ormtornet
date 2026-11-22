@@ -467,7 +467,7 @@
       "{namn}, the wandering has just ended. You will be part of it when the next tower rises. Press Enter when you are ready (on a touch screen: New tower)."
     ],
     "lobby": [
-      "Press Enter when you are ready (on a touch screen: Ready). The wandering begins when all are ready and there are at least {min} of you."
+      "Press Enter when you are ready (on a touch screen: Ready). The wandering begins when all are ready and enough have come (at least {min})."
     ],
     "redo_andra": [
       "{namn} is ready."
@@ -648,7 +648,7 @@
       "{namn} died. No one quite knows of what."
     ],
     "nytt_torn": [
-      "A new tower rises out of the mist. Press Enter when you are ready (on a touch screen: Ready). The wandering begins when all are ready and there are at least {min} of you."
+      "A new tower rises out of the mist. Press Enter when you are ready (on a touch screen: Ready). The wandering begins when all are ready and enough have come (at least {min})."
     ],
     "spela_igen": [
       "Press Enter to go into a new tower (on a touch screen: New tower)."
