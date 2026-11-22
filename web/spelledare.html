@@ -98,114 +98,122 @@
       </span>
     </div>
 
-    <section id="invite">
-    <h2 data-t="bjud_in"></h2>
-    <p class="full" data-t="bjud_in_text"></p>
-    <div id="addr">…</div>
-    <p id="ips" class="full"></p>
-    <div class="buttons">
-      <button class="btn main" id="copyInvite" type="button" data-t="kopiera_inbjudan"></button>
-      <button class="btn" id="copyAddr" type="button" data-t="kopiera_adressen"></button>
-      <a class="btn" id="joinSelf" href="./?spela" target="_blank" rel="noopener" data-t="ga_in_sjalv"></a>
+    <!-- På en bred skärm två kolumner: till vänster det som händer nu, till
+         höger förberedelser och hjälp. Avsnitten står i samma ordning som i
+         en kolumn (spelledare.css). -->
+    <div id="cols">
+      <div class="col" id="colNow">
+        <section id="invite">
+        <h2 data-t="bjud_in"></h2>
+        <p class="full" data-t="bjud_in_text"></p>
+        <div id="addr">…</div>
+        <p id="ips" class="full"></p>
+        <div class="buttons">
+          <button class="btn main" id="copyInvite" type="button" data-t="kopiera_inbjudan"></button>
+          <button class="btn" id="copyAddr" type="button" data-t="kopiera_adressen"></button>
+          <a class="btn" id="joinSelf" href="./?spela" target="_blank" rel="noopener" data-t="ga_in_sjalv"></a>
+        </div>
+        <p id="copied"></p>
+        </section>
+
+        <section id="port">
+        <h2 data-t="vid_porten"></h2>
+        <p id="status">…</p>
+        <ul id="slots"></ul>
+        <p class="dimtext" id="towerInfo"></p>
+        <div class="buttons">
+          <button class="btn" id="startNow" type="button" data-t="starta_nu"></button>
+        </div>
+        <p id="startHint" data-t="start_hint"></p>
+        </section>
+      </div>
+      <div class="col" id="colPrep">
+        <section id="next">
+        <h2 data-t="infor_nasta"></h2>
+        <form id="settings" autocomplete="off">
+          <label for="sSv" data-t="inst_svarighet"></label>
+          <select id="sSv" name="svarighet"></select>
+          <span class="note" id="svNote"></span>
+
+          <label for="sAI" data-t="inst_ai"></label>
+          <select id="sAI" name="ai"><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option></select>
+          <span class="note" id="aiNote"></span>
+
+          <label for="sSprak" data-t="sprak"></label>
+          <select id="sSprak" name="sprak">
+            <option value="sv" data-t="val_svenska"></option>
+            <option value="en" data-t="val_english"></option>
+          </select>
+          <span class="note" data-t="sprak_not"></span>
+
+          <label for="sRev" data-t="inst_avslojande"></label>
+          <select id="sRev" name="avslojande"><option value="1" data-t="val_pa"></option><option value="0" data-t="val_av"></option></select>
+          <span class="note" data-t="not_avslojande"></span>
+
+          <label for="sFr" data-t="inst_franvaro"></label>
+          <select id="sFr" name="franvaro">
+            <option value="0" data-t="val_franvaro_star"></option>
+            <option value="1" data-t="val_franvaro_1"></option>
+            <option value="2"></option>
+            <option value="3"></option>
+          </select>
+          <span class="note" data-t="not_franvaro"></span>
+        </form>
+        <p id="saved"></p>
+        <p class="dimtext" id="settingsHint" data-t="inst_hint"></p>
+        <details id="settingsHelp">
+          <summary><span data-t="forkl_rubrik"></span></summary>
+          <p data-t="forkl_spelet"></p>
+          <dl>
+            <dt data-t="inst_svarighet"></dt>
+            <dd data-t="forkl_svarighet"></dd>
+            <dt data-t="inst_ai"></dt>
+            <dd data-t="forkl_ai"></dd>
+            <dt data-t="sprak"></dt>
+            <dd data-t="forkl_sprak"></dd>
+            <dt data-t="inst_avslojande"></dt>
+            <dd data-t="forkl_avslojande"></dd>
+            <dt data-t="inst_franvaro"></dt>
+            <dd data-t="forkl_franvaro"></dd>
+          </dl>
+        </details>
+        </section>
+
+        <section id="foot">
+        <details id="helpBox">
+        <summary><h2 data-t="hjalp"></h2></summary>
+        <ul id="help">
+          <li data-t="hjalp_wifi"></li>
+          <li data-t-html="hjalp_local"></li>
+          <li data-t="hjalp_macos"></li>
+          <li data-t="hjalp_tappar"></li>
+        </ul>
+        <!-- På GitHub Pages: spelarna kommer med länken över WebRTC. -->
+        <ul id="helpPages" hidden>
+          <li data-t="hjalp_sida_lanken"></li>
+          <li data-t="hjalp_sida_natet"></li>
+          <li data-t="hjalp_sida_fliken"></li>
+          <li data-t="hjalp_sida_tappar"></li>
+        </ul>
+        </details>
+
+        <details id="reloadBox">
+        <summary><h2 data-t="las_om"></h2></summary>
+        <p>
+          <button class="btn" id="reload" type="button" data-t="las_om"></button>
+          <span class="note" data-t="las_om_not"></span>
+        </p>
+        <p id="reloadMsg"></p>
+        </details>
+
+        <h2 data-t="stang"></h2>
+        <p class="dimtext">
+          <button class="btn small" id="closeTower" type="button" data-t="stang"></button>
+          <span data-t="stang_not"></span>
+        </p>
+        </section>
+      </div>
     </div>
-    <p id="copied"></p>
-    </section>
-
-    <section id="port">
-    <h2 data-t="vid_porten"></h2>
-    <p id="status">…</p>
-    <ul id="slots"></ul>
-    <p class="dimtext" id="towerInfo"></p>
-    <div class="buttons">
-      <button class="btn" id="startNow" type="button" data-t="starta_nu"></button>
-    </div>
-    <p id="startHint" data-t="start_hint"></p>
-    </section>
-
-    <section id="next">
-    <h2 data-t="infor_nasta"></h2>
-    <form id="settings" autocomplete="off">
-      <label for="sSv" data-t="inst_svarighet"></label>
-      <select id="sSv" name="svarighet"></select>
-      <span class="note" id="svNote"></span>
-
-      <label for="sAI" data-t="inst_ai"></label>
-      <select id="sAI" name="ai"><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option></select>
-      <span class="note" id="aiNote"></span>
-
-      <label for="sSprak" data-t="sprak"></label>
-      <select id="sSprak" name="sprak">
-        <option value="sv" data-t="val_svenska"></option>
-        <option value="en" data-t="val_english"></option>
-      </select>
-      <span class="note" data-t="sprak_not"></span>
-
-      <label for="sRev" data-t="inst_avslojande"></label>
-      <select id="sRev" name="avslojande"><option value="1" data-t="val_pa"></option><option value="0" data-t="val_av"></option></select>
-      <span class="note" data-t="not_avslojande"></span>
-
-      <label for="sFr" data-t="inst_franvaro"></label>
-      <select id="sFr" name="franvaro">
-        <option value="0" data-t="val_franvaro_star"></option>
-        <option value="1" data-t="val_franvaro_1"></option>
-        <option value="2"></option>
-        <option value="3"></option>
-      </select>
-      <span class="note" data-t="not_franvaro"></span>
-    </form>
-    <p id="saved"></p>
-    <p class="dimtext" id="settingsHint" data-t="inst_hint"></p>
-    <details id="settingsHelp">
-      <summary><span data-t="forkl_rubrik"></span></summary>
-      <p data-t="forkl_spelet"></p>
-      <dl>
-        <dt data-t="inst_svarighet"></dt>
-        <dd data-t="forkl_svarighet"></dd>
-        <dt data-t="inst_ai"></dt>
-        <dd data-t="forkl_ai"></dd>
-        <dt data-t="sprak"></dt>
-        <dd data-t="forkl_sprak"></dd>
-        <dt data-t="inst_avslojande"></dt>
-        <dd data-t="forkl_avslojande"></dd>
-        <dt data-t="inst_franvaro"></dt>
-        <dd data-t="forkl_franvaro"></dd>
-      </dl>
-    </details>
-    </section>
-
-    <section id="foot">
-    <details id="helpBox">
-    <summary><h2 data-t="hjalp"></h2></summary>
-    <ul id="help">
-      <li data-t="hjalp_wifi"></li>
-      <li data-t-html="hjalp_local"></li>
-      <li data-t="hjalp_macos"></li>
-      <li data-t="hjalp_tappar"></li>
-    </ul>
-    <!-- På GitHub Pages: spelarna kommer med länken över WebRTC. -->
-    <ul id="helpPages" hidden>
-      <li data-t="hjalp_sida_lanken"></li>
-      <li data-t="hjalp_sida_natet"></li>
-      <li data-t="hjalp_sida_fliken"></li>
-      <li data-t="hjalp_sida_tappar"></li>
-    </ul>
-    </details>
-
-    <details id="reloadBox">
-    <summary><h2 data-t="las_om"></h2></summary>
-    <p>
-      <button class="btn" id="reload" type="button" data-t="las_om"></button>
-      <span class="note" data-t="las_om_not"></span>
-    </p>
-    <p id="reloadMsg"></p>
-    </details>
-
-    <h2 data-t="stang"></h2>
-    <p class="dimtext">
-      <button class="btn small" id="closeTower" type="button" data-t="stang"></button>
-      <span data-t="stang_not"></span>
-    </p>
-    </section>
   </main>
 </div>
 <script src="texter/vardsidan.js"></script>

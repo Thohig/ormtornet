@@ -55,5 +55,14 @@ html, body { overflow: auto; }
 #barWho { color: var(--fg); flex: 1 1 auto; }
 #barWho .away { color: var(--warn); }
 #barBtns { margin-left: auto; display: flex; gap: 8px; }
+/* Två kolumner på en bred skärm: Bjud in och Vid porten till vänster,
+   Inför nästa vandring och resten till höger. Raden står över båda. */
+@media (min-width: 1100px) {
+  #host { max-width: 1240px; }
+  #cols { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 0 32px; align-items: start; }
+  /* I den smalare högra kolumnen står förklaringen under valet. */
+  #cols #settings { grid-template-columns: 20ch minmax(0, 1fr); }
+  #cols #settings .note { grid-column: 2; margin: -4px 0 4px; }
+}
 .buttons { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 14px; }
 code { color: var(--hi); font: inherit; }

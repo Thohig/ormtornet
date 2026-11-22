@@ -6,6 +6,14 @@ eller leder tornet.
 
 ## 2026-11-22
 
+### Värdsidan i två kolumner
+
+- På en skärm som är minst 1100 punkter bred står värdsidan i två
+  kolumner under raden: Bjud in och Vid porten till vänster, Inför nästa
+  vandring, Kommer någon inte in?, Läs om innehållet och Stäng tornet till
+  höger. Förklaringen till varje inställning står under valet. På en
+  smalare skärm är sidan en kolumn som förut.
+
 ### Ingen blir instängd
 
 - Ibland stängde tornet in den som började vid en port, i ungefär vart

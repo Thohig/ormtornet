@@ -29,8 +29,10 @@ Så här skiljer vi på sakerna när användaren ger instruktioner:
   `web/spelledare.html`). Överst står **raden** med fasen och knappen
   som behövs just nu. Avsnitten heter Bjud in, Vid porten, Inför nästa
   vandring, Kommer någon inte in?, Läs om innehållet och Stäng tornet, och
-  står alltid i den ordningen. På Pages visas den i skalet och har länken
-  och en varning om att hålla tornets flik öppen. QR-koden togs bort
+  står alltid i den ordningen. På en bred skärm står de i två kolumner,
+  Bjud in och Vid porten till vänster och resten till höger. På Pages
+  visas den i skalet och har länken och en varning om att hålla tornets
+  flik öppen. QR-koden togs bort
   2026-11-22.
 - **skalet**: tornets flik när spelet kommer från GitHub Pages
   (`web/torn.html`, `web/torn.js`). Det kör tornet i en Web Worker
