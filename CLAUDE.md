@@ -237,5 +237,9 @@ Skriv dit när ett steg är klart.
 - [docs/balans-2026-11-22.md](docs/balans-2026-11-22.md): simuleringen av
   sex strategier, och hur klasserna, den grönaktiga skepnaden och
   AI-spelarna justerades efter den. Allt är byggt.
+- [docs/den-dodes-guld.md](docs/den-dodes-guld.md): guldet som ligger
+  kvar där någon har dött (byggt 2026-11-22), och förslaget om hur man
+  får veta var det ligger: skriket, rummet som minns, klasserna och
+  AI:n. Inget av förslaget är byggt; fråga vilka steg som ska byggas.
 - [docs/slumpade-namn.md](docs/slumpade-namn.md): tornet ger namnen och
   namnrutan är borta. Steg 1–2 är byggda; Nytt namn i lobbyn valdes bort.
