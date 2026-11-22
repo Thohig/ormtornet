@@ -242,7 +242,6 @@ Skriv dit när ett steg är klart.
   Kartritaren och Spårfinnaren, och AI:n som går dit. Allt är byggt.
 - [docs/mobilvyn.md](docs/mobilvyn.md): telefonen med kartan över hela
   höjden, en tunnare logg, tecknen på en rad och tryck på dörrarna i
-  stället för pilknapparna. Steg 1–4 är byggda; steg 5 (nivån Rummet)
-  är inte byggt, fråga innan du börjar.
+  stället för pilknapparna, och nivån Rummet närmast. Allt är byggt.
 - [docs/slumpade-namn.md](docs/slumpade-namn.md): tornet ger namnen och
   namnrutan är borta. Steg 1–2 är byggda; Nytt namn i lobbyn valdes bort.

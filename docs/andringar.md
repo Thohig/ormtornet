@@ -18,6 +18,9 @@ eller leder tornet.
 - Under kartan står bara den senaste rundan, tätare. Knappen Loggen
   öppnar hela loggen.
 - På datorn går pilarna vid dörrarna att klicka på med musen.
+- En ny zoomnivå närmast, **Rummet**, bara på telefonen: rummet du står i
+  fyller bredden. Telefonen börjar där, om du inte redan har valt en
+  annan nivå.
 
 ## 2026-11-22
 

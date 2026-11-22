@@ -1,6 +1,6 @@
 # Samlat förslag: mobilvyn
 
-Förslag 2026-11-23. Steg 1–4 byggdes samma dag; steg 5 är inte byggt.
+Förslag 2026-11-23. Steg 1–5 byggdes samma dag.
 Avsnittet Byggt säger var bygget skiljer sig från förslaget.
 
 ## Målet
@@ -112,7 +112,7 @@ de nya texterna (Vänta, namnet på nivån Rummet) går in i både
 | Tecknen i översta raden eller på en egen rad? | En egen rad: översta raden är redan full. |
 | Ska tangenterna gå att klicka på datorn? | Ja, det kostar inget. |
 | Var står Vänta när pilarna är borta? | Först i knapparnas rad. |
-| Steg 5 nu eller senare? | Senare, efter att 1–4 har provats. |
+| Steg 5 nu eller senare? | Byggt samma dag som 1–4. |
 
 ## Byggt
 
@@ -129,3 +129,8 @@ de nya texterna (Vänta, namnet på nivån Rummet) går in i både
 - **Steg 4**: tangenterna gick redan att trycka på en pekskärm, så
   ändringen i `karta.ts` behövdes inte. Pilknapparna kommer tillbaka på
   nivåerna Långt och Allt (`langtut`), inte efter tangenternas storlek.
+- **Steg 5**: Rummet har nummer -1 bland zoomnivåerna (`ROOM` i
+  `web/map.js`), så att en sparad nivå betyder samma sak som förut. Den
+  visar 2 × 2 rum. Kameran flyttar inte ned rummet under mitten, eftersom
+  tecknen inte längre står på kartan. Blir skärmen bred går kartan till
+  Nära.

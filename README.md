@@ -292,7 +292,7 @@ på kartan, och man får pröva sig fram.
 | A          | anfall (i strid)                  |
 | P          | parera (i strid)                  |
 | U eller E  | undanmanöver (i strid; E för evade på engelska) |
-| Z          | byt zoom på kartan: Nära, Mellan, Långt, Allt |
+| Z          | byt zoom på kartan: (Rummet,) Nära, Mellan, Långt, Allt |
 | L          | hela loggen (på en bred skärm)    |
 | Enter      | redo / spela igen                 |
 | V          | viska till tornet (från nivå 2)   |
@@ -366,12 +366,13 @@ Från början känner du bara rummet du börjar i, och kartan växer därifrån.
 Kartan följer rummet du står i: det står i mitten, med ljusare golv och
 en tunn ram i din färg. Vid tornets kanter går rutan bara lite utanför
 tornet, så att portarna syns och ett rum i hörnet inte hamnar under
-knapparna. Hur nära kartan går väljer du själv: Nära
+knapparna. Hur nära kartan går väljer du själv: på en smal skärm
+Rummet (rummet du står i fyller bredden), och överallt Nära
 (3 × 3 rum), Mellan (5 × 5), Långt (9 × 9) eller Allt du känner till. Z
 går runt mellan dem, och knapparna nere till höger på kartan går en nivå
 närmare eller längre ut. Scrollhjulet och två fingrar på en pekskärm zoomar gradvis, så att
 du kan stanna mellan nivåerna, och ett klick på
-nivåns namn växlar mellan din nivå och Allt. En smal skärm börjar på Nära och en
+nivåns namn växlar mellan din nivå och Allt. En smal skärm börjar på Rummet och en
 större på Mellan, och sidan kommer ihåg ditt val på den enheten. Ligger
 en port eller kammaren du känner till, eller en vandrare du ser, utanför
 rutan pekar en liten pil vid kanten åt det hållet, med samma tecken som
