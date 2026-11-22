@@ -389,7 +389,8 @@ const Sound = (() => {
 
   const effects = {
     intro,
-    // Tornets röst: en viskning med en låg ton under.
+    // När tornet talar till en vandrare, som när hen blir invigd: en
+    // viskning med en låg ton under.
     rost() {
       noiseHit(white, "bandpass", 1900, 0.05, 0.25, 1.1, true);
       tone(196, 147, "sine", 0.04, 0.4, 1.6, true);

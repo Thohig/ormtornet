@@ -135,8 +135,8 @@ func newGrid[T any](size int) [][]T {
 
 // towerSize är storleken på nästa torn. Automatiskt växer tornet med antalet
 // vandrare: 9 rum för upp till fyra, 11 för fem eller sex och 13 för sju
-// eller åtta. Spelledaren kan välja ett större torn, men aldrig ett som är
-// för litet för alla. Udda, så att kammaren står mitt i.
+// eller åtta. Storleken går inte att välja. Udda, så att kammaren står
+// mitt i.
 func (g *Game) towerSize() int {
 	need := defaultSize
 	switch n := g.vandrare(); {
@@ -148,8 +148,8 @@ func (g *Game) towerSize() int {
 	return need
 }
 
-// scaledSun är solens rundor i det här tornet. Spelledarens eget val gäller
-// som det står; 0 är automatiskt efter tornets storlek (autoSun).
+// scaledSun är solens rundor i det här tornet: automatiskt efter tornets
+// storlek (autoSun), eller det -sol har gett, för den som provar.
 func (g *Game) scaledSun() int {
 	if g.cfg.SunMax == 0 {
 		return autoSun(g.size)

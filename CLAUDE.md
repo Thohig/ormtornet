@@ -118,9 +118,10 @@ Skriv dit när ett steg är klart.
   fram ett förslag och fråga innan du bygger något därifrån.
 
 - [docs/spelledaren.md](docs/spelledaren.md): värdsidan. Del 1 är byggd;
-  översikten och ingreppen i del 2–3 byggdes och togs bort 2026-11-22. Avsnittet Läget säger vad som är byggt, vad som är på
-  gång och vad som inte är planerat. Fråga vilka delar som ska byggas innan
-  du börjar på något som inte står under På gång.
+  översikten och ingreppen i del 2–3 byggdes och togs bort 2026-11-22.
+  Avsnittet Läget säger vad som är byggt, vad som är på gång och vad som
+  inte är planerat. Fråga vilka delar som ska byggas innan du börjar på
+  något som inte står under På gång.
 - [docs/github-pages.md](docs/github-pages.md): att spela från en länk på
   GitHub Pages, med tornet i spelledarens webbläsare och WebRTC. Steg 0–4
   är byggda och publiceras vid varje push till `main`. Kvar är steg 5, ett
@@ -144,7 +145,13 @@ Skriv dit när ett steg är klart.
   2026-11-21, vad som hittades och byggdes, och vad som inte är provat.
   Robotarna som provspelar finns i `verktyg/provspelare.mjs` (README,
   Provspela med robotar).
+- [docs/ormkorten.md](docs/ormkorten.md): att ormkorten syns, med kortet
+  som vänds upp, sömnmätaren, uppvaknandet, leken bredvid guldhögen och
+  korten i krönikan. Allt är byggt.
 - [docs/isometrisk.md](docs/isometrisk.md): kartan snett ovanifrån, den
-  enda kartan sedan 2026-11-22, med Three.js och 3D-modeller, i TypeScript i `klient/` och byggd med Vite
-  till `web/iso/iso.js` (och WebRTC till `web/rtc/rtc.js`). Bygg om och
-  checka in skripten efter en ändring i `klient/src/`. Avsnittet Stegen säger vad som är byggt.
+  enda kartan sedan 2026-11-22, med Three.js och 3D-modeller, i
+  TypeScript i `klient/` och byggd med Vite till `web/iso/iso.js` (och
+  WebRTC till `web/rtc/rtc.js`). Bygg om och checka in skripten efter en
+  ändring i `klient/src/`. Avsnittet Stegen säger vad som är byggt, och
+  Spelbrädet hur kartan fick sten, facklor, inredning, miniatyrer och
+  brickor 2026-11-22.

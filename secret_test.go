@@ -248,7 +248,7 @@ func TestKillTakesNameParts(t *testing.T) {
 	d.parts = [3]bool{true, true, true}
 	g2.takeNameParts(c, d)
 	if c.partCount() != 0 {
-		t.Fatal("delar med fasta svar")
+		t.Fatal("delar fast vandringen saknar namn")
 	}
 }
 

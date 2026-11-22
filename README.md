@@ -890,7 +890,11 @@ Beskrivningarna för rummen ligger under nivåerna `"1"` till `"4"`.
     för hand). Den läser utsnittet från `map.js`
 - `klient/` kartan snett ovanifrån i TypeScript med Three.js (se
   [docs/isometrisk.md](docs/isometrisk.md)) och WebRTC för GitHub Pages
-  (`src/rtc.ts`), byggda med Vite. De byggda skripten `web/iso/iso.js` och
+  (`src/rtc.ts`), byggda med Vite. Kartan är `src/karta.ts` (tornet,
+  ljuset, brickorna och ormleken), `src/modeller.ts` (vandrarna,
+  varelserna, socklarna och fällorna), `src/inredning.ts` (rummens
+  inredning) och `src/krita.ts` (texturerna: sten, murverk, trä, krita och
+  korten). De byggda skripten `web/iso/iso.js` och
   `web/rtc/rtc.js` checkas in, så att spelet byggs utan Node. Efter en
   ändring i `klient/src/`:
 

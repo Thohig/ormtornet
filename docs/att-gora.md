@@ -35,9 +35,19 @@ En riktig kväll behövs för att se:
 - Stormen i introt: hur musiken och åskan låter. Den är inte avlyssnad.
 - Introts första 5 sekunder, när Enter inte gör något: fastnar någon
   där och tror att sidan har hängt sig?
-- Kritkartan (2026-11-18): syns vandrarnas prickar och varelserna bra på
-  en telefon, och märks avslöjandet lika tydligt i kritan som i braillen?
+- Kartan som ett spelbräde (2026-11-22): är rummen längre bort för mörka?
+  Blir murarna med krön för plottriga? Skymmer den egna figuren det som
+  står i rummets nordvästra hörn, som trappan och ässjan? Går kartan lika
+  lätt på en telefon med facklorna, inredningen och brickorna som faller?
   Nivå 3 och 4 är bara sedda genom att tvinga fram dem.
+- Ormkorten (2026-11-22): märks det att kortet vänds upp när man tar en
+  näve, och läser man det innan det glider undan? Förstår man
+  sömnmätaren och högarna bredvid guldet? Uppvaknandets stora kort är
+  bara sett med påhittade meddelanden, och krönikans kort i slutet är inte
+  sedda alls.
+- Färre inställningar (2026-11-22): strid är alltid på från första rundan
+  och klasserna alltid med. Blir striden för tidig, och saknar någon att
+  kunna spela utan klasser?
 - Teckenförklaringen på kartan (2026-11-19): nu bara tecknen, med
   betydelsen vid tryck. Hittar spelarna att man kan trycka på dem, och
   skymmer den fortfarande något på en telefon? I utsnittet tar den med
@@ -155,7 +165,7 @@ Från [foremal-och-hemligheten.md](foremal-och-hemligheten.md):
 - **Ljud:** ett reglage för volymen, och en knapp som stänger av musiken
   men behåller ljuden, på spelarsidan.
 - **Färgblindhet:** ett läge där vandrarna skiljs åt med symboler, inte
-  bara färger. Med kritkartan kan prickarna få en initial eller en form.
+  bara färger. Socklarna kan få en initial eller en form.
 - **Loggens tecken efter innehåll:** i dag följer tecknet radens klass
   från servern. Med en egen klass för strid, ljud och fynd kunde loggen
   visa till exempel ⚔, ♪ och ✦, som i förslaget till panelerna.

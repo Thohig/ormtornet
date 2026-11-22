@@ -144,8 +144,8 @@ längre.
 - Föremålen på figuren: det vandraren bär syns på den egna figuren,
   vid bältet, på bröstet, på ryggen eller på huvudet (`fastPa` i
   `klient/src/modeller.ts`). Andras väskor är hemliga och syns inte, men
-  spelledarbordet visar föremålen på alla (`foremalIds` i spelledarens
-  karta). Förbannade föremål ser ut som andra.
+  spelledarbordet visade föremålen på alla, tills det togs bort
+  2026-11-22. Förbannade föremål ser ut som andra.
 - Teckenförklaringen med bilder: med kartan snett ovanifrån står en liten
   bild av modellen i stället för tecknet för vandrarna, varelserna,
   kammaren och portarna (`bild` i `klient/src/karta.ts`, `legendImage` i
