@@ -59,6 +59,22 @@
   #settings select:disabled { color: var(--dim); border-color: var(--faint); }
   #saved { min-height: 1.2em; color: var(--info); }
   #saved.err { color: var(--warn); }
+  #seedMsg { min-height: 1.2em; color: var(--info); }
+  #seedMsg.err { color: var(--warn); }
+  #seedNow { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 12px; }
+  #seedNow[hidden] { display: none; }
+  #seedNowText { color: var(--hi); }
+  #seedForm { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 12px; margin-top: 8px; }
+  #seedNext {
+    width: 11ch;
+    background: none;
+    border: none;
+    border-bottom: 1px solid var(--dim);
+    color: var(--hi);
+    font: inherit;
+    outline: none;
+  }
+  #seedNext:focus { border-bottom-color: var(--fg); }
   #reloadMsg { white-space: pre-wrap; }
   #reloadMsg.err { color: var(--warn); }
   #startHint { color: var(--fg); }
@@ -184,6 +200,24 @@
         </details>
         </section>
 
+        <!-- Fröet: samma frö och samma drag ger samma torn (seed.go). -->
+        <section id="seed">
+        <h2 data-t="fro_rubrik"></h2>
+        <p id="seedNow" hidden>
+          <span id="seedNowText"></span>
+          <button class="btn small" id="seedCopy" type="button" data-t="fro_kopiera"></button>
+          <button class="btn small" id="seedSame" type="button" data-t="fro_samma"></button>
+        </p>
+        <form id="seedForm" autocomplete="off">
+          <label for="seedNext" data-t="fro_nasta"></label>
+          <input id="seedNext" inputmode="numeric" maxlength="11" spellcheck="false">
+          <button class="btn small" id="seedUse" type="submit" data-t="fro_anvand"></button>
+          <button class="btn small" id="seedRandom" type="button" data-t="fro_slumpa"></button>
+        </form>
+        <p id="seedMsg"></p>
+        <p class="dimtext" data-t="fro_not"></p>
+        </section>
+
         <section id="foot">
         <details id="helpBox">
         <summary><h2 data-t="hjalp"></h2></summary>
@@ -279,6 +313,62 @@ async function copy(text, done) {
 $("copyInvite").onclick = () => view && copy(inviteText(view), "kopierad_inbjudan");
 $("copyAddr").onclick = () => view && copy(view.addrs.name, onPages ? "kopierad_lanken" : "kopierad_adressen");
 
+// Fröet: den här vandringens frö och fältet med fröet nästa vandring får.
+// Fältet skrivs inte över medan spelledaren skriver i det.
+let seedTyping = false;
+let seedTimer = null;
+function seedSay(text, isErr) {
+  const el = $("seedMsg");
+  el.textContent = text;
+  el.classList.toggle("err", !!isErr);
+  clearTimeout(seedTimer);
+  if (!isErr) seedTimer = setTimeout(() => (el.textContent = ""), 2500);
+}
+function renderSeed(v) {
+  const now = v.seed && (v.phase === "spel" || v.phase === "slut");
+  $("seedNow").hidden = !now;
+  if (now) $("seedNowText").textContent = t("fro_nu", { fro: v.seed });
+  $("seedSame").hidden = v.phase !== "slut";
+  $("seedSame").disabled = v.seed === v.nextSeed;
+  if (!seedTyping && document.activeElement !== $("seedNext")) $("seedNext").value = v.nextSeed || "";
+}
+async function setSeed(body) {
+  try {
+    const r = await post("/spelledare/fro", body);
+    if (!r.ok) {
+      const data = await r.json().catch(() => ({}));
+      seedSay(data.fel || t("fro_fel"), true);
+      return;
+    }
+    seedTyping = false;
+    $("seedNext").blur();
+    await refresh();
+    if (view) seedSay(t("fro_sparat", { fro: view.nextSeed }));
+  } catch {
+    seedSay(t("svarar_inte"), true);
+  }
+}
+$("seedNext").addEventListener("input", () => (seedTyping = true));
+$("seedForm").addEventListener("submit", (e) => {
+  e.preventDefault();
+  const text = $("seedNext").value.replace(/\s/g, "");
+  if (!/^[0-9]{1,9}$/.test(text) || +text < 1) {
+    seedSay(t("fro_fel"), true);
+    return;
+  }
+  setSeed({ fro: +text });
+});
+$("seedRandom").onclick = () => setSeed({ slumpa: true });
+$("seedSame").onclick = () => view && setSeed({ fro: view.seed });
+$("seedCopy").onclick = async () => {
+  try {
+    await navigator.clipboard.writeText(String(view.seed));
+    seedSay(t("fro_kopierat"));
+  } catch {
+    seedSay(t("kopiera_fel"), true);
+  }
+};
+
 $("closeTower").onclick = async () => {
   if (!confirm(t(onPages ? "stang_fraga_sida" : "stang_fraga"))) return;
   try {
@@ -294,20 +384,15 @@ $("closeTower").onclick = async () => {
   }
 };
 
-// seedText: vandringens frö, för att kunna spela upp samma torn igen (-fro).
-function seedText(v) {
-  return v.seed ? " " + t("fro", { fro: v.seed }) : "";
-}
-
 function statusText(v) {
   const here = v.players.filter((p) => p.online);
   const humans = here.filter((p) => !p.bot);
   const ready = humans.filter((p) => p.ready);
   if (v.phase === "spel") {
-    return t("status_spel", { runda: v.round, sol: v.sun, max: v.sunMax }) + seedText(v);
+    return t("status_spel", { runda: v.round, sol: v.sun, max: v.sunMax });
   }
   if (v.phase === "klassval") return t("status_klassval");
-  const prefix = v.phase === "slut" ? t("status_slut") + seedText(v) + " " : "";
+  const prefix = v.phase === "slut" ? t("status_slut") + " " : "";
   if (humans.length === 0) return prefix + t("status_vantar");
   if (here.length < v.minPlayers) {
     return prefix + t("status_vantar_fler", { min: v.minPlayers, har: here.length });
@@ -393,6 +478,7 @@ function render(v) {
       : t("start_hint_alla");
 
   renderBar(v, canStart);
+  renderSeed(v);
   for (const f of ["lobby", "klassval", "spel", "slut"]) document.body.classList.toggle("fas-" + f, v.phase === f);
   // Gå in själv byter till spelarsidan i samma flik. Har spelledaren redan
   // en vandrare heter knappen Till spelet och tar hen tillbaka till den.
@@ -589,7 +675,8 @@ function seenParam() {
   return document.visibilityState === "visible" ? "?synlig" : "";
 }
 
-async function poll() {
+// refresh hämtar läget en gång och ritar det; poll gör det varje sekund.
+async function refresh() {
   if (closed) return;
   try {
     const r = await fetch("/spelledare/status" + seenParam(), { cache: "no-store" });
@@ -604,7 +691,11 @@ async function poll() {
     $("status").textContent = t("status_svarar_inte");
     $("status").classList.add("dead");
   }
-  setTimeout(poll, 1000);
+}
+
+async function poll() {
+  await refresh();
+  if (!closed) setTimeout(poll, 1000);
 }
 poll();
 </script>
