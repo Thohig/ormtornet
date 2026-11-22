@@ -217,7 +217,7 @@ Skriv dit när ett steg är klart.
   lådan med hela loggen, och märket som öppnar värdsidan i en ny flik.
   Allt är byggt.
 - [docs/spelkort.md](docs/spelkort.md): spelkort för alla situationer,
-  med spelkortet som ersätter rundans kort och ormkortet. Avsnittet
-  Läget säger vilka delar som är byggda.
+  med spelkortet som ersätter rundans kort och ormkortet. Allt är byggt;
+  bilderna ritas i `web/kort.js` och syns i `verktyg/kortbilder.html`.
 - [docs/slumpade-namn.md](docs/slumpade-namn.md): tornet ger namnen och
   namnrutan är borta. Steg 1–2 är byggda; Nytt namn i lobbyn valdes bort.

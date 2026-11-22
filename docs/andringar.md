@@ -38,6 +38,8 @@ eller leder tornet.
   uppvaknandet. Den som kommer ut ser sitt sista kort stort på kartan.
 - Din vandring börjar med vandringens sista kort: ute, död eller kvar
   när solen gick ner.
+- Raderna i loggen som hör till ett kort får ett litet kort framför sig,
+  och Din vandring visar rundans kort som små kort vid varje runda.
 
 ### Fröet, hela bredden och loggen på kartan
 

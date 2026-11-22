@@ -54,6 +54,13 @@ En riktig kväll behövs för att se:
   sömnmätaren och högarna bredvid guldet? Uppvaknandets stora kort är
   bara sett med påhittade meddelanden, och krönikans kort i slutet är inte
   sedda alls.
+- Spelkorten (2026-11-22, [spelkort.md](spelkort.md)): blir det för
+  många kort, och hinner man läsa dem på åtta sekunder? Står kortet i
+  vägen för kartan på en telefon? Saknar någon siffrorna i loggen, nu när
+  de står på kortet? Förbannelsens andra vändning, porten som stängs och
+  döden i Din vandring är bara sedda i tester och med påhittade
+  meddelanden; solen, varelserna, namnets delar och vandringens sista
+  kort är sedda med AI-spelare.
 - Färre inställningar (2026-11-22): strid är alltid på från första rundan
   och klasserna alltid med. Blir striden för tidig, och saknar någon att
   kunna spela utan klasser?

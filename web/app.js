@@ -68,6 +68,24 @@ const Log = (() => {
     return "r" + state.round;
   }
 
+  // Rader som hör till ett spelkort får ett minikort framför sig. Kortet
+  // kommer med rundans sammanfattning, ofta innan raden har skrivits
+  // färdigt; mark minns texten tills raden står där.
+  const marks = new Map();
+  function mark(cards) {
+    (cards || []).forEach((c) => {
+      if (c.text) marks.set(c.text, c);
+    });
+    box().querySelectorAll(".round:nth-child(-n+2) .lines > div").forEach(addMark);
+    if (marks.size > 40) marks.clear();
+  }
+  function addMark(line) {
+    const c = marks.get(line.dataset.text);
+    if (!c || line.classList.contains("cursor") || line.querySelector(".minikort")) return;
+    marks.delete(line.dataset.text);
+    line.prepend(Kort.mini(c.bild, c));
+  }
+
   function push(text, cls) {
     if (!text) return;
     queue.push({ text, cls, key: keyNow() });
@@ -246,6 +264,7 @@ const Log = (() => {
     const first = list.children.length === 0;
     const line = document.createElement("div");
     if (item.cls) line.className = item.cls;
+    line.dataset.text = item.text;
     keep(() => list.appendChild(line));
     // Rader från en runda som redan är förbi kommer ikapp fort, så att
     // loggen inte hamnar efter. Den aktuella rundan kommer i lugn takt.
@@ -253,6 +272,7 @@ const Log = (() => {
     if (!first || behind) {
       // Hela raden på en gång, med en mjuk övergång.
       keep(() => paint(line, item.text));
+      addMark(line);
       line.classList.add("appear");
       follow();
       setTimeout(next, behind ? CATCH_UP : LINE_GAP);
@@ -271,6 +291,7 @@ const Log = (() => {
       } else {
         line.classList.remove("cursor");
         keep(() => paint(line, item.text));
+        addMark(line);
         setTimeout(next, LINE_GAP);
       }
     }
@@ -293,7 +314,7 @@ const Log = (() => {
     box().querySelectorAll(".round").forEach(label);
   }
 
-  return { push, room, init, relabel };
+  return { push, room, init, relabel, mark };
 })();
 Log.init();
 
@@ -729,6 +750,18 @@ function renderChron() {
       s.textContent = " · " + t("vandring_tornet");
       h.appendChild(s);
     }
+    // Rundans spelkort som minikort, med rubriken när musen är över.
+    if (r.kort && r.kort.length) {
+      const row = document.createElement("span");
+      row.className = "kortrad";
+      r.kort.forEach((c) => {
+        const m = Kort.mini(c.bild, c);
+        m.title = c.rubrik;
+        row.appendChild(m);
+      });
+      row.setAttribute("aria-label", r.kort.map((c) => c.rubrik).join(", "));
+      h.appendChild(row);
+    }
     d.appendChild(h);
     // Rummet som i loggen: beskrivningen och det man såg, och det man
     // hörde under.
@@ -747,7 +780,8 @@ function renderChron() {
     (r.rader || []).forEach((l) => {
       const p = document.createElement("div");
       p.textContent = l.text;
-      if (l.ormkort) p.prepend(miniCard(l.ormkort));
+      // Ormkortet står redan bland rundans minikort, om det kom som spelkort.
+      if (l.ormkort && !(r.kort || []).some((c) => c.bild === l.ormkort)) p.prepend(miniCard(l.ormkort));
       if (l.c) p.className = l.c;
       d.appendChild(p);
     });
@@ -1041,6 +1075,7 @@ function canShow(msg) {
 // före kort som väntar i kön.
 function showRoundCard(msg, now) {
   if (!(msg.lines || []).length && !(msg.kort || []).length) return;
+  Log.mark(msg.kort);
   if (now) {
     const spel = $("spelkort");
     clearTimeout(cardTimer);

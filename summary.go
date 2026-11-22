@@ -91,15 +91,15 @@ func (g *Game) summarize(snap map[*Player]before, wakesBefore int) {
 			l.journey = true
 			lines = append(lines, l)
 		}
-		g.addJourney(p, lines, room, b.tower)
+		cards := g.roundCardsOf(p)
+		p.roundCards = nil
+		g.addJourney(p, lines, room, b.tower, cards...)
 		var card []summaryLine
 		for _, l := range lines {
 			if !l.journey {
 				card = append(card, l)
 			}
 		}
-		cards := g.roundCardsOf(p)
-		p.roundCards = nil
 		if p.client != nil && (len(card) > 0 || len(cards) > 0) {
 			g.send(p.client, summaryMsg{T: "runda", Round: g.round, Lines: card, Kort: cards})
 		}
@@ -266,8 +266,9 @@ func (g *Game) hurtBy(p *Player) string {
 // addJourney lägger rundan till Din vandring. Rader med en orsak (why)
 // får den texten. En runda där inget hände, eller där vandraren bara stod
 // kvar, slås ihop med en sådan runda just före: "Runda 10–12".
-func (g *Game) addJourney(p *Player, lines []summaryLine, room *roomMsg, tower bool) {
-	quiet := room == nil
+// Rundans spelkort står som minikort, utan sin text.
+func (g *Game) addJourney(p *Player, lines []summaryLine, room *roomMsg, tower bool, cards ...gameCard) {
+	quiet := room == nil && len(cards) == 0
 	for _, l := range lines {
 		if !l.journey || l.why != "" || l.Text != g.data.Text("sam_inget") {
 			quiet = false
@@ -297,6 +298,10 @@ func (g *Game) addJourney(p *Player, lines []summaryLine, room *roomMsg, tower b
 	}
 	if room != nil {
 		jr.Room, jr.Here, jr.Heard = room.Text, room.Har, room.Hor
+	}
+	for _, c := range cards {
+		c.Text = ""
+		jr.Cards = append(jr.Cards, c)
 	}
 	p.journal = append(p.journal, jr)
 }

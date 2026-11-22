@@ -232,3 +232,21 @@ func TestBigCardsInside(t *testing.T) {
 		t.Fatalf("solen: %+v %+v", ga, gb)
 	}
 }
+
+// Din vandring får rundans spelkort som minikort, utan texten, och en
+// runda med bara ett kort slås inte ihop med de tysta rundorna.
+func TestJourneyCards(t *testing.T) {
+	g, a, _ := startTwo(t)
+	p := a.player
+	putInRoom(g, p, 4, 4)
+	p.HP = 9
+	snap := g.snapshot()
+	g.give(p, "amulett")
+	g.trigger(p, g.data.trap("pilar"), 0)
+	g.summarize(snap, g.wakes)
+	v := g.journeyOf(p)
+	last := v.Rounds[len(v.Rounds)-1]
+	if len(last.Cards) != 1 || last.Cards[0].Bild != "pilar" || last.Cards[0].Text != "" || last.quiet {
+		t.Fatalf("Din vandring: %+v", last)
+	}
+}

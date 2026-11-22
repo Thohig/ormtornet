@@ -594,6 +594,9 @@ och varelser har sin korta beskrivning som rubrik, aldrig namnet.
   bara på ett annat stort kort.
 - **Vandringens sista kort**, ute, död eller kvar när solen gick ner,
   står överst i Din vandring.
+- **Minikorten**: en rad i loggen som hör till ett kort får ett litet
+  kort framför sig, och varje runda i Din vandring har rundans kort som
+  små kort bredvid rubriken.
 
 ### Skattkammaren och ormen
 

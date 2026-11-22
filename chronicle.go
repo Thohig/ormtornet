@@ -147,6 +147,7 @@ func (g *Game) statsLine(p *Player) string {
 type journeyRound struct {
 	Round int           `json:"runda"`
 	Lines []summaryLine `json:"rader"`
+	Cards []gameCard    `json:"kort,omitempty"`   // rundans spelkort, utan texten, som minikort
 	Room  string        `json:"rum,omitempty"`    // rummets beskrivning, när ett nytt rum kom den rundan
 	Here  string        `json:"har,omitempty"`    // vad som fanns där
 	Heard string        `json:"hor,omitempty"`    // vad vandraren hörde

@@ -1,7 +1,8 @@
 # Samlat förslag: spelkort för alla situationer
 
-Status: förslag 2026-11-22, byggt samma dag i delarna nedan. Avsnittet
-Läget säger vad som är byggt.
+Status: förslag 2026-11-22, byggt samma dag, alla delar A–G. Avsnittet
+Läget säger vad som blev annorlunda än förslaget, och
+[att-gora.md](att-gora.md) vad som ska provas.
 
 ## Målet
 
@@ -148,3 +149,16 @@ uppdateras i varje steg.
 | D | ja, med ett kort för guld man hittar när man söker |
 | E | ja; varslen, namnets delar och viskningen kommer mellan rundorna som ett eget kort |
 | F | ja; solen visas stort när tre rundor är kvar och när den går ner med en invigd kvar, och den som blir kvar får kortet Solen gick ner |
+| G | ja; krönikan i slutet har kvar ormkorten på raden med siffror, och Din vandring får alla kort |
+
+Annorlunda än förslaget:
+
+- Ett kort som kommer mellan rundorna (varsel, namnets delar, att bli
+  invigd) skickas genast som meddelandet `kort` och står i kö efter det
+  kort som är uppe. Tornets stora kort (port, sol) kommer som `storkort`.
+  En ny runda ersätter genast spelkortet som står uppe.
+- Guld man hittar när man söker fick ett eget kort, och sökandets,
+  dryckens och varelsernas texter förlorade sina siffror.
+- Facklan är bilden för en runda utan eget kort.
+- `verktyg/kortbilder.html` visar alla motiv, och kontrollen av
+  datafilerna säger till om en bild i `bild` inte finns.
