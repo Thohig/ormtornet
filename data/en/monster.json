@@ -25,8 +25,8 @@
       {
         "id": "yngel",
         "namn": "The Serpent Spawn",
-        "kort": "a long, hissing snake",
-        "kort_bestamd": "the long, hissing snake",
+        "kort": "something long and hissing",
+        "kort_bestamd": "the long hissing thing",
         "kort_igen": "the hissing thing",
         "dyker_upp": [
           "A snake, long as a man, rises from a heap of dust. It hisses and strikes at once.",

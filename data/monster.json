@@ -37,8 +37,8 @@
       {
         "id": "yngel",
         "namn": "Ormynglet",
-        "kort": "en lång, väsande orm",
-        "kort_bestamd": "den långa, väsande ormen",
+        "kort": "något långt och väsande",
+        "kort_bestamd": "det långa väsande",
         "kort_igen": "det väsande",
         "vikt": 3,
         "liv": 3,
