@@ -126,8 +126,11 @@ Avsnitten står alltid i samma ordning: Bjud in, Vid porten och Inför
 nästa vandring. På en skärm som är minst 1100 punkter bred står de i två
 kolumner under raden: Bjud in och Vid porten till vänster, Inför nästa
 vandring och resten till höger, med förklaringen under varje val. På en
-smalare skärm är sidan en kolumn. Under och efter vandringen krymper Bjud in till adressen
-och en knapp som kopierar den, så att resten kommer upp. Längst ner ligger Kommer någon inte in? och Läs om
+smalare skärm är sidan en kolumn. Under Bjud in står inte adressen (eller
+länken) utskriven: knapparna kopierar inbjudan och adressen, och Visa
+adressen visar den vid behov. Går det inte att kopiera visas den av sig
+själv. Under och efter vandringen krymper Bjud in till knapparna för
+adressen, så att resten kommer upp. Längst ner ligger Kommer någon inte in? och Läs om
 innehållet, hopfällda, och en liten knapp som stänger tornet. Har ingen
 människa kommit in en och en halv minut efter att sidan öppnades fälls
 Kommer någon inte in? ut av sig själv.

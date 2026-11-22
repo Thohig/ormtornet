@@ -6,6 +6,13 @@ eller leder tornet.
 
 ## 2026-11-22
 
+### Adressen under Bjud in syns bara när man ber om den
+
+- Värdsidan skriver inte ut adressen (på GitHub Pages länken) under Bjud
+  in. Kopiera inbjudan och Kopiera adressen räcker oftast, och Visa
+  adressen (Visa länken) visar den när den behövs. Går det inte att
+  kopiera visas den av sig själv, så att den kan markeras.
+
 ### AI:n tar över den som står still
 
 - Den som är kvar i tornet men inte väljer något drag, så att tiden går

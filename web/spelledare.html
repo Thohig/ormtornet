@@ -106,11 +106,16 @@
         <section id="invite">
         <h2 data-t="bjud_in"></h2>
         <p class="full" data-t="bjud_in_text"></p>
-        <div id="addr">…</div>
-        <p id="ips" class="full"></p>
+        <!-- Adressen syns bara när spelledaren ber om den: det räcker oftast
+             att kopiera den, och länken på Pages är lång. -->
+        <div id="addrBox" hidden>
+          <div id="addr">…</div>
+          <p id="ips" class="full"></p>
+        </div>
         <div class="buttons">
           <button class="btn main" id="copyInvite" type="button" data-t="kopiera_inbjudan"></button>
           <button class="btn" id="copyAddr" type="button" data-t="kopiera_adressen"></button>
+          <button class="btn" id="showAddr" type="button" aria-expanded="false" aria-controls="addrBox" data-t="visa_adressen"></button>
           <a class="btn" id="joinSelf" href="./?spela" target="_blank" rel="noopener" data-t="ga_in_sjalv"></a>
         </div>
         <p id="copied"></p>
@@ -250,11 +255,23 @@ function inviteText(v) {
   return s;
 }
 
+// showAddr visar eller döljer adressen under Bjud in.
+function showAddr(show) {
+  $("addrBox").hidden = !show;
+  $("showAddr").setAttribute("aria-expanded", String(show));
+  $("showAddr").dataset.t = (show ? "dolj_" : "visa_") + (onPages ? "lanken" : "adressen");
+  applyTexts();
+}
+$("showAddr").onclick = () => showAddr($("addrBox").hidden);
+if (onPages) showAddr(false);
+
 async function copy(text, done) {
   try {
     await navigator.clipboard.writeText(text);
     $("copied").textContent = t(done);
   } catch {
+    // Gick det inte att kopiera visas adressen, så att den går att markera.
+    showAddr(true);
     $("copied").textContent = t("kopiera_fel");
   }
 }
