@@ -400,10 +400,11 @@ gemensam. De valen är borttagna; se [docs/synlighet.md](docs/synlighet.md).
 När vandringen är slut står krönikan på en egen skärm, under resultaten och
 epilogen. Först kommer det
 som hände, runda för runda: vem som gick ut och med hur mycket, vem som dog
-och av vad, vem som fällde vilken varelse och när ormen vaknade. Sedan kommer
-en rad för varje vandrare med hur många nävar den tog ur kammaren och hur
-mycket guld de gav, och hur många fällor, fällda varelser och sökta rum den
-fick. Texterna står i `data/texter.json` under `kronika_*`. Under krönikan
+och av vad, vem som fällde vilken varelse, vem som slog vem och tog hur
+mycket guld, och när ormen vaknade. Sedan kommer en rad för varje vandrare
+med hur många nävar den tog ur kammaren och hur mycket guld de gav, och hur
+många fällor, fällda varelser och sökta rum den fick. Den som har träffat
+andra vandrare får också träffarna och det stulna guldet på sin rad. Texterna står i `data/texter.json` under `kronika_*`. Under krönikan
 står den egna vandringen, samma som den som dör ser under vandringen.
 
 ### Klasser

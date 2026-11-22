@@ -6,6 +6,18 @@ eller leder tornet.
 
 ## 2026-11-22
 
+### Striderna mellan vandrare i krönikan
+
+- Krönikan skriver ner varje slag mellan vandrare som träffar men inte
+  dödar: "Ada slog Bo och tog 12 guld." Ett bakhåll, när den andra inte
+  försvarade sig, står som "Ada föll över Bo bakifrån." Ett slag som dödar
+  står som förut bara som en död.
+- Vandrarens rad med siffror i slutet visar träffar på andra vandrare och
+  stulet guld, men bara hos den som har träffat någon.
+- Rundans kort, och därmed Din vandring, säger vem du slogs mot: "Du
+  anföll Bo.", "Du parerade mot Bo." eller "Du gjorde en undanmanöver för
+  Bo." Mot en varelse står det som förut.
+
 ### Ormleken och korten i krönikan
 
 - Bredvid guldhögen ligger ormleken och de dragna korten. Står du i

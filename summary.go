@@ -16,7 +16,8 @@ type before struct {
 	stuck, poison, dark, cellar int
 	status, action              string
 	items                       []string
-	draws                       int // ormkort dragna före rundan
+	draws                       int    // ormkort dragna före rundan
+	foe                         string // vandraren som stridsvalet riktades mot
 }
 
 type summaryLine struct {
@@ -48,9 +49,22 @@ func (g *Game) snapshot() map[*Player]before {
 			x: p.X, y: p.Y, hp: p.HP, treasure: p.Treasure, potions: p.Potions,
 			stuck: p.Stuck, poison: p.Poison, dark: p.Dark, cellar: p.Cellar,
 			status: p.Status, action: p.Action, items: items, draws: len(p.stats.draws),
+			foe: g.foeName(p),
 		}
 	}
 	return m
+}
+
+// foeName är namnet på vandraren som p:s stridsval riktas mot, eller tomt
+// om p slåss mot en varelse eller inte slåss alls.
+func (g *Game) foeName(p *Player) string {
+	if !isCombatAction(p.Action) || g.monsterAt(p.X, p.Y) != nil || g.pvpStatus(p) != pvpYes {
+		return ""
+	}
+	if foe := g.playerByID(p.target); foe != nil && foe != p && foe.Status == statusIn && foe.X == p.X && foe.Y == p.Y {
+		return foe.Name
+	}
+	return ""
 }
 
 // summarize skickar rundans sammanfattning till var och en som var i tornet.
@@ -195,7 +209,12 @@ func (g *Game) actionLine(p *Player, b before, moved bool, room string, t func(s
 	switch a {
 	case "":
 		return t("sam_inget")
-	case actWait, actTake, actSearch, actDrink, actAttack, actParry, actDodge:
+	case actAttack, actParry, actDodge:
+		if b.foe != "" {
+			return t("sam_"+a+"_vandrare", "namn", b.foe)
+		}
+		return t("sam_" + a)
+	case actWait, actTake, actSearch, actDrink:
 		return t("sam_" + a)
 	}
 	return t("sam_vanta")

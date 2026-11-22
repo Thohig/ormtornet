@@ -61,3 +61,28 @@ func TestRoundSummary(t *testing.T) {
 		t.Fatalf("Bos sammanfattning: %+v", bo)
 	}
 }
+
+func TestSummaryNamesTheFoe(t *testing.T) {
+	g, a, b := fightReady(t)
+	alva, bo := a.player, b.player
+	summaries(a)
+	summaries(b)
+	g.Act(a, actAttack, -bo.ID)
+	g.Act(b, actParry, -alva.ID)
+	has := func(c *Client, want string) bool {
+		for _, m := range summaries(c) {
+			for _, l := range m.Lines {
+				if l.Text == want {
+					return true
+				}
+			}
+		}
+		return false
+	}
+	if want := g.data.Text("sam_anfall_vandrare", "namn", bo.Name); !has(a, want) {
+		t.Fatalf("Alvas kort saknar %q", want)
+	}
+	if want := g.data.Text("sam_parera_vandrare", "namn", alva.Name); !has(b, want) {
+		t.Fatalf("Bos kort saknar %q", want)
+	}
+}
