@@ -453,6 +453,8 @@ body:not(.loggenoppen) #mapbox > #side #log .round:first-child + .round::before 
 body:not(.loggenoppen) #mapbox > #side #log .roundhead { border-top: 0; padding-top: 0; }
 body:not(.loggenoppen) #mapbox > #side #logNew { display: none; }
 #mapbox > #side #pad { order: 2; pointer-events: auto; text-shadow: none; }
+/* Minikorten i loggen går att klicka på fast loggen släpper igenom klicken till kartan. */
+#mapbox > #side #log .minikort[data-kort] { pointer-events: auto; cursor: pointer; }
 #mapbox > #side #log .who { text-shadow: 0 0 2px #000, 0 0 5px #000; }
 /* Knappen Loggen under texten, bara när loggen står på kartan. */
 #logToggle { display: none; }
