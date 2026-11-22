@@ -89,7 +89,7 @@ func TestDoubleBottomBag(t *testing.T) {
 	pa.Action, pb.Action = actAttack, actWait
 	putInRoom(g, pa, 4, 3)
 	putInRoom(g, pb, 4, 3)
-	g.hit(pa, pb, 30)
+	g.hit(pa, pb, 30, false)
 	if pb.Treasure != 75 || pa.Treasure != 15 {
 		t.Fatalf("Bo har %d, Alva %d", pb.Treasure, pa.Treasure)
 	}

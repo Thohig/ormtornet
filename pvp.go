@@ -155,10 +155,10 @@ func (g *Game) exchange(a, b *Player) {
 		bLoot = g.loot(b, a)
 	}
 	if aHits {
-		g.hit(a, b, aLoot)
+		g.hit(a, b, aLoot, false)
 	}
 	if bHits {
-		g.hit(b, a, bLoot)
+		g.hit(b, a, bLoot, false)
 	}
 }
 
@@ -175,7 +175,7 @@ func (g *Game) ambush(a, b *Player) {
 	g.fightNoise(a, b)
 	g.logTo(a, g.data.Text("pvp_oberedd", "namn", b.Name), "")
 	g.logTo(b, g.data.Text("pvp_bakhall", "namn", a.Name), "varn")
-	g.hit(a, b, g.loot(a, b))
+	g.hit(a, b, g.loot(a, b), true)
 }
 
 // loot är hur mycket guld en träff river åt sig: en tredjedel (hälften för
@@ -191,8 +191,9 @@ func (g *Game) loot(attacker, victim *Player) int {
 	return max(1, int(float64(victim.Treasure)*share))
 }
 
-// hit låter a träffa b, ta bytet och kanske döda b.
-func (g *Game) hit(a, b *Player, gold int) {
+// hit låter a träffa b, ta bytet och kanske döda b. bakhall säger att b
+// inte försvarade sig, för krönikan.
+func (g *Game) hit(a, b *Player, gold int, bakhall bool) {
 	if b.Status != statusIn {
 		return
 	}
@@ -217,8 +218,24 @@ func (g *Game) hit(a, b *Player, gold int) {
 	} else if !killing {
 		g.logTo(b, g.data.Text("pvp_traffad", "namn", a.Name, "skada", strconv.Itoa(pvpSkada)), "varn")
 	}
+	if !killing {
+		g.chronicleHit(a, b, gold, bakhall)
+	}
 	b.hurt("vandrare", a.Name)
 	g.damage(b, pvpSkada, false)
+}
+
+// chronicleHit skriver ner ett slag mellan vandrare som inte dödade. Ett
+// slag som dödar står redan i krönikan som en död.
+func (g *Game) chronicleHit(a, b *Player, gold int, bakhall bool) {
+	key := "kronika_slag"
+	if bakhall {
+		key = "kronika_bakhall"
+	}
+	if gold > 0 {
+		key += "_byte"
+	}
+	g.chronicle(key, "namn", a.Name, "offer", b.Name, "guld", strconv.Itoa(gold))
 }
 
 // fightNoise låter resten av tornet höra striden.

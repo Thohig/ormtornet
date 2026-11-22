@@ -502,6 +502,18 @@
     "kronika_varelse": [
       "{namn} felled {varelse}."
     ],
+    "kronika_slag": [
+      "{namn} struck {offer}."
+    ],
+    "kronika_slag_byte": [
+      "{namn} struck {offer} and took {guld} gold."
+    ],
+    "kronika_bakhall": [
+      "{namn} fell upon {offer} from behind."
+    ],
+    "kronika_bakhall_byte": [
+      "{namn} fell upon {offer} from behind and took {guld} gold."
+    ],
     "kronika_dod": [
       "{namn} died."
     ],

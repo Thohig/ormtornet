@@ -518,6 +518,18 @@
     "kronika_varelse": [
       "{namn} fällde {varelse}."
     ],
+    "kronika_slag": [
+      "{namn} slog {offer}."
+    ],
+    "kronika_slag_byte": [
+      "{namn} slog {offer} och tog {guld} guld."
+    ],
+    "kronika_bakhall": [
+      "{namn} föll över {offer} bakifrån."
+    ],
+    "kronika_bakhall_byte": [
+      "{namn} föll över {offer} bakifrån och tog {guld} guld."
+    ],
     "kronika_dod": [
       "{namn} dog."
     ],

@@ -111,3 +111,47 @@ func TestBotsFightEachOtherOnlyWithoutHumans(t *testing.T) {
 		t.Fatal("utan människor ska AI-spelarna kunna slåss med varandra")
 	}
 }
+
+// chronTexts är krönikans händelser som text.
+func chronTexts(g *Game) []string {
+	var out []string
+	for _, e := range g.chron {
+		out = append(out, e.text)
+	}
+	return out
+}
+
+func TestPvPHitsInChronicle(t *testing.T) {
+	g, a, b := fightReady(t)
+	alva, bo := a.player, b.player
+	bo.Treasure = 30
+	g.Act(a, actAttack, -bo.ID)
+	g.Act(b, actDodge, -alva.ID)
+	want := g.data.Text("kronika_slag_byte", "namn", alva.Name, "offer", bo.Name, "guld", "10")
+	if got := chronTexts(g); len(got) != 1 || got[0] != want {
+		t.Fatalf("krönikan efter duellen: %q, ville ha %q", got, want)
+	}
+
+	g.chron = nil
+	alva.Treasure = 0
+	g.Act(b, actAttack, -alva.ID)
+	g.Act(a, actWait, 0)
+	want = g.data.Text("kronika_bakhall", "namn", bo.Name, "offer", alva.Name)
+	if got := chronTexts(g); len(got) != 1 || got[0] != want {
+		t.Fatalf("krönikan efter bakhållet: %q, ville ha %q", got, want)
+	}
+}
+
+func TestPvPKillOnlyOnceInChronicle(t *testing.T) {
+	g, a, b := fightReady(t)
+	bo := b.player
+	bo.Treasure = 50
+	bo.HP = 1
+	g.Act(a, actAttack, -bo.ID)
+	g.Act(b, actWait, 0)
+	for _, s := range chronTexts(g) {
+		if s == g.data.Text("kronika_bakhall_byte", "namn", a.player.Name, "offer", bo.Name, "guld", "50") {
+			t.Fatalf("slaget som dödade stod också som ett slag: %q", chronTexts(g))
+		}
+	}
+}
