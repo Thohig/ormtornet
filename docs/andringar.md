@@ -6,6 +6,23 @@ eller leder tornet.
 
 ## 2026-11-22
 
+### Kartan som ett spelbräde
+
+- Kartan ser ut som ett spelbräde i fackelsken. Golven är huggna
+  stenplattor, murarna har krön, dörrarna är av trä och portarna är
+  portvalv med torn. En stängd port har stängda dörrar med röda järnband.
+- Varje rum har facklor. Rummet du står i lyses upp, grannrummen ligger i
+  dunkel och rummen längre bort nästan i mörker. Kartan har en ram som ett
+  gammalt spelbräde.
+- Rummen har inredning efter sin sort: pelare, en brunn, bänkar, ett
+  altare, en trappa, hyllor och tunnor, lyktor, stenblock, en ässja och ett
+  städ, bokhyllor, eller en hög med stenar och ben. Vad varje rumstyp har
+  står i `data/texter.json` under `modell.inredning`.
+- Vandrarna och varelserna är miniatyrer på runda socklar, med en kant i
+  vandrarens färg eller mörkröd för varelserna. En fälla som har slagit
+  till syns som en modell i stället för sitt tecken i krita.
+- Ett nytt rum faller ner som en bricka och läggs på plats.
+
 ### Bara kartan snett ovanifrån
 
 - Kartan i krita rakt ovanifrån är borttagen. Kartan snett ovanifrån i

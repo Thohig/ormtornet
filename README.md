@@ -334,6 +334,16 @@ lobbyn. Där du senast såg någon står en svag ring i dess färg, och i
 listan över vandrare står "sågs runda 12" eller "inte sedd". Tecknet
 försvinner när du ser vandraren igen, eller när den har gått ut eller dött.
 
+Kartan ser ut som ett spelbräde i fackelsken. Golven är huggna
+stenplattor, murarna har krön, dörrarna är av trä och portarna är
+portvalv med torn. Rummen har inredning efter sin sort, till exempel
+pelare, en brunn, bokhyllor eller en ässja. Rummet du står i lyses av en
+fackla, grannrummen ligger i dunkel och rummen längre bort nästan i
+mörker. Vandrarna och varelserna är miniatyrer på runda socklar, och en
+fälla som har slagit till syns som det den är: ett galler, ett hål i
+golvet, en klocka och så vidare. När du går in i ett rum som ingen har
+varit i faller det ner som en bricka och läggs på plats.
+
 Från början känner du bara rummet du börjar i, och kartan växer därifrån.
 Kartan följer rummet du står i: det står i mitten, med ljusare golv och
 en tunn ram i din färg. Vid tornets kanter går rutan bara lite utanför
@@ -686,8 +696,8 @@ Med avslöjandet på förändras tornet:
 - På nivå 4 sluter sig portarna en i taget, var tredje runda
   (`port_stangs_var`), först den som ligger längst från vandrarna. Rundan
   innan får alla som är inne en varning. Den sista porten stängs aldrig.
-  Kartan visar en stängd port som ett rött block, och ingen kommer ut genom
-  den.
+  Kartan visar en stängd port med dörrarna stängda och röda järnband, och
+  ingen kommer ut genom den.
 
 Med `-avslojande=false` stannar tornet på nivå 1: inget dunk, inga
 pulserande väggar, inga varsel och ingen epilog. Då går det inte heller att
@@ -709,7 +719,7 @@ felstavat fält, en chans som inte ligger mellan 0 och 1, ett id som finns
 två gånger eller en klass i `ai.json` som inte finns i `klasser.json`.
 Fält som börjar med `_` är kommentarer och får stå var som helst.
 
-- `texter.json` rum, beskrivningar, allmänna texter och introts väntetid
+- `texter.json` rum, beskrivningar, allmänna texter och introts väntetid. Varje rumstyp har sin inredning på kartan under `modell.inredning`, med namnen i `klient/src/inredning.ts`
 - `fallor.json` regler (liv, chans för händelse, drycker, hur länge spåren syns), fällor och sökresultat
 - `ormen.json` ormkorten, skatten i kammaren och vad som händer när ormen vaknar
 - `monster.json` varelserna (liv, skada, guld, vanor, hur ofta de vandrar, texter, och modellens färg och storlek på kartan snett ovanifrån) och striderna

@@ -134,7 +134,7 @@ längre.
   norr ligger på skärmen. Riktningen räknas ut från kamerans vinkel.
 - Pilarna vid kanten: portarna och kammaren man känner till, och vandrarna
   man ser, får en pil vid kanten med sitt tecken när de ligger utanför
-  bilden. Som på den platta kartan bara när kartan följer någon.
+  bilden, bara när kartan följer någon.
 - Tangenterna vid dörrarna: i rummet vandraren står i står en tangent med
   pilen vid varje öppen dörr och port, så att man ser vart piltangenterna
   går. Det valda draget lyser på sin tangent i vandrarens färg, i stället
@@ -149,8 +149,9 @@ längre.
 - Teckenförklaringen med bilder: med kartan snett ovanifrån står en liten
   bild av modellen i stället för tecknet för vandrarna, varelserna,
   kammaren och portarna (`bild` i `klient/src/karta.ts`, `legendImage` i
-  `web/map.js`). Det som står i krita på golvet, som fällor och pilar,
-  har kvar sitt tecken. Bilderna ritas en gång och sparas.
+  `web/map.js`). Sedan 2026-11-22 har fällorna också en bild. Det som står
+  i krita på golvet, som pilarna, har kvar sitt tecken. Bilderna ritas en
+  gång och sparas.
 - Telefoner och svaga enheter: på en pekskärm ritas högst 30 bilder i
   sekunden. Kartan mäter hur lång tid bildrutorna tar, och går det trögt
   (median över 45 ms på en pekskärm, 30 ms annars) slår den av skuggorna
@@ -163,6 +164,41 @@ längre.
   bär. Formerna står i koden. Ändringar gäller efter Läs om innehållet,
   eftersom färgen och storleken följer med tillståndet. Kontrollen säger
   till om en färg eller storlek är fel.
+
+## Spelbrädet (2026-11-22)
+
+Kartan fick en mer fantasyaktig stil, som ett spelbräde i fackelsken, i
+fem steg. Allt ritas i koden, utan bilder.
+
+1. **Sten och trä.** Golven är huggna stenplattor (`stengolv` i
+   `klient/src/krita.ts`), murarna murverk med krön (`murverk`), tjockare
+   och lite högre än förut. Murverket läses efter platsen i världen
+   (`varldsUv`), så blocken är lika stora på alla murar. Dörrarna har
+   dörrposter och en uppslagen trädörr (`tra`). Portarna är portvalv med
+   torn, spetsiga tak och trädörrar som står utåt, eller är stängda med
+   röda järnband (`portGeometri`, som teckenförklaringen också använder).
+2. **Fackelsken.** Varje rum har två facklor på murarna mot kameran, med
+   fladdrande lågor och ett sken på golvet. Rummet kartan följer lyses av
+   ett varmt punktljus, och resten av tornet blir mörkare med avståndet
+   (`dunklaShader`). Utan någon att följa får tornet ett jämnare ljus.
+   Ramen runt kartan (`.isoram` i `web/style.css`) är en tunn
+   pergamentkant med mörker mot kanterna.
+3. **Inredning.** `klient/src/inredning.ts` bygger pelare, en brunn,
+   bänkar, ett spjut, ett altare, en spiraltrappa, hyllor, tunnor, säckar,
+   lyktor, stenblock, en ässja, ett städ, bokhyllor, ett bord och en hög
+   med stenar och ben. Vilken rumstyp som har vad står under
+   `modell.inredning` i `data/texter.json`; tillståndet skickar det som
+   `in` för varje rum, och kontrollen säger till om ett namn inte finns.
+   Det höga står mot norra och västra muren.
+4. **Miniatyrer och fällor.** Vandrarna och varelserna står på socklar
+   (`miniatyr` i `klient/src/modeller.ts`) med en kant i vandrarens färg
+   eller mörkröd för varelserna. Den döda läggs ner på sockeln. En fälla
+   som har slagit till är en modell (`falla`), och tillståndet säger
+   vilken fälla märket hör till (`marki`).
+5. **Brickorna.** Ett nytt rum faller ner som en bricka, vänds i luften och
+   landar, och byggs först då (`laggBricka` och `landa` i `karta.ts`). Ett
+   nytt torn eller fler än tre rum på en gång läggs utan brickor, liksom
+   för den som har bett om mindre rörelse.
 
 ## Inte byggt
 
