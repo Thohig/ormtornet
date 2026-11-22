@@ -1,6 +1,9 @@
 # Nytt gränssnitt på dator och mobil (förslag)
 
-Förslag 2026-11-22. Steg 1–5 är byggda.
+Förslag 2026-11-22. Steg 1–5 är byggda. Samma dag fick kartan hela
+bredden på en bred skärm, och loggen flyttade från högerkolumnen in på
+kartan ([frot-och-bredden.md](frot-och-bredden.md)); det som står här om
+högerkolumnen gäller inte längre på en bred skärm.
 
 ## Vad som önskas
 

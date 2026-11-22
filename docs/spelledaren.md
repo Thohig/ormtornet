@@ -30,7 +30,10 @@ Byggt (README beskriver hur det fungerar):
 - Förval för svårighet: Lätt, Normal, Svår och Mardröm.
 - Tornet pausar rundan själv när ingen vandrare är ansluten.
 - Läs om innehållet i `data/` utan omstart, med felen på värdsidan om
-  filerna inte går ihop. Vandringens frö visas under Vid porten.
+  filerna inte går ihop.
+- Avsnittet Fröet (2026-11-22, [frot-och-bredden.md](frot-och-bredden.md)):
+  den här vandringens frö med Kopiera och Samma igen, och nästa
+  vandrings frö, som går att skriva in eller slumpa.
 - Värdsidans avsnitt står alltid i samma ordning. Under vandringen visar
   Vid porten bara raden om vandringen och vandrarna (2026-11-21).
 
@@ -44,7 +47,7 @@ På gång: inget just nu.
 
 Inte byggt, och inte planerat just nu:
 
-- Fler enskilda inställningar (chans för fällor, varelser och dörrar, frö,
+- Fler enskilda inställningar (chans för fällor, varelser och dörrar,
   liv, ormkort, nivågränser, personlighet för varje AI-spelare), namngivna
   förval och paus mellan rundor.
 - Statistik över flera kvällar och redigering av datafilerna i webbläsaren.
@@ -66,7 +69,7 @@ Dagens flaggor blir ett formulär som kan ändras i lobbyn utan omstart.
 | Tid | solens längd, turtid, paus mellan rundor |
 | Spelare | minsta antal, antal datorspelare och personlighet för var och en |
 | Svårighet | förval (Lätt, Normal, Svår, Mardröm) som sätter värdena nedan |
-| Tornet | chans för fälla, chans för varelse, chans för dörrar, frö för samma torn igen |
+| Tornet | chans för fälla, chans för varelse, chans för dörrar, frö för samma torn igen (byggt som avsnittet Fröet) |
 | Vandrare | liv, hur mycket en dryck läker, skatt i kammaren |
 | Ormen | antal sovkort och vakna-kort, skada, andel skatt man förlorar |
 | Avslöjandet | på eller av, nivågränser, hur ofta ledtrådar delas ut |

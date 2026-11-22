@@ -1,6 +1,7 @@
 # Samlat förslag: fröet, hela bredden och värdsidan under vandringen
 
-Förslag 2026-11-22, byggt samma dag i steg 1–6. En avvikelse: loggen
+Förslag 2026-11-22, byggt samma dag i steg 1–6 och publicerat på Pages.
+Det som inte är provat står i [att-gora.md](att-gora.md). En avvikelse: loggen
 står **nere** till vänster på kartan, med den senaste rundan nederst, och
 inte uppe. Då syns alltid de senaste raderna även när en runda är lång,
 och knapparna på en pekskärm står under loggen. Förslaget samlar tre saker: fröet

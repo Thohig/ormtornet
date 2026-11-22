@@ -89,8 +89,7 @@ längre.
   pulserar. Varelserna står som sitt tecken. Fällornas märken, kritpilarna,
   föremålen och de döda (x) står i krita på golvet, och draget är en pil
   vid dörren som blinkar. Ekot färgar rummets golv.
-- Kompassen nere till vänster och pilarna vid kanten kom senare (se
-  Efter stegen nedan).
+- Kompassen och pilarna vid kanten kom senare (se Efter stegen nedan).
 
 ## Så är steg 3 byggt
 
@@ -130,8 +129,17 @@ längre.
 
 ## Efter stegen
 
-- Kompassen: ett N med en pil nere till vänster på kartan, åt det håll
-  norr ligger på skärmen. Riktningen räknas ut från kamerans vinkel.
+- Kompassen: ett N med en pil åt det håll norr ligger på skärmen.
+  Riktningen räknas ut från kamerans vinkel. Den står nere till vänster
+  på telefonen, och ovanför zoomen när loggen står på kartan.
+- Loggen på kartan (2026-11-22, [frot-och-bredden.md](frot-och-bredden.md)):
+  `web/map.js` mäter hur stor del av kartans bredd loggen täcker och ger
+  den till kartan (`tackt` i `Val`, `klient/src/typer.ts`). Kameran ritar
+  då kartan bredare och flyttar den åt höger, så att utsnittet står i den
+  del som syns, och pilarna vid kanten står vid den delens kant.
+- Zoomen glider (2026-11-22): zoomen i `web/map.js` är ett tal från 0
+  (Nära) till 3 (Allt). Hjulet och två fingrar ändrar det gradvis med en
+  kort glidning; knapparna och Z går hela nivåer med den långa zoomen.
 - Pilarna vid kanten: portarna och kammaren man känner till, och vandrarna
   man ser, får en pil vid kanten med sitt tecken när de ligger utanför
   bilden, bara när kartan följer någon.

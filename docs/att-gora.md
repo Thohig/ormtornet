@@ -64,10 +64,21 @@ En riktig kväll behövs för att se:
   i rummet? Blir rumsbeskrivningarna för långa på en telefon, och hittar
   man "mer ↓"?
 - Det nya gränssnittet (2026-11-22, [nytt-granssnitt.md](nytt-granssnitt.md)):
-  läser man raden Nu under kartan mitt i en strid? Är loggen i hela
-  högerkolumnen bra på dator? På telefon: skymmer den fasta översta raden
-  och knapparna längst ner något, och fungerar det att loggen rullar med
-  sidan? Bara provat i en emulerad telefon.
+  läser man raden Nu under kartan mitt i en strid? På telefon: skymmer den
+  fasta översta raden och knapparna längst ner något, och fungerar det att
+  loggen rullar med sidan? Bara provat i en emulerad telefon.
+- Loggen på kartan (2026-11-22, [frot-och-bredden.md](frot-och-bredden.md)):
+  går texten att läsa över ljusa golv och facklor, räcker den förra
+  rundan svagt ovanför, och hittar man Loggen och L? På en riktig
+  surfplatta och en telefon på bredden: får knapparna plats under loggen,
+  och är kartan bredvid stor nog? Bara provat i en emulerad skärm, och
+  inte på Pages.
+- Zoomen som glider (2026-11-22): är ett hack på hjulet lagom stort
+  (talet 300 i `web/app.js`), och känns nypningen på en riktig pekskärm
+  naturlig?
+- Märket under vandringen (2026-11-22): öppnar spelledare värdsidan i en
+  ny flik, och tar Till spelet där tillbaka till spelets flik i Safari och
+  Chrome? Inte provat med ett riktigt klick.
 - Föremålen som verkar av sig själva (2026-11-22,
   [passiva-foremal.md](passiva-foremal.md)): märker man när rökpulvret,
   spegelskärvan, kastkniven, kritan och timglaset verkar? Blir kritans
@@ -174,7 +185,6 @@ Från [spelledaren.md](spelledaren.md):
 - Fler enskilda inställningar: chans för fällor, varelser och dörrar, liv,
   ormkort, nivågränser och personlighet för varje AI-spelare.
 - Namngivna förval och paus mellan rundor.
-- Frö, för att kunna spela samma torn igen.
 - Statistik över flera kvällar och redigering av datafilerna i webbläsaren.
 - En färdigbyggd app som går att dela utan Go.
 
