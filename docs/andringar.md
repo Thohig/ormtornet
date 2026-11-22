@@ -21,6 +21,11 @@ eller leder tornet.
   som rubrik. Klev du förbi fällan är kortet nedtonat. Fällorna har ett
   nytt fält `bild` i `data/fallor.json`.
 - `verktyg/kortbilder.html` visar alla spelkortens bilder.
+- Varelserna har var sin bild på spelkortet: när de dyker upp, i varje
+  stridsrunda och överkorsad när de faller. Striden mot en annan vandrare
+  ger båda ett kort. Fältet `bild` finns nu också i `data/monster.json`.
+- Stridens rader i loggen säger inte längre "Du förlorar 1 liv" eller
+  "Du har nu 140"; det står på spelkortet.
 
 ### Fröet, hela bredden och loggen på kartan
 

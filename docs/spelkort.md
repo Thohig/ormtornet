@@ -144,3 +144,4 @@ uppdateras i varje steg.
 | --- | --- |
 | A | ja |
 | B | ja |
+| C | ja; också varelsernas texter förlorade sina siffror |

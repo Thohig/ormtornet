@@ -195,6 +195,15 @@ func (g *Game) announceMonster(p *Player) {
 	}
 	p.Seen[m.Type] = true
 	g.soundTo(p, "monster")
+	// Spelkortet: det man ser när varelsen dyker upp, samma text som i
+	// rumsblocket. I mörkret ser man den inte.
+	if t := g.data.monsterType(m.Type); t != nil && p.Dark == 0 {
+		text := ""
+		if len(t.DykerUpp) > 0 {
+			text = t.DykerUpp[m.ID%len(t.DykerUpp)]
+		}
+		g.monsterCard(p, t, t.Kort, text, false)
+	}
 	// Varelsen beskrivs i rumsblocket i slutet av rundan (here.go), med sin
 	// egen text och utan utrop.
 	g.explainNow(p, m.Type)
@@ -222,13 +231,16 @@ func (g *Game) duel(p *Player, m *Monster, a string) {
 		playerHits, monsterHits = false, true
 		g.logTo(p, g.data.Text("klass_kartritare_undan"), "varn")
 	}
+	var result string // hur rundan gick, för spelkortet
 	switch {
 	case playerHits && monsterHits:
 		g.soundTo(p, "hugg")
-		g.logTo(p, g.data.MonsterText("bada_traffar", g.monsterVars(m, p, "skada", strconv.Itoa(t.Skada))...), "varn")
+		result = g.data.MonsterText("bada_traffar", g.monsterVars(m, p, "skada", strconv.Itoa(t.Skada))...)
+		g.logTo(p, result, "varn")
 	case playerHits:
 		g.soundTo(p, "hugg")
-		g.logTo(p, g.data.MonsterText("du_traffar", g.monsterVars(m, p)...), "syn")
+		result = g.data.MonsterText("du_traffar", g.monsterVars(m, p)...)
+		g.logTo(p, result, "syn")
 	case monsterHits:
 		// Texten följer det du valde, så att den inte säger att du vek undan
 		// när du anföll.
@@ -236,10 +248,12 @@ func (g *Game) duel(p *Player, m *Monster, a string) {
 		if len(g.data.Monster.Texter[key]) == 0 {
 			key = "monster_traffar"
 		}
-		g.logTo(p, g.data.MonsterText(key, g.monsterVars(m, p, "skada", strconv.Itoa(t.Skada))...), "varn")
+		result = g.data.MonsterText(key, g.monsterVars(m, p, "skada", strconv.Itoa(t.Skada))...)
+		g.logTo(p, result, "varn")
 	default:
 		g.soundTo(p, choiceSound(a))
-		g.logTo(p, g.data.MonsterText("inget", g.monsterVars(m, p)...), "dim")
+		result = g.data.MonsterText("inget", g.monsterVars(m, p)...)
+		g.logTo(p, result, "dim")
 	}
 	if monsterHits {
 		p.hurt("varelse", t.Kort)
@@ -248,9 +262,24 @@ func (g *Game) duel(p *Player, m *Monster, a string) {
 	if playerHits {
 		m.HP -= g.data.Monster.Spelarskada
 		if m.HP <= 0 {
-			g.defeat(p, m)
+			g.defeat(p, m) // kortet säger att varelsen föll
+			return
 		}
 	}
+	g.monsterCard(p, t, g.fightName(m, p), result, false)
+}
+
+// fightName är varelsens korta beskrivning i striden, som i texterna:
+// "det bleka mångbenta", och från andra rundan "det mångbenta".
+func (g *Game) fightName(m *Monster, p *Player) string {
+	vars := g.monsterVars(m, p)
+	return vars[3]
+}
+
+// monsterCard lägger varelsens spelkort, med den korta beskrivningen som
+// rubrik. fallen är en varelse som vandraren fällde.
+func (g *Game) monsterCard(p *Player, t *MonsterType, rubrik, text string, fallen bool) {
+	g.addCard(p, gameCard{Slag: "varelse", Bild: cardImage(t.Bild, t.ID), Rubrik: rubrik, Text: text, Fallen: fallen})
 }
 
 func choiceSound(a string) string {
@@ -267,7 +296,9 @@ func (g *Game) freeAttack(p *Player, m *Monster, key string) {
 	mc := g.monsterChoiceVs(m, p)
 	g.logTo(p, g.data.MonsterText(key, g.monsterVars(m, p, "dess_val", g.choiceWord(mc))...), "varn")
 	if mc == actAttack {
-		g.logTo(p, g.data.MonsterText("monster_traffar", g.monsterVars(m, p, "skada", strconv.Itoa(t.Skada))...), "varn")
+		text := g.data.MonsterText("monster_traffar", g.monsterVars(m, p, "skada", strconv.Itoa(t.Skada))...)
+		g.logTo(p, text, "varn")
+		g.monsterCard(p, t, g.fightName(m, p), text, false)
 		p.hurt("varelse", t.Kort)
 		g.damage(p, g.shieldDamage(p, t.Skada), false)
 	}
@@ -284,7 +315,9 @@ func (g *Game) defeat(p *Player, m *Monster) {
 	p.roundKill = t.KortBestamd
 	g.chronicle("kronika_varelse", "namn", p.Name, "varelse", t.Kort)
 	g.soundTo(p, "monster_dor")
-	g.logTo(p, pick(t.Dor), "")
+	dor := pick(t.Dor)
+	g.logTo(p, dor, "")
+	g.monsterCard(p, t, t.KortBestamd, dor, true)
 	g.logTo(p, g.data.MonsterText("seger", g.monsterVars(m, p,
 		"guld", strconv.Itoa(t.Guld), "skatt", strconv.Itoa(p.Treasure))...), "syn")
 }

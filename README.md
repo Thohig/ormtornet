@@ -571,6 +571,12 @@ och varelser har sin korta beskrivning som rubrik, aldrig namnet.
   vrider sig, pilarna, dimman, ormgropen, skinnet, klockan, vindpusten
   och ekot. Klev du förbi en fälla, med amuletten, som Spårfinnaren eller
   som invigd, får du samma kort nedtonat.
+- **Varelserna** har var sin bild. Kortet kommer när varelsen dyker upp,
+  med samma text som i loggen, och i varje stridsrunda med hur rundan
+  gick. Fäller du den är bilden överkorsad. I mörkret syns varelsen inte,
+  och då kommer inget kort när den dyker upp.
+- **Striden mot en vandrare** ger båda ett kort med två skuggor och den
+  andras namn. Liv och guld står på kortets rader, inte i loggen.
 
 ### Skattkammaren och ormen
 

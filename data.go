@@ -99,6 +99,7 @@ type MonsterType struct {
 	// KortIgen är den korta formen när striden har pågått en runda: "det
 	// mångbenta". Tom ger KortBestamd.
 	KortIgen string         `json:"kort_igen"`
+	Bild     string         `json:"bild"` // spelkortets motiv (web/kort.js); utan bild gäller id:t
 	Vikt     int            `json:"vikt"`
 	Liv      int            `json:"liv"`
 	Skada    int            `json:"skada"`

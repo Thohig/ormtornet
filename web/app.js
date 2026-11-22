@@ -1048,7 +1048,7 @@ function showRoundCard(msg) {
     const more = document.createElement("div");
     more.className = "ok-fler";
     cards.slice(1).forEach((c) => {
-      const m = Kort.mini(c.bild);
+      const m = Kort.mini(c.bild, c);
       m.title = c.rubrik;
       more.appendChild(m);
     });
@@ -1116,7 +1116,7 @@ function buildCard(el, c, extra) {
   name.textContent = c.rubrik || "";
   const art = document.createElement("div");
   art.className = "ok-bild";
-  art.innerHTML = Kort.bild(c.bild, { svag: c.svag });
+  art.innerHTML = Kort.bild(c.bild, c);
   front.append(name, art);
   if (c.text) {
     const text = document.createElement("div");

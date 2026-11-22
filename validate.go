@@ -175,6 +175,7 @@ func (d *Data) validate() []string {
 	ids = nil
 	for _, t := range m.Typer {
 		model("monster.json", "varelsen", t.ID, t.Modell)
+		cardImageOK("monster.json", "varelsen "+t.ID, cardImage(t.Bild, t.ID))
 		ids = append(ids, t.ID)
 		if t.Vandrar != nil {
 			chance("monster.json", t.ID+": vandrar", *t.Vandrar)

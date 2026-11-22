@@ -219,22 +219,28 @@ func (g *Game) hit(a, b *Player, gold int, bakhall bool) {
 	a.stats.stolen += gold
 	g.soundTo(a, "hugg")
 	killing := b.HP <= pvpSkada
+	// Siffrorna, liv och guld, står på spelkortet.
+	var aText, bText string
 	switch {
 	case killing:
-		g.logTo(a, g.data.Text("pvp_dodar", "namn", b.Name, "guld", strconv.Itoa(gold), "skatt", strconv.Itoa(a.Treasure)), "syn")
+		aText = g.data.Text("pvp_dodar", "namn", b.Name, "guld", strconv.Itoa(gold))
 	case gold > 0:
-		g.logTo(a, g.data.Text("pvp_byte", "namn", b.Name, "guld", strconv.Itoa(gold), "skatt", strconv.Itoa(a.Treasure)), "syn")
+		aText = g.data.Text("pvp_byte", "namn", b.Name, "guld", strconv.Itoa(gold))
 	default:
-		g.logTo(a, g.data.Text("pvp_traff_tom", "namn", b.Name), "syn")
+		aText = g.data.Text("pvp_traff_tom", "namn", b.Name)
 	}
+	g.logTo(a, aText, "syn")
+	g.addCard(a, gameCard{Slag: "vandrare", Bild: "vandrare", Rubrik: b.Name, Text: aText})
 	if killing {
 		g.takeNameParts(a, b)
-		g.logTo(b, g.data.Text("pvp_dodad", "namn", a.Name), "varn")
+		bText = g.data.Text("pvp_dodad", "namn", a.Name)
 	} else if gold > 0 {
-		g.logTo(b, g.data.Text("pvp_bytt", "namn", a.Name, "guld", strconv.Itoa(gold), "skada", strconv.Itoa(pvpSkada)), "varn")
-	} else if !killing {
-		g.logTo(b, g.data.Text("pvp_traffad", "namn", a.Name, "skada", strconv.Itoa(pvpSkada)), "varn")
+		bText = g.data.Text("pvp_bytt", "namn", a.Name, "guld", strconv.Itoa(gold))
+	} else {
+		bText = g.data.Text("pvp_traffad", "namn", a.Name)
 	}
+	g.logTo(b, bText, "varn")
+	g.addCard(b, gameCard{Slag: "vandrare", Bild: "vandrare", Rubrik: a.Name, Text: bText})
 	if !killing {
 		g.chronicleHit(a, b, gold, bakhall)
 	}

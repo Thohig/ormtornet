@@ -28,6 +28,8 @@ type gameCard struct {
 	// Svag: kortet visar något som inte hände, till exempel en fälla man
 	// klev förbi. Bilden tonas ned.
 	Svag bool `json:"svag,omitempty"`
+	// Fallen: en varelse som vandraren fällde. Bilden är överkorsad.
+	Fallen bool `json:"fallen,omitempty"`
 	// Stor: kortet vänds upp stort mitt på kartan, som uppvaknandet.
 	Stor bool `json:"stor,omitempty"`
 }
@@ -61,6 +63,7 @@ func (g *Game) roundCardsOf(p *Player) []gameCard {
 var cardImages = []string{
 	"fackla", "sover", "ror_sig", "vaknar",
 	"fallgaller", "rasande_golv", "roterande", "pilar", "dimma", "ormgrop", "skinn", "klocka", "morker", "eko",
+	"krypare", "yngel", "fjallvakt", "gallgast", "benvaktare", "vandrare",
 }
 
 // cardImage är motivet för innehåll i data/: fältet bild, annars id:t.

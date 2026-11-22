@@ -5,6 +5,7 @@ package main
 import (
 	"regexp"
 	"slices"
+	"strings"
 	"testing"
 )
 
@@ -68,5 +69,53 @@ func TestTrapCard(t *testing.T) {
 	cards = g.roundCardsOf(p)
 	if len(cards) != 1 || !cards[0].Svag {
 		t.Fatalf("amuletten: %+v", cards)
+	}
+}
+
+// En varelse som dyker upp ger ett kort med den korta beskrivningen och
+// samma text som rumsblocket. En varelse man fäller ger ett överkorsat kort.
+func TestMonsterCards(t *testing.T) {
+	g, a, _ := startTwo(t)
+	p := a.player
+	putInRoom(g, p, 4, 4)
+	typ := g.data.monsterType("krypare")
+	m := &Monster{ID: 3, Type: typ.ID, X: 4, Y: 4, HP: 1}
+	g.monsters = []*Monster{m}
+	g.announceMonster(p)
+	cards := g.roundCardsOf(p)
+	if len(cards) != 1 || cards[0].Slag != "varelse" || cards[0].Bild != "krypare" || cards[0].Rubrik != upperFirst(typ.Kort) || cards[0].Text != typ.DykerUpp[3%len(typ.DykerUpp)] {
+		t.Fatalf("när den dyker upp: %+v", cards)
+	}
+	p.roundCards = nil
+	g.defeat(p, m)
+	cards = g.roundCardsOf(p)
+	if len(cards) != 1 || !cards[0].Fallen || cards[0].Rubrik != upperFirst(typ.KortBestamd) {
+		t.Fatalf("när den faller: %+v", cards)
+	}
+	// I mörkret syns varelsen inte.
+	p.roundCards = nil
+	p.Dark = 2
+	g.monsters = []*Monster{{ID: 4, Type: typ.ID, X: 4, Y: 4, HP: 1}}
+	g.announceMonster(p)
+	if cards := g.roundCardsOf(p); len(cards) != 0 {
+		t.Fatalf("i mörkret: %+v", cards)
+	}
+}
+
+// Ett slag mellan vandrare ger båda ett kort med den andras namn, och
+// texten säger inte siffrorna; de står på kortets rader.
+func TestPvpCards(t *testing.T) {
+	g, a, b := startTwo(t)
+	pa, pb := a.player, b.player
+	putInRoom(g, pa, 4, 4)
+	putInRoom(g, pb, 4, 4)
+	pa.HP, pb.HP, pb.Treasure = 9, 9, 30
+	g.hit(pa, pb, 10, false)
+	ca, cb := g.roundCardsOf(pa), g.roundCardsOf(pb)
+	if len(ca) != 1 || ca[0].Slag != "vandrare" || ca[0].Rubrik != pb.Name {
+		t.Fatalf("den som slog: %+v", ca)
+	}
+	if len(cb) != 1 || cb[0].Rubrik != pa.Name || strings.Contains(cb[0].Text, "liv") {
+		t.Fatalf("den som blev slagen: %+v", cb)
 	}
 }

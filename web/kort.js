@@ -4,8 +4,8 @@
 // motivet (bild i data/ eller id:t); ett motiv som saknas här ritas som
 // facklan.
 //
-//   Kort.bild(motiv, { svag })  SVG-text för kortets bild
-//   Kort.mini(motiv)            ett litet kort att ställa framför en rad
+//   Kort.bild(motiv, { svag, fallen })  SVG-text för kortets bild
+//   Kort.mini(motiv, { svag, fallen })  ett litet kort framför en rad
 
 const Kort = (() => {
   const f = (n) => n.toFixed(1);
@@ -167,24 +167,88 @@ ${[0, 1, 2, 3].map((r) => [0, 1, 2, 3, 4].map((c) => `<path d="M${20 + c * 14 + 
 ${[8, 16, 25, 35, 46].map((r, i) => `<circle cx="50" cy="54" r="${r}" fill="none" stroke="${BRUN}" stroke-width="${2.2 - i * 0.35}" opacity="${1 - i * 0.17}"/>`).join("")}
 <circle cx="50" cy="54" r="3" fill="${BLAECK}"/>`;
 
+  // ---- Varelserna och striden ----
+
+  // Något blekt och mångbent som kryper ur en springa.
+  BILDER.krypare = () => {
+    const led = [0, 1, 2, 3, 4, 5].map((i) => [26 + i * 10, 56 - Math.sin(i / 1.7) * 8]);
+    return `${vagg()}
+<path d="M8 22q24 8 24 34q0 20 -6 38" fill="none" stroke="#140e09" stroke-width="4"/>
+${led.map(([x, y]) => `<path d="M${f(x)} ${f(y)}l-5 -14 -4 -5M${f(x)} ${f(y)}l-4 16 -5 5" fill="none" stroke="#8a8270" stroke-width="1.6" stroke-linecap="round"/>`).join("")}
+${led.map(([x, y]) => `<ellipse cx="${f(x)}" cy="${f(y)}" rx="7.5" ry="6" fill="#e6dfcf" stroke="#8a8270" stroke-width="1"/>`).join("")}
+<ellipse cx="88" cy="52" rx="7" ry="6" fill="#efe9dc" stroke="#8a8270" stroke-width="1"/>
+<path d="M93 48l4 -4M93 55l4 3" stroke="#8a8270" stroke-width="1.2" stroke-linecap="round"/>`;
+  };
+
+  // Något långt och väsande, som reser sig med öppen käft.
+  BILDER.yngel = () => `${golv(84)}
+<path d="M14 86q20 -6 30 -2t24 -8q10 -10 0 -22t-6 -24" fill="none" stroke="#1d2410" stroke-width="9" stroke-linecap="round"/>
+<path d="M14 86q20 -6 30 -2t24 -8q10 -10 0 -22t-6 -24" fill="none" stroke="${GRON}" stroke-width="7" stroke-linecap="round"/>
+<path d="M62 30l14 -8 4 6 -6 4 6 4 -4 4 -14 -6z" fill="${GRON}" stroke="#1d2410" stroke-width="1"/>
+<circle cx="68" cy="27" r="1.6" fill="#e8c040"/>
+<path d="M80 30l8 -2M88 28l3 -3M88 28l3 2" stroke="${ROD}" stroke-width="1.1" stroke-linecap="round"/>
+<path d="M84 14q4 -2 6 2M86 8q6 -2 8 4" fill="none" stroke="${BRUN}" stroke-width="1.2" stroke-linecap="round"/>`;
+
+  // En gestalt i fjällrustning, med spjut.
+  BILDER.fjallvakt = () => `${vagg()}
+<path d="M72 8V92" stroke="${BRUN}" stroke-width="2.4"/><path d="M72 4l-4 10h8z" fill="${JARN}"/>
+<path d="M38 90l4 -30h16l4 30z" fill="#3c4a32"/>
+<path d="M34 64q-2 -22 16 -26q18 4 16 26z" fill="#4f5e3c" stroke="${BLAECK}" stroke-width="1"/>
+${[0, 1, 2, 3].map((r) => [0, 1, 2, 3].map((c) => `<path d="M${38 + c * 7 + (r % 2) * 3.5} ${46 + r * 5}q3.5 4 7 0" fill="none" stroke="#a8b47a" stroke-width="0.9"/>`).join("")).join("")}
+<path d="M40 30q10 -16 20 0v6H40z" fill="#4f5e3c" stroke="${BLAECK}" stroke-width="1"/>
+<rect x="43" y="31" width="14" height="3" fill="#140e09"/>
+<path d="M64 50l8 -6" stroke="#4f5e3c" stroke-width="5" stroke-linecap="round"/>`;
+
+  // En grönaktig skepnad som svävar.
+  BILDER.gallgast = () => `<rect x="4" y="4" width="92" height="92" rx="6" fill="#2a2a1c" opacity="0.25"/>
+<path d="M30 86q-4 -40 6 -56q14 -20 28 0q10 16 6 56l-7 -6 -6 8 -6 -8 -7 8 -7 -8z" fill="#a8c890" opacity="0.7" stroke="#5a7a48" stroke-width="1.2"/>
+<ellipse cx="44" cy="42" rx="4" ry="6" fill="#1e2a16"/><ellipse cx="58" cy="42" rx="4" ry="6" fill="#1e2a16"/>
+<ellipse cx="51" cy="58" rx="3.5" ry="5" fill="#1e2a16"/>
+<path d="M20 50q-6 6 0 12M82 46q6 6 0 12" fill="none" stroke="#7a9a64" stroke-width="1.4" opacity="0.7"/>`;
+
+  // Ett väsen av vita ben.
+  BILDER.benvaktare = () => `${vagg()}
+<circle cx="50" cy="24" r="12" fill="#f2ecdd" stroke="#8a8270" stroke-width="1"/>
+<ellipse cx="45" cy="23" rx="3" ry="3.6" fill="${BLAECK}"/><ellipse cx="55" cy="23" rx="3" ry="3.6" fill="${BLAECK}"/>
+<path d="M50 27l-2 4h4z" fill="${BLAECK}"/><path d="M44 33h12" stroke="${BLAECK}" stroke-width="1" stroke-dasharray="1.5 1"/>
+<path d="M50 36v38" stroke="#f2ecdd" stroke-width="3"/>
+${[42, 49, 56, 63].map((y, i) => `<path d="M50 ${y}q-${14 - i * 2} 2 -${14 - i * 2} 8M50 ${y}q${14 - i * 2} 2 ${14 - i * 2} 8" fill="none" stroke="#f2ecdd" stroke-width="2.2" stroke-linecap="round"/>`).join("")}
+<path d="M50 74l-10 18M50 74l10 18M36 42l-14 18M64 42l14 18" stroke="#f2ecdd" stroke-width="3" stroke-linecap="round"/>
+<path d="M22 60l-2 4M78 60l2 4" stroke="#8a8270" stroke-width="2"/>`;
+
+  // Två skuggor som slåss: en annan vandrare.
+  const skugga = (x, vand) => `<g transform="translate(${x} 0) scale(${vand} 1)">
+<circle cx="0" cy="34" r="7" fill="#2a2018"/>
+<path d="M-8 90l2 -30q-4 -12 6 -18q10 6 6 18l2 30z" fill="#2a2018"/>
+<path d="M4 50l14 -10" stroke="#2a2018" stroke-width="4" stroke-linecap="round"/></g>`;
+  BILDER.vandrare = () => `${golv(86)}
+${skugga(30, 1)}${skugga(70, -1)}
+<path d="M44 40l18 -22M56 40l-18 -22" stroke="#9a958c" stroke-width="2" stroke-linecap="round"/>
+<circle cx="50" cy="29" r="3" fill="#fff0b0" opacity="0.9"/>`;
+
+  // Krysset över en varelse som har fallit.
+  const KRYSS = `<path d="M18 18L82 82M82 18L18 82" stroke="${ROD}" stroke-width="5" stroke-linecap="round" opacity="0.75"/>`;
+
   const ORM = ["sover", "ror_sig", "vaknar"];
 
   return {
     bild(motiv, opt = {}) {
       const rita = BILDER[motiv] || BILDER.fackla;
-      const inner = rita();
-      return svg(opt.svag ? `<g opacity="0.45" style="filter: grayscale(1)">${inner}</g>` : inner);
+      let inner = rita();
+      if (opt.svag) inner = `<g opacity="0.45" style="filter: grayscale(1)">${inner}</g>`;
+      if (opt.fallen) inner = `<g opacity="0.6">${inner}</g>${KRYSS}`;
+      return svg(inner);
     },
     // mini ger ett litet kort. Ormkorten har egna små bilder i CSS:en;
     // de andra får sin bild i liten skala.
-    mini(motiv) {
+    mini(motiv, opt = {}) {
       const s = document.createElement("span");
       s.setAttribute("aria-hidden", "true");
       if (ORM.includes(motiv)) {
         s.className = "minikort " + motiv;
       } else {
         s.className = "minikort bild";
-        s.innerHTML = this.bild(motiv);
+        s.innerHTML = this.bild(motiv, opt);
       }
       return s;
     },

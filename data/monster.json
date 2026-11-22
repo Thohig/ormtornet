@@ -23,6 +23,7 @@
         "skada": 1,
         "guld": 10,
         "tecken": "k",
+        "bild": "krypare",
         "modell": { "farg": "#d8d0bf", "storlek": 1 },
         "vandrar": 0.35,
         "vanor": { "anfall": 1, "parera": 1, "undan": 3 },
@@ -45,6 +46,7 @@
         "skada": 1,
         "guld": 15,
         "tecken": "s",
+        "bild": "yngel",
         "modell": { "farg": "#6d8040", "storlek": 1 },
         "vandrar": 0.3,
         "vanor": { "anfall": 3, "parera": 1, "undan": 1 },
@@ -67,6 +69,7 @@
         "skada": 2,
         "guld": 30,
         "tecken": "V",
+        "bild": "fjallvakt",
         "modell": { "farg": "#62897f", "storlek": 1 },
         "vandrar": 0.15,
         "vanor": { "anfall": 1, "parera": 3, "undan": 1 },
@@ -89,6 +92,7 @@
         "skada": 2,
         "guld": 20,
         "tecken": "g",
+        "bild": "gallgast",
         "modell": { "farg": "#8ac77f", "storlek": 1 },
         "vandrar": 0.4,
         "vanor": { "anfall": 2, "parera": 1, "undan": 2 },
@@ -111,6 +115,7 @@
         "skada": 2,
         "guld": 40,
         "tecken": "B",
+        "bild": "benvaktare",
         "modell": { "farg": "#e8e0cc", "storlek": 1 },
         "vandrar": 0.05,
         "vanor": { "anfall": 2, "parera": 2, "undan": 1 },
@@ -132,22 +137,22 @@
         "Ditt slag tar."
       ],
       "monster_traffar": [
-        "{Monster} träffar dig. Du förlorar {skada} liv."
+        "{Monster} träffar dig."
       ],
       "monster_traffar_anfall": [
-        "{Monster} fångar ditt slag och slår tillbaka. Du förlorar {skada} liv.",
-        "Ditt slag studsar mot {monster}, som slår tillbaka. Du förlorar {skada} liv."
+        "{Monster} fångar ditt slag och slår tillbaka.",
+        "Ditt slag studsar mot {monster}, som slår tillbaka."
       ],
       "monster_traffar_parera": [
-        "{Monster} glider runt din parering. Du förlorar {skada} liv.",
-        "Du väntar på ett slag, men {monster} kommer från sidan. Du förlorar {skada} liv."
+        "{Monster} glider runt din parering.",
+        "Du väntar på ett slag, men {monster} kommer från sidan."
       ],
       "monster_traffar_undan": [
-        "Du hinner inte undan. Du förlorar {skada} liv.",
-        "{Monster} träffar dig mitt i steget. Du förlorar {skada} liv."
+        "Du hinner inte undan.",
+        "{Monster} träffar dig mitt i steget."
       ],
       "bada_traffar": [
-        "Ni träffar varandra samtidigt. Du förlorar {skada} liv."
+        "Ni träffar varandra samtidigt."
       ],
       "inget": [
         "Ingen av er kommer åt den andra.",
@@ -160,7 +165,7 @@
         "Du vänder och flyr. {Monster} {dess_val}."
       ],
       "seger": [
-        "Du har besegrat {monster} och tar {guld} guld. Du har nu {skatt}."
+        "Du har besegrat {monster} och tar {guld} guld."
       ],
       "strid_andra": [
         "Stridsljud hörs i tornets {region} del."
