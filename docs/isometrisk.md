@@ -151,7 +151,11 @@ längre.
   kammaren och portarna (`bild` i `klient/src/karta.ts`, `legendImage` i
   `web/map.js`). Sedan 2026-11-22 har fällorna också en bild. Det som står
   i krita på golvet, som pilarna, har kvar sitt tecken. Bilderna ritas en
-  gång och sparas.
+  gång och sparas. Sedan 2026-11-22 står samma bilder på krönikans rader
+  och rundans kort i Din vandring (`signLook` i `web/map.js`, `signs.go`).
+  Där berättar tornet vilken modell en varelse eller fälla har (`lar` i
+  `karta.ts`), så att kartan kan rita den även om vandraren aldrig såg
+  den.
 - Telefoner och svaga enheter: på en pekskärm ritas högst 30 bilder i
   sekunden. Kartan mäter hur lång tid bildrutorna tar, och går det trögt
   (median över 45 ms på en pekskärm, 30 ms annars) slår den av skuggorna

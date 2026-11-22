@@ -52,6 +52,10 @@ En riktig kväll behövs för att se:
   betydelsen vid tryck. Hittar spelarna att man kan trycka på dem, och
   skymmer den fortfarande något på en telefon? I utsnittet tar den med
   tecken från kända rum som ligger utanför bild.
+- Striderna och tecknen i krönikan (2026-11-22): blir krönikan för lång
+  när många slåss, och är raden med siffror för lång på en telefon? Känns
+  tecknen igen från kartan, och hittar man förklaringen? Rundans kort på
+  kartan under spelet har inga tecken än; ska det ha det?
 - Bara den egna porten: hittar spelarna ut, eller går de vilse när de
   inte ser de andra portarna?
 - Tecknen på kartan (2026-11-19): går de att förstå, och skymmer de

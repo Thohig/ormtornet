@@ -80,6 +80,7 @@ Så här skiljer vi på sakerna när användaren ger instruktioner:
   `web/app.js`). Den som dör ser **Din vandring**, rundans kort runda för
   runda (`vandring` i tillståndet, `journeyOf` i `chronicle.go`), och i
   slutet ser alla resultaten, epilogen, hela krönikan och sin vandring.
+  Raderna har samma tecken som teckenförklaringen (`signs.go`).
 - **tangenterna vid dörrarna**: piltangenterna som står vid dörrarna i ens
   rum på kartan snett ovanifrån (`ritaTangenter` i `klient/src/karta.ts`).
 - **väskan**: föremålen under tecknen, med en plats för varje föremål man
