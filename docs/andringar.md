@@ -22,7 +22,7 @@ Rättat efter en timmes provspel (se
   ligger inte längre över varandra på telefonen.
 - Resultatet: den som gick ut tomhänt står före de döda och förlorade.
 - Texterna: "Du sitter fast en runda" (inte "1 rundor"), "kammaren en
-  gång", och föremålen med en eller ett: "Sigge hittade en extra veke",
+  gång", "+2 drycker", och föremålen med en eller ett: "Sigge hittade en extra veke",
   "Här ligger en krita … och får lämna fyndet kvar". På engelska står inte
   längre "−1 lives".
 - Slutet: den som laddar om sidan, eller vars telefon somnar, står kvar i
