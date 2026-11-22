@@ -157,6 +157,7 @@ func (g *Game) pickUp(p *Player) {
 	if p.Status != statusIn || p.Cellar > 0 {
 		return
 	}
+	g.pickUpGold(p)
 	room := &g.rooms[p.Y][p.X]
 	var left []string
 	for _, id := range room.items {

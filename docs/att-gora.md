@@ -108,6 +108,9 @@ En riktig kväll behövs för att se:
   tycker spelarna om namnen, eller saknar de att skriva sitt eget? Får
   den som byter telefon eller webbläsare mitt i kvällen ett nytt namn, och
   gör det något?
+- Den dödes guld (2026-11-22): går någon dit en annan har dött för att
+  hämta guldet, och blir det för lätt att plocka upp en hel kammares
+  skatt? AI-spelarna går inte dit med flit.
 - Bara den egna porten: hittar spelarna ut, eller går de vilse när de
   inte ser de andra portarna?
 - Tecknen på kartan (2026-11-19): går de att förstå, och skymmer de

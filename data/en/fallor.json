@@ -192,6 +192,22 @@
     "dod_andra": [
       "A scream rings out and dies away. {namn} is dead."
     ],
+    "guld_kvar_du": [
+      "The gold you carried, {guld} gold, lies where you fell."
+    ],
+    "guld_kvar": [
+      "On the floor lies what {namn} carried. You gather up {antal} gold.",
+      "This is where {namn} fell. The coins lie where they rolled, {antal} gold, and you take them."
+    ],
+    "guld_kvar_ute": [
+      "Your gold got out with {namn}."
+    ],
+    "guld_kvar_inte_ute": [
+      "{namn} picked up your gold, but never got out."
+    ],
+    "kort_guld_kvar": [
+      "What was left behind"
+    ],
     "fast": [
       "You are stuck and cannot go on."
     ],

@@ -629,7 +629,10 @@
       "stulet {antal} guld"
     ],
     "kronika_dod_guld": [
-      "{guld} guld gick förlorat."
+      "{guld} guld blev liggande där."
+    ],
+    "kronika_guld_kvar": [
+      "{namn} tog upp guldet som {dod} hade burit, {guld} guld."
     ],
     "kronika_kammaren": [
       "{namn} nådde skattkammaren först."

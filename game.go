@@ -202,10 +202,11 @@ type Room struct {
 	Event    string // fälla som väntar på den som först går in
 	Mark     string // tecken som visar att en fälla har slagit till
 	Searched bool
-	Walked   bool     // någon har gått in i rummet; en port är annars bara känd för den som började där
-	trail    trail    // den som senast gick ut ur rummet, för spåren
-	items    []string // föremål som någon har lämnat här
-	chalk    Dir      // pilen någon har ritat med krita
+	Walked   bool       // någon har gått in i rummet; en port är annars bara känd för den som började där
+	trail    trail      // den som senast gick ut ur rummet, för spåren
+	items    []string   // föremål som någon har lämnat här
+	gold     []leftGold // guld som döda vandrare bar, åt den som kommer efter
+	chalk    Dir        // pilen någon har ritat med krita
 	hasChalk bool
 	omen     string // det ett varsel har lovat: "falla:id", "varelse:id" eller "tomt"
 	Shut     bool   // porten har slutit sig (tornet förändras, nivå 4)
@@ -277,6 +278,7 @@ type Player struct {
 	roundHurtKind, roundHurtWhat, roundKill string
 	roundCards                              []gameCard // spelkorten för rundan (spelkort.go)
 	lastCard                                *gameCard  // vandringens sista kort: ute, död eller kvar när solen gick ner
+	goldTakenBy                             []int      // vandrarna som tog upp guldet den döda vandraren bar
 }
 
 // present är sant för en spelare som deltar just nu: en människa med öppen
@@ -1523,6 +1525,10 @@ func (g *Game) resolve() {
 		}
 		p.Action = ""
 	}
+	// Den som står kvar där någon har dött tar guldet som ligger där.
+	for _, p := range active {
+		g.pickUpGold(p)
+	}
 	for _, p := range g.players {
 		if p != nil {
 			g.meetIfNew(p)
@@ -1630,6 +1636,7 @@ func (g *Game) endGame() {
 		g.logAll(g.data.Text("ingen_vinnare"), "varn")
 	}
 	g.epilogue()
+	g.goldEpilogue()
 	g.logAll(g.data.Text("spela_igen"), "dim")
 	g.soundAll("slut")
 	g.broadcastState()

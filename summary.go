@@ -189,7 +189,8 @@ func (g *Game) summaryFor(p *Player, b before, woke bool) []summaryLine {
 	if p.Status != statusOut {
 		if d := p.Treasure - b.treasure; d > 0 {
 			add(t("sam_guld_plus", "antal", itoa(d), "skatt", itoa(p.Treasure)), "gold")
-		} else if d < 0 {
+		} else if d < 0 && p.Status != statusDead {
+			// Den döda tappar guldet i rummet; kortet om döden säger det.
 			add(t("sam_guld_minus", "antal", itoa(-d), "skatt", itoa(p.Treasure)), "varn")
 		}
 	}

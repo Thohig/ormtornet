@@ -250,6 +250,22 @@
     "dod_andra": [
       "Ett skrik hörs och dör bort. {namn} är död."
     ],
+    "guld_kvar_du": [
+      "Guldet du bar, {guld} guld, ligger kvar där du föll."
+    ],
+    "guld_kvar": [
+      "På golvet ligger det som {namn} bar. Du samlar ihop {antal} guld.",
+      "Här föll {namn}. Mynten ligger kvar där de rullade, {antal} guld, och du tar dem."
+    ],
+    "guld_kvar_ute": [
+      "Ditt guld kom ut med {namn}."
+    ],
+    "guld_kvar_inte_ute": [
+      "{namn} tog upp ditt guld, men kom aldrig ut."
+    ],
+    "kort_guld_kvar": [
+      "Det som blev kvar"
+    ],
     "fast": [
       "Du sitter fast och kommer inte vidare."
     ],

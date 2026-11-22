@@ -85,7 +85,7 @@ func (g *Game) chronicleDeath(p *Player) {
 	}
 	g.chronicle(key, "namn", p.Name, "vad", p.hurtWhat)
 	if p.Treasure > 0 {
-		// Guldet den döda bar går förlorat; det hör till samma händelse.
+		// Guldet den döda bar ligger kvar; det hör till samma händelse.
 		e := &g.chron[len(g.chron)-1]
 		e.text += " " + g.data.Text("kronika_dod_guld", "guld", strconv.Itoa(p.Treasure))
 	}
@@ -101,6 +101,7 @@ func (g *Game) resetChronicle() {
 			p.stats = chronStats{}
 			p.hurt("", "")
 			p.journal, p.death, p.epilog, p.lastCard = nil, "", nil, nil
+			p.goldTakenBy = nil
 		}
 	}
 }

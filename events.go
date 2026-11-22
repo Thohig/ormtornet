@@ -37,6 +37,7 @@ func (g *Game) kill(p *Player) {
 	p.Action = ""
 	text := g.data.Text("dod")
 	g.logTo(p, text, "varn")
+	g.dropGold(p)
 	g.endCard(p, gameCard{Slag: "dod", Bild: "dod", Rubrik: g.data.Text("kort_dod"), Text: text, Stor: true})
 	g.logOthers(p, g.data.Text("dod_andra", "namn", p.Name), "varn")
 	g.soundAll("dod")

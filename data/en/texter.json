@@ -591,7 +591,10 @@
       "stolen {antal} gold"
     ],
     "kronika_dod_guld": [
-      "{guld} gold was lost."
+      "{guld} gold was left lying there."
+    ],
+    "kronika_guld_kvar": [
+      "{namn} picked up the {guld} gold that {dod} had carried."
     ],
     "kronika_kammaren": [
       "{namn} reached the treasure chamber first."

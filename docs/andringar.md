@@ -6,6 +6,16 @@ eller leder tornet.
 
 ## 2026-11-22
 
+### Den dödes guld
+
+- Den som dör tappar sitt guld i rummet, som föremålen. Förut gick guldet
+  förlorat. Den som går in i rummet, eller står kvar där när rundan är
+  slut, tar det, med spelkortet Det som blev kvar.
+- Krönikan säger vem som tog upp vems guld, och den döda får i slutet
+  veta om guldet kom ut och med vem.
+- Den som dödar en annan vandrare tar som förut allt guldet direkt, så
+  det blir inget kvar efter en strid mellan vandrare.
+
 ### Ormtornet.app i ~/Applications
 
 - `./skapa-app.sh` skapar nu appen i `~/Applications`, där macOS letar

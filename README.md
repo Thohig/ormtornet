@@ -415,7 +415,7 @@ gemensam. De valen är borttagna; se [docs/synlighet.md](docs/synlighet.md).
 När vandringen är slut står krönikan på en egen skärm, under resultaten och
 epilogen. Först kommer det
 som hände, runda för runda: vem som gick ut och med hur mycket, vem som dog,
-av vad och hur mycket guld som gick förlorat, vem som fällde vilken
+av vad och hur mycket guld som blev liggande, vem som tog upp det, vem som fällde vilken
 varelse, vem som slog vem och tog hur mycket guld, vem som nådde
 skattkammaren först, när klockan fick solen att sjunka fortare och när
 ormen vaknade. Sedan kommer en rad för varje vandrare
@@ -665,7 +665,9 @@ föremål man kan bära, med föremålets tecken och namn, och under vandringen
 en svag prick för varje tom plats. Ett nytt föremål lyser en stund. Alla
 föremål verkar av sig själva; man använder dem aldrig. Hittar man ett
 när väskan är full blir det kvar i rummet, och den som kommer in där
-härnäst tar det. Den som dör tappar sina föremål i rummet. Föremålen följer
+härnäst tar det. Den som dör tappar sina föremål och sitt guld i rummet.
+Den som går in där, eller står kvar där när rundan är slut, tar guldet, och
+den döda får i slutet veta om guldet kom ut och med vem. Föremålen följer
 inte med till nästa torn. Krönikan berättar vem som hittade vad.
 
 | Föremål | Vad det gör |
