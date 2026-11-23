@@ -386,5 +386,14 @@ Andra föremål som föreslogs när kritan ersattes av benluren
   skiffer. Kvar som idéer: skarp terminal med hela väggar, ritade rum med
   runda märken, kartritarens karta på sotat pergament eller guld på
   läder.
-- **Tester för klienten:** i dag testas bara servern, så kartan och
-  panelen provas för hand.
+- **Tester för klienten:** webbläsarprovet (`verktyg/webbprov.mjs`,
+  2026-11-23) spelar en kort vandring på dator och telefon och letar efter
+  fel på sidan. Kvar som idéer:
+  - **Webbläsarprovet i CI:** det kräver Chromium vid varje push och tar
+    ett par minuter.
+  - **Spara en vandring och spela upp den igen:** fröet och dragen avgör
+    allt, så värdsidan kunde spara dem i en fil som `-spela-om fil`
+    spelar upp. Då går ett fel från en kväll med människor att återskapa
+    exakt.
+  - **En vanlig spelare i provet:** båda webbläsarna står på tornets
+    dator och spelar som spelledaren; en spelare utan märket provas inte.

@@ -203,7 +203,11 @@ Skriv dit när ett steg är klart.
 - [docs/provspel-2026-11-21.md](docs/provspel-2026-11-21.md): provspelet
   2026-11-21, vad som hittades och byggdes, och vad som inte är provat.
   Robotarna som provspelar finns i `verktyg/provspelare.mjs` (README,
-  Provspela med robotar).
+  Provspela med robotar), med reglerna för trasiga texter i
+  `verktyg/textkontroll.mjs`. Webbläsarprovet `verktyg/webbprov.mjs`
+  spelar en kort vandring på dator och telefon i Chromium (README,
+  Webbläsarprovet). Kör båda efter en ändring i texterna eller på
+  spelarsidan.
 - [docs/provspel-2026-11-22.md](docs/provspel-2026-11-22.md): provspelet
   2026-11-22, felen som rättades och åtta saker att fråga om (mörkret som
   visar dörrarna, Kartritaren, AI:n och kammaren med flera).
