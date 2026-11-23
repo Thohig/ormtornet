@@ -30,8 +30,13 @@ func TestPartsFromThreeSources(t *testing.T) {
 	if b.partCount() != 0 {
 		t.Fatalf("den andre fick %d delar", b.partCount())
 	}
-	if st := g.stateFor(a); strings.Join(st.NameParts, "") != strings.ToUpper(strings.Join(g.serpentName, "")) {
-		t.Fatalf("klienten: %v", st.NameParts)
+	// Tecknen står i den ordning de hittades, inte i namnets.
+	want := ""
+	for src := range 3 {
+		want += strings.ToUpper(g.serpentName[g.partAt[src]])
+	}
+	if st := g.stateFor(a); strings.Join(st.NameParts, "") != want {
+		t.Fatalf("klienten: %v, ville ha %s", st.NameParts, want)
 	}
 }
 
@@ -106,5 +111,52 @@ func TestChamberPart(t *testing.T) {
 	g.take(p)
 	if !p.parts[g.partAt[srcChamber]] {
 		t.Fatal("ingen del ur kammaren")
+	}
+}
+
+// Texten säger var på ormen delen sitter, inte vilken i ordningen den är.
+func TestPartTextGivesPlace(t *testing.T) {
+	g, _ := nameGame(t, 1)
+	g.serpentName = []string{"Ka", "ru", "meth"}
+	for i := range 3 {
+		text := g.namePartText(srcCarving, i)
+		if !strings.Contains(text, strings.ToUpper(g.serpentName[i])) {
+			t.Fatalf("delen saknas: %q", text)
+		}
+		found := false
+		for _, pl := range g.data.Avslojande.Platser[i] {
+			found = found || strings.Contains(text, pl)
+		}
+		if !found || strings.Contains(text, "{") {
+			t.Fatalf("platsen saknas: %q", text)
+		}
+	}
+}
+
+// Rätt delar i fel ordning: tornet säger det, försöket är förbrukat och
+// ormen blir inte oroligare. En fel viskning gör ormen oroligare.
+func TestWhisperWrongOrderAndWrong(t *testing.T) {
+	g, cs := nameGame(t, 1)
+	c := cs[0]
+	g.serpentName = []string{"Ka", "ru", "meth"}
+	g.level = 2
+	wake := countWake(g)
+	logs(c)
+	g.Whisper(c, "tornet är Rukameth")
+	if c.player.initiated || c.player.guessLevel != 2 || !contains(logs(c), g.data.Text("viskning_ordning")) {
+		t.Fatal("fel ordning ska förbruka försöket och sägas")
+	}
+	if countWake(g) != wake {
+		t.Fatal("fel ordning gjorde ormen oroligare")
+	}
+	g.level = 3
+	g.Whisper(c, "tornet är en ödla")
+	if c.player.initiated || countWake(g) != wake+1 {
+		t.Fatalf("fel viskning: %d vakna-kort, ville ha %d", countWake(g), wake+1)
+	}
+	g.level = 4
+	g.Whisper(c, "ka ru meth, tornet är ormen")
+	if !c.player.initiated {
+		t.Fatal("rätt viskning med mellanrum gick inte")
 	}
 }

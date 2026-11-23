@@ -151,7 +151,8 @@ Så här skiljer vi på sakerna när användaren ger instruktioner:
 - **invigningen**: det som gör någon invigd, **ormens namn**. Varje
   vandring har ett namn i tre **delar** som var och en hittar själv: i
   **ristningen** i ett rum, hos en varelse och i kammaren
-  (`namndelar.go`); till
+  (`namndelar.go`). Texten säger var på ormen delen sitter (huvudet,
+  buken, svansen), inte vilken i ordningen den är; till
   det hör **byte vid dödande** och **den förste invigde**, som får mer guld
   (`secret.go`). Tornets nåd togs bort 2026-11-23.
 - **varsel**: en ledtråd om ett rum som ingen har varit i, där innehållet
@@ -249,6 +250,7 @@ Skriv dit när ett steg är klart.
   stället för pilknapparna, och nivån Rummet närmast. Allt är byggt.
 - [docs/namnet-som-tavling.md](docs/namnet-som-tavling.md): ormens namn
   som en tävling, där var och en hittar namnet själv i tornet, och
-  avslöjandet som alltid är på. Avsnittet Stegen säger vad som är byggt.
+  avslöjandet som alltid är på. Allt är byggt; avsnittet Att prova säger
+  vad som behöver provas i spel.
 - [docs/slumpade-namn.md](docs/slumpade-namn.md): tornet ger namnen och
   namnrutan är borta. Steg 1–2 är byggda; Nytt namn i lobbyn valdes bort.

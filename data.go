@@ -518,7 +518,7 @@ type Reveal struct {
 
 	// Med invigningen "ormens namn" (se secret.go).
 	Namn        [][]string          `json:"namn"`          // namnen, tre delar vardera
-	Ordning     []string            `json:"ordning"`       // första, andra och tredje
+	Platser     [][]string          `json:"platser"`       // var i namnet delen står: vid huvudet, i buken, i svansen
 	Delar       map[string][]string `json:"delar"`         // texterna när en del delas ut, per nivå
 	SvarMedNamn []string            `json:"svar_med_namn"` // mallar med {namn} som räknas som svar
 	EpilogNamn  []string            `json:"epilog_namn"`   // epilogen säger namnet

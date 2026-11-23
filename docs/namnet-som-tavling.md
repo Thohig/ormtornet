@@ -1,7 +1,7 @@
 # Ormens namn som en tävling
 
-Status: förslaget skrevs 2026-11-23 och byggs i fyra steg. Avsnittet
-Stegen säger vad som är byggt.
+Status: förslaget skrevs 2026-11-23 och är byggt i fyra steg samma dag.
+Avsnittet Stegen säger hur, och Att prova vad som behöver provas i spel.
 
 ## Varför
 
@@ -33,6 +33,22 @@ det, så att den som har spelat förut inte får något stort försprång.
    så att den som slåss en runda får den.
 4. **Ordningen och straffet.** Delarna kommer utan plats, men med en
    ledtråd om var de står. Fel ordning förbrukar inte försöket. En fel
-   viskning gör ormen oroligare.
+   viskning gör ormen oroligare. Byggt 2026-11-23, med två ändringar mot
+   förslaget:
+   - Ledtråden om platsen är var på en orm delen sitter: vid huvudet, i
+     buken eller i svansen (`platser`). Huvudet först och svansen sist
+     får man lista ut själv. Tecknen på spelskärmen står i den ordning
+     delarna hittades, så att de inte avslöjar ordningen.
+   - Fel ordning **förbrukar** försöket. Annars kunde man pröva alla sex
+     ordningarna samma runda utan att förlora något. Tornet säger ändå att
+     ordningen är fel, och ormen blir inte oroligare av det.
+
+## Att prova
+
+- Hittar vandrarna ristningen i tid? Chansen per rum som passar är
+  `ristning_chans` (0,3); riktningen ges från nivå 3.
+- Får de som undviker strid varelsens del? Den kommer vid första träffen.
+- Är huvudet, buken och svansen för lätt eller för svårt att förstå?
+- Blir det för dyrt att gissa fel nu när ormen blir oroligare?
 
 Att skrapa bort en ristning är inte med.

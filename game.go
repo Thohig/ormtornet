@@ -229,6 +229,7 @@ type Player struct {
 	initiated    bool    // vandraren har viskat tornets hemlighet
 	guessLevel   int     // nivån då vandraren senast viskade
 	parts        [3]bool // delarna av ormens namn som vandraren har fått
+	partsFound   []int   // delarna i den ordning vandraren hittade dem
 	calmed       bool    // den invigde har lugnat ormen under vandringen
 	X, Y         int
 	client       *Client
@@ -939,7 +940,7 @@ func (g *Game) placeAtCorner(p *Player) {
 	p.known = newGrid[bool](g.size)
 	p.items = nil
 	p.initiated, p.guessLevel, p.calmed = false, 0, false
-	p.parts = [3]bool{}
+	p.parts, p.partsFound = [3]bool{}, nil
 	p.forgetRoom()
 	g.revealPorts()
 	g.noteRoom(p)

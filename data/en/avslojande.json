@@ -48,22 +48,22 @@
       "i ormens buk"
     ],
 
-    "ordning": ["first", "second", "third"],
+    "platser": [["at the head", "where the head is", "nearest the jaws"], ["in the belly", "in the middle of the body", "where the heart beats"], ["in the tail", "where the tail ends", "at the very tip of the tail"]],
     "delar": {
       "ristning": [
-        "Someone has carved three signs into the wall, almost worn away. Only the {ordning} can be read: {del}.",
-        "Deep in the mortar, as if cut with fingernails, is a name in three signs. The {ordning} is the only one you can see: {del}.",
-        "A notch in the stone, then another. Three signs, one word. The {ordning} can be read: {del}."
+        "Someone has carved a serpent into the wall, almost worn away, and a sign {plats}: {del}.",
+        "Deep in the mortar, as if cut with fingernails, a serpent coils. Only one sign can be read, {plats}: {del}.",
+        "A notch in the stone becomes a serpent as you follow it with your finger. Someone has cut a sign {plats}: {del}."
       ],
       "varelse": [
-        "Where you struck, a few scales come loose, and beneath them a sign is burned into the skin. The {ordning} sign of a name: {del}.",
-        "Under what you knocked away is a sign, like a brand. It is the {ordning} of a name in three: {del}.",
-        "The creature bears a mark where its skin was torn, a sign you have seen in the walls. The {ordning}: {del}."
+        "Where you struck, a few scales come loose, and beneath them a mark is burned into the skin: a serpent, with the sign {del} {plats}.",
+        "Under what you knocked away is a brand like a coiled serpent. A sign stands {plats}: {del}.",
+        "The creature bears a mark where its skin was torn, a serpent in thin lines. The sign {del} sits {plats}."
       ],
       "kammare": [
-        "Beneath the gold something hisses in its sleep. A word in three breaths, and you hear the {ordning} clearly: {del}.",
-        "As you pull your hand from the pile, the dark beneath you mutters a name. The {ordning} of its three signs: {del}.",
-        "The breaths beneath the gold form a word. You catch the {ordning} of three: {del}."
+        "Beneath the gold something hisses in its sleep. A word in three breaths, and you hear one of them clearly: {del}. It belongs {plats}.",
+        "As you pull your hand from the pile, the dark beneath you mutters a name. One part you hear clearly, {del}, and you know it belongs {plats}.",
+        "The breaths beneath the gold form a word. You catch a part of it, {del}, and feel that it belongs {plats}."
       ]
     },
     "varsel": {
@@ -262,7 +262,10 @@
       "No one has whispered before you. The tower remembers who came first, and the gate will be generous to you."
     ],
     "viskning_fel": [
-      "You whisper to the wall. Nothing answers. Perhaps you will understand more once the sun has sunk."
+      "You whisper to the wall. Nothing answers, but deep below you something turns in its sleep, restless."
+    ],
+    "viskning_ordning": [
+      "The walls flinch at the signs, but they are in the wrong order. The tower falls silent and will not listen for a while."
     ],
     "viskning_bara_namn": [
       "The walls flinch as you say the name, as if something knows it. But what is it you want to say about it?"
@@ -305,6 +308,9 @@
     ],
     "namndel_byte": [
       "In {offer}'s hand lies a stone with carved signs: {delar}."
+    ],
+    "namndel_plats": [
+      "({plats})"
     ],
     "ristning_riktning": [
       "Somewhere to the {horn}, someone has carved signs into a wall. You do not know how you know.",

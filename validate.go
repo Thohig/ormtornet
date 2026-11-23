@@ -244,16 +244,21 @@ func (d *Data) validate() []string {
 			}
 		}
 	}
-	if len(a.Ordning) != 3 {
-		bad("avslojande.json", "ordning: ska ha tre ord")
+	if len(a.Platser) != 3 {
+		bad("avslojande.json", "platser: ska ha tre listor")
+	}
+	for i, l := range a.Platser {
+		if len(l) == 0 {
+			bad("avslojande.json", "platser %d: inga texter", i+1)
+		}
 	}
 	for _, src := range partSources {
 		if len(a.Delar[src]) == 0 {
 			bad("avslojande.json", "delar: %s saknar texter", src)
 		}
 		for _, s := range a.Delar[src] {
-			if !strings.Contains(s, "{del}") {
-				bad("avslojande.json", "delar %s: %q saknar {del}", src, s)
+			if !strings.Contains(s, "{del}") || !strings.Contains(s, "{plats}") {
+				bad("avslojande.json", "delar %s: %q saknar {del} eller {plats}", src, s)
 			}
 		}
 	}

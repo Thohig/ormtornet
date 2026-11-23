@@ -6,6 +6,18 @@ eller leder tornet.
 
 ## 2026-11-23
 
+### Ormens namn: ordningen och fel viskningar
+
+- Texten för en del av namnet säger inte längre om den är den första,
+  andra eller tredje. Den säger var på en orm tecknet sitter: vid huvudet,
+  i buken eller i svansen. Ordningen får man lista ut själv.
+- Tecknen på spelskärmen står i den ordning du hittade delarna.
+- Viskar du rätt delar i fel ordning säger tornet det, men försöket är
+  förbrukat.
+- En fel viskning gör ormen oroligare: ett vakna-kort till i leken.
+- Den som dödar en vandrare och tar hens delar får veta var på ormen de
+  sitter.
+
 ### Ormens namn finns i tornet
 
 - Tornet delar inte längre ut namnets delar. Var och en hittar dem själv,

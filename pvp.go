@@ -269,14 +269,7 @@ func (g *Game) fightNoise(a, b *Player) {
 // fightStirsSerpent: tornet känner när det blöder inuti det. Högst ett nytt
 // vakna-kort per runda.
 func (g *Game) fightStirsSerpent(active []*Player) {
-	for _, c := range g.data.Ormen.Kort {
-		if c.Vaknar {
-			g.deck = append(g.deck, c.ID)
-			i, j := len(g.deck)-1, g.rng.IntN(len(g.deck))
-			g.deck[i], g.deck[j] = g.deck[j], g.deck[i]
-			break
-		}
-	}
+	g.stirSerpent()
 	for _, p := range active {
 		if p.Status == statusIn && p.Cellar == 0 && (isCombatAction(p.Action) || len(g.foesHere(p)) > 0) {
 			g.logTo(p, g.data.Text("pvp_tornet_kanner"), "info")

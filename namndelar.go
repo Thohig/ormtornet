@@ -100,10 +100,9 @@ func (g *Game) learnPart(p *Player, src int) {
 		return
 	}
 	i := g.partAt[src]
-	if p.parts[i] {
+	if !p.gainPart(i) {
 		return
 	}
-	p.parts[i] = true
 	text := g.namePartText(src, i)
 	g.logTo(p, text, "rost")
 	g.addCard(p, gameCard{Slag: "namn", Bild: "namndel", Rubrik: g.data.Text("kort_namndel"), Text: text})
@@ -117,13 +116,15 @@ func (g *Game) readCarving(p *Player) {
 }
 
 // namePartText är texten när vandraren hittar del i av namnet i källan src.
+// Texten säger inte rakt ut var i namnet delen står, bara var på ormen:
+// vid huvudet, i buken eller i svansen.
 func (g *Game) namePartText(src, i int) string {
 	a := &g.data.Avslojande
-	ord := ""
-	if i < len(a.Ordning) {
-		ord = a.Ordning[i]
+	plats := ""
+	if i < len(a.Platser) {
+		plats = pick(a.Platser[i])
 	}
-	return strings.NewReplacer("{ordning}", ord, "{del}", strings.ToUpper(g.serpentName[i])).Replace(pick(a.Delar[partSources[src]]))
+	return strings.NewReplacer("{plats}", plats, "{del}", strings.ToUpper(g.serpentName[i])).Replace(pick(a.Delar[partSources[src]]))
 }
 
 // partsOnLevelUp: från nivå 3 hör den som inte har läst ristningen åt

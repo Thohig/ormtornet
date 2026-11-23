@@ -80,19 +80,31 @@ func (p *Player) partCount() int {
 	return n
 }
 
-// namePartsFor är delarna vandraren har, med versaler, och tomma där den
-// inte vet. Ingenting om vandraren inte har fått någon del.
+// namePartsFor är delarna vandraren har, med versaler, i den ordning hen
+// hittade dem och tomma för dem hen saknar. Platsen i tecknen säger alltså
+// inget om var delen står i namnet. Ingenting om vandraren inte har
+// hittat någon del.
 func (g *Game) namePartsFor(p *Player) []string {
 	if !g.usesName() || p.partCount() == 0 {
 		return nil
 	}
 	out := make([]string, 3)
-	for i, k := range p.parts {
-		if k {
-			out[i] = strings.ToUpper(g.serpentName[i])
+	for n, i := range p.partsFound {
+		if n < 3 {
+			out[n] = strings.ToUpper(g.serpentName[i])
 		}
 	}
 	return out
+}
+
+// gainPart ger vandraren del i av namnet. Falskt om hen redan hade den.
+func (p *Player) gainPart(i int) bool {
+	if p.parts[i] {
+		return false
+	}
+	p.parts[i] = true
+	p.partsFound = append(p.partsFound, i)
+	return true
 }
 
 // whisperRight avgör om viskningen gör vandraren invigd: ett av de fasta
@@ -119,6 +131,27 @@ func (g *Game) whisperRight(text string) bool {
 		forms[i] = strings.ReplaceAll(f, "{namn}", name)
 	}
 	return whisperMatches(w, forms)
+}
+
+// wrongOrder är sant när viskningen har namnets tre delar, men i en annan
+// ordning än namnets, ihop eller med mellanrum.
+func (g *Game) wrongOrder(text string) bool {
+	if !g.usesName() {
+		return false
+	}
+	w := " " + normalizeWhisper(text) + " "
+	for _, perm := range [][3]int{{0, 2, 1}, {1, 0, 2}, {1, 2, 0}, {2, 0, 1}, {2, 1, 0}} {
+		parts := []string{g.serpentName[perm[0]], g.serpentName[perm[1]], g.serpentName[perm[2]]}
+		if strings.Join(parts, "") == strings.Join(g.serpentName, "") {
+			continue // två delar är lika: samma namn
+		}
+		for _, sep := range []string{"", " "} {
+			if strings.Contains(w, " "+normalizeWhisper(strings.Join(parts, sep))+" ") {
+				return true
+			}
+		}
+	}
+	return false
 }
 
 // onlyName är sant när viskningen är ormens namn och inget mer. Det är rätt
@@ -174,7 +207,16 @@ func (g *Game) Whisper(c *Client, text string) {
 		return
 	}
 	p.guessLevel = g.level
-	if !g.whisperRight(text) {
+	switch {
+	case g.whisperRight(text):
+	case g.wrongOrder(text):
+		// Rätt tecken i fel ordning: tornet säger det, men försöket är
+		// förbrukat, så att ingen kan pröva sig igenom ordningarna.
+		g.answerTo(p, g.data.Text("viskning_ordning"), "rost")
+		return
+	default:
+		// En fel viskning gör ormen oroligare: ett vakna-kort till.
+		g.stirSerpent()
 		g.answerTo(p, g.data.Text("viskning_fel"), "rost")
 		return
 	}
@@ -202,9 +244,9 @@ func (g *Game) takeNameParts(killer, victim *Player) {
 	}
 	var got []string
 	for i := range 3 {
-		if victim.parts[i] && !killer.parts[i] {
-			killer.parts[i] = true
-			got = append(got, strings.ToUpper(g.serpentName[i]))
+		if victim.parts[i] && killer.gainPart(i) {
+			// Stenen visar var på ormen tecknet sitter, som där offret fann det.
+			got = append(got, strings.ToUpper(g.serpentName[i])+" "+g.data.Text("namndel_plats", "plats", pick(g.data.Avslojande.Platser[i])))
 		}
 	}
 	if len(got) == 0 {

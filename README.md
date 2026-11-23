@@ -771,20 +771,30 @@ del som finns var lottas varje vandring:
 - **Kammaren.** Den som tar en näve hör ormen väsa delen i sömnen.
 
 Ingen får veta vad någon annan har hittat. På nivå 4 får den som har
-hittat något veta att det är tornet självt som heter så. Delarna
-står i loggen och i tecknen (`· RU ·`). Viskningen ska innehålla namnet,
+hittat något veta att det är tornet självt som heter så.
+
+Texten säger inte vilken i ordningen delen är, bara var på en orm den
+sitter: vid huvudet, i buken eller i svansen (`platser`, med några
+olika ord för varje). Huvudet är först, buken i mitten och svansen sist,
+men det får man lista ut själv. Delarna står i loggen och i tecknen,
+i den ordning man hittade dem (`RU · ·`), så att tecknen inte avslöjar
+ordningen. Viskningen ska innehålla namnet,
 ihop eller i delar, och visa att man förstår: ett av svaren under `svar`
 ("Karumeth, tornet är ormen") eller en mall under `svar_med_namn`
 ("tornet är Karumeth"). Svaren räcker inte ensamma, så pusslet är nytt
 varje gång, också för den som har spelat förut. Viskar man bara namnet
 känner tornet igen det och frågar vad man vill säga om det
-(`viskning_bara_namn`), och försöket är inte förbrukat. Saknar
+(`viskning_bara_namn`), och försöket är inte förbrukat. Har viskningen
+rätt delar i fel ordning säger tornet det (`viskning_ordning`), men
+försöket är förbrukat, så att ingen kan pröva sig igenom ordningarna. En
+fel viskning gör ormen oroligare: ett vakna-kort till i leken, som när
+vandrare slåss (`viskning_fel`). Saknar
 `avslojande.json` namn räcker svaren ensamma.
 
 Till ormens namn hör också två saker:
 
 - **Byte vid dödande.** Den som dödar en annan vandrare hittar de delar av
-  namnet som offret hade och dödaren saknade.
+  namnet som offret hade och dödaren saknade, med var på ormen de sitter.
 - **Den förste invigde.** Den som blir invigd först i vandringen får en
   fjärdedel mer guld till när hen kommer ut (`invigd.forst_guld`), och
   krönikan säger att ingen hann före. Tornets nåd, som tog bort vakna-kort
