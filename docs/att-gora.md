@@ -166,9 +166,6 @@ En riktig kväll behövs för att se:
 
 ### Justera efter provet
 
-- Legoknekten på Mardröm: med AI-spelare kommer hen ut med skatt i 43 %
-  av vandringarna, mot 21–32 % för de andra klasserna. Extralivet och
-  skölden väger tungt när alla har få liv.
 - Svårigheterna med AI-spelare (2026-11-19, 10 000 vandringar, 4
   AI-spelare): ut med skatt 71, 54, 45 och 28 % på Lätt, Normal, Svår och
   Mardröm, döda 10, 24, 26 och 50 %. Fler varelser på Svår
@@ -180,10 +177,14 @@ En riktig kväll behövs för att se:
   44 % (förut 9, 21, 23 och 44 %). Fällor som slog till per vandrare 2,1
   i stället för 2,5. Känns början lagom med människor?
 
-- Göra Normal mildare om den är för hård, i `data/svarighet.json` (färre
-  fällor eller ett liv till). Uppdatera då tabellen i README. I provspelet
-  2026-11-22 tog fällorna 3–6 av 6 liv inom 7–10 rundor i tre vandringar
-  av fyra, och den söta dimman kostade 3 liv (−1 och två rundor gift).
+- Svårigheterna efter justeringen 2026-11-23 (3000 vandringar, 4
+  AI-spelare): ut med skatt 82, 69, 54 och 40 % på Lätt, Normal, Svår och
+  Mardröm, döda 9, 14, 27 och 43 %. Normal har 7 liv, Mardröm 6 liv men
+  +1 i skada, Lätt en fjärdedel längre sol, och kammaren ger mer guld på
+  Svår och Mardröm. Med människor: är Normal lagom nu, känns Mardröms
+  hårdare träffar rätt, och går någon till kammaren för guldets skull?
+  Klassernas extraliv väger fortfarande tungt på Mardröm (Legoknekten
+  49 % ut med skatt, Kartritaren 32 %).
 - Kartritaren är fortfarande svagast i simuleringen 2026-11-22 (300
   vandringar, 3 AI-spelare): 49 % överlever och 22 % vinner, mot
   Legoknektens 79 % och 41 %.
