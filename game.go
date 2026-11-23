@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"math"
 	"math/rand/v2"
 	"slices"
 	"sort"
@@ -147,9 +148,13 @@ func (g *Game) towerSize() int {
 }
 
 // scaledSun är solens rundor i det här tornet: automatiskt efter tornets
-// storlek (autoSun), eller det -sol har gett, för den som provar.
+// storlek (autoSun) och svårigheten, eller det -sol har gett, för den som
+// provar.
 func (g *Game) scaledSun() int {
 	if g.cfg.SunMax == 0 {
+		if f := g.data.Regler.Sol; f > 0 {
+			return max(4, int(math.Round(float64(autoSun(g.size))*f)))
+		}
 		return autoSun(g.size)
 	}
 	return max(4, g.cfg.SunMax)

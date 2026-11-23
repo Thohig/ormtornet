@@ -6,6 +6,18 @@ eller leder tornet.
 
 ## 2026-11-23
 
+### Skada och sol efter svårigheten
+
+- En svårighet kan nu göra fällor och varelser farligare (`skada` i
+  `data/svarighet.json`) och solen längre eller kortare (`sol`).
+- **Mardröm** har 6 liv i stället för 4, men varje fälla och varelse
+  som skadar tar ett liv mer. Med 4 AI-spelare blir det ungefär lika
+  svårt som förut (39 % ut med skatt, 44 % döda), men varje träff känns
+  mer.
+- **Lätt** har en fjärdedel längre sol, 50 rundor i stället för 40 i ett
+  torn på 9 × 9. På Lätt var det fler som blev kvar i mörkret än som dog
+  (8 och 6 %); nu blir 4 % kvar.
+
 ### Normal har 7 liv
 
 - På Normal har var och en 7 liv i stället för 6 (Legoknekten och

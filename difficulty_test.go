@@ -54,6 +54,52 @@ func TestDifficultyPresets(t *testing.T) {
 	}
 }
 
+// Skadan läggs till fällor och varelser som skadar, och solen gångras när
+// den är automatisk.
+func TestDifficultyDamageAndSun(t *testing.T) {
+	d, _, err := loadData("data")
+	if err != nil {
+		t.Fatal(err)
+	}
+	one, minus := 1, -5
+	d.Svarighet.Nivaer = append(d.Svarighet.Nivaer,
+		DifficultyStep{ID: "hard", Skada: &one},
+		DifficultyStep{ID: "mild", Skada: &minus})
+	hard, mild := d.withDifficulty("hard"), d.withDifficulty("mild")
+	for i, tr := range d.Fallor {
+		want, wantMild := tr.Skada, tr.Skada
+		if tr.Skada > 0 {
+			want, wantMild = tr.Skada+1, 1
+		}
+		if hard.Fallor[i].Skada != want || mild.Fallor[i].Skada != wantMild {
+			t.Errorf("fällan %s: %d och %d, ville ha %d och %d", tr.ID, hard.Fallor[i].Skada, mild.Fallor[i].Skada, want, wantMild)
+		}
+	}
+	for i, m := range d.Monster.Typer {
+		if m.Skada > 0 && hard.Monster.Typer[i].Skada != m.Skada+1 {
+			t.Errorf("varelsen %s: %d", m.ID, hard.Monster.Typer[i].Skada)
+		}
+	}
+	orig, _, _ := loadData("data")
+	for i := range d.Fallor {
+		if d.Fallor[i].Skada != orig.Fallor[i].Skada {
+			t.Errorf("fällan %s ändrades i originalet", d.Fallor[i].ID)
+		}
+	}
+
+	g := testGame(t)
+	g.cfg.SunMax = 0 // automatisk sol
+	sun := g.scaledSun()
+	g.data.Regler.Sol = 1.25
+	if got := g.scaledSun(); got != autoSun(g.size)*5/4 {
+		t.Errorf("solen med 1,25 gav %d, förut %d", got, sun)
+	}
+	g.cfg.SunMax = 20
+	if got := g.scaledSun(); got != 20 {
+		t.Errorf("-sol 20 gav %d", got)
+	}
+}
+
 func TestDifficultyAppliesToNextGame(t *testing.T) {
 	g := testGame(t)
 	a, b := testClient(), testClient()
@@ -65,15 +111,15 @@ func TestDifficultyAppliesToNextGame(t *testing.T) {
 	if err != nil || got.Svarighet != "mardrom" {
 		t.Fatalf("%v %+v", err, got)
 	}
-	if a.player.HP != 4 {
+	if a.player.HP != 6 {
 		t.Fatalf("liv i lobbyn %d", a.player.HP)
 	}
 	g.Ready(a)
 	g.Ready(b)
-	if g.phase != phasePlay || a.player.HP != 4 || g.deckSleep != 9 {
+	if g.phase != phasePlay || a.player.HP != 6 || g.deckSleep != 9 {
 		t.Fatalf("fas %s liv %d sovkort %d", g.phase, a.player.HP, g.deckSleep)
 	}
-	if !contains(logs(a), "Svårighet: Mardröm. Du har 4 liv.") {
+	if !contains(logs(a), "Svårighet: Mardröm. Du har 6 liv.") {
 		t.Error("vandrarna fick inte veta svårigheten")
 	}
 	// Under vandringen går det inte att byta.

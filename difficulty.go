@@ -22,6 +22,11 @@ type DifficultyStep struct {
 	Vaknakort    *int     `json:"vaknakort"`     // antal kort där ormen vaknar
 	Ormskada     *int     `json:"ormskada"`      // skada när ormen vaknar
 	SkattForlust *float64 `json:"skatt_forlust"` // andel av skatten som går förlorad när ormen vaknar
+	// Skada läggs till skadan från fällor och varelser som skadar, men
+	// ingen av dem skadar mindre än 1.
+	Skada *int `json:"skada"`
+	// Sol gångrar solens rundor när solen är automatisk.
+	Sol *float64 `json:"sol"`
 }
 
 // difficultyView är det värdsidan behöver för att visa ett förval.
@@ -64,7 +69,8 @@ func (d *Data) difficultyID(id string) string {
 func (d *Data) withDifficulty(id string) *Data {
 	s := d.difficulty(id)
 	if s == nil || (s.Liv == nil && s.Fallchans == nil && s.Varelsechans == nil &&
-		s.Sovkort == nil && s.Vaknakort == nil && s.Ormskada == nil && s.SkattForlust == nil) {
+		s.Sovkort == nil && s.Vaknakort == nil && s.Ormskada == nil && s.SkattForlust == nil &&
+		s.Skada == nil && s.Sol == nil) {
 		return d
 	}
 	c := *d
@@ -82,6 +88,23 @@ func (d *Data) withDifficulty(id string) *Data {
 	}
 	if s.SkattForlust != nil {
 		c.Ormen.SkattForlust = clamp01(*s.SkattForlust)
+	}
+	if s.Skada != nil && *s.Skada != 0 {
+		c.Fallor = append([]Trap(nil), d.Fallor...)
+		for i := range c.Fallor {
+			if c.Fallor[i].Skada > 0 {
+				c.Fallor[i].Skada = max(1, c.Fallor[i].Skada+*s.Skada)
+			}
+		}
+		c.Monster.Typer = append([]MonsterType(nil), d.Monster.Typer...)
+		for i := range c.Monster.Typer {
+			if c.Monster.Typer[i].Skada > 0 {
+				c.Monster.Typer[i].Skada = max(1, c.Monster.Typer[i].Skada+*s.Skada)
+			}
+		}
+	}
+	if s.Sol != nil && *s.Sol > 0 {
+		c.Regler.Sol = *s.Sol
 	}
 	if s.Sovkort != nil || s.Vaknakort != nil {
 		c.Ormen.Kort = append([]Card(nil), d.Ormen.Kort...)

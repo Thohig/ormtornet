@@ -5,8 +5,9 @@
       {
         "id": "latt",
         "namn": "Lätt",
-        "beskrivning": "8 liv, färre fällor och varelser, ormen sover djupare och biter mildare",
+        "beskrivning": "8 liv, färre fällor och varelser, solen går ner senare, ormen sover djupare och biter mildare",
         "liv": 8,
+        "sol": 1.25,
         "fallchans": 0.35,
         "varelsechans": 0.12,
         "sovkort": 17,
@@ -34,8 +35,9 @@
       {
         "id": "mardrom",
         "namn": "Mardröm",
-        "beskrivning": "4 liv, fällor och varelser överallt, ormen sover lätt och biter hårt",
-        "liv": 4,
+        "beskrivning": "6 liv, fällor och varelser överallt som skadar mer, ormen sover lätt och biter hårt",
+        "liv": 6,
+        "skada": 1,
         "fallchans": 0.65,
         "varelsechans": 0.35,
         "sovkort": 9,

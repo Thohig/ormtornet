@@ -56,6 +56,9 @@ type Rules struct {
 	// TryggVidPorten: rummen bredvid en port har aldrig en fälla, så att
 	// ingen förlorar liv redan på första steget in.
 	TryggVidPorten bool `json:"trygg_vid_porten"`
+	// Sol gångrar den automatiska solens rundor. Den sätts av svårigheten
+	// (svarighet.json), och 0 är detsamma som 1.
+	Sol float64 `json:"-"`
 }
 
 type Search struct {

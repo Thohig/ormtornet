@@ -5,7 +5,7 @@
       {
         "id": "latt",
         "namn": "Easy",
-        "beskrivning": "8 lives, fewer traps and creatures, the serpent sleeps deeper and bites softer"
+        "beskrivning": "8 lives, fewer traps and creatures, the sun sets later, the serpent sleeps deeper and bites softer"
       },
       {
         "id": "normal",
@@ -20,7 +20,7 @@
       {
         "id": "mardrom",
         "namn": "Nightmare",
-        "beskrivning": "4 lives, traps and creatures everywhere, the serpent sleeps lightly and bites hard"
+        "beskrivning": "6 lives, traps and creatures everywhere that hurt more, the serpent sleeps lightly and bites hard"
       }
     ]
   }

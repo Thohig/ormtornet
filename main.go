@@ -28,7 +28,7 @@ var webFS embed.FS
 func main() {
 	addr := flag.String("addr", "0.0.0.0:8080", "adress och port att lyssna på")
 	dataPath := flag.String("data", "data", "mapp med rum, fällor och texter")
-	sun := flag.Int("sol", 0, "antal rundor innan solen går ner (0 = automatiskt: 40, 50 eller 60 efter tornets storlek)")
+	sun := flag.Int("sol", 0, "antal rundor innan solen går ner (0 = automatiskt: 40, 50 eller 60 efter tornets storlek, fler på Lätt)")
 	turn := flag.Duration("turtid", 0, "längsta tid att välja drag per runda (0 = automatiskt: 30–40 sekunder efter antalet människor)")
 	minPlayers := flag.Int("min", defaultMin, "minsta antal spelare för att börja, datorspelare inräknade (för att prova; förval 2)")
 	bots := flag.Int("ai", defaultSettings.AI, "antal datorstyrda vandrare (0-7)")
