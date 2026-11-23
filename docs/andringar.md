@@ -6,6 +6,20 @@ eller leder tornet.
 
 ## 2026-11-23
 
+### "En runda kvar" när solen hoppar
+
+- Webbläsarprovet hittade "1 rounds left" på engelska: när klockfällan
+  får solen att hoppa ner till en runda sa varningen "1 rundor kvar".
+  Nu säger den "En runda kvar" (`sol_snart_en` i `data/texter.json` och
+  `data/en/texter.json`, `TestSunWarningOneRound`).
+- Webbläsarprovet är stadigare: det väntar högst tre sekunder på något
+  som inte går att trycka på och skriver då på en rad med `OBS` vad som
+  låg över, det läser inte en rad som loggen fortfarande skriver ut, och
+  det räknar inte med att rummet berättas igen i mörkret.
+- På telefonen låg spelkortet eller det stora kortet ibland över
+  tangenterna vid dörrarna, och ibland låg en tangent under tecknen eller
+  solmätaren. Det står i `docs/att-gora.md` bland det som ska frågas om.
+
 ### Webbläsarprovet
 
 - `node verktyg/webbprov.mjs` spelar en kort vandring på en dator och en

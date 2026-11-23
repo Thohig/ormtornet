@@ -1272,7 +1272,10 @@ telefonen med tangenterna vid dörrarna. Under vägen letar det efter
 Det tar en bild av varje fas i båda webbläsarna (introt, lobbyn,
 klassvalet, vandringen, kortvisningen, omladdningen och slutet) och
 skriver allt det hittade till `rapport.txt` i mappen (`webbprov/` om
-ingen anges; den checkas inte in). Med `en` spelas vandringen på
+ingen anges; den checkas inte in). Går något inte att trycka på på
+telefonen, för att till exempel spelkortet ligger över, står det på en
+rad som börjar med `OBS` och säger vad som låg över; det räknas inte som
+ett fynd, och provet trycker på tangenten i stället. Med `en` spelas vandringen på
 engelska. Det slutar med 1 om något hittades och tar ett par minuter.
 Båda webbläsarna står på tornets dator och spelar alltså som spelledaren
 med Gå in själv, med märket i översta raden.

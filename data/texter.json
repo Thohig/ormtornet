@@ -552,6 +552,9 @@
     "sol_snart": [
       "Solen nuddar nästan horisonten. {sol} rundor kvar. Skynda er ut!"
     ],
+    "sol_snart_en": [
+      "Solen nuddar nästan horisonten. En runda kvar. Skynda er ut!"
+    ],
     "solnedgang": [
       "Solen sjunker under horisonten. Någonstans slår porten igen med ett vått ljud."
     ],

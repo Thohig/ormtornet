@@ -86,6 +86,33 @@ func TestStuckOneRound(t *testing.T) {
 	if txt := g.data.Text("sam_fast_en"); txt == "" || strings.Contains(txt, "rundor") {
 		t.Fatalf("sam_fast_en: %q", txt)
 	}
+	if txt := g.data.Text("sol_snart_en"); txt == "" || strings.Contains(txt, "rundor") {
+		t.Fatalf("sol_snart_en: %q", txt)
+	}
+}
+
+// Hoppar solen ner till en runda (klockfällan) säger varningen "en
+// runda", inte "1 rundor".
+func TestSunWarningOneRound(t *testing.T) {
+	g, a, _ := startTwo(t)
+	for len(a.send) > 0 {
+		<-a.send
+	}
+	g.sun = 1
+	g.sunWarning(4)
+	found := false
+	for len(a.send) > 0 {
+		var m logMsg
+		if json.Unmarshal(<-a.send, &m) == nil && m.T == "log" {
+			if strings.Contains(m.Text, "1 rundor") {
+				t.Fatalf("varningen säger %q", m.Text)
+			}
+			found = found || strings.Contains(m.Text, "En runda kvar")
+		}
+	}
+	if !found {
+		t.Fatal("varningen om en runda kom inte")
+	}
 }
 
 // Den som laddar om sidan i slutet står kvar i resultatet och kommer

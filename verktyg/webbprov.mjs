@@ -131,8 +131,12 @@ async function granska(s, fas) {
         return { k: el.dataset.key, x: r.x, y: r.y, w: r.width, h: r.height };
       });
     const kartan = document.getElementById("mapbox").getBoundingClientRect();
+    // Raden som loggen skriver ut just nu (.cursor) är inte färdig.
+    const skrivs = [...document.querySelectorAll(".cursor")]
+      .flatMap((e) => e.innerText.split("\n").map((r) => r.trim()));
     return {
       text: document.body.innerText,
+      skrivs,
       bredd: document.documentElement.scrollWidth,
       skarm: innerWidth,
       tangenter,
@@ -140,8 +144,9 @@ async function granska(s, fas) {
       utanWebgl: !document.getElementById("mapNone").hidden,
     };
   });
+  const skrivs = new Set(g.skrivs);
   for (const rad of g.text.split("\n").map((r) => r.trim()).filter((r) => r.includes(" "))) {
-    if (s.sett.has(rad)) continue;
+    if (s.sett.has(rad) || skrivs.has(rad)) continue;
     s.sett.add(rad);
     const fel = kontrollera(rad, sprak);
     if (fel.length) fynna(s.namn, `trasig text i ${fas} [${fel.join(", ")}]: ${rad}`);
@@ -165,6 +170,30 @@ async function bild(s, namn) {
   s.bilder.add(namn);
   await s.page.screenshot({ path: path.join(mapp, `${s.namn}-${namn}.png`) });
 }
+
+// tryck trycker på något på telefonen. Ligger något annat över det, som
+// det stora kortet, väntar det högst tre sekunder och skriver vad som låg
+// i vägen (en iakttagelse, inget fynd), och svarar false.
+async function tryck(s, loc, vad) {
+  try {
+    await loc.tap({ timeout: 3000 });
+    return true;
+  } catch (e) {
+    // Det som ligger över mitten av knappen, med närmaste id (#spelkort,
+    // #storkort och så vidare).
+    const over = await loc.evaluate((el) => {
+      const r = el.getBoundingClientRect();
+      const top = document.elementFromPoint(r.x + r.width / 2, r.y + r.height / 2);
+      if (!top || el.contains(top)) return "";
+      const med = top.closest("[id]");
+      return med ? "#" + med.id : top.tagName.toLowerCase();
+    }).catch(() => "");
+    const rad = `OBS ${s.namn}: ${vad} gick inte att trycka på` + (over ? `; ${over} låg över` : "");
+    if (!rapport.includes(rad)) logga(rad);
+    return false;
+  }
+}
+const tangent = (s, k) => s.page.evaluate((k) => pressKey(k), k);
 
 // gaIn går förbi introt: Enter när knappen Gå in är redo.
 async function gaIn(s) {
@@ -190,12 +219,12 @@ async function spela(s) {
   if (s.mobil) {
     const vid = s.page.locator(`.isotangenter span[data-key="${val}"]`);
     if (await vid.count() && await vid.first().isVisible()) {
-      await vid.first().tap();
+      if (!(await tryck(s, vid.first(), "tangenten vid dörren"))) await tangent(s, val);
       return;
     }
     const knapp = s.page.locator(`#pad button[data-key="${val}"]`);
     if (await knapp.count() && await knapp.first().isVisible()) {
-      await knapp.first().tap();
+      if (!(await tryck(s, knapp.first(), "pilknappen"))) await tangent(s, val);
       return;
     }
   }
@@ -212,6 +241,10 @@ async function provaMinikort(s) {
     if (await mini.nth(i).isVisible()) { synlig = mini.nth(i); break; }
   }
   if (!synlig) return false;
+  // Rundan ska ha tid kvar, annars tar den slut innan mellanslaget syns.
+  const kvar = await s.page.evaluate(() => state.deadlineMs - (performance.now() - state.receivedAt));
+  if (kvar < 5000) return false;
+  const runda0 = await s.page.evaluate(() => state.round);
   await synlig.click();
   if (await s.page.locator("#kortvisning").isHidden()) {
     fynna(s.namn, "ett klick på ett minikort öppnade inte kortvisningen");
@@ -221,9 +254,20 @@ async function provaMinikort(s) {
   await s.page.click("#kortvisning");
   await s.page.keyboard.press(" ");
   try {
-    await s.page.waitForFunction(() => state.action === "vanta", null, { timeout: 4000 });
+    // Draget syns, eller så var det det sista som behövdes och rundan
+    // gick vidare.
+    await s.page.waitForFunction((r0) => state.action === "vanta" || state.round > r0, runda0, { timeout: 4000 });
   } catch {
-    fynna(s.namn, "mellanslag spelade inte efter ett klick på ett minikort");
+    const l = await s.page.evaluate((fore) => {
+      const a = document.activeElement;
+      return {
+        fokus: a ? a.tagName.toLowerCase() + (a.id ? "#" + a.id : "") + (a.className ? "." + String(a.className).split(" ")[0] : "") : "",
+        drag: state.action, runda: state.round, fore,
+        kvar: Math.round(state.deadlineMs - (performance.now() - state.receivedAt)),
+      };
+    }, runda0);
+    fynna(s.namn, `mellanslag spelade inte efter ett klick på ett minikort (fokus ${l.fokus}, drag "${l.drag}", runda ${l.fore} till ${l.runda}, ${l.kvar} ms kvar)`);
+    await bild(s, "fel-minikortet");
   }
   if (await s.page.locator("#kortvisning").isVisible()) {
     fynna(s.namn, "kortvisningen öppnades igen av mellanslag");
@@ -252,7 +296,7 @@ try {
         await bild(s, "2-lobbyn");
         if (!s.redo) {
           s.redo = true;
-          if (s.mobil) await s.page.tap("#padEnter");
+          if (s.mobil) { if (!(await tryck(s, s.page.locator("#padEnter"), "Redo"))) await tangent(s, "Enter"); }
           else await s.page.keyboard.press("Enter");
         }
       } else if (l.phase === "klassval") {
@@ -261,7 +305,7 @@ try {
         await bild(s, "3-klassvalet");
         if (!s.klass) {
           s.klass = true;
-          if (s.mobil) await s.page.locator("#cards button.card").nth(1).tap();
+          if (s.mobil) { if (!(await tryck(s, s.page.locator("#cards button.card").nth(1), "klasskortet"))) await tangent(s, "2"); }
           else await s.page.keyboard.press(s === dator ? "1" : "2");
         }
       } else if (l.phase === "spel") {
@@ -278,12 +322,15 @@ try {
           await s.page.waitForFunction(() => typeof state !== "undefined" && state && state.phase === "spel", null, { timeout: 15000 })
             .catch(async () => { if ((await lage(s)).intro) await gaIn(s); });
           // Loggen skriver raderna en i taget; rummet ska stå i den senaste
-          // rundan inom några sekunder.
+          // rundan inom några sekunder (längre på en dator med mycket att göra).
           const rummet = await s.page.waitForFunction(() => {
             const g = document.querySelector("#log section.round");
             return !!(g && g.querySelector(".roomblock"));
-          }, null, { timeout: 8000 }).then(() => true, () => false);
-          if (!rummet) fynna(s.namn, "efter en omladdning berättas inte rummet igen i loggen");
+          }, null, { timeout: 20000 }).then(() => true, () => false);
+          // I mörkret och i källarvalven ser vandraren inget, och då
+          // berättas rummet inte (retellRoom i here.go).
+          const blind = await s.page.evaluate(() => state.dark > 0 || state.cellar > 0);
+          if (!rummet && !blind) fynna(s.namn, "efter en omladdning berättas inte rummet igen i loggen");
           await bild(s, "5-omladdningen");
           runda.delete(s);
           continue;
@@ -304,7 +351,7 @@ try {
     if (slutfas === alla.length) break;
     await vanta(300);
   }
-  if (!gjort.minikort) logga("inget minikort syntes i loggen; minikorten provades inte");
+  if (!gjort.minikort) logga("minikorten provades inte: inget minikort syntes i loggen när rundan hade tid kvar");
 } catch (e) {
   fynna("provet", `stannade: ${e.message.split("\n")[0]}`);
   for (const s of alla) await s.page.screenshot({ path: path.join(mapp, `${s.namn}-fel.png`) }).catch(() => {});

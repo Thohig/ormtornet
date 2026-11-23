@@ -42,7 +42,9 @@ En riktig kväll behövs för att se:
   förval? Går det att zooma med två fingrar på en riktig telefon (bara
   provat med hjul, tangenter och knappar)? Hittar man M och knapparna
   nere till höger? Hamnar pilarna vid kanten under rutan Mörker eller
-  Källarvalven, eller tecknen i kartans övre hörn?
+  Källarvalven, eller tecknen i kartans övre hörn? Webbläsarprovet
+  (2026-11-23) såg på telefonen ibland en tangent vid dörren under
+  tecknen (`#status`), solmätaren eller märket.
 - Klassvalet: räcker 30 sekunder för att läsa korten? På en telefon står
   korten sedan 2026-11-21 två och två utan den kursiva beskrivningen, med
   nedräkningen fast överst. Går de att läsa på en riktig telefon?
@@ -210,6 +212,9 @@ Sett 2026-11-22 men inte ändrat:
 - Lådan med loggen börjar med den senaste rundan över hela höjden, så den
   ser tom ut under den första rundan.
 - Spelkortet täcker rummet på telefonen en stund efter varje runda.
+  Webbläsarprovet (2026-11-23) bekräftar det: på telefonen låg spelkortet
+  (`#spelkort`) eller det stora kortet (`#storkort`) ibland över
+  tangenterna vid dörrarna, så att de inte gick att trycka på.
 - Värdsidans avsnitt Inför nästa vandring är låst under vandringen, utom
   Fröet.
 - Pages lokalt: spelledarens Gå in själv fastnade en gång på introt när

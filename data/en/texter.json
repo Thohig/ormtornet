@@ -515,6 +515,9 @@
     "sol_snart": [
       "The sun is almost touching the horizon. {sol} rounds left. Hurry out!"
     ],
+    "sol_snart_en": [
+      "The sun is almost touching the horizon. One round left. Hurry out!"
+    ],
     "solnedgang": [
       "The sun sinks below the horizon. Somewhere the gate slams shut with a wet sound."
     ],

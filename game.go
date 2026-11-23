@@ -1596,6 +1596,9 @@ func (g *Game) sunWarning(before int) {
 	case passed(g.sunMax / 2):
 		key = "sol_halv"
 	}
+	if key == "sol_snart" && g.sun == 1 {
+		key = "sol_snart_en" // klockfällan kan hoppa ända ner till en runda
+	}
 	if key != "" {
 		text := g.data.Text(key, "sol", strconv.Itoa(g.sun))
 		g.logAll(text, "varn")
