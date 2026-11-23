@@ -1079,6 +1079,8 @@ Beskrivningarna för rummen ligger under nivåerna `"1"` till `"4"`.
   websocketen och samlar alla texter (se Provspela med robotar)
 - `verktyg/textkontroll.mjs` reglerna som märker trasiga texter, och
   `verktyg/textkontroll.prov.mjs` som provar dem
+- `verktyg/webbprov.mjs` webbläsarprovet: en kort vandring på en dator och
+  en telefon i Chromium (se Webbläsarprovet)
 - `verktyg/kortbilder.html` visar alla spelkortens och klasskortens bilder
 - `lang.go` språken: översättningarna i `data/en/` läggs över de svenska texterna
 - `web/texter.js` sidornas texter: `t()`, `applyTexts()` och språkbytet
@@ -1242,3 +1244,42 @@ står en gång på en rad som börjar med `MISSTÄNKT`, så att
 rad som börjar med `RESULTAT`. `-min` ska räkna med både robotarna och
 AI-spelarna, så att alla hinner ansluta innan vandringen börjar. Kräver Node 22 eller senare. Provspelet 2026-11-21
 beskrivs i [docs/provspel-2026-11-21.md](docs/provspel-2026-11-21.md).
+
+### Webbläsarprovet
+
+Robotarna ser bara det tornet skickar. Det som går fel på sidan, som ett
+minikort som inte går att klicka på eller tangenterna vid dörrarna som
+ligger över varandra på telefonen, hittar webbläsarprovet:
+
+```bash
+node verktyg/webbprov.mjs webbprov sv
+```
+
+Det bygger och startar tornet (solen 8 rundor, en AI-spelare) och spelar
+en vandring i två webbläsare samtidigt, en dator (1440 × 900) och en
+telefon (iPhone 13, med tryck). Datorn spelar med piltangenterna och
+telefonen med tangenterna vid dörrarna. Under vägen letar det efter
+
+- fel i skripten och i konsolen, och filer som inte går att hämta,
+- trasiga texter på sidan (samma regler som robotarna),
+- en sida som är bredare än skärmen,
+- tangenter vid dörrarna som ligger över varandra,
+- ett minikort i loggen som inte öppnar kortvisningen, och att mellanslag
+  spelar efter att kortvisningen har stängts,
+- en omladdning mitt i vandringen som inte berättar rummet igen,
+- och vandrare som saknas i resultatet.
+
+Det tar en bild av varje fas i båda webbläsarna (introt, lobbyn,
+klassvalet, vandringen, kortvisningen, omladdningen och slutet) och
+skriver allt det hittade till `rapport.txt` i mappen (`webbprov/` om
+ingen anges; den checkas inte in). Med `en` spelas vandringen på
+engelska. Det slutar med 1 om något hittades och tar ett par minuter.
+Båda webbläsarna står på tornets dator och spelar alltså som spelledaren
+med Gå in själv, med märket i översta raden.
+
+Provet kräver Go, Node 22 och Playwright med Chromium. Har du inte
+Playwright:
+
+```bash
+cd klient && npm install --no-save playwright && npx playwright install chromium
+```

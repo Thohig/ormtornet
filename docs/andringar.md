@@ -6,6 +6,20 @@ eller leder tornet.
 
 ## 2026-11-23
 
+### Webbläsarprovet
+
+- `node verktyg/webbprov.mjs` spelar en kort vandring på en dator och en
+  telefon i Chromium och letar efter det robotarna inte ser: fel i
+  skripten, trasiga texter på sidan, en sida bredare än skärmen,
+  tangenterna vid dörrarna som ligger över varandra, minikort som inte
+  öppnas, mellanslag som inte spelar efter kortvisningen, en omladdning
+  som inte berättar rummet igen och vandrare som saknas i resultatet.
+  Det tar en bild av varje fas. README beskriver det under
+  Webbläsarprovet.
+- Provet hittade inga fel på svenska eller engelska. Med felet från
+  provspelet 2026-11-22 tillbaka (mellanslag efter ett klick på ett
+  minikort) märkte det felet.
+
 ### Robotarna hittar fler trasiga texter
 
 - Provspelarna (`verktyg/provspelare.mjs`) märker nu också "1 rundor",
