@@ -69,9 +69,9 @@ func (g *Game) onLevelUp() {
 	}
 }
 
-// dealClues ger varje spelare i tornet en egen text för nivån, så att ingen
-// får samma som någon annan. Texterna delas ut som kort ur en lek; när leken
-// är slut blandas den om.
+// dealClues ger varje spelare i tornet en text för nivån. Alla drar ur
+// samma texter, var och en ur sin egen lek, så att ingen behöver de andra
+// för att förstå. När ens lek är slut blandas den om.
 func (g *Game) dealClues(pool map[string][]string, kind, class string) {
 	g.dealCluesTo(pool, kind, class, func(*Player) bool { return true })
 }
@@ -82,35 +82,27 @@ func (g *Game) dealCluesTo(pool map[string][]string, kind, class string, want fu
 	if len(list) == 0 {
 		return
 	}
-	var receivers []*Player
 	for _, p := range g.players {
 		// Ledtrådarna går bara till människor; datorspelare behöver dem inte.
-		if p != nil && p.Status == statusIn && p.bot == nil && want(p) {
-			receivers = append(receivers, p)
+		if p == nil || p.Status != statusIn || p.bot != nil || !want(p) {
+			continue
 		}
-	}
-	if len(receivers) == 0 {
-		return
-	}
-	key := func(i int) string { return kind + ":" + strconv.Itoa(g.level) + ":" + strconv.Itoa(i) }
-	var free []int
-	for i := range list {
-		if !g.usedClues[key(i)] {
-			free = append(free, i)
+		key := func(i int) string {
+			return strconv.Itoa(p.ID) + ":" + kind + ":" + strconv.Itoa(g.level) + ":" + strconv.Itoa(i)
 		}
-	}
-	if len(free) < len(receivers) {
+		var free []int
 		for i := range list {
-			delete(g.usedClues, key(i))
+			if !g.usedClues[key(i)] {
+				free = append(free, i)
+			}
 		}
-		free = free[:0]
-		for i := range list {
-			free = append(free, i)
+		if len(free) == 0 {
+			for i := range list {
+				delete(g.usedClues, key(i))
+				free = append(free, i)
+			}
 		}
-	}
-	g.rng.Shuffle(len(free), func(i, j int) { free[i], free[j] = free[j], free[i] })
-	for n, p := range receivers {
-		i := free[n%len(free)]
+		i := free[g.rng.IntN(len(free))]
 		g.usedClues[key(i)] = true
 		g.logTo(p, list[i], class)
 	}

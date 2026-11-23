@@ -20,7 +20,10 @@ det, så att den som har spelat förut inte får något stort försprång.
 
 1. **Avslöjandet går inte att stänga av.** Byggt 2026-11-23.
 2. **Samarbetet tas bort.** Delarna delas inte ut, tornets nåd ersätts av
-   den förste invigde, och ledtrådarna är desamma för alla.
+   den förste invigde, och ledtrådarna är desamma för alla. Byggt
+   2026-11-23: delarna delades först ut till var och en för sig, lottat,
+   tills steg 3 lade dem i tornet. Den förste invigde får en fjärdedel mer
+   guld till när hen kommer ut (`invigd.forst_guld`).
 3. **Delarna finns i tornet.** En del är ristad i ett rum, en finns hos en
    varelse och en hörs i kammaren.
 4. **Ordningen och straffet.** Delarna kommer utan plats, men med en

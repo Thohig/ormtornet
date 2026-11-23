@@ -553,7 +553,7 @@ och varelser har sin korta beskrivning som rubrik, aldrig namnet.
 - **Vandringens största stunder**: i krönikan i slutet läggs högst fem
   av krönikans händelser fram som stora kort under resultaten och vänds
   upp ett i taget: vinnaren, uppvaknanden, de som dog, den som blev
-  invigd, portar som stängdes, tornets nåd, klockan, den första näven,
+  invigd, portar som stängdes, klockan, den första näven,
   en varelse som föll, namnets delar och den som blev kvar när solen
   gick ner, i den ordningen, högst två av samma slag. De står i den
   ordning de hände. Slagen och antalet står under `spelkort.stunder` i
@@ -741,9 +741,9 @@ gradvis, i fyra nivåer som följer solen:
 
 - Varje rum har beskrivningar för alla fyra nivåerna, och spelare som står i
   samma rum kan få olika texter.
-- Var fjärde runda, och vid varje nytt steg, får varje spelare en egen
-  ledtråd. Ingen får samma som någon annan, så spelarna måste prata med
-  varandra för att få hela bilden.
+- Var fjärde runda, och vid varje nytt steg, får varje spelare en
+  ledtråd. Alla drar ur samma texter, var och en ur sin egen lek, så att
+  var och en kan förstå hela bilden själv.
 - På nivå 4 får varje spelare nya förklaringar till de fällor och varelser
   hen har mött (gallret som rasade ner var tänderna, de roterande rummen tarmarna ...).
 - När spelet är slut säger tornet hemligheten rakt ut, och porten stängs.
@@ -757,9 +757,8 @@ svarar bara "Det vet att du vet", och de andra hör att det blev tyst
 någonstans. Rätt viskning innehåller ormens namn.
 Varje vandring lottar ett namn i tre delar ur
 `namn` i `avslojande.json`, till exempel Karumeth (Ka, ru, meth). Vid
-nivå 2 får varje människa i tornet en del, fördelat så att gruppen
-tillsammans vet så mycket som möjligt, och vid nivå 3 och 4 en del till
-som den saknar. Den som spelar ensam har hela namnet vid nivå 4. Delarna
+nivå 2 får varje människa i tornet en del, och vid nivå 3 och 4 en del
+till som hen saknar, lottat för var och en för sig. Delarna
 står i loggen och i tecknen (`· RU ·`). Viskningen ska innehålla namnet,
 ihop eller i delar, och visa att man förstår: ett av svaren under `svar`
 ("Karumeth, tornet är ormen") eller en mall under `svar_med_namn`
@@ -773,10 +772,10 @@ Till ormens namn hör också två saker:
 
 - **Byte vid dödande.** Den som dödar en annan vandrare hittar de delar av
   namnet som offret hade och dödaren saknade.
-- **Tornets nåd.** När alla människor som är kvar inne är invigda tas
-  hälften av vakna-korten i leken bort (`nad_andel`, minst ett), en gång
-  per vandring. Nåden gäller också när leken byggs om efter att ormen har
-  vaknat. Den som tiger om sin del håller alltså tillbaka alla.
+- **Den förste invigde.** Den som blir invigd först i vandringen får en
+  fjärdedel mer guld till när hen kommer ut (`invigd.forst_guld`), och
+  krönikan säger att ingen hann före. Tornets nåd, som tog bort vakna-kort
+  när alla var invigda, togs bort 2026-11-23: spelet är en tävling.
 
 Den invigde:
 
@@ -788,7 +787,7 @@ Den invigde:
 
 Men varelserna anfaller den invigde oftare, och en näve ur kammaren väcker
 ormen lättare. Siffrorna står under `invigd` i `avslojande.json`.
-Krönikan nämner den som förstod, bytena, nåden och de invigda som kom ut,
+Krönikan nämner den som förstod, den som var först, bytena och de invigda som kom ut,
 och epilogen säger namnet.
 
 ### Varslen
@@ -803,7 +802,7 @@ eller att låta bli. Texterna står under `varsel` i `avslojande.json`.
 
 ### Tornet förändras
 
-Med avslöjandet på förändras tornet:
+Tornet förändras:
 
 - Från nivå 3 blir fällorna som hör till ormens kropp vanligare i nya rum:
   det rasande golvet, det roterande rummet, ormgropen och det ömsade
@@ -942,7 +941,7 @@ med `python3 -m http.server 8095` i repots rot och
 - `foremal.json` föremålen: tecken i väskan, namn, beskrivning, hur ofta, hur länge och texter
 - `avslojande.json` nivågränser, ledtrådar, texter vid nivåbyte, nya
   förklaringar till fällorna, epilogen, svaren, ormens namn och texterna
-  för delarna, tornets nåd, varslen och hur tornet förändras. Rumsbeskrivningarna för varje
+  för delarna, den förste invigdes guld, varslen och hur tornet förändras. Rumsbeskrivningarna för varje
   nivå (`"1"` till `"4"`) ligger i `texter.json`.
 - `spelarsidan.json` spelarsidans egna texter: introt, klassvalet, styrningen, panelerna och knapparna
 - `vardsidan.json` värdsidans texter, och tornets besked och loggrader till spelledaren (`server_*`)
@@ -1039,7 +1038,7 @@ Beskrivningarna för rummen ligger under nivåerna `"1"` till `"4"`.
 - `difficulty.go` förvalen för svårighet
 - `classes.go` klasserna och valet av klass
 - `items.go` föremålen
-- `secret.go` viskningen, den invigde, ormens namn och tornets nåd
+- `secret.go` viskningen, den invigde, ormens namn och den förste invigde
 - `omens.go` varslen
 - `change.go` tornet som förändras: fällvikterna och portarna som sluter sig
 - `ai.go` datorstyrda vandrare

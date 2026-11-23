@@ -341,13 +341,12 @@ type Game struct {
 
 	graceUsed bool // porten har redan väntat på de invigda
 
-	serpentName []string // ormens namn i tre delar, med invigningen "ormens namn"
-	mercy       int      // vakna-kort som tornets nåd har tagit bort, också när leken byggs om
-	mercyGiven  bool     // tornets nåd har kommit i den här vandringen
-	clueDeals   int      // ledtrådar som har delats ut, för att varannan ska bli ett varsel
-	omens       []omenNote
-	portClock   int // rundor sedan nivå 4 eller sedan en port stängdes
-	portNext    int // porten som ska stängas, eller -1
+	serpentName    []string // ormens namn i tre delar, med invigningen "ormens namn"
+	firstInitiated int      // id för den som blev invigd först i vandringen, 0 om ingen
+	clueDeals      int      // ledtrådar som har delats ut, för att varannan ska bli ett varsel
+	omens          []omenNote
+	portClock      int // rundor sedan nivå 4 eller sedan en port stängdes
+	portNext       int // porten som ska stängas, eller -1
 }
 
 func NewGame(d *Data, cfg Config) *Game {
@@ -1291,7 +1290,7 @@ func (g *Game) startGame() {
 	g.turn = g.turnTime() // ligger fast under vandringen
 	g.round = 1
 	g.wakes = 0
-	g.mercy, g.mercyGiven = 0, false
+	g.firstInitiated = 0
 	g.clueDeals, g.omens = 0, nil
 	g.portClock, g.portNext = 0, -1
 	g.buildDeck()
@@ -1534,7 +1533,6 @@ func (g *Game) resolve() {
 	}
 	g.tellRooms()
 	g.hearing = false
-	g.checkMercy()
 
 	g.sun--
 	if g.sun < 0 {
@@ -1721,7 +1719,11 @@ func (g *Game) move(p *Player, d Dir, depth int) {
 			g.logTo(p, g.data.Text("foremal_guld", "antal", strconv.Itoa(gold)), "syn")
 		}
 		if p.initiated && p.Treasure > 0 {
-			if bonus := int(float64(p.Treasure) * g.data.Avslojande.Invigd.Guld); bonus > 0 {
+			share := g.data.Avslojande.Invigd.Guld
+			if p.ID == g.firstInitiated {
+				share += g.data.Avslojande.Invigd.ForstGuld
+			}
+			if bonus := int(float64(p.Treasure) * share); bonus > 0 {
 				p.Treasure += bonus
 				g.logTo(p, g.data.Text("invigd_guld", "antal", strconv.Itoa(bonus)), "rost")
 			}

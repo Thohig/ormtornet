@@ -150,7 +150,8 @@ Så här skiljer vi på sakerna när användaren ger instruktioner:
   `data/avslojande.json`).
 - **invigningen**: det som gör någon invigd, **ormens namn**. Varje
   vandring har ett namn i tre **delar** som delas ut till vandrarna; till
-  det hör **byte vid dödande** och **tornets nåd** (`secret.go`).
+  det hör **byte vid dödande** och **den förste invigde**, som får mer guld
+  (`secret.go`). Tornets nåd togs bort 2026-11-23.
 - **varsel**: en ledtråd om ett rum som ingen har varit i, där innehållet
   bestäms när varslet ges (`omens.go`, `varsel` i `avslojande.json`).
 - **tornet förändras**: att fällorna ändras från nivå 3 och portarna
@@ -191,7 +192,7 @@ Skriv dit när ett steg är klart.
   värdsidan. Allt är byggt. Nya texter ska in på båda språken (`data/` och
   `data/en/`); ett test kräver att allt är översatt.
 - [docs/avslojandet.md](docs/avslojandet.md): invigningen med ormens namn,
-  byte vid dödande, tornets nåd, varslen och tornet som förändras. Allt är
+  byte vid dödande, tornets nåd (borttagen 2026-11-23), varslen och tornet som förändras. Allt är
   byggt.
 - [docs/synlighet.md](docs/synlighet.md): att vandrarna bara ser varandra
   när de möts, och bara sin egen karta. Allt är byggt, och egen karta är

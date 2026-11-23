@@ -160,32 +160,19 @@ func nameGame(t *testing.T, n int) (*Game, []*Client) {
 }
 
 func TestNamePartsDealt(t *testing.T) {
-	for _, n := range []int{1, 2, 3, 8} {
+	for _, n := range []int{1, 2, 8} {
 		g, cs := nameGame(t, n)
 		for level := 2; level <= 4; level++ {
 			g.level = level
 			g.dealNameParts()
-			union := [3]bool{}
 			for _, c := range cs {
 				p := c.player
 				if got, want := p.partCount(), min(level-1, 3); got != want {
 					t.Fatalf("%d människor, nivå %d: %s har %d delar, ville ha %d", n, level, p.Name, got, want)
 				}
-				for i, k := range p.parts {
-					union[i] = union[i] || k
-				}
 				if st := g.stateFor(p); len(st.NameParts) != 3 {
 					t.Fatalf("klienten fick inte delarna: %v", st.NameParts)
 				}
-			}
-			known := 0
-			for _, k := range union {
-				if k {
-					known++
-				}
-			}
-			if want := min(3, n*(level-1)); known != want {
-				t.Fatalf("%d människor, nivå %d: gruppen vet %d delar, ville ha %d", n, level, known, want)
 			}
 		}
 	}
@@ -253,34 +240,42 @@ func countWake(g *Game) int {
 	return n
 }
 
-func TestMercyWhenAllInsideKnow(t *testing.T) {
+func TestFirstInitiatedGetsMoreGold(t *testing.T) {
 	g, cs := nameGame(t, 2)
-	a, b := cs[0].player, cs[1].player
-	before := countWake(g)
-	if before < 2 {
-		t.Fatalf("leken har %d vakna-kort", before)
+	g.serpentName = []string{"Ka", "ru", "meth"}
+	g.level = 2
+	a, b := cs[0], cs[1]
+	g.Whisper(a, "tornet är Karumeth")
+	g.Whisper(b, "tornet är Karumeth")
+	if !a.player.initiated || !b.player.initiated || g.firstInitiated != a.player.ID {
+		t.Fatalf("invigda %v %v, först %d", a.player.initiated, b.player.initiated, g.firstInitiated)
 	}
-	a.initiated = true
-	g.checkMercy()
-	if g.mercyGiven {
-		t.Fatal("nåd när bara en av två var invigd")
+	heard := func(c *Client) bool {
+		return contains(logs(c), g.data.Text("invigd_forst"))
 	}
-	// Den som inte vet går ut: då är alla som är kvar inne invigda.
-	b.Status = statusOut
-	g.checkMercy()
-	if !g.mercyGiven || countWake(g) != before-max(1, before/2) {
-		t.Fatalf("nåden: given %v, %d vakna-kort av %d", g.mercyGiven, countWake(g), before)
+	if !heard(a) || heard(b) {
+		t.Fatal("bara den förste ska få höra att hen var först")
 	}
-	// Nåden håller när leken byggs om.
-	g.buildDeck()
-	if countWake(g) != before-g.mercy {
-		t.Fatalf("efter ombyggnaden %d vakna-kort, ville ha %d", countWake(g), before-g.mercy)
+	// Båda går ut genom porten de står vid, med 100 guld.
+	gold := func(c *Client) int {
+		p := c.player
+		p.Treasure = 100
+		room := &g.rooms[p.Y][p.X]
+		if !room.HasExit {
+			t.Fatalf("%s står inte vid en port", p.Name)
+		}
+		g.move(p, room.Exit, 0)
+		if p.Status != statusOut {
+			t.Fatalf("%s kom inte ut", p.Name)
+		}
+		return p.Treasure
 	}
-	// Bara en gång per vandring.
-	n := countWake(g)
-	g.checkMercy()
-	if countWake(g) != n {
-		t.Fatal("nåden kom två gånger")
+	inv := g.data.Avslojande.Invigd
+	if got, want := gold(a), 100+int(100*(inv.Guld+inv.ForstGuld)); got != want {
+		t.Fatalf("den förste fick %d, ville ha %d", got, want)
+	}
+	if got, want := gold(b), 100+int(100*inv.Guld); got != want {
+		t.Fatalf("den andre fick %d, ville ha %d", got, want)
 	}
 }
 
@@ -304,5 +299,27 @@ func TestWhisperOnlyNameKeepsTheTry(t *testing.T) {
 	g.Whisper(a, "tornet är Karumeth")
 	if !pa.initiated {
 		t.Fatal("rätt viskning efter namnet gick inte igenom")
+	}
+}
+
+// Var och en drar ledtrådar ur sin egen lek: alla får till slut alla
+// texterna på nivån, oberoende av de andra.
+func TestCluesFromOwnDeck(t *testing.T) {
+	g, cs := nameGame(t, 3)
+	g.level = 2
+	list := g.data.Avslojande.Ledtradar["2"]
+	for _, c := range cs {
+		logs(c)
+	}
+	for range list {
+		g.dealClues(g.data.Avslojande.Ledtradar, "ledtrad", "info")
+	}
+	for _, c := range cs {
+		got := logs(c)
+		for _, want := range list {
+			if !contains(got, want) {
+				t.Fatalf("%s fick inte %q", c.player.Name, want)
+			}
+		}
 	}
 }

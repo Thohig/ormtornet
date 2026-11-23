@@ -537,7 +537,7 @@ func TestRevealLevels(t *testing.T) {
 	}
 }
 
-func TestRevealDifferentCluesAndExplanations(t *testing.T) {
+func TestRevealCluesAndExplanations(t *testing.T) {
 	g, a, b := startTwo(t)
 	a.player.Seen["fallgaller"] = true
 	logs(a)
@@ -559,8 +559,8 @@ func TestRevealDifferentCluesAndExplanations(t *testing.T) {
 			cb = c
 		}
 	}
-	if ca == "" || cb == "" || ca == cb {
-		t.Fatalf("ledtrådarna ska finnas och skilja sig: %q och %q", ca, cb)
+	if ca == "" || cb == "" {
+		t.Fatalf("båda ska få en ledtråd: %q och %q", ca, cb)
 	}
 	expl := g.data.Avslojande.Forklaringar["fallgaller"]
 	if !contains(la, expl) || contains(lb, expl) {

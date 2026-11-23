@@ -94,44 +94,28 @@ func (g *Game) namePartsFor(p *Player) []string {
 	return out
 }
 
-// dealNameParts ger människorna i tornet delar av namnet, så att var och en
-// har lika många delar som nivån minus ett (högst tre). Varje del som delas
-// ut är den som färst i gruppen har, så att gruppen tillsammans vet så
-// mycket som möjligt och måste prata för att få ihop namnet.
+// dealNameParts ger var och en av människorna i tornet delar av namnet, så
+// att hen har lika många delar som nivån minus ett (högst tre). Delarna
+// lottas för var och en för sig: ingen får dem för att gruppen ska veta mer.
 func (g *Game) dealNameParts() {
 	if !g.usesName() {
 		return
 	}
 	want := min(g.level-1, 3)
-	var group []*Player
 	for _, p := range g.players {
-		if p != nil && p.bot == nil && p.Status == statusIn {
-			group = append(group, p)
+		if p == nil || p.bot != nil || p.Status != statusIn {
+			continue
 		}
-	}
-	g.rng.Shuffle(len(group), func(i, j int) { group[i], group[j] = group[j], group[i] })
-	for range 3 {
-		for _, p := range group {
-			if p.partCount() >= want {
-				continue
-			}
-			best, bestN := -1, 0
+		for p.partCount() < want {
+			var missing []int
 			for i := range 3 {
-				if p.parts[i] {
-					continue
-				}
-				n := 0
-				for _, o := range group {
-					if o.parts[i] {
-						n++
-					}
-				}
-				if best < 0 || n < bestN {
-					best, bestN = i, n
+				if !p.parts[i] {
+					missing = append(missing, i)
 				}
 			}
-			p.parts[best] = true
-			text := g.namePartText(best)
+			i := missing[g.rng.IntN(len(missing))]
+			p.parts[i] = true
+			text := g.namePartText(i)
 			g.logTo(p, text, "info")
 			g.sendCard(p, gameCard{Slag: "namn", Bild: "namndel", Rubrik: g.data.Text("kort_namndel"), Text: text})
 		}
@@ -241,8 +225,14 @@ func (g *Game) Whisper(c *Client, text string) {
 	g.answerTo(p, said, "rost")
 	g.sendCard(p, gameCard{Slag: "viska", Bild: "invigd", Rubrik: g.data.Text("kort_invigd"), Text: said})
 	g.logOthers(p, g.data.Text("invigd_andra"), "dim")
-	g.chronicle("kronika_invigd", "namn", p.Name, "runda", strconv.Itoa(g.round))
-	g.checkMercy()
+	if g.firstInitiated == 0 {
+		// Den som hinner först får tornets gunst: mer guld när hen kommer ut.
+		g.firstInitiated = p.ID
+		g.logTo(p, g.data.Text("invigd_forst"), "rost")
+		g.chronicle("kronika_invigd_forst", "namn", p.Name, "runda", strconv.Itoa(g.round))
+	} else {
+		g.chronicle("kronika_invigd", "namn", p.Name, "runda", strconv.Itoa(g.round))
+	}
 }
 
 // takeNameParts: den som dödar en vandrare hittar de delar av namnet som
@@ -265,49 +255,6 @@ func (g *Game) takeNameParts(killer, victim *Player) {
 	g.logTo(killer, text, "rost")
 	g.addCard(killer, gameCard{Slag: "namn", Bild: "namndel", Rubrik: g.data.Text("kort_namndel"), Text: text})
 	g.chronicle("kronika_namndel", "namn", killer.Name, "offer", victim.Name)
-}
-
-// checkMercy ger tornets nåd när alla människor som är kvar inne är
-// invigda: en andel av vakna-korten tas bort, en gång per vandring.
-func (g *Game) checkMercy() {
-	if !g.usesName() || g.mercyGiven || g.phase != phasePlay {
-		return
-	}
-	var inside []*Player
-	for _, p := range g.players {
-		if p != nil && p.bot == nil && p.Status == statusIn {
-			if !p.initiated {
-				return
-			}
-			inside = append(inside, p)
-		}
-	}
-	if len(inside) == 0 {
-		return
-	}
-	wake := 0
-	for _, id := range g.deck {
-		if c := g.data.card(id); c != nil && c.Vaknar {
-			wake++
-		}
-	}
-	n := max(1, int(float64(wake)*g.data.Avslojande.NadAndel))
-	removed := 0
-	for i := 0; i < len(g.deck) && removed < n; {
-		if c := g.data.card(g.deck[i]); c != nil && c.Vaknar {
-			g.deck = append(g.deck[:i], g.deck[i+1:]...)
-			removed++
-			continue
-		}
-		i++
-	}
-	g.mercyGiven = true
-	g.mercy = n
-	for _, p := range inside {
-		g.logTo(p, g.data.Text("nad"), "rost")
-		g.soundTo(p, "rost")
-	}
-	g.chronicle("kronika_nad")
 }
 
 func (g *Game) anyInitiatedInside() bool {

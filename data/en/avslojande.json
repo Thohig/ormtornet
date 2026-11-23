@@ -258,6 +258,9 @@
     "invigd_andra": [
       "Somewhere in the tower, all goes silent for a moment."
     ],
+    "invigd_forst": [
+      "No one has whispered before you. The tower remembers who came first, and the gate will be generous to you."
+    ],
     "viskning_fel": [
       "You whisper to the wall. Nothing answers. Perhaps you will understand more once the sun has sunk."
     ],
@@ -297,17 +300,14 @@
     "kronika_invigd": [
       "{namn} whispered something to the tower, and the tower heard."
     ],
+    "kronika_invigd_forst": [
+      "{namn} whispered something to the tower, and the tower heard. No one had been quicker."
+    ],
     "namndel_byte": [
       "In {offer}'s hand lies a stone with carved signs: {delar}."
     ],
-    "nad": [
-      "The tower sighs. Something in the walls relaxes, and the beat grows slower."
-    ],
     "kronika_namndel": [
       "{namn} took the signs from {offer}'s hand."
-    ],
-    "kronika_nad": [
-      "Everyone left in the tower knew. The serpent sank into deeper sleep."
     ],
     "kronika_invigda_ute": [
       "Those who knew and got out: {namn}."

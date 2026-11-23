@@ -6,6 +6,16 @@ eller leder tornet.
 
 ## 2026-11-23
 
+### Ormens namn: var och en för sig
+
+- Delarna av ormens namn lottas för var och en för sig. Tornet fördelar
+  dem inte längre så att gruppen tillsammans vet mest.
+- Ledtrådarna dras ur samma texter för alla, var och en ur sin egen lek.
+  Två vandrare kan alltså få samma ledtråd.
+- **Tornets nåd** är borta. I stället får **den förste invigde** en
+  fjärdedel mer guld till när hen kommer ut, och krönikan säger att ingen
+  hann före.
+
 ### Avslöjandet går inte att stänga av
 
 - Raden Avslöjandet på värdsidan och flaggan `-avslojande` är borta.

@@ -521,7 +521,6 @@ type Reveal struct {
 	Delar       map[string][]string `json:"delar"`         // texterna när en del delas ut, per nivå
 	SvarMedNamn []string            `json:"svar_med_namn"` // mallar med {namn} som räknas som svar
 	EpilogNamn  []string            `json:"epilog_namn"`   // epilogen säger namnet
-	NadAndel    float64             `json:"nad_andel"`     // andelen vakna-kort som tornets nåd tar bort
 	Varsel      Omens               `json:"varsel"`        // varslen om rum som ingen har varit i
 	Forandring  Change              `json:"forandring"`    // hur tornet förändras med nivåerna
 }
@@ -543,6 +542,7 @@ type Omens struct {
 // Initiate är fördelarna och svagheten för den som har viskat hemligheten.
 type Initiate struct {
 	Guld        float64 `json:"guld"`         // andel extra guld när den invigde kommer ut
+	ForstGuld   float64 `json:"forst_guld"`   // andel extra guld till, för den som blev invigd först
 	Falla       float64 `json:"falla"`        // chansen att känna igen en fälla och kliva förbi
 	ExtraAnfall int     `json:"extra_anfall"` // varelserna anfaller oftare
 	Vacker      float64 `json:"vacker"`       // chansen att en näve drar ett vakna-kort

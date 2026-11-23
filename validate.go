@@ -262,7 +262,7 @@ func (d *Data) validate() []string {
 			bad("avslojande.json", "svar_med_namn: %q saknar {namn}", s)
 		}
 	}
-	chance("avslojande.json", "nad_andel", a.NadAndel)
+	chance("avslojande.json", "invigd.forst_guld", a.Invigd.ForstGuld)
 	for _, t := range d.Fallor {
 		if len(a.Varsel.Fallor[t.ID]) == 0 {
 			bad("avslojande.json", "varsel: fällan %q saknar text", t.ID)
