@@ -23,8 +23,9 @@
       {
         "id": "svar",
         "namn": "Svår",
-        "beskrivning": "5 liv, fler fällor och varelser, ormen vaknar lättare",
+        "beskrivning": "5 liv, fler fällor och varelser, ormen vaknar lättare men vaktar mer guld",
         "liv": 5,
+        "kammarskatt": 1.25,
         "fallchans": 0.55,
         "varelsechans": 0.28,
         "sovkort": 11,
@@ -35,9 +36,10 @@
       {
         "id": "mardrom",
         "namn": "Mardröm",
-        "beskrivning": "6 liv, fällor och varelser överallt som skadar mer, ormen sover lätt och biter hårt",
+        "beskrivning": "6 liv, fällor och varelser överallt som skadar mer, ormen sover lätt, biter hårt och vaktar mest guld",
         "liv": 6,
         "skada": 1,
+        "kammarskatt": 1.5,
         "fallchans": 0.65,
         "varelsechans": 0.35,
         "sovkort": 9,

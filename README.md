@@ -1022,18 +1022,19 @@ vakna-kort (`vaknakort`) i ormleken, skadan när ormen vaknar (`ormskada`)
 och hur stor andel av skatten som går förlorad (`skatt_forlust`). `skada`
 läggs till skadan från alla fällor och varelser som skadar (ingen skadar
 mindre än 1), och `sol` gångrar solens rundor när solen är automatisk
-(1,25 ger 50 rundor i stället för 40). Det som inte
+(1,25 ger 50 rundor i stället för 40). `kammarskatt` gångrar guldet i
+varje näve ur skattkammaren. Det som inte
 står med i ett förval tas från de andra datafilerna. Normal står därför tom,
 och då gäller filerna som de är. `standard` är förvalet som gäller när inget
 annat är valt. När vandringen börjar får alla veta svårigheten och hur många
 liv de har.
 
-| Förval  | Liv | Fälla | Varelse | Skada | Sol    | Sovkort | Vakna-kort | Ormskada | Förlust |
-|---------|-----|-------|---------|-------|--------|---------|------------|----------|---------|
-| Lätt    | 8   | 35 %  | 12 %    |       | × 1,25 | 17      | 2          | 1        | 35 %    |
-| Normal  | 7   | 45 %  | 20 %    |       |        | 13      | 2          | 2        | 50 %    |
-| Svår    | 5   | 55 %  | 28 %    |       |        | 11      | 2          | 2        | 60 %    |
-| Mardröm | 6   | 65 %  | 35 %    | +1    |        | 9       | 3          | 3        | 75 %    |
+| Förval  | Liv | Fälla | Varelse | Skada | Sol    | Sovkort | Vakna-kort | Ormskada | Förlust | Näven  |
+|---------|-----|-------|---------|-------|--------|---------|------------|----------|---------|--------|
+| Lätt    | 8   | 35 %  | 12 %    |       | × 1,25 | 17      | 2          | 1        | 35 %    | 15–45  |
+| Normal  | 7   | 45 %  | 20 %    |       |        | 13      | 2          | 2        | 50 %    | 15–45  |
+| Svår    | 5   | 55 %  | 28 %    |       |        | 11      | 2          | 2        | 60 %    | 19–56  |
+| Mardröm | 6   | 65 %  | 35 %    | +1    |        | 9       | 3          | 3        | 75 %    | 23–68  |
 
 För varje fälla kan du ändra namn, vikt (hur ofta den dyker upp), skada,
 antal rundor, tecknet på kartan och texterna. Vad fällan gör styrs av dess

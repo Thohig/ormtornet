@@ -80,6 +80,13 @@ func TestDifficultyDamageAndSun(t *testing.T) {
 			t.Errorf("varelsen %s: %d", m.ID, hard.Monster.Typer[i].Skada)
 		}
 	}
+	half := 1.5
+	d.Svarighet.Nivaer = append(d.Svarighet.Nivaer, DifficultyStep{ID: "rik", Kammarskatt: &half})
+	rich := d.withDifficulty("rik")
+	if rich.Ormen.SkattMin != (d.Ormen.SkattMin*3+1)/2 || rich.Ormen.SkattMax != (d.Ormen.SkattMax*3+1)/2 {
+		t.Errorf("kammarskatt 1,5: %d–%d av %d–%d", rich.Ormen.SkattMin, rich.Ormen.SkattMax, d.Ormen.SkattMin, d.Ormen.SkattMax)
+	}
+
 	orig, _, _ := loadData("data")
 	for i := range d.Fallor {
 		if d.Fallor[i].Skada != orig.Fallor[i].Skada {

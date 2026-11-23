@@ -15,12 +15,12 @@
       {
         "id": "svar",
         "namn": "Hard",
-        "beskrivning": "5 lives, more traps and creatures, the serpent wakes more easily"
+        "beskrivning": "5 lives, more traps and creatures, the serpent wakes more easily but guards more gold"
       },
       {
         "id": "mardrom",
         "namn": "Nightmare",
-        "beskrivning": "6 lives, traps and creatures everywhere that hurt more, the serpent sleeps lightly and bites hard"
+        "beskrivning": "6 lives, traps and creatures everywhere that hurt more, the serpent sleeps lightly, bites hard and guards the most gold"
       }
     ]
   }

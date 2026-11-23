@@ -27,6 +27,8 @@ type DifficultyStep struct {
 	Skada *int `json:"skada"`
 	// Sol gångrar solens rundor när solen är automatisk.
 	Sol *float64 `json:"sol"`
+	// Kammarskatt gångrar guldet i varje näve ur skattkammaren.
+	Kammarskatt *float64 `json:"kammarskatt"`
 }
 
 // difficultyView är det värdsidan behöver för att visa ett förval.
@@ -70,7 +72,7 @@ func (d *Data) withDifficulty(id string) *Data {
 	s := d.difficulty(id)
 	if s == nil || (s.Liv == nil && s.Fallchans == nil && s.Varelsechans == nil &&
 		s.Sovkort == nil && s.Vaknakort == nil && s.Ormskada == nil && s.SkattForlust == nil &&
-		s.Skada == nil && s.Sol == nil) {
+		s.Skada == nil && s.Sol == nil && s.Kammarskatt == nil) {
 		return d
 	}
 	c := *d
@@ -102,6 +104,11 @@ func (d *Data) withDifficulty(id string) *Data {
 				c.Monster.Typer[i].Skada = max(1, c.Monster.Typer[i].Skada+*s.Skada)
 			}
 		}
+	}
+	if s.Kammarskatt != nil && *s.Kammarskatt > 0 {
+		f := *s.Kammarskatt
+		c.Ormen.SkattMin = max(1, int(math.Round(float64(d.Ormen.SkattMin)*f)))
+		c.Ormen.SkattMax = max(c.Ormen.SkattMin, int(math.Round(float64(d.Ormen.SkattMax)*f)))
 	}
 	if s.Sol != nil && *s.Sol > 0 {
 		c.Regler.Sol = *s.Sol

@@ -6,6 +6,15 @@ eller leder tornet.
 
 ## 2026-11-23
 
+### Mer guld i kammaren på de svårare nivåerna
+
+- En näve ur skattkammaren ger mer guld på Svår (19–56 i stället för
+  15–45) och mest på Mardröm (23–68), så att det lönar sig att våga mer
+  (`kammarskatt` i `data/svarighet.json`).
+- AI-spelarna tar sällan en näve på de svåra nivåerna (0,1–0,3 per
+  vandring), så simuleringen visar knappt någon skillnad. Det får ett
+  provspel med människor visa.
+
 ### Skada och sol efter svårigheten
 
 - En svårighet kan nu göra fällor och varelser farligare (`skada` i
