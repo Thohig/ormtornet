@@ -40,8 +40,8 @@ func whisperMatches(whisper string, answers []string) bool {
 }
 
 // Invigningen: de fasta svaren räcker inte. Varje vandring har ett eget
-// namn i tre delar, ormens namn, som delas ut till människorna i tornet,
-// och viskningen ska innehålla namnet. Saknar datafilerna namn räcker
+// namn i tre delar, ormens namn, som var och en hittar i tornet
+// (namndelar.go), och viskningen ska innehålla namnet. Saknar datafilerna namn räcker
 // svaren.
 
 // usesName är sant när invigningen kräver ormens namn i den här vandringen.
@@ -57,6 +57,7 @@ func (g *Game) pickSerpentName() {
 		return
 	}
 	g.serpentName = names[g.rng.IntN(len(names))]
+	g.placeParts()
 }
 
 // serpentNameText är namnet som det skrivs, till exempel Karumeth.
@@ -92,48 +93,6 @@ func (g *Game) namePartsFor(p *Player) []string {
 		}
 	}
 	return out
-}
-
-// dealNameParts ger var och en av människorna i tornet delar av namnet, så
-// att hen har lika många delar som nivån minus ett (högst tre). Delarna
-// lottas för var och en för sig: ingen får dem för att gruppen ska veta mer.
-func (g *Game) dealNameParts() {
-	if !g.usesName() {
-		return
-	}
-	want := min(g.level-1, 3)
-	for _, p := range g.players {
-		if p == nil || p.bot != nil || p.Status != statusIn {
-			continue
-		}
-		for p.partCount() < want {
-			var missing []int
-			for i := range 3 {
-				if !p.parts[i] {
-					missing = append(missing, i)
-				}
-			}
-			i := missing[g.rng.IntN(len(missing))]
-			p.parts[i] = true
-			text := g.namePartText(i)
-			g.logTo(p, text, "info")
-			g.sendCard(p, gameCard{Slag: "namn", Bild: "namndel", Rubrik: g.data.Text("kort_namndel"), Text: text})
-		}
-	}
-}
-
-// namePartText är texten när vandraren får del i av namnet.
-func (g *Game) namePartText(i int) string {
-	a := &g.data.Avslojande
-	list := a.Delar[strconv.Itoa(g.level)]
-	if len(list) == 0 {
-		list = a.Delar["4"]
-	}
-	ord := ""
-	if i < len(a.Ordning) {
-		ord = a.Ordning[i]
-	}
-	return strings.NewReplacer("{ordning}", ord, "{del}", strings.ToUpper(g.serpentName[i])).Replace(pick(list))
 }
 
 // whisperRight avgör om viskningen gör vandraren invigd: ett av de fasta

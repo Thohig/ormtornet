@@ -32,6 +32,7 @@ func TestTakeShowsCard(t *testing.T) {
 	pa.X, pa.Y = g.center(), g.center()
 	g.reveal(pa.X, pa.Y)
 	g.deck = []string{"sover"}
+	pa.parts = [3]bool{true, true, true} // ormens del ger annars ett kort till
 	summaries(a)
 	summaries(b)
 	snap := g.snapshot()

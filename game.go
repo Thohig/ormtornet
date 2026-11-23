@@ -342,6 +342,8 @@ type Game struct {
 	graceUsed bool // porten har redan väntat på de invigda
 
 	serpentName    []string // ormens namn i tre delar, med invigningen "ormens namn"
+	partAt         [3]int   // vilken del av namnet som finns i ristningen, hos varelsen och i kammaren
+	carving        carving  // rummet med ristningen
 	firstInitiated int      // id för den som blev invigd först i vandringen, 0 om ingen
 	clueDeals      int      // ledtrådar som har delats ut, för att varannan ska bli ett varsel
 	omens          []omenNote
@@ -447,6 +449,7 @@ func (g *Game) build(x, y int, spawn bool) *Room {
 		undecided = append(undecided[:i], undecided[i+1:]...)
 	}
 	g.keepWayOut(x, y)
+	g.placeCarving(x, y)
 	// Händelse: en varelse, en fälla eller ingenting. Har ett varsel redan
 	// sagt vad som väntar blir det så.
 	if r.omen != "" {
@@ -1529,6 +1532,7 @@ func (g *Game) resolve() {
 	for _, p := range g.players {
 		if p != nil {
 			g.meetIfNew(p)
+			g.readCarving(p)
 		}
 	}
 	g.tellRooms()

@@ -260,6 +260,7 @@ func (g *Game) duel(p *Player, m *Monster, a string) {
 		g.damage(p, g.shieldDamage(p, t.Skada), false)
 	}
 	if playerHits {
+		g.learnPart(p, srcCreature) // under fjällen där vapnet träffade
 		m.HP -= g.data.Monster.Spelarskada
 		if m.HP <= 0 {
 			g.defeat(p, m) // kortet säger att varelsen föll

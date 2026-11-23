@@ -25,7 +25,12 @@ det, så att den som har spelat förut inte får något stort försprång.
    tills steg 3 lade dem i tornet. Den förste invigde får en fjärdedel mer
    guld till när hen kommer ut (`invigd.forst_guld`).
 3. **Delarna finns i tornet.** En del är ristad i ett rum, en finns hos en
-   varelse och en hörs i kammaren.
+   varelse och en hörs i kammaren. Byggt 2026-11-23 (`namndelar.go`).
+   Ristningen bestäms när tornet bygger ett rum som passar, så att den
+   alltid går att nå; finns den inte på nivå 3 läggs den i ett känt rum.
+   Riktningen till den ges från nivå 3, och till Spårfinnaren från nivå 2.
+   Varelsens del kommer när man träffar den, inte först när den faller,
+   så att den som slåss en runda får den.
 4. **Ordningen och straffet.** Delarna kommer utan plats, men med en
    ledtråd om var de står. Fel ordning förbrukar inte försöket. En fel
    viskning gör ormen oroligare.

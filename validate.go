@@ -247,16 +247,17 @@ func (d *Data) validate() []string {
 	if len(a.Ordning) != 3 {
 		bad("avslojande.json", "ordning: ska ha tre ord")
 	}
-	for _, lvl := range []string{"2", "3", "4"} {
-		if len(a.Delar[lvl]) == 0 {
-			bad("avslojande.json", "delar: nivå %s saknar texter", lvl)
+	for _, src := range partSources {
+		if len(a.Delar[src]) == 0 {
+			bad("avslojande.json", "delar: %s saknar texter", src)
 		}
-		for _, s := range a.Delar[lvl] {
+		for _, s := range a.Delar[src] {
 			if !strings.Contains(s, "{del}") {
-				bad("avslojande.json", "delar %s: %q saknar {del}", lvl, s)
+				bad("avslojande.json", "delar %s: %q saknar {del}", src, s)
 			}
 		}
 	}
+	chance("avslojande.json", "ristning_chans", a.RistningChans)
 	for _, s := range a.SvarMedNamn {
 		if !strings.Contains(s, "{namn}") {
 			bad("avslojande.json", "svar_med_namn: %q saknar {namn}", s)

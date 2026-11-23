@@ -73,7 +73,7 @@
     "tecken_morker": "The lantern is out. You see only the room you stand in, but not its doors: you must feel your way.",
     "tecken_invigd": "The tower has heard you.",
     "tecken_viska": "{tryck} to whisper to the tower.",
-    "tecken_namndelar": "Signs you have found in the walls. The dots are the ones you are missing.",
+    "tecken_namndelar": "Signs of a name that you have found in the tower. The dots are the ones you are missing.",
     "tecken_tom_plats": "An empty place in your bag. You can carry {max} items.",
     "tryck_tangent": "Press {tangent}",
     "tryck_knapp": "Tap {knapp}",

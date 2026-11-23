@@ -29,7 +29,7 @@
       "i ormens buk"
     ],
 
-    "_om_namn": "Med invigningen \"ormens namn\" lottas ett av namnen för varje vandring. Varje namn har tre delar med bara bokstäver a–z. Delarna delas ut till människorna i tornet vid nivå 2, 3 och 4, med texterna under delar ({ordning} är första, andra eller tredje och {del} delen). Viskningen ska innehålla namnet och något av svaren, eller en av mallarna i svar_med_namn.",
+    "_om_namn": "Ett av namnen lottas för varje vandring. Varje namn har tre delar med bara bokstäver a–z. Delarna finns på tre ställen i tornet, och vilken del som finns var lottas: ristad i ett rum (ristning, chansen per nytt rum en bit in i tornet är ristning_chans; finns ingen ristning på nivå 3 hamnar den i ett känt rum), hos en varelse man träffar (varelse) och i kammaren när man tar en näve (kammare). Texterna står under delar ({ordning} är första, andra eller tredje och {del} delen). Viskningen ska innehålla namnet och något av svaren, eller en av mallarna i svar_med_namn.",
     "namn": [
       ["Ka", "ru", "meth"],
       ["Ys", "ge", "rah"],
@@ -48,22 +48,23 @@
       ["Zu", "le", "rath"],
       ["Ha", "ma", "rok"]
     ],
+    "ristning_chans": 0.3,
     "ordning": ["första", "andra", "tredje"],
     "delar": {
-      "2": [
-        "Någon har ristat tre tecken i väggen, nästan utnötta. Det {ordning} går att läsa: {del}.",
-        "Under dammet på golvet syns tre tecken som bildar ett ord. Det {ordning} är {del}.",
-        "En skåra i stenen, sedan en till. Tre tecken, ett ord. Det {ordning} är {del}."
+      "ristning": [
+        "Någon har ristat tre tecken i väggen, nästan utnötta. Bara det {ordning} går att läsa: {del}.",
+        "Djupt i murbruket, som skuret med naglar, står ett namn i tre tecken. Det {ordning} är det enda som syns: {del}.",
+        "En skåra i stenen, sedan en till. Tre tecken, ett ord. Det {ordning} går att läsa: {del}."
       ],
-      "3": [
-        "Det är ett namn, ristat av någon som visste. Det {ordning} av dess tre tecken är {del}.",
-        "Väggen viskar ett namn i tre delar. Du hör den {ordning} tydligt: {del}.",
-        "Namnet står skrivet med naglar i murbruket. Den {ordning} delen: {del}."
+      "varelse": [
+        "Där du träffade lossnar några fjäll, och under dem syns ett tecken inbränt i huden. Det {ordning} tecknet i ett namn: {del}.",
+        "Under det du slog bort syns ett tecken, som ett brännmärke. Det är det {ordning} i ett namn på tre: {del}.",
+        "Varelsen bär ett märke där huden revs upp, ett tecken som du har sett förut i väggarna. Det {ordning}: {del}."
       ],
-      "4": [
-        "Det är tornet självt som heter så. Den {ordning} delen av namnet: {del}.",
-        "Väggarna säger sitt namn nu, i tre andetag. Det {ordning} är {del}.",
-        "Allt runt dig bär samma namn. Dess {ordning} del är {del}."
+      "kammare": [
+        "Under guldet väser något i sömnen. Ett ord i tre andetag, och du hör det {ordning} tydligt: {del}.",
+        "När du drar handen ur högen mumlar mörket under dig ett namn. Det {ordning} av dess tre tecken: {del}.",
+        "Andetagen under guldet bildar ett ord. Du fångar det {ordning} av tre: {del}."
       ]
     },
     "_om_varsel": "Varslen: från nivå 2 är varannan ledtråd ett varsel om ett rum som ingen har varit i, två eller tre steg bort. Rummets innehåll bestäms när varslet ges. Varje fälla och varelse har en text, tomt gäller ett rum utan något. {avstand} är ett av orden under avstand och {riktning} ett väderstreck.",
@@ -300,6 +301,13 @@
     ],
     "namndel_byte": [
       "I {offer}s hand ligger en sten med ristade tecken: {delar}."
+    ],
+    "ristning_riktning": [
+      "Någonstans åt {horn} har någon ristat tecken i en vägg. Du vet inte hur du vet det.",
+      "Det kliar i fingertopparna, som efter att ha rört vid ristad sten. Tecknen finns åt {horn}."
+    ],
+    "namn_tornet": [
+      "Tecknen du har hittat hör till ett och samma namn. Det är tornet självt som heter så."
     ],
     "kronika_namndel": [
       "{namn} tog tecknen ur {offer}s hand."

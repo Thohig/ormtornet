@@ -50,20 +50,20 @@
 
     "ordning": ["first", "second", "third"],
     "delar": {
-      "2": [
-        "Someone has carved three signs into the wall, almost worn away. The {ordning} can be read: {del}.",
-        "Under the dust on the floor are three signs that make a word. The {ordning} is {del}.",
-        "A notch in the stone, then another. Three signs, one word. The {ordning} is {del}."
+      "ristning": [
+        "Someone has carved three signs into the wall, almost worn away. Only the {ordning} can be read: {del}.",
+        "Deep in the mortar, as if cut with fingernails, is a name in three signs. The {ordning} is the only one you can see: {del}.",
+        "A notch in the stone, then another. Three signs, one word. The {ordning} can be read: {del}."
       ],
-      "3": [
-        "It is a name, carved by someone who knew. The {ordning} of its three signs is {del}.",
-        "The wall whispers a name in three parts. You hear the {ordning} clearly: {del}.",
-        "The name is written with fingernails in the mortar. The {ordning} part: {del}."
+      "varelse": [
+        "Where you struck, a few scales come loose, and beneath them a sign is burned into the skin. The {ordning} sign of a name: {del}.",
+        "Under what you knocked away is a sign, like a brand. It is the {ordning} of a name in three: {del}.",
+        "The creature bears a mark where its skin was torn, a sign you have seen in the walls. The {ordning}: {del}."
       ],
-      "4": [
-        "It is the tower itself that bears this name. The {ordning} part of the name: {del}.",
-        "The walls speak their name now, in three breaths. The {ordning} is {del}.",
-        "Everything around you bears the same name. Its {ordning} part is {del}."
+      "kammare": [
+        "Beneath the gold something hisses in its sleep. A word in three breaths, and you hear the {ordning} clearly: {del}.",
+        "As you pull your hand from the pile, the dark beneath you mutters a name. The {ordning} of its three signs: {del}.",
+        "The breaths beneath the gold form a word. You catch the {ordning} of three: {del}."
       ]
     },
     "varsel": {
@@ -305,6 +305,13 @@
     ],
     "namndel_byte": [
       "In {offer}'s hand lies a stone with carved signs: {delar}."
+    ],
+    "ristning_riktning": [
+      "Somewhere to the {horn}, someone has carved signs into a wall. You do not know how you know.",
+      "Your fingertips itch, as after touching carved stone. The signs are to the {horn}."
+    ],
+    "namn_tornet": [
+      "The signs you have found belong to one and the same name. It is the tower itself that bears it."
     ],
     "kronika_namndel": [
       "{namn} took the signs from {offer}'s hand."

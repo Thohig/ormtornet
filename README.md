@@ -453,7 +453,7 @@ igen.
 | Örtkvinnan | börjar med en dryck, en dryck ger tre liv, tål gift | tappar mycket mer skatt när ormen vaknar |
 | Kartritaren | ser genom dörrarna in i rummen bredvid, ser alla rum som någon har hittat och var någon har dött (ett x i hörnet), ger sin karta till den hen möter, hittar alltid en hemlig gång om det går, har en dryck med sig | undanmanöver lyckas aldrig |
 | Ormtjusaren | ser i kammaren hur många vakna-kort som är kvar, ormen skadar inte hen när den vaknar | hittar hälften så mycket guld när hen söker |
-| Spårfinnaren | ser spår 6 rundor bakåt och vems de är, märker hälften av fällorna i tid, ser var föremål och guld ligger och vem som tog guldet | hör inget genom väggarna, utom med benluren |
+| Spårfinnaren | ser spår 6 rundor bakåt och vems de är, märker hälften av fällorna i tid, ser var föremål och guld ligger och vem som tog guldet, känner före andra åt vilket håll ristningen finns | hör inget genom väggarna, utom med benluren |
 | Lyktbäraren | ett liv extra, tål mörker, ser varelser i grannrummen | syns för andra redan från grannrummet |
 | Pilgrimen | ledtrådar dubbelt så ofta, en dryck när tornet förändras, känner igen förbannade föremål | slår aldrig andra vandrare, kan bara värja sig |
 
@@ -756,9 +756,22 @@ servern och spelledaren. Rätt viskning gör vandraren **invigd**. Tornet
 svarar bara "Det vet att du vet", och de andra hör att det blev tyst
 någonstans. Rätt viskning innehåller ormens namn.
 Varje vandring lottar ett namn i tre delar ur
-`namn` i `avslojande.json`, till exempel Karumeth (Ka, ru, meth). Vid
-nivå 2 får varje människa i tornet en del, och vid nivå 3 och 4 en del
-till som hen saknar, lottat för var och en för sig. Delarna
+`namn` i `avslojande.json`, till exempel Karumeth (Ka, ru, meth). Delarna
+finns på tre ställen i tornet, och var och en hittar dem själv. Vilken
+del som finns var lottas varje vandring:
+
+- **Ristningen.** Tecken i väggen i ett rum en bit in i tornet, minst en
+  tredjedel av bredden från varje port. Den hamnar i ett av rummen som
+  byggs när någon ser in i dem eller går dit (`ristning_chans` per rum som
+  passar), så att den alltid går att nå. Den som står i rummet efter
+  rundan läser den. Finns ingen ristning när nivå 3 kommer hamnar den i
+  ett känt rum långt från portarna. Från nivå 3 får den som inte har läst
+  den veta åt vilket håll den finns, och Spårfinnaren redan från nivå 2.
+- **Varelsen.** Den som träffar en varelse ser ett tecken under fjällen.
+- **Kammaren.** Den som tar en näve hör ormen väsa delen i sömnen.
+
+Ingen får veta vad någon annan har hittat. På nivå 4 får den som har
+hittat något veta att det är tornet självt som heter så. Delarna
 står i loggen och i tecknen (`· RU ·`). Viskningen ska innehålla namnet,
 ihop eller i delar, och visa att man förstår: ett av svaren under `svar`
 ("Karumeth, tornet är ormen") eller en mall under `svar_med_namn`
@@ -1039,6 +1052,7 @@ Beskrivningarna för rummen ligger under nivåerna `"1"` till `"4"`.
 - `classes.go` klasserna och valet av klass
 - `items.go` föremålen
 - `secret.go` viskningen, den invigde, ormens namn och den förste invigde
+- `namndelar.go` var namnets delar finns: ristningen, varelsen och kammaren
 - `omens.go` varslen
 - `change.go` tornet som förändras: fällvikterna och portarna som sluter sig
 - `ai.go` datorstyrda vandrare

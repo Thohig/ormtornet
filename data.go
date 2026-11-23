@@ -514,6 +514,7 @@ type Reveal struct {
 	Svar             []string            `json:"svar"`            // viskningar som visar att man vet hemligheten
 	ViskaFranNiva    int                 `json:"viska_fran_niva"` // första nivån då man kan viska
 	Invigd           Initiate            `json:"invigd"`
+	RistningChans    float64             `json:"ristning_chans"` // chansen att ristningen hamnar i ett nytt rum som passar
 
 	// Med invigningen "ormens namn" (se secret.go).
 	Namn        [][]string          `json:"namn"`          // namnen, tre delar vardera

@@ -81,7 +81,7 @@
       "namn": "Spårfinnaren",
       "kort": "spårfinnaren",
       "beskrivning": "Läser marken som andra läser böcker. Ser var någon har gått, och när.",
-      "styrka": "Ser spår längre bakåt och vems de är, märker hälften av fällorna i tid och ser var någon har lämnat ett föremål eller guld, och vem som har tagit det.",
+      "styrka": "Ser spår längre bakåt och vems de är, märker hälften av fällorna i tid och ser var någon har lämnat ett föremål eller guld, och vem som har tagit det. Känner före andra åt vilket håll tecknen i väggen finns.",
       "svaghet": "Hör ingenting genom väggarna.",
       "liv": 0,
       "drycker": 0,

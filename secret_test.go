@@ -159,25 +159,6 @@ func nameGame(t *testing.T, n int) (*Game, []*Client) {
 	return g, cs
 }
 
-func TestNamePartsDealt(t *testing.T) {
-	for _, n := range []int{1, 2, 8} {
-		g, cs := nameGame(t, n)
-		for level := 2; level <= 4; level++ {
-			g.level = level
-			g.dealNameParts()
-			for _, c := range cs {
-				p := c.player
-				if got, want := p.partCount(), min(level-1, 3); got != want {
-					t.Fatalf("%d människor, nivå %d: %s har %d delar, ville ha %d", n, level, p.Name, got, want)
-				}
-				if st := g.stateFor(p); len(st.NameParts) != 3 {
-					t.Fatalf("klienten fick inte delarna: %v", st.NameParts)
-				}
-			}
-		}
-	}
-}
-
 func TestNameWhisper(t *testing.T) {
 	g, _ := nameGame(t, 1)
 	g.serpentName = []string{"Ka", "ru", "meth"}

@@ -6,6 +6,16 @@ eller leder tornet.
 
 ## 2026-11-23
 
+### Ormens namn finns i tornet
+
+- Tornet delar inte längre ut namnets delar. Var och en hittar dem själv,
+  på tre ställen: **ristad i väggen** i ett rum en bit in i tornet, **under
+  fjällen** på en varelse man träffar, och **i kammaren**, där ormen väser
+  sin del i sömnen när man tar en näve. Vilken del som finns var lottas.
+- Från nivå 3 får den som inte har hittat ristningen veta åt vilket håll
+  den finns. Spårfinnaren får veta det redan från nivå 2.
+- På nivå 4 får den som har hittat något veta vems namnet är.
+
 ### Ormens namn: var och en för sig
 
 - Delarna av ormens namn lottas för var och en för sig. Tornet fördelar

@@ -149,7 +149,9 @@ Så här skiljer vi på sakerna när användaren ger instruktioner:
   med V och blir då invigd (`secret.go`, `svar` och `invigd` i
   `data/avslojande.json`).
 - **invigningen**: det som gör någon invigd, **ormens namn**. Varje
-  vandring har ett namn i tre **delar** som delas ut till vandrarna; till
+  vandring har ett namn i tre **delar** som var och en hittar själv: i
+  **ristningen** i ett rum, hos en varelse och i kammaren
+  (`namndelar.go`); till
   det hör **byte vid dödande** och **den förste invigde**, som får mer guld
   (`secret.go`). Tornets nåd togs bort 2026-11-23.
 - **varsel**: en ledtråd om ett rum som ingen har varit i, där innehållet

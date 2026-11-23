@@ -136,6 +136,7 @@ func (g *Game) take(p *Player) {
 		return
 	}
 	p.stats.draws = append(p.stats.draws, c.ID)
+	g.learnPart(p, srcChamber) // ormen väser ett ord i sömnen
 	if c.Vaknar {
 		g.chronicle("kronika_vaknade", "namn", p.Name)
 		g.logTo(p, pick(c.Texter), "varn")
