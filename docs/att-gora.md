@@ -23,6 +23,12 @@ En riktig kväll behövs för att se:
   medan hon är i kammaren (85 % på Lätt). Är det för hårt? Sänk i så fall
   `extra_forlust` i `data/klasser.json` till cirka 0,35.
 - Viskningen: gissar någon rätt, och känns fördelen lagom?
+- Ormens namn som en tävling (2026-11-23,
+  [namnet-som-tavling.md](namnet-som-tavling.md)): hittar vandrarna
+  ristningen i tid (`ristning_chans`), får de som undviker strid
+  varelsens del, förstår de att huvudet är först och svansen sist, och
+  blir det för dyrt att viska fel nu när ormen blir oroligare? Hinner
+  någon bli invigd före nivå 4?
 - Inga namn (2026-11-22): går det att prata om rum, fällor och varelser
   utan namn, eller hittar spelarna på egna? Läser de korta beskrivningarna
   (`kort` i `data/`) bra i striden, som "Det bleka mångbenta träffar
@@ -343,8 +349,9 @@ Chanskort vid sökning (förslag 2026-11-22):
   föremål hittas hur många gånger som helst.
 - Nya kort som hjälper: kartbiten (visar två–tre rum runt dig), gluggen
   (solen backar en handsbredd, sällsynt), det lösa fjället (ormen sover
-  djupare), spåren (åt vilket håll närmaste vandrare gick), ristningen (en
-  del av ormens namn du saknar, från nivå 2, sällsynt) och varslet.
+  djupare), spåren (åt vilket håll närmaste vandrare gick) och varslet.
+  (Ristningen finns sedan 2026-11-23 som en av namnets tre källor, se
+  [namnet-som-tavling.md](namnet-som-tavling.md).)
 - Nya kort som stjälper: den lösa stenen (ett vakna-kort i leken), boet
   (en varelse kryper fram), falluckan (ner i källarvalven) och det kalla
   guldet (40 guld, men ormen blir oroligare och alla hör det).

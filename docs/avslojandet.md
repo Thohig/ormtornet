@@ -3,7 +3,9 @@
 Status: förslaget skrevs 2026-11-19 och är byggt i fem steg samma dag.
 Sedan 2026-11-22 finns inte spelledarbordet, och inte heller fasta svar
 eller inställningarna för invigningen och tornet som förändras; det som
-står om dem nedan är hur det var byggt.
+står om dem nedan är hur det var byggt. Sedan 2026-11-23 går avslöjandet
+inte att stänga av, tornets nåd är borta och namnets delar delas inte ut
+längre utan finns i tornet; se [namnet-som-tavling.md](namnet-som-tavling.md).
 README beskriver hur det fungerar (spoilervarning). Med 600 simulerade
 vandringar ändrade portarna som sluter sig andelen som blev kvar i mörkret
 med högst två procentenheter. Invigningen, bytet och nåden kan inte
