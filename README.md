@@ -1077,6 +1077,8 @@ Beskrivningarna för rummen ligger under nivåerna `"1"` till `"4"`.
 - `simulate.go` simulerar vandringar med bara AI-spelare (`-simulera`)
 - `verktyg/provspelare.mjs` en robot som provspelar som människa över
   websocketen och samlar alla texter (se Provspela med robotar)
+- `verktyg/textkontroll.mjs` reglerna som märker trasiga texter, och
+  `verktyg/textkontroll.prov.mjs` som provar dem
 - `verktyg/kortbilder.html` visar alla spelkortens och klasskortens bilder
 - `lang.go` språken: översättningarna i `data/en/` läggs över de svenska texterna
 - `web/texter.js` sidornas texter: `t()`, `applyTexts()` och språkbytet
@@ -1228,7 +1230,15 @@ node verktyg/provspelare.mjs 8096 Alva 10 provlogg.txt & node verktyg/provspelar
 
 Varje robot spelar tio vandringar och skriver allt den får i loggen till
 `provlogg.txt`, med namnet först på varje rad. Rader som ser trasiga ut
-märks med `<<< MISSTÄNKT`, och resultatet av varje vandring står på en
+märks med `<<< MISSTÄNKT` och regeln, till exempel en platshållare som
+står kvar, "1 rundor", "1 lives", samma ord två gånger eller svenska ord
+i en engelsk vandring. Texterna i rundans kort, spelkorten, krönikan och
+resten av det tornet skickar kontrolleras också, och en trasig text där
+står en gång på en rad som börjar med `MISSTÄNKT`, så att
+`grep MISSTÄNKT provlogg.txt` visar allt. Reglerna står i
+`verktyg/textkontroll.mjs`; lägg till ett fel i
+`verktyg/textkontroll.prov.mjs` när en regel behöver bli skarpare, och kör
+`node verktyg/textkontroll.prov.mjs` (det görs också i CI). Resultatet av varje vandring står på en
 rad som börjar med `RESULTAT`. `-min` ska räkna med både robotarna och
 AI-spelarna, så att alla hinner ansluta innan vandringen börjar. Kräver Node 22 eller senare. Provspelet 2026-11-21
 beskrivs i [docs/provspel-2026-11-21.md](docs/provspel-2026-11-21.md).

@@ -1,8 +1,11 @@
 // Provspelare: ansluter till tornet som en människa över websocketen,
 // spelar ett antal vandringar och skriver alla rader den får i loggen till
 // en fil (eller till terminalen). Rader som ser trasiga ut, till exempel med
-// en {platshållare} kvar, "undefined" eller dubbla mellanslag, märks med
-// "<<< MISSTÄNKT". Den används för att hitta fel i texter och lägen som
+// en {platshållare} kvar, "1 rundor" eller svenska ord på engelska, märks
+// med "<<< MISSTÄNKT" och regeln (se textkontroll.mjs). Texterna i
+// rundans kort, spelkorten, krönikan och resten av tillståndet kontrolleras
+// också; en trasig text där skrivs en gång på en rad som börjar med
+// MISSTÄNKT. Den används för att hitta fel i texter och lägen som
 // sällan dyker upp när man spelar för hand. Se README, "Provspela med
 // robotar", och docs/provspel-2026-11-21.md.
 //
@@ -14,6 +17,7 @@
 // tornet med -min satt så att alla provspelare hinner ansluta innan
 // vandringen börjar.
 import fs from "node:fs";
+import { kontrollera, texterI } from "./textkontroll.mjs";
 
 const [port, name, gamesArg, logFile] = process.argv.slice(2);
 const games = Number(gamesArg || 1);
@@ -23,7 +27,19 @@ const w = (s) => out.write(`[${name}] ${s}\n`);
 const ws = new WebSocket(`ws://127.0.0.1:${port}/ws`);
 let st = null, lastRound = -1, readySent = "", classSent = false, played = 0;
 let takes = 0, whispered = false, lastPhase = "";
-const sus = /\{|\}|undefined|<nil>|%!|NaN|\bnull\b|\[object|  +\S|\.\.(?!\.)|\s[.,]/;
+let sprak = "sv";
+const sett = new Set();
+
+// misstankt kontrollerar texterna i ett meddelande från tornet och skriver
+// varje trasig text en gång.
+function misstankt(msg) {
+  for (const text of texterI(msg)) {
+    if (sett.has(text)) continue;
+    sett.add(text);
+    const fel = kontrollera(text, sprak);
+    if (fel.length) w(`MISSTÄNKT [${fel.join(", ")}] (${msg.t}) ${text}`);
+  }
+}
 
 const send = (o) => ws.send(JSON.stringify(o));
 const DX = [0, 1, 0, -1], DY = [-1, 0, 1, 0], NESW = "NESW";
@@ -99,10 +115,14 @@ ws.onclose = () => { w("STÄNGD"); process.exit(0); };
 ws.onmessage = (ev) => {
   const msg = JSON.parse(ev.data);
   if (msg.t === "log" || msg.t === "error") {
-    const flag = sus.test(msg.text) ? "  <<< MISSTÄNKT" : "";
+    const fel = kontrollera(msg.text, sprak);
+    sett.add(msg.text);
+    const flag = fel.length ? `  <<< MISSTÄNKT [${fel.join(", ")}]` : "";
     w(`${msg.t === "error" ? "FEL " : ""}r${st ? st.round : "?"} ${msg.text}${flag}`);
     return;
   }
+  if (msg.t === "state") sprak = msg.sprak || sprak;
+  misstankt(msg);
   if (msg.t !== "state") return;
   st = msg;
   if (st.phase !== lastPhase) { w(`--- fas ${st.phase}`); lastPhase = st.phase; }

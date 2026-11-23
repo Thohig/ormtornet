@@ -1,6 +1,6 @@
 # Kontrollerar tornet vid varje push och pull request: formatering, go vet,
 # testerna med race-detektorn (bland dem kontrollen av datafilerna) och att
-# JavaScript-filerna går att läsa.
+# JavaScript-filerna går att läsa, och att textkontrollen hittar felen.
 name: Kontroll
 
 on:
@@ -44,4 +44,7 @@ jobs:
           node-version: 22
 
       - name: JavaScript
-        run: for f in web/*.js; do node --check "$f"; done
+        run: for f in web/*.js verktyg/*.mjs; do node --check "$f"; done
+
+      - name: Textkontrollen
+        run: node verktyg/textkontroll.prov.mjs

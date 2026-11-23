@@ -6,6 +6,23 @@ eller leder tornet.
 
 ## 2026-11-23
 
+### Robotarna hittar fler trasiga texter
+
+- Provspelarna (`verktyg/provspelare.mjs`) märker nu också "1 rundor",
+  "1 lives", "there are at least 1 of you", samma ord två gånger, liten
+  bokstav efter punkt och svenska ord i en engelsk vandring. Ingen av
+  dem märktes förut, och flera sådana fel hittades i provspelet
+  2026-11-22 för hand.
+- De kontrollerar alla texter som tornet skickar, inte bara loggen:
+  rundans kort, spelkorten, det stora kortet, krönikan, epilogen och
+  stunderna. En trasig text skrivs en gång, på en rad som börjar med
+  `MISSTÄNKT`.
+- Reglerna står i `verktyg/textkontroll.mjs`, och
+  `verktyg/textkontroll.prov.mjs` provar dem mot felen från provspelen i
+  CI.
+- 36 vandringar med tre robotar och två AI-spelare (18 på svenska, 18 på
+  engelska på Mardröm) gav ingen märkt text.
+
 ### Mer guld i kammaren på de svårare nivåerna
 
 - En näve ur skattkammaren ger mer guld på Svår (19–56 i stället för
