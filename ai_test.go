@@ -31,6 +31,8 @@ func TestLostBotHeadsForPorts(t *testing.T) {
 // få liv inte vänder redan i porten.
 func TestBotLifeLimitFollowsMaxHP(t *testing.T) {
 	g := testGame(t)
+	// Ett jämnt antal liv, så att hälften går jämnt upp.
+	g.base.Regler.Liv = 6
 	base := g.base.Regler.Liv
 	for _, c := range []struct{ limit, maxHP, want int }{
 		{3, base, 3},

@@ -6,6 +6,14 @@ eller leder tornet.
 
 ## 2026-11-23
 
+### Normal har 7 liv
+
+- På Normal har var och en 7 liv i stället för 6 (Legoknekten och
+  Lyktbäraren 8). I provspelet tog fällorna 3–6 av 6 liv inom tio rundor.
+  I simuleringen gör fällchansen nästan ingen skillnad; det är antalet
+  liv som avgör. Med 4 AI-spelare kommer 68 % ut med skatt och 13 % dör
+  (förut 66 och 15 %).
+
 ### Ormens namn: ordningen och fel viskningar
 
 - Texten för en del av namnet säger inte längre om den är den första,

@@ -663,8 +663,8 @@ visar sedan för alla att något har hänt där.
 | Mörker          | lyktan slocknar i 4 rundor; du ser bara ditt eget rum |
 | Eko             | alla får veta var du är                             |
 
-Du har 6 liv på svårigheten Normal, och klassen kan ge fler (legoknekten
-har 7). Den som når noll liv dör.
+Du har 7 liv på svårigheten Normal, och klassen kan ge fler (legoknekten
+har 8). Den som når noll liv dör.
 
 Ett vanligt rum kan sökas igenom en gång (S). Man kan hitta skatt, en dryck,
 ett föremål, en hemlig gång till ett grannrum, eller utlösa en fälla. En
@@ -1027,7 +1027,7 @@ liv de har.
 | Förval  | Liv | Fälla | Varelse | Sovkort | Vakna-kort | Ormskada | Förlust |
 |---------|-----|-------|---------|---------|------------|----------|---------|
 | Lätt    | 8   | 35 %  | 12 %    | 17      | 2          | 1        | 35 %    |
-| Normal  | 6   | 45 %  | 20 %    | 13      | 2          | 2        | 50 %    |
+| Normal  | 7   | 45 %  | 20 %    | 13      | 2          | 2        | 50 %    |
 | Svår    | 5   | 55 %  | 28 %    | 11      | 2          | 2        | 60 %    |
 | Mardröm | 4   | 65 %  | 35 %    | 9       | 3          | 3        | 75 %    |
 
