@@ -51,7 +51,6 @@ type Config struct {
 	AbsentRounds int    // rundor innan AI tar över en frånvarande vandrare, 0 = aldrig
 	PvP          string // strid mellan vandrare: "pa", eller "av" (tomt) i testerna
 	Classes      bool   // vandrarna väljer klass; alltid i spelet, av i de flesta testerna
-	Reveal       bool   // false stänger av avslöjandet
 	SunMax       int
 	TurnTime     time.Duration
 	MinPlayers   int
@@ -629,7 +628,7 @@ type stateMsg struct {
 	You        int           `json:"you"`
 	Size       int           `json:"size"`
 	Level      int           `json:"level"`
-	Reveal     bool          `json:"reveal"`
+	Reveal     bool          `json:"reveal"` // alltid sant; kartan i klient/ läser det
 	Phase      string        `json:"phase"`
 	Sun        int           `json:"sun"`
 	SunMax     int           `json:"sunMax"`
@@ -763,7 +762,7 @@ func (g *Game) hiddenText(key string, vars ...string) string {
 func (g *Game) stateFor(me *Player) stateMsg {
 	g.noteRoom(me)
 	st := stateMsg{
-		T: "state", Sprak: g.base.Lang, You: me.ID, Size: g.size, Level: g.level, Reveal: g.cfg.Reveal,
+		T: "state", Sprak: g.base.Lang, You: me.ID, Size: g.size, Level: g.level, Reveal: true,
 		Phase: g.phase, Sun: g.sun, SunMax: g.sunMax, Round: g.round,
 		MinPlayers: g.cfg.MinPlayers, Action: me.Action,
 		HP: me.HP, MaxHP: g.maxHP(me), Potions: me.Potions, MaxItems: g.data.maxItems(),

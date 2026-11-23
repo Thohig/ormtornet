@@ -383,11 +383,7 @@ func (g *Game) flute(p *Player, i int) int {
 // readLetter: ett brev från en tidigare vandrare läses direkt. Texten följer
 // avslöjandets nivå och säger aldrig hemligheten rakt ut.
 func (g *Game) readLetter(p *Player) {
-	level := g.level
-	if !g.cfg.Reveal {
-		level = 1
-	}
-	for l := level; l >= 1; l-- {
+	for l := g.level; l >= 1; l-- {
 		if list := g.data.Foremal.Brev[strconv.Itoa(l)]; len(list) > 0 {
 			g.logTo(p, g.data.Text("brev_hittar"), "syn")
 			text := pick(list)

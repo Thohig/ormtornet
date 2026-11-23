@@ -710,12 +710,6 @@
       "The birds never land on the tower. They fly the long way round it.",
       "Those who come out smell sweet for days afterwards."
     ],
-    "rykten_invigda": [
-      "In the middle of the tower, they say, a serpent sleeps around a treasure greater than a kingdom.",
-      "Take what you dare, and come out before the sun goes down.",
-      "Many have gone in. Fewer have come out.",
-      "The gates stand open as long as the sun is up."
-    ],
     "sam_gick": ["You went {riktning} to {rum}."],
     "sam_gick_morker": ["You went {riktning} in the dark."],
     "sam_stod_kvar": ["You tried to go {riktning} but got no further."],

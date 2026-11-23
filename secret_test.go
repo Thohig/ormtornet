@@ -55,15 +55,6 @@ func TestWhisperInitiates(t *testing.T) {
 	if st := g.stateFor(pa); !st.Initiated || st.Heart == "" || st.CanWhisper {
 		t.Fatalf("klienten: %+v", st.Initiated)
 	}
-	// Utan avslöjande går det inte att viska.
-	g2, c, _ := startTwo(t)
-	g2.cfg.Reveal = false
-	g2.level = 3
-	g2.serpentName = []string{"Ka", "ru", "meth"}
-	g2.Whisper(c, "Karumeth, tornet är ormen")
-	if c.player.initiated {
-		t.Fatal("invigd utan avslöjande")
-	}
 }
 
 func TestHeartbeatPointsToChamber(t *testing.T) {

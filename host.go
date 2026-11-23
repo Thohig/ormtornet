@@ -42,7 +42,6 @@ type hostView struct {
 	TurnSecs   int          `json:"turnSecs"` // turtiden under vandringen, annars den som skulle gälla nu
 	MinPlayers int          `json:"minPlayers"`
 	MaxPlayers int          `json:"maxPlayers"`
-	Reveal     bool         `json:"reveal"`
 	Players    []hostPlayer `json:"players"`
 	Settings   Settings     `json:"settings"`
 	Bots       int          `json:"bots"`             // datorspelare som är med just nu
@@ -68,7 +67,7 @@ func (g *Game) HostView(visible bool) hostView {
 	v := hostView{
 		Phase: g.phase, Round: g.round, Sun: g.sun, SunMax: g.sunMax,
 		TurnSecs: int(g.turnTime() / time.Second), MinPlayers: g.cfg.MinPlayers,
-		MaxPlayers: maxPlayers, Reveal: g.cfg.Reveal, Players: []hostPlayer{},
+		MaxPlayers: maxPlayers, Players: []hostPlayer{},
 		Settings: settingsFrom(g.cfg), Bots: g.botCount(), Size: g.size,
 		Svarigheter: g.base.difficulties(), Sprak: g.base.Lang,
 		Paused: g.paused, NextSeed: g.nextSeed,
@@ -94,25 +93,19 @@ func (g *Game) HostView(visible bool) hostView {
 
 // introInfo är det startsidan behöver innan spelaren har anslutit.
 type introInfo struct {
-	Sprak      string   `json:"sprak"` // texternas språk
-	Avslojande bool     `json:"avslojande"`
-	Rykten     []string `json:"rykten"`
-	Vard       bool     `json:"vard"`      // sidan visas på datorn som kör tornet
-	Vanta      int      `json:"vanta"`     // sekunder innan knappen visas
-	Ljud       string   `json:"ljud"`      // uppmaningen att klicka för att höra stormen
-	LjudTryck  string   `json:"ljudTryck"` // samma uppmaning på en pekskärm
+	Sprak     string   `json:"sprak"` // texternas språk
+	Rykten    []string `json:"rykten"`
+	Vard      bool     `json:"vard"`      // sidan visas på datorn som kör tornet
+	Vanta     int      `json:"vanta"`     // sekunder innan knappen visas
+	Ljud      string   `json:"ljud"`      // uppmaningen att klicka för att höra stormen
+	LjudTryck string   `json:"ljudTryck"` // samma uppmaning på en pekskärm
 }
 
-// Intro väljer rykten till startsidan. Med avslöjandet avstängt, för spelare
-// som redan känner till tornets hemlighet, blir ryktena ofarliga.
+// Intro väljer rykten till startsidan.
 func (g *Game) Intro() introInfo {
 	g.mu.Lock()
 	defer g.mu.Unlock()
-	key := "rykten"
-	if !g.cfg.Reveal {
-		key = "rykten_invigda"
-	}
-	return introInfo{Sprak: g.base.Lang, Avslojande: g.cfg.Reveal, Rykten: g.data.Texter[key],
+	return introInfo{Sprak: g.base.Lang, Rykten: g.data.Texter["rykten"],
 		Vanta: g.data.Intro.Vanta, Ljud: g.data.Text("intro_ljud"), LjudTryck: g.data.Text("intro_ljud_tryck")}
 }
 

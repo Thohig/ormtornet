@@ -12,7 +12,7 @@ func TestSimulation(t *testing.T) {
 			t.Fatal(err)
 		}
 		var b strings.Builder
-		cfg := Config{Reveal: true, SunMax: 40, Classes: true}
+		cfg := Config{SunMax: 40, Classes: true}
 		if err := runSimulation(d, cfg, 20, 4, 5, &b); err != nil {
 			t.Fatal(err)
 		}
@@ -55,7 +55,7 @@ func TestSimDealsClassesEvenly(t *testing.T) {
 	}
 	count := map[[2]string]int{}
 	for seed := uint64(1); seed <= uint64(2*k); seed++ {
-		r, err := simulateOne(d, Config{Reveal: true, SunMax: 40, Classes: true}, bots, seed)
+		r, err := simulateOne(d, Config{SunMax: 40, Classes: true}, bots, seed)
 		if err != nil {
 			t.Fatal(err)
 		}

@@ -133,7 +133,7 @@ func TestSettingsChangeLanguage(t *testing.T) {
 		}
 		return out
 	}
-	out := post(`{"ai":0,"min":2,"sol":40,"turtid":30,"avslojande":true,"sprak":"en","svarighet":"latt"}`)
+	out := post(`{"ai":0,"min":2,"sol":40,"turtid":30,"sprak":"en","svarighet":"latt"}`)
 	if asked != langEn || saved.Sprak != langEn || g.Settings().Sprak != langEn {
 		t.Fatalf("frågade efter %q, sparade %q", asked, saved.Sprak)
 	}
@@ -144,11 +144,11 @@ func TestSettingsChangeLanguage(t *testing.T) {
 		t.Fatalf("svårigheten heter %+v", s)
 	}
 	asked = ""
-	post(`{"ai":0,"min":2,"sol":40,"turtid":30,"avslojande":true,"sprak":"en"}`)
+	post(`{"ai":0,"min":2,"sol":40,"turtid":30,"sprak":"en"}`)
 	if asked != "" {
 		t.Fatal("texterna lästes om fast språket var detsamma")
 	}
-	post(`{"ai":0,"min":2,"sol":40,"turtid":30,"avslojande":true,"sprak":"xx"}`)
+	post(`{"ai":0,"min":2,"sol":40,"turtid":30,"sprak":"xx"}`)
 	if g.Settings().Sprak != langSv || g.base.difficulty("latt").Namn != "Lätt" {
 		t.Fatal("ett okänt språk ska bli svenska")
 	}

@@ -255,7 +255,7 @@ const Sound = (() => {
   // stormen kan tona ut när man går in.
   let storm = null;
 
-  function startStorm(reveal) {
+  function startStorm() {
     if (storm) return;
     const t = ctx.currentTime;
     const bus = ctx.createGain();
@@ -348,17 +348,15 @@ const Sound = (() => {
       later(swell, 14000 + Math.random() * 12000);
     };
     later(swell, 6000);
-    if (reveal) {
-      // Ett dubbelt slag långt inne i tornet, som ett hjärta som sover.
-      const beat = () => {
-        if (!storm || !ctx) return;
-        const now = ctx.currentTime;
-        thump(now, 0.16);
-        thump(now + 0.24, 0.1);
-        later(beat, 15000 + Math.random() * 10000);
-      };
-      later(beat, 9000);
-    }
+    // Ett dubbelt slag långt inne i tornet, som ett hjärta som sover.
+    const beat = () => {
+      if (!storm || !ctx) return;
+      const now = ctx.currentTime;
+      thump(now, 0.16);
+      thump(now + 0.24, 0.1);
+      later(beat, 15000 + Math.random() * 10000);
+    };
+    later(beat, 9000);
   }
 
   function stopStorm(seconds) {
@@ -640,11 +638,11 @@ const Sound = (() => {
       heartTimer = null;
       setTimeout(() => closing.close(), 2800);
     },
-    // storm startar stormen på startsidan. reveal lägger till tornets dunk.
-    storm(reveal) {
+    // storm startar stormen på startsidan, med tornets dunk.
+    storm() {
       if (!ctx) return;
       if (ctx.state === "suspended") ctx.resume();
-      startStorm(reveal);
+      startStorm();
     },
     calm(seconds) {
       stopStorm(seconds || 3);

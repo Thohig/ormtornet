@@ -18,13 +18,13 @@ func countBots(g *Game) int {
 
 func TestSettingsAddAndRemoveBots(t *testing.T) {
 	g := testGame(t)
-	if _, err := g.ApplySettings(Settings{AI: 3, Avslojande: false}); err != nil {
+	if _, err := g.ApplySettings(Settings{AI: 3, Franvaro: 4}); err != nil {
 		t.Fatal(err)
 	}
 	if n := countBots(g); n != 3 {
 		t.Fatalf("%d datorspelare, ville ha 3", n)
 	}
-	if g.cfg.Reveal {
+	if g.cfg.AbsentRounds != 4 {
 		t.Errorf("inställningarna slog inte igenom: %+v", g.cfg)
 	}
 	// Solen, turtiden och minsta antalet är inga inställningar: det som
@@ -75,7 +75,7 @@ func TestSettingsLockedDuringPlay(t *testing.T) {
 
 func TestBotStepsAsideForHuman(t *testing.T) {
 	g := testGame(t)
-	g.ApplySettings(Settings{AI: 7, Avslojande: true})
+	g.ApplySettings(Settings{AI: 7})
 	a, b := testClient(), testClient()
 	g.Join(a, "Alva")
 	if a.player == nil || countBots(g) != 7 {
@@ -115,7 +115,7 @@ func TestSettingsSaveAndLoad(t *testing.T) {
 	if err != nil || s != defaultSettings {
 		t.Fatalf("utan fil: %+v %v", s, err)
 	}
-	want := Settings{AI: 2, Avslojande: false, Franvaro: 1, Sprak: langEn}
+	want := Settings{AI: 2, Franvaro: 1, Sprak: langEn}
 	if err := saveSettings(path, want); err != nil {
 		t.Fatal(err)
 	}
@@ -127,7 +127,7 @@ func TestSettingsSaveAndLoad(t *testing.T) {
 	if err := os.WriteFile(path, []byte(old), 0o644); err != nil {
 		t.Fatal(err)
 	}
-	if s, err = loadSettings(path); err != nil || s.AI != 1 || !s.Avslojande {
+	if s, err = loadSettings(path); err != nil || s.AI != 1 {
 		t.Fatalf("gammal fil: %+v %v", s, err)
 	}
 }
@@ -143,7 +143,7 @@ func TestSettingsEndpointSaves(t *testing.T) {
 	r.Header.Set("X-Ormtornet", "spelledare")
 	w := httptest.NewRecorder()
 	mux.ServeHTTP(w, r)
-	if w.Code != http.StatusOK || saved.AI != 2 || !saved.Avslojande {
+	if w.Code != http.StatusOK || saved.AI != 2 {
 		t.Fatalf("kod %d, sparat %+v", w.Code, saved)
 	}
 	if n := countBots(g); n != 2 {

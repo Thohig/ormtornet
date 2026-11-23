@@ -8,15 +8,10 @@ import (
 	"strconv"
 )
 
-// changes är sant när tornet förändras i den här vandringen.
-func (g *Game) changes() bool {
-	return g.cfg.Reveal
-}
-
 // randomTrap väljer en fälla för ett nytt rum. När tornet förändras gäller
 // vikterna för den högsta nivån som inte är över avslöjandets.
 func (g *Game) randomTrap() *Trap {
-	if !g.changes() || g.level < 3 {
+	if g.level < 3 {
 		return g.data.randomTrap(g.rng)
 	}
 	var over map[string]int
@@ -48,7 +43,7 @@ func (g *Game) openPorts() []int {
 // och stänger den när port_stangs_var rundor har gått, sedan nästa. Först
 // stängs den port som ligger längst från vandrarna som är kvar inne.
 func (g *Game) closePorts() {
-	if !g.changes() || g.level < 4 {
+	if g.level < 4 {
 		return
 	}
 	every := max(1, g.data.Avslojande.Forandring.PortStangsVar)

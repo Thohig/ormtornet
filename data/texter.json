@@ -748,12 +748,6 @@
       "Fåglarna landar aldrig på tornet. De flyger en omväg runt det.",
       "Den som kommer ut luktar sött i flera dagar efteråt."
     ],
-    "rykten_invigda": [
-      "Mitt i tornet sägs en orm sova kring en skatt större än ett kungarike.",
-      "Ta vad du vågar, och kom ut innan solen går ner.",
-      "Många har gått in. Färre har kommit ut.",
-      "Portarna står öppna så länge solen är uppe."
-    ],
     "sam_gick": ["Du gick {riktning}ut till {rum}."],
     "sam_gick_morker": ["Du gick {riktning}ut i mörkret."],
     "sam_stod_kvar": ["Du ville gå {riktning}ut men kom inte vidare."],

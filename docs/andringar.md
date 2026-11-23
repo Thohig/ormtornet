@@ -6,6 +6,15 @@ eller leder tornet.
 
 ## 2026-11-23
 
+### Avslöjandet går inte att stänga av
+
+- Raden Avslöjandet på värdsidan och flaggan `-avslojande` är borta.
+  Tornet bär alltid på sin hemlighet, med invigningen, varslen och
+  tornet som förändras.
+- Introt har alltid tornets antydningar och dunk; ryktena för den som
+  redan kände hemligheten (`rykten_invigda`) är borta.
+- Sparade inställningar med `avslojande` läses som förut; fältet struntas i.
+
 ### Telefonen: mer karta
 
 - Kartan fyller höjden mellan översta raden och knapparna, och går lite

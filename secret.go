@@ -46,14 +46,14 @@ func whisperMatches(whisper string, answers []string) bool {
 
 // usesName är sant när invigningen kräver ormens namn i den här vandringen.
 func (g *Game) usesName() bool {
-	return g.cfg.Reveal && len(g.serpentName) == 3
+	return len(g.serpentName) == 3
 }
 
 // pickSerpentName lottar ormens namn när en vandring börjar.
 func (g *Game) pickSerpentName() {
 	g.serpentName = nil
 	names := g.data.Avslojande.Namn
-	if !g.cfg.Reveal || len(names) == 0 {
+	if len(names) == 0 {
 		return
 	}
 	g.serpentName = names[g.rng.IntN(len(names))]
@@ -192,7 +192,7 @@ func (g *Game) onlyName(text string) bool {
 // Whisper tar emot en viskning från en vandrare.
 func (g *Game) Whisper(c *Client, text string) {
 	p := c.player
-	if p == nil || p.bot != nil || g.phase != phasePlay || p.Status != statusIn || !g.cfg.Reveal {
+	if p == nil || p.bot != nil || g.phase != phasePlay || p.Status != statusIn {
 		return
 	}
 	if p.initiated {
@@ -362,7 +362,7 @@ func (g *Game) portGrace() bool {
 // canWhisper är sant när vandraren kan viska nu: för att bli invigd, eller
 // som invigd i kammaren för att lugna ormen.
 func (g *Game) canWhisper(p *Player) bool {
-	if !g.cfg.Reveal || p.bot != nil || p.Status != statusIn || p.Cellar > 0 || g.phase != phasePlay {
+	if p.bot != nil || p.Status != statusIn || p.Cellar > 0 || g.phase != phasePlay {
 		return false
 	}
 	if p.initiated {

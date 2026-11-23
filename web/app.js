@@ -459,8 +459,8 @@ function handle(msg) {
       MapView.draw(state);
       padArrows();
       Sound.breath(state.phase === "spel" ? state.sleep : -1);
-      Sound.level(state.reveal ? state.level : 0);
-      document.body.dataset.niva = state.reveal ? String(state.level) : "1";
+      Sound.level(state.level);
+      document.body.dataset.niva = String(state.level);
       renderSide();
       renderTop();
       renderOverlay();
@@ -1806,7 +1806,6 @@ const Intro = (() => {
   // valt att spela själv (adressen slutar med ?spela).
   let toHostPage = false;
   const wantsToPlay = new URLSearchParams(location.search).has("spela");
-  let reveal = true;
   let next = 0;
   let entering = false;
   let done = false;
@@ -1916,7 +1915,7 @@ const Intro = (() => {
     const near = Math.random();
     if (heard) setTimeout(() => Sound.thunder(near), 300 + (1 - near) * 2600);
     // Ibland glöder ögat i tornet en stund efter blixten.
-    if (reveal && Math.random() < 0.35) {
+    if (Math.random() < 0.35) {
       setTimeout(() => $("eye").classList.add("glint"), 600);
       setTimeout(() => $("eye").classList.remove("glint"), 1900);
     }
@@ -1955,7 +1954,7 @@ const Intro = (() => {
     if (heard) return;
     heard = true;
     Sound.start();
-    Sound.storm(reveal);
+    Sound.storm();
     $("listen").classList.add("gone");
   }
 
@@ -1973,15 +1972,13 @@ const Intro = (() => {
   function startStorm() {
     Rain.start();
     scheduleFlash();
-    if (heard) Sound.storm(reveal);
+    if (heard) Sound.storm();
   }
 
   fetch("/intro" + (document.visibilityState === "visible" ? "?synlig" : ""), { cache: "no-store" })
     .then((r) => r.json())
     .then((info) => {
       if (info.sprak && info.sprak !== UI.sprak) changeLanguage(info.sprak, false);
-      reveal = !!info.avslojande;
-      if (!reveal) $("intro").classList.add("invigd");
       toHostPage = info.vard && !wantsToPlay;
       // Spelledaren som kommer från värdsidan har redan sett introt.
       // Ljudet startar då vid första tryck eller klick, eftersom

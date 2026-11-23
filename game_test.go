@@ -17,7 +17,7 @@ func testGame(t *testing.T) *Game {
 	d.Monster.Chans = 0
 	d.Regler.Handelsechans = 0
 	noWander(d)
-	return NewGame(d, Config{Reveal: true, SunMax: 10, TurnTime: time.Hour, MinPlayers: 2})
+	return NewGame(d, Config{SunMax: 10, TurnTime: time.Hour, MinPlayers: 2})
 }
 
 func testClient() *Client {
@@ -535,10 +535,6 @@ func TestRevealLevels(t *testing.T) {
 			t.Errorf("sol %d: nivå %d, väntade %d", sun, got, lvl)
 		}
 	}
-	g.cfg.Reveal = false
-	if g.levelFor(0) != 1 {
-		t.Error("avstängt avslöjande ska stanna på nivå 1")
-	}
 }
 
 func TestRevealDifferentCluesAndExplanations(t *testing.T) {
@@ -577,22 +573,6 @@ func TestRevealDifferentCluesAndExplanations(t *testing.T) {
 	}
 }
 
-func TestRevealDisabled(t *testing.T) {
-	g, a, _ := startTwo(t)
-	g.cfg.Reveal = false
-	g.sun = 1
-	g.updateLevel()
-	g.endGame()
-	for _, l := range logs(a) {
-		if contains(g.data.Avslojande.Epilog, l) {
-			t.Fatal("epilogen visades fast avslöjandet är avstängt")
-		}
-	}
-	if g.level != 1 {
-		t.Fatalf("nivå %d", g.level)
-	}
-}
-
 func TestEpilogue(t *testing.T) {
 	g, a, _ := startTwo(t)
 	logs(a)
@@ -615,7 +595,7 @@ func simulate(t *testing.T, sun int, seed ...uint64) (*Game, *Player) {
 		t.Fatal(err)
 	}
 	d.AI.BetanketidMs = []int{3600000, 3600000} // timrarna ska aldrig hinna gå
-	cfg := Config{Reveal: true, SunMax: sun, TurnTime: time.Hour, MinPlayers: 2}
+	cfg := Config{SunMax: sun, TurnTime: time.Hour, MinPlayers: 2}
 	if len(seed) > 0 {
 		cfg.Seed = seed[0]
 	}

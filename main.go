@@ -34,7 +34,6 @@ func main() {
 	bots := flag.Int("ai", defaultSettings.AI, "antal datorstyrda vandrare (0-7)")
 	seed := flag.Uint64("fro", 0, "frö för första vandringen; samma frö och samma drag ger samma torn (0 = slumpat)")
 	difficulty := flag.String("svarighet", "", "svårighet: latt, normal, svar eller mardrom (förvalen står i data/svarighet.json)")
-	reveal := flag.Bool("avslojande", defaultSettings.Avslojande, "låt tornet avslöja sin hemlighet (false för den som redan känner till den)")
 	settingsPath := flag.String("installningar", defaultSettingsPath(), "fil där spelledarens inställningar sparas (tom för att inte spara)")
 	openPage := flag.Bool("oppna", false, "öppna introt i webbläsaren när servern har startat; det leder till värdsidan")
 	awake := flag.Bool("vaken", false, "håll datorn vaken så länge servern är igång")
@@ -66,8 +65,6 @@ func main() {
 			cfg.MinPlayers = max(1, min(maxPlayers, *minPlayers))
 		case "ai":
 			settings.AI = *bots
-		case "avslojande":
-			settings.Avslojande = *reveal
 		case "svarighet":
 			settings.Svarighet = *difficulty
 		case "sprak":
@@ -194,9 +191,6 @@ func main() {
 	fmt.Printf("Solen går ner %s. Turtid %s. Minst %d spelare.\n", sunText, turnText, cfg.MinPlayers)
 	if s := data.difficulty(cfg.Difficulty); s != nil {
 		fmt.Printf("Svårighet: %s.\n", s.Namn)
-	}
-	if !cfg.Reveal {
-		fmt.Println("Avslöjandet är avstängt.")
 	}
 	if addedBots > 0 {
 		fmt.Printf("%d datorstyrda vandrare väntar vid portarna.\n", addedBots)

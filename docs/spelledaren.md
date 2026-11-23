@@ -9,7 +9,7 @@ bort 2026-11-22. Resten av dokumentet är det ursprungliga förslaget.
 Byggt (README beskriver hur det fungerar):
 
 - Värdsidan på `/spelledare`, bara från tornets egen dator.
-- Inställningar som ändras utan omstart: svårighet, AI-spelare, språket, avslöjandet och frånvarande vandrare. De sparas
+- Inställningar som ändras utan omstart: svårighet, AI-spelare, språket och frånvarande vandrare (avslöjandet togs bort som inställning 2026-11-23). De sparas
   till nästa gång. ("Vandrarna syns" togs bort 2026-11-21: egen karta är
   det enda läget. Minsta antal, sol, turtid, strid mellan vandrare, tornets
   storlek, klasser, invigningen, tornet förändras och kartan togs bort

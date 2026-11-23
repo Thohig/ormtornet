@@ -147,16 +147,17 @@ Så här skiljer vi på sakerna när användaren ger instruktioner:
   används med 1–3. Några är förbannade.
 - **viska** och **invigd**: den som vet tornets hemlighet kan viska den
   med V och blir då invigd (`secret.go`, `svar` och `invigd` i
-  `data/avslojande.json`). Bara med avslöjandet på.
+  `data/avslojande.json`).
 - **invigningen**: det som gör någon invigd, **ormens namn**. Varje
   vandring har ett namn i tre **delar** som delas ut till vandrarna; till
-  det hör **byte vid dödande** och **tornets nåd** (`secret.go`). Gäller
-  alltid när avslöjandet är på; det finns ingen inställning.
+  det hör **byte vid dödande** och **tornets nåd** (`secret.go`).
 - **varsel**: en ledtråd om ett rum som ingen har varit i, där innehållet
   bestäms när varslet ges (`omens.go`, `varsel` i `avslojande.json`).
 - **tornet förändras**: att fällorna ändras från nivå 3 och portarna
   sluter sig på nivå 4 (`change.go`, `forandring` i `avslojande.json`).
-  Gäller alltid när avslöjandet är på; det finns ingen inställning.
+- **avslöjandet**: att tornet visar sin hemlighet i fyra nivåer som följer
+  solen (`reveal.go`, `data/avslojande.json`). Det är alltid på; det går
+  inte att stänga av sedan 2026-11-23.
 
 Spelarna ser ordet "spelledare" i spelets texter, aldrig "värdsidan".
 
@@ -243,5 +244,8 @@ Skriv dit när ett steg är klart.
 - [docs/mobilvyn.md](docs/mobilvyn.md): telefonen med kartan över hela
   höjden, en tunnare logg, tecknen på en rad och tryck på dörrarna i
   stället för pilknapparna, och nivån Rummet närmast. Allt är byggt.
+- [docs/namnet-som-tavling.md](docs/namnet-som-tavling.md): ormens namn
+  som en tävling, där var och en hittar namnet själv i tornet, och
+  avslöjandet som alltid är på. Avsnittet Stegen säger vad som är byggt.
 - [docs/slumpade-namn.md](docs/slumpade-namn.md): tornet ger namnen och
   namnrutan är borta. Steg 1–2 är byggda; Nytt namn i lobbyn valdes bort.

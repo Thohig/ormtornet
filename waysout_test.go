@@ -16,7 +16,7 @@ func TestTowerNeverSealsAPortIn(t *testing.T) {
 	}
 	type pos struct{ x, y int }
 	for i := 0; i < 3000; i++ {
-		g := NewGame(d, Config{Reveal: true, TurnTime: time.Hour, MinPlayers: 1})
+		g := NewGame(d, Config{TurnTime: time.Hour, MinPlayers: 1})
 		g.buildTower([]int{9, 11, 13}[i%3])
 		cn := g.corners()[i%4]
 		seen := map[pos]bool{{cn.x, cn.y}: true}

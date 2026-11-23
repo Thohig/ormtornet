@@ -11,19 +11,18 @@ import (
 )
 
 type Settings struct {
-	AI         int    `json:"ai"`         // datorspelare, 0–7
-	Avslojande bool   `json:"avslojande"` // låt tornet avslöja sin hemlighet; då gäller också invigningen och tornet förändras
-	Franvaro   int    `json:"franvaro"`   // rundor innan AI tar över en frånvarande vandrare, 0 = aldrig
-	Svarighet  string `json:"svarighet"`  // förval i data/svarighet.json, tomt för standard
-	Sprak      string `json:"sprak"`      // språket i spelet och på värdsidan: "sv" eller "en"
+	AI        int    `json:"ai"`        // datorspelare, 0–7
+	Franvaro  int    `json:"franvaro"`  // rundor innan AI tar över en frånvarande vandrare, 0 = aldrig
+	Svarighet string `json:"svarighet"` // förval i data/svarighet.json, tomt för standard
+	Sprak     string `json:"sprak"`     // språket i spelet och på värdsidan: "sv" eller "en"
 }
 
 // Det som inte går att ställa in. Tornets storlek, solen och turtiden
-// bestäms automatiskt; klasserna och striden mellan vandrarna är alltid
-// med. Flaggorna -sol, -turtid och -min finns kvar för den som provar.
+// bestäms automatiskt; klasserna, striden mellan vandrarna och
+// avslöjandet är alltid med. Flaggorna -sol, -turtid och -min finns kvar för den som provar.
 const defaultMin = 2
 
-var defaultSettings = Settings{AI: 0, Avslojande: true, Franvaro: 2, Sprak: langSv}
+var defaultSettings = Settings{AI: 0, Franvaro: 2, Sprak: langSv}
 
 var errPlaying = errors.New("inställningarna kan ändras när omgången är slut")
 
@@ -48,13 +47,12 @@ func (s Settings) applyTo(cfg Config) Config {
 	cfg.Difficulty = s.Svarighet
 	cfg.AI = s.AI
 	cfg.AbsentRounds = s.Franvaro
-	cfg.Reveal = s.Avslojande
 	cfg.Lang = s.Sprak
 	return cfg
 }
 
 func settingsFrom(cfg Config) Settings {
-	return Settings{Svarighet: cfg.Difficulty, AI: cfg.AI, Franvaro: cfg.AbsentRounds, Avslojande: cfg.Reveal, Sprak: langOrDefault(cfg.Lang)}
+	return Settings{Svarighet: cfg.Difficulty, AI: cfg.AI, Franvaro: cfg.AbsentRounds, Sprak: langOrDefault(cfg.Lang)}
 }
 
 // defaultSettingsPath ger ~/Library/Application Support/Ormtornet/installningar.json.

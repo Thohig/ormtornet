@@ -89,7 +89,6 @@ inställning med några meningar (`forkl_*` i `vardsidan.json`).
 |---|---|---|
 | AI-spelare | 0–7 | 0 |
 | Svårighet | Lätt, Normal, Svår, Mardröm | Normal |
-| Avslöjandet | på eller av; med det på gäller invigningen med ormens namn och tornet förändras | på |
 | Frånvarande vandrare | AI tar över efter 1–3 rundor, eller står still | 2 rundor |
 | Språk | svenska eller English | svenska |
 
@@ -156,8 +155,7 @@ kommer inte åt den.
    "Gå in i tornet" fram efter en blixt, och porten börjar glimma. Klicka
    på den eller tryck Enter. Den som redan har sett introt i fliken, och
    spelledaren på tornets dator, får knappen direkt. Ryktena står i
-   `data/texter.json` under `rykten`, och under `rykten_invigda` för den som
-   spelar med `-avslojande=false`. Väntetiden står under `intro` → `vanta`
+   `data/texter.json` under `rykten`. Väntetiden står under `intro` → `vanta`
    och uppmaningen att klicka under `intro_ljud`.
 2. Tornet ger dig ett namn, till exempel "Dagny Ekfot", och loggen säger
    "Tornet kallar dig Dagny Ekfot." Ingen skriver något namn.
@@ -816,9 +814,7 @@ Med avslöjandet på förändras tornet:
   Kartan visar en stängd port med dörrarna stängda och röda järnband, och
   ingen kommer ut genom den.
 
-Med `-avslojande=false` stannar tornet på nivå 1: inget dunk, inga
-pulserande väggar, inga varsel och ingen epilog. Då går det inte heller att
-viska, ingen blir invigd och tornet förändras inte.
+Avslöjandet går inte att stänga av (sedan 2026-11-23).
 
 ## Ladda ner och kör tornet själv
 
@@ -895,7 +891,6 @@ till nästa gång. Flaggorna nedan gäller före det sparade, men bara den gång
 - `-kontrollera` kontrollerar datafilerna och avslutar, utan att öppna tornet
 - `-sida mapp` skriver sidorna för GitHub Pages till mappen och avslutar. Använd hellre `verktyg/bygg-sida.sh`, som också bygger tornet (se Tornet i webbläsaren nedan)
 - `-fro 0` frö för den första vandringen. Varje vandring skriver sitt frö i terminalen och under Fröet på värdsidan, där nästa vandrings frö också går att skriva in eller slumpa. Startar du med samma frö och vandrarna gör samma drag blir tornet detsamma, rum för rum, så att en konstig vandring kan spelas upp igen. `0` ger ett slumpat frö
-- `-avslojande=false` stänger av avslöjandet: ingen berättelse, inga varsel, ingen invigning och inget tornet som förändras
 - `-oppna` öppnar introt i webbläsaren när servern har startat; på den här datorn leder det till värdsidan
 - `-vaken` håller datorn vaken så länge servern är igång
 - `-autostopp 10m` stänger tornet när ingen spelare är ansluten och ingen sida har synts på tornets dator så länge (`0` = aldrig)

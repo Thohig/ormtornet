@@ -167,10 +167,6 @@
           </select>
           <span class="note" data-t="sprak_not"></span>
 
-          <label for="sRev" data-t="inst_avslojande"></label>
-          <select id="sRev" name="avslojande"><option value="1" data-t="val_pa"></option><option value="0" data-t="val_av"></option></select>
-          <span class="note" data-t="not_avslojande"></span>
-
           <label for="sFr" data-t="inst_franvaro"></label>
           <select id="sFr" name="franvaro">
             <option value="0" data-t="val_franvaro_star"></option>
@@ -192,8 +188,6 @@
             <dd data-t="forkl_ai"></dd>
             <dt data-t="sprak"></dt>
             <dd data-t="forkl_sprak"></dd>
-            <dt data-t="inst_avslojande"></dt>
-            <dd data-t="forkl_avslojande"></dd>
             <dt data-t="inst_franvaro"></dt>
             <dd data-t="forkl_franvaro"></dd>
           </dl>
@@ -578,7 +572,6 @@ function renderSettings(v) {
 // fillForm fyller i formuläret med inställningarna s, som de gäller på tornet.
 function fillForm(s) {
   $("sAI").value = String(s.ai);
-  $("sRev").value = s.avslojande ? "1" : "0";
   const fr = $("sFr");
   if (![...fr.options].some((o) => +o.value === s.franvaro)) {
     fr.append(new Option(t("val_franvaro_n", { antal: s.franvaro }), String(s.franvaro)));
@@ -614,7 +607,6 @@ function say(text, isErr) {
 $("settings").addEventListener("change", async () => {
   const s = {
     ai: +$("sAI").value,
-    avslojande: $("sRev").value === "1",
     franvaro: +$("sFr").value,
     svarighet: $("sSv").value,
     sprak: $("sSprak").value,

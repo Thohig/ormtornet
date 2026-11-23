@@ -59,7 +59,7 @@ func TestBotsPlayEverySize(t *testing.T) {
 				t.Fatal(err)
 			}
 			d.AI.BetanketidMs = []int{3600000, 3600000}
-			g := NewGame(d, Config{Reveal: true, SunMax: 40, TurnTime: time.Hour, MinPlayers: 1, AI: 8, PvP: pvpOn, Classes: true})
+			g := NewGame(d, Config{SunMax: 40, TurnTime: time.Hour, MinPlayers: 1, AI: 8, PvP: pvpOn, Classes: true})
 			g.AddBots(bots)
 			if g.size != size {
 				t.Fatalf("%d vandrare: tornet %d, ville ha %d", bots, g.size, size)

@@ -12,9 +12,6 @@ import (
 
 // levelFor räknar ut nivån för ett visst solvärde.
 func (g *Game) levelFor(sun int) int {
-	if !g.cfg.Reveal {
-		return 1
-	}
 	frac := float64(sun) / float64(g.sunMax)
 	level := 1
 	for _, limit := range g.data.Avslojande.Granser {
@@ -28,9 +25,6 @@ func (g *Game) levelFor(sun int) int {
 // updateLevel körs efter varje runda: höjer nivån när solen har sjunkit
 // tillräckligt och delar ut nya ledtrådar med jämna mellanrum.
 func (g *Game) updateLevel() {
-	if !g.cfg.Reveal {
-		return
-	}
 	next := g.levelFor(g.sun)
 	if next > g.level {
 		for g.level < next {
@@ -124,7 +118,7 @@ func (g *Game) dealCluesTo(pool map[string][]string, kind, class string, want fu
 
 // explainNow ger den nya förklaringen direkt när något händer på nivå 4.
 func (g *Game) explainNow(p *Player, id string) {
-	if !g.cfg.Reveal || g.level < 4 {
+	if g.level < 4 {
 		return
 	}
 	if text := g.data.Avslojande.Forklaringar[id]; text != "" {
@@ -152,9 +146,6 @@ func (g *Game) explainAll(p *Player) {
 
 // epilogue säger hemligheten rakt ut när spelet är slut.
 func (g *Game) epilogue() {
-	if !g.cfg.Reveal {
-		return
-	}
 	g.level = 4
 	a := &g.data.Avslojande
 	// Epilogen skrivs i loggen och sparas, så att den också står på

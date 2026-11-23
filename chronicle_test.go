@@ -57,7 +57,7 @@ func TestChronicle(t *testing.T) {
 	if strings.Contains(strings.Join(logs(a), "\n"), "Krönikan över vandringen") {
 		t.Error("krönikan står i loggen")
 	}
-	if st := g.stateFor(pa); st.Journey == nil || (g.cfg.Reveal && len(st.Epilogue) == 0) {
+	if st := g.stateFor(pa); st.Journey == nil || len(st.Epilogue) == 0 {
 		t.Error("slutet saknar den egna vandringen eller epilogen")
 	}
 
