@@ -81,7 +81,7 @@
     "tecken_morker": "Lyktan är släckt. Du ser bara rummet du står i, men inte dess dörrar: du får pröva dig fram.",
     "tecken_invigd": "Tornet har hört dig.",
     "tecken_viska": "{tryck} för att viska till tornet.",
-    "tecken_namndelar": "Tecken av ett namn som du har hittat i tornet. Prickarna är de du saknar.",
+    "tecken_namndelar": "Tecken av ett namn som du har hittat i tornet, i den ordning du hittade dem, inte i namnets ordning. Prickarna är de du saknar. Var på ormen varje del satt står där du hittade den.",
     "tecken_tom_plats": "En tom plats i väskan. Du kan bära {max} föremål.",
     "tryck_tangent": "Tryck {tangent}",
     "tryck_knapp": "Tryck {knapp}",

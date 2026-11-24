@@ -647,6 +647,13 @@ body.touch .isotangenter span {
 }
 .hudrow { display: flex; align-items: center; gap: 6px; }
 #status, #bag { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 4px; }
+/* På kartan får tecknen en gemensam mörk botten, så att facklor och murar
+   inte lyser igenom mellan och bakom dem. */
+#hud #status:not(:empty), #hud #bag:not(:empty) {
+  padding: 2px;
+  border-radius: 5px;
+  background: rgba(16, 17, 20, 0.82);
+}
 .hudicon {
   display: inline-flex;
   align-items: center;
