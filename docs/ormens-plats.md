@@ -60,5 +60,5 @@ Mätningen 2026-11-24 (3000 vandringar, 6 AI-spelare, frö 1):
 
 Den som startar närmast vinner 4 procentenheter oftare än snittet, inom
 målet, så guldet i kammaren växer inte med nivån. AI-spelarna tar 0,7
-nävar per vandring på Normal, som före den fria platsen. Klasserna vinner
+nävar per vandring på Normal (0,8 med kammaren nära mitten). Klasserna vinner
 13–21 %; Spårfinnaren och Tjuven ligger lägst.
