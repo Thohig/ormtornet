@@ -272,7 +272,7 @@
     "brev": {
       "1": [
         "\"Dag två. Väggarna är varma, fast det regnar ute. Bertil säger att det är solen som har legat på dem. Jag tror honom inte.\"",
-        "\"Om du hittar det här: gå inte till mitten första dagen. Lyssna först. Det finns ett ljud under allt annat.\""
+        "\"Om du hittar det här: gå inte mot mitten innan du har hört andetagen. Lyssna först. Det finns ett ljud under allt annat.\""
       ],
       "2": [
         "\"Golvet rör sig när jag ligger still. Upp och ner, sakta, som när man sover bredvid någon.\"",
@@ -336,6 +336,15 @@
     ],
     "foremal_av_sig_sjalv": [
       "{foremal} verkar av sig självt."
+    ],
+    "brev_tips_ristning": [
+      "I marginalen har någon ritat en pil och skrivit: tecknen i väggen, åt {horn}."
+    ],
+    "brev_tips_varelse": [
+      "Längst ner, med darrig hand: något väntar åt {horn}. Gå inte dit utan vapen."
+    ],
+    "brev_tips_kammare": [
+      "På baksidan en pil, och ett ord: andetagen. Pilen pekar åt {horn}."
     ],
     "brev_hittar": [
       "Under en sten ligger ett hopvikt papper, fuktigt och skört. Någon har skrivit med kol:"

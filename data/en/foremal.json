@@ -188,7 +188,7 @@
     "brev": {
       "1": [
         "\"Day two. The walls are warm, though it is raining outside. Bertil says it is the sun that has lain on them. I do not believe him.\"",
-        "\"If you find this: do not go to the middle on the first day. Listen first. There is a sound beneath everything else.\""
+        "\"If you find this: do not go towards the middle until you have heard the breathing. Listen first. There is a sound beneath everything else.\""
       ],
       "2": [
         "\"The floor moves when I lie still. Up and down, slowly, as when you sleep beside someone.\"",
@@ -252,6 +252,15 @@
     ],
     "foremal_av_sig_sjalv": [
       "{foremal} works of its own accord."
+    ],
+    "brev_tips_ristning": [
+      "In the margin someone has drawn an arrow and written: the signs in the wall, to the {horn}."
+    ],
+    "brev_tips_varelse": [
+      "At the very bottom, in a shaky hand: something waits to the {horn}. Do not go there unarmed."
+    ],
+    "brev_tips_kammare": [
+      "On the back an arrow, and one word: the breathing. The arrow points {horn}."
     ],
     "brev_hittar": [
       "Under a stone lies a folded paper, damp and brittle. Someone has written in charcoal:"

@@ -6,6 +6,14 @@ eller leder tornet.
 
 ## 2026-11-24
 
+### Breven pekar mot något
+
+- Ett brev har nu en rad i marginalen som pekar mot något i just det här
+  tornet: åt vilket håll ristningen finns om du inte har läst den, annars
+  närmaste varelse, och annars kammaren.
+- Brevet om att inte gå till mitten "första dagen" säger nu att man ska
+  vänta tills man har hört andetagen, eftersom en vandring bara är en dag.
+
 ### Ormen flyttar sig när den vaknar
 
 - När ormen har vaknat kryper den till en ny kammare, ett annat av rummen

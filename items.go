@@ -405,6 +405,10 @@ func (g *Game) readLetter(p *Player) {
 			g.logTo(p, g.data.Text("brev_hittar"), "syn")
 			text := pick(list)
 			g.logTo(p, text, "rost")
+			if tip := g.letterTip(p); tip != "" {
+				g.logTo(p, tip, "info")
+				text += " " + tip
+			}
 			if t := g.data.itemType("brev"); t != nil {
 				g.addCard(p, gameCard{Slag: "brev", Bild: cardImage(t.Bild, t.ID), Rubrik: t.Namn, Text: text})
 			}
@@ -412,6 +416,31 @@ func (g *Game) readLetter(p *Player) {
 			return
 		}
 	}
+}
+
+// letterTip är det brevet pekar mot i just det här tornet: ristningen, om
+// den finns och vandraren inte har läst den, annars närmaste varelse, och
+// annars kammaren.
+func (g *Game) letterTip(p *Player) string {
+	if g.carving.set && g.usesName() && !p.parts[g.partAt[srcCarving]] && (p.X != g.carving.x || p.Y != g.carving.y) {
+		return g.data.Text("brev_tips_ristning", "horn", g.hornToward(p.X, p.Y, g.carving.x, g.carving.y))
+	}
+	var near *Monster
+	best := 0
+	for _, m := range g.monsters {
+		d := abs(m.X-p.X) + abs(m.Y-p.Y)
+		if d > 0 && (near == nil || d < best) {
+			near, best = m, d
+		}
+	}
+	if near != nil {
+		return g.data.Text("brev_tips_varelse", "horn", g.hornToward(p.X, p.Y, near.X, near.Y))
+	}
+	cx, cy := g.chamber()
+	if cx == p.X && cy == p.Y {
+		return ""
+	}
+	return g.data.Text("brev_tips_kammare", "horn", g.hornToward(p.X, p.Y, cx, cy))
 }
 
 // itemCard lägger föremålets spelkort: namnet och vad det gör, som inte

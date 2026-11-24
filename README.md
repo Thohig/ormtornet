@@ -743,7 +743,9 @@ men man märker baksidan först när man bär dem:
 | Kronan av rost | 30 | den som står i grannrummet ser dig |
 
 Ibland hittar man ett brev från någon som var i tornet förut. Det läses
-direkt och följer avslöjandets nivå. Breven står under `brev` i
+direkt och följer avslöjandets nivå. I marginalen pekar det mot något i
+just det här tornet: ristningen om du inte har läst den, annars närmaste
+varelse och annars kammaren (`brev_tips_*` i `foremal.json`). Breven står under `brev` i
 `foremal.json`.
 
 Namn, texter, hur ofta de dyker upp och hur länge de håller står i

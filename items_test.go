@@ -1,6 +1,9 @@
 package main
 
-import "testing"
+import (
+	"strings"
+	"testing"
+)
 
 func TestCarryThreeAndLeaveInRoom(t *testing.T) {
 	g, a, b := startTwo(t)
@@ -355,5 +358,28 @@ func TestMapMakerHasPotion(t *testing.T) {
 	o.classID = ""
 	if p.Potions < 1 || p.Potions != g.startPotions(o)+1 {
 		t.Fatalf("kartritaren har %d drycker, utan klass %d", p.Potions, g.startPotions(o))
+	}
+}
+
+// Brevet pekar mot något i just det här tornet: ristningen om den inte är
+// läst, annars närmaste varelse, annars kammaren.
+func TestLetterTip(t *testing.T) {
+	g, a, _ := startTwo(t)
+	p := a.player
+	putInRoom(g, p, 1, 4)
+	cx, cy := g.chamber()
+	want := g.data.Text("brev_tips_kammare", "horn", g.hornToward(1, 4, cx, cy))
+	if got := g.letterTip(p); got != want {
+		t.Fatalf("utan ristning och varelse: %q", got)
+	}
+	g.monsters = append(g.monsters, &Monster{ID: 70, Type: g.data.Monster.Typer[0].ID, X: 1, Y: 1, HP: 2})
+	if got := g.letterTip(p); !strings.Contains(got, g.data.Horn[4]) || got == want {
+		t.Fatalf("med en varelse i norr: %q", got)
+	}
+	if g.usesName() {
+		g.carving = carving{x: 7, y: 4, set: true}
+		if got := g.letterTip(p); !strings.Contains(got, g.data.Horn[7]) {
+			t.Fatalf("med ristningen i öster: %q", got)
+		}
 	}
 }
