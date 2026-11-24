@@ -29,7 +29,20 @@ Vandrarna och varelserna blir enkla 3D-modeller med ljus och skuggor.
   kartan, staven. Varje klass har en egen kropp (`FORM` i
   `klient/src/modeller.ts`), och alla har ögon och en mantel med kappa i
   vandrarens färg (2026-11-24). De vänder sig och går mellan rummen i
-  stället för att hoppa. Den egna har en ring på golvet, och draget är en pil vid dörren.
+  stället för att hoppa.
+- När de har gått klart gör figurerna det de gjorde under rundan:
+  utfall, parering, ett kliv åt sidan, på knä för att ta eller söka,
+  huvudet bakåt för att dricka, och ett ryck med en röd ring när de blir
+  träffade. Den som slåss vänder sig mot den den slåss med. Tillståndet
+  säger det i `gjorde` och `traffad` för vandrarna och varelserna, och
+  varelserna som föll under rundan står i `fallna` (`clearMoves` i
+  `monster.go`, `nyaRorelser` och `rorelse` i `klient/src/karta.ts`).
+- En vandrare som dör faller framåt och blir liggande, grå. Varelserna
+  faller var på sitt sätt (`dor` i `klient/src/modeller.ts`): det
+  mångbenta viker in benen, det långa sjunker ihop, fjällvakten faller
+  baklänges och tappar skölden, den grönaktiga skepnaden stiger och
+  bleknar bort och benväsendet rasar till en hög ben. Den som redan låg
+  när kartan kom dit ligger bara där. Den egna har en ring på golvet, och draget är en pil vid dörren.
 - Varelserna har en modell var. En varelse i `data/` som saknar modell
   visas med sitt tecken.
 - Avslöjandet: kritan andas på nivå 2, revben och hjärtslag på nivå 3, och

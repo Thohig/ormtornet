@@ -20,6 +20,7 @@ func (g *Game) damage(p *Player, n int, announce bool) {
 		return
 	}
 	p.HP = max(0, p.HP-n)
+	p.hit = true
 	g.soundTo(p, "skada")
 	if announce && p.HP > 0 {
 		g.logTo(p, g.data.Text("skada", "skada", strconv.Itoa(n), "liv", strconv.Itoa(p.HP)), "varn")

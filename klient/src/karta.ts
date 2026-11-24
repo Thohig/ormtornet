@@ -117,7 +117,57 @@ interface Aktor {
   vag: THREE.Vector3[]; // punkterna den går mot
   vinkel: number;
   dod: boolean;
+  // dodStart är när figuren började falla: -1 medan den väntar på att gå
+  // klart och göra det den gjorde, -Infinity om den redan låg när kartan
+  // fick se den.
+  dodStart: number;
+  varDod: boolean; // figuren var död i förra tillståndet
+  skapad: boolean; // figuren kom till i det här tillståndet
+  // Det figuren gjorde under rundan, i tur och ordning, och när det första
+  // började (-1 medan figuren fortfarande går).
+  rorelser: string[];
+  rorelseStart: number;
+  blixt?: THREE.Mesh; // den röda ringen när figuren blir träffad
+  blixtStart?: number;
   ring?: THREE.Mesh; // den egna vandrarens ring
+}
+
+// Hur länge varje rörelse pågår, i millisekunder.
+const RORELSE_MS: Record<string, number> = { anfall: 650, parera: 550, undan: 600, traffad: 520, ta: 800, sok: 800, drick: 700 };
+const DOD_MS = 1300;
+const STRID = new Set(["anfall", "parera", "undan"]);
+
+// rorelse ställer modellen (som tittar mot +z) mitt i en rörelse: f går från
+// 0 till 1, och s är 0 i början och slutet och 1 mitt i.
+function rorelse(m: THREE.Object3D, slag: string, f: number, t: number): void {
+  const s = Math.sin(Math.PI * f);
+  switch (slag) {
+    case "anfall": // ett utfall framåt
+      m.position.z += 0.42 * s;
+      m.rotation.x += 0.35 * s;
+      break;
+    case "parera": // bakåt, med kroppen bakom vapnet
+      m.position.z -= 0.1 * s;
+      m.rotation.x -= 0.14 * s;
+      break;
+    case "undan": // ett kliv åt sidan
+      m.position.x += 0.34 * s;
+      m.rotation.z -= 0.28 * s;
+      break;
+    case "traffad": // ett ryck bakåt som skakar
+      m.position.z -= 0.2 * s;
+      m.position.x += Math.sin(t / 22) * 0.035 * s;
+      m.rotation.x -= 0.32 * s;
+      break;
+    case "ta":
+    case "sok": // ner på knä, framåtböjd
+      m.position.y -= 0.2 * s;
+      m.rotation.x += 0.5 * s;
+      break;
+    case "drick": // huvudet bakåt
+      m.rotation.x -= 0.28 * s;
+      break;
+  }
 }
 
 // kompassSvg ritar ett N med en pil åt det håll norr ligger på skärmen,
@@ -1113,6 +1163,21 @@ float puls() {
       );
       sedda.add("m" + m.id);
     });
+    // Varelserna som föll under rundan står kvar tills de har fallit.
+    (state.fallna || []).forEach((m) => {
+      const [x, z] = plats(m.x, m.y, VARELSE[0], VARELSE[1]);
+      const typ = m.typ || "";
+      const mm = m.modell || {};
+      const a = this.flytta(
+        "m" + m.id,
+        "m" + typ + m.glyph + "|" + (mm.farg || "") + "|" + (mm.storlek || 1),
+        () => M.miniatyr(skala(M.varelse(typ, mm.farg) || this.tecknad(m.glyph), mm.storlek), KANT_VARELSE, mm.storlek),
+        m.x, m.y, x, z,
+      );
+      a.dod = true;
+      sedda.add("m" + m.id);
+    });
+    this.nyaRorelser(state);
     this.aktorer.forEach((a, id) => {
       if (sedda.has(id)) return;
       this.figurer.remove(a.hall);
@@ -1157,7 +1222,7 @@ float puls() {
       const vinkel = Math.PI / 4; // mot kameran
       hall.rotation.y = vinkel;
       this.figurer.add(hall);
-      a = { hall, fig, nyckel, rum: [rx, ry], vag: [], vinkel, dod: false };
+      a = { hall, fig, nyckel, rum: [rx, ry], vag: [], vinkel, dod: false, dodStart: -Infinity, varDod: false, skapad: true, rorelser: [], rorelseStart: -1 };
       this.aktorer.set(id, a);
       return a;
     }
@@ -1227,13 +1292,108 @@ float puls() {
       let dv = a.vinkel - a.hall.rotation.y;
       dv = Math.atan2(Math.sin(dv), Math.cos(dv));
       a.hall.rotation.y += dv * Math.min(1, dt / 90);
-      // Den döda läggs ner på sin sockel.
       const modell = (a.fig.grupp.userData.modell as THREE.Object3D | undefined) || a.fig.grupp;
-      modell.rotation.z = a.dod ? Math.PI / 2 : 0;
-      modell.position.y = a.dod ? M.SOCKEL + 0.2 : M.SOCKEL;
-      if (!a.dod) a.fig.steg(t, gar);
+      const y0 = a.fig.grupp.userData.modell ? M.SOCKEL : 0;
+      modell.position.set(0, y0, 0);
+      modell.rotation.set(0, 0, 0);
+      if (!a.dod || a.dodStart !== -Infinity) a.fig.steg(t, gar);
+      this.gorRorelse(a, modell, t, gar);
+      if (a.dod) {
+        // Den döda faller när den har gjort det den gjorde. En figur med
+        // en egen död (varelserna) faller på sitt sätt; de andra faller
+        // framåt och blir liggande på sockeln.
+        if (a.dodStart === -1 && !gar && !a.rorelser.length) a.dodStart = t;
+        const f = a.dodStart === -1 ? 0 : Math.min(1, (t - a.dodStart) / DOD_MS);
+        const e = 1 - Math.pow(1 - f, 3);
+        if (a.fig.dor) a.fig.dor(f);
+        else {
+          modell.rotation.x += e * Math.PI * 0.48;
+          modell.position.y += e * 0.2;
+        }
+      }
       if (a.ring) a.ring.scale.set(p, p, 1);
     });
+  }
+
+  // nyaRorelser ger figurerna det de gjorde under rundan, när en ny runda
+  // har börjat. Den som slåss vänder sig mot den den slåss mot. En figur
+  // som just har dött faller när den har gjort klart.
+  private runda: number | undefined;
+  private nyaRorelser(state: Tillstand): void {
+    const ny = state.round !== undefined && this.runda !== undefined && state.round !== this.runda;
+    const forsta = this.runda === undefined;
+    this.runda = state.round;
+    const levande = (state.monsters || []).map((m) => ({ id: "m" + m.id, x: m.x, y: m.y, gjorde: m.gjorde, traffad: m.traffad }));
+    const fallna = (state.fallna || []).map((m) => ({ id: "m" + m.id, x: m.x, y: m.y, gjorde: m.gjorde, traffad: m.traffad }));
+    const vandrare = state.players
+      .filter((p) => !(p.status === "ute" || p.hidden || p.x < 0))
+      .map((p) => ({ id: "v" + p.id, x: p.x, y: p.y, gjorde: p.gjorde, traffad: p.traffad }));
+    const alla = [...vandrare, ...levande, ...fallna];
+    alla.forEach((f) => {
+      const a = this.aktorer.get(f.id);
+      if (!a) return;
+      // Bara en figur som kartan såg leva faller; den som redan låg när
+      // kartan kom dit ligger bara där.
+      if (a.dod && !a.varDod) a.dodStart = forsta || a.skapad ? -Infinity : -1;
+      if (!a.dod) a.dodStart = -Infinity;
+      a.varDod = a.dod;
+      a.skapad = false;
+      if (!ny) return;
+      a.rorelser = [f.gjorde || "", f.traffad ? "traffad" : ""].filter((s) => s && RORELSE_MS[s]);
+      a.rorelseStart = -1;
+      if (!a.rorelser.some((s) => STRID.has(s) || s === "traffad")) return;
+      // Vänd figuren mot den den slåss med: en vandrare mot varelsen i
+      // rummet, annars mot en annan vandrare där; en varelse mot vandrarna.
+      const motstandare = (f.id[0] === "v" ? [...levande, ...fallna, ...vandrare] : vandrare)
+        .find((o) => o.id !== f.id && o.x === f.x && o.y === f.y);
+      const b = motstandare && this.aktorer.get(motstandare.id);
+      if (!b) return;
+      const fran = a.vag[a.vag.length - 1] || a.hall.position;
+      const till = b.vag[b.vag.length - 1] || b.hall.position;
+      const d = till.clone().sub(fran);
+      if (d.lengthSq() > 0.0001) a.vinkel = Math.atan2(d.x, d.z);
+    });
+  }
+
+  // gorRorelse spelar figurens rörelser efter varandra, när den har gått
+  // klart, och den röda ringen när den blir träffad.
+  private gorRorelse(a: Aktor, modell: THREE.Object3D, t: number, gar: boolean): void {
+    if (a.rorelser.length && !gar) {
+      if (a.rorelseStart < 0) {
+        a.rorelseStart = t;
+        if (a.rorelser[0] === "traffad") this.blixt(a, t);
+      }
+      const slag = a.rorelser[0];
+      const f = (t - a.rorelseStart) / RORELSE_MS[slag];
+      if (f >= 1) {
+        a.rorelser.shift();
+        a.rorelseStart = -1;
+      } else rorelse(modell, slag, f, t);
+    }
+    if (a.blixt && a.blixtStart !== undefined) {
+      const f = (t - a.blixtStart) / 600;
+      if (f >= 1) {
+        a.hall.remove(a.blixt);
+        (a.blixt.material as THREE.Material).dispose();
+        a.blixt = undefined;
+      } else {
+        a.blixt.scale.setScalar(0.6 + f * 0.9);
+        (a.blixt.material as THREE.MeshBasicMaterial).opacity = 0.85 * (1 - f);
+      }
+    }
+  }
+
+  private blixtGeo: THREE.BufferGeometry | null = null;
+  private blixt(a: Aktor, t: number): void {
+    if (a.blixt) a.hall.remove(a.blixt);
+    const geo = this.blixtGeo || (this.blixtGeo = new THREE.RingGeometry(0.48, 0.62, 32));
+    const m = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({ color: 0xd8382a, transparent: true, opacity: 0.85, depthWrite: false }));
+    m.rotation.x = -Math.PI / 2;
+    m.position.y = 0.03;
+    m.renderOrder = 2;
+    a.hall.add(m);
+    a.blixt = m;
+    a.blixtStart = t;
   }
 
   private spriteMaterial(ch: string, farg: string): THREE.SpriteMaterial {

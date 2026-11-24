@@ -265,6 +265,11 @@ type Player struct {
 	attackedBy, attackedRound int
 	met                       string // vilka andra vandrare som stod i rummet förra gången, så att det bara sägs en gång
 
+	// did är det vandraren gjorde under rundan (anfall, parera, undan, ta,
+	// sok, drick) och hit att hen blev skadad, för figuren på kartan.
+	did string
+	hit bool
+
 	HP      int
 	Potions int
 	Stuck   int // rundor kvar fast (fallgaller, ormgrop, skinn)
@@ -328,6 +333,7 @@ type Game struct {
 	wakes     int      // hur många gånger ormen har vaknat
 
 	monsters      []*Monster
+	fallen        []*Monster // varelserna som föll den här rundan, för kartan
 	nextMonsterID int
 	rng           *rand.Rand // tornets slump; samma frö ger samma torn
 	seed          uint64     // fröet för den pågående vandringen
@@ -604,6 +610,8 @@ type playerView struct {
 	Class      string     `json:"klass,omitempty"`       // klassen med liten bokstav
 	ClassID    string     `json:"klassId,omitempty"`     // klassens id, för figuren på kartan snett ovanifrån
 	ClassModel *ModelLook `json:"klassModell,omitempty"` // färg och storlek på figuren
+	Did        string     `json:"gjorde,omitempty"`      // det vandraren gjorde under rundan, för figuren
+	Hit        bool       `json:"traffad,omitempty"`     // vandraren blev skadad under rundan
 }
 
 type roomView struct {
@@ -653,7 +661,8 @@ type stateMsg struct {
 	Dark       int           `json:"dark"`
 	Sleep      int           `json:"sleep"` // -1 utanför kammaren
 	Monsters   []monsterView `json:"monsters"`
-	PvP        string        `json:"pvp"` // om det går att strida mot andra vandrare här
+	Fallen     []monsterView `json:"fallna,omitempty"` // varelserna som föll under rundan, för kartan
+	PvP        string        `json:"pvp"`              // om det går att strida mot andra vandrare här
 	// Motstandare är vandraren tornet väljer om du slåss här (pickFoe).
 	Motstandare string       `json:"motstandare,omitempty"`
 	Paused      bool         `json:"paused,omitempty"`
@@ -821,6 +830,7 @@ func (g *Game) stateFor(me *Player) stateMsg {
 			ID: p.ID, Name: p.Name, Slot: p.Slot, X: p.X, Y: p.Y,
 			Online: p.present(), Bot: p.bot != nil, Status: p.Status, Ready: p.Ready,
 			Chosen: p.Action != "", Treasure: -1, AI: p.takenOver, Class: g.classLabel(p), ClassID: g.classID(p), ClassModel: g.classModel(p),
+			Did: p.did, Hit: p.hit,
 		}
 		if p == me || g.phase == phaseEnd {
 			pv.Treasure = p.Treasure
@@ -828,6 +838,7 @@ func (g *Game) stateFor(me *Player) stateMsg {
 		if p.Cellar > 0 || (blind && p != me) || (p != me && !g.sees(me, p)) {
 			pv.Hidden = true
 			pv.X, pv.Y = -1, -1
+			pv.Did, pv.Hit = "", false
 		}
 		st.Players = append(st.Players, pv)
 	}
@@ -861,6 +872,7 @@ func (g *Game) stateFor(me *Player) stateMsg {
 		}
 	}
 	st.Monsters = g.monsterViews(me, blind)
+	st.Fallen = g.fallenViews(me, blind)
 	if g.phase == phasePlay {
 		st.PvP = g.pvpStatus(me)
 		if st.PvP == pvpYes && g.monsterAt(me.X, me.Y) == nil {
@@ -1249,6 +1261,7 @@ func (g *Game) buildTower(size int) {
 		g.sun = g.sunMax
 	}
 	g.monsters = nil
+	g.fallen = nil
 	g.assignPorts()
 	for _, p := range g.players {
 		if p != nil {
@@ -1519,11 +1532,15 @@ func (g *Game) resolve() {
 	sunBefore := g.sun
 	snap, wakes := g.snapshot(), g.wakes
 	g.hearing = true // ljuden samlas till rumsblocken
+	g.clearMoves()
 	g.wanderMonsters()
 	var active []*Player
 	for _, p := range g.players {
 		if p != nil && p.Status == statusIn {
 			active = append(active, p)
+			if p.Cellar == 0 && (isCombatAction(p.Action) || p.Action == actTake || p.Action == actSearch || p.Action == actDrink) {
+				p.did = p.Action
+			}
 		}
 	}
 	g.countStill(active)

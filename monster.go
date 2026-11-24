@@ -28,6 +28,10 @@ type Monster struct {
 	Type string
 	X, Y int
 	HP   int
+	// did är varelsens val under rundan och hit att den blev träffad, för
+	// figuren på kartan.
+	did string
+	hit bool
 	// named är rundan då varje vandrare (på ID) först fick höra varelsen
 	// beskriven i striden. Rundorna efter räcker den korta formen.
 	named map[int]int
@@ -37,8 +41,10 @@ type monsterView struct {
 	ID    int        `json:"id"`
 	Name  string     `json:"name"`
 	Glyph string     `json:"glyph"`
-	Type  string     `json:"typ"`              // varelsens id i monster.json, för modellen på kartan snett ovanifrån
-	Model *ModelLook `json:"modell,omitempty"` // färg och storlek på modellen
+	Type  string     `json:"typ"`               // varelsens id i monster.json, för modellen på kartan snett ovanifrån
+	Model *ModelLook `json:"modell,omitempty"`  // färg och storlek på modellen
+	Did   string     `json:"gjorde,omitempty"`  // varelsens val under rundan, för figuren
+	Hit   bool       `json:"traffad,omitempty"` // varelsen blev träffad under rundan
 	X     int        `json:"x"`
 	Y     int        `json:"y"`
 	HP    int        `json:"hp"`
@@ -214,6 +220,7 @@ func (g *Game) announceMonster(p *Player) {
 func (g *Game) duel(p *Player, m *Monster, a string) {
 	t := g.data.monsterType(m.Type)
 	mc := g.monsterChoiceVs(m, p)
+	m.did = mc
 	if p.bot != nil {
 		p.bot.saw(m.Type, mc)
 	}
@@ -261,6 +268,7 @@ func (g *Game) duel(p *Player, m *Monster, a string) {
 	}
 	if playerHits {
 		g.learnPart(p, srcCreature) // under fjällen där vapnet träffade
+		m.hit = true
 		m.HP -= g.data.Monster.Spelarskada
 		if m.HP <= 0 {
 			g.defeat(p, m) // kortet säger att varelsen föll
@@ -303,6 +311,7 @@ func (g *Game) freeAttack(p *Player, m *Monster, key string) {
 	}
 	g.logTo(p, g.data.MonsterText(key, g.monsterVars(m, p, "dess_val", g.choiceWord(mc))...), "varn")
 	if mc == actAttack {
+		m.did = actAttack
 		text := g.data.MonsterText("monster_traffar", g.monsterVars(m, p, "skada", strconv.Itoa(t.Skada))...)
 		g.logTo(p, text, "varn")
 		g.monsterCard(p, t, g.fightName(m, p), text, false)
@@ -314,6 +323,7 @@ func (g *Game) freeAttack(p *Player, m *Monster, key string) {
 func (g *Game) defeat(p *Player, m *Monster) {
 	t := g.data.monsterType(m.Type)
 	g.removeMonster(m)
+	g.fallen = append(g.fallen, m)
 	if g.slain != nil {
 		g.slain[m.ID] = p.ID
 	}
@@ -399,17 +409,42 @@ func (g *Game) wanderMonsters() {
 }
 
 func (g *Game) monsterViews(me *Player, blind bool) []monsterView {
+	return g.viewsOf(g.monsters, me, blind)
+}
+
+// fallenViews är varelserna som föll under rundan och som me ser, så att
+// kartan kan låta dem falla. Rundan efter är de borta.
+func (g *Game) fallenViews(me *Player, blind bool) []monsterView {
+	return g.viewsOf(g.fallen, me, blind)
+}
+
+func (g *Game) viewsOf(ms []*Monster, me *Player, blind bool) []monsterView {
 	var out []monsterView
-	for _, m := range g.monsters {
+	for _, m := range ms {
 		if !g.seesMonsterAt(me, m.X, m.Y) || (blind && (m.X != me.X || m.Y != me.Y)) {
 			continue
 		}
 		t := g.data.monsterType(m.Type)
 		out = append(out, monsterView{
 			ID: m.ID, Name: t.KortBestamd, Glyph: t.Tecken, Type: m.Type, Model: t.Modell, X: m.X, Y: m.Y, HP: m.HP, MaxHP: t.Liv,
+			Did: m.did, Hit: m.hit,
 		})
 	}
 	return out
+}
+
+// clearMoves glömmer det figurerna gjorde förra rundan, innan en ny runda
+// avgörs.
+func (g *Game) clearMoves() {
+	for _, p := range g.players {
+		if p != nil {
+			p.did, p.hit = "", false
+		}
+	}
+	for _, m := range g.monsters {
+		m.did, m.hit = "", false
+	}
+	g.fallen = nil
 }
 
 // combatTurn hanterar spelarens drag när en varelse står i samma rum.

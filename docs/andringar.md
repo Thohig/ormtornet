@@ -6,6 +6,24 @@ eller leder tornet.
 
 ## 2026-11-24
 
+### Figurerna slåss och faller
+
+- På kartan gör figurerna det de gjorde under rundan, när de har gått
+  klart. Den som anfaller gör ett utfall mot den den slåss med. Den som
+  parerar drar sig bakåt, och den som viker undan kliver åt sidan. Den
+  som tar skatt eller söker går ner på knä, och den som dricker lutar
+  huvudet bakåt. Den som blir träffad rycker till, och en röd ring syns
+  på golvet. Varelserna gör samma sak.
+- Den som dör faller framåt och blir liggande på sockeln, i stället för
+  att vridas på sidan. Varelserna faller på var sitt sätt: det bleka
+  mångbenta viker in benen, det långa sjunker ihop i dammet, gestalten i
+  fjällrustning faller baklänges och tappar skölden, den grönaktiga
+  skepnaden stiger och bleknar bort, och väsendet av ben rasar ihop till
+  en hög.
+- Tillståndet säger vad varje figur gjorde och om den blev träffad
+  (`gjorde`, `traffad`), bara för de figurer man ser, och vilka varelser
+  som föll under rundan (`fallna`). `TestMovesAndFallenForTheMap`.
+
 ### Figurerna går att känna igen
 
 - Varje klass har fått en egen kropp på kartan, så att klasserna går att

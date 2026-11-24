@@ -12,6 +12,9 @@ export interface Figur {
   // steg rör modellen varje bildruta: t är tiden i millisekunder och gar
   // sant medan figuren går.
   steg(t: number, gar: boolean): void;
+  // dor låter figuren falla på sitt eget sätt: f går från 0 till 1 och står
+  // sedan kvar på 1. En figur utan dor faller framåt (se karta.ts).
+  dor?(f: number): void;
 }
 
 // ---- Delade material och geometrier ----
@@ -97,7 +100,7 @@ export function miniatyr(f: Figur, kant: THREE.ColorRepresentation, storlek = 1)
   modell.position.y = SOCKEL;
   g.add(fot, modell);
   g.userData.modell = modell;
-  return { grupp: g, steg: f.steg };
+  return { grupp: g, steg: f.steg, dor: f.dor };
 }
 
 // SOCKEL är sockelns höjd, där figuren står.
@@ -402,6 +405,11 @@ function fastPa(kropp: THREE.Group, id: string, bredd = 0): void {
 
 // ---- Varelserna ----
 
+// ut ger ett mjukt slut på en rörelse: f från 0 till 1.
+function ut(f: number): number {
+  return 1 - Math.pow(1 - Math.min(1, Math.max(0, f)), 3);
+}
+
 // varelse bygger varelsen typ, i färgen farg (modell.farg i monster.json)
 // eller sin egen.
 export function varelse(typ: string, farg?: string): Figur | null {
@@ -445,6 +453,17 @@ function krypare(farg?: string): Figur {
       const fart = gar ? 50 : 90;
       ben.forEach(({ b, i, s }) => (b.rotation.x = Math.sin(t / fart + i * 1.6 + (s > 0 ? Math.PI : 0)) * 0.25));
     },
+    // Den sjunker ihop och viker in benen över sig.
+    dor(f) {
+      const e = ut(f);
+      kropp.position.y = 0.26 - 0.15 * e;
+      huvud.position.y = 0.24 - 0.14 * e;
+      ben.forEach(({ b, s }) => {
+        b.position.y = 0.32 - 0.15 * e;
+        b.rotation.x = 0;
+        b.rotation.z = s * (0.95 + 1.7 * e);
+      });
+    },
   };
 }
 
@@ -472,6 +491,12 @@ function yngel(farg?: string): Figur {
     steg(t) {
       kropp.rotation.y = Math.sin(t / 650) * 0.25;
       huvud.position.y = 1.1 + Math.sin(t / 400) * 0.04;
+    },
+    // Den sjunker ner i dammet och huvudet faller fram.
+    dor(f) {
+      const e = ut(f);
+      kropp.scale.y = 1 - 0.8 * e;
+      huvud.rotation.x = 1.1 * e;
     },
   };
 }
@@ -515,6 +540,15 @@ function fjallvakt(farg?: string): Figur {
       kropp.position.y = gar ? Math.abs(s) * 0.03 : 0;
       skold.position.z = 0.42 + Math.sin(t / 900) * 0.02;
     },
+    // Den faller baklänges, och skölden glider av och blir liggande
+    // bredvid den på golvet.
+    dor(f) {
+      const e = ut(f);
+      g.rotation.x = -e * Math.PI * 0.47;
+      g.position.y = e * 0.25;
+      skold.position.set(-0.05 - 0.55 * e, 0.92, 0.42 - 0.64 * e);
+      skold.rotation.z = 0.4 * e;
+    },
   };
 }
 
@@ -524,6 +558,7 @@ function gallgast(farg?: string): Figur {
   const kropp = new THREE.Group();
   g.add(kropp);
   const dimma = lam(farg || 0x8ac77f, { opacity: 0.72, emissive: 0x1a3a18 });
+  let egen: THREE.Material | null = null;
   kropp.add(del(geo("gastkåpa", () => new THREE.ConeGeometry(0.42, 1.25, 9, 1, true)), dimma, 0, 0.72, 0));
   kropp.add(del(geo("gasthuvud", () => new THREE.IcosahedronGeometry(0.18, 1)), dimma, 0, 1.45, 0));
   [-1, 1].forEach((s) => kropp.add(new THREE.Mesh(geo("gastöga", () => new THREE.SphereGeometry(0.035, 6, 4)), lysande(0xd8ffb0)).translateX(s * 0.07).translateY(1.47).translateZ(0.15)));
@@ -546,6 +581,22 @@ function gallgast(farg?: string): Figur {
       kropp.position.y = 0.12 + Math.sin(t / 500) * 0.07;
       armar.forEach((a, i) => (a.rotation.x = -0.9 + Math.sin(t / 420 + i) * 0.12));
     },
+    // Den stiger och bleknar bort. Den får ett eget material, så att inte
+    // alla skepnader bleknar.
+    dor(f) {
+      if (!egen) {
+        egen = dimma.clone();
+        kropp.traverse((o) => {
+          if (o instanceof THREE.Mesh && o.material === dimma) o.material = egen;
+        });
+      }
+      const e = ut(f);
+      kropp.position.y = 0.12 + e * 0.9;
+      egen.opacity = 0.72 * (1 - e);
+      kropp.traverse((o) => {
+        if (o instanceof THREE.Mesh && o.material !== egen) o.visible = e < 0.5;
+      });
+    },
   };
 }
 
@@ -555,6 +606,7 @@ function benvaktare(farg?: string): Figur {
   const ben = lam(farg || 0xe8e0cc);
   const kropp = new THREE.Group();
   g.add(kropp);
+  let fore: { o: THREE.Object3D; p: THREE.Vector3; r: THREE.Euler }[] | null = null;
   for (let i = 0; i < 8; i++) kropp.add(del(geo("kota", () => new THREE.IcosahedronGeometry(0.065, 0)), ben, 0, 0.55 + i * 0.12, -0.08));
   for (let i = 0; i < 4; i++) {
     const r = 0.26 - i * 0.02;
@@ -586,6 +638,17 @@ function benvaktare(farg?: string): Figur {
       lar[1].rotation.x = -s * 0.5;
       kropp.rotation.z = Math.sin(t / 800) * 0.04;
       armar.forEach((a, i) => (a.rotation.x = -0.3 + Math.sin(t / 600 + i * 2) * 0.15));
+    },
+    // Den rasar ihop till en hög ben. De högre benen faller lite senare.
+    dor(f) {
+      if (!fore) fore = [...kropp.children, ...lar].map((o) => ({ o, p: o.position.clone(), r: o.rotation.clone() }));
+      kropp.rotation.z = 0;
+      fore.forEach(({ o, p, r }, i) => {
+        const e = ut(f * 1.4 - (p.y / 1.7) * 0.4);
+        const v = i * 2.39;
+        o.position.set(p.x + Math.cos(v) * 0.22 * e, p.y + (0.06 + (i % 3) * 0.04 - p.y) * e, p.z + Math.sin(v) * 0.22 * e);
+        o.rotation.set(r.x + (Math.PI / 2) * e, r.y + v * e, r.z + 0.6 * Math.sin(v) * e);
+      });
     },
   };
 }

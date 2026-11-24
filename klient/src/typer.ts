@@ -26,6 +26,8 @@ export interface Vandrare {
   hidden: boolean;
   klassId?: string; // klassens id i klasser.json
   klassModell?: Modell; // modell i klasser.json
+  gjorde?: string; // det vandraren gjorde under rundan: anfall, parera, undan, ta, sok, drick
+  traffad?: boolean; // vandraren blev skadad under rundan
 }
 
 // Modell är färgen och storleken på en modell, från modell i klasser.json
@@ -43,6 +45,8 @@ export interface Varelse {
   modell?: Modell;
   x: number;
   y: number;
+  gjorde?: string; // varelsens val under rundan
+  traffad?: boolean; // varelsen blev träffad under rundan
 }
 
 export interface Tillstand {
@@ -56,6 +60,8 @@ export interface Tillstand {
   foremal?: { id: string }[]; // den egna väskan
   players: Vandrare[];
   monsters?: Varelse[];
+  fallna?: Varelse[]; // varelserna som föll under rundan
+  round?: number;
   lastSeen?: Record<string, { x: number; y: number; slot: number }>;
   sleep?: number; // hur djupt ormen sover, 0–2, bara för den som står i kammaren (annars -1)
 }
