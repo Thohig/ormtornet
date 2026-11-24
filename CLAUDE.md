@@ -137,8 +137,10 @@ Så här skiljer vi på sakerna när användaren ger instruktioner:
   för runda** bakom en knapp (`guldbok.go`, docs/guldboken.md). Sedan
   **berättelsen** (inträdet, höjdpunkterna med var sitt spelkort och
   slutet, `berattelse.go`, docs/berattelsen.md), epilogen och bakom
-  knappen Visa din vandring sin vandring. Hela krönikan och tornets dunk
-  togs bort från slutskärmen 2026-11-24.
+  knappen Visa din vandring sin vandring. Knappen Se vandringen igen
+  visar **reprisen**: allas vägar runda för runda på tornet som det blev
+  (`replay.go`, `web/repris.js`, docs/repris.md). Hela krönikan och
+  tornets dunk togs bort från slutskärmen 2026-11-24.
   Spelledaren har där också Till värdsidan bredvid Nytt torn.
 - **tangenterna vid dörrarna**: piltangenterna som står vid dörrarna i ens
   rum på kartan snett ovanifrån (`ritaTangenter` i `klient/src/karta.ts`).
@@ -326,5 +328,11 @@ Skriv dit när ett steg är klart.
 - [docs/minikartan.md](docs/minikartan.md): minikartan med det man har
   upptäckt, en fast ruta på datorn och kompassens ställe på telefonen.
   Allt är byggt; avsnittet Att prova säger vad som behöver provas i spel.
+- [docs/repris.md](docs/repris.md): reprisen på slutskärmen, där allas
+  vägar växer fram runda för runda. Allt är byggt; avsnittet Att prova
+  säger vad som behöver provas i spel.
+- [docs/ideer.md](docs/ideer.md): idéer för framtida utbyggnad, spånade
+  2026-11-25. Inget där är bestämt; ta fram ett förslag och fråga innan
+  du bygger något därifrån.
 - [docs/slumpade-namn.md](docs/slumpade-namn.md): tornet ger namnen och
   namnrutan är borta. Steg 1–2 är byggda; Nytt namn i lobbyn valdes bort.

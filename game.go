@@ -465,6 +465,11 @@ type Game struct {
 	eventCount  map[string]int
 	// shutDoors är dörrarna som tornet har slutit en stund.
 	shutDoors []shutDoor
+	// Reprisen (replay.go): vilka som är med, var de stod runda för runda
+	// och reprisen som alla får i slutet.
+	replayWho    []*Player
+	replayFrames [][]replayStep
+	replayDone   *replayView
 
 	serpentName    []string // ormens namn i tre delar, med invigningen "ormens namn"
 	partAt         [3]int   // vilken del av namnet som finns i ristningen, hos varelsen och i kammaren
@@ -812,6 +817,7 @@ type stateMsg struct {
 	Story       []storyPart   `json:"berattelse,omitempty"` // berättelsen om vandringen, när den är slut
 	StoryPeople []storyPerson `json:"vandrarna,omitempty"`  // raden om var och en under berättelsen
 	GoldBooks   []goldBook    `json:"guldbok,omitempty"`    // hur var och en fick sitt guld, när vandringen är slut
+	Replay      *replayView   `json:"repris,omitempty"`     // allas vägar runda för runda, när vandringen är slut (replay.go)
 }
 
 type logMsg struct {
@@ -1023,6 +1029,7 @@ func (g *Game) stateFor(me *Player) stateMsg {
 		st.Story = g.story
 		st.StoryPeople = g.storyPeople
 		st.GoldBooks = g.books
+		st.Replay = g.replayDone
 	}
 	return st
 }
@@ -1521,6 +1528,7 @@ func (g *Game) startGame() {
 			g.tellRoom(p)
 		}
 	}
+	g.replayStart()
 	g.startRound()
 }
 
@@ -1732,6 +1740,7 @@ func (g *Game) resolve() {
 		g.sun = 0
 	}
 	g.towerEventTick()
+	g.replayNote()
 	g.summarize(snap, wakes)
 	g.soundAll("runda")
 	inside := 0
@@ -1818,6 +1827,7 @@ func (g *Game) endGame() {
 			g.logOthers(p, g.data.Text("forlorad", "namn", p.Name), "varn")
 		}
 	}
+	g.replayEnd()
 	res := g.results()
 	if len(res) > 0 && res[0].Winner {
 		var names []string

@@ -4,6 +4,17 @@ Det som har ändrats i spelet, nyast först. README beskriver hur allt
 fungerar. Här står vad som är nytt och vad det betyder för den som spelar
 eller leder tornet.
 
+## 2026-11-25
+
+### Reprisen
+
+- På slutskärmen visar knappen Se vandringen igen tornet som det blev,
+  med allas vägar som växer fram runda för runda i var och ens färg.
+  Under kartan står vad var och en bar just då och hur det gick.
+- Reprisen spelar sig själv och går att pausa, spola tillbaka och dra
+  fram och tillbaka med ett reglage. Escape stänger den.
+- Idéerna för framtida utbyggnad står i docs/ideer.md.
+
 ## 2026-11-24
 
 ### Nio nya händelser i tornet

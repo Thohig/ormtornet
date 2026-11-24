@@ -470,6 +470,12 @@ vandringen. Vilka händelser som räknas och hur mycket de väger står under
 `spelkort.berattelse` i `data/texter.json`, texterna under `ber_*` och
 guldböckernas under `gb_*`.
 
+Knappen **Se vandringen igen** visar **reprisen** (`replay.go`,
+`web/repris.js`, [docs/repris.md](docs/repris.md)): tornet som det blev,
+platt som minikartan, där allas vägar växer fram runda för runda i var och
+ens färg, med guldet var och en bar under kartan. Den spelar sig själv och
+går att pausa, spola och stänga med Escape.
+
 Krönikan, händelserna runda för runda (`kronika_*` i `data/texter.json`),
 är det berättelsen och den största stunden byggs av. Den står inte längre
 på skärmen sedan 2026-11-24.
@@ -1154,6 +1160,7 @@ Beskrivningarna för rummen ligger under nivåerna `"1"` till `"4"`.
   rundorna och de stora korten (bilderna i `web/kort.js`)
 - `berattelse.go` berättelsen om vandringen i krönikan i slutet
 - `guldbok.go` guldboken: hur var och en fick sitt guld, i slutet
+- `replay.go` reprisen: var alla stod runda för runda, i slutet
 - `difficulty.go` förvalen för svårighet
 - `classes.go` klasserna och valet av klass
 - `items.go` föremålen
@@ -1199,6 +1206,7 @@ Beskrivningarna för rummen ligger under nivåerna `"1"` till `"4"`.
     rummet vandraren står i. Den skapar kartan snett ovanifrån, eller visar en
     text där WebGL saknas
   - `minikarta.js` minikartan med allt vandraren har upptäckt
+  - `repris.js` reprisen på slutskärmen
   - `audio.js` allt ljud, skapat med Web Audio API, även stormen i introt
   - `kort.js` spelkortens och klasskortens bilder, ritade som SVG, och
     minikorten

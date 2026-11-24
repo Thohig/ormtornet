@@ -99,6 +99,7 @@ func (g *Game) resetChronicle() {
 	g.chron = nil
 	g.epilog = nil
 	g.story, g.storyPeople, g.books = nil, nil, nil
+	g.replayWho, g.replayFrames, g.replayDone = nil, nil, nil
 	for _, p := range g.players {
 		if p != nil {
 			p.stats = chronStats{}

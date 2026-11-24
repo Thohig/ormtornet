@@ -1655,6 +1655,59 @@ body:not(.touch) #spelkort { width: 165px; }
   cursor: pointer;
 }
 #kortvisning[hidden] { display: none; }
+/* Reprisen på slutskärmen (web/repris.js): tornet som det blev och allas
+   vägar runda för runda, i ett lager över hela sidan. */
+#repris {
+  position: fixed;
+  inset: 0;
+  z-index: 45;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.7);
+}
+#repris[hidden] { display: none; }
+#repris .rp-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: min(900px, 94vw);
+  height: min(680px, 90vh);
+  padding: 12px 14px;
+  background: #0c0905;
+  border: 1px solid var(--dim);
+  border-radius: 8px;
+}
+#repris .rp-head { display: flex; align-items: center; justify-content: space-between; }
+#repris h2 { margin: 0; font-size: 13px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--fg); font-weight: normal; }
+#repris button {
+  font: inherit;
+  color: var(--fg);
+  background: transparent;
+  border: 1px solid var(--dim);
+  border-radius: 6px;
+  min-width: 34px;
+  padding: 4px 10px;
+  cursor: pointer;
+}
+#repris button:hover, #repris button:focus-visible { color: var(--hi); border-color: var(--hi); outline: none; }
+#repris .rp-karta { flex: 1 1 auto; min-height: 0; width: 100%; display: block; }
+#repris .rp-styr { display: flex; align-items: center; gap: 10px; }
+#repris .rp-styr input { flex: 1 1 auto; accent-color: var(--fg); }
+#repris .rp-runda { min-width: 9em; text-align: right; color: var(--hi); }
+#repris .rp-vandrare { display: flex; flex-wrap: wrap; gap: 4px 18px; font-size: 12px; color: var(--dim); }
+#repris .rp-vandrare b { font-weight: normal; }
+#repris .rp-rum { fill: rgba(169, 166, 157, 0.16); stroke: var(--dim); stroke-width: 1; }
+#repris .rp-kammare { fill: rgba(255, 204, 102, 0.3); stroke: var(--hi); }
+#repris line { stroke-linecap: round; }
+#repris .rp-dorr { stroke: var(--dim); stroke-width: 1.5; }
+#repris .rp-port { stroke: var(--fg); stroke-width: 2; }
+#repris .rp-vag { stroke-width: 2.4; opacity: 0.75; }
+#repris .rp-vag.rp-ny { opacity: 1; stroke-width: 3; }
+#repris .rp-du { stroke: #000; stroke-width: 1.2; }
+#repris .rp-du.rp-ute { fill: none; stroke-width: 2.4; }
+#repris .rp-du.rp-svag { opacity: 0.4; }
+#repris .rp-dod { fill: none; stroke-width: 2.6; stroke-linecap: round; }
 #kortvisningKort { position: relative; width: 230px; perspective: 800px; }
 #kortvisningKort .ok-namn { font-size: 13px; }
 #kortvisningKort .ok-bild { width: 160px; height: 140px; }

@@ -755,6 +755,7 @@ function renderChron() {
   next.textContent = me && me.ready ? t("nu_vantar") : t("knapp_nytt_torn");
   next.disabled = !!(me && me.ready);
   $("chronHost").hidden = !end || !state.vard;
+  $("chronReplay").hidden = !end || !state.repris;
   // Vandringens sista kort: ute, död eller kvar när solen gick ner. Det
   // vänds upp en gång, inte vid varje nytt läge.
   const last = $("chronCard");
@@ -985,6 +986,7 @@ $("chronRestBtn").addEventListener("click", () => {
 });
 $("chronNext").addEventListener("click", () => send({ t: "ready" }));
 $("chronHost").addEventListener("click", goHost);
+$("chronReplay").addEventListener("click", () => Repris.open(state && state.repris));
 $("chronMap").addEventListener("click", () => {
   chronMap = true;
   showPhase();
@@ -1617,6 +1619,11 @@ document.addEventListener("keydown", (e) => {
     e.preventDefault();
     e.stopPropagation();
     hideCardPopup();
+    return;
+  }
+  if (e.key === "Escape" && Repris.close()) {
+    e.preventDefault();
+    e.stopPropagation();
     return;
   }
   if ((e.key === "Enter" || e.key === " ") && openMini(e)) return;
