@@ -82,12 +82,27 @@ type Serpent struct {
 	Somn               []string `json:"somn"`
 }
 
+// HitRules är träffchansen i strid (docs/bara-anfall.md): bas + per_steg ×
+// (Kraft − motståndarens Försvar), inom min och max, i procent. Garden
+// läggs till mot den som håller garden och Oberedd mot den som söker eller
+// dricker. Kraft och Forsvar gäller vandrare utan klass.
+type HitRules struct {
+	Bas     int `json:"bas"`
+	PerSteg int `json:"per_steg"`
+	Min     int `json:"min"`
+	Max     int `json:"max"`
+	Garden  int `json:"garden"`
+	Oberedd int `json:"oberedd"`
+	Kraft   int `json:"kraft"`
+	Forsvar int `json:"forsvar"`
+}
+
 // Monsters styr varelserna i tornet och striderna mot dem.
 type Monsters struct {
 	Chans       float64             `json:"chans"`
 	VandraChans float64             `json:"vandra_chans"` // chans per runda att en varelse vandrar av sig själv
 	Spelarskada int                 `json:"spelarskada"`
-	Val         map[string]string   `json:"val"`
+	Traff       HitRules            `json:"traff"`
 	Typer       []MonsterType       `json:"typer"`
 	Texter      map[string][]string `json:"texter"`
 }
@@ -109,7 +124,9 @@ type MonsterType struct {
 	Guld     int            `json:"guld"`
 	Tecken   string         `json:"tecken"`
 	Modell   *ModelLook     `json:"modell,omitempty"` // färg och storlek på kartan snett ovanifrån
-	Vanor    map[string]int `json:"vanor"`
+	Kraft    int            `json:"kraft"`   // hur lätt varelsen träffar
+	Forsvar  int            `json:"forsvar"` // hur svår den är att träffa
+	Lynne    int            `json:"lynne"`   // chansen i procent att den anfaller när vandraren inte gör det
 	Vandrar  *float64       `json:"vandrar,omitempty"` // egen chans att vandra, annars vandra_chans
 	DykerUpp []string       `json:"dyker_upp"`
 	Dor      []string       `json:"dor"`
@@ -548,7 +565,7 @@ type Initiate struct {
 	Guld        float64 `json:"guld"`         // andel extra guld när den invigde kommer ut
 	ForstGuld   float64 `json:"forst_guld"`   // andel extra guld till, för den som blev invigd först
 	Falla       float64 `json:"falla"`        // chansen att känna igen en fälla och kliva förbi
-	ExtraAnfall int     `json:"extra_anfall"` // varelserna anfaller oftare
+	ExtraLynne  int     `json:"extra_lynne"`  // procentenheter som varelserna anfaller oftare
 	Vacker      float64 `json:"vacker"`       // chansen att en näve drar ett vakna-kort
 }
 

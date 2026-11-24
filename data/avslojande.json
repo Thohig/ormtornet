@@ -6,8 +6,8 @@
 
     "_om_svar": "Viskningar som visar att vandraren vet hemligheten. Stämmer en viskning med något av svaren, som hela ord, blir vandraren invigd. Man kan viska en gång per nivå, från viska_fran_niva.",
     "viska_fran_niva": 2,
-    "_om_invigd": "Fördelarna och svagheten för den invigde: extra guld när hen kommer ut (och forst_guld till för den som blev invigd först), chansen att kliva förbi en fälla, hur mycket oftare varelserna anfaller och chansen att en näve väcker ormen.",
-    "invigd": { "guld": 0.25, "forst_guld": 0.25, "falla": 0.5, "extra_anfall": 1, "vacker": 0.15 },
+    "_om_invigd": "Fördelarna och svagheten för den invigde: extra guld när hen kommer ut (och forst_guld till för den som blev invigd först), chansen att kliva förbi en fälla, hur många procentenheter oftare varelserna anfaller (extra_lynne) och chansen att en näve väcker ormen.",
+    "invigd": { "guld": 0.25, "forst_guld": 0.25, "falla": 0.5, "extra_lynne": 15, "vacker": 0.15 },
     "_om_forandring": "Med inställningen Tornet förändras: från nivå 3 får fällorna under fallvikter nya vikter i nya rum (den högsta nivån som inte är över avslöjandets gäller), och på nivå 4 stängs portarna en i taget, var port_stangs_var:e runda, med en varning rundan innan. Den sista porten stängs aldrig.",
     "forandring": {
       "fallvikter": {

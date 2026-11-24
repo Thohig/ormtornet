@@ -7,7 +7,7 @@ import "testing"
 func TestLostBotHeadsForPorts(t *testing.T) {
 	g, a, _ := startTwo(t)
 	p := a.player
-	p.bot = &botBrain{pers: &g.data.AI.Personligheter[0], habits: map[string]map[string]int{}}
+	p.bot = &botBrain{pers: &g.data.AI.Personligheter[0]}
 	for y := range g.size {
 		for x := range g.size {
 			g.rooms[y][x].Revealed, g.rooms[y][x].Walked = false, false

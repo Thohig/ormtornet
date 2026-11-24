@@ -237,8 +237,8 @@ func TestDarkHidesDoors(t *testing.T) {
 	}
 }
 
-// Dricker man eller flyr medan en varelse inte anfaller står det inte att
-// den "försöker vika undan" när ingen slår mot den, och man förlorar inget.
+// Dricker, flyr eller väntar man medan en varelse inte anfaller står det
+// att den låter en vara, och man förlorar inget.
 func TestFreeAttackCalmWhenNotAttacking(t *testing.T) {
 	g, a, _ := startTwo(t)
 	p := a.player
@@ -250,11 +250,8 @@ func TestFreeAttackCalmWhenNotAttacking(t *testing.T) {
 		}
 		m := &Monster{ID: 90 + i, Type: typ.ID, X: p.X, Y: p.Y, HP: 2}
 		p.HP = 50
-		key := "inte_beredd"
-		if i%2 == 1 {
-			key = "fly"
-		}
-		g.freeAttack(p, m, key)
+		key := []string{"inte_beredd", "fly", "garden"}[i%3]
+		g.freeAttack(p, m, key, 0, false)
 		for len(a.send) > 0 {
 			var msg logMsg
 			if json.Unmarshal(<-a.send, &msg) != nil || msg.T != "log" {
@@ -263,7 +260,7 @@ func TestFreeAttackCalmWhenNotAttacking(t *testing.T) {
 			if strings.Contains(msg.Text, "försöker") {
 				t.Fatalf("fritt drag: %q", msg.Text)
 			}
-			if strings.Contains(msg.Text, "låter dig vara") || strings.Contains(msg.Text, "följer inte efter") {
+			if strings.Contains(msg.Text, "låter dig vara") || strings.Contains(msg.Text, "följer inte efter") || strings.Contains(msg.Text, "väntar också") || strings.Contains(msg.Text, "inte rör sig") {
 				calm++
 				if p.HP != 50 {
 					t.Fatalf("skadad fast varelsen inte anföll: %d", p.HP)

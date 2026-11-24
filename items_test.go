@@ -137,7 +137,7 @@ func TestSmokeFleesWithoutBlow(t *testing.T) {
 	p := a.player
 	openRoom(g, p, 4, 3)
 	typ := &g.data.Monster.Typer[0]
-	typ.Vanor = map[string]int{actAttack: 1}
+	typ.Lynne = 100
 	g.monsters = append(g.monsters, &Monster{ID: 60, Type: typ.ID, X: 4, Y: 3, HP: 9})
 	g.give(p, "rokpulver")
 	hp := p.HP

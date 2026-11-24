@@ -43,7 +43,7 @@ func TestDataCheckFindsMistakes(t *testing.T) {
 	}{
 		{"monster.json", `"vandra_chans"`, `"vandar_chans"`, `okänt fält "vandar_chans"`},
 		{"monster.json", `"vandra_chans": 0.25`, `"vandra_chans": 2.5`, "vandra_chans ska vara mellan 0 och 1"},
-		{"monster.json", `"vanor": { "anfall": 1`, `"vanor": { "anfal": 1`, `vanan "anfal"`},
+		{"monster.json", `"lynne": 25`, `"lynne": 250`, `lynne ska vara 0–100`},
 		{"monster.json", `"id": "yngel"`, `"id": "krypare"`, `varelsen "krypare" finns två gånger`},
 		{"ai.json", `"legoknekt"`, `"legoknekten"`, `klassen "legoknekten" finns inte`},
 		{"monster.json", `"liv": 2,`, `"liv": "två",`, "har fel sorts värde"},

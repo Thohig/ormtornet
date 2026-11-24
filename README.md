@@ -290,12 +290,10 @@ på kartan, och man får pröva sig fram.
 | Tangent    | Drag                              |
 |------------|-----------------------------------|
 | Pilar      | gå åt det hållet                  |
-| Mellanslag | vänta                             |
+| Mellanslag | vänta (i strid: håll garden)      |
 | S          | sök igenom rummet, eller ta skatt i skattkammaren |
 | D          | drick en dryck                    |
 | A          | anfall (i strid)                  |
-| P          | parera (i strid)                  |
-| U eller E  | undanmanöver (i strid; E för evade på engelska) |
 | Z          | byt zoom på kartan: (Rummet,) Nära, Mellan, Långt, Allt |
 | L          | hela loggen (på en bred skärm)    |
 | Enter      | redo / spela igen                 |
@@ -310,8 +308,8 @@ och går den trögt slår den av skuggorna och ritar med lägre upplösning.
 En iPhone, iPad eller Android-telefon i samma nätverk kan vara med. Öppna
 samma adress i Safari eller Chrome. På en pekskärm visas knappar i stället
 för tangenterna, och bara de som gäller just nu: utanför strid pilarna,
-`·` (vänta), Sök och Drick; i strid pilarna (att gå är att fly), Anfall,
-Parera, Undan och Drick; Viska när det går att viska; och i lobbyn och
+`·` (vänta), Sök och Drick; i strid pilarna (att gå är att fly), Vänta
+(håll garden), Anfall, Sök och Drick; Viska när det går att viska; och i lobbyn och
 slutet bara Redo (som Enter, och Nytt torn när vandringen är slut).
 Styrningen bakom ? visar på samma sätt bara de tangenter som gäller. På kartan snett ovanifrån går det också att
 trycka på pilarna vid dörrarna (och klicka på dem med musen). På en smal
@@ -454,10 +452,10 @@ igen.
 
 | Klass | Styrka | Svaghet |
 |---|---|---|
-| Legoknekten | ett liv extra, tar ingen skada när båda anfaller | hittar hälften så mycket guld när hen söker |
+| Legoknekten | ett liv extra, och slår hårdast av alla (Kraft 3, Försvar 2) | hittar hälften så mycket guld när hen söker |
 | Tjuven | en fjärdedel mer guld ur kammaren, hittar oftare föremål, ingen märker när ormen rör sig vid hens näve, river hälften i strid mot vandrare | hittar aldrig drycker när hen söker |
 | Örtkvinnan | börjar med en dryck, en dryck ger tre liv, tål gift | tappar mycket mer skatt när ormen vaknar |
-| Kartritaren | ser genom dörrarna in i rummen bredvid, ser alla rum som någon har hittat och var någon har dött (ett x i hörnet), ger sin karta till den hen möter, hittar alltid en hemlig gång om det går, har en dryck med sig | undanmanöver lyckas aldrig |
+| Kartritaren | ser genom dörrarna in i rummen bredvid, ser alla rum som någon har hittat och var någon har dött (ett x i hörnet), ger sin karta till den hen möter, hittar alltid en hemlig gång om det går, har en dryck med sig | flyr hen ur en strid träffar slaget mot ryggen alltid |
 | Ormtjusaren | ser i kammaren hur många vakna-kort som är kvar, ormen skadar inte hen när den vaknar | hittar hälften så mycket guld när hen söker |
 | Spårfinnaren | ser spår 6 rundor bakåt och vems de är, märker hälften av fällorna i tid, ser var föremål och guld ligger och vem som tog guldet, känner före andra åt vilket håll ristningen finns | hör inget genom väggarna, utom med benluren |
 | Lyktbäraren | ett liv extra, tål mörker, ser varelser i grannrummen | syns för andra redan från grannrummet |
@@ -469,11 +467,13 @@ spelet händer. Klasserna går inte att stänga av.
 
 ### Strid mellan vandrare
 
-Står två vandrare i samma rum utan någon varelse kan de slåss med samma
-sten-sax-påse som mot varelserna (A, P, U eller E). Står flera där väljer
+Står två vandrare i samma rum utan någon varelse kan de slåss med A, som mot
+varelserna. Står flera där väljer
 tornet motståndaren: den som anföll dig förra rundan, annars den som kom
-först in i tornet. Panelen Nu säger vem. Den som inte försvarar sig blir träffad om den andra
-anfaller, även om den går ut ur rummet. Varje träff kostar 1 liv och river
+först in i tornet. Panelen Nu säger vem. Anfaller båda slår båda, och var
+och en träffar med sin chans. Den som inte anfaller kan bli träffad även om
+den går ut ur rummet; den som väntar håller garden och är svårare att
+träffa, den som söker eller dricker lättare. Varje träff kostar 1 liv och river
 åt sig en tredjedel av motståndarens guld (minst 1). Den som dödar tar allt.
 Hur mycket någon bär syns inte, men man får en vink när man möter dem.
 Portrummen är fredade, och varje runda med strid gör ormen lite oroligare.
@@ -503,8 +503,7 @@ står de som "(dator)".
 - Hur lite liv de går hem eller dricker vid står i `data/ai.json` för
   liven i datafilerna och räknas om efter vandrarens egna liv, så att en
   försiktig vandrare med få liv på Mardröm inte vänder redan i porten.
-- I strid gissar de varelsens vanor utifrån dess beskrivning och lär sig av
-  det de ser. De flyr när nästa slag kan döda dem.
+- I strid anfaller de, och flyr när nästa slag kan döda dem.
 - Hör de mynt rassla när någon dör går de ibland dit, till rummet om de
   stod bredvid och annars till den del av tornet skriket kom från, men
   bara med minst halva livet kvar och gott om tid. Hur gärna står som
@@ -614,22 +613,29 @@ Kortens namn står under `namn` i `data/ormen.json`.
 ### Strider
 
 Ett nytt rum kan i stället för en fälla ha en varelse. Den syns på kartan för
-alla. Står du i samma rum som en varelse är du i strid. Båda väljer i hemlighet:
+alla. Står du i samma rum som en varelse är du i strid. Det enda stridsvalet
+är **anfall** (A): då slår både du och varelsen, och var och en träffar med
+sin chans (se [docs/bara-anfall.md](docs/bara-anfall.md)).
 
-- **parera** slår **anfall**
-- **anfall** slår **undanmanöver**
-- **undanmanöver** slår **parera**
+Chansen kommer av två värden. **Kraft** är hur lätt man träffar och
+**Försvar** hur svår man är att träffa. Varje klass har sina
+(`kraft` och `forsvar` i `data/klasser.json`), och varje varelse sina
+(`data/monster.json`). Träffchansen är `bas + per_steg × (Kraft −
+motståndarens Försvar)` inom `min` och `max` (`traff` i
+`data/monster.json`). Spelarna ser aldrig talen.
 
-Vinnaren träffar. Väljer båda anfall träffar båda; annars händer inget vid
-lika val. Loggen säger att varelsen "försöker parera" eller "försöker vika
-undan" (`val` i `data/monster.json`), eftersom valet kan misslyckas. Varje sorts varelse har egna vanor, så det lönar sig att lära sig
-dem. Besegrar du en varelse får du dess guld.
+Du kan också göra något annat medan varelsen står där, men då kanske den
+anfaller. Hur ofta beror på dess **lynne** (`lynne`, i procent), så det
+lönar sig att lära sig varelserna:
 
-Gör du något annat än att slåss (söker, dricker, väntar) får varelsen ett
-fritt drag mot dig. Du kan fly genom att gå ut ur rummet, men varelsen får
-ett fritt drag mot din rygg först. Bara ett anfall träffar; väljer
-varelsen något annat står det att den låter dig vara eller inte följer
-efter (`inte_beredd_lugn` och `fly_lugn`).
+- **vänta** (mellanslag) är att hålla garden: varelsen träffar sämre
+  (`garden`), och du slår inte,
+- **sök** och **drick** går, men varelsen träffar lättare (`oberedd`),
+- **gå** är att fly: varelsen kanske slår mot din rygg innan du är ute.
+
+Står du still utan att välja något hålls ingen garden. Besegrar du en
+varelse får du dess guld. Den invigde och den som bär Myntet med hål gör
+varelserna mer lynniga.
 
 Varelserna vandrar också av sig själva. I början av varje runda kan en
 varelse gå genom en öppen dörr till ett grannrum, ibland ut i delar av
@@ -967,7 +973,7 @@ med `python3 -m http.server 8095` i repots rot och
 - `texter.json` rum, beskrivningar, allmänna texter och introts väntetid. Varje rumstyp har sin inredning på kartan under `modell.inredning`, med namnen i `klient/src/inredning.ts`
 - `fallor.json` regler (liv, chans för händelse, drycker, hur länge spåren syns), fällor och sökresultat
 - `ormen.json` ormkorten, skatten i kammaren och vad som händer när ormen vaknar
-- `monster.json` varelserna (liv, skada, guld, vanor, hur ofta de vandrar, texter, och modellens färg och storlek på kartan snett ovanifrån) och striderna
+- `monster.json` varelserna (liv, skada, guld, Kraft, Försvar och lynne, hur ofta de vandrar, texter, och modellens färg och storlek på kartan snett ovanifrån) och striderna
 - `ai.json` datorspelarnas namn, personligheter och betänketid
 - `svarighet.json` förvalen för svårighet (se nedan)
 - `klasser.json` klasserna: namn, styrka, svaghet, liv, drycker, siffror och texter, och figurens färg och storlek på kartan snett ovanifrån
@@ -1019,8 +1025,7 @@ laddar. Sedan byts den mot titeln på tornets språk:
 Titlarna är `sidans_titel` i `data/spelarsidan.json` och `skal_sidtitel`,
 och `sidtitel` i `data/vardsidan.json`.
 
-På engelska heter undanmanövern E (evade). U fungerar också, på båda
-språken. En viskning till tornet räknas på båda språken.
+En viskning till tornet räknas på båda språken.
 
 ### Svårighet
 

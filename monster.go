@@ -1,13 +1,10 @@
 package main
 
-// Monster och strider. En strid är som sten-sax-påse: båda sidor väljer i
-// hemlighet anfall, parering eller undanmanöver.
-//
-//	parering slår anfall (slaget avleds och besvaras)
-//	anfall slår undanmanöver (den som viker undan blir träffad)
-//	undanmanöver slår parering (man glider runt skölden)
-//
-// Väljer båda anfall träffar båda. Annars händer ingenting vid lika val.
+// Monster och strider (docs/bara-anfall.md). Det enda stridsvalet är
+// anfall: då slår både vandraren och varelsen, och var och en träffar med
+// sin chans (hitChance). Gör vandraren något annat anfaller varelsen med
+// chansen i sitt lynne. Den som väntar håller garden och är svårare att
+// träffa; den som söker eller dricker är lättare.
 
 import (
 	"slices"
@@ -17,11 +14,7 @@ import (
 	"unicode/utf8"
 )
 
-const (
-	actAttack = "anfall"
-	actParry  = "parera"
-	actDodge  = "undan"
-)
+const actAttack = "anfall"
 
 type Monster struct {
 	ID   int
@@ -52,14 +45,50 @@ type monsterView struct {
 }
 
 func isCombatAction(a string) bool {
-	return a == actAttack || a == actParry || a == actDodge
+	return a == actAttack
 }
 
-// beats säger om val a vinner över val b.
-func beats(a, b string) bool {
-	return (a == actParry && b == actAttack) ||
-		(a == actAttack && b == actDodge) ||
-		(a == actDodge && b == actParry)
+// hitChance är chansen i procent att den med kraften träffar den med
+// försvaret, med mod (garden eller oberedd) lagt till.
+func (g *Game) hitChance(kraft, forsvar, mod int) int {
+	r := g.data.Monster.Traff
+	c := r.Bas + r.PerSteg*(kraft-forsvar) + mod
+	return min(r.Max, max(r.Min, c))
+}
+
+// roll är sant med chansen pct i procent.
+func (g *Game) roll(pct int) bool {
+	return g.rng.IntN(100) < pct
+}
+
+// kraft och forsvar är vandrarens värden i strid: klassens, eller
+// värdena för den som inte har någon klass.
+func (g *Game) kraft(p *Player) int {
+	if c := g.classOf(p); c != nil {
+		return c.Kraft
+	}
+	return g.data.Monster.Traff.Kraft
+}
+
+func (g *Game) forsvar(p *Player) int {
+	if c := g.classOf(p); c != nil {
+		return c.Forsvar
+	}
+	return g.data.Monster.Traff.Forsvar
+}
+
+// guardMod är hur mycket lättare eller svårare det är att träffa den som
+// gjorde a i stället för att anfalla: garden när hen väntar, oberedd när
+// hen söker, dricker eller tar skatt. Den som går eller inte valde något
+// har inget tillägg.
+func (g *Game) guardMod(a string) int {
+	switch a {
+	case actWait:
+		return g.data.Monster.Traff.Garden
+	case actSearch, actDrink, actTake:
+		return g.data.Monster.Traff.Oberedd
+	}
+	return 0
 }
 
 func lowerFirst(s string) string {
@@ -122,36 +151,22 @@ func (g *Game) removeMonster(m *Monster) {
 	}
 }
 
-// monsterChoice låter varelsen välja efter sina vanor.
-func (g *Game) monsterChoice(m *Monster) string {
+// lynne är chansen i procent att varelsen anfaller p en runda då p inte
+// anfaller. Den invigde och den som bär Myntet med hål gör den mer lynnig.
+func (g *Game) lynne(m *Monster, p *Player) int {
 	t := g.data.monsterType(m.Type)
-	if t == nil || len(t.Vanor) == 0 {
-		return []string{actAttack, actParry, actDodge}[g.rng.IntN(3)]
+	if t == nil {
+		return 50
 	}
-	return weighted(g.rng, t.Vanor)
-}
-
-// monsterChoiceVs är varelsens val mot en viss vandrare. Ormtjusaren lockar
-// fram fler anfall.
-func (g *Game) monsterChoiceVs(m *Monster, p *Player) string {
-	extra := int(g.classVal(p, "extra_anfall", 0))
+	l := t.Lynne
 	if p.initiated {
-		extra += g.data.Avslojande.Invigd.ExtraAnfall
+		l += g.data.Avslojande.Invigd.ExtraLynne
 	}
 	if p.has("mynt_hal") != nil {
 		g.curse(p, "mynt_hal")
-		extra += 2
+		l += 25
 	}
-	t := g.data.monsterType(m.Type)
-	if extra <= 0 || t == nil || len(t.Vanor) == 0 {
-		return g.monsterChoice(m)
-	}
-	w := map[string]int{}
-	for k, v := range t.Vanor {
-		w[k] = v
-	}
-	w[actAttack] += extra
-	return weighted(g.rng, w)
+	return min(100, l)
 }
 
 // monsterViews: lyktbäraren ser också varelser i grannrummen.
@@ -185,13 +200,6 @@ func (g *Game) monsterVars(m *Monster, p *Player, extra ...string) []string {
 	return append([]string{"Monster", upperFirst(the), "monster", the}, extra...)
 }
 
-func (g *Game) choiceWord(a string) string {
-	if w := g.data.Monster.Val[a]; w != "" {
-		return w
-	}
-	return a
-}
-
 // announceMonster säger med ett ljud att en varelse finns i rummet. Vad
 // spelaren ser står i rumsblocket.
 func (g *Game) announceMonster(p *Player) {
@@ -216,28 +224,15 @@ func (g *Game) announceMonster(p *Player) {
 	g.knife(p, m)
 }
 
-// duel utför en stridsrunda mellan spelaren och varelsen.
-func (g *Game) duel(p *Player, m *Monster, a string) {
+// duel utför en stridsrunda mellan spelaren och varelsen: spelaren
+// anfaller, varelsen slår tillbaka, och var och en träffar med sin chans.
+func (g *Game) duel(p *Player, m *Monster) {
 	t := g.data.monsterType(m.Type)
-	mc := g.monsterChoiceVs(m, p)
-	m.did = mc
-	if p.bot != nil {
-		p.bot.saw(m.Type, mc)
-	}
-	g.logTo(p, g.data.MonsterText("duell", g.monsterVars(m, p,
-		"ditt_val", g.choiceWord(a), "dess_val", g.choiceWord(mc))...), "")
+	m.did = actAttack
 	g.hearFight(p.X, p.Y, p)
 
-	playerHits := beats(a, mc) || (a == actAttack && mc == actAttack)
-	monsterHits := beats(mc, a) || (a == actAttack && mc == actAttack)
-	if a == actAttack && mc == actAttack && g.is(p, "legoknekt") {
-		monsterHits = false
-		g.logTo(p, g.data.Text("klass_legoknekt_skold"), "info")
-	}
-	if a == actDodge && g.is(p, "kartritare") {
-		playerHits, monsterHits = false, true
-		g.logTo(p, g.data.Text("klass_kartritare_undan"), "varn")
-	}
+	playerHits := g.roll(g.hitChance(g.kraft(p), t.Forsvar, 0))
+	monsterHits := g.roll(g.hitChance(t.Kraft, g.forsvar(p), 0))
 	var result string // hur rundan gick, för spelkortet
 	switch {
 	case playerHits && monsterHits:
@@ -249,16 +244,10 @@ func (g *Game) duel(p *Player, m *Monster, a string) {
 		result = g.data.MonsterText("du_traffar", g.monsterVars(m, p)...)
 		g.logTo(p, result, "syn")
 	case monsterHits:
-		// Texten följer det du valde, så att den inte säger att du vek undan
-		// när du anföll.
-		key := "monster_traffar_" + a
-		if len(g.data.Monster.Texter[key]) == 0 {
-			key = "monster_traffar"
-		}
-		result = g.data.MonsterText(key, g.monsterVars(m, p, "skada", strconv.Itoa(t.Skada))...)
+		result = g.data.MonsterText("monster_traffar", g.monsterVars(m, p, "skada", strconv.Itoa(t.Skada))...)
 		g.logTo(p, result, "varn")
 	default:
-		g.soundTo(p, choiceSound(a))
+		g.soundTo(p, "parera")
 		result = g.data.MonsterText("inget", g.monsterVars(m, p)...)
 		g.logTo(p, result, "dim")
 	}
@@ -291,33 +280,33 @@ func (g *Game) monsterCard(p *Player, t *MonsterType, rubrik, text string, falle
 	g.addCard(p, gameCard{Slag: "varelse", Bild: cardImage(t.Bild, t.ID), Rubrik: rubrik, Text: text, Fallen: fallen})
 }
 
-func choiceSound(a string) string {
-	if a == actParry {
-		return "parera"
-	}
-	return "undan"
-}
-
-// freeAttack: spelaren gör något annat än att slåss, och varelsen får ett
-// fritt drag. Bara ett anfall träffar.
-func (g *Game) freeAttack(p *Player, m *Monster, key string) {
+// freeAttack: spelaren gör något annat än att anfalla, och varelsen
+// anfaller kanske, med chansen i sitt lynne. key är texternas början
+// (inte_beredd, garden eller fly) och mod hur mycket lättare eller svårare
+// spelaren är att träffa. always är kartritaren som flyr: slaget mot
+// ryggen tar alltid.
+func (g *Game) freeAttack(p *Player, m *Monster, key string, mod int, always bool) {
 	t := g.data.monsterType(m.Type)
-	mc := g.monsterChoiceVs(m, p)
-	// Anfaller varelsen inte står det att den låter en vara, inte att den
-	// "försöker vika undan" när ingen slår mot den.
-	if mc != actAttack && len(g.data.Monster.Texter[key+"_lugn"]) > 0 {
+	if !g.roll(g.lynne(m, p)) {
 		g.logTo(p, g.data.MonsterText(key+"_lugn", g.monsterVars(m, p)...), "dim")
 		return
 	}
-	g.logTo(p, g.data.MonsterText(key, g.monsterVars(m, p, "dess_val", g.choiceWord(mc))...), "varn")
-	if mc == actAttack {
-		m.did = actAttack
-		text := g.data.MonsterText("monster_traffar", g.monsterVars(m, p, "skada", strconv.Itoa(t.Skada))...)
-		g.logTo(p, text, "varn")
+	m.did = actAttack
+	if !always && !g.roll(g.hitChance(t.Kraft, g.forsvar(p), mod)) {
+		g.soundTo(p, "parera")
+		text := g.data.MonsterText(key+"_miss", g.monsterVars(m, p)...)
+		g.logTo(p, text, "dim")
 		g.monsterCard(p, t, g.fightName(m, p), text, false)
-		p.hurt("varelse", t.Kort)
-		g.damage(p, g.shieldDamage(p, t.Skada), false)
+		return
 	}
+	if always {
+		g.logTo(p, g.data.Text("klass_kartritare_fly"), "varn")
+	}
+	text := g.data.MonsterText(key+"_traff", g.monsterVars(m, p, "skada", strconv.Itoa(t.Skada))...)
+	g.logTo(p, text, "varn")
+	g.monsterCard(p, t, g.fightName(m, p), text, false)
+	p.hurt("varelse", t.Kort)
+	g.damage(p, g.shieldDamage(p, t.Skada), false)
 }
 
 func (g *Game) defeat(p *Player, m *Monster) {
@@ -456,11 +445,23 @@ func (g *Game) combatTurn(p *Player, a string) bool {
 	}
 	switch {
 	case isCombatAction(a):
-		g.duel(p, m, a)
+		g.duel(p, m)
 		return true
 	case a == actDrink:
 		g.drink(p)
-		g.freeAttack(p, m, "inte_beredd")
+		g.freeAttack(p, m, "inte_beredd", g.guardMod(a), false)
+		return true
+	case a == actSearch:
+		// Man kan söka medan varelsen står där, men den kanske anfaller.
+		g.freeAttack(p, m, "inte_beredd", g.guardMod(a), false)
+		if p.Status == statusIn {
+			g.search(p)
+		}
+		return true
+	case a == actWait && p.Action != "":
+		// Den som väntar håller garden. Den som inte valde något står
+		// bara still.
+		g.freeAttack(p, m, "garden", g.guardMod(a), false)
 		return true
 	case strings.Contains("NESW", a) && len(a) == 1:
 		// Flykt: varelsen får ett fritt drag, sedan går spelaren. Med
@@ -468,10 +469,10 @@ func (g *Game) combatTurn(p *Player, a string) bool {
 		if g.smoke(p, dirCodes[a]) {
 			return false
 		}
-		g.freeAttack(p, m, "fly")
+		g.freeAttack(p, m, "fly", 0, g.is(p, "kartritare"))
 		return p.Status != statusIn
 	default:
-		g.freeAttack(p, m, "inte_beredd")
+		g.freeAttack(p, m, "inte_beredd", g.guardMod(p.Action), false)
 		return true
 	}
 }

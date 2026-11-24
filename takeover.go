@@ -20,7 +20,7 @@ func (g *Game) takeOver(p *Player) {
 	if len(pers) == 0 {
 		return
 	}
-	p.bot = &botBrain{pers: &pers[p.Slot%len(pers)], habits: map[string]map[string]int{}}
+	p.bot = &botBrain{pers: &pers[p.Slot%len(pers)]}
 	p.takenOver = true
 	p.aiPlayed = true
 	p.still = 0

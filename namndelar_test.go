@@ -88,14 +88,16 @@ func TestCreaturePart(t *testing.T) {
 	p := cs[0].player
 	putInRoom(g, p, 4, 3)
 	typ := &g.data.Monster.Typer[0]
-	typ.Vanor = map[string]int{actDodge: 1}
 	m := &Monster{ID: 50, Type: typ.ID, X: 4, Y: 3, HP: 10}
 	g.monsters = append(g.monsters, m)
-	g.duel(p, m, actParry) // undanmanöver slår parera: varelsen träffar
+	sureHits(g)
+	typ.Forsvar = 1 // Kraft 1 mot Försvar 1: slaget tar inte
+	g.duel(p, m)
 	if p.parts[g.partAt[srcCreature]] {
 		t.Fatal("delen utan att träffa")
 	}
-	g.duel(p, m, actAttack)
+	typ.Forsvar = 0
+	g.duel(p, m)
 	if !p.parts[g.partAt[srcCreature]] {
 		t.Fatal("ingen del när vandraren träffade")
 	}

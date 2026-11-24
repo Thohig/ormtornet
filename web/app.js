@@ -544,7 +544,7 @@ async function changeLanguage(lang, againIntro) {
 const ACTION_WORDS = {
   N: "drag_norrut", E: "drag_osterut", S: "drag_soderut", W: "drag_vasterut",
   vanta: "drag_vanta", ta: "drag_ta", sok: "drag_sok", drick: "drag_drick",
-  anfall: "drag_anfall", parera: "drag_parera", undan: "drag_undan",
+  anfall: "drag_anfall",
 };
 function actionWord(a) {
   return ACTION_WORDS[a] ? t(ACTION_WORDS[a]) : a;
@@ -2143,9 +2143,7 @@ $("back").addEventListener("click", () => pressKey("Escape"));
 const KEYS = {
   ArrowUp: "N", ArrowRight: "E", ArrowDown: "S", ArrowLeft: "W",
   " ": "vanta", s: "sok", S: "sok", d: "drick", D: "drick",
-  a: "anfall", A: "anfall", p: "parera", P: "parera", u: "undan", U: "undan",
-  // E (evade) är undanmanövern på engelska; båda bokstäverna fungerar på båda språken.
-  e: "undan", E: "undan",
+  a: "anfall", A: "anfall",
 };
 document.addEventListener("keydown", (e) => {
   if (e.metaKey || e.ctrlKey || e.altKey) return;

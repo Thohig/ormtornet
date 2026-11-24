@@ -75,7 +75,7 @@ function choose() {
   const m = me();
   const r = room(m.x, m.y);
   const foe = (st.monsters || []).find((x) => x.x === m.x && x.y === m.y);
-  if (foe && !st.cellar) return { a: ["anfall", "anfall", "parera", "undan"][Math.floor(Math.random() * 4)] };
+  if (foe && !st.cellar) return { a: ["anfall", "anfall", "anfall", "vanta"][Math.floor(Math.random() * 4)] };
   if (st.kanViska && !whispered && Math.random() < 0.3) {
     whispered = true;
     const parts = st.namndelar || [];

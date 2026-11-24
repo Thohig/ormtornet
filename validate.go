@@ -188,6 +188,9 @@ func (d *Data) validate() []string {
 	m := &d.Monster
 	chance("monster.json", "chans", m.Chans)
 	chance("monster.json", "vandra_chans", m.VandraChans)
+	if r := m.Traff; r.Min < 0 || r.Max > 100 || r.Min > r.Max {
+		bad("monster.json", "traff: min och max ska vara 0–100, min först")
+	}
 	ids = nil
 	for _, t := range m.Typer {
 		model("monster.json", "varelsen", t.ID, t.Modell)
@@ -196,10 +199,8 @@ func (d *Data) validate() []string {
 		if t.Vandrar != nil {
 			chance("monster.json", t.ID+": vandrar", *t.Vandrar)
 		}
-		for k := range t.Vanor {
-			if _, ok := m.Val[k]; !ok {
-				bad("monster.json", "%s: vanan %q är inget val (%s)", t.ID, k, keys(m.Val))
-			}
+		if t.Lynne < 0 || t.Lynne > 100 {
+			bad("monster.json", "%s: lynne ska vara 0–100", t.ID)
 		}
 		if t.Liv <= 0 {
 			bad("monster.json", "%s: liv ska vara minst 1", t.ID)

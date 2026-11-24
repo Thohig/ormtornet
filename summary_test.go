@@ -76,7 +76,7 @@ func TestSummaryNamesTheFoe(t *testing.T) {
 	summaries(a)
 	summaries(b)
 	g.Act(a, actAttack, -bo.ID)
-	g.Act(b, actParry, -alva.ID)
+	g.Act(b, actAttack, -alva.ID)
 	has := func(c *Client, want string) bool {
 		for _, m := range summaries(c) {
 			for _, l := range m.Lines {
@@ -90,7 +90,7 @@ func TestSummaryNamesTheFoe(t *testing.T) {
 	if want := g.data.Text("sam_anfall_vandrare", "namn", bo.Name); !has(a, want) {
 		t.Fatalf("Alvas kort saknar %q", want)
 	}
-	if want := g.data.Text("sam_parera_vandrare", "namn", alva.Name); !has(b, want) {
+	if want := g.data.Text("sam_anfall_vandrare", "namn", alva.Name); !has(b, want) {
 		t.Fatalf("Bos kort saknar %q", want)
 	}
 }

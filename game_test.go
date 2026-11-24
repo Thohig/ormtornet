@@ -380,60 +380,98 @@ func allWake(g *Game) bool {
 	return true
 }
 
-func TestBeats(t *testing.T) {
-	if !beats(actParry, actAttack) || !beats(actAttack, actDodge) || !beats(actDodge, actParry) {
-		t.Fatal("fel ordning i sten-sax-påse")
-	}
-	for _, a := range []string{actAttack, actParry, actDodge} {
-		if beats(a, a) {
-			t.Fatalf("%s slår sig själv", a)
-		}
-	}
+// sureHits gör träffarna säkra i ett test: den med högre Kraft än
+// motståndarens Försvar träffar alltid, annars aldrig, och garden och
+// oberedd gör ingen skillnad.
+func sureHits(g *Game) {
+	g.data.Monster.Traff = HitRules{Bas: 0, PerSteg: 100, Min: 0, Max: 100, Kraft: 1, Forsvar: 1}
 }
 
-// fightSetup ställer Alva i ett rum med en varelse som alltid väljer mc.
-func fightSetup(t *testing.T, mc string) (*Game, *Client, *Client, *Monster) {
+// fightSetup ställer Alva (Kraft 1, Försvar 1) i ett rum med en varelse
+// som alltid anfaller. playerHits säger om Alva träffar den och
+// monsterHits om den träffar henne.
+func fightSetup(t *testing.T, playerHits, monsterHits bool) (*Game, *Client, *Client, *Monster) {
 	g, a, b := startTwo(t)
+	sureHits(g)
 	putInRoom(g, a.player, 4, 2)
 	typ := g.data.monsterType("fjallvakt")
-	typ.Vanor = map[string]int{mc: 1}
+	typ.Lynne = 100
+	typ.Kraft, typ.Forsvar = 1, 1
+	if playerHits {
+		typ.Forsvar = 0
+	}
+	if monsterHits {
+		typ.Kraft = 2
+	}
 	m := &Monster{ID: 99, Type: "fjallvakt", X: 4, Y: 2, HP: typ.Liv}
 	g.monsters = append(g.monsters, m)
 	return g, a, b, m
 }
 
 func TestDuel(t *testing.T) {
-	cases := []struct {
-		player, monster string
-		playerLoses     bool
-		monsterLoses    bool
-	}{
-		{actParry, actAttack, false, true},
-		{actAttack, actParry, true, false},
-		{actAttack, actDodge, false, true},
-		{actDodge, actParry, false, true},
-		{actAttack, actAttack, true, true},
-		{actParry, actParry, false, false},
-		{actDodge, actDodge, false, false},
+	for _, c := range []struct{ playerHits, monsterHits bool }{
+		{true, true}, {true, false}, {false, true}, {false, false},
+	} {
+		g, a, b, m := fightSetup(t, c.playerHits, c.monsterHits)
+		p := a.player
+		hp, mhp := p.HP, m.HP
+		step(g, a, b, actAttack, actWait)
+		if (p.HP < hp) != c.monsterHits {
+			t.Fatalf("%+v: spelarens liv %d -> %d", c, hp, p.HP)
+		}
+		if (m.HP < mhp) != c.playerHits {
+			t.Fatalf("%+v: varelsens liv %d -> %d", c, mhp, m.HP)
+		}
 	}
-	for _, c := range cases {
-		t.Run(c.player+"_mot_"+c.monster, func(t *testing.T) {
-			g, a, b, m := fightSetup(t, c.monster)
-			p := a.player
-			hp, mhp := p.HP, m.HP
-			step(g, a, b, c.player, actWait)
-			if (p.HP < hp) != c.playerLoses {
-				t.Fatalf("spelarens liv %d -> %d", hp, p.HP)
-			}
-			if (m.HP < mhp) != c.monsterLoses {
-				t.Fatalf("varelsens liv %d -> %d", mhp, m.HP)
-			}
-		})
+}
+
+func TestHitChance(t *testing.T) {
+	g := testGame(t)
+	r := g.data.Monster.Traff
+	if got := g.hitChance(1, 1, 0); got != r.Bas {
+		t.Fatalf("lika värden: %d, ville ha %d", got, r.Bas)
+	}
+	if got := g.hitChance(3, 0, 0); got != min(r.Max, r.Bas+3*r.PerSteg) {
+		t.Fatalf("Kraft 3 mot Försvar 0: %d", got)
+	}
+	if got := g.hitChance(0, 9, 0); got != r.Min {
+		t.Fatalf("aldrig under min: %d", got)
+	}
+	if g.hitChance(1, 1, r.Garden) >= g.hitChance(1, 1, r.Oberedd) {
+		t.Fatal("garden ska vara svårare att träffa än den som söker")
+	}
+}
+
+// Den som håller garden är svårare att träffa än den som söker.
+func TestGuard(t *testing.T) {
+	g, a, b, _ := fightSetup(t, false, true)
+	g.data.Monster.Traff.Garden = -100
+	p := a.player
+	hp := p.HP
+	step(g, a, b, actWait, actWait)
+	if p.HP != hp {
+		t.Fatal("garden höll inte")
+	}
+	step(g, a, b, actSearch, actWait)
+	if p.HP >= hp {
+		t.Fatal("den som sökte blev inte träffad")
+	}
+}
+
+// En varelse utan lynne låter den som söker vara.
+func TestCalmCreature(t *testing.T) {
+	g, a, b, m := fightSetup(t, false, true)
+	g.data.monsterType(m.Type).Lynne = 0
+	p := a.player
+	hp := p.HP
+	step(g, a, b, actSearch, actWait)
+	if p.HP != hp || !g.rooms[2][4].Searched {
+		t.Fatalf("liv %d -> %d, genomsökt %v", hp, p.HP, g.rooms[2][4].Searched)
 	}
 }
 
 func TestDefeatMonsterGivesGold(t *testing.T) {
-	g, a, b, m := fightSetup(t, actDodge)
+	g, a, b, m := fightSetup(t, true, false)
 	p := a.player
 	for i := 0; i < 10 && g.monsterByID(m.ID) != nil; i++ {
 		step(g, a, b, actAttack, actWait)
@@ -447,15 +485,16 @@ func TestDefeatMonsterGivesGold(t *testing.T) {
 }
 
 func TestFleeAndUnprepared(t *testing.T) {
-	g, a, b, _ := fightSetup(t, actAttack)
+	g, a, b, _ := fightSetup(t, false, true)
 	p := a.player
 	g.rooms[2][4].Doors[North] = true
 	g.reveal(4, 1)
 	hp := p.HP
-	// Den som söker igenom rummet medan varelsen står där blir träffad.
+	// Den som söker igenom rummet medan varelsen står där blir träffad,
+	// men hinner söka.
 	step(g, a, b, actSearch, actWait)
-	if p.HP >= hp || g.rooms[2][4].Searched {
-		t.Fatal("varelsen fick inget fritt anfall")
+	if p.HP >= hp || !g.rooms[2][4].Searched {
+		t.Fatal("varelsen fick inget fritt anfall, eller rummet söktes inte")
 	}
 	// Flykt: ett fritt anfall till, sedan är spelaren ute ur rummet.
 	hp = p.HP

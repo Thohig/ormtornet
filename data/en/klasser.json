@@ -6,7 +6,7 @@
       "namn": "The Sellsword",
       "kort": "the Sellsword",
       "beskrivning": "Has fought for whoever pays for twenty years. Carries a dented shield and trusts no one.",
-      "styrka": "One extra life, and takes no harm when both attack.",
+      "styrka": "One extra life, and strikes hardest of all and holds up well.",
       "svaghet": "Finds only half as much gold when searching."
     },
     {
@@ -31,7 +31,7 @@
       "kort": "the Mapmaker",
       "beskrivning": "Has drawn maps of caves, mines and cloisters. No one has drawn the tower. Yet.",
       "styrka": "Sees through doors into the rooms next door. Sees every room anyone has found and where anyone has died, and gives their map to whoever they meet. Always finds something when searching, if a secret passage can be made. Carries a potion.",
-      "svaghet": "No quick feet: the evasive move never works, and then the opponent always hits."
+      "svaghet": "No quick feet: when they flee a fight, the blow at their back always lands."
     },
     {
       "id": "ormtjusare",
@@ -83,9 +83,6 @@
     "klass_upptagen": [
       "Someone else chose {klass} first. Choose another card."
     ],
-    "klass_legoknekt_skold": [
-      "You strike at the same time, but you catch the blow on your shield."
-    ],
     "klass_tjuv_tyst": [
       "The serpent stirs, but you hold your breath and no one else notices."
     ],
@@ -98,8 +95,8 @@
     "klass_kartritare_ger": [
       "You let {namn} copy your map."
     ],
-    "klass_kartritare_undan": [
-      "You try to dodge aside but stumble over your own feet."
+    "klass_kartritare_fly": [
+      "You turn too slowly and stumble over your own feet."
     ],
     "klass_ormtjusare_kort": [
       "You count the breaths. {antal} of the cards in the deck would wake the serpent."

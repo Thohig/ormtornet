@@ -21,6 +21,8 @@ type Class struct {
 	Svaghet     string             `json:"svaghet"`
 	Liv         int                `json:"liv"` // läggs till svårighetens antal liv
 	Drycker     int                `json:"drycker"`
+	Kraft       int                `json:"kraft"`   // hur lätt vandraren träffar i strid
+	Forsvar     int                `json:"forsvar"` // hur svår vandraren är att träffa
 	Varden      map[string]float64 `json:"varden"`
 	Modell      *ModelLook         `json:"modell,omitempty"` // färgen på det klassen bär och storleken, på kartan snett ovanifrån
 }

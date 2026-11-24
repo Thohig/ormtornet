@@ -132,31 +132,17 @@ func (g *Game) resolveFights(active []*Player) {
 	}
 }
 
-// exchange: båda har valt att slåss mot varandra.
+// exchange: båda anfaller varandra, och var och en träffar med sin chans.
+// Pilgrimen lyfter aldrig vapen mot en vandrare.
 func (g *Game) exchange(a, b *Player) {
-	aHits := beats(a.Action, b.Action) || (a.Action == actAttack && b.Action == actAttack)
-	bHits := beats(b.Action, a.Action) || (a.Action == actAttack && b.Action == actAttack)
-	// Klasserna: skölden, den som inte kan slåss och den som inte vill.
-	for _, f := range [2]struct {
-		me, foe        *Player
-		meHits, foeHit *bool
-	}{{a, b, &aHits, &bHits}, {b, a, &bHits, &aHits}} {
-		if f.me.Action == actAttack && f.foe.Action == actAttack && g.is(f.me, "legoknekt") {
-			*f.foeHit = false
-		}
-		if f.me.Action == actDodge && g.is(f.me, "kartritare") {
-			*f.meHits, *f.foeHit = false, true
-		}
-		if g.is(f.me, "pilgrim") {
-			*f.meHits = false
-		}
-	}
-	g.logTo(a, g.data.Text("pvp_duell", "namn", b.Name, "ditt_val", g.choiceWord(a.Action), "dess_val", g.choiceWord(b.Action)), "")
-	g.logTo(b, g.data.Text("pvp_duell", "namn", a.Name, "ditt_val", g.choiceWord(b.Action), "dess_val", g.choiceWord(a.Action)), "")
+	aHits := !g.is(a, "pilgrim") && g.roll(g.hitChance(g.kraft(a), g.forsvar(b), 0))
+	bHits := !g.is(b, "pilgrim") && g.roll(g.hitChance(g.kraft(b), g.forsvar(a), 0))
+	g.logTo(a, g.data.Text("pvp_duell", "namn", b.Name), "")
+	g.logTo(b, g.data.Text("pvp_duell", "namn", a.Name), "")
 	g.fightNoise(a, b)
 	if !aHits && !bHits {
-		g.soundTo(a, choiceSound(a.Action))
-		g.soundTo(b, choiceSound(b.Action))
+		g.soundTo(a, "parera")
+		g.soundTo(b, "parera")
 		g.logTo(a, g.data.Text("pvp_inget", "namn", b.Name), "dim")
 		g.logTo(b, g.data.Text("pvp_inget", "namn", a.Name), "dim")
 		return
@@ -177,19 +163,36 @@ func (g *Game) exchange(a, b *Player) {
 	}
 }
 
-// ambush: anfallaren slår mot någon som gör något annat.
+// ambush: anfallaren slår mot någon som gör något annat. Den som håller
+// garden är svårare att träffa, den som söker eller dricker lättare, och
+// kartritaren som flyr blir alltid träffad.
 func (g *Game) ambush(a, b *Player) {
-	if a.Action != actAttack {
-		g.logTo(a, g.data.Text("pvp_vantar", "namn", b.Name, "ditt_val", g.choiceWord(a.Action)), "dim")
-		return
-	}
 	if g.is(a, "pilgrim") {
 		g.logTo(a, g.data.Text("klass_pilgrim_fred", "namn", b.Name), "dim")
 		return
 	}
 	g.fightNoise(a, b)
-	g.logTo(a, g.data.Text("pvp_oberedd", "namn", b.Name), "")
-	g.logTo(b, g.data.Text("pvp_bakhall", "namn", a.Name), "varn")
+	_, fleeing := dirCodes[b.Action]
+	guard := b.Action == actWait
+	always := fleeing && g.is(b, "kartritare")
+	if !always && !g.roll(g.hitChance(g.kraft(a), g.forsvar(b), g.guardMod(b.Action))) {
+		g.soundTo(a, "parera")
+		if guard {
+			g.logTo(a, g.data.Text("pvp_garden_miss", "namn", b.Name), "dim")
+			g.logTo(b, g.data.Text("pvp_garden_hall", "namn", a.Name), "dim")
+		} else {
+			g.logTo(a, g.data.Text("pvp_miss", "namn", b.Name), "dim")
+			g.logTo(b, g.data.Text("pvp_missad", "namn", a.Name), "varn")
+		}
+		return
+	}
+	if guard {
+		g.logTo(a, g.data.Text("pvp_garden_traff", "namn", b.Name), "")
+		g.logTo(b, g.data.Text("pvp_garden_traffad", "namn", a.Name), "varn")
+	} else {
+		g.logTo(a, g.data.Text("pvp_oberedd", "namn", b.Name), "")
+		g.logTo(b, g.data.Text("pvp_bakhall", "namn", a.Name), "varn")
+	}
 	g.hit(a, b, g.loot(a, b), true)
 }
 

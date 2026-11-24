@@ -4,11 +4,8 @@
     "vandra_chans": 0.25,
     "spelarskada": 1,
 
-    "val": {
-      "anfall": "anfaller",
-      "parera": "försöker parera",
-      "undan": "försöker vika undan"
-    },
+    "_om_traff": "Striden har bara ett val, anfall. Träffchansen i procent är bas + per_steg × (Kraft − motståndarens Försvar), inom min och max. garden läggs till när den som slås mot håller garden (väntar), oberedd när hen söker eller dricker. kraft och forsvar här gäller vandrare utan klass. lynne hos en varelse är chansen i procent att den anfaller en runda då vandraren inte anfaller. Se docs/bara-anfall.md.",
+    "traff": { "bas": 50, "per_steg": 15, "min": 10, "max": 95, "garden": -20, "oberedd": 15, "kraft": 1, "forsvar": 1 },
 
     "_om_modell": "modell är varelsen på kartan snett ovanifrån: farg är kroppens färg som #rrggbb och storlek hur stor den är (0,5–2, 1 är vanlig storlek). Formen står i klient/src/modeller.ts, och en varelse utan form där visas med sitt tecken.",
     "typer": [
@@ -26,7 +23,7 @@
         "bild": "krypare",
         "modell": { "farg": "#d8d0bf", "storlek": 1 },
         "vandrar": 0.35,
-        "vanor": { "anfall": 1, "parera": 1, "undan": 3 },
+        "kraft": 1, "forsvar": 0, "lynne": 25,
         "dyker_upp": [
           "Något blekt och mångbent kryper fram ur en springa. Det har inga ögon, men det vänder sig mot dig.",
           "Något blekt lösgör sig från väggen, där det legat så tätt att du trodde det var en del av stenen."
@@ -49,7 +46,7 @@
         "bild": "yngel",
         "modell": { "farg": "#6d8040", "storlek": 1 },
         "vandrar": 0.3,
-        "vanor": { "anfall": 3, "parera": 1, "undan": 1 },
+        "kraft": 2, "forsvar": 0, "lynne": 75,
         "dyker_upp": [
           "En orm, lång som en man, reser sig ur en hög av damm. Den väser och slår genast.",
           "En ung, glänsande orm ligger hoprullad i hörnet. Den har redan sett dig."
@@ -72,7 +69,7 @@
         "bild": "fjallvakt",
         "modell": { "farg": "#62897f", "storlek": 1 },
         "vandrar": 0.15,
-        "vanor": { "anfall": 1, "parera": 3, "undan": 1 },
+        "kraft": 1, "forsvar": 3, "lynne": 40,
         "dyker_upp": [
           "En gestalt i rustning av överlappande fjäll kliver fram. Den håller en sköld framför sig och väntar.",
           "En gestalt i fjällrustning står orörlig mitt i rummet. Rustningen ser vuxen ut snarare än smidd."
@@ -95,7 +92,7 @@
         "bild": "gallgast",
         "modell": { "farg": "#8ac77f", "storlek": 1 },
         "vandrar": 0.4,
-        "vanor": { "anfall": 3, "parera": 1, "undan": 1 },
+        "kraft": 3, "forsvar": 0, "lynne": 80,
         "dyker_upp": [
           "En grönaktig skepnad glider fram. Den bär en äventyrares kläder, men de hänger i trasor och är blekta, som om de legat i syra.",
           "Något stiger upp ur golvet, grönaktigt och genomskinligt. Det tittar på din väska, som om det minns hur det var att bära en."
@@ -118,7 +115,7 @@
         "bild": "benvaktare",
         "modell": { "farg": "#e8e0cc", "storlek": 1 },
         "vandrar": 0.05,
-        "vanor": { "anfall": 2, "parera": 2, "undan": 1 },
+        "kraft": 2, "forsvar": 2, "lynne": 50,
         "dyker_upp": [
           "Ett väsen byggt av böjda, vita ben reser sig. Benen är alla lika, som revben från ett och samma djur."
         ],
@@ -129,43 +126,47 @@
     ],
 
     "texter": {
-      "duell": [
-        "Du {ditt_val}. {Monster} {dess_val}."
-      ],
       "du_traffar": [
-        "Du träffar {monster}.",
-        "Ditt slag tar."
+        "Ditt slag tar, och slaget från {monster} går förbi dig.",
+        "Du träffar {monster} och hinner undan dess slag."
       ],
       "monster_traffar": [
-        "{Monster} träffar dig."
-      ],
-      "monster_traffar_anfall": [
-        "{Monster} fångar ditt slag och slår tillbaka.",
-        "Ditt slag studsar mot {monster}, som slår tillbaka."
-      ],
-      "monster_traffar_parera": [
-        "{Monster} glider runt din parering.",
-        "Du väntar på ett slag, men {monster} kommer från sidan."
-      ],
-      "monster_traffar_undan": [
-        "Du hinner inte undan.",
-        "{Monster} träffar dig mitt i steget."
+        "Ditt slag går förbi, men {monster} träffar dig.",
+        "{Monster} är snabbare. Ditt slag tar i luften, dess i dig."
       ],
       "bada_traffar": [
         "Ni träffar varandra samtidigt."
       ],
       "inget": [
-        "Ingen av er kommer åt den andra.",
-        "Ni cirklar runt varandra."
+        "Ni slår mot varandra, men inget slag tar.",
+        "Ni cirklar runt varandra, och slagen går förbi."
       ],
-      "inte_beredd": [
-        "Du är inte beredd. {Monster} {dess_val}."
+      "inte_beredd_traff": [
+        "Du är inte beredd. {Monster} anfaller och träffar dig.",
+        "{Monster} slår medan du ser åt annat håll."
+      ],
+      "inte_beredd_miss": [
+        "Du är inte beredd. {Monster} anfaller, men slaget går förbi."
       ],
       "inte_beredd_lugn": [
         "Du är inte beredd, men {monster} låter dig vara."
       ],
-      "fly": [
-        "Du vänder och flyr. {Monster} {dess_val}."
+      "garden_traff": [
+        "Du håller garden, men {monster} kommer igenom den."
+      ],
+      "garden_miss": [
+        "Du håller garden, och slaget från {monster} tar i den.",
+        "Du håller garden. {Monster} anfaller, men kommer inte igenom."
+      ],
+      "garden_lugn": [
+        "Du håller garden. {Monster} väntar också.",
+        "Du håller garden och ser på {monster}, som inte rör sig."
+      ],
+      "fly_traff": [
+        "Du vänder och flyr. {Monster} hinner slå dig i ryggen."
+      ],
+      "fly_miss": [
+        "Du vänder och flyr. {Monster} slår efter dig, men missar."
       ],
       "fly_lugn": [
         "Du vänder och flyr. {Monster} följer inte efter."

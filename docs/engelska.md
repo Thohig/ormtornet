@@ -39,8 +39,8 @@ Kvar att ta ställning till:
 - **Tornets hemlighet** översätts lika beslöjat som på svenska och sägs
   inte rakt ut förrän i slutet.
 - **AI-namnen** (Ingrid, Sigge och de andra) behålls.
-- **Tangenterna:** på engelska heter undanmanövern E (evade), eftersom D
-  redan är drink. De svenska tangenterna fungerar i båda språken.
+- **Tangenterna:** de svenska tangenterna fungerar i båda språken. Undanmanövern
+  (E, evade) togs bort 2026-11-24 (docs/bara-anfall.md).
 
 ## Ordlista
 

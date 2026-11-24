@@ -1449,7 +1449,7 @@ func (g *Game) actPlayer(p *Player, a string, monsterID int) {
 		a = actTake
 	}
 	switch a {
-	case actAttack, actParry, actDodge:
+	case actAttack:
 		if g.monsterAt(p.X, p.Y) == nil {
 			// Ingen varelse: kanske en annan vandrare. Tornet väljer vem;
 			// en datorspelare kan peka ut någon med ett negativt id.

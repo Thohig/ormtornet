@@ -187,7 +187,7 @@ func TestBotGoesForTheGold(t *testing.T) {
 		p := a.player
 		pers := g.data.AI.Personligheter[0]
 		pers.Guldlust = lust
-		p.bot = &botBrain{pers: &pers, habits: map[string]map[string]int{}}
+		p.bot = &botBrain{pers: &pers}
 		for y := range g.size {
 			for x := range g.size {
 				g.rooms[y][x].Revealed, g.rooms[y][x].Walked = false, false

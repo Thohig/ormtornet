@@ -154,20 +154,34 @@ func TestBotWaitsWhenTimeRunsOut(t *testing.T) {
 	}
 }
 
-func TestLegoknektShield(t *testing.T) {
-	g, pa, _ := withClass(t, "legoknekt")
+func TestLegoknektStrong(t *testing.T) {
+	g, pa, pb := withClass(t, "legoknekt")
 	if pa.HP != g.data.Regler.Liv+1 {
 		t.Fatalf("legoknekten har %d liv", pa.HP)
 	}
+	if g.kraft(pa) != 3 || g.forsvar(pa) != 2 {
+		t.Fatalf("legoknekten har Kraft %d och Försvar %d", g.kraft(pa), g.forsvar(pa))
+	}
+	if g.kraft(pb) >= g.kraft(pa) {
+		t.Fatal("den andra klassen slår lika hårt")
+	}
+}
+
+// Kartritaren som flyr blir alltid träffad när varelsen anfaller.
+func TestKartritareFleeAlwaysHit(t *testing.T) {
+	g, pa, _ := withClass(t, "kartritare")
+	sureHits(g)
 	putInRoom(g, pa, 4, 3)
+	g.rooms[3][4].Doors[North] = true
+	g.reveal(4, 2)
 	typ := &g.data.Monster.Typer[0]
-	typ.Vanor = map[string]int{actAttack: 1}
-	m := &Monster{ID: 50, Type: typ.ID, X: 4, Y: 3, HP: 10}
-	g.monsters = append(g.monsters, m)
+	typ.Kraft, typ.Lynne = 0, 100 // träffar annars aldrig
+	g.monsters = append(g.monsters, &Monster{ID: 50, Type: typ.ID, X: 4, Y: 3, HP: 10})
 	hp := pa.HP
-	g.duel(pa, m, actAttack)
-	if pa.HP != hp || m.HP != 10-g.data.Monster.Spelarskada {
-		t.Fatalf("liv %d, varelsen %d", pa.HP, m.HP)
+	g.actPlayer(pa, "N", 0)
+	g.playTurn(pa)
+	if pa.HP >= hp {
+		t.Fatal("kartritaren kom undan")
 	}
 }
 

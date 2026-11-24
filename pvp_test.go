@@ -1,6 +1,7 @@
 package main
 
 import (
+	"slices"
 	"strings"
 	"testing"
 )
@@ -13,6 +14,7 @@ func fightReady(t *testing.T) (*Game, *Client, *Client) {
 	putInRoom(g, a.player, 4, 1)
 	putInRoom(g, b.player, 4, 1)
 	g.deck = []string{"sover", "sover", "sover"}
+	g.data.Monster.Traff = HitRules{Bas: 100, Min: 0, Max: 100} // varje slag tar
 	return g, a, b
 }
 
@@ -32,7 +34,7 @@ func TestPvPExchangeStealsAThird(t *testing.T) {
 	bo.Treasure = 30
 	hp := bo.HP
 	g.Act(a, actAttack, -bo.ID)
-	g.Act(b, actDodge, -alva.ID) // anfall slår undanmanöver
+	g.Act(b, actAttack, -alva.ID) // båda träffar; Alva har inget att ta
 	if bo.HP != hp-pvpSkada || bo.Treasure != 20 || alva.Treasure != 10 {
 		t.Fatalf("Bo %d liv %d guld, Alva %d guld", bo.HP, bo.Treasure, alva.Treasure)
 	}
@@ -53,14 +55,15 @@ func TestPvPAmbushAndKill(t *testing.T) {
 	}
 }
 
-func TestPvPParryAgainstNoAttack(t *testing.T) {
+func TestPvPGuardHolds(t *testing.T) {
 	g, a, b := fightReady(t)
+	g.data.Monster.Traff.Garden = -100
 	bo := b.player
 	hp := bo.HP
-	g.Act(a, actParry, -bo.ID)
+	g.Act(a, actAttack, -bo.ID)
 	g.Act(b, actWait, 0)
 	if bo.HP != hp {
-		t.Fatal("en parering skadade någon som inte anföll")
+		t.Fatal("garden höll inte")
 	}
 }
 
@@ -129,9 +132,9 @@ func TestPvPHitsInChronicle(t *testing.T) {
 	alva, bo := a.player, b.player
 	bo.Treasure = 30
 	g.Act(a, actAttack, -bo.ID)
-	g.Act(b, actDodge, -alva.ID)
+	g.Act(b, actAttack, -alva.ID)
 	want := g.data.Text("kronika_slag_byte", "namn", alva.Name, "offer", bo.Name, "guld", "10")
-	if got := chronTexts(g); len(got) != 1 || got[0] != want {
+	if got := chronTexts(g); !slices.Contains(got, want) {
 		t.Fatalf("krönikan efter duellen: %q, ville ha %q", got, want)
 	}
 

@@ -10,49 +10,9 @@ import (
 	"time"
 )
 
-// botBrain är det en datorspelare minns mellan rundorna.
+// botBrain är datorspelarens personlighet.
 type botBrain struct {
-	pers   *Personality
-	habits map[string]map[string]int // varelsetyp -> val -> antal gånger sett
-}
-
-// saw minns vad en varelse valde i en strid, precis som en människa kan läsa
-// det i loggen.
-func (b *botBrain) saw(monsterType, choice string) {
-	if b.habits[monsterType] == nil {
-		b.habits[monsterType] = map[string]int{}
-	}
-	b.habits[monsterType][choice]++
-}
-
-// counter väljer det drag som slår varelsens troligaste val. Utgångsläget är
-// det en människa kan gissa ur varelsens beskrivning (vanorna); sedan väger
-// det den själv har sett i strid tyngre.
-func (b *botBrain) counter(rng *rand.Rand, t *MonsterType) string {
-	if t == nil {
-		return []string{actAttack, actParry, actDodge}[rng.IntN(3)]
-	}
-	weights := map[string]int{}
-	for k, n := range t.Vanor {
-		weights[k] += n
-	}
-	for k, n := range b.habits[t.ID] {
-		weights[k] += n * 2
-	}
-	// Välj det val varelsen oftast gör, med lite slump vid lika.
-	likely, best := "", -1
-	for _, k := range []string{actAttack, actParry, actDodge} {
-		if w := weights[k]; w > best || (w == best && rng.IntN(2) == 0) {
-			likely, best = k, w
-		}
-	}
-	switch likely {
-	case actAttack:
-		return actParry
-	case actParry:
-		return actDodge
-	}
-	return actAttack
+	pers *Personality
 }
 
 // AddBots fyller upp till n lediga platser med datorspelare, från sista
@@ -84,7 +44,7 @@ func (g *Game) AddBots(n int) int {
 		g.nextID++
 		p := &Player{
 			ID: g.nextID, Name: name, Slot: slot,
-			bot: &botBrain{pers: &ai.Personligheter[g.botCount()%len(ai.Personligheter)], habits: map[string]map[string]int{}},
+			bot: &botBrain{pers: &ai.Personligheter[g.botCount()%len(ai.Personligheter)]},
 		}
 		g.players[slot] = p
 		g.fitTower(p)
@@ -309,22 +269,12 @@ func (g *Game) botDecide(p *Player) (string, int) {
 				}
 			}
 		}
-		c := p.bot.counter(g.rng, typ)
-		if c == actDodge && g.is(p, "kartritare") {
-			c = actParry // kartritaren vet att undanmanövern aldrig lyckas
-		}
-		return c, 0
+		return actAttack, 0
 	}
 
 	// Strid mot en annan vandrare: ibland, beroende på hur stridslysten den är.
 	if foe := g.botFoe(p); foe != nil && g.rng.Float64() < pers.Stridslust {
-		a := actAttack
-		if r := g.rng.Float64(); r > 0.8 {
-			a = actDodge
-		} else if r > 0.6 {
-			a = actParry
-		}
-		return a, -foe.ID
+		return actAttack, -foe.ID
 	}
 
 	if st.HP <= g.botLifeLimit(pers.DrickVidLiv, st.MaxHP) && st.Potions > 0 {

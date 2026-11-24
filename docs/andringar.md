@@ -6,6 +6,27 @@ eller leder tornet.
 
 ## 2026-11-24
 
+### Striden har bara anfall
+
+- Parera och undanmanöver är borta. Det enda stridsvalet är anfall (A):
+  då slår både du och varelsen, och var och en träffar med sin chans
+  (docs/bara-anfall.md).
+- Chansen kommer av Kraft och Försvar. Varje klass och varelse har sina
+  (`kraft` och `forsvar` i `data/klasser.json` och `data/monster.json`),
+  och reglerna står under `traff` i `data/monster.json`.
+- Står en varelse i rummet kan du ändå söka, dricka, vänta eller gå, men
+  då kanske den anfaller, så ofta som dess lynne säger (`lynne`). Att
+  vänta är att hålla garden, och då träffar varelsen sämre. Den som söker
+  eller dricker träffas lättare. Att söka under en varelse gick inte förut.
+- Mellan vandrare gäller samma sak: anfaller båda slår båda, och den som
+  väntar håller garden.
+- Legoknekten tar inte längre ingen skada när båda anfaller, utan slår
+  hårdast av alla. Kartritarens svaghet är nu att slaget mot ryggen alltid
+  träffar när hen flyr. Den invigde och Myntet med hål gör varelserna mer
+  lynniga.
+- Knapparna Parera och Undan och tangenterna P, U och E är borta. I strid
+  står Vänta (håll garden), Anfall, Sök och Drick.
+
 ### Figurerna ser målade ut
 
 - Vandrarna, varelserna, socklarna och ormen har fått en tunn mörk

@@ -249,7 +249,7 @@ func (g *Game) actionLine(p *Player, b before, moved bool, room string, t func(s
 	switch a {
 	case "":
 		return t("sam_inget")
-	case actAttack, actParry, actDodge:
+	case actAttack:
 		if b.foe != "" {
 			return t("sam_"+a+"_vandrare", "namn", b.foe)
 		}

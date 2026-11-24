@@ -1,12 +1,6 @@
 {
-  "_om": "Engelsk översättning av monster.json. Bara texter; siffrorna och tecknen står i den svenska filen. Varelserna kopplas ihop med sina id:n. Valen i val är substantivfraser, eftersom samma ord sätts in efter både du och en varelse eller vandrare (duell här, pvp_duell och pvp_vantar i texter.json).",
+  "_om": "Engelsk översättning av monster.json. Bara texter; siffrorna och tecknen står i den svenska filen. Varelserna kopplas ihop med sina id:n.",
   "monster": {
-    "val": {
-      "anfall": "an attack",
-      "parera": "an attempt to parry",
-      "undan": "an attempt to dodge"
-    },
-
     "typer": [
       {
         "id": "krypare",
@@ -80,43 +74,47 @@
     ],
 
     "texter": {
-      "duell": [
-        "You go for {ditt_val}. {Monster} answers with {dess_val}."
-      ],
       "du_traffar": [
-        "You hit {monster}.",
-        "Your blow lands."
+        "Your blow lands, and the blow from {monster} misses you.",
+        "You hit {monster} and get clear of its blow."
       ],
       "monster_traffar": [
-        "{Monster} hits you."
-      ],
-      "monster_traffar_anfall": [
-        "{Monster} catches your blow and strikes back.",
-        "Your blow glances off {monster}, which strikes back."
-      ],
-      "monster_traffar_parera": [
-        "{Monster} slips around your parry.",
-        "You wait for a blow, but {monster} comes from the side."
-      ],
-      "monster_traffar_undan": [
-        "You are too slow to get away.",
-        "{Monster} hits you in mid-step."
+        "Your blow misses, but {monster} hits you.",
+        "{Monster} is quicker. Your blow finds air, its blow finds you."
       ],
       "bada_traffar": [
         "You strike each other at once."
       ],
       "inget": [
-        "Neither of you reaches the other.",
-        "You circle each other."
+        "You strike at each other, but no blow lands.",
+        "You circle each other, and the blows go wide."
       ],
-      "inte_beredd": [
-        "You are not ready. {Monster} answers with {dess_val}."
+      "inte_beredd_traff": [
+        "You are not ready. {Monster} attacks and hits you.",
+        "{Monster} strikes while you look the other way."
+      ],
+      "inte_beredd_miss": [
+        "You are not ready. {Monster} attacks, but the blow misses."
       ],
       "inte_beredd_lugn": [
         "You are not ready, but {monster} leaves you be."
       ],
-      "fly": [
-        "You turn and flee. {Monster} answers with {dess_val}."
+      "garden_traff": [
+        "You keep your guard up, but {monster} gets through it."
+      ],
+      "garden_miss": [
+        "You keep your guard up, and the blow from {monster} glances off it.",
+        "You keep your guard up. {Monster} attacks, but cannot get through."
+      ],
+      "garden_lugn": [
+        "You keep your guard up. {Monster} waits too.",
+        "You keep your guard up and watch {monster}, which does not move."
+      ],
+      "fly_traff": [
+        "You turn and flee. {Monster} strikes you in the back."
+      ],
+      "fly_miss": [
+        "You turn and flee. {Monster} strikes after you, but misses."
       ],
       "fly_lugn": [
         "You turn and flee. {Monster} does not follow."
