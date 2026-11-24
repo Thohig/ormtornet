@@ -151,7 +151,7 @@ uppdateras i varje steg.
 | D | ja, med ett kort för guld man hittar när man söker |
 | E | ja; varslen, namnets delar och viskningen kommer mellan rundorna som ett eget kort |
 | F | ja; solen visas stort när tre rundor är kvar och när den går ner med en invigd kvar, och den som blir kvar får kortet Solen gick ner |
-| G | ja; krönikan i slutet har kvar ormkorten på raden med siffror, och Din vandring får alla kort |
+| G | ja; krönikan i slutet hade kvar ormkorten på raden med siffror (borttagen från slutskärmen 2026-11-24, guldboken säger vilket kort varje näve gav), och Din vandring får alla kort |
 
 Annorlunda än förslaget:
 

@@ -597,7 +597,8 @@ och varelser har sin korta beskrivning som rubrik, aldrig namnet.
   kort framför sig, och varje runda i Din vandring har rundans kort som
   små spelkort med bilden och rubriken. Ett klick på ett minikort, eller Enter,
   visar kortet stort med sin text; ett klick till eller Escape stänger
-  det. På raden med siffror står ormkorten ihopslagna, "Ormen sover ×3".
+  det. På raden med siffror i Din vandring, för den som har dött, står
+  ormkorten ihopslagna, "Ormen sover ×3".
 
 ### Tornets händelser
 
@@ -654,8 +655,9 @@ Korten syns så här:
   högar som inte ändras. När ormen vaknar flyger de dragna korten tillbaka
   in i leken.
 - **Krönikan.** Din vandring visar kortet du drog med ett litet kort
-  bredvid, och i krönikan i slutet har var och en sina kort på
-  raden med siffror.
+  bredvid. I slutet säger guldboken hur många nävar var och en tog och
+  vilket kort varje näve gav (Runda för runda); hela krönikan med raden
+  med siffror står inte längre där sedan 2026-11-24.
 
 Kortens namn står under `namn` i `data/ormen.json`.
 

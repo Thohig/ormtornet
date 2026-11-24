@@ -54,7 +54,10 @@ webbläsarprovet:
   vikterna rätt höjdpunkter, är sju stycken lagom, och läser någon
   berättelsen eller hoppar man till Nytt torn? Är titlarna roliga, och
   får för få en titel när lika mycket inte ger någon? Saknar någon hela
-  krönikan, som nu ligger bakom Visa alla rundor?
+  krönikan, som togs bort från slutskärmen 2026-11-24?
+- Guldboken ([guldboken.md](guldboken.md)): väljer man en vandrare på
+  slutskärmen, läses berättelsen om guldet bra när den blir lång, och
+  räcker raderna Runda för runda?
 - Tangenterna vid dörrarna på telefonen: de hålls nu inom kartan och
   ligger över det stora kortet. Träffar man dem, och förstår man en
   tangent som har flyttats in till kanten?
