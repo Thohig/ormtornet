@@ -42,9 +42,9 @@ för de andra.
   `packHint` i `pvp.go`). Har ingen av er något säger den inget mer. Hur
   mycket syns fortfarande inte.
 
-## Steg 3: ställningen för kvällen (inte byggt)
+## Steg 3: ställningen för kvällen (valdes bort 2026-11-24)
 
-Varje Nytt torn ger poäng efter placeringen, till exempel 3, 2 och 1, och
-ställningen följer med mellan tornen tills spelledaren nollställer den på
-värdsidan. Det rör värdsidan och vad tornet minns mellan vandringarna;
-fråga innan det byggs.
+Förslaget var att varje Nytt torn skulle ge poäng efter placeringen, till
+exempel 3, 2 och 1, och att ställningen skulle följa med mellan tornen
+tills spelledaren nollställde den på värdsidan. Det valdes bort; varje
+vandring är en tävling för sig.

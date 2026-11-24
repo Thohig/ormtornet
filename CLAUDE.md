@@ -267,7 +267,7 @@ Skriv dit när ett steg är klart.
   den individuella tävlingen. Steg 1–2 är byggda (Kartritaren ger inte
   bort sin karta, timglaset och viskningen i kammaren gäller bara en
   själv, introt uppmanar inte till samarbete, placering för alla och en
-  vink som jämför med det du bär). Fråga innan steg 3, ställningen för
-  kvällen.
+  vink som jämför med det du bär). Steg 3, ställningen för kvällen,
+  valdes bort.
 - [docs/slumpade-namn.md](docs/slumpade-namn.md): tornet ger namnen och
   namnrutan är borta. Steg 1–2 är byggda; Nytt namn i lobbyn valdes bort.
