@@ -98,8 +98,8 @@ func TestRoomBlockTellsWhatIsHere(t *testing.T) {
 	}
 }
 
-// Ett tomt rum säger ingenting, och en fälla som har slagit till syns som
-// ett spår utan sitt namn.
+// Ett känt, tomt rum säger bara att man känner igen det, och en fälla som
+// har slagit till syns som ett spår utan sitt namn.
 func TestRoomBlockShowsNotTells(t *testing.T) {
 	g, a, _ := startTwo(t)
 	pa := a.player
@@ -107,8 +107,13 @@ func TestRoomBlockShowsNotTells(t *testing.T) {
 	pa.told = told{}
 	rooms(a)
 	g.tellRoom(pa)
+	want := g.data.Text("har_igen", "rum", g.roomShort(r))
+	if got := rooms(a); len(got) != 1 || got[0].Har != want || got[0].Text != "" {
+		t.Fatalf("ett känt, tomt rum ska ge %q, fick %+v", want, got)
+	}
+	g.tellRoom(pa)
 	if got := rooms(a); len(got) != 0 {
-		t.Fatalf("ett känt, tomt rum ska inte ge något block, fick %+v", got)
+		t.Fatalf("den som står kvar i ett tomt rum ska inte få något block, fick %+v", got)
 	}
 	trap := g.data.trap("roterande")
 	r.Mark = trap.Tecken

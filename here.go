@@ -87,6 +87,11 @@ func (g *Game) tellRoom(p *Player) {
 	if moved {
 		msg.Text = p.told.desc
 		msg.Har = strings.TrimSpace(g.sayHere(cur) + " " + p.told.extra)
+		if msg.Text == "" && msg.Har == "" {
+			// Ett känt, tomt rum: en kort rad, så att loggen säger att
+			// draget blev av och var vandraren står.
+			msg.Har = g.data.Text("har_igen", "rum", g.roomShort(&g.rooms[p.Y][p.X]))
+		}
 	} else {
 		var added []herePart
 		for _, part := range cur {
@@ -120,7 +125,7 @@ func (g *Game) tellRoom(p *Player) {
 	}
 	p.told = told{ok: true, x: p.X, y: p.Y, parts: now}
 	if msg.Text == "" && msg.Har == "" && msg.Hor == "" {
-		return // ett känt, tomt rum: blocket skulle inte säga något
+		return // vandraren står kvar och inget har ändrats
 	}
 	g.send(p.client, msg)
 	p.roundRoom = &msg

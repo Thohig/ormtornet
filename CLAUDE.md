@@ -87,7 +87,8 @@ Så här skiljer vi på sakerna när användaren ger instruktioner:
     utan namn: beskrivningen när rummet är nytt, det man
     ser (beskrivet, inte förklarat) och sist det man hörde (`here.go`,
     `har_` i `data/texter.json`, `spar_efter` i `data/fallor.json`).
-    Ett känt, tomt rum ger inget block, och en strid som pågår hörs bara
+    Ett känt, tomt rum ger bara raden "Du känner igen rummet" med den
+    korta beskrivningen (`har_igen`), och en strid som pågår hörs bara
     första rundan (`hearFight` i `sounds.go`).
     Teckenförklaringen togs bort 2026-11-22.
 - **namnen**: rum, fällor och varelser har inga namn för spelarna, bara

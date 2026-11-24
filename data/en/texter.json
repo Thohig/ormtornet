@@ -433,6 +433,9 @@
       "The evening light stings your eyes. Not yet. The tower has more to give.",
       "You look out over the slope below. Then you turn back in."
     ],
+    "har_igen": [
+      "You know this room: {rum}."
+    ],
     "har_varelse_borta": [
       "{varelse} is gone."
     ],

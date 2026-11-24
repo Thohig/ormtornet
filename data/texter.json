@@ -470,6 +470,9 @@
       "Kvällsljuset skär i ögonen. Inte än. Tornet har mer att ge.",
       "Du ser ut över backen nedanför. Sedan vänder du tillbaka in."
     ],
+    "har_igen": [
+      "Du känner igen rummet: {rum}."
+    ],
     "har_varelse_borta": [
       "{varelse} är borta."
     ],
