@@ -348,3 +348,33 @@ func (g *Game) moveChamber() {
 		}
 	}
 }
+
+// breathThroughWall: den som står bredvid kammaren hör ormen andas genom
+// väggen, och åt vilket håll, en gång per rum (docs/ormens-plats.md).
+func (g *Game) breathThroughWall() {
+	cx, cy := g.chamber()
+	for _, p := range g.players {
+		if p == nil || p.Status != statusIn || p.Cellar > 0 {
+			continue
+		}
+		d, ok := g.nextTo(p, cx, cy)
+		here := [2]int{p.X + 1, p.Y + 1}
+		if !ok || p.breathAt == here {
+			continue
+		}
+		p.breathAt = here
+		g.hearTo(p, g.data.Text("andetag_vagg", "riktning", g.data.Riktningar[d]), "info")
+	}
+}
+
+// breathForAll: från nivå 2 hör alla inne ormens andetag en gång, åt vilket
+// håll de kommer.
+func (g *Game) breathForAll() {
+	cx, cy := g.chamber()
+	for _, p := range g.players {
+		if p == nil || p.Status != statusIn || p.Cellar > 0 || (p.X == cx && p.Y == cy) {
+			continue
+		}
+		g.logTo(p, g.data.Text("andetag_alla", "horn", g.hornToward(p.X, p.Y, cx, cy)), "info")
+	}
+}

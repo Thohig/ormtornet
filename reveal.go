@@ -54,6 +54,9 @@ func (g *Game) onLevelUp() {
 	g.dealClues(g.data.Avslojande.Nivabyte, "nivabyte", "syn")
 	g.dealClues(g.data.Avslojande.Ledtradar, "ledtrad", "info")
 	g.partsOnLevelUp()
+	if g.level == 2 {
+		g.breathForAll()
+	}
 	for _, p := range g.players {
 		if p != nil && p.Status == statusIn && g.is(p, "pilgrim") {
 			p.Potions++

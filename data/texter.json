@@ -354,10 +354,10 @@
       "beskrivningar": {
         "1": [
           "Murarna möts i en spetsig båge. Ett avlägset ljud, som av något tungt som flyttar sig, dör bort innan du hinner lyssna.",
-          "Här korsas gångarna. Golvet sluttar svagt mot mitten av tornet."
+          "Här korsas gångarna. Golvet sluttar svagt åt {horn}."
         ],
         "2": [
-          "Golvet sluttar mot mitten, och sluttningen har blivit brantare.",
+          "Golvet sluttar åt {horn}, och sluttningen har blivit brantare.",
           "Ljudet av något tungt som flyttar sig kommer tillbaka, och nu hör du att det kommer från alla håll."
         ],
         "3": [
@@ -424,7 +424,7 @@
       "Solen går ner"
     ],
     "valkommen": [
-      "{namn}, du står innanför porten i tornets {horn}. Någonstans i mitten sägs en orm sova kring sin skatt. Ta vad du vågar och kom ut innan solen går ner."
+      "{namn}, du står innanför porten i tornets {horn}. Någonstans i tornet sägs en orm sova kring sin skatt. Ta vad du vågar och kom ut innan solen går ner."
     ],
     "tillbaka": [
       "Du är tillbaka. Tornet har väntat på dig."
@@ -444,7 +444,7 @@
       "En ny lykta tänds vid en av portarna. Det är {namn}."
     ],
     "valkommen_dolt": [
-      "{namn}, du står i skymningen vid tornets fot. Någonstans i mitten sägs en orm sova kring sin skatt. Ta vad du vågar och kom ut innan solen går ner. Vilken port du går in genom får du veta när vandringen börjar."
+      "{namn}, du står i skymningen vid tornets fot. Någonstans i tornet sägs en orm sova kring sin skatt. Ta vad du vågar och kom ut innan solen går ner. Vilken port du går in genom får du veta när vandringen börjar."
     ],
     "start_hor_en": [
       "Långt borta knarrar en annan port."
@@ -687,6 +687,14 @@
     ],
     "nave_ser": [
       "{namn} sträcker sig efter guldet i högen."
+    ],
+    "andetag_vagg": [
+      "Genom väggen åt {riktning} andas något väldigt, långsamt och tungt.",
+      "Väggen åt {riktning} är varm, och bakom den drar något efter andan."
+    ],
+    "andetag_alla": [
+      "Under alla andra ljud hör du det nu: andetag, långsamma och djupa. De kommer från {horn}.",
+      "Tornet andas. Ljudet är starkast åt {horn}."
     ],
     "ormen_flyttar": [
       "Väsandet drar sig bort genom väggarna. Ormen har krupit till en ny plats i tornets mage.",

@@ -155,3 +155,30 @@ func TestHandfulIsHeard(t *testing.T) {
 		t.Fatalf("Bo hörde inte näven åt %s: %q", want, got)
 	}
 }
+
+// Den som står bredvid kammaren hör andetagen genom väggen en gång, och
+// från nivå 2 hör alla åt vilket håll de kommer.
+func TestBreathClues(t *testing.T) {
+	g, a, _ := startTwo(t)
+	p := a.player
+	cx, cy := g.chamber()
+	putInRoom(g, p, cx, cy-1)
+	logs(a)
+	g.breathThroughWall()
+	g.breathThroughWall()
+	n := 0
+	for _, l := range logs(a) {
+		if strings.Contains(l, g.data.Riktningar[South]) {
+			n++
+		}
+	}
+	if n != 1 {
+		t.Fatalf("andetagen hördes %d gånger", n)
+	}
+	putInRoom(g, p, cx-3, cy)
+	g.breathForAll()
+	got := logs(a)
+	if len(got) == 0 || !strings.Contains(got[len(got)-1], g.data.Horn[7]) {
+		t.Fatalf("andetagen för alla: %q", got)
+	}
+}

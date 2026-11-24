@@ -332,6 +332,7 @@ type Player struct {
 	parts        [3]bool // delarna av ormens namn som vandraren har fått
 	partsFound   []int   // delarna i den ordning vandraren hittade dem
 	calmed       bool    // den invigde har lugnat ormen under vandringen
+	breathAt     [2]int  // rummet där vandraren senast hörde andetagen genom väggen, x+1 och y+1
 	safeDraw     bool    // den invigdes nästa näve väcker inte ormen
 	X, Y         int
 	client       *Client
@@ -695,7 +696,12 @@ func (g *Game) roomShort(r *Room) string {
 
 // describe ger spelaren en beskrivning av rummet för tornets nuvarande nivå.
 func (g *Game) describe(p *Player, r *Room, x, y int) string {
-	return g.data.roomType(r.TypeID).Describe(g.level, p.Slot+x+y)
+	text := g.data.roomType(r.TypeID).Describe(g.level, p.Slot+x+y)
+	// {horn} är riktningen mot ormen: golvet som sluttar dit.
+	if cx, cy := g.chamber(); strings.Contains(text, "{horn}") && (cx != x || cy != y) {
+		text = fill(text, "horn", g.hornToward(x, y, cx, cy))
+	}
+	return text
 }
 
 // Meddelanden till klienten.
@@ -1459,6 +1465,7 @@ func (g *Game) startGame() {
 			p.HP = g.maxHP(p) // svårigheten kan ha ändrats sedan tornet byggdes
 			p.Potions = g.startPotions(p)
 			p.awayRound, p.exitAsked, p.still = 0, 0, 0
+			p.breathAt = [2]int{}
 			if p.bot == nil && p.client == nil {
 				p.awayRound = 1 // lämnade under klassvalet: borta från första rundan
 			}
@@ -1697,6 +1704,7 @@ func (g *Game) resolve() {
 			g.readCarving(p)
 		}
 	}
+	g.breathThroughWall()
 	g.tellRooms()
 	g.hearing = false
 

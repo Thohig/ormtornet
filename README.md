@@ -587,9 +587,13 @@ den döde vandrar eller en klocka slår. Alla inne får ett spelkort och vet
 
 ### Skattkammaren och ormen
 
-Kammaren ligger nära mitten av tornet, i ett av rummen i mittens 3 × 3
-(`spridning` i `data/ormen.json`), så att man inte kan gå rakt mot
-mitten. Där kan du ta skatt (S) en gång per runda. Varje gång
+Kammaren kan ligga nästan var som helst i tornet: inte i den yttre ringen,
+inte närmare någon port än tre rum, och ingen har den mer än tre rum
+närmare än de andra (`plats` i `data/ormen.json`, se
+[docs/ormens-plats.md](docs/ormens-plats.md)). Står du bredvid den hör du
+ormen andas genom väggen, från nivå 2 hör alla åt vilket håll andetagen
+kommer, och golvet i korsvägarna sluttar mot den. Där kan du ta skatt (S)
+en gång per runda. Varje gång
 dras ett ormkort ur en lek:
 
 - **Sover** eller **rör sig**: du får 15–45 guld och kortet tas bort ur leken.
@@ -600,8 +604,7 @@ dras ett ormkort ur en lek:
   sin skatt och 2 liv och kastas ut genom en slumpad öppning. Väsandet hörs
   i hela tornet.
 
-När ormen har vaknat kryper den till en ny kammare, ett annat av rummen i
-mittens 3 × 3. Den gamla blir ett vanligt rum, där 15–45 guld ligger kvar
+När ormen har vaknat kryper den till en ny kammare, med samma regler. Den gamla blir ett vanligt rum, där 15–45 guld ligger kvar
 på golvet åt den som kommer först, och alla i tornet hör att ormen flyttar
 sig.
 

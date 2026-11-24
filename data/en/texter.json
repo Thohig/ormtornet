@@ -338,10 +338,10 @@
       "beskrivningar": {
         "1": [
           "The walls meet in a pointed arch. A distant sound, as of something heavy shifting, dies away before you can listen.",
-          "Here the passages cross. The floor slopes faintly towards the middle of the tower."
+          "Here the passages cross. The floor slopes faintly to the {horn}."
         ],
         "2": [
-          "The floor slopes towards the middle, and the slope has grown steeper.",
+          "The floor slopes to the {horn}, and the slope has grown steeper.",
           "The sound of something heavy shifting comes back, and now you hear that it comes from every side."
         ],
         "3": [
@@ -387,7 +387,7 @@
       "The sun is setting"
     ],
     "valkommen": [
-      "{namn}, you stand inside the gate in the tower's {horn}. Somewhere in the middle, they say, a serpent sleeps around its treasure. Take what you dare, and come out before the sun goes down."
+      "{namn}, you stand inside the gate in the tower's {horn}. Somewhere in the tower, they say, a serpent sleeps around its treasure. Take what you dare, and come out before the sun goes down."
     ],
     "tillbaka": [
       "You are back. The tower has been waiting for you."
@@ -407,7 +407,7 @@
       "A new lantern is lit by one of the gates. It is {namn}."
     ],
     "valkommen_dolt": [
-      "{namn}, you stand in the dusk at the foot of the tower. Somewhere in the middle, they say, a serpent sleeps around its treasure. Take what you dare, and come out before the sun goes down. Which gate you enter by, you will learn when the wandering begins."
+      "{namn}, you stand in the dusk at the foot of the tower. Somewhere in the tower, they say, a serpent sleeps around its treasure. Take what you dare, and come out before the sun goes down. Which gate you enter by, you will learn when the wandering begins."
     ],
     "start_hor_en": [
       "Far away, another gate creaks."
@@ -650,6 +650,14 @@
     ],
     "nave_ser": [
       "{namn} reaches for the gold in the hoard."
+    ],
+    "andetag_vagg": [
+      "Through the wall to the {riktning} something vast is breathing, slow and heavy.",
+      "The wall to the {riktning} is warm, and behind it something draws breath."
+    ],
+    "andetag_alla": [
+      "Beneath every other sound you hear it now: breathing, slow and deep. It comes from the {horn}.",
+      "The tower breathes. The sound is strongest to the {horn}."
     ],
     "ormen_flyttar": [
       "The hissing draws away through the walls. The serpent has crawled to a new place in the belly of the tower.",
