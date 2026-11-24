@@ -34,6 +34,10 @@ Byggt (README beskriver hur det fungerar):
 - Avsnittet Fröet (2026-11-22, [frot-och-bredden.md](frot-och-bredden.md)):
   den här vandringens frö med Kopiera och Samma igen, och nästa
   vandrings frö, som går att skriva in eller slumpa.
+- En ändring i slutet ger ett nytt torn (2026-11-24): ett nytt antal
+  AI-spelare, en ny svårighet eller ett nytt frö stänger slutskärmen, och
+  alla kommer till lobbyn med ett nytt torn (`towerChanged` i `seed.go`).
+  Frånvarande vandrare och språket stänger den inte.
 - Värdsidans avsnitt står alltid i samma ordning. Under vandringen visar
   Vid porten bara raden om vandringen och vandrarna (2026-11-21).
 

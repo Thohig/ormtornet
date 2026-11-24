@@ -33,7 +33,9 @@ Så här skiljer vi på sakerna när användaren ger instruktioner:
   står alltid i den ordningen. På en bred skärm står de i två kolumner,
   Bjud in och Vid porten till vänster och resten till höger. Under Bjud
   in står adressen (på Pages länken) inte utskriven; knapparna kopierar
-  den, och Visa adressen visar den. **Gå in själv** byter till spelarsidan
+  den, och Visa adressen visar den. Ändras AI-spelarna, svårigheten
+  eller fröet i slutet stängs slutskärmen och alla kommer till lobbyn med
+  ett nytt torn (`towerChanged` i `seed.go`). **Gå in själv** byter till spelarsidan
   i samma flik och heter Till spelet när spelledaren har en vandrare under
   vandringen. På Pages visas den i skalet och har länken och en varning
   om att hålla tornets flik öppen. QR-koden togs bort 2026-11-22.
