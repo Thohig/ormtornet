@@ -62,6 +62,10 @@ func (g *Game) eventPossible(id string) bool {
 		return g.lightRounds == 0
 	case "klirrar":
 		return g.richest() != nil
+	case "packning":
+		return g.plainItem() != ""
+	case "brev":
+		return len(g.letterReaders()) > 0
 	}
 	return true
 }
@@ -133,6 +137,21 @@ func (g *Game) runTowerEvent(id string) bool {
 		if p == nil {
 			return false
 		}
+		x, y = p.X, p.Y
+		hit = map[*Player]bool{p: true}
+	case "packning":
+		id := g.plainItem()
+		if id == "" {
+			return false
+		}
+		x, y = g.quietSpot()
+		g.rooms[y][x].items = append(g.rooms[y][x].items, id)
+	case "brev":
+		r := g.letterReaders()
+		if len(r) == 0 {
+			return false
+		}
+		p := r[g.rng.IntN(len(r))]
 		x, y = p.X, p.Y
 		hit = map[*Player]bool{p: true}
 	default:
@@ -225,9 +244,35 @@ func (g *Game) eventHere(p *Player, id string) {
 		}
 	case "guld":
 		g.pickUpGold(p)
-	case "skinn":
+	case "skinn", "packning":
 		g.pickUp(p)
+	case "brev":
+		g.readLetter(p)
 	}
+}
+
+// plainItem drar ett föremål som inte är förbannat och inte är ett brev,
+// för packningen som någon glömde.
+func (g *Game) plainItem() string {
+	for range 20 {
+		id := g.data.randomItem(g.rng)
+		if t := g.data.itemType(id); t != nil && !t.Forbannad && !t.Brev {
+			return id
+		}
+	}
+	return ""
+}
+
+// letterReaders är de som kan få ett brev under dörren: inne, inte i
+// valven och inte i mörkret.
+func (g *Game) letterReaders() []*Player {
+	var r []*Player
+	for _, p := range g.inside() {
+		if p.Cellar == 0 && p.Dark == 0 && g.cornerIndex(p.X, p.Y) < 0 {
+			r = append(r, p)
+		}
+	}
+	return r
 }
 
 // quietSpot är ett vanligt rum där ingen står och ingen har varit: där

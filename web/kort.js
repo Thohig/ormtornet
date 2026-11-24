@@ -391,6 +391,26 @@ ${[22, 56, 72].map((y, i) => `<path d="M${8 + i * 4} ${y}q14 -5 26 0t26 0" fill=
 ${[[70, 56, 0], [78, 44, 1], [74, 74, 0], [84, 66, 1], [64, 40, 0]].map(([x, y, k]) => `<ellipse cx="${x}" cy="${y}" rx="${k ? 4 : 3.4}" ry="${k ? 2 : 3.4}" fill="${GULD}" stroke="${BRUN}" stroke-width="0.6"/>`).join("")}
 <path d="M80 30l4 -4M88 38l5 -2M86 52l6 0" stroke="${GULD}" stroke-width="1.4" stroke-linecap="round"/>`;
 
+  // Den glömda packningen: en sliten läderväska som ligger öppen, med
+  // något som glimmar i, och damm från taket.
+  BILDER.packning = () => `${golv(80)}
+<path d="M24 78q-2 -22 6 -30h40q8 8 6 30z" fill="${BRUN}" stroke="${BLAECK}" stroke-width="1.4"/>
+<path d="M30 48q20 -18 40 0" fill="none" stroke="${BLAECK}" stroke-width="2.4"/>
+<path d="M28 50l-6 -10h56l-6 10z" fill="#8a6234" stroke="${BLAECK}" stroke-width="1.2"/>
+<path d="M36 62h28M40 70h20" stroke="${BLAECK}" stroke-width="1" opacity="0.5"/>
+<circle cx="50" cy="44" r="4" fill="${GULD}"/><path d="M50 34v4M43 37l3 3M57 37l-3 3" stroke="${GULD}" stroke-width="1.2" stroke-linecap="round"/>
+${[[30, 14], [46, 20], [62, 12], [70, 24], [38, 26]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="1.4" fill="${STEN}"/>`).join("")}`;
+
+  // Brevet under dörren: en dörr och ett vikt brev som sticker in under
+  // dörrkanten.
+  BILDER.brev_dorr = () => `${vagg()}
+<path d="M28 14h44v66H28z" fill="#6b4a24" stroke="${BLAECK}" stroke-width="1.6"/>
+<path d="M38 14v66M50 14v66M62 14v66" stroke="${BLAECK}" stroke-width="0.8" opacity="0.5"/>
+<circle cx="64" cy="48" r="2.4" fill="${JARN}"/>
+<path d="M14 80h72" stroke="${BLAECK}" stroke-width="2"/>
+<path d="M36 80l4 12h34l-6 -12z" fill="#f3ead6" stroke="${BLAECK}" stroke-width="1"/>
+<path d="M44 86h20M46 89h14" stroke="${BRUN}" stroke-width="0.8"/>`;
+
   // Ett rostigt svärd, snett över kortet.
   BILDER.svard = () => `${ljus}
 <path d="M30 76l42 -50 6 -6 -2 8 -42 50z" fill="#9a8a7a" stroke="${BLAECK}" stroke-width="1.2"/>

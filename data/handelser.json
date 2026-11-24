@@ -135,6 +135,29 @@
         "bredvid": [
           "Pungen bredvid dig klirrar så att det ekar mellan väggarna. Den som bär den har mer än alla andra."
         ]
+      },
+      {
+        "id": "packning",
+        "vikt": 2,
+        "max": 2,
+        "bild": "packning",
+        "rubrik": "Den glömda packningen",
+        "text": [
+          "Åt {horn} faller något tungt ur ett hål i taket och landar med en duns."
+        ],
+        "har": [
+          "En packning faller ur taket framför dina fötter. Någon som gick här före dig hann aldrig hämta den."
+        ]
+      },
+      {
+        "id": "brev",
+        "vikt": 2,
+        "max": 2,
+        "bild": "brev_dorr",
+        "rubrik": "Brevet under dörren",
+        "har": [
+          "Ett papper glider in under dörren, som om någon på andra sidan sköt in det."
+        ]
       }
     ]
   }

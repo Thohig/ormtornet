@@ -95,6 +95,23 @@
         "bredvid": [
           "The purse beside you jingles so loudly that it echoes between the walls. Whoever carries it has more than anyone else."
         ]
+      },
+      {
+        "id": "packning",
+        "rubrik": "The forgotten pack",
+        "text": [
+          "To the {horn} something heavy falls from a hole in the ceiling and lands with a thud."
+        ],
+        "har": [
+          "A pack falls from the ceiling at your feet. Someone who walked here before you never came back for it."
+        ]
+      },
+      {
+        "id": "brev",
+        "rubrik": "The letter under the door",
+        "har": [
+          "A sheet of paper slides in under the door, as if someone on the other side pushed it through."
+        ]
       }
     ]
   }

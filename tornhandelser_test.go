@@ -153,6 +153,51 @@ func TestTowerEventsMore(t *testing.T) {
 	})
 }
 
+// Den glömda packningen och brevet under dörren.
+func TestTowerEventsFound(t *testing.T) {
+	t.Run("packning", func(t *testing.T) {
+		g, a, _ := startTwo(t)
+		if !g.runTowerEvent("packning") || !hasEventCard(a.player, "packning") {
+			t.Fatal("ingen packning")
+		}
+		n := 0
+		for y := range g.size {
+			for x := range g.size {
+				for _, id := range g.rooms[y][x].items {
+					if it := g.data.itemType(id); it != nil && !it.Forbannad && !it.Brev {
+						n++
+					}
+				}
+			}
+		}
+		if n != 1 {
+			t.Fatalf("%d föremål i tornet", n)
+		}
+	})
+	t.Run("brev", func(t *testing.T) {
+		g, a, b := startTwo(t)
+		putInRoom(g, a.player, 2, 2)
+		putInRoom(g, b.player, 4, 4)
+		if !g.runTowerEvent("brev") {
+			t.Fatal("inget brev")
+		}
+		got := 0
+		for _, p := range []*Player{a.player, b.player} {
+			for _, c := range p.roundCards {
+				if c.Slag == "brev" {
+					got++
+					if !hasEventCard(p, "brev_dorr") {
+						t.Fatal("brevet kom utan händelsens kort")
+					}
+				}
+			}
+		}
+		if got != 1 {
+			t.Fatalf("%d fick ett brev", got)
+		}
+	})
+}
+
 // Ett rasat rum går inte att gå in i, och varelser går inte dit heller.
 func TestCaveInBlocks(t *testing.T) {
 	g, a, _ := startTwo(t)

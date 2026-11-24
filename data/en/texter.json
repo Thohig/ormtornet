@@ -491,6 +491,12 @@
     "ber_handelse_klirrar": [
       "{nar}, a purse jingled so loudly it was heard through the whole tower."
     ],
+    "ber_handelse_packning": [
+      "{nar}, a forgotten pack fell from the ceiling."
+    ],
+    "ber_handelse_brev": [
+      "{nar}, a letter slid in under a door."
+    ],
     "ber_foremal": [
       "{nar}, {namn} found {foremal}."
     ],
@@ -1049,6 +1055,12 @@
     ],
     "kronika_handelse_klirrar": [
       "A purse jingled so loudly it was heard through the whole tower."
+    ],
+    "kronika_handelse_packning": [
+      "A forgotten pack fell from the ceiling in a room."
+    ],
+    "kronika_handelse_brev": [
+      "A letter slid in under a door."
     ],
     "handelse_guld_tar": [
       "The coins from the crack lie on the floor. You take {antal} gold."

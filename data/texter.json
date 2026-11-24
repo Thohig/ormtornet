@@ -405,7 +405,7 @@
         {"id": "varelse", "nycklar": ["kronika_varelse"], "vikt": 3, "forst": 2, "bild": "fackla", "rubrik": "stund_varelse", "flera": "ber_flera_varelse"},
         {"id": "foremal", "nycklar": ["kronika_foremal"], "vikt": 2, "bild": "guld", "rubrik": "ber_rubrik_foremal"},
         {"id": "guld_lost", "nycklar": ["kronika_guld_lost"], "vikt": 1, "bild": "guld", "rubrik": "kort_guld_lost"},
-        {"id": "handelse", "nycklar": ["kronika_handelse_andas", "kronika_handelse_guld", "kronika_handelse_ljus", "kronika_handelse_skinn", "kronika_handelse_ras", "kronika_handelse_doden", "kronika_handelse_klockslag", "kronika_handelse_stannar", "kronika_handelse_draget", "kronika_handelse_klirrar"], "vikt": 3, "bild": "andas", "rubrik": "ber_rubrik_handelse"}
+        {"id": "handelse", "nycklar": ["kronika_handelse_andas", "kronika_handelse_guld", "kronika_handelse_ljus", "kronika_handelse_skinn", "kronika_handelse_ras", "kronika_handelse_doden", "kronika_handelse_klockslag", "kronika_handelse_stannar", "kronika_handelse_draget", "kronika_handelse_klirrar", "kronika_handelse_packning", "kronika_handelse_brev"], "vikt": 3, "bild": "andas", "rubrik": "ber_rubrik_handelse"}
       ]
     }
   },
@@ -544,6 +544,12 @@
     ],
     "ber_handelse_klirrar": [
       "{nar} klirrade en pung så att det hördes i hela tornet."
+    ],
+    "ber_handelse_packning": [
+      "{nar} föll en glömd packning ur taket."
+    ],
+    "ber_handelse_brev": [
+      "{nar} gled ett brev in under en dörr."
     ],
     "ber_foremal": [
       "{nar} hittade {namn} {foremal}."
@@ -1103,6 +1109,12 @@
     ],
     "kronika_handelse_klirrar": [
       "En pung klirrade så att det hördes i hela tornet."
+    ],
+    "kronika_handelse_packning": [
+      "En glömd packning föll ur taket i ett rum."
+    ],
+    "kronika_handelse_brev": [
+      "Ett brev gled in under en dörr."
     ],
     "handelse_guld_tar": [
       "Mynten från sprickan ligger på golvet. Du tar {antal} guld."
