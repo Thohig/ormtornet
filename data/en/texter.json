@@ -608,6 +608,19 @@
     "kronika_dod_guld": [
       "{guld} gold was left lying there."
     ],
+    "kronika_guld_lost": [
+      "{namn} picked up {guld} gold that lay loose on the floor."
+    ],
+    "kort_guld_lost": [
+      "Gold on the floor"
+    ],
+    "ormen_flyttar": [
+      "The hissing draws away through the walls. The serpent has crawled to a new place in the belly of the tower.",
+      "The floor moves for a long time, as when something large shifts. The serpent no longer lies where it lay."
+    ],
+    "ormen_guld_kvar": [
+      "Where the serpent lay, gold is left in the tracks of its scales. You take {antal} gold."
+    ],
     "kronika_guld_kvar": [
       "{namn} picked up the {guld} gold that {dod} had carried."
     ],

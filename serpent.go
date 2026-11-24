@@ -268,6 +268,7 @@ func (g *Game) wakeSerpent() {
 	g.wakes++
 	g.buildDeck()
 	g.logAll(pick(o.SomnarOm), "dim")
+	g.moveChamber()
 	for _, p := range g.players {
 		if p == nil {
 			continue
@@ -277,5 +278,48 @@ func (g *Game) wakeSerpent() {
 			m = wakeMsg{T: "vaknar", Namn: name, Text: general} // ute, död eller i källarvalven
 		}
 		g.send(p.client, m)
+	}
+}
+
+// moveChamber: när ormen har vaknat kryper den till en ny kammare nära
+// mitten (inom spridningen). Den gamla blir ett vanligt rum med lite guld
+// kvar på golvet, och alla i tornet hör att ormen flyttar sig.
+func (g *Game) moveChamber() {
+	c := g.center()
+	s := max(0, min(g.data.Ormen.Spridning, c-1))
+	ox, oy := g.chamber()
+	var spots [][2]int
+	for y := c - s; y <= c+s; y++ {
+		for x := c - s; x <= c+s; x++ {
+			if (x != ox || y != oy) && g.cornerIndex(x, y) < 0 {
+				spots = append(spots, [2]int{x, y})
+			}
+		}
+	}
+	if len(spots) == 0 {
+		return
+	}
+	n := spots[g.rng.IntN(len(spots))]
+	g.chamberMoved = true // kammaren får de dörrar rummet har, inte fyra
+	// Den gamla kammaren blir ett vanligt rum. Ett rum som ingen har sett
+	// byggs först, med vanliga dörrar.
+	old := &g.rooms[oy][ox]
+	if old.Revealed {
+		old.Kind, old.TypeID = "rum", g.roomTypeFor(ox, oy)
+		old.Searched = false
+		o := &g.data.Ormen
+		g.spillGold(ox, oy, o.SkattMin+g.rng.IntN(max(1, o.SkattMax-o.SkattMin+1)), "ormen_guld_kvar")
+	}
+	g.chamberX, g.chamberY = n[0], n[1]
+	r := g.build(n[0], n[1], false)
+	r.Kind, r.TypeID = "kammare", "skattkammare"
+	r.Event = ""
+	if m := g.monsterAt(n[0], n[1]); m != nil {
+		g.removeMonster(m) // varelsen flyr för ormen
+	}
+	for _, p := range g.players {
+		if p != nil && p.Status == statusIn && p.Cellar == 0 {
+			g.logTo(p, g.data.Text("ormen_flyttar"), "varn")
+		}
 	}
 }

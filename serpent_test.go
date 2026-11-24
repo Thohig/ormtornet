@@ -104,3 +104,30 @@ func TestDrawnCardsInSummaryAndChronicle(t *testing.T) {
 		t.Fatalf("Din vandring: %+v", v.Cards)
 	}
 }
+
+// När ormen vaknar kryper den till en ny kammare nära mitten, och den
+// gamla blir ett vanligt rum med guld kvar på golvet.
+func TestSerpentMovesWhenWaking(t *testing.T) {
+	g, a, _ := startTwo(t)
+	g.data.Ormen.Spridning = 1
+	ox, oy := g.chamber()
+	g.reveal(ox, oy)
+	g.wakeSerpent()
+	nx, ny := g.chamber()
+	if nx == ox && ny == oy {
+		t.Fatal("kammaren flyttade inte")
+	}
+	if abs(nx-g.center()) > 1 || abs(ny-g.center()) > 1 {
+		t.Fatalf("den nya kammaren på %d,%d", nx, ny)
+	}
+	if g.rooms[ny][nx].Kind != "kammare" || g.rooms[oy][ox].Kind != "rum" || g.rooms[oy][ox].loose <= 0 {
+		t.Fatalf("ny %s, gammal %s med %d guld", g.rooms[ny][nx].Kind, g.rooms[oy][ox].Kind, g.rooms[oy][ox].loose)
+	}
+	// Guldet tas av den som kommer dit.
+	p := a.player
+	p.X, p.Y, p.Treasure = ox, oy, 0
+	g.pickUpGold(p)
+	if p.Treasure <= 0 || g.rooms[oy][ox].loose != 0 {
+		t.Fatalf("guldet togs inte: %d", p.Treasure)
+	}
+}

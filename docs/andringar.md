@@ -6,6 +6,13 @@ eller leder tornet.
 
 ## 2026-11-24
 
+### Ormen flyttar sig när den vaknar
+
+- När ormen har vaknat kryper den till en ny kammare, ett annat av rummen
+  i mittens 3 × 3. Den gamla kammaren blir ett vanligt rum med lite guld
+  kvar på golvet, som den som kommer först tar. Alla i tornet hör att
+  ormen flyttar sig, och den invigdes hjärtslag pekar mot den nya platsen.
+
 ### Kammaren ligger nära mitten
 
 - Kammaren ligger inte längre alltid mitt i tornet, utan i ett av rummen i

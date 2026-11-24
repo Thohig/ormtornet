@@ -645,6 +645,19 @@
     "kronika_dod_guld": [
       "{guld} guld blev liggande där."
     ],
+    "kronika_guld_lost": [
+      "{namn} tog upp {guld} guld som låg löst på golvet."
+    ],
+    "kort_guld_lost": [
+      "Guld på golvet"
+    ],
+    "ormen_flyttar": [
+      "Väsandet drar sig bort genom väggarna. Ormen har krupit till en ny plats i tornets mage.",
+      "Golvet rör sig länge, som när något stort byter läge. Ormen ligger inte där den låg."
+    ],
+    "ormen_guld_kvar": [
+      "Där ormen låg ligger guld kvar i fjällens spår. Du tar {antal} guld."
+    ],
     "kronika_guld_kvar": [
       "{namn} tog upp guldet som {dod} hade burit, {guld} guld."
     ],

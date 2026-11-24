@@ -589,6 +589,11 @@ dras ett ormkort ur en lek:
   sin skatt och 2 liv och kastas ut genom en slumpad öppning. Väsandet hörs
   i hela tornet.
 
+När ormen har vaknat kryper den till en ny kammare, ett annat av rummen i
+mittens 3 × 3. Den gamla blir ett vanligt rum, där 15–45 guld ligger kvar
+på golvet åt den som kommer först, och alla i tornet hör att ormen flyttar
+sig.
+
 Eftersom bara sovkorten tas bort ökar risken för varje näve. Leken börjar med
 13 sovkort och 2 vakna-kort på Normal. När ormen har vaknat blandas en ny lek med 2
 färre sovkort än förra gången. Står du i kammaren ser du hur djupt ormen

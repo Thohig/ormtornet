@@ -102,6 +102,27 @@ func (g *Game) pickUpGold(p *Player) {
 		r.goldBy = p.ID
 	}
 	r.gold = nil
+	if r.loose > 0 {
+		n := strconv.Itoa(r.loose)
+		p.Treasure += r.loose
+		g.soundTo(p, "skatt")
+		text := g.data.Text(r.looseKey, "antal", n)
+		g.logTo(p, text, "syn")
+		g.addCard(p, gameCard{Slag: "guld", Bild: "guld", Rubrik: g.data.Text("kort_guld_lost"), Text: text})
+		g.chronicle("kronika_guld_lost", "namn", p.Name, "guld", n)
+		r.loose, r.looseKey = 0, ""
+	}
+}
+
+// spillGold lägger löst guld i ett rum, som den som kommer först tar.
+// key är texten när det tas, med {antal}.
+func (g *Game) spillGold(x, y, amount int, key string) {
+	if amount <= 0 || !g.inBounds(x, y) {
+		return
+	}
+	r := &g.rooms[y][x]
+	r.loose += amount
+	r.looseKey = key
 }
 
 // goldEpilogue säger till den döda vart guldet tog vägen, i slutet.
