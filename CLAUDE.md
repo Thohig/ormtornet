@@ -70,6 +70,9 @@ Så här skiljer vi på sakerna när användaren ger instruktioner:
   - **det stora kortet** mitt på kartan (`#storkort`): **uppvaknandet**,
     kortet Ormen vaknar som alla ser (`showWakeCard` i `web/app.js`), en
     port som stängs, solen och att komma ut,
+  - **minikartan**: allt man har upptäckt, platt och vridet som kartan,
+    uppe till vänster på kartan på datorn och i kompassens ställe på
+    telefonen (`web/minikarta.js`, docs/minikartan.md),
   - **sömnmätaren**: hur djupt ormen sover, i panelen Nu i skattkammaren,
   - **panelen Nu**: draget, striden och vad som väntar, som en rad under
     kartan (`#nowBlock`). Den syns bara när den har något att säga. Panelen Vandrare togs bort 2026-11-22,
@@ -299,5 +302,8 @@ Skriv dit när ett steg är klart.
   kammaren nära mitten (sedan ersatt av den fria platsen i
   ormens-plats.md), ormen som flyttar sig när den vaknar och tornets sju
   slumpade händelser med var sitt spelkort. Allt är byggt.
+- [docs/minikartan.md](docs/minikartan.md): minikartan med det man har
+  upptäckt, en fast ruta på datorn och kompassens ställe på telefonen.
+  Allt är byggt; avsnittet Att prova säger vad som behöver provas i spel.
 - [docs/slumpade-namn.md](docs/slumpade-namn.md): tornet ger namnen och
   namnrutan är borta. Steg 1–2 är byggda; Nytt namn i lobbyn valdes bort.

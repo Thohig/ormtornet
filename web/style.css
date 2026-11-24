@@ -627,6 +627,56 @@ body.touch .isotangenter { z-index: 5; }
 .isotangenter span.vald { background: rgba(21, 23, 26, 0.9); box-shadow: 0 0 8px currentColor; }
 .isokompass[hidden], .isokant[hidden], .isokant > div[hidden], .isotangenter[hidden], .isotangenter span[hidden] { display: none; }
 
+/* Minikartan: allt man har upptäckt, platt och vridet som kartan
+   (web/minikarta.js). Uppe till vänster på datorn, med rummets rad och
+   loggen under, och nere till vänster i kompassens ställe på telefonen. */
+#minikarta {
+  position: absolute;
+  left: 10px;
+  top: 8px;
+  width: 168px;
+  height: 112px;
+  z-index: 9;
+  border: 1px solid var(--chalkline);
+  border-radius: 6px;
+  background: rgba(21, 23, 26, 0.72);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+#minikarta:hover { border-color: var(--chalk); }
+#minikarta[hidden] { display: none; }
+#minikarta svg { display: block; }
+#minikarta .mk-rum { fill: rgba(169, 166, 157, 0.28); stroke: var(--chalk); stroke-width: 1; stroke-opacity: 0.7; }
+#minikarta .mk-rum.mk-andras { fill: none; stroke-opacity: 0.35; stroke-dasharray: 2 2; }
+#minikarta .mk-rum.mk-kammare { fill: rgba(255, 204, 102, 0.45); stroke: var(--hi); stroke-opacity: 0.9; }
+#minikarta line { stroke-linecap: round; }
+#minikarta .mk-dorr { stroke: var(--chalk); stroke-width: 1.5; }
+#minikarta .mk-dorr.mk-andras { stroke-opacity: 0.4; }
+#minikarta .mk-port { stroke: var(--hi); stroke-width: 2; }
+#minikarta .mk-port.mk-stangd { stroke: var(--warn); stroke-opacity: 0.7; }
+#minikarta .mk-dod { stroke: var(--warn); stroke-width: 1.3; }
+#minikarta .mk-du { fill: var(--hi); stroke: #000; stroke-width: 1; }
+#minikarta .mk-vy { fill: rgba(255, 231, 176, 0.05); stroke: var(--dim); stroke-width: 1; stroke-dasharray: 3 3; }
+#minikarta .mk-n { fill: var(--chalk); font: 10px Menlo, Monaco, monospace; opacity: 0.8; }
+#minikarta .mk-npil { fill: none; stroke: var(--chalk); stroke-width: 1.2; stroke-linecap: round; stroke-linejoin: round; opacity: 0.8; }
+/* Avslöjandet når minikartan också: kritan rodnar. */
+body[data-niva="3"] #minikarta .mk-rum, body[data-niva="3"] #minikarta .mk-dorr { stroke: #b9928a; }
+body[data-niva="4"] #minikarta .mk-rum, body[data-niva="4"] #minikarta .mk-dorr { stroke: #c0766a; }
+body[data-niva="4"] #minikarta { border-color: #4a2a26; }
+body.minikarta #mapleft { top: 128px; }
+body.minikarta #mapbox > #side { top: 132px; }
+@media (min-width: 701px) and (max-height: 500px) {
+  #minikarta { width: 124px; height: 80px; }
+  body.minikarta #mapleft { top: 94px; }
+  body.minikarta #mapbox > #side { top: 96px; }
+}
+@media (max-width: 700px) {
+  #minikarta { top: auto; bottom: 8px; left: 8px; width: 92px; height: 84px; z-index: 4; }
+  #minikarta.stor { top: 8px; right: 8px; bottom: 8px; left: 8px; width: auto; height: auto; z-index: 20; background: rgba(12, 13, 15, 0.94); }
+  body.minikarta #mapleft { top: 8px; }
+  body.minikarta .isokompass { display: none; }
+}
+
 #roomname {
   color: var(--chalk);
   letter-spacing: 0.08em;

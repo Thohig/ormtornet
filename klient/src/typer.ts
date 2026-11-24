@@ -13,6 +13,7 @@ export interface Rum {
   f?: boolean; // ett föremål eller guld ligger här (för spårfinnaren)
   dod?: boolean; // här har någon dött (för kartritaren)
   stangd?: boolean; // porten har slutit sig
+  a?: boolean; // ett rum bara andra har hittat (kartritaren), för minikartan
   in?: string[]; // inredningen, efter rumstypen (inredning.ts)
 }
 

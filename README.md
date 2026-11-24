@@ -295,6 +295,7 @@ på kartan, och man får pröva sig fram.
 | D          | drick en dryck                    |
 | A          | anfall (i strid)                  |
 | Z          | byt zoom på kartan: (Rummet,) Nära, Mellan, Långt, Allt |
+| K          | visa och dölj minikartan (på en bred skärm) |
 | L          | hela loggen (på en bred skärm)    |
 | Enter      | redo / spela igen                 |
 | V          | viska till tornet (från nivå 2)   |
@@ -387,6 +388,16 @@ och var och en får bara veta sin egen. Ordningen i listan och färgen säger
 inget om porten, och när någon kommer till tornet står det inte vid vilken
 port. Står du i ett grannrum till en port när någon går ut hör du porten
 gnissla.
+
+Minikartan visar allt du har upptäckt, platt och vriden som kartan, så
+att norr pekar snett uppåt höger: rummen, dörrarna (ett streck mot ett
+rum du inte har varit i är en väg du inte har gått), portarna, kammaren
+när du har hittat den och var du står. En streckad ram visar vad kartan
+visar just nu. Kartritaren ser också de andras rum, streckade, och kryss
+där någon har dött. På en bred skärm står den uppe till vänster på
+kartan; ett klick växlar mellan din zoom och Allt, och K döljer och visar
+den. På telefonen står den nere till vänster i kompassens ställe, och ett
+tryck gör den stor över kartan tills du trycker igen.
 
 Tornet berättar fortfarande när någon faller ner i källaren eller kommer
 upp, eller när en fälla slår till, men bara i vilken del av tornet och
@@ -1157,6 +1168,7 @@ Beskrivningarna för rummen ligger under nivåerna `"1"` till `"4"`.
   - `map.js` räknar ut kartans utsnitt och zoom, så att kartan följer
     rummet vandraren står i. Den skapar kartan snett ovanifrån, eller visar en
     text där WebGL saknas
+  - `minikarta.js` minikartan med allt vandraren har upptäckt
   - `audio.js` allt ljud, skapat med Web Audio API, även stormen i introt
   - `kort.js` spelkortens och klasskortens bilder, ritade som SVG, och
     minikorten

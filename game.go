@@ -740,6 +740,7 @@ type roomView struct {
 	Fell  bool     `json:"dod,omitempty"`    // här har någon dött (bara för kartritaren)
 	In    []string `json:"in,omitempty"`     // inredningen på kartan snett ovanifrån
 	Shut  bool     `json:"stangd,omitempty"` // porten har slutit sig
+	Other bool     `json:"a,omitempty"`      // ett rum bara andra har hittat (kartritaren), för minikartan
 }
 
 type resultView struct {
@@ -979,6 +980,7 @@ func (g *Game) stateFor(me *Player) stateMsg {
 			}
 			rv.F = (len(r.items) > 0 || len(r.gold) > 0) && g.is(me, "sparfinnare")
 			rv.Fell = len(r.fell) > 0 && g.is(me, "kartritare")
+			rv.Other = me.known != nil && !me.known[y][x] && g.phase != phaseEnd
 			if r.HasExit {
 				rv.Exit = int(r.Exit)
 				rv.Shut = r.Shut

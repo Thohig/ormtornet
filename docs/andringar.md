@@ -6,6 +6,17 @@ eller leder tornet.
 
 ## 2026-11-24
 
+### Minikartan
+
+- En liten karta med allt du har upptäckt, vriden som kartan så att norr
+  pekar snett uppåt höger: rummen, dörrarna, portarna, kammaren och var du
+  står, och en streckad ram för det kartan visar (docs/minikartan.md).
+- På datorn står den uppe till vänster på kartan. Ett klick växlar mellan
+  din zoom och Allt, och K döljer och visar den.
+- På telefonen står den i kompassens ställe nere till vänster, och ett
+  tryck gör den stor över kartan.
+- Kartritaren ser de andras rum streckade och kryss där någon har dött.
+
 ### Ormen kan ligga nästan var som helst
 
 - Kammaren ligger inte längre nära mitten, utan nästan var som helst: inte

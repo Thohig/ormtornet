@@ -252,6 +252,10 @@ const MapView = (() => {
     const now = performance.now();
     aim(wanted(state), now);
     if (iso) iso.visaTillstand(state);
+    if (typeof Minikarta !== "undefined") {
+      const me = state.players.find((p) => p.id === state.you);
+      Minikarta.draw(state, target, me ? PLAYER_COLORS[me.slot] : "");
+    }
   }
 
   // cover är den del av kartans bredd som loggen täcker när den står på

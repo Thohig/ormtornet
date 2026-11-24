@@ -2237,6 +2237,11 @@ function pressKey(key) {
       MapView.cycle();
       return true;
     }
+    if (key === "k" || key === "K") {
+      Minikarta.toggle();
+      return true;
+    }
+    if (key === "Escape" && Minikarta.close()) return true;
   }
   if (state && state.phase === "klassval") {
     // Siffrorna väljer kort. Tab och Enter får göra som vanligt bland knapparna.
