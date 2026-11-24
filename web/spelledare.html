@@ -83,6 +83,9 @@
      att Vid porten och Inför nästa vandring kommer upp. */
   body.fas-spel #invite .full, body.fas-spel #copyInvite, body.fas-spel:not(.har-vandrare) #joinSelf,
   body.fas-slut #invite .full, body.fas-slut #copyInvite { display: none; }
+  /* I slutet stänger en ändring slutskärmen för alla (towerChanged i seed.go). */
+  .slutvarning { display: none; }
+  body.fas-slut .slutvarning { display: block; }
   body.fas-spel #addr, body.fas-slut #addr { font-size: 15px; }
   body.fas-spel #invite .buttons, body.fas-slut #invite .buttons { margin-top: 6px; }
   /* Under vandringen kan ingen ny komma in och den går inte att starta:
@@ -151,6 +154,7 @@
       <div class="col" id="colPrep">
         <section id="next">
         <h2 data-t="infor_nasta"></h2>
+        <p class="dimtext slutvarning" data-t="slut_andra"></p>
         <form id="settings" autocomplete="off">
           <label for="sSv" data-t="inst_svarighet"></label>
           <select id="sSv" name="svarighet"></select>
@@ -197,6 +201,7 @@
         <!-- Fröet: samma frö och samma drag ger samma torn (seed.go). -->
         <section id="seed">
         <h2 data-t="fro_rubrik"></h2>
+        <p class="dimtext slutvarning" data-t="slut_andra_fro"></p>
         <p id="seedNow" hidden>
           <span id="seedNowText"></span>
           <button class="btn small" id="seedCopy" type="button" data-t="fro_kopiera"></button>

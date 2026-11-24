@@ -113,9 +113,15 @@ func (g *Game) ApplySettings(s Settings) (Settings, error) {
 	if g.phase == phasePlay {
 		return settingsFrom(g.cfg), errPlaying
 	}
+	before := g.cfg
 	g.cfg = s.applyTo(g.cfg)
 	g.cfg.Difficulty = g.base.difficultyID(g.cfg.Difficulty)
 	g.data = g.base.withDifficulty(g.cfg.Difficulty)
+	if g.phase == phaseEnd && (g.cfg.AI != before.AI || g.cfg.Difficulty != before.Difficulty) {
+		// Slutskärmen gäller vandringen som var. Med andra förutsättningar
+		// väntar ett nytt torn i stället (towerChanged).
+		g.towerChanged()
+	}
 	if g.phase == phaseLobby {
 		for _, p := range g.players {
 			if p != nil {

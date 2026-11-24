@@ -52,8 +52,11 @@ func (g *Game) SetNextSeed(seed uint64) bool {
 	if seed == 0 {
 		seed = randomSeed()
 	}
+	changed := seed != g.nextSeed
 	g.nextSeed = seed
-	if g.phase == phaseLobby {
+	if g.phase == phaseEnd && changed {
+		g.towerChanged() // bygger tornet med det nya fröet
+	} else if g.phase == phaseLobby {
 		g.reseed(seed)
 		g.newTower()
 	}
@@ -66,4 +69,15 @@ func (g *Game) SetNextSeed(seed uint64) bool {
 func (g *Game) towerForNext() {
 	g.reseed(g.nextSeed)
 	g.newTower()
+}
+
+// towerChanged stänger slutskärmen när spelledaren ändrar förutsättningarna
+// (fröet, AI-spelarna eller svårigheten) efter en vandring. Alla kommer till
+// lobbyn med ett nytt torn, så att placeringen aldrig visar en vandring som
+// inte längre stämmer.
+func (g *Game) towerChanged() {
+	if g.phase != phaseEnd {
+		return
+	}
+	g.toLobby("torn_andrat")
 }

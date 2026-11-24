@@ -1334,7 +1334,7 @@ func (g *Game) checkStart() bool {
 	}
 	if g.phase == phaseEnd && g.cfg.Classes {
 		// Nytt torn: tillbaka till lobbyn, där alla får välja klass igen.
-		g.toLobby()
+		g.toLobby("")
 		return true
 	}
 	if g.phase == phaseEnd {
@@ -1361,16 +1361,24 @@ func (g *Game) begin() {
 }
 
 // toLobby bygger ett nytt torn efter en vandring och låter alla vänta i
-// lobbyn. När alla är redo igen väljer de nya klasser.
-func (g *Game) toLobby() {
+// lobbyn. När alla är redo igen väljer de nya klasser. why är en textnyckel
+// som står före raden om det nya tornet, eller tom.
+func (g *Game) toLobby(why string) {
 	if g.nextData != nil {
 		g.useData(g.nextData)
 	}
 	g.phase = phaseLobby
 	g.level = 1 // tornet i lobbyn har inte börjat avslöja något
-	if g.dropAbsent() > 0 {
-		g.syncBots(true)
+	if why != "" {
+		// Före raderna om AI-spelare som kommer eller går.
+		for _, p := range g.players {
+			if p != nil && p.client != nil {
+				g.logTo(p, g.data.Text(why), "syn")
+			}
+		}
 	}
+	g.dropAbsent()
+	g.syncBots(true) // de som lämnade, eller ett nytt antal AI-spelare
 	g.resetClasses()
 	for _, p := range g.players {
 		if p != nil {

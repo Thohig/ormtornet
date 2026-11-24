@@ -1183,6 +1183,9 @@
     "kronika_dod_tornet": [
       "{namn} dog. Ingen vet riktigt av vad."
     ],
+    "torn_andrat": [
+      "Spelledaren har ändrat tornet. Vandringen som var är över."
+    ],
     "nytt_torn": [
       "Ett nytt torn reser sig ur dimman. Tryck Enter när du är redo (på en pekskärm: Redo). Vandringen börjar när alla är redo och ni är minst {min}."
     ],

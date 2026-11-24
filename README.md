@@ -82,6 +82,14 @@ vandring; vandringen efter får ett nytt. I lobbyn byggs tornet om med
 fröet, så att också portarna blir desamma. Samma frö ger samma torn när
 lika många vandrar, med samma svårighet och samma drag.
 
+Ändrar spelledaren fröet, svårigheten eller antalet AI-spelare i slutet
+stängs slutskärmen för alla: de kommer till lobbyn med ett nytt torn som
+följer det nya, och loggen säger att spelledaren har ändrat tornet
+(`towerChanged` i `seed.go`). Så visar placeringen aldrig en vandring med
+AI-spelare som inte längre finns. Frånvarande vandrare och språket ändrar
+inte tornet. I slutet står en rad om det under Inför nästa vandring och
+Fröet.
+
 Under Inför nästa vandring väljer spelledaren det här. Under formuläret förklarar "Vad inställningarna gör", hopfälld, varje
 inställning med några meningar (`forkl_*` i `vardsidan.json`).
 

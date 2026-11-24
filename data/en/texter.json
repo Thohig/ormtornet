@@ -1129,6 +1129,9 @@
     "kronika_dod_tornet": [
       "{namn} died. No one quite knows of what."
     ],
+    "torn_andrat": [
+      "The game master has changed the tower. The wandering that was is over."
+    ],
     "nytt_torn": [
       "A new tower rises out of the mist. Press Enter when you are ready (on a touch screen: Ready). The wandering begins when all are ready and enough have come (at least {min})."
     ],

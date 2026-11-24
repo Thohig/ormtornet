@@ -53,7 +53,7 @@ func TestReloadWaitsForNextTower(t *testing.T) {
 	if g.base != old || g.nextData != d {
 		t.Fatal("det nya innehållet väntar inte")
 	}
-	g.toLobby()
+	g.toLobby("")
 	if g.base != d || g.nextData != nil {
 		t.Fatal("det nya innehållet gäller inte i nästa torn")
 	}

@@ -6,6 +6,18 @@ eller leder tornet.
 
 ## 2026-11-24
 
+### En ändring i slutet ger ett nytt torn
+
+- Ändrar spelledaren antalet AI-spelare, svårigheten eller fröet när
+  vandringen är slut stängs slutskärmen för alla. Alla kommer till lobbyn
+  med ett nytt torn som följer det nya, och loggen säger att spelledaren
+  har ändrat tornet. Förut stod slutskärmen kvar, och AI-spelare som togs
+  bort försvann ur placeringen.
+- Frånvarande vandrare och språket ändrar inte tornet och stänger inte
+  slutskärmen.
+- På värdsidan står i slutet en rad om det under Inför nästa vandring och
+  Fröet.
+
 ### Guldboken och en enklare slutskärm
 
 - Slutskärmen börjar med placeringen. Välj en vandrare för att läsa hens

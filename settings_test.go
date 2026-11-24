@@ -176,3 +176,75 @@ func TestAutoSunAndTurn(t *testing.T) {
 		t.Fatalf("värdsidan: sol %d, turtid %d", v.SunMax, v.TurnSecs)
 	}
 }
+
+// endedGame ger ett torn där en vandring med Alva och två AI-spelare är
+// slut, så att slutskärmen visas.
+func endedGame(t *testing.T) (*Game, *Client) {
+	t.Helper()
+	g := testGame(t)
+	a := testClient()
+	g.Join(a, "Alva")
+	if _, err := g.ApplySettings(Settings{AI: 2, Franvaro: 2}); err != nil {
+		t.Fatal(err)
+	}
+	g.ForceStart()
+	if g.phase != phasePlay {
+		t.Fatalf("fas %s, ville ha vandringen", g.phase)
+	}
+	g.endGame()
+	if g.phase != phaseEnd {
+		t.Fatalf("fas %s, ville ha slut", g.phase)
+	}
+	return g, a
+}
+
+// Ändras antalet AI-spelare i slutet stängs slutskärmen och ett nytt torn
+// i rätt storlek väntar i lobbyn; placeringen tappar aldrig någon.
+func TestChangedAIClosesEndScreen(t *testing.T) {
+	g, a := endedGame(t)
+	if _, err := g.ApplySettings(Settings{AI: 5, Franvaro: 2}); err != nil {
+		t.Fatal(err)
+	}
+	if g.phase != phaseLobby {
+		t.Fatalf("fas %s, ville ha lobbyn", g.phase)
+	}
+	if n := countBots(g); n != 5 {
+		t.Fatalf("%d AI-spelare, ville ha 5", n)
+	}
+	if g.size != g.towerSize() {
+		t.Errorf("tornet är %d stort, ville ha %d", g.size, g.towerSize())
+	}
+	if !strings.Contains(strings.Join(drainAll(a), "\n"), g.data.Texter["torn_andrat"][0]) {
+		t.Error("ingen rad om att tornet ändrades")
+	}
+	if a.player.Ready {
+		t.Error("Alva är redo i det nya tornet utan att ha sagt det")
+	}
+}
+
+// Frånvarande vandrare ändrar inte tornet, så slutskärmen står kvar.
+func TestAbsentSettingKeepsEndScreen(t *testing.T) {
+	g, _ := endedGame(t)
+	g.ApplySettings(Settings{AI: 2, Franvaro: 5})
+	if g.phase != phaseEnd || countBots(g) != 2 {
+		t.Fatalf("fas %s med %d AI-spelare", g.phase, countBots(g))
+	}
+}
+
+// Ett nytt frö i slutet ger ett nytt torn med det fröet i lobbyn, samma
+// torn som en lobby med samma frö ger.
+func TestNewSeedClosesEndScreen(t *testing.T) {
+	g, _ := endedGame(t)
+	if !g.SetNextSeed(4242) {
+		t.Fatal("fröet togs inte emot")
+	}
+	if g.phase != phaseLobby || g.nextSeed != 4242 || countBots(g) != 2 {
+		t.Fatalf("fas %s frö %d med %d AI-spelare", g.phase, g.nextSeed, countBots(g))
+	}
+	// Samma frö en gång till ändrar inget.
+	ports := g.corners()
+	g.SetNextSeed(4242)
+	if g.phase != phaseLobby || len(g.corners()) != len(ports) {
+		t.Fatal("samma frö igen byggde om tornet")
+	}
+}
