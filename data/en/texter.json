@@ -724,6 +724,7 @@
     "sam_orsak_ormen": ["The serpent"],
     "sam_falde": ["You slew {varelse}."],
     "sam_tyst": ["You stayed where you were."],
+    "sam_tyst_fast": ["You were stuck."],
     "sam_dod": ["You died."],
     "sam_inget": ["You hesitated and stayed where you were."],
     "sam_vanta": ["You waited."],

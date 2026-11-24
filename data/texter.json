@@ -761,6 +761,7 @@
     "sam_orsak_ormen": ["Ormen"],
     "sam_falde": ["Du fällde {varelse}."],
     "sam_tyst": ["Du stod kvar."],
+    "sam_tyst_fast": ["Du satt fast."],
     "sam_dod": ["Du dog."],
     "sam_inget": ["Du tvekade och blev stående."],
     "sam_vanta": ["Du väntade."],

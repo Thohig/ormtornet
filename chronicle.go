@@ -175,6 +175,7 @@ type journeyRound struct {
 	To    int           `json:"till,omitempty"`   // sista rundan, när tysta rundor har slagits ihop
 	Tower bool          `json:"tornet,omitempty"` // tornet (AI:n) styrde vandraren
 	quiet bool          // inget hände, eller vandraren stod bara kvar
+	stuck bool          // en tyst runda då vandraren satt fast
 }
 
 // journeyView är vandrarens egen vandring, som den som har dött ser på en

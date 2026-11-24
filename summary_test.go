@@ -119,14 +119,14 @@ func TestJourneyQuietRoundsAndCause(t *testing.T) {
 	stood := []summaryLine{{Text: g.data.Text("sam_inget"), journey: true}}
 	for r := 10; r <= 12; r++ {
 		g.round = r
-		g.addJourney(p, stood, nil, false)
+		g.addJourney(p, stood, nil, false, false)
 	}
 	if len(p.journal) != 1 || p.journal[0].Round != 10 || p.journal[0].To != 12 {
 		t.Fatalf("tre tysta rundor väntades bli en, fick %+v", p.journal)
 	}
 	// Tornet styrde nästa runda: en egen rad, med märket.
 	g.round = 13
-	g.addJourney(p, nil, nil, true)
+	g.addJourney(p, nil, nil, true, false)
 	if len(p.journal) != 2 || !p.journal[1].Tower {
 		t.Fatalf("rundan då tornet styrde väntades stå för sig: %+v", p.journal)
 	}
@@ -140,12 +140,34 @@ func TestJourneyQuietRoundsAndCause(t *testing.T) {
 	p.HP -= 2
 	p.hurt("falla", trap.Kort)
 	lines := g.summaryFor(p, before, false)
-	g.addJourney(p, lines, nil, false)
+	g.addJourney(p, lines, nil, false, false)
 	last := p.journal[len(p.journal)-1]
 	if len(last.Lines) == 0 || !strings.HasPrefix(last.Lines[0].Text, upperFirst(trap.Kort)) {
 		t.Fatalf("skadan sa inte vad den kom av: %+v", last)
 	}
 	if strings.HasPrefix(lines[0].Text, upperFirst(trap.Kort)) {
 		t.Fatalf("kortet fick orsaken också: %+v", lines)
+	}
+}
+
+// En tyst runda då vandraren satt fast (en grop, ett galler) säger det, och
+// slås inte ihop med rundor då hen stod kvar av sig själv.
+func TestJourneyStuckRound(t *testing.T) {
+	g, a, _ := startTwo(t)
+	p := a.player
+	p.journal = nil
+	stood := []summaryLine{{Text: g.data.Text("sam_inget"), journey: true}}
+	g.round = 3
+	g.addJourney(p, stood, nil, false, true)
+	g.round = 4
+	g.addJourney(p, stood, nil, false, false)
+	if len(p.journal) != 2 {
+		t.Fatalf("väntade två rundor, fick %+v", p.journal)
+	}
+	if got := p.journal[0].Lines[0].Text; got != g.data.Text("sam_tyst_fast") {
+		t.Fatalf("runda 3: %q", got)
+	}
+	if got := p.journal[1].Lines[0].Text; got != g.data.Text("sam_tyst") {
+		t.Fatalf("runda 4: %q", got)
 	}
 }

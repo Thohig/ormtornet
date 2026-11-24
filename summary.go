@@ -93,7 +93,7 @@ func (g *Game) summarize(snap map[*Player]before, wakesBefore int) {
 		}
 		cards := g.roundCardsOf(p)
 		p.roundCards = nil
-		g.addJourney(p, lines, room, b.tower, cards...)
+		g.addJourney(p, lines, room, b.tower, b.stuck > 0, cards...)
 		var card []summaryLine
 		for _, l := range lines {
 			if !l.journey {
@@ -276,7 +276,9 @@ func (g *Game) hurtBy(p *Player) string {
 // får den texten. En runda där inget hände, eller där vandraren bara stod
 // kvar, slås ihop med en sådan runda just före: "Runda 10–12".
 // Rundans spelkort står som minikort, med sin text för den som klickar.
-func (g *Game) addJourney(p *Player, lines []summaryLine, room *roomMsg, tower bool, cards ...gameCard) {
+// stuck: vandraren satt fast när rundan började, så att en tyst runda säger
+// "Du satt fast" och inte att vandraren stod kvar.
+func (g *Game) addJourney(p *Player, lines []summaryLine, room *roomMsg, tower, stuck bool, cards ...gameCard) {
 	quiet := room == nil && len(cards) == 0
 	for _, l := range lines {
 		if !l.journey || l.why != "" || l.Text != g.data.Text("sam_inget") {
@@ -288,13 +290,17 @@ func (g *Game) addJourney(p *Player, lines []summaryLine, room *roomMsg, tower b
 		if n > 0 {
 			last := &p.journal[n-1]
 			end := max(last.Round, last.To)
-			if last.quiet && last.Tower == tower && end == g.round-1 {
+			if last.quiet && last.Tower == tower && last.stuck == stuck && end == g.round-1 {
 				last.To = g.round
 				return
 			}
 		}
-		p.journal = append(p.journal, journeyRound{Round: g.round, Tower: tower, quiet: true,
-			Lines: []summaryLine{{Text: g.data.Text("sam_tyst")}}})
+		key := "sam_tyst"
+		if stuck {
+			key = "sam_tyst_fast"
+		}
+		p.journal = append(p.journal, journeyRound{Round: g.round, Tower: tower, quiet: true, stuck: stuck,
+			Lines: []summaryLine{{Text: g.data.Text(key)}}})
 		return
 	}
 	// Lines är aldrig nil, så att spelarsidan alltid får en lista.
