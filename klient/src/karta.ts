@@ -297,6 +297,7 @@ export class IsoKarta {
   private bredd = 0;
   private hojd = 0;
   private tackt = 0; // den del av bredden som loggen täcker (Val.tackt)
+  private tacktH = 0; // den del av bredden som spelkortet täcker (Val.tacktHoger)
   private ringar: THREE.MeshBasicMaterial[] = [];
   private munnar: { upper: THREE.Group; lower: THREE.Group }[] = [];
   private ogon: THREE.Group[] = [];
@@ -1328,11 +1329,15 @@ float puls() {
     const skarp = f ? 0.6 + 0.12 * Math.min(1, Math.max(0, (Math.min(u.w, u.h) - 3) / 2)) : 1.03;
     let hw = (diag / 2) * skarp;
     let hh = (diag / 2) * LUTNING * skarp + 1.2;
-    // Täcker loggen kartans vänstra del ställs utsnittet i den del som
-    // syns: kartan ritas bredare och flyttas åt höger.
+    // Täcker loggen kartans vänstra del, och spelkortet den högra, ställs
+    // utsnittet i den del som syns mellan dem: kartan ritas bredare och
+    // flyttas dit.
     const tackt = Math.max(0, Math.min(0.5, this.val.tackt ? this.val.tackt() : 0));
+    const tacktH = Math.max(0, Math.min(0.3, this.val.tacktHoger ? this.val.tacktHoger() : 0));
     this.tackt = tackt;
-    const asp = (this.bredd * (1 - tackt)) / this.hojd;
+    this.tacktH = tacktH;
+    const fri = 1 - tackt - tacktH;
+    const asp = (this.bredd * fri) / this.hojd;
     // En smal, hög karta (telefonen) går närmare när den följer någon:
     // rummet får mer av bredden, och rombens sidor skärs av.
     if (f && asp < 1) {
@@ -1342,8 +1347,11 @@ float puls() {
     }
     if (hw / hh > asp) hh = hw / asp;
     else hw = hh * asp;
-    const hel = hw / (1 - tackt);
-    Object.assign(this.cam, { left: -hel - hel * tackt, right: hel - hel * tackt, top: hh, bottom: -hh });
+    // Hela bredden är 2 * hel, och utsnittets mitt står mitt i den fria
+    // delen, vid c av bredden från vänster.
+    const hel = hw / fri;
+    const c = (tackt + 1 - tacktH) / 2;
+    Object.assign(this.cam, { left: -2 * hel * c, right: 2 * hel * (1 - c), top: hh, bottom: -hh });
     this.cam.updateProjectionMatrix();
 
     // Solen följer kameran, så att skuggorna är skarpa där man tittar.
@@ -1464,8 +1472,9 @@ float puls() {
         mal.push({ x: p.x * S + S / 2, z: p.y * S + S / 2, tecken: "●", farg: this.val.farger[p.slot] || "#ffffff" });
       });
     }
-    // Pilarna står vid kanten av den del av kartan som syns bredvid loggen.
-    const W = this.bredd, H = this.hojd, m = 16, x0 = W * this.tackt, mx = (x0 + W) / 2, my = H / 2;
+    // Pilarna står vid kanten av den del av kartan som syns mellan loggen
+    // och spelkortet.
+    const H = this.hojd, m = 16, x0 = this.bredd * this.tackt, W = this.bredd * (1 - this.tacktH), mx = (x0 + W) / 2, my = H / 2;
     const sedda: { nyckel: string; x: number; y: number }[] = [];
     const v = new THREE.Vector3();
     let n = 0;

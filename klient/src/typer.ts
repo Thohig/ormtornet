@@ -75,6 +75,9 @@ export interface Val {
   // Hur stor del av kartans bredd, från vänster, som loggen täcker (0–0,5).
   // Kameran ställer utsnittet i den del som syns.
   tackt?: () => number;
+  // Hur stor del av bredden, från höger, som spelkortet täcker när det
+  // vänds upp (0–0,3). Kameran håller den delen fri på en bred skärm.
+  tacktHoger?: () => number;
 
   farger: string[]; // vandrarnas färger, en per plats
 }

@@ -233,7 +233,7 @@ const MapView = (() => {
     towerSize = size;
     target = null; // hoppa direkt till rätt utsnitt
     if (!iso && window.IsoKarta && IsoKarta.stods()) {
-      iso = IsoKarta.skapa(canvas, { utsnitt: () => viewAt(performance.now()), fokus: focusRoom, farger: PLAYER_COLORS, tackt: () => cover });
+      iso = IsoKarta.skapa(canvas, { utsnitt: () => viewAt(performance.now()), fokus: focusRoom, farger: PLAYER_COLORS, tackt: () => cover, tacktHoger: () => coverRight });
       iso.visa(true);
     }
     if (iso) iso.storlek(size);
@@ -256,14 +256,27 @@ const MapView = (() => {
 
   // cover är den del av kartans bredd som loggen täcker när den står på
   // kartan (placeSide i app.js). Den mäts när kartan byter storlek.
+  // coverRight är den del som spelkortet täcker till höger när det vänds
+  // upp. På en bred skärm hålls den fri hela tiden, så att kortet inte
+  // ligger över ens egen figur och kartan inte hoppar när kortet kommer.
+  // På en smal skärm skulle det ta för mycket av kartan.
   let cover = 0;
+  let coverRight = 0;
   let coverWatch = null;
   function measureCover() {
     const side = document.getElementById("side");
     const box = document.getElementById("mapbox");
+    const card = document.getElementById("spelkort");
     cover = 0;
+    coverRight = 0;
     if (side && box && side.parentElement === box && box.clientWidth > 0) {
       cover = Math.min(0.45, (side.offsetLeft + side.offsetWidth + 8) / box.clientWidth);
+    }
+    if (card && box && card.parentElement === box && box.clientWidth >= 760) {
+      // Kortet är ofta dolt; bredden står i stilen (#spelkort i style.css).
+      const cs = getComputedStyle(card);
+      const w = parseFloat(cs.width) || 190;
+      coverRight = Math.min(0.3, ((parseFloat(cs.right) || 0) + w + 8) / box.clientWidth);
     }
   }
 
