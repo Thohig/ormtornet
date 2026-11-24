@@ -6,6 +6,11 @@ eller leder tornet.
 
 ## 2026-11-24
 
+### (du) på slutskärmen
+
+- I resultaten på krönikans skärm och i resultatrutan står "(du)" efter
+  ditt eget namn, och din rad är fet.
+
 ### Tangenterna vid dörrarna går alltid att trycka på
 
 - På telefonen kunde en tangent vid en dörr hamna under översta raden

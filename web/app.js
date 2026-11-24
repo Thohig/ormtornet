@@ -739,7 +739,7 @@ function renderChron() {
   $("chronLead").textContent = end ? "" : v.dod || "";
   $("chronStatus").textContent = end ? "" : t(state.sun === 1 ? "vandring_pagar_en" : "vandring_pagar", { runda: state.round, sol: state.sun, inne: v.inne, ute: v.ute });
   // Resultaten: vem som kom ut med hur mycket, vinnaren först.
-  const results = end ? (state.results || []).map((r) => ({ text: (r.plats ? r.plats + ". " : "") + (r.winner ? "★ " : "") + r.name + (r.ai ? " ~" : "") + " · " + resultWord(r), c: r.winner ? "win" : r.status !== "ute" ? "lost" : "" })) : [];
+  const results = end ? (state.results || []).map((r) => ({ text: (r.plats ? r.plats + ". " : "") + (r.winner ? "★ " : "") + r.name + (isMine(r) ? " " + t("slut_du") : "") + (r.ai ? " ~" : "") + " · " + resultWord(r), c: (r.winner ? "win" : r.status !== "ute" ? "lost" : "") + (isMine(r) ? " mine" : "") })) : [];
   // ~ förklaras under resultaten, som i resultatrutan på kartan.
   if (end && (state.results || []).some((r) => r.ai)) results.push({ text: t("slut_ai"), c: "dim" });
   rows("chronResults", results);
@@ -1781,6 +1781,12 @@ function backToStart() {
 }
 
 // resultWord säger hur det gick för en vandrare: guldet, tomhänt, död eller förlorad.
+// isMine är sant för den egna raden i resultaten, som får (du) efter namnet.
+function isMine(r) {
+  const me = state && (state.players || []).find((p) => p.id === state.you);
+  return !!me && r.slot === me.slot;
+}
+
 function resultWord(r) {
   if (r.status === "ute") return r.treasure > 0 ? t("slut_guld", { n: r.treasure }) : t("slut_tomhant");
   if (r.status === "dod") return t("slut_dod");
@@ -1801,7 +1807,8 @@ function renderOverlay() {
   state.results.forEach((r, i) => {
     const what = resultWord(r);
     const place = String(r.plats || i + 1).padStart(2, " ") + " ";
-    const name = (r.winner ? "*" : " ") + (r.ai ? "~" : " ") + r.name;
+    const du = isMine(r) ? " " + t("slut_du") : "";
+    const name = (r.winner ? "*" : " ") + (r.ai ? "~" : " ") + r.name.slice(0, Math.max(4, 15 - du.length)) + du;
     const row = place + name.padEnd(17, " ") + what.padStart(10, " ");
     lines.push({ text: row, cls: r.winner ? "win" : r.status !== "ute" ? "lost" : "" });
   });
