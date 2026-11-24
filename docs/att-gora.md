@@ -2,7 +2,8 @@
 
 Status: samlat 2026-11-18, kompletterat efter provspelen 2026-11-21 och
 2026-11-22 (se [provspel-2026-11-21.md](provspel-2026-11-21.md) och
-[provspel-2026-11-22.md](provspel-2026-11-22.md)) och städat 2026-11-24.
+[provspel-2026-11-22.md](provspel-2026-11-22.md)) och städat 2026-11-24, då
+minikartan och berättelsen om vandringen kom till.
 Spelet är sedan 2026-11-24 en renodlat individuell tävling
 ([individuell-tavling.md](individuell-tavling.md)). Inget här är bestämt. Användaren väljer vad som
 byggs, och förslag tas fram innan något byggs.
@@ -45,6 +46,15 @@ webbläsarprovet:
   mitten? Går någon mot det håll där någon tog en näve, för att slåss om
   guldet? Känns det orättvist för den som startar längst bort (13–14 %
   vinster mot 21 % för den närmaste med AI-spelare)?
+- Minikartan ([minikartan.md](minikartan.md)): är den till nytta på
+  datorn, eller räcker zoomen Allt? Går den att läsa liten på telefonen,
+  och lockar strecken mot okända rum till att utforska? Ska kompassen på
+  datorn bort, nu när minikartan visar norr?
+- Berättelsen om vandringen ([berattelsen.md](berattelsen.md)): väljer
+  vikterna rätt höjdpunkter, är sju stycken lagom, och läser någon
+  berättelsen eller hoppar man till Nytt torn? Är titlarna roliga, och
+  får för få en titel när lika mycket inte ger någon? Saknar någon hela
+  krönikan, som nu ligger bakom Visa alla rundor?
 - Tangenterna vid dörrarna på telefonen: de hålls nu inom kartan och
   ligger över det stora kortet. Träffar man dem, och förstår man en
   tangent som har flyttats in till kanten?
@@ -113,9 +123,6 @@ En riktig kväll behövs för att se:
 - Klasskorten (2026-11-22): går det att läsa pergamentet på en telefon,
   och tar vändningen i klassvalet för lång tid av de 30 sekunderna? Ett
   kort som någon annan tar är bara sett med ett påhittat läge.
-- Vandringens största stunder (2026-11-22): väljs rätt stunder, och är
-  fem lagom? Bara sedda med påhittade stunder; en kort vandring med AI
-  gav inga.
 - Färre inställningar (2026-11-22): strid är alltid på från första rundan
   och klasserna alltid med. Blir striden för tidig, och saknar någon att
   kunna spela utan klasser?

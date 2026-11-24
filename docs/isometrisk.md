@@ -159,8 +159,9 @@ längre.
 ## Efter stegen
 
 - Kompassen: ett N med en pil åt det håll norr ligger på skärmen.
-  Riktningen räknas ut från kamerans vinkel. Den står nere till vänster
-  på telefonen, och ovanför zoomen när loggen står på kartan.
+  Riktningen räknas ut från kamerans vinkel. Den står ovanför zoomen när
+  loggen står på kartan. På telefonen står minikartan i dess ställe
+  sedan 2026-11-24 ([minikartan.md](minikartan.md)).
 - Loggen på kartan (2026-11-22, [frot-och-bredden.md](frot-och-bredden.md)):
   `web/map.js` mäter hur stor del av kartans bredd loggen täcker och ger
   den till kartan (`tackt` i `Val`, `klient/src/typer.ts`). Kameran ritar

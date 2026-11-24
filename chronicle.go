@@ -11,8 +11,8 @@ import (
 
 // chronEvent är en händelse i krönikan, redan skriven som text. key är
 // textens nyckel, who vandraren den handlar om och bild ett motiv som
-// händelsen själv bär (en varelse), för vandringens största stunder
-// (stunder.go).
+// händelsen själv bär (en varelse eller ett föremål), för berättelsen om
+// vandringen (berattelse.go).
 type chronEvent struct {
 	round int
 	text  string
