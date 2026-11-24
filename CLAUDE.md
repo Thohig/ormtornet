@@ -260,5 +260,8 @@ Skriv dit när ett steg är klart.
   som en tävling, där var och en hittar namnet själv i tornet, och
   avslöjandet som alltid är på. Allt är byggt; avsnittet Att prova säger
   vad som behöver provas i spel.
+- [docs/bara-anfall.md](docs/bara-anfall.md): striden med anfall som
+  enda val, Kraft, Försvar och varelsernas lynne, föremålen som gör en
+  starkare och balansen efter simuleringen. Allt är byggt.
 - [docs/slumpade-namn.md](docs/slumpade-namn.md): tornet ger namnen och
   namnrutan är borta. Steg 1–2 är byggda; Nytt namn i lobbyn valdes bort.

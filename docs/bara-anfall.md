@@ -55,5 +55,53 @@ svaghet är nu att den som slår mot ryggen när hen flyr alltid träffar.
    heter inte "som törstar", eftersom ett förbannat föremål ska se
    värdefullt ut). Kraft och Försvar står bland tecknen (⚔ och ◆, gröna
    när ett föremål höjer dem) och på klasskorten.
-3. **Balansen** (inte byggt): simuleringen av strategierna igen, och
-   panelen Nu som säger hur striden ser ut.
+3. **Balansen** (byggt 2026-11-24): simuleringen igen och nya tal för
+   klasserna och två varelser (se nedan), och panelen Nu som säger i ord
+   hur striden ser ut: "Du träffar lätt · den träffar ibland"
+   (`fightOutlook` i `monster.go`). Lätt är minst 65 %, ibland minst 35 %,
+   annars sällan.
+
+## Balansen
+
+3000 vandringar med sex AI-spelare (`-simulera 3000 -ai 6`), frö 1 och
+5001, på Normal och Svår, som i [balans-2026-11-22.md](balans-2026-11-22.md).
+Klasserna delas ut i tur och ordning, så att varje klass spelas lika ofta.
+
+Med de första talen blev striden hårdare än förut: den grönaktiga
+skepnaden (Kraft 3) stod för 30 % av dödsfallen, och gestalten i
+fjällrustning (Försvar 3) gick nästan inte att träffa. Legoknekten och
+Kartritaren vann för ofta, Lyktbäraren, Ormtjusaren och Tjuven för sällan.
+
+| Ändring | Före | Efter |
+| --- | --- | --- |
+| den grönaktiga skepnaden | Kraft 3 | Kraft 2 |
+| gestalten i fjällrustning | Försvar 3 | Försvar 2 |
+| Kartritaren | 1 / 1 | 0 / 1 |
+| Tjuven | 1 / 2 | 2 / 2 |
+| Ormtjusaren | 1 / 1 | 2 / 2 |
+| Lyktbäraren | 1 / 1 | 2 / 2 |
+
+Klasserna, Kraft / Försvar och andel vinster efter justeringen (två frön):
+
+| Klass | Kraft / Försvar | Normal | Svår |
+| --- | --- | --- | --- |
+| Kartritaren | 0 / 1 | 19–20 % | 20–21 % |
+| Legoknekten | 3 / 2 | 18–20 % | 18–20 % |
+| Lyktbäraren | 2 / 2 | 18–19 % | 16–19 % |
+| Örtkvinnan | 0 / 2 | 16–17 % | 18–21 % |
+| Ormtjusaren | 2 / 2 | 17 % | 14–15 % |
+| Pilgrimen | 0 / 3 | 15–16 % | 16–18 % |
+| Tjuven | 2 / 2 | 14–15 % | 14–15 % |
+| Spårfinnaren | 2 / 1 | 14 % | 15 % |
+
+Före bytet av strid låg klasserna mellan 14 och 22 % på Normal. Nu dör 13 %
+på Normal (12 % förut) och 23 % på Svår (24 % förut). Guldet per
+vandrare är lägre än förut, på Normal 36–47 mot 39–52: AI-spelarna valde
+förut det drag som slog varelsens vanligaste val, och nu anfaller de
+alltid. Den grönaktiga skepnaden står för 20 % av dödsfallen.
+
+Provat och inte valt: Legoknekten 2 / 2 (16–18 %, då slår hen inte
+hårdast), Lyktbäraren 1 / 2 (13–17 %) och 2 / 1 (12–16 %).
+
+Talen gäller AI-spelare som alltid anfaller. Människor kan söka eller
+hålla garden när varelsen är lugn, och kan spela annorlunda.

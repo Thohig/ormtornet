@@ -140,6 +140,8 @@ func simCause(kind string) string {
 		return "fälla"
 	case "vandrare":
 		return "en annan vandrare"
+	case "foremal":
+		return "föremål"
 	}
 	return kind
 }

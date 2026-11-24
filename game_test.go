@@ -907,3 +907,23 @@ func TestSearchTakesInTheChamber(t *testing.T) {
 		t.Fatal("ingen skatt togs")
 	}
 }
+
+// Panelen Nu säger i ord hur striden ser ut, aldrig talen.
+func TestFightOutlook(t *testing.T) {
+	g, a, _, m := fightSetup(t, true, false)
+	typ := g.data.monsterType(m.Type)
+	g.data.Monster.Traff = HitRules{Bas: 50, PerSteg: 15, Min: 10, Max: 95, Kraft: 1, Forsvar: 1}
+	typ.Kraft, typ.Forsvar = 0, 0 // Alva träffar med 65 %, varelsen med 35 %
+	got := g.fightOutlook(a.player)
+	if got == nil || got.Du != "latt" || got.Den != "ibland" {
+		t.Fatalf("utsikten: %+v", got)
+	}
+	typ.Kraft = -1 // 20 %
+	if got := g.fightOutlook(a.player); got.Den != "sallan" {
+		t.Fatalf("utsikten: %+v", got)
+	}
+	g.removeMonster(m)
+	if g.fightOutlook(a.player) != nil {
+		t.Fatal("utsikt utan någon att slåss mot")
+	}
+}

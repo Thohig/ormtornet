@@ -737,7 +737,7 @@ function renderChron() {
   };
   $("chronTitle").textContent = end ? endTitle() : t("vandring_rubrik");
   $("chronLead").textContent = end ? "" : v.dod || "";
-  $("chronStatus").textContent = end ? "" : t("vandring_pagar", { runda: state.round, sol: state.sun, inne: v.inne, ute: v.ute });
+  $("chronStatus").textContent = end ? "" : t(state.sun === 1 ? "vandring_pagar_en" : "vandring_pagar", { runda: state.round, sol: state.sun, inne: v.inne, ute: v.ute });
   // Resultaten: vem som kom ut med hur mycket, vinnaren först.
   const results = end ? (state.results || []).map((r) => ({ text: (r.winner ? "★ " : "") + r.name + (r.ai ? " ~" : "") + " · " + resultWord(r), c: r.winner ? "win" : r.status !== "ute" ? "lost" : "" })) : [];
   // ~ förklaras under resultaten, som i resultatrutan på kartan.
@@ -1139,6 +1139,16 @@ function renderNow(me) {
     return;
   }
   if (me.status === "dod" && state.phase === "spel") line(t("nu_dod"), "cond");
+  // Hur striden ser ut, i ord: hur lätt du träffar och hur lätt motståndaren
+  // träffar dig (fightOutlook i monster.go).
+  const outlook = (varelse) => {
+    const s = state.strid;
+    if (!s) return;
+    const delar = [];
+    if (s.du) delar.push(t("nu_du_traffar_" + s.du));
+    delar.push(t((varelse ? "nu_den_traffar_" : "nu_hen_traffar_") + s.den));
+    line(delar.join(" · "), "dimline");
+  };
   // Tillbaka till krönikans skärm: för den som har dött, och för alla i
   // slutet när de har gått till kartan.
   if (wantsChron()) {
@@ -1160,6 +1170,7 @@ function renderNow(me) {
     if (foe && state.cellar === 0) {
       line(t("nu_strid", { namn: foe.name }), "foe");
       box.appendChild(meter("foehp", t("nu_dess_liv"), foe.hp, foe.maxHp));
+      outlook(true);
       if (!touch) line(t("nu_strid_tangenter"), "dimline");
     }
     const others = foe || state.cellar > 0 ? [] : foesHere();
@@ -1168,6 +1179,7 @@ function renderNow(me) {
       const f = currentFoe();
       if (state.pvp === "ja") {
         line(t("nu_strid", { namn: f.name }), "foe");
+        outlook(false);
         if (!touch) line(t("nu_strid_tangenter"), "dimline");
       } else {
         line(t("nu_har_star", { namn: names }), "dimline");

@@ -30,7 +30,7 @@
       "styrka": "Får en fjärdedel mer guld ur kammaren, hittar oftare föremål, och ingen annan märker när ormen rör sig vid tjuvens näve. River hälften av guldet i strid mot vandrare.",
       "svaghet": "Litar inte på andras drycker: hittar aldrig någon när hen söker.",
       "liv": 0,
-      "kraft": 1,
+      "kraft": 2,
       "forsvar": 2,
       "drycker": 0,
       "varden": { "byte": 0.5, "kammar_guld": 1.25, "inga_drycker": 1, "foremal_i_stallet": 0.5 }
@@ -62,7 +62,7 @@
       "styrka": "Ser genom dörrarna in i rummen bredvid. Ser alla rum som någon har hittat och var någon har dött, och ger sin karta till den hen möter. Hittar alltid något när hen söker, om en hemlig gång går att göra. Har en dryck med sig.",
       "svaghet": "Inga snabba fötter: flyr hen ur en strid träffar slaget mot ryggen alltid.",
       "liv": 0,
-      "kraft": 1,
+      "kraft": 0,
       "forsvar": 1,
       "drycker": 1,
       "varden": {}
@@ -78,8 +78,8 @@
       "styrka": "Ser i kammaren hur många vakna-kort som finns kvar i leken. Ormen skadar inte henom när den vaknar.",
       "svaghet": "Har aldrig lärt sig leta: hittar bara hälften så mycket guld när hen söker.",
       "liv": 0,
-      "kraft": 1,
-      "forsvar": 1,
+      "kraft": 2,
+      "forsvar": 2,
       "drycker": 0,
       "varden": { "ormskada": 2, "sok_guld": 0.5 }
     },
@@ -110,8 +110,8 @@
       "styrka": "Ett liv extra. Mörkret biter inte, och hen ser varelser i grannrummen.",
       "svaghet": "Ljuset syns: de andra ser henom redan från grannrummet.",
       "liv": 1,
-      "kraft": 1,
-      "forsvar": 1,
+      "kraft": 2,
+      "forsvar": 2,
       "drycker": 0,
       "varden": {}
     },

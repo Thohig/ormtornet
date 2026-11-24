@@ -655,10 +655,11 @@ type stateMsg struct {
 	HP          int           `json:"hp"`
 	MaxHP       int           `json:"maxHp"`
 	Potions     int           `json:"potions"`
-	Kraft       int           `json:"kraft"`       // Kraft i strid, med föremålen
-	Forsvar     int           `json:"forsvar"`     // Försvar i strid, med föremålen
-	KraftPlus   int           `json:"kraftPlus"`   // det föremålen lägger till Kraft
-	ForsvarPlus int           `json:"forsvarPlus"` // det föremålen lägger till Försvar
+	Kraft       int           `json:"kraft"`           // Kraft i strid, med föremålen
+	Forsvar     int           `json:"forsvar"`         // Försvar i strid, med föremålen
+	KraftPlus   int           `json:"kraftPlus"`       // det föremålen lägger till Kraft
+	ForsvarPlus int           `json:"forsvarPlus"`     // det föremålen lägger till Försvar
+	Strid       *fightView    `json:"strid,omitempty"` // hur striden i rummet ser ut
 	Stuck       int           `json:"stuck"`
 	Cellar      int           `json:"cellar"`
 	Poison      int           `json:"poison"`
@@ -806,6 +807,7 @@ func (g *Game) stateFor(me *Player) stateMsg {
 	st.Class = viewOfClass(g.classOf(me))
 	st.Kraft, st.Forsvar = g.kraft(me), g.forsvar(me)
 	st.KraftPlus, st.ForsvarPlus = g.itemBonus(me)
+	st.Strid = g.fightOutlook(me)
 	st.Items = g.itemViews(me)
 	if g.phase == phasePlay && me.Status == statusIn {
 		g.curse(me, "rostkrona") // kronan syns redan första rundan

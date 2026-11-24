@@ -6,6 +6,19 @@ eller leder tornet.
 
 ## 2026-11-24
 
+### Striden i balans, och panelen Nu säger hur den ser ut
+
+- Simuleringen har körts med den nya striden, och talen är justerade så
+  att alla klasser vinner mellan 14 och 21 % (docs/bara-anfall.md,
+  Balansen). Den grönaktiga skepnaden slår lite lösare (Kraft 2) och
+  gestalten i fjällrustning går lättare att träffa (Försvar 2).
+  Kartritaren har Kraft 0, och Tjuven, Ormtjusaren och Lyktbäraren har
+  Kraft 2 och Försvar 2.
+- I strid säger panelen Nu hur lätt du träffar och hur lätt motståndaren
+  träffar dig: "Du träffar lätt · den träffar ibland". Talen syns aldrig.
+- Krönikan säger "en handsbredd" i stället för "1 handsbredder" när solen
+  står lågt.
+
 ### Föremål som gör en starkare i strid
 
 - Föremål kan nu höja Kraft och Försvar (`kraft` och `forsvar` i

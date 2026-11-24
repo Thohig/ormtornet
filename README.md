@@ -625,7 +625,8 @@ motståndarens Försvar)` inom `min` och `max` (`traff` i
 `data/monster.json`). Föremål som svärdet, skölden och brynjan lägger
 till sitt (`kraft` och `forsvar` i `data/foremal.json`). Dina egna värden
 står bland tecknen (⚔ Kraft, ◆ Försvar, grönt när ett föremål höjer dem)
-och på klasskorten; varelsernas ser du aldrig.
+och på klasskorten; varelsernas ser du aldrig. Panelen Nu säger i ord hur
+striden ser ut: "Du träffar lätt · den träffar ibland".
 
 Du kan också göra något annat medan varelsen står där, men då kanske den
 anfaller. Hur ofta beror på dess **lynne** (`lynne`, i procent), så det

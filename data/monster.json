@@ -69,7 +69,7 @@
         "bild": "fjallvakt",
         "modell": { "farg": "#62897f", "storlek": 1 },
         "vandrar": 0.15,
-        "kraft": 1, "forsvar": 3, "lynne": 40,
+        "kraft": 1, "forsvar": 2, "lynne": 40,
         "dyker_upp": [
           "En gestalt i rustning av överlappande fjäll kliver fram. Den håller en sköld framför sig och väntar.",
           "En gestalt i fjällrustning står orörlig mitt i rummet. Rustningen ser vuxen ut snarare än smidd."
@@ -92,7 +92,7 @@
         "bild": "gallgast",
         "modell": { "farg": "#8ac77f", "storlek": 1 },
         "vandrar": 0.4,
-        "kraft": 3, "forsvar": 0, "lynne": 80,
+        "kraft": 2, "forsvar": 0, "lynne": 80,
         "dyker_upp": [
           "En grönaktig skepnad glider fram. Den bär en äventyrares kläder, men de hänger i trasor och är blekta, som om de legat i syra.",
           "Något stiger upp ur golvet, grönaktigt och genomskinligt. Det tittar på din väska, som om det minns hur det var att bära en."

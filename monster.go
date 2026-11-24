@@ -82,6 +82,51 @@ func (g *Game) forsvar(p *Player) int {
 	return max(0, n+f)
 }
 
+// fightView säger i ord hur lätt vandraren och motståndaren träffar
+// varandra när de anfaller: "latt", "ibland" eller "sallan".
+type fightView struct {
+	Du  string `json:"du,omitempty"`
+	Den string `json:"den"`
+}
+
+// fightOutlook är hur striden i vandrarens rum ser ut, mot varelsen eller
+// mot den vandrare tornet väljer. Talen syns aldrig, bara orden.
+func (g *Game) fightOutlook(p *Player) *fightView {
+	if g.phase != phasePlay || p.Status != statusIn || p.Cellar > 0 {
+		return nil
+	}
+	if m := g.monsterAt(p.X, p.Y); m != nil {
+		t := g.data.monsterType(m.Type)
+		if t == nil {
+			return nil
+		}
+		return &fightView{Du: hitWord(g.hitChance(g.kraft(p), t.Forsvar, 0)), Den: hitWord(g.hitChance(t.Kraft, g.forsvar(p), 0))}
+	}
+	if g.pvpStatus(p) != pvpYes {
+		return nil
+	}
+	foe := g.pickFoe(p, 0)
+	if foe == nil {
+		return nil
+	}
+	du := hitWord(g.hitChance(g.kraft(p), g.forsvar(foe), 0))
+	if g.is(p, "pilgrim") {
+		du = "" // pilgrimen lyfter aldrig vapen mot en vandrare
+	}
+	return &fightView{Du: du, Den: hitWord(g.hitChance(g.kraft(foe), g.forsvar(p), 0))}
+}
+
+// hitWord gör en träffchans till ett ord.
+func hitWord(pct int) string {
+	switch {
+	case pct >= 65:
+		return "latt"
+	case pct >= 35:
+		return "ibland"
+	}
+	return "sallan"
+}
+
 // guardMod är hur mycket lättare eller svårare det är att träffa den som
 // gjorde a i stället för att anfalla: garden när hen väntar, oberedd när
 // hen söker, dricker eller tar skatt. Den som går eller inte valde något
