@@ -58,7 +58,12 @@ i stället för tre:
 
 ## Korten
 
-47 kort: 44 nya motiv och de 3 ormkort som finns.
+64 motiv, uppdaterat 2026-11-24. De står i `cardImages` i
+`spelkort.go` och ritas i `web/kort.js`; alla syns i
+`verktyg/kortbilder.html`.
+
+**Ormkorten (3).** Ormen sover, Ormen rör sig och Ormen vaknar (stort,
+för alla).
 
 **Fällorna (10).** Klev du förbi får du samma kort nedtonat.
 Ett galler av spetsiga järnstänger, ett golv som ger efter, ett golv som
@@ -71,23 +76,36 @@ en varm vindpust som släcker lågan och ett eko som inte vill tystna.
 mångbent, något långt och väsande, en gestalt i fjällrustning, en
 grönaktig skepnad och ett väsen av vita ben.
 
-**Föremålen (15 och 3 baksidor).** Kortet har föremålets namn och vad
-det gör, så att raden om det kan lämna loggen. Rep med kroken kvar,
-Fjällamuletten, Extra veke, Bucklig sköld, Väskan med dubbel botten,
-Kompass utan nord, Rökpulver, Spegelskärva, Kastkniv, Krita, Sövande
-flöjt och Timglas av ben. De förbannade vänds en gång till när de visar
-sin baksida: Den svarta pärlan, Myntet med hål och Kronan av rost.
+**Föremålen (19).** Kortet har föremålets namn och vad det gör, så att
+raden om det kan lämna loggen. Rep med kroken kvar, Fjällamuletten,
+Extra veke, Bucklig sköld, Väskan med dubbel botten, Kompass utan nord,
+Rökpulver, Spegelskärva, Kastkniv, Benluren, Sövande flöjt, Timglas av
+ben, Rostigt svärd och Fjällbrynja. De förbannade vänds en gång till när
+de visar sin baksida: Den svarta pärlan, Myntet med hål, Kronan av rost,
+Svärdet med rött fäste och Ormens skinn.
 
-**Det som händer dig (8).** En annan vandrare anfaller dig, en dryck,
-källarvalven (när du faller ner eller kommer upp), ett varsel, en del av
-ormens namn, viskningen eller att du blir invigd, ett brev, och döden
-(stort, bara för dig).
+**Tornets händelser (7).** Var och en har sitt kort
+(`data/handelser.json`, docs/handelser.md): Tornet andas, Guld ur
+sprickan, Ljus genom gluggarna, Ömsat skinn, Ett ras, Den döde vandrar
+och Klockslaget.
 
-**Ormkorten (3, finns).** Ormen sover, Ormen rör sig och Ormen vaknar
-(stort, för alla).
+**Det som händer dig (9).** En annan vandrare anfaller dig, en dryck
+(hittad eller drucken), guld (taget, det som ligger kvar efter en död
+och löst guld), källarvalven (när du faller ner eller kommer upp), ett
+varsel, en del av ormens namn, viskningen eller att du blir invigd, ett
+brev, och döden (stort, bara för dig).
 
 **Tornets stora kort (3).** En port stängs, solen går ner de sista
 rundorna, och du kommer ut med skatt (bara för dig).
+
+**Klasskorten (8).** Legoknekten, Tjuven, Örtkvinnan, Kartritaren,
+Ormtjusaren, Spårfinnaren, Lyktbäraren och Pilgrimen, i klassvalet och
+som ett litet klasskort bland tecknen.
+
+**Facklan (1).** Motivet när en runda inte har något eget kort, och när
+ett motiv i `data/` saknas (kontrollen i `validate.go` säger till).
+
+Berättelsen i slutet använder samma motiv för höjdpunkterna.
 
 ## Loggen och kortet
 
