@@ -188,7 +188,7 @@ Så här skiljer vi på sakerna när användaren ger instruktioner:
   `spillGold` i `guld.go`). **Andetagen** hörs genom väggen bredvid den
   och för alla från nivå 2, och alla hör åt vilket håll någon tar en
   näve.
-- **händelserna**: tornets sju slumpade händelser, var och en med ett
+- **händelserna**: tornets sexton slumpade händelser, var och en med ett
   eget spelkort (`tornhandelser.go`, `data/handelser.json`,
   docs/handelser.md).
 - **placeringen**: allas plats 1 till N i slutet, och **vinken**: det man

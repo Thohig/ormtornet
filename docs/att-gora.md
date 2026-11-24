@@ -36,7 +36,8 @@ webbläsarprovet:
 - Tornets händelser ([handelser.md](handelser.md)): hänger man med i
   spelkorten, går någon efter guldet ur sprickan eller skinnet, och är ett
   ras eller den döde som vandrar för hårt? Kommer de lagom ofta (chans
-  0,12 per runda från runda 4)?
+  0,12 per runda från runda 4)? Med sexton händelser 2026-11-24: jagar
+  någon den rike efter klirret, och är draget och ynglet för hårda?
 - Ormen som flyttar sig när den vaknar: märker man att den har flyttat,
   och går någon till den gamla kammaren för guldet?
 - Breven: läser man raden i marginalen, och går man åt det håll den

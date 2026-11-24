@@ -617,8 +617,12 @@ och varelser har sin korta beskrivning som rubrik, aldrig namnet.
 Från runda 4 kan något hända i tornet i slutet av en runda: tornet andas
 och en ny dörr öppnas, guld rasar ur en spricka, ljus faller genom
 gluggarna så att mörkret inte biter, ormen ömsar skinn, ett tak rasar,
-den döde vandrar eller en klocka slår. Alla inne får ett spelkort och vet
-åt vilket håll det hände. Händelserna och deras texter står i
+den döde vandrar eller en klocka slår. Klockan kan också stanna, ett drag
+släcka facklorna, en tung pung klirra, en glömd packning falla ur taket,
+ett brev glida in under en dörr, tornet sluta en dörr en stund, ett yngel
+krypa ut ur väggen, ormen drömma eller kryp fly från kammaren. Oftast får
+alla inne ett spelkort och vet åt vilket håll det hände; några märker
+bara den det händer. Händelserna och deras texter står i
 `data/handelser.json` (se [docs/handelser.md](docs/handelser.md)).
 
 ### Skattkammaren och ormen

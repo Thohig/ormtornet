@@ -40,9 +40,28 @@ den som står där får en egen text. Varje händelse står i krönikan
 | Ett ras | `ras` | ett rum man har gått i går inte att gå in i på tre rundor; den som stod där tar en skada och faller ner i valven |
 | Den döde vandrar | `doden` | ett väsen av vita ben reser sig där någon har dött |
 | Klockslaget | `klockslag` | solen sjunker en handsbredd, och den som står i kammaren får en säker näve |
+| Klockan stannar | `klocka_stilla` | solen sjunker inte den rundan; aldrig när solen är full |
+| Draget | `draget` | alla som inte bär ljus får mörker en runda; inte medan ljuset faller genom gluggarna, och Lyktbäraren och veken klarar sig |
+| Det klirrar | `klirrar` | alla hör åt vilket håll den som bär mest står, men inte vem; den rike och de bredvid får egna texter |
+| Den glömda packningen | `packning` | ett föremål som inte är förbannat eller ett brev hamnar i ett rum ingen har varit i |
+| Brevet under dörren | `brev_dorr` | en vandrare som inte står i mörkret eller valven får ett brev; bara hen märker det |
+| Tornet sluter sig | `sluter` | en dörr mellan två rum stängs i tre rundor, men bara där det finns en annan väg mellan rummen |
+| Yngel ur väggen | `yngel_vagg` | ett yngel kryper fram hos den som står ensam längst från portarna; bara hen märker det |
+| Ormen drömmer | `drom` | två kort läggs i ormens lek, sovkort eller vakna-kort; alla märker att ormen rör sig, och den i kammaren vet åt vilket håll |
+| Kryp som flyr | `kryp` | de som står högst tre rum från kammaren ser kryp komma från det hållet; bara de märker det |
 
 Händelserna gynnar bara den som drabbas eller hinner dit först, så att
 tävlingen förblir var och ens.
+
+De nio sista kom till 2026-11-24. En händelse kan sakna `text`, och då
+märker bara den det händer något (`har`). `bredvid` är texten för de
+andra i samma rum, `har_annars` det den får när det gick åt andra hållet
+(ormen som drömmer), `avstand` hur nära kammaren krypen syns och
+`ormkort` hur många kort ormen som drömmer lägger i leken. Chansen per
+runda är densamma, 0,12, så de gamla händelserna kommer mer sällan än
+förut. I en simulering av 1500 vandringar med fyra AI-spelare ändrades
+lite: något mindre guld hos dem som kom ut (53 mot 55) och Kartritaren
+vann 19 % i stället för 21 %.
 
 ## Balansen
 
@@ -54,6 +73,10 @@ Kartritaren har därför ingen egen dryck längre, och Ormtjusaren har Kraft
 
 ## Inte byggt
 
+- AI-spelarna känner inte till de nya händelserna: de går inte efter den
+  glömda packningen och bryr sig inte om klirret eller krypen.
+- En sluten dörr syns inte på kartan som sluten; den är borta tills den
+  öppnas igen.
 - AI-spelarna känner inte till rasade rum och kan försöka gå in i ett
   några rundor; de går inte heller efter löst guld eller skinnet.
 - Ett rasat rum syns inte på kartan; man märker det när man försöker gå

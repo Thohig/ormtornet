@@ -89,10 +89,12 @@ ben, Rostigt svärd och Fjällbrynja. De förbannade vänds en gång till när
 de visar sin baksida: Den svarta pärlan, Myntet med hål, Kronan av rost,
 Svärdet med rött fäste och Ormens skinn.
 
-**Tornets händelser (7).** Var och en har sitt kort
+**Tornets händelser (16).** Var och en har sitt kort
 (`data/handelser.json`, docs/handelser.md): Tornet andas, Guld ur
-sprickan, Ljus genom gluggarna, Ömsat skinn, Ett ras, Den döde vandrar
-och Klockslaget.
+sprickan, Ljus genom gluggarna, Ömsat skinn, Ett ras, Den döde vandrar,
+Klockslaget, Klockan stannar, Draget, Det klirrar, Den glömda
+packningen, Brevet under dörren, Tornet sluter sig, Yngel ur väggen,
+Ormen drömmer och Kryp som flyr.
 
 **Det som händer dig (9).** En annan vandrare anfaller dig, en dryck
 (hittad eller drucken), guld (taget, det som ligger kvar efter en död

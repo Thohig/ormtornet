@@ -6,6 +6,28 @@ eller leder tornet.
 
 ## 2026-11-24
 
+### Nio nya händelser i tornet
+
+- Tornet har nu sexton slumpade händelser, var och en med ett eget
+  spelkort med en ny bild:
+  - **Klockan stannar**: solen sjunker inte den rundan.
+  - **Draget**: facklorna slocknar, och alla som inte bär ljus står i
+    mörkret en runda.
+  - **Det klirrar**: alla hör åt vilket håll den som bär mest guld står.
+  - **Den glömda packningen**: ett föremål faller ur taket i ett rum som
+    ingen har varit i.
+  - **Brevet under dörren**: en vandrare får ett brev.
+  - **Tornet sluter sig**: en dörr stängs i tre rundor, men aldrig den
+    enda vägen.
+  - **Yngel ur väggen**: ett yngel kryper fram hos den som står ensam
+    längst in.
+  - **Ormen drömmer**: ormen sover djupare eller lättare, och den som står
+    i kammaren märker vilket.
+  - **Kryp som flyr**: de som står nära kammaren ser kryp komma därifrån.
+- Brevet, ynglet och krypen märker bara den det händer.
+- Händelserna kommer lika ofta som förut, så var och en av de gamla
+  kommer mer sällan.
+
 ### Rundans kort i en solfjäder
 
 - Händer flera saker samma runda ligger på datorn rundans två nästa kort
