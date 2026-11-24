@@ -246,16 +246,23 @@ func TestKnifeAndHourglass(t *testing.T) {
 
 	p.items = nil
 
+}
+
+// Timglaset håller porten öppen en runda till efter solnedgången, bara för
+// den som bär det.
+func TestHourglassGraceOnlyForBearer(t *testing.T) {
+	g, a, b := startTwo(t)
+	p, o := a.player, b.player
 	g.give(p, "timglas")
-	g.sun = 5
-	g.hourglass()
-	if g.sun != 5 || p.has("timglas") == nil {
-		t.Fatal("timglaset vändes för tidigt")
+	g.sun = 0
+	if !g.anyGracedInside() || !g.portGrace() {
+		t.Fatal("porten väntade inte")
 	}
-	g.sun = 3
-	g.hourglass()
-	if g.sun != 4 || p.has("timglas") != nil {
-		t.Fatal("timglaset stoppade inte solen")
+	if p.Status != statusIn || p.has("timglas") != nil {
+		t.Fatalf("bäraren: %s, timglaset kvar %v", p.Status, p.has("timglas") != nil)
+	}
+	if o.Status != statusLost {
+		t.Fatalf("den andra: %s", o.Status)
 	}
 }
 

@@ -389,21 +389,6 @@ func (g *Game) knife(p *Player, m *Monster) {
 	}
 }
 
-// hourglass: när solen har tre handsbredder kvar vänds timglaset av sig
-// självt, hos den första som bär det, och solen står still en runda.
-func (g *Game) hourglass() {
-	if g.sun <= 0 || g.sun > 3 {
-		return
-	}
-	for _, p := range g.players {
-		if p != nil && p.Status == statusIn && p.Cellar == 0 && g.useItem(p, "timglas") {
-			g.sun++
-			g.logOthers(p, g.data.Text("timglas_alla"), "info")
-			return
-		}
-	}
-}
-
 // flute: den sövande flöjten låter den som drar ett vakna-kort dra om.
 func (g *Game) flute(p *Player, i int) int {
 	if c := g.data.card(g.deck[i]); c == nil || !c.Vaknar || !g.useItem(p, "flojt") {

@@ -3,7 +3,9 @@
 Förslag 2026-11-22. Allt är byggt, som det står här: kritan blev passiv,
 spegelskärvan visar ett osett grannrum och timglaset verkar vid tre
 handsbredder kvar. Kritan togs senare bort och ersattes av benluren (se
-[andringar.md](andringar.md)).
+[andringar.md](andringar.md)). Sedan 2026-11-24 gäller timglaset bara
+den som bär det: porten väntar en runda till på hen när solen går ner
+([individuell-tavling.md](individuell-tavling.md)).
 
 ## Vad som önskas
 

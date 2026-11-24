@@ -230,13 +230,13 @@ func TestKartritareSeesAll(t *testing.T) {
 	if !hasRoom(g.stateFor(pa), 6, 6) {
 		t.Fatal("kartritaren ser inte rummet")
 	}
-	// Bo får kartan när de möts.
+	// Kartritaren ger inte bort sin karta när de möts.
 	putInRoom(g, pa, 6, 6)
 	pb.met = ""
 	g.reveal(2, 2).Walked = true
 	g.meetIfNew(pb)
-	if !pb.known[2][2] {
-		t.Fatal("Bo fick inte kartan")
+	if pb.known[2][2] {
+		t.Fatal("Bo fick kartritarens karta")
 	}
 }
 

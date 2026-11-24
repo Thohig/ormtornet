@@ -240,9 +240,10 @@ Sett efter provspelet 2026-11-22, med förslag men inte ändrat:
   kartan hela murar runt rummet, och man går rakt igenom dem. Förslag:
   rita inga murar alls runt rummet i mörkret, så att kanterna ser okända
   ut i stället för stängda. Ordet Mörker och ◐ står kvar.
-- **Timglaset märks knappt.** Solen står still en runda, men det är bara
-  en rad i loggen. Förslag: ett stort kort för alla inne, som solkortet,
-  till exempel "Solen står still".
+- **Timglaset märks knappt.** Sedan 2026-11-24 väntar porten en runda
+  till på den som bär det när solen går ner
+  ([individuell-tavling.md](individuell-tavling.md)), men det är bara en
+  rad i loggen. Förslag: ett eget stort kort för bäraren, som solkortet.
 - **Kompassen kan peka mot en stängd port.** Den räknar inte med att
   portarna sluter sig på nivå 4 (`compass` i `items.go`).
 

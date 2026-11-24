@@ -162,3 +162,30 @@ func TestWhisperWrongOrderAndWrong(t *testing.T) {
 		t.Fatal("rätt viskning med mellanrum gick inte")
 	}
 }
+
+// Den invigde som viskar i kammaren gör sin egen nästa näve säker, men
+// leken är densamma för de andra.
+func TestWhisperCalmsOnlyForWhisperer(t *testing.T) {
+	g, cs := nameGame(t, 1)
+	p := cs[0].player
+	c := g.center()
+	g.reveal(c, c)
+	p.X, p.Y = c, c
+	p.initiated = true
+	g.data.Avslojande.Invigd.Vacker = 0
+	g.deck = []string{"vaknar", "sover"}
+	before := len(g.deck)
+	g.Whisper(cs[0], "")
+	if !p.safeDraw || len(g.deck) != before {
+		t.Fatalf("viskningen: säker %v, leken %d kort", p.safeDraw, len(g.deck))
+	}
+	hp := p.HP
+	for range 5 {
+		g.deck = []string{"vaknar", "sover"}
+		p.safeDraw = true
+		g.take(p)
+		if p.HP != hp {
+			t.Fatal("ormen vaknade av den säkra näven")
+		}
+	}
+}

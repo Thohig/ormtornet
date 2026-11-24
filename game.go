@@ -236,6 +236,7 @@ type Player struct {
 	parts        [3]bool // delarna av ormens namn som vandraren har fått
 	partsFound   []int   // delarna i den ordning vandraren hittade dem
 	calmed       bool    // den invigde har lugnat ormen under vandringen
+	safeDraw     bool    // den invigdes nästa näve väcker inte ormen
 	X, Y         int
 	client       *Client
 	Ready        bool
@@ -964,7 +965,7 @@ func (g *Game) placeAtCorner(p *Player) {
 	p.Potions, p.Stuck, p.Cellar, p.Poison, p.Dark = 0, 0, 0, 0, 0
 	p.known = newGrid[bool](g.size)
 	p.items = nil
-	p.initiated, p.guessLevel, p.calmed = false, 0, false
+	p.initiated, p.guessLevel, p.calmed, p.safeDraw = false, 0, false, false
 	p.parts, p.partsFound = [3]bool{}, nil
 	p.forgetRoom()
 	g.revealPorts()
@@ -1577,7 +1578,6 @@ func (g *Game) resolve() {
 	if g.sun < 0 {
 		g.sun = 0
 	}
-	g.hourglass()
 	g.summarize(snap, wakes)
 	g.soundAll("runda")
 	inside := 0
@@ -1589,7 +1589,7 @@ func (g *Game) resolve() {
 	switch {
 	case inside == 0:
 		g.endGame()
-	case g.sun <= 0 && !g.graceUsed && g.anyInitiatedInside():
+	case g.sun <= 0 && !g.graceUsed && g.anyGracedInside():
 		text := g.data.Text("solnedgang")
 		g.logAll(text, "varn")
 		g.bigCardInside(gameCard{Slag: "sol", Bild: "sol", Rubrik: g.data.Text("kort_sol"), Text: text})

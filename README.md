@@ -455,7 +455,7 @@ igen.
 | Legoknekten | 3 / 2 | ett liv extra, och slår hårdast av alla | hittar hälften så mycket guld när hen söker |
 | Tjuven | 2 / 2 | en fjärdedel mer guld ur kammaren, hittar oftare föremål, ingen märker när ormen rör sig vid hens näve, river hälften i strid mot vandrare | hittar aldrig drycker när hen söker |
 | Örtkvinnan | 0 / 2 | börjar med en dryck, en dryck ger tre liv, tål gift | tappar mycket mer skatt när ormen vaknar |
-| Kartritaren | 0 / 1 | ser genom dörrarna in i rummen bredvid, ser alla rum som någon har hittat och var någon har dött (ett x i hörnet), ger sin karta till den hen möter, hittar alltid en hemlig gång om det går, har en dryck med sig | flyr hen ur en strid träffar slaget mot ryggen alltid |
+| Kartritaren | 0 / 1 | ser genom dörrarna in i rummen bredvid, ser alla rum som någon har hittat och var någon har dött (ett x i hörnet), hittar alltid en hemlig gång om det går, har en dryck med sig | flyr hen ur en strid träffar slaget mot ryggen alltid |
 | Ormtjusaren | 2 / 2 | ser i kammaren hur många vakna-kort som är kvar, ormen skadar inte hen när den vaknar | hittar hälften så mycket guld när hen söker |
 | Spårfinnaren | 2 / 1 | ser spår 6 rundor bakåt och vems de är, märker hälften av fällorna i tid, ser var föremål och guld ligger och vem som tog guldet, känner före andra åt vilket håll ristningen finns | hör inget genom väggarna, utom med benluren |
 | Lyktbäraren | 2 / 2 | ett liv extra, tål mörker, ser varelser i grannrummen | syns för andra redan från grannrummet |
@@ -719,7 +719,7 @@ inte med till nästa torn. Krönikan berättar vem som hittade vad.
 | Spegelskärva | i ett nytt rum visar den ett rum bakom en dörr som du inte har sett: fällan, varelsen och vandrarna där (tre gånger) |
 | Kastkniv | dyker en varelse upp i ditt rum tar den en skada innan striden börjar (en gång) |
 | Benluren | när du kommer in i ett rum hör du om en varelse står i ett grannrum, och åt vilket håll; ljud som andra bara hör från grannrummen hör du också två rum bort, med väderstreck |
-| Timglas av ben | när solen har tre handsbredder kvar står den still en runda för alla (en gång) |
+| Timglas av ben | när solen går ner väntar porten en runda till på dig, som på de invigda (en gång) |
 
 Förbannade föremål ser värdefulla ut och är värda guld när man kommer ut,
 men man märker baksidan först när man bär dem:
@@ -828,7 +828,7 @@ Den invigde:
 
 - hör dunket och vet åt vilket håll kammaren ligger,
 - känner igen hälften av fällorna och kliver förbi,
-- kan en gång viska i kammaren och lugna ormen (ett vakna-kort mindre),
+- kan en gång viska i kammaren och lugna ormen, så att hens nästa näve inte väcker den (leken är densamma för de andra),
 - får en fjärdedel mer guld när hen kommer ut,
 - och när solen går ner väntar porten en runda till för de invigda.
 

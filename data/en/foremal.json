@@ -118,9 +118,9 @@
         "namn": "An hourglass of bone",
         "hittad": "an hourglass of bone",
         "kort": "the hourglass",
-        "beskrivning": "When the sun has three hand-widths left it turns by itself, and the sun stands still for a round for everyone.",
+        "beskrivning": "When the sun goes down it turns by itself, and the gate waits one more round for you.",
         "verkar": [
-          "The hourglass turns over in your bag. The sand stands still. The light through the slits stops moving."
+          "The sun goes down, and the hourglass turns over in your bag. For you the sand stands still: the gate waits one more round."
         ]
       },
       {
@@ -249,9 +249,6 @@
     "benlur_varelse": [
       "The bone horn catches breathing behind the wall to the {riktning}. Something is waiting there.",
       "Through the bone horn you hear claws on stone to the {riktning}."
-    ],
-    "timglas_alla": [
-      "For a moment everything stands still. The sun does not move."
     ],
     "foremal_av_sig_sjalv": [
       "{foremal} works of its own accord."

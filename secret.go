@@ -180,7 +180,7 @@ func (g *Game) Whisper(c *Client, text string) {
 			g.answerTo(p, g.data.Text("invigd_lugnat"), "dim")
 		default:
 			p.calmed = true
-			g.calmSerpent()
+			p.safeDraw = true
 			g.answerTo(p, g.data.Text("invigd_lugnar"), "rost")
 		}
 		return
@@ -258,13 +258,19 @@ func (g *Game) takeNameParts(killer, victim *Player) {
 	g.chronicle("kronika_namndel", "namn", killer.Name, "offer", victim.Name)
 }
 
-func (g *Game) anyInitiatedInside() bool {
+func (g *Game) anyGracedInside() bool {
 	for _, p := range g.players {
-		if p != nil && p.Status == statusIn && p.initiated {
+		if p != nil && p.Status == statusIn && g.graced(p) {
 			return true
 		}
 	}
 	return false
+}
+
+// graced är sant för den som porten väntar på när solen har gått ner: den
+// invigde, och den som bär timglaset.
+func (g *Game) graced(p *Player) bool {
+	return p.initiated || p.has("timglas") != nil
 }
 
 // heartbeat är vad den invigde hör: åt vilket håll kammaren ligger.
@@ -281,13 +287,13 @@ func (g *Game) heartbeat(p *Player) string {
 }
 
 // portGrace: när solen går ner håller porten sig öppen en runda till för
-// de invigda som är kvar inne. De andra är förlorade. Sant om vandringen
+// de invigda och den som bär timglaset. De andra är förlorade. Sant om vandringen
 // ska fortsätta en runda.
 func (g *Game) portGrace() bool {
 	if g.graceUsed {
 		return false
 	}
-	if !g.anyInitiatedInside() {
+	if !g.anyGracedInside() {
 		return false
 	}
 	g.graceUsed = true
@@ -298,6 +304,9 @@ func (g *Game) portGrace() bool {
 		if p.initiated {
 			g.logTo(p, g.data.Text("porten_vantar"), "rost")
 			continue
+		}
+		if g.useItem(p, "timglas") {
+			continue // timglaset säger själv att solen står kvar för en
 		}
 		p.Status = statusLost
 		g.chronicle("kronika_forlorad", "namn", p.Name)
@@ -319,20 +328,3 @@ func (g *Game) canWhisper(p *Player) bool {
 	return g.level >= max(1, g.data.Avslojande.ViskaFranNiva) && p.guessLevel < g.level
 }
 
-// calmSerpent tar ett vakna-kort ur leken, eller lägger till ett sovkort om
-// det inte finns något vakna-kort kvar.
-func (g *Game) calmSerpent() string {
-	for i, id := range g.deck {
-		if c := g.data.card(id); c != nil && c.Vaknar {
-			g.deck = append(g.deck[:i], g.deck[i+1:]...)
-			return "vakna"
-		}
-	}
-	for _, c := range g.data.Ormen.Kort {
-		if !c.Vaknar {
-			g.deck = append(g.deck, c.ID)
-			return "sov"
-		}
-	}
-	return ""
-}

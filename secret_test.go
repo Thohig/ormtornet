@@ -114,7 +114,8 @@ func TestInitiatedBenefits(t *testing.T) {
 		t.Fatal("kan inte viska i kammaren")
 	}
 	g.Whisper(a, "sov")
-	if g.wakeCardsLeft() != before-1 || !p.calmed || g.canWhisper(p) {
+	// Leken är densamma; bara den invigdes nästa näve är säker.
+	if g.wakeCardsLeft() != before || !p.calmed || !p.safeDraw || g.canWhisper(p) {
 		t.Fatalf("vakna-kort %d, före %d", g.wakeCardsLeft(), before)
 	}
 

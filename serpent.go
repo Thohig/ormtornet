@@ -143,6 +143,19 @@ func (g *Game) take(p *Player) {
 			}
 		}
 	}
+	// Den invigde som har viskat till ormen: nästa näve väcker den inte,
+	// om leken har något sovkort kvar. Leken är densamma för de andra.
+	if p.safeDraw {
+		p.safeDraw = false
+		if c := g.data.card(g.deck[i]); c != nil && c.Vaknar {
+			for j, id := range g.deck {
+				if c := g.data.card(id); c != nil && !c.Vaknar {
+					i = j
+					break
+				}
+			}
+		}
+	}
 	c := g.data.card(g.deck[i])
 	if c == nil {
 		g.deck = append(g.deck[:i], g.deck[i+1:]...)

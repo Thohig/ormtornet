@@ -6,6 +6,19 @@ eller leder tornet.
 
 ## 2026-11-24
 
+### Var och en för sig
+
+- Kartritaren ger inte längre bort sin karta till den hen möter
+  (docs/individuell-tavling.md).
+- Timglaset stoppar inte solen för alla. När solen går ner vänds det, och
+  porten väntar en runda till på den som bär det, som på de invigda.
+- Den invigde som viskar i kammaren tar inget vakna-kort ur leken för
+  alla. I stället väcker hens egen nästa näve inte ormen.
+- Introt säger att ni kan berätta för varandra vad ni har sett, men att
+  ingen måste säga sanningen.
+- I simuleringen vinner Kartritaren nu 20–22 % (19–21 % förut), när de
+  andra inte längre får hens karta.
+
 ### Striden i balans, och panelen Nu säger hur den ser ut
 
 - Simuleringen har körts med den nya striden, och talen är justerade så

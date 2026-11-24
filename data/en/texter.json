@@ -564,10 +564,10 @@
       "Through the wall to the {riktning} you hear a few quick gulps."
     ],
     "synlighet_egen": [
-      "The tower is large and dark. You see the other wanderers only when you stand in the same room, and your map shows only the rooms you have passed through yourself. Tell one another what you have seen."
+      "The tower is large and dark. You see the other wanderers only when you stand in the same room, and your map shows only the rooms you have passed through yourself. You may tell one another what you have seen, but no one has to tell the truth."
     ],
     "synlighet_kartritare": [
-      "The tower is large and dark. You see the other wanderers only when you stand in the same room, but your map fills in with every room that anyone finds. Tell the others what you see."
+      "The tower is large and dark. You see the other wanderers only when you stand in the same room, but your map fills in with every room that anyone finds. What you know, you need not share with anyone."
     ],
     "ingen_vinnare": [
       "No one came out with any treasure. The tower won."

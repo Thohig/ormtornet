@@ -334,32 +334,6 @@ func (g *Game) wakeCardsLeft() int {
 	return n
 }
 
-// shareMap: kartritaren ger sin karta till den hen möter. Med egen karta
-// får den andra alla rum som någon har hittat.
-func (g *Game) shareMap(p *Player, foes []*Player) {
-	for _, o := range foes {
-		if !g.is(o, "kartritare") || g.is(p, "kartritare") {
-			continue
-		}
-		fresh := 0
-		for y := range g.size {
-			for x := range g.size {
-				if g.knowsRoom(o, x, y) && !g.knowsRoom(p, x, y) {
-					p.known[y][x] = true
-					fresh++
-				}
-			}
-		}
-		// Bara när kartan ger något nytt, så att det inte upprepas varje
-		// runda som de står tillsammans.
-		if fresh == 0 {
-			continue
-		}
-		g.logTo(p, g.data.Text("klass_kartritare_karta", "namn", o.Name), "info")
-		g.logTo(o, g.data.Text("klass_kartritare_ger", "namn", p.Name), "dim")
-	}
-}
-
 // peekNeighbors: kartritaren ser genom dörrarna in i rummen bredvid det
 // hen står i, och de kommer med på hens karta. Rummen räknas inte som
 // hittade, så ingen annan ser dem, och en fälla där väntar fortfarande.

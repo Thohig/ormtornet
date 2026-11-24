@@ -59,7 +59,7 @@
       "namn": "Kartritaren",
       "kort": "kartritaren",
       "beskrivning": "Har ritat kartor över grottor, gruvor och kloster. Ingen har ritat tornet. Än.",
-      "styrka": "Ser genom dörrarna in i rummen bredvid. Ser alla rum som någon har hittat och var någon har dött, och ger sin karta till den hen möter. Hittar alltid något när hen söker, om en hemlig gång går att göra. Har en dryck med sig.",
+      "styrka": "Ser genom dörrarna in i rummen bredvid. Ser alla rum som någon har hittat och var någon har dött. Hittar alltid något när hen söker, om en hemlig gång går att göra. Har en dryck med sig.",
       "svaghet": "Inga snabba fötter: flyr hen ur en strid träffar slaget mot ryggen alltid.",
       "liv": 0,
       "kraft": 0,
@@ -154,12 +154,6 @@
     ],
     "klass_ortkvinna_gift": [
       "Dimman sticker i halsen, men du känner igen örterna i den. Giftet biter inte på dig."
-    ],
-    "klass_kartritare_karta": [
-      "{namn} breder ut sin karta och du ritar av den. Nu vet du mer om tornet."
-    ],
-    "klass_kartritare_ger": [
-      "Du låter {namn} rita av din karta."
     ],
     "klass_kartritare_fly": [
       "Du vänder för långsamt och snubblar på dina egna fötter."

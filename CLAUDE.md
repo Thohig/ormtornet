@@ -263,5 +263,9 @@ Skriv dit när ett steg är klart.
 - [docs/bara-anfall.md](docs/bara-anfall.md): striden med anfall som
   enda val, Kraft, Försvar och varelsernas lynne, föremålen som gör en
   starkare och balansen efter simuleringen. Allt är byggt.
+- [docs/individuell-tavling.md](docs/individuell-tavling.md): att renodla
+  den individuella tävlingen. Steg 1 är byggt (Kartritaren ger inte bort
+  sin karta, timglaset och viskningen i kammaren gäller bara en själv,
+  introt uppmanar inte till samarbete). Fråga innan steg 2 och 3.
 - [docs/slumpade-namn.md](docs/slumpade-namn.md): tornet ger namnen och
   namnrutan är borta. Steg 1–2 är byggda; Nytt namn i lobbyn valdes bort.

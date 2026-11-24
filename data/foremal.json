@@ -166,11 +166,11 @@
         "namn": "Timglas av ben",
         "hittad": "ett timglas av ben",
         "kort": "timglaset",
-        "beskrivning": "När solen har tre handsbredder kvar vänds det av sig självt, och solen står still en runda för alla.",
+        "beskrivning": "När solen går ner vänds det av sig självt, och porten väntar en runda till på dig.",
         "vikt": 1,
         "anvandningar": 1,
         "verkar": [
-          "Timglaset vänder sig själv i väskan. Sanden står still. Ljuset genom gluggarna slutar röra sig."
+          "Solen går ner, och timglaset vänder sig själv i väskan. För dig står sanden still: porten väntar en runda till."
         ]
       },
       {
@@ -333,9 +333,6 @@
     "benlur_varelse": [
       "Benluren fångar en andning bakom väggen åt {riktning}. Något väntar där.",
       "Genom benluren hör du klor mot sten åt {riktning}."
-    ],
-    "timglas_alla": [
-      "Ett ögonblick står allt stilla. Solen rör sig inte."
     ],
     "foremal_av_sig_sjalv": [
       "{foremal} verkar av sig självt."

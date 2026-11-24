@@ -310,7 +310,6 @@ func (g *Game) meetIfNew(p *Player) {
 	if len(foes) == 0 {
 		return
 	}
-	g.shareMap(p, foes)
 	for _, o := range foes {
 		g.logTo(p, g.packHint(o), "info")
 	}
