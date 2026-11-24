@@ -1,0 +1,103 @@
+{
+  "_om": "Tornets slumpade händelser (tornhandelser.go, docs/handelser.md). Från runda fran_runda kan en händelse hända varje runda, med chansen chans. vikt är hur ofta just den händer och max hur många gånger per vandring. bild är spelkortets motiv (web/kort.js). text får alla som är inne i tornet, med {horn} åt det håll det hände; har får den som står där. Vad händelsen gör styrs av id:t: andas öppnar en ny dörr, guld lägger guld_min–guld_max guld i ett rum, ljus låter mörkret vara i rundor rundor, skinn lägger ormens skinn (ett förbannat föremål) i ett rum, ras stänger ett rum i rundor rundor och skickar den som står där ner i valven, doden låter en varelse resa sig där någon dog, och klockslag tar sol handsbredder av solen och gör nästa näve säker för den som står i kammaren.",
+  "handelser": {
+    "chans": 0.12,
+    "fran_runda": 4,
+    "lista": [
+      {
+        "id": "andas",
+        "vikt": 3,
+        "max": 3,
+        "bild": "andas",
+        "rubrik": "Tornet andas",
+        "text": [
+          "Väggarna drar efter andan. Åt {horn} gnisslar sten mot sten, och där det var en vägg finns nu en öppning."
+        ],
+        "har": [
+          "Väggen bredvid dig glider undan med ett långt andetag. Där finns nu en öppning."
+        ]
+      },
+      {
+        "id": "guld",
+        "vikt": 3,
+        "max": 2,
+        "bild": "spricka",
+        "rubrik": "Guld ur sprickan",
+        "guld_min": 20,
+        "guld_max": 45,
+        "text": [
+          "Någonstans åt {horn} spricker en vägg, och mynt rasslar ner på ett golv."
+        ],
+        "har": [
+          "Väggen spricker bredvid dig, och mynt rasslar ner runt dina fötter."
+        ]
+      },
+      {
+        "id": "ljus",
+        "vikt": 2,
+        "max": 1,
+        "bild": "gluggar",
+        "rubrik": "Ljus genom gluggarna",
+        "rundor": 3,
+        "text": [
+          "Solen hittar en väg genom gluggarna. Ett blekt ljus faller genom hela tornet, och mörkret drar sig undan en stund."
+        ]
+      },
+      {
+        "id": "skinn",
+        "vikt": 2,
+        "max": 1,
+        "bild": "ormskinn",
+        "rubrik": "Ömsat skinn",
+        "text": [
+          "Åt {horn} rasslar något torrt och tunt. Ormen har ömsat skinn."
+        ],
+        "har": [
+          "Ett torrt, genomskinligt skinn glider ner längs väggen bredvid dig."
+        ]
+      },
+      {
+        "id": "ras",
+        "vikt": 2,
+        "max": 2,
+        "bild": "ras",
+        "rubrik": "Ett ras",
+        "rundor": 3,
+        "text": [
+          "Åt {horn} rasar ett tak med ett dån. Det rummet går inte att ta sig in i på en stund."
+        ],
+        "har": [
+          "Taket rasar över dig! Golvet ger efter, och du faller ner i valven."
+        ]
+      },
+      {
+        "id": "doden",
+        "vikt": 2,
+        "max": 2,
+        "bild": "doden",
+        "rubrik": "Den döde vandrar",
+        "varelse": "benvaktare",
+        "text": [
+          "Åt {horn}, där någon dog, reser sig något av vita ben."
+        ],
+        "har": [
+          "Där någon dog reser sig något av vita ben, alldeles bredvid dig."
+        ]
+      },
+      {
+        "id": "klockslag",
+        "vikt": 2,
+        "max": 1,
+        "bild": "klockslag",
+        "rubrik": "Klockslaget",
+        "sol": 1,
+        "text": [
+          "En klocka slår någonstans djupt i tornet, ett enda slag. Ljuset utanför blir rödare."
+        ],
+        "har": [
+          "Vid klockslaget stannar ormens andetag upp. Nästa näve du tar väcker den inte."
+        ]
+      }
+    ]
+  }
+}

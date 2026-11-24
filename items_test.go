@@ -351,12 +351,12 @@ func TestLetterAndDeathDrop(t *testing.T) {
 	}
 }
 
-func TestMapMakerHasPotion(t *testing.T) {
-	// Den andra vandraren får en slumpad klass, som kan ha egna drycker,
-	// så kartritaren jämförs med en vandrare utan klass.
+// Kartritaren har ingen egen dryck sedan kammaren slumpas nära mitten
+// (docs/handelser.md, balansen).
+func TestMapMakerHasNoPotion(t *testing.T) {
 	g, p, o := withClass(t, "kartritare")
 	o.classID = ""
-	if p.Potions < 1 || p.Potions != g.startPotions(o)+1 {
+	if p.Potions != g.startPotions(o) {
 		t.Fatalf("kartritaren har %d drycker, utan klass %d", p.Potions, g.startPotions(o))
 	}
 }

@@ -207,11 +207,48 @@ type Data struct {
 	Foremal          ItemData            `json:"foremal"`
 	Vandrarnamn      NameData            `json:"vandrarnamn"` // namnen tornet ger vandrarna (namn.json)
 	Spelkort         CardData            `json:"spelkort"`    // spelkortens ordning (texter.json)
+	Handelser        TowerEvents         `json:"handelser"`   // tornets slumpade händelser (handelser.json)
 	// Spelarsidan och Vardsidan är sidornas egna texter, på nyckel. Sidorna
 	// hämtar dem från /texter/ (se web/texter.js).
 	Spelarsidan map[string]string `json:"spelarsidan"`
 	Vardsidan   map[string]string `json:"vardsidan"`
 	Lang        string            `json:"-"` // språket texterna är på
+}
+
+// TowerEvents är tornets slumpade händelser (tornhandelser.go): varje
+// runda från FranRunda kan en av dem hända, med chansen Chans.
+type TowerEvents struct {
+	Chans     float64      `json:"chans"`
+	FranRunda int          `json:"fran_runda"`
+	Lista     []TowerEvent `json:"lista"`
+}
+
+// TowerEvent är en händelse. Vad den gör styrs av dess id; siffrorna och
+// texterna står här. Text är det alla i tornet får, med {horn} åt det håll
+// det hände, och Har det den som står där det händer får. Krönikans rad
+// står i texter.json (kronika_handelse_<id>).
+type TowerEvent struct {
+	ID      string   `json:"id"`
+	Vikt    int      `json:"vikt"`
+	Max     int      `json:"max"` // högst så många gånger per vandring
+	Bild    string   `json:"bild"`
+	Rubrik  string   `json:"rubrik"`
+	Text    []string `json:"text"`
+	Har     []string `json:"har,omitempty"`
+	GuldMin int      `json:"guld_min,omitempty"`
+	GuldMax int      `json:"guld_max,omitempty"`
+	Rundor  int      `json:"rundor,omitempty"`
+	Varelse string   `json:"varelse,omitempty"`
+	Sol     int      `json:"sol,omitempty"`
+}
+
+func (d *Data) towerEvent(id string) *TowerEvent {
+	for i := range d.Handelser.Lista {
+		if d.Handelser.Lista[i].ID == id {
+			return &d.Handelser.Lista[i]
+		}
+	}
+	return nil
 }
 
 // IntroData styr startsidan.
@@ -220,7 +257,7 @@ type IntroData struct {
 }
 
 // Filerna i datamappen. Alla läses in i samma struktur; "texter" slås ihop.
-var dataFiles = []string{"texter.json", "fallor.json", "ormen.json", "monster.json", "avslojande.json", "ai.json", "svarighet.json", "klasser.json", "foremal.json", "namn.json", "spelarsidan.json", "vardsidan.json"}
+var dataFiles = []string{"texter.json", "fallor.json", "ormen.json", "monster.json", "avslojande.json", "ai.json", "svarighet.json", "klasser.json", "foremal.json", "namn.json", "handelser.json", "spelarsidan.json", "vardsidan.json"}
 
 // loadData läser filerna i mappen dir på svenska. Saknas en fil används den
 // inbyggda kopian.
@@ -319,6 +356,9 @@ func loadDataLang(dir, lang string) (*Data, string, error) {
 
 // mergeData kopierar de fält som är satta i part till d.
 func mergeData(d, part *Data) {
+	if len(part.Handelser.Lista) > 0 {
+		d.Handelser = part.Handelser
+	}
 	if len(part.Rumstyper) > 0 {
 		d.Rumstyper = part.Rumstyper
 	}

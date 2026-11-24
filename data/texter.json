@@ -373,7 +373,7 @@
   ],
   "spelkort": {
     "_om": "Spelkorten (docs/spelkort.md): ordningen säger vilket kort som vänds upp när flera saker händer samma runda. Det första i listan är viktigast; resten blir minikort.",
-    "ordning": ["dod", "ut", "ormen", "varelse", "vandrare", "falla", "forbannelse", "foremal", "guld", "kallare", "varsel", "namn", "viska", "brev", "dryck"],
+    "ordning": ["dod", "ut", "ormen", "varelse", "vandrare", "falla", "handelse", "forbannelse", "foremal", "guld", "kallare", "varsel", "namn", "viska", "brev", "dryck"],
     "stunder": {
       "_om": "Vandringens största stunder i krönikan i slutet: krönikans händelser (nycklar) som läggs fram som stora kort. Slagen står med det viktigaste först; antal är hur många kort och per_slag hur många av samma slag. rubrik är en nyckel bland texterna. bara_vinnare tar bara med den som vann.",
       "antal": 5,
@@ -644,6 +644,36 @@
     ],
     "kronika_dod_guld": [
       "{guld} guld blev liggande där."
+    ],
+    "kronika_handelse_andas": [
+      "Tornet andades, och en ny öppning uppstod mellan två rum."
+    ],
+    "kronika_handelse_guld": [
+      "En vägg sprack och släppte ut guld."
+    ],
+    "kronika_handelse_ljus": [
+      "Ljus föll genom gluggarna, och mörkret drog sig undan."
+    ],
+    "kronika_handelse_skinn": [
+      "Ormen ömsade skinn, och skinnet blev liggande i tornet."
+    ],
+    "kronika_handelse_ras": [
+      "Taket rasade i ett rum."
+    ],
+    "kronika_handelse_doden": [
+      "Där någon hade dött reste sig något av vita ben."
+    ],
+    "kronika_handelse_klockslag": [
+      "En klocka slog djupt i tornet, och solen sjönk."
+    ],
+    "handelse_guld_tar": [
+      "Mynten från sprickan ligger på golvet. Du tar {antal} guld."
+    ],
+    "ras_stangt": [
+      "Stenarna efter raset fyller dörröppningen. Du kommer inte in där än."
+    ],
+    "ljus_morker": [
+      "Lågan fladdrar, men ljuset genom gluggarna räcker. Mörkret biter inte."
     ],
     "kronika_guld_lost": [
       "{namn} tog upp {guld} guld som låg löst på golvet."

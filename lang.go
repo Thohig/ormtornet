@@ -157,6 +157,9 @@ func isCode(path string) bool {
 	if path == ".svarighet.standard" || strings.HasPrefix(path, ".spelkort.") {
 		return true
 	}
+	if strings.HasPrefix(path, ".handelser.lista[") && strings.HasSuffix(path, "].varelse") {
+		return true // varelsens id i monster.json
+	}
 	return strings.HasPrefix(path, ".ai.personligheter[") && strings.HasSuffix(path, "].klasser")
 }
 

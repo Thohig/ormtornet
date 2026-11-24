@@ -307,6 +307,61 @@ ${[[46, 40, 9], [58, 30, 11], [42, 22, 8], [62, 14, 7]].map(([x, y, r]) => `<cir
 <path d="M12 90l12 -12" stroke="${BRUN}" stroke-width="5" stroke-linecap="round"/>
 <circle cx="12" cy="90" r="3.5" fill="none" stroke="${JARN}" stroke-width="1.6"/>`;
 
+  // Tornet andas: en vägg som glider isär, med en ny öppning och luft som
+  // strömmar ut.
+  BILDER.andas = () => `${vagg()}
+<path d="M14 20h26v66H14z" fill="${MORK_STEN}" opacity="0.8"/>
+<path d="M60 20h26v66H60z" fill="${MORK_STEN}" opacity="0.8"/>
+<path d="M40 20h20v66H40z" fill="#1e1610" opacity="0.85"/>
+<path d="M40 20q-6 33 0 66M60 20q6 33 0 66" fill="none" stroke="${BLAECK}" stroke-width="1.4"/>
+${[34, 50, 66].map((y, i) => `<path d="M44 ${y}q6 -${4 + i} 12 0" fill="none" stroke="#e6d8b8" stroke-width="1.6" opacity="0.75"/>`).join("")}
+<path d="M34 50l-8 0M66 50l8 0" stroke="${BRUN}" stroke-width="2" stroke-linecap="round"/>
+<path d="M26 50l4 -3v6zM74 50l-4 -3v6z" fill="${BRUN}"/>`;
+
+  // Guld ur sprickan: en vägg med en spricka, och mynt som rasar ut.
+  BILDER.spricka = () => `${vagg()}
+<path d="M50 10l-6 18 8 10 -10 16 6 12 -4 16" fill="none" stroke="${BLAECK}" stroke-width="2.6" stroke-linejoin="round"/>
+<path d="M50 10l-6 18 8 10 -10 16 6 12 -4 16" fill="none" stroke="#1e1610" stroke-width="5" opacity="0.35"/>
+${[[46, 58, 0], [54, 66, 1], [40, 72, 0], [58, 78, 1], [48, 84, 0], [36, 86, 1], [62, 88, 0]].map(([x, y, k]) => `<ellipse cx="${x}" cy="${y}" rx="${k ? 4 : 3.4}" ry="1.8" fill="${GULD}" stroke="${BRUN}" stroke-width="0.6"/>`).join("")}
+<circle cx="52" cy="46" r="2" fill="${GULD}"/><circle cx="47" cy="52" r="1.6" fill="${GULD}"/>`;
+
+  // Ljus genom gluggarna: smala fönster högt upp och strålar ner i mörkret.
+  BILDER.gluggar = () => `<rect x="4" y="4" width="92" height="92" rx="6" fill="#2a2018" opacity="0.55"/>
+${[24, 48, 72].map((x) => `<rect x="${x - 3}" y="12" width="6" height="14" rx="3" fill="#fff6dc"/>`).join("")}
+${[24, 48, 72].map((x) => `<path d="M${x - 3} 24L${x - 14} 90H${x + 10}L${x + 3} 24z" fill="#fff6dc" opacity="0.22"/>`).join("")}
+${golv(86)}`;
+
+  // Ormens ömsade skinn: ett torrt, genomskinligt rör av fjäll i en slinga.
+  BILDER.ormskinn = () => `${golv(80)}
+<path d="M16 74q8 -30 30 -24t28 -18q6 -8 -2 -16" fill="none" stroke="${BRUN}" stroke-width="13" stroke-linecap="round" opacity="0.55"/>
+<path d="M16 74q8 -30 30 -24t28 -18q6 -8 -2 -16" fill="none" stroke="#f3ead6" stroke-width="10" stroke-linecap="round"/>
+<path d="M16 74q8 -30 30 -24t28 -18q6 -8 -2 -16" fill="none" stroke="${STEN}" stroke-width="8" stroke-dasharray="2 3" stroke-linecap="round" opacity="0.6"/>
+<path d="M68 12q-6 -4 -10 2" fill="none" stroke="${BRUN}" stroke-width="1.2"/>`;
+
+  // Ett ras: tak som rasar ner i en dörröppning.
+  BILDER.ras = () => `${vagg()}
+<path d="M30 30h40v60H30z" fill="#1e1610" opacity="0.85"/>
+<path d="M26 26h48v6H26z" fill="${MORK_STEN}"/>
+${[[34, 78, 12, 10], [48, 74, 14, 14], [62, 80, 10, 9], [40, 62, 9, 8], [56, 60, 11, 9], [46, 48, 8, 7]].map(([x, y, w, h]) => `<rect x="${x - w / 2}" y="${y - h / 2}" width="${w}" height="${h}" rx="2" fill="${STEN}" stroke="${BLAECK}" stroke-width="0.8" transform="rotate(${(x * 7) % 30 - 15} ${x} ${y})"/>`).join("")}
+${[[22, 40], [78, 44], [30, 20], [70, 18]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="1.6" fill="${STEN}"/>`).join("")}`;
+
+  // Den döde vandrar: ett kryss på golvet, och ben som reser sig ur det.
+  BILDER.doden = () => `${golv(80)}
+<path d="M38 74l24 10M62 74l-24 10" stroke="${ROD}" stroke-width="2.2" stroke-linecap="round" opacity="0.7"/>
+<circle cx="50" cy="30" r="9" fill="#efe9da" stroke="${BLAECK}" stroke-width="1.2"/>
+<circle cx="46.5" cy="29" r="2" fill="${BLAECK}"/><circle cx="53.5" cy="29" r="2" fill="${BLAECK}"/>
+<path d="M50 39v28M40 48h20M42 56h16M44 64h12" stroke="#efe9da" stroke-width="3" stroke-linecap="round"/>
+<path d="M50 39v28" stroke="${BLAECK}" stroke-width="0.8"/>`;
+
+  // Klockslaget: en klocka i mörkret och ljudvågor, och en röd sol.
+  BILDER.klockslag = () => `<rect x="4" y="4" width="92" height="92" rx="6" fill="#2a2018" opacity="0.45"/>
+<circle cx="78" cy="22" r="9" fill="${ROD}" opacity="0.8"/>
+<path d="M50 18v6" stroke="${JARN}" stroke-width="2"/>
+<path d="M36 64q0 -38 14 -40q14 2 14 40z" fill="#a8823a" stroke="${BLAECK}" stroke-width="1.4"/>
+<path d="M32 64h36" stroke="${BLAECK}" stroke-width="3" stroke-linecap="round"/>
+<circle cx="50" cy="70" r="3.2" fill="${JARN}"/>
+<path d="M22 44q-6 12 0 24M16 40q-9 16 0 32M78 44q6 12 0 24M84 40q9 16 0 32" fill="none" stroke="#e6d8b8" stroke-width="1.6" stroke-linecap="round" opacity="0.8"/>`;
+
   // Ett rostigt svärd, snett över kortet.
   BILDER.svard = () => `${ljus}
 <path d="M30 76l42 -50 6 -6 -2 8 -42 50z" fill="#9a8a7a" stroke="${BLAECK}" stroke-width="1.2"/>

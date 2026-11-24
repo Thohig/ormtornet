@@ -59,12 +59,12 @@
       "namn": "Kartritaren",
       "kort": "kartritaren",
       "beskrivning": "Har ritat kartor över grottor, gruvor och kloster. Ingen har ritat tornet. Än.",
-      "styrka": "Ser genom dörrarna in i rummen bredvid. Ser alla rum som någon har hittat och var någon har dött. Hittar alltid något när hen söker, om en hemlig gång går att göra. Har en dryck med sig.",
+      "styrka": "Ser genom dörrarna in i rummen bredvid. Ser alla rum som någon har hittat och var någon har dött. Hittar alltid något när hen söker, om en hemlig gång går att göra.",
       "svaghet": "Inga snabba fötter: flyr hen ur en strid träffar slaget mot ryggen alltid.",
       "liv": 0,
       "kraft": 0,
       "forsvar": 1,
-      "drycker": 1,
+      "drycker": 0,
       "varden": {}
     },
     {
@@ -79,7 +79,7 @@
       "svaghet": "Har aldrig lärt sig leta: hittar bara hälften så mycket guld när hen söker.",
       "liv": 0,
       "kraft": 2,
-      "forsvar": 2,
+      "forsvar": 3,
       "drycker": 0,
       "varden": { "ormskada": 2, "sok_guld": 0.5 }
     },

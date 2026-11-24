@@ -143,6 +143,15 @@ func (g *Game) take(p *Player) {
 			}
 		}
 	}
+	// Ormens skinn: ormen känner lukten, och ibland väcker näven den.
+	if p.has("skinn") != nil && g.curse(p, "skinn") && g.rng.Float64() < 0.25 {
+		for j, id := range g.deck {
+			if c := g.data.card(id); c != nil && c.Vaknar {
+				i = j
+				break
+			}
+		}
+	}
 	// Den invigde som har viskat till ormen: nästa näve väcker den inte,
 	// om leken har något sovkort kvar. Leken är densamma för de andra.
 	if p.safeDraw {

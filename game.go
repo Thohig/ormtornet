@@ -235,6 +235,7 @@ type Room struct {
 	fell     []string   // vandrarna som har dött här, för rumsblocket
 	goldBy   int        // vandraren som senast tog upp guld här, 0 om ingen
 	loose    int        // löst guld i rummet, som ormen eller tornet har lämnat
+	blocked  int        // rundor kvar som rummet är rasat och inte går att gå in i
 	looseKey string     // texten när någon tar det löst liggande guldet
 	omen     string     // det ett varsel har lovat: "falla:id", "varelse:id" eller "tomt"
 	Shut     bool       // porten har slutit sig (tornet förändras, nivå 4)
@@ -381,6 +382,11 @@ type Game struct {
 	// flyttat den, så att rummet har de dörrar det redan hade.
 	chamberX, chamberY int
 	chamberMoved       bool
+	// lightRounds är rundorna kvar då ljuset genom gluggarna håller mörkret
+	// borta, och eventCount hur många gånger varje händelse har hänt under
+	// vandringen (tornhandelser.go).
+	lightRounds int
+	eventCount  map[string]int
 
 	serpentName    []string // ormens namn i tre delar, med invigningen "ormens namn"
 	partAt         [3]int   // vilken del av namnet som finns i ristningen, hos varelsen och i kammaren
@@ -1365,6 +1371,8 @@ func (g *Game) startGame() {
 	g.turn = g.turnTime() // ligger fast under vandringen
 	g.round = 1
 	g.wakes = 0
+	g.lightRounds = 0
+	g.eventCount = map[string]int{}
 	g.firstInitiated = 0
 	g.clueDeals, g.omens = 0, nil
 	g.portClock, g.portNext = 0, -1
@@ -1622,6 +1630,7 @@ func (g *Game) resolve() {
 	if g.sun < 0 {
 		g.sun = 0
 	}
+	g.towerEventTick()
 	g.summarize(snap, wakes)
 	g.soundAll("runda")
 	inside := 0
@@ -1850,6 +1859,11 @@ func (g *Game) move(p *Player, d Dir, depth int) {
 	}
 	nx, ny := p.X+dirDX[d], p.Y+dirDY[d]
 	target := &g.rooms[ny][nx]
+	if target.blocked > 0 {
+		g.soundTo(p, "vagg")
+		g.logTo(p, g.data.Text("ras_stangt"), "dim")
+		return
+	}
 	isNew := !target.Walked // ett rum som någon bara har sett in i är fortfarande nytt
 	g.reveal(nx, ny)
 	target.Walked = true

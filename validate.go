@@ -208,6 +208,20 @@ func (d *Data) validate() []string {
 	}
 	unique("monster.json", "varelsen", ids)
 
+	ids = nil
+	for _, e := range d.Handelser.Lista {
+		ids = append(ids, e.ID)
+		cardImageOK("handelser.json", "händelsen "+e.ID, e.Bild)
+		if e.Varelse != "" && d.monsterType(e.Varelse) == nil {
+			bad("handelser.json", "%s: varelsen %q finns inte i monster.json", e.ID, e.Varelse)
+		}
+		if len(e.Text) == 0 {
+			bad("handelser.json", "%s: text saknas", e.ID)
+		}
+	}
+	unique("handelser.json", "händelsen", ids)
+	chance("handelser.json", "chans", d.Handelser.Chans)
+
 	for _, p := range d.AI.Personligheter {
 		chance("ai.json", p.ID+": sok_chans", p.SokChans)
 		chance("ai.json", p.ID+": stridslust", p.Stridslust)

@@ -458,8 +458,8 @@ igen.
 | Legoknekten | 3 / 2 | ett liv extra, och slår hårdast av alla | hittar hälften så mycket guld när hen söker |
 | Tjuven | 2 / 2 | en fjärdedel mer guld ur kammaren, hittar oftare föremål, ingen märker när ormen rör sig vid hens näve, river hälften i strid mot vandrare | hittar aldrig drycker när hen söker |
 | Örtkvinnan | 0 / 2 | börjar med en dryck, en dryck ger tre liv, tål gift | tappar mycket mer skatt när ormen vaknar |
-| Kartritaren | 0 / 1 | ser genom dörrarna in i rummen bredvid, ser alla rum som någon har hittat och var någon har dött (ett x i hörnet), hittar alltid en hemlig gång om det går, har en dryck med sig | flyr hen ur en strid träffar slaget mot ryggen alltid |
-| Ormtjusaren | 2 / 2 | ser i kammaren hur många vakna-kort som är kvar, ormen skadar inte hen när den vaknar | hittar hälften så mycket guld när hen söker |
+| Kartritaren | 0 / 1 | ser genom dörrarna in i rummen bredvid, ser alla rum som någon har hittat och var någon har dött (ett x i hörnet), hittar alltid en hemlig gång om det går | flyr hen ur en strid träffar slaget mot ryggen alltid |
+| Ormtjusaren | 2 / 3 | ser i kammaren hur många vakna-kort som är kvar, ormen skadar inte hen när den vaknar | hittar hälften så mycket guld när hen söker |
 | Spårfinnaren | 2 / 1 | ser spår 6 rundor bakåt och vems de är, märker hälften av fällorna i tid, ser var föremål och guld ligger och vem som tog guldet, känner före andra åt vilket håll ristningen finns | hör inget genom väggarna, utom med benluren |
 | Lyktbäraren | 2 / 2 | ett liv extra, tål mörker, ser varelser i grannrummen | syns för andra redan från grannrummet |
 | Pilgrimen | 0 / 3 | ledtrådar dubbelt så ofta, en dryck när tornet förändras, känner igen förbannade föremål | slår aldrig andra vandrare, kan bara värja sig |
@@ -575,6 +575,15 @@ och varelser har sin korta beskrivning som rubrik, aldrig namnet.
   små spelkort med bilden och rubriken. Ett klick på ett minikort, eller Enter,
   visar kortet stort med sin text; ett klick till eller Escape stänger
   det. På raden med siffror står ormkorten ihopslagna, "Ormen sover ×3".
+
+### Tornets händelser
+
+Från runda 4 kan något hända i tornet i slutet av en runda: tornet andas
+och en ny dörr öppnas, guld rasar ur en spricka, ljus faller genom
+gluggarna så att mörkret inte biter, ormen ömsar skinn, ett tak rasar,
+den döde vandrar eller en klocka slår. Alla inne får ett spelkort och vet
+åt vilket håll det hände. Händelserna och deras texter står i
+`data/handelser.json` (se [docs/handelser.md](docs/handelser.md)).
 
 ### Skattkammaren och ormen
 

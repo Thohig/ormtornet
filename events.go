@@ -128,7 +128,9 @@ func (g *Game) trigger(p *Player, t *Trap, depth int) {
 		g.sun -= max(1, t.Sol)
 		g.chronicle("kronika_klocka", "namn", p.Name)
 	case "morker":
-		if g.is(p, "lyktbarare") {
+		if g.lightRounds > 0 {
+			g.logTo(p, g.data.Text("ljus_morker"), "info")
+		} else if g.is(p, "lyktbarare") {
 			g.logTo(p, g.data.Text("klass_lyktbarare_morker"), "info")
 		} else if !g.useItem(p, "veke") {
 			p.Dark = max(p.Dark, t.Rundor)

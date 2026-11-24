@@ -178,6 +178,16 @@
         ]
       },
       {
+        "id": "skinn",
+        "namn": "The serpent's skin",
+        "hittad": "a shed skin, dry and translucent",
+        "kort": "the skin",
+        "beskrivning": "Dry and translucent, as large as a folded sail. Worth 30 gold when you get out.",
+        "forbannelse": [
+          "The serpent smells its own skin. The breathing quickens when you reach for the gold, and sometimes it wakes because of it."
+        ]
+      },
+      {
         "id": "brev",
         "namn": "A letter",
         "hittad": "a letter",

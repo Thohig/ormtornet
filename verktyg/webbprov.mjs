@@ -65,7 +65,16 @@ const server = spawn(bin, [
 let serverlogg = "";
 server.stdout.on("data", (d) => (serverlogg += d));
 server.stderr.on("data", (d) => (serverlogg += d));
+// Avslutas tornet under provet står det som ett fynd, med de sista
+// raderna det skrev (till exempel en panic).
+let stanger = false;
+server.on("exit", (kod, signal) => {
+  if (stanger) return;
+  const sista = serverlogg.trim().split("\n").filter((l) => !l.includes("Vandringen börjar")).slice(-12).join("\n");
+  logga(`FYND tornet: avslutades (${kod ?? signal}) under provet:\n${sista}`);
+});
 function stang(kod) {
+  stanger = true;
   server.kill();
   try { fs.unlinkSync(bin); } catch {}
   fs.writeFileSync(path.join(mapp, "rapport.txt"), rapport.join("\n") + "\n");

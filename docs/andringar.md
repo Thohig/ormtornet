@@ -6,6 +6,17 @@ eller leder tornet.
 
 ## 2026-11-24
 
+### Tornets händelser
+
+- Från runda 4 kan något hända i tornet i slutet av en runda, med var sitt
+  spelkort: tornet andas (en ny dörr), guld ur sprickan, ljus genom
+  gluggarna, ömsat skinn (ett nytt förbannat föremål), ett ras, den döde
+  vandrar och klockslaget (docs/handelser.md).
+- Kartritaren har ingen egen dryck längre, och Ormtjusaren har Kraft 2 och
+  Försvar 3, efter simuleringen med den slumpade kammaren.
+- Webbläsarprovet säger till om tornet avslutas under provet, med de
+  sista raderna det skrev.
+
 ### Breven pekar mot något
 
 - Ett brev har nu en rad i marginalen som pekar mot något i just det här

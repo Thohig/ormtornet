@@ -257,6 +257,21 @@
         ]
       },
       {
+        "id": "skinn",
+        "tecken": "≋",
+        "bild": "ormskinn",
+        "namn": "Ormens skinn",
+        "hittad": "ett ömsat skinn, torrt och genomskinligt",
+        "kort": "skinnet",
+        "beskrivning": "Torrt och genomskinligt, stort som ett hopvikt segel. Värt 30 guld när du kommer ut.",
+        "vikt": 0,
+        "forbannad": true,
+        "varde": 30,
+        "forbannelse": [
+          "Ormen känner lukten av sitt eget skinn. Andetagen blir tätare när du sträcker dig efter guldet, och ibland vaknar den av det."
+        ]
+      },
+      {
         "id": "brev",
         "tecken": "✉",
         "bild": "brev",

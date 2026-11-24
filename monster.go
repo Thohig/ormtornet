@@ -401,7 +401,7 @@ func (g *Game) canMonsterGo(m *Monster, d Dir) bool {
 		_, fixed := g.fixedDoors(nx, ny)
 		return !fixed
 	}
-	return n.Kind == "rum"
+	return n.Kind == "rum" && n.blocked == 0
 }
 
 // stepMonster flyttar varelsen ett rum åt hållet d. Finns rummet inte än

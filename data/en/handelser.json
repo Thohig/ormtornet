@@ -1,0 +1,74 @@
+{
+  "_om": "English translation of handelser.json. Texts only; the numbers stand in the Swedish file. The events are matched by their ids.",
+  "handelser": {
+    "lista": [
+      {
+        "id": "andas",
+        "rubrik": "The tower breathes",
+        "text": [
+          "The walls draw breath. To the {horn} stone grinds on stone, and where there was a wall there is now an opening."
+        ],
+        "har": [
+          "The wall beside you slides aside with a long breath. There is an opening there now."
+        ]
+      },
+      {
+        "id": "guld",
+        "rubrik": "Gold from the crack",
+        "text": [
+          "Somewhere to the {horn} a wall cracks, and coins rattle down onto a floor."
+        ],
+        "har": [
+          "The wall cracks beside you, and coins rattle down around your feet."
+        ]
+      },
+      {
+        "id": "ljus",
+        "rubrik": "Light through the slits",
+        "text": [
+          "The sun finds a way through the slits. A pale light falls through the whole tower, and the darkness draws back for a while."
+        ]
+      },
+      {
+        "id": "skinn",
+        "rubrik": "A shed skin",
+        "text": [
+          "To the {horn} something dry and thin rustles. The serpent has shed its skin."
+        ],
+        "har": [
+          "A dry, translucent skin slides down the wall beside you."
+        ]
+      },
+      {
+        "id": "ras",
+        "rubrik": "A cave-in",
+        "text": [
+          "To the {horn} a ceiling caves in with a roar. No one can get into that room for a while."
+        ],
+        "har": [
+          "The ceiling caves in on you! The floor gives way, and you fall into the vaults."
+        ]
+      },
+      {
+        "id": "doden",
+        "rubrik": "The dead walk",
+        "text": [
+          "To the {horn}, where someone died, something of white bone rises."
+        ],
+        "har": [
+          "Where someone died, something of white bone rises right beside you."
+        ]
+      },
+      {
+        "id": "klockslag",
+        "rubrik": "The bell",
+        "text": [
+          "A bell strikes somewhere deep in the tower, a single stroke. The light outside turns redder."
+        ],
+        "har": [
+          "At the stroke of the bell the serpent's breathing stops short. The next handful you take will not wake it."
+        ]
+      }
+    ]
+  }
+}

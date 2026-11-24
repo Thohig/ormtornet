@@ -608,6 +608,36 @@
     "kronika_dod_guld": [
       "{guld} gold was left lying there."
     ],
+    "kronika_handelse_andas": [
+      "The tower breathed, and a new opening appeared between two rooms."
+    ],
+    "kronika_handelse_guld": [
+      "A wall cracked and let out gold."
+    ],
+    "kronika_handelse_ljus": [
+      "Light fell through the slits, and the darkness drew back."
+    ],
+    "kronika_handelse_skinn": [
+      "The serpent shed its skin, and the skin was left lying in the tower."
+    ],
+    "kronika_handelse_ras": [
+      "A ceiling caved in."
+    ],
+    "kronika_handelse_doden": [
+      "Where someone had died, something of white bone rose."
+    ],
+    "kronika_handelse_klockslag": [
+      "A bell struck deep in the tower, and the sun sank."
+    ],
+    "handelse_guld_tar": [
+      "The coins from the crack lie on the floor. You take {antal} gold."
+    ],
+    "ras_stangt": [
+      "The stones from the cave-in fill the doorway. You cannot get in there yet."
+    ],
+    "ljus_morker": [
+      "The flame flickers, but the light through the slits is enough. The darkness has no hold."
+    ],
     "kronika_guld_lost": [
       "{namn} picked up {guld} gold that lay loose on the floor."
     ],
