@@ -9,6 +9,10 @@
     "sovkort_per_vandrare_over_fyra": 2,
     "_om_spridning": "Hur långt från mitten kammaren kan hamna, i rum åt varje håll: 0 är alltid mitt i tornet, 1 ett av rummen i mittens 3 × 3. Ormen ligger alltid i tornets mage, men man kan inte gå rakt mot mitten.",
     "spridning": 1,
+    "_om_plats": "plats: fri eller mitten. Med mitten ligger kammaren inom spridning från mitten. Med fri ligger den var som helst utom i den yttre ringen, minst fri_fran_port rum från varje port, och ingen vandrare har den mer än fri_skillnad rum närmare än snittet av allas avstånd (docs/ormens-plats.md).",
+    "plats": "fri",
+    "fri_fran_port": 3,
+    "fri_skillnad": 3,
 
     "kort": [
       {

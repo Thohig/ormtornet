@@ -290,22 +290,13 @@ func (g *Game) wakeSerpent() {
 	}
 }
 
-// moveChamber: när ormen har vaknat kryper den till en ny kammare nära
-// mitten (inom spridningen). Den gamla blir ett vanligt rum med lite guld
+// moveChamber: när ormen har vaknat kryper den till en ny kammare, med
+// samma regler som när den placerades (chamberSpots). Den gamla blir ett vanligt rum med lite guld
 // kvar på golvet, och alla i tornet hör att ormen flyttar sig.
 func (g *Game) moveChamber() {
-	c := g.center()
-	s := max(0, min(g.data.Ormen.Spridning, c-1))
 	ox, oy := g.chamber()
-	var spots [][2]int
-	for y := c - s; y <= c+s; y++ {
-		for x := c - s; x <= c+s; x++ {
-			if (x != ox || y != oy) && g.cornerIndex(x, y) < 0 {
-				spots = append(spots, [2]int{x, y})
-			}
-		}
-	}
-	if len(spots) == 0 {
+	spots := g.chamberSpots(ox, oy)
+	if len(spots) == 0 || (len(spots) == 1 && spots[0] == [2]int{ox, oy}) {
 		return
 	}
 	n := spots[g.rng.IntN(len(spots))]

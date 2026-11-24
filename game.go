@@ -131,19 +131,90 @@ func (g *Game) chamber() (int, int) { return g.chamberX, g.chamberY }
 // isChamber är sant för kammarens rum.
 func (g *Game) isChamber(x, y int) bool { return x == g.chamberX && y == g.chamberY }
 
-// placeChamber slumpar kammarens plats inom spridningen från mitten
-// (spridning i ormen.json), aldrig i ett portrum.
+// placeChamber slumpar kammarens plats: fritt och ganska rättvist, eller
+// inom spridningen från mitten (plats i ormen.json). Aldrig i ett portrum.
 func (g *Game) placeChamber() {
-	c := g.center()
-	s := max(0, min(g.data.Ormen.Spridning, c-1))
 	g.chamberMoved = false
-	for {
-		x, y := c-s+g.rng.IntN(2*s+1), c-s+g.rng.IntN(2*s+1)
-		if g.cornerIndex(x, y) < 0 {
-			g.chamberX, g.chamberY = x, y
-			return
+	spots := g.chamberSpots(-1, -1)
+	s := spots[g.rng.IntN(len(spots))]
+	g.chamberX, g.chamberY = s[0], s[1]
+}
+
+// chamberSpots är rummen kammaren kan hamna i, utom (nx, ny).
+func (g *Game) chamberSpots(nx, ny int) [][2]int {
+	o := &g.data.Ormen
+	c := g.center()
+	var spots [][2]int
+	add := func(x, y int) {
+		if (x != nx || y != ny) && g.cornerIndex(x, y) < 0 {
+			spots = append(spots, [2]int{x, y})
 		}
 	}
+	if o.Plats == "fri" {
+		var used []corner
+		for _, p := range g.players {
+			if p != nil && p.Corner >= 0 && p.Corner < len(g.corners()) {
+				used = append(used, g.corners()[p.Corner])
+			}
+		}
+		for y := 1; y < g.size-1; y++ {
+			for x := 1; x < g.size-1; x++ {
+				if g.fairChamber(x, y, used) {
+					add(x, y)
+				}
+			}
+		}
+	}
+	if len(spots) == 0 {
+		s := max(0, min(o.Spridning, c-1))
+		for y := c - s; y <= c+s; y++ {
+			for x := c - s; x <= c+s; x++ {
+				add(x, y)
+			}
+		}
+	}
+	if len(spots) == 0 {
+		spots = [][2]int{{c, c}}
+	}
+	return spots
+}
+
+// fairChamber säger om kammaren får ligga i (x, y): minst fri_fran_port rum
+// från varje port, och ingen av portarna i bruk mer än fri_skillnad rum
+// närmare än snittet.
+func (g *Game) fairChamber(x, y int, used []corner) bool {
+	o := &g.data.Ormen
+	for _, cn := range g.corners() {
+		if abs(cn.x-x)+abs(cn.y-y) < o.FriFranPort {
+			return false
+		}
+	}
+	if len(used) == 0 {
+		return true
+	}
+	sum, least := 0, 1<<30
+	for _, cn := range used {
+		d := abs(cn.x-x) + abs(cn.y-y)
+		sum += d
+		least = min(least, d)
+	}
+	return float64(least) >= float64(sum)/float64(len(used))-float64(o.FriSkillnad)
+}
+
+// chamberSun är de extra rundor solen får när kammaren ligger längre från
+// en port i bruk än mitten gör: två för varje rum, dit och tillbaka.
+func (g *Game) chamberSun() int {
+	if g.cfg.SunMax != 0 {
+		return 0
+	}
+	far := 0
+	for _, p := range g.players {
+		if p != nil && p.Corner >= 0 && p.Corner < len(g.corners()) {
+			cn := g.corners()[p.Corner]
+			far = max(far, abs(cn.x-g.chamberX)+abs(cn.y-g.chamberY))
+		}
+	}
+	return 2 * max(0, far-(g.size-1))
 }
 
 func newGrid[T any](size int) [][]T {
@@ -1362,8 +1433,6 @@ func (g *Game) startGame() {
 	g.ensureClasses()
 	if g.towerSize() != g.size {
 		g.newTower() // fler eller färre vandrare än när tornet byggdes
-	} else {
-		g.placeChamber() // efter vandringens frö, så att samma frö ger samma kammare
 	}
 	g.phase = phasePlay
 	g.sunMax = g.scaledSun()
@@ -1412,6 +1481,11 @@ func (g *Game) startGame() {
 	}
 	g.revealPorts()
 	g.drawCorners()
+	// Kammaren efter portarna, så att platsen blir ganska rättvis, och
+	// efter vandringens frö, så att samma frö ger samma kammare.
+	g.placeChamber()
+	g.sunMax += g.chamberSun()
+	g.sun = g.sunMax
 	for _, p := range g.players {
 		if p != nil {
 			g.noteRoom(p) // efter klassvalet: kartritaren ser in i grannrummen

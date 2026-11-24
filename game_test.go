@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"strconv"
 	"strings"
 	"testing"
 	"time"
@@ -16,7 +17,7 @@ func testGame(t *testing.T) *Game {
 	// Inga slumpade varelser eller fällor; testerna placerar dem själva.
 	d.Monster.Chans = 0
 	d.Regler.Handelsechans = 0
-	d.Ormen.Spridning = 0 // kammaren mitt i tornet, som testerna räknar med
+	d.Ormen.Plats, d.Ormen.Spridning = "mitten", 0 // kammaren mitt i tornet, som testerna räknar med
 	noWander(d)
 	return NewGame(d, Config{SunMax: 10, TurnTime: time.Hour, MinPlayers: 2})
 }
@@ -972,5 +973,42 @@ func TestChamberNearCenter(t *testing.T) {
 	x, y := g.chamber()
 	if r := g.reveal(x, y); r.Kind != "kammare" || r.Doors != [4]bool{true, true, true, true} {
 		t.Fatalf("kammaren: %s, dörrar %v", r.Kind, r.Doors)
+	}
+}
+
+// Med fri plats hamnar kammaren inte i den yttre ringen, inte nära någon
+// port, och ingen vandrare har den mer än fri_skillnad rum närmare än
+// snittet. Platserna når ändå långt från mitten.
+func TestChamberFreeAndFair(t *testing.T) {
+	g := testGame(t)
+	g.data.Ormen.Plats = "fri"
+	g.buildTower(9)
+	for i := range 4 {
+		g.players[i] = &Player{ID: i + 1, Name: "V" + strconv.Itoa(i), Corner: i}
+	}
+	o := &g.data.Ormen
+	far := false
+	for _, s := range g.chamberSpots(-1, -1) {
+		x, y := s[0], s[1]
+		if x == 0 || y == 0 || x == g.size-1 || y == g.size-1 {
+			t.Fatalf("i yttre ringen: %d,%d", x, y)
+		}
+		sum, least := 0, 99
+		for i := range 4 {
+			cn := g.corners()[i]
+			d := abs(cn.x-x) + abs(cn.y-y)
+			if d < o.FriFranPort {
+				t.Fatalf("%d,%d för nära porten %d", x, y, i)
+			}
+			sum += d
+			least = min(least, d)
+		}
+		if float64(least) < float64(sum)/4-float64(o.FriSkillnad) {
+			t.Fatalf("%d,%d orättvis: närmast %d, snitt %.1f", x, y, least, float64(sum)/4)
+		}
+		far = far || abs(x-g.center())+abs(y-g.center()) >= 3
+	}
+	if !far {
+		t.Fatal("ingen plats långt från mitten")
 	}
 }

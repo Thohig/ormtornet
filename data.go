@@ -83,6 +83,12 @@ type Serpent struct {
 	// Spridning är hur långt från mitten kammaren kan hamna, i rum åt varje
 	// håll: 0 är alltid mitt i tornet, 1 ett av rummen i mittens 3 × 3.
 	Spridning int `json:"spridning"`
+	// Plats är "fri" eller "mitten". Fri: inte i den yttre ringen, minst
+	// FriFranPort rum från varje port, och ingen vandrare mer än FriSkillnad
+	// rum närmare kammaren än snittet (docs/ormens-plats.md).
+	Plats       string `json:"plats"`
+	FriFranPort int    `json:"fri_fran_port"`
+	FriSkillnad int    `json:"fri_skillnad"`
 }
 
 // HitRules är träffchansen i strid (docs/bara-anfall.md): bas + per_steg ×

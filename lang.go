@@ -154,7 +154,7 @@ func overlay(o, t any, path string) (any, error) {
 // isCode svarar om fältet på path ser ut som text men är ett val som koden
 // läser, till exempel förvalet bland svårigheterna.
 func isCode(path string) bool {
-	if path == ".svarighet.standard" || strings.HasPrefix(path, ".spelkort.") {
+	if path == ".svarighet.standard" || path == ".ormen.plats" || strings.HasPrefix(path, ".spelkort.") {
 		return true
 	}
 	if strings.HasPrefix(path, ".handelser.lista[") && strings.HasSuffix(path, "].varelse") {
