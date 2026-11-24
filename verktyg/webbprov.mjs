@@ -188,7 +188,10 @@ async function tryck(s, loc, vad) {
       const med = top.closest("[id]");
       return med ? "#" + med.id : top.tagName.toLowerCase();
     }).catch(() => "");
-    const rad = `OBS ${s.namn}: ${vad} gick inte att trycka på` + (over ? `; ${over} låg över` : "");
+    // Varför trycket inte gick, med Playwrights ord, när inget låg över:
+    // till exempel att tangenten rörde sig eller låg utanför fönstret.
+    const varfor = over ? "" : ((String(e.message).match(/ - (element is [^\n]*|element was [^\n]*|[^\n]*outside[^\n]*)/g) || []).pop() || "").replace(/^ - /, "");
+    const rad = `OBS ${s.namn}: ${vad} gick inte att trycka på` + (over ? `; ${over} låg över` : varfor ? `; ${varfor}` : "");
     if (!rapport.includes(rad)) logga(rad);
     return false;
   }

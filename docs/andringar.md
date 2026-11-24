@@ -6,6 +6,15 @@ eller leder tornet.
 
 ## 2026-11-24
 
+### Tangenterna vid dörrarna går alltid att trycka på
+
+- På telefonen kunde en tangent vid en dörr hamna under översta raden
+  eller under det stora kortet, så att trycket inte gick fram. Nu hålls
+  tangenterna inom den del av kartan som syns, och flyttas in till kanten
+  åt samma håll när dörren ligger utanför. På telefonen ligger de över det
+  stora kortet.
+- Webbläsarprovet säger varför ett tryck inte gick, när inget låg över.
+
 ### Placering för alla, och vinken jämför
 
 - I slutet får alla en placering: först de som kom ut, efter skatt, sedan

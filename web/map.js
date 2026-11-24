@@ -233,7 +233,7 @@ const MapView = (() => {
     towerSize = size;
     target = null; // hoppa direkt till rätt utsnitt
     if (!iso && window.IsoKarta && IsoKarta.stods()) {
-      iso = IsoKarta.skapa(canvas, { utsnitt: () => viewAt(performance.now()), fokus: focusRoom, farger: PLAYER_COLORS, tackt: () => cover, tacktHoger: () => coverRight });
+      iso = IsoKarta.skapa(canvas, { utsnitt: () => viewAt(performance.now()), fokus: focusRoom, farger: PLAYER_COLORS, tackt: () => cover, tacktHoger: () => coverRight, fritt: freeBand });
       iso.visa(true);
     }
     if (iso) iso.storlek(size);
@@ -278,6 +278,18 @@ const MapView = (() => {
       const w = parseFloat(cs.width) || 190;
       coverRight = Math.min(0.3, ((parseFloat(cs.right) || 0) + w + 8) / box.clientWidth);
     }
+  }
+
+  // freeBand är den del av fönstrets höjd där kartan syns: under översta
+  // raden (som står kvar överst på telefonen) och ovanför knapparna längst
+  // ned när de står fast. Tangenterna vid dörrarna hålls där.
+  function freeBand() {
+    const top = document.getElementById("top");
+    const pad = document.getElementById("pad");
+    return {
+      topp: top ? top.getBoundingClientRect().bottom : 0,
+      botten: pad && pad.offsetHeight && getComputedStyle(pad).position === "fixed" ? pad.getBoundingClientRect().top : window.innerHeight,
+    };
   }
 
   function resize() {

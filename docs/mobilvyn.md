@@ -73,6 +73,13 @@ Kartan blir då helt fri.
 
 ### Steg 4: tryck på dörrarna
 
+Sedan 2026-11-24 hålls tangenterna inom den del av kartan som syns:
+en tangent som skulle hamna under översta raden, bakom knapparna eller
+utanför kanten flyttas in till kanten åt samma håll, och två som hamnar
+vid samma kant skjuts isär. På telefonen ligger de över det stora kortet,
+så att de alltid går att trycka på (`ritaTangenter` i
+`klient/src/karta.ts`, `freeBand` i `web/map.js`).
+
 Tangenterna vid dörrarna blir knappar: ett tryck på en tangent väljer
 det hållet, precis som piltangenten. Det gäller på alla skärmar, också
 med musen på datorn, eftersom det inte ändrar något som finns där i dag.

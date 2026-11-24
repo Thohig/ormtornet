@@ -621,6 +621,9 @@ body.touch .isotangenter span {
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
 }
+/* På telefonen ligger tangenterna över det stora kortet, så att de alltid
+   går att trycka på (kortet går undan av sig självt). */
+body.touch .isotangenter { z-index: 5; }
 .isotangenter span.vald { background: rgba(21, 23, 26, 0.9); box-shadow: 0 0 8px currentColor; }
 .isokompass[hidden], .isokant[hidden], .isokant > div[hidden], .isotangenter[hidden], .isotangenter span[hidden] { display: none; }
 

@@ -84,6 +84,10 @@ export interface Val {
   // Hur stor del av bredden, från höger, som spelkortet täcker när det
   // vänds upp (0–0,3). Kameran håller den delen fri på en bred skärm.
   tacktHoger?: () => number;
+  // Den del av fönstrets höjd som syns, i px från fönstrets överkant: under
+  // översta raden och ovanför knapparna på telefonen. Tangenterna vid
+  // dörrarna hålls där, så att de går att trycka på.
+  fritt?: () => { topp: number; botten: number };
 
   farger: string[]; // vandrarnas färger, en per plats
 }

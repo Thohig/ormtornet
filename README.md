@@ -1289,7 +1289,8 @@ telefonen med tangenterna vid dörrarna. Under vägen letar det efter
 - fel i skripten och i konsolen, och filer som inte går att hämta,
 - trasiga texter på sidan (samma regler som robotarna),
 - en sida som är bredare än skärmen,
-- tangenter vid dörrarna som ligger över varandra,
+- tangenter vid dörrarna som ligger över varandra, eller som inte går att
+  trycka på (med det som låg över, eller varför trycket inte gick),
 - ett minikort i loggen som inte öppnar kortvisningen, och att mellanslag
   spelar efter att kortvisningen har stängts,
 - en omladdning mitt i vandringen som inte berättar rummet igen,

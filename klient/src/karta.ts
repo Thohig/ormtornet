@@ -1596,6 +1596,44 @@ float puls() {
     const synlig = this.tangent.find((el) => !el.hidden);
     const storlek = synlig ? Math.max(synlig.offsetWidth, synlig.offsetHeight) + 4 : 0;
     const skala = storlek && narmast < storlek ? Math.max(0.5, narmast / storlek) : 1;
+    // En tangent utanför den del av kartan som syns (under översta raden,
+    // bakom knapparna eller utanför kanten) flyttas in till kanten, åt
+    // samma håll, så att den går att trycka på.
+    if (synlig && pos.length) {
+      const halv = (storlek * skala) / 2;
+      const ruta = this.canvas.getBoundingClientRect();
+      const fri = this.val.fritt ? this.val.fritt() : { topp: -Infinity, botten: Infinity };
+      const x0 = halv, x1 = this.bredd - halv;
+      const y0 = Math.max(0, fri.topp - ruta.top) + halv, y1 = Math.min(this.hojd, fri.botten - ruta.top) - halv;
+      const klamp = (v: number, lo: number, hi: number) => (hi > lo ? Math.min(hi, Math.max(lo, v)) : v);
+      const nya = pos.map(([tx, ty]) => [klamp(tx, x0, x1), klamp(ty, y0, y1)]);
+      // Två tangenter som flyttats till samma kant får inte hamna över
+      // varandra: den andra flyttas längs kanten.
+      const avstand = storlek * skala;
+      for (let a = 0; a < nya.length; a++) {
+        for (let b = 0; b < a; b++) {
+          if (Math.hypot(nya[a][0] - nya[b][0], nya[a][1] - nya[b][1]) >= avstand) continue;
+          const vidKantY = nya[a][1] !== pos[a][1];
+          if (vidKantY) {
+            const hit = nya[a][0] >= nya[b][0] ? 1 : -1;
+            nya[a][0] = klamp(nya[b][0] + hit * avstand, x0, x1);
+            if (Math.abs(nya[a][0] - nya[b][0]) < avstand) nya[a][0] = klamp(nya[b][0] - hit * avstand, x0, x1);
+          } else {
+            const hit = nya[a][1] >= nya[b][1] ? 1 : -1;
+            nya[a][1] = klamp(nya[b][1] + hit * avstand, y0, y1);
+            if (Math.abs(nya[a][1] - nya[b][1]) < avstand) nya[a][1] = klamp(nya[b][1] - hit * avstand, y0, y1);
+          }
+        }
+      }
+      let i = 0;
+      this.tangent.forEach((el) => {
+        if (el.hidden) return;
+        const [nx, ny] = nya[i];
+        const [tx, ty] = pos[i++];
+        if (nx !== tx) el.style.left = nx + "px";
+        if (ny !== ty) el.style.top = ny + "px";
+      });
+    }
     const flytt = skala < 1 ? `translate(-50%, -50%) scale(${skala.toFixed(2)})` : "";
     this.tangent.forEach((el) => {
       if (el.style.transform !== flytt) el.style.transform = flytt;
