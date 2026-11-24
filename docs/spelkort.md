@@ -183,7 +183,11 @@ Annorlunda än förslaget:
 - Ett kort som kommer mellan rundorna (varsel, namnets delar, att bli
   invigd) skickas genast som meddelandet `kort` och står i kö efter det
   kort som är uppe. Tornets stora kort (port, sol) kommer som `storkort`.
-  En ny runda ersätter genast spelkortet som står uppe.
+  En ny runda ersätter genast spelkortet som står uppe. Sedan 2026-11-24
+  läggs ett sådant kort på datorn i raden med rundans kort, om ett
+  spelkort står uppe.
+- På datorn står rundans tre viktigaste kort sedan 2026-11-24 i en rad,
+  lika stora och med sin text, i stället för ett kort med minikort.
 - Guld man hittar när man söker fick ett eget kort, och sökandets,
   dryckens och varelsernas texter förlorade sina siffror.
 - Facklan är bilden för en runda utan eget kort.

@@ -1,6 +1,7 @@
 # Slumpade händelser, ormen som flyttar sig och breven
 
-Förslag och bygge 2026-11-24. Allt är byggt.
+Förslag och bygge 2026-11-24, och nio händelser till samma kväll. Allt är
+byggt.
 
 ## Breven
 

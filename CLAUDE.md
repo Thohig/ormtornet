@@ -65,10 +65,13 @@ Så här skiljer vi på sakerna när användaren ger instruktioner:
   - **frågetecknet**: styrningen, som ligger bakom ? på kartan,
   - **spelkortet**: rundans kort, som vänds upp till höger på kartan
     med bild, rubrik och text för rundans viktigaste händelse, rundans
-    rader under (`summary.go`, `sam_` i `data/texter.json`) och resten
-    av rundans kort som **minikort** (`spelkort.go`, `showRoundCard` i
-    `web/app.js`, bilderna i `web/kort.js`, ordningen under `spelkort` i
-    `data/texter.json`). **Ormkortet** är spelkortet när du tar en näve,
+    rader under (`summary.go`, `sam_` i `data/texter.json`). På datorn
+    står rundans två nästa kort lika stora till vänster om det, i
+    **raden** (`renderRow` i `web/app.js`), och resten av rundans kort,
+    på telefonen alla utom det första, som **minikort** (`spelkort.go`,
+    `showRoundCard` i `web/app.js`, bilderna i `web/kort.js`, ordningen
+    under `spelkort` i `data/texter.json`). **Ormkortet** är spelkortet
+    när du tar en näve,
   - **det stora kortet** mitt på kartan (`#storkort`): **uppvaknandet**,
     kortet Ormen vaknar som alla ser (`showWakeCard` i `web/app.js`), en
     port som stängs, solen och att komma ut,
@@ -279,8 +282,9 @@ Skriv dit när ett steg är klart.
   Allt är byggt.
 - [docs/spelkort.md](docs/spelkort.md): spelkort för alla situationer,
   med spelkortet som ersätter rundans kort och ormkortet, och efteråt
-  vandringens största stunder, klasskorten och minikorten. Allt är byggt;
-  bilderna ritas i `web/kort.js` och syns i `verktyg/kortbilder.html`.
+  vandringens största stunder, klasskorten och minikorten, och raden med
+  rundans kort på datorn (2026-11-24). Allt är byggt; bilderna ritas i
+  `web/kort.js` och syns i `verktyg/kortbilder.html`.
 - [docs/balans-2026-11-22.md](docs/balans-2026-11-22.md): simuleringen av
   sex strategier, och hur klasserna, den grönaktiga skepnaden och
   AI-spelarna justerades efter den. Allt är byggt.
@@ -308,8 +312,10 @@ Skriv dit när ett steg är klart.
   följer dem. Allt är byggt.
 - [docs/handelser.md](docs/handelser.md): breven som pekar mot något,
   kammaren nära mitten (sedan ersatt av den fria platsen i
-  ormens-plats.md), ormen som flyttar sig när den vaknar och tornets sju
-  slumpade händelser med var sitt spelkort. Allt är byggt.
+  ormens-plats.md), ormen som flyttar sig när den vaknar och tornets
+  sexton slumpade händelser med var sitt spelkort (de nio sista
+  2026-11-24). Allt är byggt; avsnittet Inte byggt säger vad AI:n inte
+  känner till.
 - [docs/berattelsen.md](docs/berattelsen.md): slutkrönikan som en
   gemensam berättelse med höjdpunkter i stället för drag för drag, och
   raden om var och en med en titel. Allt är byggt.
