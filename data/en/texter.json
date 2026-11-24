@@ -563,6 +563,9 @@
     "synlighet_egen": [
       "The tower is large and dark. You see the other wanderers only when you stand in the same room, and your map shows only the rooms you have passed through yourself. Tell one another what you have seen."
     ],
+    "synlighet_kartritare": [
+      "The tower is large and dark. You see the other wanderers only when you stand in the same room, but your map fills in with every room that anyone finds. Tell the others what you see."
+    ],
     "ingen_vinnare": [
       "No one came out with any treasure. The tower won."
     ],

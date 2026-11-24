@@ -1331,7 +1331,11 @@ func (g *Game) startGame() {
 			}
 		}
 	}
-	g.logAll(g.data.Text("synlighet_egen"), "dim")
+	for _, p := range g.players {
+		if p != nil {
+			g.logTo(p, g.data.Text(g.visibilityKey(p)), "dim")
+		}
+	}
 	g.revealPorts()
 	g.drawCorners()
 	for _, p := range g.players {
@@ -1915,4 +1919,14 @@ func (g *Game) fitTower(p *Player) {
 // newRoomSound spelar ljudet för ett nytt rum, bara för den som gick in.
 func (g *Game) newRoomSound(p *Player) {
 	g.soundTo(p, "nyttrum")
+}
+
+// visibilityKey är texten om synligheten när vandringen börjar. Kartritaren
+// ser alla rum som någon har hittat, så hen får inte höra att kartan bara
+// visar de egna rummen.
+func (g *Game) visibilityKey(p *Player) string {
+	if g.is(p, "kartritare") {
+		return "synlighet_kartritare"
+	}
+	return "synlighet_egen"
 }

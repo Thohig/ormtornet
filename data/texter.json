@@ -600,6 +600,9 @@
     "synlighet_egen": [
       "Tornet är stort och mörkt. Du ser de andra vandrarna bara när ni står i samma rum, och din karta visar bara rum du själv har gått igenom. Berätta för varandra vad ni har sett."
     ],
+    "synlighet_kartritare": [
+      "Tornet är stort och mörkt. Du ser de andra vandrarna bara när ni står i samma rum, men din karta fylls i med varje rum som någon hittar. Berätta för de andra vad du ser."
+    ],
     "ingen_vinnare": [
       "Ingen kom ut med någon skatt. Tornet vann."
     ],

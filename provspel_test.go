@@ -278,3 +278,17 @@ func TestFreeAttackCalmWhenNotAttacking(t *testing.T) {
 		t.Fatalf("lugna %d, träffar %d", calm, hit)
 	}
 }
+
+// Kartritaren får inte höra att kartan bara visar de egna rummen.
+func TestCartographerIntro(t *testing.T) {
+	g, a, b := startTwo(t)
+	g.cfg.Classes = true
+	a.player.classID = "kartritare"
+	b.player.classID = "legoknekt"
+	if k := g.visibilityKey(a.player); k != "synlighet_kartritare" {
+		t.Fatalf("kartritaren: %s", k)
+	}
+	if k := g.visibilityKey(b.player); k != "synlighet_egen" {
+		t.Fatalf("legoknekten: %s", k)
+	}
+}
