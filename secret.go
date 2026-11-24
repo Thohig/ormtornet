@@ -327,4 +327,3 @@ func (g *Game) canWhisper(p *Player) bool {
 	}
 	return g.level >= max(1, g.data.Avslojande.ViskaFranNiva) && p.guessLevel < g.level
 }
-
