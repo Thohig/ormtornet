@@ -499,9 +499,10 @@ står de som "(dator)".
 
 - De ser bara det en människa skulle se: kända rum, varelser i kända rum och
   sin egen skatt. De ser inte okända rum, ormkorten eller andras skatt.
-- De utforskar mot mitten, tar skatt i kammaren så länge ormen sover djupt
-  nog, och går mot närmaste port när solen börjar bli låg, väskan är full
-  eller livet tryter.
+- De utforskar mot mitten tills de har hört ormen (andetagen genom väggen,
+  andetagen på nivå 2 eller någon som tar en näve) och sedan åt det hållet,
+  tar skatt i kammaren så länge ormen sover djupt nog, och går mot närmaste
+  port när solen börjar bli låg, väskan är full eller livet tryter.
 - Har de tappat vägen ut, till exempel efter ett fall genom golvet, letar
   de sig mot portarna i stället för mot mitten när de bär skatt eller
   solen börjar sjunka.
@@ -954,7 +955,7 @@ till nästa gång. Flaggorna nedan gäller före det sparade, men bara den gång
 
 - `-addr 0.0.0.0:8080` adress och port
 - `-data data` mapp med datafilerna
-- `-sol 0` antal rundor innan solen går ner; `0` är automatiskt efter tornets storlek (40 på 9 × 9, 50 på 11 × 11, 60 på 13 × 13). Inte en inställning på värdsidan; för den som provar
+- `-sol 0` antal rundor innan solen går ner; `0` är automatiskt efter tornets storlek (40 på 9 × 9, 50 på 11 × 11, 60 på 13 × 13), och två rundor till för varje rum som kammaren ligger längre från en port än mitten gör. Inte en inställning på värdsidan; för den som provar
 - `-turtid 0` längsta tid att välja drag per runda; `0` är automatiskt efter antalet människor (30–40 sekunder). Inte en inställning på värdsidan; för den som provar
 - `-min 2` minsta antal spelare för att börja, datorspelare inräknade (sätt `-min 1` för att prova ensam). Inte en inställning på värdsidan; för den som provar
 - `-ai 2` antal datorstyrda vandrare (0–7)

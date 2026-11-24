@@ -296,7 +296,8 @@ Skriv dit när ett steg är klart.
   ganska rättvis plats, näven som hörs, andetagen och AI-spelarna som
   följer dem. Allt är byggt.
 - [docs/handelser.md](docs/handelser.md): breven som pekar mot något,
-  kammaren nära mitten, ormen som flyttar sig när den vaknar och tornets
-  sju slumpade händelser med var sitt spelkort. Allt är byggt.
+  kammaren nära mitten (sedan ersatt av den fria platsen i
+  ormens-plats.md), ormen som flyttar sig när den vaknar och tornets sju
+  slumpade händelser med var sitt spelkort. Allt är byggt.
 - [docs/slumpade-namn.md](docs/slumpade-namn.md): tornet ger namnen och
   namnrutan är borta. Steg 1–2 är byggda; Nytt namn i lobbyn valdes bort.

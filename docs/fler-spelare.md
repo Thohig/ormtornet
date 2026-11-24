@@ -32,7 +32,8 @@ README beskriver klasserna under "Klasser". Besluten:
 ## Steg 2: tornets storlek i koden (byggt)
 
 Byggt som planerat. Storleken är `g.size`, portarna `g.corners()` och
-kammaren `g.center()`. "Automatisk" ger 9 × 9 tills steg 3. Provat med hela
+kammaren `g.center()` (sedan 2026-11-24 `g.chamber()`, se
+[ormens-plats.md](ormens-plats.md)). "Automatisk" ger 9 × 9 tills steg 3. Provat med hela
 vandringar av AI-spelare på 9, 11 och 13. Kartan fungerar på 13 × 13 på en
 dator, men på en telefon blir rummen mycket små: det löses i steg 3.
 

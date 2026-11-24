@@ -36,9 +36,8 @@ webbläsarprovet:
   spelkorten, går någon efter guldet ur sprickan eller skinnet, och är ett
   ras eller den döde som vandrar för hårt? Kommer de lagom ofta (chans
   0,12 per runda från runda 4)?
-- Kammaren nära mitten och ormen som flyttar sig: hittar man kammaren,
-  och märker man att den har flyttat? Går någon till den gamla för
-  guldet?
+- Ormen som flyttar sig när den vaknar: märker man att den har flyttat,
+  och går någon till den gamla kammaren för guldet?
 - Breven: läser man raden i marginalen, och går man åt det håll den
   pekar?
 - Ormens fria plats ([ormens-plats.md](ormens-plats.md)): hittar man

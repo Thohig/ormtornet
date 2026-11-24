@@ -12,15 +12,16 @@ närmaste varelse, och annars kammaren. Brevet om att inte gå till mitten
 
 ## Kammaren och ormen
 
-- **Nära mitten.** Kammaren ligger i ett av rummen i mittens 3 × 3,
+- **Nära mitten.** Kammaren låg i ett av rummen i mittens 3 × 3,
   slumpat efter vandringens frö (`spridning` i `ormen.json`, `placeChamber`
-  i `game.go`). Med spridning 0 ligger den mitt i tornet som förut;
-  testerna använder det.
-- **Ormen flyttar sig när den vaknar.** Den kryper till ett annat av rummen
-  i mittens 3 × 3 (`moveChamber` i `serpent.go`). Den gamla kammaren blir
-  ett vanligt rum med 15–45 guld löst på golvet åt den som kommer först
-  (`spillGold` i `guld.go`). Den nya kammaren får de dörrar rummet redan
-  hade, och en varelse som stod där flyr.
+  i `game.go`). Samma dag ersattes det av en fri men ganska rättvis plats
+  ([ormens-plats.md](ormens-plats.md)); mitten finns kvar som
+  `"plats": "mitten"`, och testerna använder det med spridning 0.
+- **Ormen flyttar sig när den vaknar.** Den kryper till en ny plats med
+  samma regler som när den placerades (`moveChamber` i `serpent.go`). Den
+  gamla kammaren blir ett vanligt rum med 15–45 guld löst på golvet åt
+  den som kommer först (`spillGold` i `guld.go`). Den nya kammaren får de
+  dörrar rummet redan hade, och en varelse som stod där flyr.
 
 ## Händelserna
 
