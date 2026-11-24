@@ -681,6 +681,13 @@
     "kort_guld_lost": [
       "Guld på golvet"
     ],
+    "nave_hors": [
+      "Åt {horn} klirrar mynt mot sten. Någon tar ur ormens hög.",
+      "Långt bort åt {horn} rasslar guld. Någon har hittat ormen."
+    ],
+    "nave_ser": [
+      "{namn} sträcker sig efter guldet i högen."
+    ],
     "ormen_flyttar": [
       "Väsandet drar sig bort genom väggarna. Ormen har krupit till en ny plats i tornets mage.",
       "Golvet rör sig länge, som när något stort byter läge. Ormen ligger inte där den låg."

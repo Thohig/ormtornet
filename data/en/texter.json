@@ -644,6 +644,13 @@
     "kort_guld_lost": [
       "Gold on the floor"
     ],
+    "nave_hors": [
+      "To the {horn} coins clink against stone. Someone is taking from the serpent's hoard.",
+      "Far off to the {horn} gold rattles. Someone has found the serpent."
+    ],
+    "nave_ser": [
+      "{namn} reaches for the gold in the hoard."
+    ],
     "ormen_flyttar": [
       "The hissing draws away through the walls. The serpent has crawled to a new place in the belly of the tower.",
       "The floor moves for a long time, as when something large shifts. The serpent no longer lies where it lay."

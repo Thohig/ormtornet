@@ -211,13 +211,38 @@ func (g *Game) take(p *Player) {
 	g.logTo(p, text, "syn")
 	// Guldet och vad vandraren bär står längst ner på spelkortet.
 	g.addCard(p, gameCard{Slag: "ormen", Bild: c.ID, Rubrik: c.Namn, Text: text})
-	if other := pick(c.Andra); other != "" {
-		if g.is(p, "tjuv") {
+	other := pick(c.Andra)
+	if g.is(p, "tjuv") {
+		if other != "" {
 			g.logTo(p, g.data.Text("klass_tjuv_tyst"), "dim")
-		} else {
-			g.hearOthers(p, other, "info")
-			g.soundAll("ormen_ror")
 		}
+		return
+	}
+	g.heardTaking(p, other)
+	if other != "" {
+		g.soundAll("ormen_ror")
+	}
+}
+
+// heardTaking: när någon tar en näve hör alla andra i tornet åt vilket håll
+// det kom ifrån, och de i kammaren ser vem det var (docs/ormens-plats.md).
+// Rör sig ormen står det först. Den som är först i kammaren blir känd.
+func (g *Game) heardTaking(p *Player, other string) {
+	for _, o := range g.players {
+		if o == nil || o == p || o.Status != statusIn {
+			continue
+		}
+		var text string
+		switch {
+		case o.Cellar == 0 && o.X == p.X && o.Y == p.Y:
+			text = g.data.Text("nave_ser", "namn", p.Name)
+		default:
+			text = g.data.Text("nave_hors", "horn", g.hornToward(o.X, o.Y, p.X, p.Y))
+		}
+		if other != "" {
+			text = other + " " + text
+		}
+		g.hearTo(o, text, "info")
 	}
 }
 

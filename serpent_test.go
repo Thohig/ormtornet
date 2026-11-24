@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"strings"
 	"testing"
 )
 
@@ -129,5 +130,28 @@ func TestSerpentMovesWhenWaking(t *testing.T) {
 	g.pickUpGold(p)
 	if p.Treasure <= 0 || g.rooms[oy][ox].loose != 0 {
 		t.Fatalf("guldet togs inte: %d", p.Treasure)
+	}
+}
+
+// När någon tar en näve hör de andra åt vilket håll; tjuvens näve hörs
+// inte.
+func TestHandfulIsHeard(t *testing.T) {
+	g, a, b := startTwo(t)
+	p, o := a.player, b.player
+	cx, cy := g.chamber()
+	g.reveal(cx, cy)
+	p.X, p.Y = cx, cy
+	putInRoom(g, o, cx, 0)
+	g.deck = []string{"sover", "sover"}
+	logs(b) // töm det Bo redan har fått
+	g.take(p)
+	want := g.hornToward(o.X, o.Y, cx, cy)
+	got := logs(b)
+	heard := false
+	for _, l := range got {
+		heard = heard || strings.Contains(l, want)
+	}
+	if !heard {
+		t.Fatalf("Bo hörde inte näven åt %s: %q", want, got)
 	}
 }

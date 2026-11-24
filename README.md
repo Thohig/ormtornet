@@ -593,7 +593,9 @@ mitten. Där kan du ta skatt (S) en gång per runda. Varje gång
 dras ett ormkort ur en lek:
 
 - **Sover** eller **rör sig**: du får 15–45 guld och kortet tas bort ur leken.
-  Rör sig ormen märker alla i tornet det.
+  Alla andra i tornet hör åt vilket håll någon tog en näve, och de i
+  kammaren ser vem (utom när Tjuven tar). Rör sig ormen märker alla det
+  också.
 - **Vaknar**: kortet blir kvar i leken. Alla i kammaren förlorar hälften av
   sin skatt och 2 liv och kastas ut genom en slumpad öppning. Väsandet hörs
   i hela tornet.
