@@ -32,11 +32,11 @@ i stället för tre:
   rader från i dag (`sam_` i `data/texter.json`): "−2 liv. Du har 4
   kvar.", "+31 guld. Du bär 140." Det farliga står först, som i dag.
 - **Fler saker samma runda** blir minikort i en rad längst ner på kortet.
-  Sedan 2026-11-24 ligger de två nästa på datorn i en solfjäder snett
-  bakom kortet, med bild och rubrik men utan text, och ett klick lägger
-  ett av dem överst (`renderFan` i `web/app.js`). Ett varsel eller
+  Sedan 2026-11-24 står de två nästa på datorn i en rad till vänster om
+  kortet, lika stora och med sin text, och raden står 4 sekunder längre
+  för varje kort till (`renderRow` i `web/app.js`). Ett varsel eller
   viskningen som kommer medan kortet står uppe läggs också där. Fler än
-  tre kort, och alla utom det översta på telefonen, står som minikort.
+  tre kort, och alla utom det första på telefonen, står som minikort.
   Ordningen är döden, ormen, varelsen, fällan, föremålet och sist resten,
   och den står i `data/`.
 - **Kortet glider undan** när du väljer nästa drag, efter en stund eller

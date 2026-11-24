@@ -1327,18 +1327,22 @@ function renderNow(me) {
 // bild. Kortet glider undan när du väljer nästa drag, efter en stund eller
 // vid ett klick. Ett stort kort (stor: att komma ut, en port som stängs,
 // solen) vänds upp mitt på kartan i stället.
-// På datorn ligger rundans kort i en solfjäder: det viktigaste överst med
-// text, och högst FAN till snett bakom med bild och rubrik. Ett klick på
-// ett kort bakom lägger det överst. Fler kort, och alla utom det översta
-// på telefonen, står som minikort på kortet.
+// På datorn står rundans kort i en rad, lika stora och alla med sin text:
+// det viktigaste längst till höger med rundans rader, och högst ROW till
+// till vänster om det. De vänds upp ett i taget och står längre ju fler de
+// är. Fler kort, och alla utom det första på telefonen, står som minikort
+// på kortet. Ett klick på något av korten låter raden glida undan.
 // Ett kort som kommer medan ett annat står uppe väntar i kön: ett
 // spelkort på de stora korten, och ett stort kort på ett annat stort. Ett
 // stort kort väntar inte på spelkortet. Ett ensamt kort mellan rundorna
-// (ett varsel, viskningen) läggs i solfjädern om spelkortet står uppe.
+// (ett varsel, viskningen) läggs i raden om spelkortet står uppe.
 const CARD_MS = 8000;
-const FAN = 2;
-const fanMode = () => !touch && !(window.matchMedia && matchMedia("(max-width: 700px)").matches);
+const CARD_MORE_MS = 4000; // för varje kort till i raden
+const ROW = 2;
+const rowMode = () => !touch && !(window.matchMedia && matchMedia("(max-width: 700px)").matches);
 let shownMsg = null;
+// cardTime är hur länge raden står: längre ju fler kort den har.
+const cardTime = (cards) => CARD_MS + CARD_MORE_MS * (rowMode() ? Math.min(ROW, Math.max(0, cards.length - 1)) : 0);
 const BIG_MS = 5000;
 let cardTimer = null;
 let bigTimer = null;
@@ -1369,27 +1373,27 @@ function showRoundCard(msg, now) {
       if (q.round < msg.round && !(qMain && qMain.stor)) cardQueue.splice(i, 1);
     }
     cardQueue.unshift(msg);
-  } else if (joinFan(msg)) {
+  } else if (joinRow(msg)) {
     return;
   } else {
     cardQueue.push(msg);
   }
   nextCard();
 }
-// joinFan lägger ett ensamt kort i solfjädern på spelkortet som står uppe.
-function joinFan(msg) {
+// joinRow lägger ett ensamt kort i raden med spelkortet som står uppe.
+function joinRow(msg) {
   const cards = msg.kort || [];
   const el = $("spelkort");
-  if (!fanMode() || !shownMsg || !busy(el) || cardQueue.length) return false;
+  if (!rowMode() || !shownMsg || !busy(el) || cardQueue.length) return false;
   if (cards.length !== 1 || cards[0].stor || (msg.lines || []).length) return false;
   const from = shownMsg.kort.length;
   shownMsg.kort.push(cards[0]);
-  renderFan(el, el.querySelector(":scope > .ok-inner > .ok-front"), shownMsg.kort, from);
+  renderRow(el, el.querySelector(":scope > .ok-inner > .ok-front"), shownMsg.kort, from);
   clearTimeout(cardTimer);
-  cardTimer = setTimeout(hideRoundCard, CARD_MS);
+  cardTimer = setTimeout(hideRoundCard, cardTime(shownMsg.kort));
   return true;
 }
-function renderRoundCard(msg, still) {
+function renderRoundCard(msg) {
   const lines = msg.lines || [];
   const cards = msg.kort || [];
   const main = cards[0];
@@ -1419,7 +1423,7 @@ function renderRoundCard(msg, still) {
     });
     front.appendChild(rows);
   }
-  renderFan(el, front, big ? [] : cards, 1, still, big ? cards.slice(1) : null);
+  renderRow(el, front, big ? [] : cards, 1, big ? cards.slice(1) : null);
   if (big) {
     clearTimeout(bigTimer);
     bigTimer = setTimeout(hideBigCard, BIG_MS);
@@ -1429,27 +1433,24 @@ function renderRoundCard(msg, still) {
   // utan drag. Ett kort som har väntat i kön följer draget som är valt.
   cardAction = msg.ny ? "" : (state && state.action) || "";
   clearTimeout(cardTimer);
-  cardTimer = setTimeout(hideRoundCard, CARD_MS);
+  cardTimer = setTimeout(hideRoundCard, cardTime(cards));
 }
-// renderFan lägger korten från och med from bakom det översta, och de som
-// inte får plats som minikort på framsidan. still: korten bakom vänds inte
-// upp igen. mini: korten som ska stå som minikort, för det stora kortet.
-function renderFan(el, front, cards, from, still, mini) {
-  const behind = fanMode() ? cards.slice(1, 1 + FAN) : [];
-  behind.forEach((c, i) => {
+// renderRow ställer korten från och med from i raden till vänster om det
+// första, lika stora och med sin text, och de som inte får plats som
+// minikort på framsidan. mini: korten som ska stå som minikort, för det
+// stora kortet.
+function renderRow(el, front, cards, from, mini) {
+  const row = rowMode() ? cards.slice(1, 1 + ROW) : [];
+  row.forEach((c, i) => {
     if (i + 1 < from) return;
     const b = document.createElement("div");
-    b.className = "okort ok-bakom ok-bakom" + (i + 1);
-    b.title = c.rubrik;
+    b.className = "okort ok-rad";
+    b.style.setProperty("--plats", i + 1);
     el.appendChild(b);
-    buildCard(b, { ...c, text: "" }, null, still);
-    b.querySelector(".ok-inner").style.transitionDelay = 0.25 + 0.2 * (i + 1 - from) + "s";
-    b.addEventListener("click", (e) => {
-      e.stopPropagation();
-      raiseCard(c);
-    });
+    buildCard(b, c);
+    b.querySelector(".ok-inner").style.transitionDelay = 0.35 * (i + 2 - from) + "s";
   });
-  const rest = mini || cards.slice(1 + behind.length);
+  const rest = mini || cards.slice(1 + row.length);
   const old = front && front.querySelector(".ok-fler");
   if (old) old.remove();
   if (!front || !rest.length) return;
@@ -1462,16 +1463,6 @@ function renderFan(el, front, cards, from, still, mini) {
   });
   more.setAttribute("aria-label", rest.map((c) => c.rubrik).join(", "));
   front.appendChild(more);
-}
-// raiseCard lägger ett kort ur solfjädern överst, med sin text, och det
-// som låg överst på dess plats. Kortet står sedan en ny stund.
-function raiseCard(c) {
-  const cards = shownMsg && shownMsg.kort;
-  const i = cards ? cards.indexOf(c) : -1;
-  if (i <= 0) return;
-  [cards[0], cards[i]] = [cards[i], cards[0]];
-  shownMsg.ny = false;
-  renderRoundCard(shownMsg, true);
 }
 // fadeOut låter kortet glida undan och visar sedan nästa i kön.
 function fadeOut(el) {
@@ -1540,9 +1531,8 @@ function cardRow(list) {
 
 // buildCard bygger ett kort med baksidan och framsidan, så att det kan
 // vändas: rubriken, bilden och texten, och extra längst ner. Den svarar
-// med framsidan, så att den som anropar kan lägga till mer. still: kortet
-// står redan uppvänt och vänds inte.
-function buildCard(el, c, extra, still) {
+// med framsidan, så att den som anropar kan lägga till mer.
+function buildCard(el, c, extra) {
   el.innerHTML = "";
   const inner = document.createElement("div");
   inner.className = "ok-inner";
@@ -1567,11 +1557,7 @@ function buildCard(el, c, extra, still) {
   inner.append(back, front);
   el.appendChild(inner);
   el.hidden = false;
-  el.classList.remove("leaving", "vand", "igen", "skaka", "still");
-  if (still) {
-    el.classList.add("still", "vand"); // redan uppvänt
-    return front;
-  }
+  el.classList.remove("leaving", "vand", "igen", "skaka");
   void el.offsetWidth; // börja med baksidan upp
   el.classList.add("vand");
   if (c.bild === "vaknar") el.classList.add("skaka");

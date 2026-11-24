@@ -561,10 +561,10 @@ Det som händer dig under en runda blir ett kort ur samma lek som
 ormkorten (`spelkort.go`, bilderna i `web/kort.js`). Efter rundan vänds
 det viktigaste upp till höger på kartan med en bild, en rubrik och
 händelsens text, och under den står rundans rader. Händer flera saker
-samma runda ligger på datorn de två nästa i en solfjäder snett bakom
-kortet, med bild och rubrik; ett klick på ett av dem lägger det överst
-med sin text. Fler kort än tre, och på telefonen alla utom det översta,
-står som små kort längst ner på kortet. Ordningen,
+samma runda står på datorn de två nästa till vänster om det i en rad,
+lika stora och med sin text, och raden står längre ju fler kort den har.
+Fler kort än tre, och på telefonen alla utom det första, står som små
+kort längst ner på kortet. Ordningen,
 det viktigaste först, står under `spelkort` i `data/texter.json`. En
 runda utan eget kort har Runda N som rubrik och en fackla som bild.
 
@@ -590,7 +590,7 @@ och varelser har sin korta beskrivning som rubrik, aldrig namnet.
   och ett **brev** ett kort med brevets text.
 - **Varslen**, **namnets delar** och att du blir **invigd** kommer mellan
   rundorna och visas genast som ett eget kort (meddelandet `kort`). Står
-  ett spelkort redan uppe läggs det nya i solfjädern på datorn; annars
+  ett spelkort redan uppe läggs det nya i raden på datorn; annars
   väntar det tills det första har gått undan.
 - **Stora kort** mitt på kartan: uppvaknandet, en port som stängs och
   solen när tre rundor är kvar och när den går ner visas för alla som är

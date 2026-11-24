@@ -28,16 +28,18 @@ eller leder tornet.
 - Händelserna kommer lika ofta som förut, så var och en av de gamla
   kommer mer sällan.
 
-### Rundans kort i en solfjäder
+### Rundans kort i en rad
 
-- Händer flera saker samma runda ligger på datorn rundans två nästa kort
-  snett bakom spelkortet, med bild och rubrik. Förut stod de bara som
-  små minikort längst ner på kortet.
-- Ett klick på ett kort bakom lägger det överst med sin text, och kortet
-  står sedan en ny stund. Ett klick på det översta låter det glida undan
-  som förut.
+- Händer flera saker samma runda står på datorn rundans tre viktigaste
+  kort i en rad, lika stora och alla med sin text. Det viktigaste står
+  längst till höger med rundans rader. Förut stod de andra bara som små
+  minikort längst ner på kortet. (Först byggdes en solfjäder med mindre
+  kort bakom, men korten ska vara lika stora.)
+- Korten vänds upp ett i taget och står längre ju fler de är: 8 sekunder
+  och 4 till för varje kort till. Ett klick på något av dem låter raden
+  glida undan.
 - Ett varsel eller viskningen som kommer medan spelkortet står uppe läggs
-  i solfjädern i stället för att vänta.
+  i raden i stället för att vänta.
 - Fler än tre kort står som minikort, och på telefonen är allt som förut.
 
 ### En ändring i slutet ger ett nytt torn
