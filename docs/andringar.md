@@ -6,6 +6,15 @@ eller leder tornet.
 
 ## 2026-11-24
 
+### Figurerna ser målade ut
+
+- Vandrarna, varelserna, socklarna och ormen har fått en tunn mörk
+  kontur, som målade spelfigurer. Det som vetter uppåt fångar ljuset,
+  det som vetter nedåt är mörkare, och kanterna som vänder sig bort
+  mörknar (`konturera` och `malad` i `klient/src/modeller.ts`).
+- Konturen ritar varje del en gång till. När kartan går trögt slår den
+  av konturen tillsammans med skuggorna.
+
 ### Ormen ligger på guldet
 
 - I kammaren ligger nu ormen själv hoprullad uppe på guldhögen, med

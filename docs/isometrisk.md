@@ -30,6 +30,12 @@ Vandrarna och varelserna blir enkla 3D-modeller med ljus och skuggor.
   `klient/src/modeller.ts`), och alla har ögon och en mantel med kappa i
   vandrarens färg (2026-11-24). De vänder sig och går mellan rummen i
   stället för att hoppa.
+- Figurerna, socklarna och ormen ser målade ut (2026-11-24): en tunn
+  mörk kontur, ett mörkt skal bakom varje del (`konturera` i
+  `klient/src/modeller.ts`), och en yta där det som vetter uppåt fångar
+  ljuset, det som vetter nedåt är mörkare och kanterna mörknar
+  (`malad`). Konturen slås av med skuggorna när kartan går trögt
+  (`sankKvalitet` i `klient/src/karta.ts`).
 - När de har gått klart gör figurerna det de gjorde under rundan:
   utfall, parering, ett kliv åt sidan, på knä för att ta eller söka,
   huvudet bakåt för att dricka, och ett ryck med en röd ring när de blir

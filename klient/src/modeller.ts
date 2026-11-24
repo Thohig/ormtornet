@@ -34,9 +34,61 @@ function lam(farg: THREE.ColorRepresentation, extra: { emissive?: number; opacit
       opacity: extra.opacity ?? 1,
       side: extra.opacity !== undefined ? THREE.DoubleSide : THREE.FrontSide,
     });
+    malad(m);
     material.set(k, m);
   }
   return m;
+}
+
+// malad ger materialet ytan på en målad spelfigur: kanterna som vänder
+// sig bort från kameran mörknar, som den tunna mörka linjen kring en målad
+// figur; det som vetter nedåt får en mörkare ton, som färgen som har runnit
+// ner i skrevorna; och det som vetter uppåt fångar ljuset, som när man
+// drar en torr pensel över topparna. Allt räknas per bildpunkt i samma
+// shader, så det kostar inget extra att rita.
+function malad(m: THREE.Material): void {
+  m.onBeforeCompile = (s) => {
+    s.fragmentShader = s.fragmentShader.replace(
+      "#include <opaque_fragment>",
+      `{
+        vec3 mV = isOrthographic ? vec3(0.0, 0.0, 1.0) : normalize(vViewPosition);
+        float mKant = clamp(dot(normal, mV), 0.0, 1.0);
+        float mUpp = dot(normal, normalize((viewMatrix * vec4(0.0, 1.0, 0.0, 0.0)).xyz));
+        outgoingLight *= mix(0.3, 1.0, smoothstep(0.12, 0.6, mKant));
+        outgoingLight *= 1.0 - 0.4 * clamp(-mUpp, 0.0, 1.0);
+        outgoingLight += diffuseColor.rgb * 0.28 * smoothstep(0.45, 0.9, mUpp);
+      }
+      #include <opaque_fragment>`,
+    );
+  };
+  m.customProgramCacheKey = () => "malad";
+}
+
+// Konturen: varje målad del får ett mörkt skal som bara syns bakifrån och
+// sticker ut en aning, så att det blir en tunn mörk linje kring figuren.
+// Alla skal delar ett material, så att kartan kan slå av dem på en gång
+// när den behöver gå lättare (konturer).
+const KONTUR = new THREE.MeshBasicMaterial({ color: 0x16110c, side: THREE.BackSide });
+KONTUR.onBeforeCompile = (s) => {
+  s.vertexShader = s.vertexShader.replace("#include <begin_vertex>", "#include <begin_vertex>\n\ttransformed += normalize(normal) * 0.016;");
+};
+
+// konturer slår på eller av konturen kring alla figurer.
+export function konturer(pa: boolean): void {
+  KONTUR.visible = pa;
+}
+
+// konturera ger varje målad, ogenomskinlig del av o en kontur.
+function konturera(o: THREE.Object3D): void {
+  const delar: THREE.Mesh[] = [];
+  o.traverse((m) => {
+    if (m instanceof THREE.Mesh && m.material instanceof THREE.MeshLambertMaterial && !m.material.transparent) delar.push(m);
+  });
+  delar.forEach((m) => {
+    const k = new THREE.Mesh(m.geometry, KONTUR);
+    k.userData.kontur = true;
+    m.add(k);
+  });
 }
 
 function lysande(farg: THREE.ColorRepresentation): THREE.Material {
@@ -100,6 +152,7 @@ export function miniatyr(f: Figur, kant: THREE.ColorRepresentation, storlek = 1)
   modell.position.y = SOCKEL;
   g.add(fot, modell);
   g.userData.modell = modell;
+  konturera(g);
   return { grupp: g, steg: f.steg, dor: f.dor };
 }
 
@@ -769,6 +822,8 @@ export function orm(): Orm {
     oppna.push(oga);
     huvud.add(lock, oga);
   });
+
+  konturera(g);
 
   return {
     grupp: g,

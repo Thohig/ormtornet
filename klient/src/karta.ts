@@ -82,7 +82,8 @@ const VAKEN_MS = 3500;
 
 // Telefoner och svaga enheter: på en pekskärm ritas högst 30 bilder i
 // sekunden, för batteriets skull. Går det för trögt ändå slår kartan av
-// skuggorna och ritar med lägre upplösning (sankKvalitet). Adressen kan
+// skuggorna och figurernas kontur och ritar med lägre upplösning
+// (sankKvalitet). Adressen kan
 // tvinga fram det med ?kvalitet=lag, för att prova.
 const PEK = typeof matchMedia === "function" && matchMedia("(pointer: coarse)").matches;
 const MAX_BILDER = PEK ? 30 : 60;
@@ -1431,6 +1432,7 @@ float puls() {
     if (this.lag) return;
     this.lag = true;
     this.sol.castShadow = false;
+    M.konturer(false);
     this.renderer.setPixelRatio(1);
     this.anpassa();
     console.info("Kartan snett ovanifrån ritas med lägre kvalitet: inga skuggor och lägre upplösning.");
