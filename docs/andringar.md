@@ -13,8 +13,38 @@ eller leder tornet.
   fjällrustningen skymde figuren helt under striden. Varelsen står nu
   snett framför rummets mitt (`VARELSE` i `klient/src/karta.ts`), där
   ingen vandrare står rakt bakom den.
-- Det övriga från provspelet står under Småsaker från provspelet i
-  `docs/att-gora.md`.
+
+### Det övriga från provspelet
+
+- **Solens varningar i rätt ordning.** Med en kort sol (`-sol` under 8)
+  kom "Solen nuddar nästan horisonten" före "halva vägen". Varningarna om
+  halva och en fjärdedel hoppas nu över när de skulle komma vid tre rundor
+  eller färre (`sunWarning` i `game.go`, `TestShortSunWarningsInOrder`).
+- **Striden.** Varelsen "försöker parera" och "försöker vika undan" i
+  stället för "parerar" och "gör en undanmanöver", så att det inte låter
+  som att den lyckades när man sedan träffar den (`val` i
+  `data/monster.json`, på engelska "an attempt to parry/dodge"). Dricker
+  man eller flyr medan varelsen inte anfaller står det "Du är inte beredd,
+  men … låter dig vara" och "… följer inte efter" (`inte_beredd_lugn` och
+  `fly_lugn`, `TestFreeAttackCalmWhenNotAttacking`).
+- **Din vandring** säger "Du satt fast" om en runda i en grop eller bakom
+  ett galler, i stället för "Du stod kvar" (`sam_tyst_fast`,
+  `TestJourneyStuckRound`).
+- **Kartritaren** får höra att kartan fylls i med varje rum som någon
+  hittar, i stället för att den bara visar de egna rummen
+  (`synlighet_kartritare`, `TestCartographerIntro`).
+- **Ett känt, tomt rum** ger raden "Du känner igen rummet: …" med rummets
+  korta beskrivning, så att loggen säger att draget blev av och var man
+  står (`har_igen` i `here.go`).
+- **Tecknen på kartan** har en gemensam mörk botten, så att facklor och
+  murar inte lyser igenom. Förklaringen till namnets delar säger att de
+  står i den ordning man hittade dem, inte i namnets ordning.
+- **Spelkortet** täcker inte längre den egna figuren på en bred skärm:
+  kartan håller kortets plats till höger fri, som den gör för loggen till
+  vänster (`tacktHoger` i `klient/src/karta.ts`, `coverRight` i
+  `web/map.js`). På en skärm smalare än 760 punkter är det som förut.
+- Fjällrustningen mot Kartritaren är prövad i simuleringen och lämnad som
+  den är; se `docs/att-gora.md`.
 
 ## 2026-11-23
 

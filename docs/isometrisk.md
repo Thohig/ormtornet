@@ -137,6 +137,9 @@ längre.
   den till kartan (`tackt` i `Val`, `klient/src/typer.ts`). Kameran ritar
   då kartan bredare och flyttar den åt höger, så att utsnittet står i den
   del som syns, och pilarna vid kanten står vid den delens kant.
+  På en bred skärm (minst 760 punkter) mäts också spelkortets plats till
+  höger (`tacktHoger`, 2026-11-24), så att utsnittet står mellan loggen
+  och kortet och kortet inte täcker den egna figuren.
 - Zoomen glider (2026-11-22): zoomen i `web/map.js` är ett tal från 0
   (Nära) till 3 (Allt). Hjulet och två fingrar ändrar det gradvis med en
   kort glidning; knapparna och Z går hela nivåer med den långa zoomen.

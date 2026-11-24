@@ -204,11 +204,11 @@ Sett 2026-11-21 men inte ändrat:
   klockan har skyndat på solen.
 Sett 2026-11-22 men inte ändrat:
 
-- Introt säger "din karta visar bara rum du själv har gått igenom" också
-  till Kartritaren, som ser alla rum som någon har hittat.
-- Har förra rundan ingenting i loggen (ett känt, tomt rum) börjar en stöt
-  i muren ändå en ny runda, och står där före rumsblocket när rundan
-  sedan händer.
+- Har förra rundan ingenting i loggen (man stod kvar i ett tomt rum)
+  börjar en stöt i muren ändå en ny runda, och står där före rumsblocket
+  när rundan sedan händer. Sedan 2026-11-24 ger ett känt, tomt rum som man
+  går in i raden "Du känner igen rummet", så det händer bara när man stod
+  kvar.
 - Lådan med loggen börjar med den senaste rundan över hela höjden, så den
   ser tom ut under den första rundan.
 - Spelkortet täcker rummet på telefonen en stund efter varje runda.
@@ -232,25 +232,14 @@ Sett efter provspelet 2026-11-22, med förslag men inte ändrat:
 - **Kompassen kan peka mot en stängd port.** Den räknar inte med att
   portarna sluter sig på nivå 4 (`compass` i `items.go`).
 
-Sett i provspelet 2026-11-24 men inte ändrat:
+Sett i provspelet 2026-11-24 och prövat:
 
-- Med en kort sol (`-sol` under 8) kommer "Solen nuddar nästan
-  horisonten" före "halva vägen", eftersom gränserna i `sunWarning`
-  hamnar under tre rundor. Förslag: varna för halva och en fjärdedel bara
-  när gränsen är över 3.
-- "Det bleka mångbenta gör en undanmanöver. Du träffar …" låter
-  motsägelsefullt, fast anfall slår undanmanöver. Förslag: "försöker vika
-  undan" (`val` i `data/monster.json`). Samma sak när man dricker: "Du är
-  inte beredd. Gestalten gör en undanmanöver."
-- Spelkortet täcker också på datorn den egna figuren när man står i
-  rummets östra del.
-- Tecknen uppe till höger har ingen bakgrund, så facklorna på kartan syns
-  igenom dem.
-- Namnets delar står bland tecknen i den ordning man hittade dem ("ROK
-  HA", fast HA sitter vid huvudet). Förklaringen kan säga det, så att
-  ingen viskar i fel ordning.
-- Din vandring säger "Du stod kvar" om rundan man satt fast i en grop.
-- Fjällrustningen tog 4 liv på två rundor från Kartritaren på Normal.
+- Fjällrustningen tog 4 liv på två rundor från Kartritaren på Normal, när
+  hen anföll den. Den parerar oftast, och Kartritarens undanmanöver
+  lyckas aldrig, så parering är det som hjälper. Simuleringen (3 000
+  vandringar) visar att Kartritaren ändå dör minst av klasserna (10 %),
+  så siffrorna är oförändrade. Prova med människor om de läser "håller en
+  sköld framför sig och väntar".
 
 Från förut:
 
