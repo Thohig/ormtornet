@@ -6,8 +6,8 @@
 
     "val": {
       "anfall": "anfaller",
-      "parera": "parerar",
-      "undan": "gör en undanmanöver"
+      "parera": "försöker parera",
+      "undan": "försöker vika undan"
     },
 
     "_om_modell": "modell är varelsen på kartan snett ovanifrån: farg är kroppens färg som #rrggbb och storlek hur stor den är (0,5–2, 1 är vanlig storlek). Formen står i klient/src/modeller.ts, och en varelse utan form där visas med sitt tecken.",
@@ -161,8 +161,14 @@
       "inte_beredd": [
         "Du är inte beredd. {Monster} {dess_val}."
       ],
+      "inte_beredd_lugn": [
+        "Du är inte beredd, men {monster} låter dig vara."
+      ],
       "fly": [
         "Du vänder och flyr. {Monster} {dess_val}."
+      ],
+      "fly_lugn": [
+        "Du vänder och flyr. {Monster} följer inte efter."
       ],
       "seger": [
         "Du har besegrat {monster} och tar {guld} guld."

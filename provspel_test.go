@@ -236,3 +236,45 @@ func TestDarkHidesDoors(t *testing.T) {
 		t.Fatal("porten syns inte i ljuset")
 	}
 }
+
+// Dricker man eller flyr medan en varelse inte anfaller står det inte att
+// den "försöker vika undan" när ingen slår mot den, och man förlorar inget.
+func TestFreeAttackCalmWhenNotAttacking(t *testing.T) {
+	g, a, _ := startTwo(t)
+	p := a.player
+	typ := g.data.Monster.Typer[0]
+	calm, hit := 0, 0
+	for i := 0; i < 60; i++ {
+		for len(a.send) > 0 {
+			<-a.send
+		}
+		m := &Monster{ID: 90 + i, Type: typ.ID, X: p.X, Y: p.Y, HP: 2}
+		p.HP = 50
+		key := "inte_beredd"
+		if i%2 == 1 {
+			key = "fly"
+		}
+		g.freeAttack(p, m, key)
+		for len(a.send) > 0 {
+			var msg logMsg
+			if json.Unmarshal(<-a.send, &msg) != nil || msg.T != "log" {
+				continue
+			}
+			if strings.Contains(msg.Text, "försöker") {
+				t.Fatalf("fritt drag: %q", msg.Text)
+			}
+			if strings.Contains(msg.Text, "låter dig vara") || strings.Contains(msg.Text, "följer inte efter") {
+				calm++
+				if p.HP != 50 {
+					t.Fatalf("skadad fast varelsen inte anföll: %d", p.HP)
+				}
+			}
+		}
+		if p.HP < 50 {
+			hit++
+		}
+	}
+	if calm == 0 || hit == 0 {
+		t.Fatalf("lugna %d, träffar %d", calm, hit)
+	}
+}

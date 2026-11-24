@@ -295,6 +295,12 @@ func choiceSound(a string) string {
 func (g *Game) freeAttack(p *Player, m *Monster, key string) {
 	t := g.data.monsterType(m.Type)
 	mc := g.monsterChoiceVs(m, p)
+	// Anfaller varelsen inte står det att den låter en vara, inte att den
+	// "försöker vika undan" när ingen slår mot den.
+	if mc != actAttack && len(g.data.Monster.Texter[key+"_lugn"]) > 0 {
+		g.logTo(p, g.data.MonsterText(key+"_lugn", g.monsterVars(m, p)...), "dim")
+		return
+	}
 	g.logTo(p, g.data.MonsterText(key, g.monsterVars(m, p, "dess_val", g.choiceWord(mc))...), "varn")
 	if mc == actAttack {
 		text := g.data.MonsterText("monster_traffar", g.monsterVars(m, p, "skada", strconv.Itoa(t.Skada))...)

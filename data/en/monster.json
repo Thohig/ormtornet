@@ -3,8 +3,8 @@
   "monster": {
     "val": {
       "anfall": "an attack",
-      "parera": "a parry",
-      "undan": "an evasive move"
+      "parera": "an attempt to parry",
+      "undan": "an attempt to dodge"
     },
 
     "typer": [
@@ -112,8 +112,14 @@
       "inte_beredd": [
         "You are not ready. {Monster} answers with {dess_val}."
       ],
+      "inte_beredd_lugn": [
+        "You are not ready, but {monster} leaves you be."
+      ],
       "fly": [
         "You turn and flee. {Monster} answers with {dess_val}."
+      ],
+      "fly_lugn": [
+        "You turn and flee. {Monster} does not follow."
       ],
       "seger": [
         "You have defeated {monster} and take {guld} gold."
