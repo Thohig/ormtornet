@@ -307,6 +307,30 @@ ${[[46, 40, 9], [58, 30, 11], [42, 22, 8], [62, 14, 7]].map(([x, y, r]) => `<cir
 <path d="M12 90l12 -12" stroke="${BRUN}" stroke-width="5" stroke-linecap="round"/>
 <circle cx="12" cy="90" r="3.5" fill="none" stroke="${JARN}" stroke-width="1.6"/>`;
 
+  // Ett rostigt svärd, snett över kortet.
+  BILDER.svard = () => `${ljus}
+<path d="M30 76l42 -50 6 -6 -2 8 -42 50z" fill="#9a8a7a" stroke="${BLAECK}" stroke-width="1.2"/>
+<path d="M36 70l38 -44" stroke="#c8c0b4" stroke-width="1" opacity="0.8"/>
+<circle cx="48" cy="56" r="2.4" fill="#8a4a24" opacity="0.8"/><circle cx="60" cy="42" r="1.8" fill="#8a4a24" opacity="0.7"/>
+<path d="M22 66l18 16" stroke="${JARN}" stroke-width="4" stroke-linecap="round"/>
+<path d="M30 76l-10 10" stroke="${BRUN}" stroke-width="5" stroke-linecap="round"/>
+<circle cx="18" cy="88" r="3.4" fill="${JARN}"/>`;
+
+  // En brynja av fjäll.
+  BILDER.brynja = () => `${ljus}
+<path d="M28 24l14 -6h16l14 6 6 22 -8 4v38H30V50l-8 -4z" fill="#5a6a54" stroke="${BLAECK}" stroke-width="1.4"/>
+${[30, 40, 50, 60, 70, 80].map((y) => [36, 44, 52, 60, 68].filter((x) => y > 44 || (x > 40 && x < 64)).map((x) => `<path d="M${x - 4} ${y}q4 6 8 0" fill="none" stroke="#8a9a80" stroke-width="1.2"/>`).join("")).join("")}
+<path d="M42 18q8 8 16 0" fill="none" stroke="${BLAECK}" stroke-width="1.4"/>`;
+
+  // Svärdet med rött fäste: tunt och blankt, med en droppe vid spetsen.
+  BILDER.tarst_svard = () => `${ljus}
+<path d="M30 76l44 -52 4 -4 -1 6 -44 52z" fill="#d8d4cc" stroke="${BLAECK}" stroke-width="1.1"/>
+<path d="M34 72l40 -46" stroke="#fff" stroke-width="0.8" opacity="0.8"/>
+<path d="M22 66l18 16" stroke="${GULD}" stroke-width="3.6" stroke-linecap="round"/>
+<path d="M30 76l-10 10" stroke="${ROD}" stroke-width="5" stroke-linecap="round"/>
+<circle cx="18" cy="88" r="3.4" fill="${ROD}"/>
+<path d="M80 26q-2 6 0 8q2 -2 0 -8z" fill="${ROD}"/>`;
+
   // Benluren: ett krökt horn av ben, och ljudet som kommer genom väggen.
   BILDER.benlur = () => `${vagg()}
 <path d="M20 74q6 -34 40 -44l6 8q-28 10 -34 40z" fill="#e8e0cc" stroke="${BLAECK}" stroke-width="1.4"/>

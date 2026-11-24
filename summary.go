@@ -264,7 +264,7 @@ func (g *Game) actionLine(p *Player, b before, moved bool, room string, t func(s
 // eller tomt om det inte är känt.
 func (g *Game) hurtBy(p *Player) string {
 	switch p.roundHurtKind {
-	case "falla", "varelse", "vandrare":
+	case "falla", "varelse", "vandrare", "foremal":
 		return upperFirst(p.roundHurtWhat)
 	case "gift", "ormen":
 		return g.data.Text("sam_orsak_" + p.roundHurtKind)

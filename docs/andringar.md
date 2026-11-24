@@ -6,6 +6,20 @@ eller leder tornet.
 
 ## 2026-11-24
 
+### Föremål som gör en starkare i strid
+
+- Föremål kan nu höja Kraft och Försvar (`kraft` och `forsvar` i
+  `data/foremal.json`).
+- Nya föremål: **Rostigt svärd** (Kraft +1) och **Fjällbrynja** (Försvar
+  +2, men den är tung, så slaget mot ryggen träffar alltid när man flyr).
+- Nytt förbannat föremål: **Svärdet med rött fäste**, värt 15 guld och
+  Kraft +2, men varje runda i strid då man inte anfaller skär det en och
+  tar ett liv.
+- **Den buckliga skölden** ger Försvar +1 i stället för en skada mindre,
+  och spricker som förut efter tre träffar från varelser.
+- Kraft och Försvar står bland tecknen (⚔ och ◆), gröna när ett föremål
+  höjer dem, och på klasskorten.
+
 ### Striden har bara anfall
 
 - Parera och undanmanöver är borta. Det enda stridsvalet är anfall (A):

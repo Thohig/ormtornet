@@ -52,11 +52,12 @@
         "namn": "Bucklig sköld",
         "hittad": "en bucklig sköld",
         "kort": "skölden",
-        "beskrivning": "Varelser gör en skada mindre. Går sönder efter tre träffar.",
+        "beskrivning": "Försvar +1: du är svårare att träffa. Går sönder efter tre träffar från varelser.",
         "vikt": 2,
         "anvandningar": 3,
+        "forsvar": 1,
         "verkar": [
-          "Slaget tar i skölden och halkar av."
+          "Slaget tar i kanten på skölden och lämnar en ny buckla."
         ],
         "slut": [
           "Skölden spricker och faller i bitar."
@@ -218,6 +219,44 @@
         ]
       },
       {
+        "id": "svard",
+        "tecken": "⚔",
+        "bild": "svard",
+        "namn": "Rostigt svärd",
+        "hittad": "ett rostigt svärd",
+        "kort": "svärdet",
+        "beskrivning": "Kraft +1: du träffar lättare i strid.",
+        "vikt": 2,
+        "kraft": 1
+      },
+      {
+        "id": "brynja",
+        "tecken": "▦",
+        "bild": "brynja",
+        "namn": "Fjällbrynja",
+        "hittad": "en brynja av fjäll",
+        "kort": "brynjan",
+        "beskrivning": "Försvar +2: du är svårare att träffa. Den är tung, så flyr du ur en strid träffar slaget mot ryggen alltid.",
+        "vikt": 1,
+        "forsvar": 2
+      },
+      {
+        "id": "tarst_svard",
+        "tecken": "‡",
+        "bild": "tarst_svard",
+        "namn": "Svärdet med rött fäste",
+        "hittad": "ett svärd med rött fäste",
+        "kort": "svärdet med rött fäste",
+        "beskrivning": "Ett tunt svärd, lätt i handen. Kraft +2. Värt 15 guld när du kommer ut.",
+        "vikt": 1,
+        "kraft": 2,
+        "forbannad": true,
+        "varde": 15,
+        "forbannelse": [
+          "Svärdet drar i handen när du inte slår. Det vill ha blod, och om det inte får något annat tar det ditt."
+        ]
+      },
+      {
         "id": "brev",
         "tecken": "✉",
         "bild": "brev",
@@ -251,6 +290,12 @@
   },
 
   "texter": {
+    "tarst_tar": [
+      "Svärdet med rött fäste drar i din hand och skär dig. Det ville slåss."
+    ],
+    "brynja_fly": [
+      "Brynjan är tung, och du vänder för långsamt."
+    ],
     "foremal_hittar": [
       "Under en lös sten ligger något: {foremal}.",
       "Längst in i en nisch, insvept i en trasa: {foremal}."

@@ -63,18 +63,23 @@ func (g *Game) roll(pct int) bool {
 
 // kraft och forsvar är vandrarens värden i strid: klassens, eller
 // värdena för den som inte har någon klass.
+// Föremålen i väskan lägger till sitt.
 func (g *Game) kraft(p *Player) int {
+	n := g.data.Monster.Traff.Kraft
 	if c := g.classOf(p); c != nil {
-		return c.Kraft
+		n = c.Kraft
 	}
-	return g.data.Monster.Traff.Kraft
+	k, _ := g.itemBonus(p)
+	return max(0, n+k)
 }
 
 func (g *Game) forsvar(p *Player) int {
+	n := g.data.Monster.Traff.Forsvar
 	if c := g.classOf(p); c != nil {
-		return c.Forsvar
+		n = c.Forsvar
 	}
-	return g.data.Monster.Traff.Forsvar
+	_, f := g.itemBonus(p)
+	return max(0, n+f)
 }
 
 // guardMod är hur mycket lättare eller svårare det är att träffa den som
@@ -253,7 +258,8 @@ func (g *Game) duel(p *Player, m *Monster) {
 	}
 	if monsterHits {
 		p.hurt("varelse", t.Kort)
-		g.damage(p, g.shieldDamage(p, t.Skada), false)
+		g.shieldWear(p)
+		g.damage(p, t.Skada, false)
 	}
 	if playerHits {
 		g.learnPart(p, srcCreature) // under fjällen där vapnet träffade
@@ -300,13 +306,18 @@ func (g *Game) freeAttack(p *Player, m *Monster, key string, mod int, always boo
 		return
 	}
 	if always {
-		g.logTo(p, g.data.Text("klass_kartritare_fly"), "varn")
+		key := "klass_kartritare_fly"
+		if !g.is(p, "kartritare") {
+			key = "brynja_fly"
+		}
+		g.logTo(p, g.data.Text(key), "varn")
 	}
 	text := g.data.MonsterText(key+"_traff", g.monsterVars(m, p, "skada", strconv.Itoa(t.Skada))...)
 	g.logTo(p, text, "varn")
 	g.monsterCard(p, t, g.fightName(m, p), text, false)
 	p.hurt("varelse", t.Kort)
-	g.damage(p, g.shieldDamage(p, t.Skada), false)
+	g.shieldWear(p)
+	g.damage(p, t.Skada, false)
 }
 
 func (g *Game) defeat(p *Player, m *Monster) {
@@ -443,6 +454,12 @@ func (g *Game) combatTurn(p *Player, a string) bool {
 	if m == nil {
 		return false
 	}
+	if !isCombatAction(a) {
+		g.thirst(p)
+		if p.Status != statusIn {
+			return true
+		}
+	}
 	switch {
 	case isCombatAction(a):
 		g.duel(p, m)
@@ -469,7 +486,7 @@ func (g *Game) combatTurn(p *Player, a string) bool {
 		if g.smoke(p, dirCodes[a]) {
 			return false
 		}
-		g.freeAttack(p, m, "fly", 0, g.is(p, "kartritare"))
+		g.freeAttack(p, m, "fly", 0, g.slowFeet(p))
 		return p.Status != statusIn
 	default:
 		g.freeAttack(p, m, "inte_beredd", g.guardMod(p.Action), false)

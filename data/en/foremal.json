@@ -37,9 +37,9 @@
         "namn": "A dented shield",
         "hittad": "a dented shield",
         "kort": "the shield",
-        "beskrivning": "Creatures do one wound less. Breaks after three hits.",
+        "beskrivning": "Defence +1: you are harder to hit. Breaks after three hits from creatures.",
         "verkar": [
-          "The blow strikes the shield and glances off."
+          "The blow catches the rim of the shield and leaves a new dent."
         ],
         "slut": [
           "The shield cracks and falls to pieces."
@@ -154,6 +154,30 @@
         ]
       },
       {
+        "id": "svard",
+        "namn": "Rusty sword",
+        "hittad": "a rusty sword",
+        "kort": "the sword",
+        "beskrivning": "Strength +1: you hit more easily in a fight."
+      },
+      {
+        "id": "brynja",
+        "namn": "Scale mail",
+        "hittad": "a coat of scales",
+        "kort": "the scale mail",
+        "beskrivning": "Defence +2: you are harder to hit. It is heavy, so if you flee a fight the blow at your back always lands."
+      },
+      {
+        "id": "tarst_svard",
+        "namn": "The sword with the red hilt",
+        "hittad": "a sword with a red hilt",
+        "kort": "the sword with the red hilt",
+        "beskrivning": "A thin sword, light in the hand. Strength +2. Worth 15 gold when you get out.",
+        "forbannelse": [
+          "The sword tugs at your hand when you do not strike. It wants blood, and if it gets nothing else it takes yours."
+        ]
+      },
+      {
         "id": "brev",
         "namn": "A letter",
         "hittad": "a letter",
@@ -182,6 +206,12 @@
   },
 
   "texter": {
+    "tarst_tar": [
+      "The sword with the red hilt tugs at your hand and cuts you. It wanted to fight."
+    ],
+    "brynja_fly": [
+      "The scale mail is heavy, and you turn too slowly."
+    ],
     "foremal_hittar": [
       "Under a loose stone lies something: {foremal}.",
       "Deep in a niche, wrapped in a rag: {foremal}."

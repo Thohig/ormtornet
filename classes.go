@@ -38,6 +38,8 @@ type classView struct {
 	Svaghet     string `json:"svaghet"`
 	Liv         int    `json:"liv,omitempty"`
 	Drycker     int    `json:"drycker,omitempty"`
+	Kraft       int    `json:"kraft"`
+	Forsvar     int    `json:"forsvar"`
 	Tagen       string `json:"tagen,omitempty"` // vem som har valt klassen, under klassvalet
 	Din         bool   `json:"din,omitempty"`   // klassen är den egna
 }
@@ -46,7 +48,7 @@ func viewOfClass(c *Class) *classView {
 	if c == nil {
 		return nil
 	}
-	return &classView{ID: c.ID, Namn: c.Namn, Tecken: c.Tecken, Bild: cardImage(c.Bild, c.ID), Beskrivning: c.Beskrivning, Styrka: c.Styrka, Svaghet: c.Svaghet, Liv: c.Liv, Drycker: c.Drycker}
+	return &classView{ID: c.ID, Namn: c.Namn, Tecken: c.Tecken, Bild: cardImage(c.Bild, c.ID), Beskrivning: c.Beskrivning, Styrka: c.Styrka, Svaghet: c.Svaghet, Liv: c.Liv, Drycker: c.Drycker, Kraft: c.Kraft, Forsvar: c.Forsvar}
 }
 
 func (d *Data) class(id string) *Class {

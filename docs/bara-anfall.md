@@ -47,7 +47,13 @@ svaghet är nu att den som slår mot ryggen när hen flyr alltid träffar.
 1. **Värden och anfall** (byggt 2026-11-24): värdena i datan, anfall som
    enda stridsval, garden när man väntar, strid mellan vandrare, AI:n,
    spelarsidan och texterna på båda språken.
-2. **Föremålen** (inte byggt): Rostigt svärd, Fjällbrynja, skölden som
-   Försvar, Svärdet som törstar; värdena bland tecknen och på klasskorten.
+2. **Föremålen** (byggt 2026-11-24): föremål kan ha `kraft` och `forsvar`
+   i `data/foremal.json`. Rostigt svärd (Kraft +1), Fjällbrynja (Försvar
+   +2, men slaget mot ryggen träffar alltid när man flyr), skölden som
+   Försvar +1 i tre träffar, och det förbannade Svärdet med rött fäste
+   (Kraft +2, men ett liv varje runda i strid då man inte anfaller; det
+   heter inte "som törstar", eftersom ett förbannat föremål ska se
+   värdefullt ut). Kraft och Försvar står bland tecknen (⚔ och ◆, gröna
+   när ett föremål höjer dem) och på klasskorten.
 3. **Balansen** (inte byggt): simuleringen av strategierna igen, och
    panelen Nu som säger hur striden ser ut.

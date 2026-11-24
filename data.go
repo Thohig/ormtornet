@@ -116,20 +116,20 @@ type MonsterType struct {
 	KortBestamd string `json:"kort_bestamd"`
 	// KortIgen är den korta formen när striden har pågått en runda: "det
 	// mångbenta". Tom ger KortBestamd.
-	KortIgen string         `json:"kort_igen"`
-	Bild     string         `json:"bild"` // spelkortets motiv (web/kort.js); utan bild gäller id:t
-	Vikt     int            `json:"vikt"`
-	Liv      int            `json:"liv"`
-	Skada    int            `json:"skada"`
-	Guld     int            `json:"guld"`
-	Tecken   string         `json:"tecken"`
-	Modell   *ModelLook     `json:"modell,omitempty"` // färg och storlek på kartan snett ovanifrån
-	Kraft    int            `json:"kraft"`   // hur lätt varelsen träffar
-	Forsvar  int            `json:"forsvar"` // hur svår den är att träffa
-	Lynne    int            `json:"lynne"`   // chansen i procent att den anfaller när vandraren inte gör det
-	Vandrar  *float64       `json:"vandrar,omitempty"` // egen chans att vandra, annars vandra_chans
-	DykerUpp []string       `json:"dyker_upp"`
-	Dor      []string       `json:"dor"`
+	KortIgen string     `json:"kort_igen"`
+	Bild     string     `json:"bild"` // spelkortets motiv (web/kort.js); utan bild gäller id:t
+	Vikt     int        `json:"vikt"`
+	Liv      int        `json:"liv"`
+	Skada    int        `json:"skada"`
+	Guld     int        `json:"guld"`
+	Tecken   string     `json:"tecken"`
+	Modell   *ModelLook `json:"modell,omitempty"`  // färg och storlek på kartan snett ovanifrån
+	Kraft    int        `json:"kraft"`             // hur lätt varelsen träffar
+	Forsvar  int        `json:"forsvar"`           // hur svår den är att träffa
+	Lynne    int        `json:"lynne"`             // chansen i procent att den anfaller när vandraren inte gör det
+	Vandrar  *float64   `json:"vandrar,omitempty"` // egen chans att vandra, annars vandra_chans
+	DykerUpp []string   `json:"dyker_upp"`
+	Dor      []string   `json:"dor"`
 }
 
 func (d *Data) monsterType(id string) *MonsterType {
@@ -562,11 +562,11 @@ type Omens struct {
 
 // Initiate är fördelarna och svagheten för den som har viskat hemligheten.
 type Initiate struct {
-	Guld        float64 `json:"guld"`         // andel extra guld när den invigde kommer ut
-	ForstGuld   float64 `json:"forst_guld"`   // andel extra guld till, för den som blev invigd först
-	Falla       float64 `json:"falla"`        // chansen att känna igen en fälla och kliva förbi
-	ExtraLynne  int     `json:"extra_lynne"`  // procentenheter som varelserna anfaller oftare
-	Vacker      float64 `json:"vacker"`       // chansen att en näve drar ett vakna-kort
+	Guld       float64 `json:"guld"`        // andel extra guld när den invigde kommer ut
+	ForstGuld  float64 `json:"forst_guld"`  // andel extra guld till, för den som blev invigd först
+	Falla      float64 `json:"falla"`       // chansen att känna igen en fälla och kliva förbi
+	ExtraLynne int     `json:"extra_lynne"` // procentenheter som varelserna anfaller oftare
+	Vacker     float64 `json:"vacker"`      // chansen att en näve drar ett vakna-kort
 }
 
 func (d *Data) roomType(id string) *RoomType {

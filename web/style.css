@@ -677,6 +677,8 @@ button.hudicon.klass { font: inherit; color: inherit; cursor: pointer; }
 .okort .ok-rader .bad { color: #8a2a18; }
 .hudicon.hp .glyph { color: #e07a6a; }
 .hudicon.gold { color: #ffd36b; }
+.hudicon.strid { color: #c8c0b0; }
+.hudicon.strid.plus { color: #9fe0a0; }
 .hudicon.warn { color: var(--warn); }
 .hudicon.rost { color: #e3b8f0; }
 .hudicon.klass .glyph { color: var(--hi); }

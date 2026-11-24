@@ -662,6 +662,9 @@
     "kronika_dod_gift": [
       "{namn} died of the poison in their body."
     ],
+    "kronika_dod_foremal": [
+      "{namn} was killed by {vad} in their own hand."
+    ],
     "kronika_dod_tornet": [
       "{namn} died. No one quite knows of what."
     ],

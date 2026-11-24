@@ -936,6 +936,7 @@ function buildClassCard(c, i) {
   const stats = [];
   if (c.liv) stats.push(t(c.liv > 0 ? "klasskort_liv_mer" : "klasskort_liv_mindre", { n: Math.abs(c.liv) }));
   if (c.drycker) stats.push(t(c.drycker === 1 ? "klasskort_dryck_en" : "klasskort_dryck_flera", { n: c.drycker }));
+  stats.push(t("klasskort_strid", { kraft: c.kraft || 0, forsvar: c.forsvar || 0 }));
   if (stats.length) add("stats", stats.join(" · "));
   add("good", t("klasskort_styrka", { styrka: c.styrka }));
   add("bad", t("klasskort_svaghet", { svaghet: c.svaghet }));
@@ -1035,6 +1036,16 @@ function renderHud(me) {
     icon("♥", state.hp + "/" + state.maxHp, t("tecken_liv", { liv: state.hp, max: state.maxHp }), low ? "warn" : "hp");
   }
   icon("¤", String(me.treasure), t("tecken_skatt", { guld: me.treasure }), "gold");
+  // Kraft och Försvar. Ett föremål som höjer värdet får det att lysa.
+  const strid = (glyph, n, plus, key) => {
+    let tip = t(key, { n });
+    if (plus) tip = t("tecken_plus", { text: tip, plus: (plus > 0 ? "+" : "−") + Math.abs(plus) });
+    icon(glyph, String(n), tip, plus > 0 ? "strid plus" : "strid");
+  };
+  if (state.kraft !== undefined) {
+    strid("⚔", state.kraft, state.kraftPlus || 0, "tecken_kraft");
+    strid("◆", state.forsvar, state.forsvarPlus || 0, "tecken_forsvar");
+  }
   if (state.potions > 0) {
     const tryck = pressWord("knapp_drick", "D");
     icon("⚱", String(state.potions), state.potions === 1 ? t("tecken_dryck_en", { tryck }) : t("tecken_dryck_flera", { n: state.potions, tryck }), "");
@@ -1437,7 +1448,7 @@ function showClassCard(c) {
   hideTip();
   const extra = document.createElement("div");
   extra.className = "ok-rader";
-  [["good", t("klasskort_styrka", { styrka: c.styrka })], ["bad", t("klasskort_svaghet", { svaghet: c.svaghet })]].forEach(([cls, text]) => {
+  [["stats", t("klasskort_strid", { kraft: c.kraft || 0, forsvar: c.forsvar || 0 })], ["good", t("klasskort_styrka", { styrka: c.styrka })], ["bad", t("klasskort_svaghet", { svaghet: c.svaghet })]].forEach(([cls, text]) => {
     const d = document.createElement("div");
     d.className = cls;
     d.textContent = text;

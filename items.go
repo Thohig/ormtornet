@@ -24,7 +24,9 @@ type ItemType struct {
 	Forbannad    bool     `json:"forbannad"` // ser värdefullt ut, men har en baksida
 	Varde        int      `json:"varde"`     // guld det är värt när man kommer ut
 	Forbannelse  []string `json:"forbannelse"`
-	Brev         bool     `json:"brev"` // läses direkt och bärs inte
+	Brev         bool     `json:"brev"`    // läses direkt och bärs inte
+	Kraft        int      `json:"kraft"`   // läggs till vandrarens Kraft så länge hen bär föremålet
+	Forsvar      int      `json:"forsvar"` // läggs till vandrarens Försvar
 }
 
 // found är föremålet i obestämd form, som texterna säger att någon hittar.
@@ -224,13 +226,43 @@ func (g *Game) hiddenShare(p *Player, loss int) int {
 	return loss - kept
 }
 
-// shieldDamage: skölden tar en skada av varje träff från en varelse.
-func (g *Game) shieldDamage(p *Player, dmg int) int {
-	if dmg <= 0 || p.has("skold") == nil {
-		return dmg
+// shieldWear: skölden ger Försvar tills den har tagit tre träffar från
+// varelser.
+func (g *Game) shieldWear(p *Player) {
+	if p.has("skold") != nil {
+		g.useItem(p, "skold")
 	}
-	g.useItem(p, "skold")
-	return dmg - 1
+}
+
+// itemBonus är det föremålen i väskan lägger till vandrarens Kraft och
+// Försvar.
+func (g *Game) itemBonus(p *Player) (kraft, forsvar int) {
+	for _, it := range p.items {
+		if t := g.data.itemType(it.ID); t != nil {
+			kraft += t.Kraft
+			forsvar += t.Forsvar
+		}
+	}
+	return kraft, forsvar
+}
+
+// slowFeet: den som flyr blir alltid träffad av slaget mot ryggen, om hen
+// är kartritaren eller bär brynjan.
+func (g *Game) slowFeet(p *Player) bool {
+	return g.is(p, "kartritare") || p.has("brynja") != nil
+}
+
+// thirst: svärdet som törstar tar ett liv varje runda i strid då
+// vandraren inte anfaller.
+func (g *Game) thirst(p *Player) {
+	if p.has("tarst_svard") == nil || p.Status != statusIn {
+		return
+	}
+	g.curse(p, "tarst_svard")
+	t := g.data.itemType("tarst_svard")
+	g.logTo(p, g.data.Text("tarst_tar"), "varn")
+	p.hurt("foremal", t.Kort)
+	g.damage(p, 1, false)
 }
 
 // compass är vad kompassen visar: riktningen mot närmaste port, som ett av

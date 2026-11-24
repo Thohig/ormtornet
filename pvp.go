@@ -174,7 +174,7 @@ func (g *Game) ambush(a, b *Player) {
 	g.fightNoise(a, b)
 	_, fleeing := dirCodes[b.Action]
 	guard := b.Action == actWait
-	always := fleeing && g.is(b, "kartritare")
+	always := fleeing && g.slowFeet(b)
 	if !always && !g.roll(g.hitChance(g.kraft(a), g.forsvar(b), g.guardMod(b.Action))) {
 		g.soundTo(a, "parera")
 		if guard {

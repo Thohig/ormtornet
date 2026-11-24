@@ -63,18 +63,67 @@ func TestRopeAmuletWick(t *testing.T) {
 func TestShieldBreaksAfterThree(t *testing.T) {
 	g, a, _ := startTwo(t)
 	p := a.player
-	p.HP = 50
+	base := g.forsvar(p)
 	g.give(p, "skold")
 	for i := range 3 {
-		if got := g.shieldDamage(p, 2); got != 1 {
-			t.Fatalf("träff %d: %d skada", i+1, got)
+		if g.forsvar(p) != base+1 {
+			t.Fatalf("träff %d: Försvar %d", i+1, g.forsvar(p))
 		}
+		g.shieldWear(p)
 	}
-	if p.has("skold") != nil {
+	if p.has("skold") != nil || g.forsvar(p) != base {
 		t.Fatal("skölden höll för mer än tre träffar")
 	}
-	if got := g.shieldDamage(p, 2); got != 2 {
-		t.Fatal("skada utan sköld")
+}
+
+func TestSwordAndMail(t *testing.T) {
+	g, a, b := startTwo(t)
+	p := a.player
+	k, f := g.kraft(p), g.forsvar(p)
+	g.give(p, "svard")
+	g.give(p, "brynja")
+	if g.kraft(p) != k+1 || g.forsvar(p) != f+2 {
+		t.Fatalf("Kraft %d, Försvar %d", g.kraft(p), g.forsvar(p))
+	}
+	// Med brynjan träffar slaget mot ryggen alltid när man flyr.
+	sureHits(g)
+	openRoom(g, p, 4, 3)
+	typ := &g.data.Monster.Typer[0]
+	typ.Kraft, typ.Lynne = 0, 100
+	g.monsters = append(g.monsters, &Monster{ID: 61, Type: typ.ID, X: 4, Y: 3, HP: 9})
+	hp := p.HP
+	step(g, a, b, "E", actWait)
+	if p.HP >= hp {
+		t.Fatal("brynjan gjorde inte flykten långsam")
+	}
+}
+
+// Svärdet med rött fäste ger Kraft +2 men tar ett liv varje runda i strid
+// då vandraren inte anfaller.
+func TestThirstingSword(t *testing.T) {
+	g, a, b := startTwo(t)
+	p := a.player
+	k := g.kraft(p)
+	g.give(p, "tarst_svard")
+	if g.kraft(p) != k+2 {
+		t.Fatalf("Kraft %d", g.kraft(p))
+	}
+	sureHits(g)
+	putInRoom(g, p, 4, 3)
+	typ := &g.data.Monster.Typer[0]
+	typ.Lynne = 0
+	m := &Monster{ID: 62, Type: typ.ID, X: 4, Y: 3, HP: 9}
+	g.monsters = append(g.monsters, m)
+	hp := p.HP
+	step(g, a, b, actWait, actWait)
+	if p.HP != hp-1 || !p.has("tarst_svard").cursed {
+		t.Fatalf("liv %d -> %d", hp, p.HP)
+	}
+	typ.Kraft = 0 // varelsen träffar inte
+	hp = p.HP
+	step(g, a, b, actAttack, actWait)
+	if p.HP != hp {
+		t.Fatalf("svärdet tog liv fast vandraren anföll: %d -> %d", hp, p.HP)
 	}
 }
 

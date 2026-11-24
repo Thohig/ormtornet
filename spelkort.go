@@ -118,6 +118,7 @@ var cardImages = []string{
 	"krypare", "yngel", "fjallvakt", "gallgast", "benvaktare", "vandrare",
 	"rep", "amulett", "veke", "skold", "vaska", "kompass", "rokpulver", "spegel", "kastkniv", "benlur",
 	"flojt", "timglas", "svart_parla", "mynt_hal", "rostkrona", "brev", "dryck", "guld",
+	"svard", "brynja", "tarst_svard",
 	"kallare", "varsel", "namndel", "invigd",
 	"ut", "dod", "sol", "port",
 	"legoknekt", "tjuv", "ortkvinna", "kartritare", "ormtjusare", "sparfinnare", "lyktbarare", "pilgrim",

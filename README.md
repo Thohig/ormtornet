@@ -622,7 +622,10 @@ Chansen kommer av två värden. **Kraft** är hur lätt man träffar och
 (`kraft` och `forsvar` i `data/klasser.json`), och varje varelse sina
 (`data/monster.json`). Träffchansen är `bas + per_steg × (Kraft −
 motståndarens Försvar)` inom `min` och `max` (`traff` i
-`data/monster.json`). Spelarna ser aldrig talen.
+`data/monster.json`). Föremål som svärdet, skölden och brynjan lägger
+till sitt (`kraft` och `forsvar` i `data/foremal.json`). Dina egna värden
+står bland tecknen (⚔ Kraft, ◆ Försvar, grönt när ett föremål höjer dem)
+och på klasskorten; varelsernas ser du aldrig.
 
 Du kan också göra något annat medan varelsen står där, men då kanske den
 anfaller. Hur ofta beror på dess **lynne** (`lynne`, i procent), så det
@@ -704,7 +707,9 @@ inte med till nästa torn. Krönikan berättar vem som hittade vad.
 | Rep med kroken kvar | faller du genom golvet hamnar du inte i källarvalven (en gång) |
 | Fjällamuletten | nästa fälla slår inte till, men tecknet syns (en gång) |
 | Extra veke | lyktan tål ett mörker (en gång) |
-| Bucklig sköld | varelser gör en skada mindre, i tre träffar |
+| Bucklig sköld | Försvar +1, tills den har tagit tre träffar från varelser |
+| Rostigt svärd | Kraft +1 |
+| Fjällbrynja | Försvar +2, men flyr du ur en strid träffar slaget mot ryggen alltid |
 | Väskan med dubbel botten | hälften av det du förlorar när ormen vaknar eller någon river guld är gömt |
 | Kompass utan nord | visar åt vilket håll närmaste port ligger |
 | Sövande flöjt | drar du ett kort som väcker ormen får du dra om (en gång) |
@@ -721,6 +726,7 @@ men man märker baksidan först när man bär dem:
 |---|---|---|
 | Den svarta pärlan | 40 | varje näve ur kammaren lägger ett vakna-kort i leken |
 | Myntet med hål | 25 | varelserna anfaller oftare |
+| Svärdet med rött fäste | 15 | Kraft +2, men varje runda i strid då du inte anfaller tar det ett liv |
 | Kronan av rost | 30 | den som står i grannrummet ser dig |
 
 Ibland hittar man ett brev från någon som var i tornet förut. Det läses

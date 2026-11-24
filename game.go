@@ -639,30 +639,34 @@ type resultView struct {
 }
 
 type stateMsg struct {
-	T          string        `json:"t"`
-	Sprak      string        `json:"sprak"` // texternas språk; byts det hämtar sidan nya texter
-	You        int           `json:"you"`
-	Size       int           `json:"size"`
-	Level      int           `json:"level"`
-	Reveal     bool          `json:"reveal"` // alltid sant; kartan i klient/ läser det
-	Phase      string        `json:"phase"`
-	Sun        int           `json:"sun"`
-	SunMax     int           `json:"sunMax"`
-	Round      int           `json:"round"`
-	DeadlineMs int64         `json:"deadlineMs"`
-	MinPlayers int           `json:"minPlayers"`
-	Action     string        `json:"action"`
-	HP         int           `json:"hp"`
-	MaxHP      int           `json:"maxHp"`
-	Potions    int           `json:"potions"`
-	Stuck      int           `json:"stuck"`
-	Cellar     int           `json:"cellar"`
-	Poison     int           `json:"poison"`
-	Dark       int           `json:"dark"`
-	Sleep      int           `json:"sleep"` // -1 utanför kammaren
-	Monsters   []monsterView `json:"monsters"`
-	Fallen     []monsterView `json:"fallna,omitempty"` // varelserna som föll under rundan, för kartan
-	PvP        string        `json:"pvp"`              // om det går att strida mot andra vandrare här
+	T           string        `json:"t"`
+	Sprak       string        `json:"sprak"` // texternas språk; byts det hämtar sidan nya texter
+	You         int           `json:"you"`
+	Size        int           `json:"size"`
+	Level       int           `json:"level"`
+	Reveal      bool          `json:"reveal"` // alltid sant; kartan i klient/ läser det
+	Phase       string        `json:"phase"`
+	Sun         int           `json:"sun"`
+	SunMax      int           `json:"sunMax"`
+	Round       int           `json:"round"`
+	DeadlineMs  int64         `json:"deadlineMs"`
+	MinPlayers  int           `json:"minPlayers"`
+	Action      string        `json:"action"`
+	HP          int           `json:"hp"`
+	MaxHP       int           `json:"maxHp"`
+	Potions     int           `json:"potions"`
+	Kraft       int           `json:"kraft"`       // Kraft i strid, med föremålen
+	Forsvar     int           `json:"forsvar"`     // Försvar i strid, med föremålen
+	KraftPlus   int           `json:"kraftPlus"`   // det föremålen lägger till Kraft
+	ForsvarPlus int           `json:"forsvarPlus"` // det föremålen lägger till Försvar
+	Stuck       int           `json:"stuck"`
+	Cellar      int           `json:"cellar"`
+	Poison      int           `json:"poison"`
+	Dark        int           `json:"dark"`
+	Sleep       int           `json:"sleep"` // -1 utanför kammaren
+	Monsters    []monsterView `json:"monsters"`
+	Fallen      []monsterView `json:"fallna,omitempty"` // varelserna som föll under rundan, för kartan
+	PvP         string        `json:"pvp"`              // om det går att strida mot andra vandrare här
 	// Motstandare är vandraren tornet väljer om du slåss här (pickFoe).
 	Motstandare string       `json:"motstandare,omitempty"`
 	Paused      bool         `json:"paused,omitempty"`
@@ -800,6 +804,8 @@ func (g *Game) stateFor(me *Player) stateMsg {
 		}
 	}
 	st.Class = viewOfClass(g.classOf(me))
+	st.Kraft, st.Forsvar = g.kraft(me), g.forsvar(me)
+	st.KraftPlus, st.ForsvarPlus = g.itemBonus(me)
 	st.Items = g.itemViews(me)
 	if g.phase == phasePlay && me.Status == statusIn {
 		g.curse(me, "rostkrona") // kronan syns redan första rundan

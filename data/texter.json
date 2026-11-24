@@ -381,7 +381,7 @@
       "slag": [
         { "id": "vinnare", "nycklar": ["kronika_ut"], "bild": "ut", "rubrik": "stund_vinnare", "bara_vinnare": true },
         { "id": "vaknade", "nycklar": ["kronika_vaknade"], "bild": "vaknar", "rubrik": "stund_vaknade" },
-        { "id": "dod", "nycklar": ["kronika_dod", "kronika_dod_falla", "kronika_dod_varelse", "kronika_dod_vandrare", "kronika_dod_ormen", "kronika_dod_gift", "kronika_dod_tornet"], "bild": "dod", "rubrik": "kort_dod" },
+        { "id": "dod", "nycklar": ["kronika_dod", "kronika_dod_falla", "kronika_dod_varelse", "kronika_dod_vandrare", "kronika_dod_ormen", "kronika_dod_gift", "kronika_dod_foremal", "kronika_dod_tornet"], "bild": "dod", "rubrik": "kort_dod" },
         { "id": "invigd", "nycklar": ["kronika_invigd_forst", "kronika_invigd"], "bild": "invigd", "rubrik": "kort_invigd" },
         { "id": "port", "nycklar": ["kronika_port"], "bild": "port", "rubrik": "kort_port" },
         { "id": "klocka", "nycklar": ["kronika_klocka"], "bild": "klocka", "rubrik": "stund_klocka" },
@@ -698,6 +698,9 @@
     ],
     "kronika_dod_gift": [
       "{namn} dog av giftet i kroppen."
+    ],
+    "kronika_dod_foremal": [
+      "{namn} dog av {vad} i sin egen hand."
     ],
     "kronika_dod_tornet": [
       "{namn} dog. Ingen vet riktigt av vad."
