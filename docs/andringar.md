@@ -45,6 +45,7 @@ eller leder tornet.
   `web/map.js`). På en skärm smalare än 760 punkter är det som förut.
 - Fjällrustningen mot Kartritaren är prövad i simuleringen och lämnad som
   den är; se `docs/att-gora.md`.
+- Provspelet står i [provspel-2026-11-24.md](provspel-2026-11-24.md).
 
 ## 2026-11-23
 

@@ -204,7 +204,11 @@ fem steg. Allt ritas i koden, utan bilder.
    (`miniatyr` i `klient/src/modeller.ts`) med en kant i vandrarens färg
    eller mörkröd för varelserna. Den döda läggs ner på sockeln. En fälla
    som har slagit till är en modell (`falla`), och tillståndet säger
-   vilken fälla märket hör till (`marki`).
+   vilken fälla märket hör till (`marki`). Vandrarna står på sina platser
+   i rummet (`SLOTS` i `karta.ts`) och varelsen mellan cellerna, snett
+   framför mitten (`VARELSE`), så att ingen vandrare står rakt bakom den
+   sett från kameran (2026-11-24; förut skymde en hög varelse den första
+   vandraren).
 5. **Brickorna.** Ett nytt rum faller ner som en bricka, vänds i luften och
    landar, och byggs först då (`laggBricka` och `landa` i `karta.ts`). Ett
    nytt torn eller fler än tre rum på en gång läggs utan brickor, liksom

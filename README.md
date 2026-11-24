@@ -198,7 +198,9 @@ den som dör och för alla i slutet (se slutet nedan och Strider):
      rummet är nytt, och det man ser där, beskrivet och inte förklarat:
      varelsens egen text, de andra vandrarna, guldet, porten, spåret
      efter en fälla som har slagit till (utan fällans namn) och föremål
-     som någon har lämnat. Ett tomt rum säger ingenting. Står man kvar
+     som någon har lämnat. Går man in i ett känt, tomt rum står bara
+     "Du känner igen rummet:" och rummets korta beskrivning (`har_igen`),
+     så att man ser att draget blev av. Står man kvar
      kommer bara det som har ändrats, som "Gestalten i fjällrustning är borta."
      En varelse som någon annan fällde "ligger fälld på golvet"; den som
      fällde den har redan läst det. Spåret efter en fälla som nyss slog
@@ -237,7 +239,10 @@ den som dör och för alla i slutet (se slutet nedan och Strider):
      bokstäverna och en svag toning, så att kartan syns mellan raderna och
      går att klicka genom texten. Den senaste rundan står nederst, den
      förra svagt ovanför, och de äldre syns inte. Kartan ställer sig i den
-     del som loggen inte täcker. Knappen Loggen under texten, eller L,
+     del som loggen inte täcker, och på en bred skärm (minst 760 punkter)
+     håller den också spelkortets plats till höger fri, så att kortet inte
+     ligger över ens egen figur. Tecknen uppe till höger har en mörk
+     botten, så att facklorna inte syns igenom. Knappen Loggen under texten, eller L,
      öppnar hela loggen i en låda på kartan; den stängs med L, Esc eller ett
      klick utanför. I lådan, och på en smal skärm, står den senaste rundan
      överst och fyller hela loggens höjd, och de äldre rundorna ligger
@@ -616,12 +621,15 @@ alla. Står du i samma rum som en varelse är du i strid. Båda väljer i hemlig
 - **undanmanöver** slår **parera**
 
 Vinnaren träffar. Väljer båda anfall träffar båda; annars händer inget vid
-lika val. Varje sorts varelse har egna vanor, så det lönar sig att lära sig
+lika val. Loggen säger att varelsen "försöker parera" eller "försöker vika
+undan" (`val` i `data/monster.json`), eftersom valet kan misslyckas. Varje sorts varelse har egna vanor, så det lönar sig att lära sig
 dem. Besegrar du en varelse får du dess guld.
 
 Gör du något annat än att slåss (söker, dricker, väntar) får varelsen ett
 fritt drag mot dig. Du kan fly genom att gå ut ur rummet, men varelsen får
-ett fritt drag mot din rygg först.
+ett fritt drag mot din rygg först. Bara ett anfall träffar; väljer
+varelsen något annat står det att den låter dig vara eller inte följer
+efter (`inte_beredd_lugn` och `fly_lugn`).
 
 Varelserna vandrar också av sig själva. I början av varje runda kan en
 varelse gå genom en öppen dörr till ett grannrum, ibland ut i delar av
@@ -642,7 +650,8 @@ hörde, hur hen dog och sina siffror, och hur många som är kvar i tornet och
 har gått ut. Där kortet bara säger "−2 liv" säger Din vandring vad det kom
 av ("Pilar ur små hål i väggen: −2 liv"), och vad som dödade en och
 vilken varelse man fällde står med. Rundor där man bara stod kvar slås
-ihop ("Runda 10–12"), och det står när tornet styrde vandraren. Var de andra är och vad de gör står inte där, så att den döda
+ihop ("Runda 10–12"), och en runda då man satt fast i en grop eller
+bakom ett galler säger "Du satt fast", och det står när tornet styrde vandraren. Var de andra är och vad de gör står inte där, så att den döda
 inte kan avslöja något för de levande. Visa kartan går tillbaka till
 spelet, och Din vandring i panelen Nu hit igen.
 
@@ -779,7 +788,7 @@ sitter: vid huvudet, i buken eller i svansen (`platser`, med några
 olika ord för varje). Huvudet är först, buken i mitten och svansen sist,
 men det får man lista ut själv. Delarna står i loggen och i tecknen,
 i den ordning man hittade dem (`RU · ·`), så att tecknen inte avslöjar
-ordningen. Viskningen ska innehålla namnet,
+ordningen; förklaringen till tecknet säger det. Viskningen ska innehålla namnet,
 ihop eller i delar, och visa att man förstår: ett av svaren under `svar`
 ("Karumeth, tornet är ormen") eller en mall under `svar_med_namn`
 ("tornet är Karumeth"). Svaren räcker inte ensamma, så pusslet är nytt

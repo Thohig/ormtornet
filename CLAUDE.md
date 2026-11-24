@@ -212,6 +212,9 @@ Skriv dit när ett steg är klart.
 - [docs/provspel-2026-11-22.md](docs/provspel-2026-11-22.md): provspelet
   2026-11-22, felen som rättades och åtta saker att fråga om (mörkret som
   visar dörrarna, Kartritaren, AI:n och kammaren med flera).
+- [docs/provspel-2026-11-24.md](docs/provspel-2026-11-24.md): provspelet
+  2026-11-24 med robotarna, webbläsarprovet och två egna vandringar, och
+  de åtta felen och förbättringarna som byggdes efter det.
 - [docs/ormkorten.md](docs/ormkorten.md): att ormkorten syns, med kortet
   som vänds upp, sömnmätaren, uppvaknandet, leken bredvid guldhögen och
   korten i krönikan. Allt är byggt.
