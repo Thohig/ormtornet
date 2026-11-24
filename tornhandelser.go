@@ -28,6 +28,7 @@ func (g *Game) towerEventTick() {
 			}
 		}
 	}
+	g.reopenDoors()
 	h := &g.data.Handelser
 	if len(h.Lista) == 0 || g.round < h.FranRunda || g.rng.Float64() >= h.Chans {
 		return
@@ -66,6 +67,11 @@ func (g *Game) eventPossible(id string) bool {
 		return g.plainItem() != ""
 	case "brev":
 		return len(g.letterReaders()) > 0
+	case "sluter":
+		_, ok := g.shutSpot()
+		return ok
+	case "yngel":
+		return g.loneWanderer() != nil
 	}
 	return true
 }
@@ -152,6 +158,32 @@ func (g *Game) runTowerEvent(id string) bool {
 			return false
 		}
 		p := r[g.rng.IntN(len(r))]
+		x, y = p.X, p.Y
+		hit = map[*Player]bool{p: true}
+	case "sluter":
+		sd, ok := g.shutSpot()
+		if !ok {
+			return false
+		}
+		sd.rounds = max(1, e.Rundor)
+		nx, ny := sd.x+dirDX[sd.d], sd.y+dirDY[sd.d]
+		g.rooms[sd.y][sd.x].Doors[sd.d] = false
+		g.rooms[ny][nx].Doors[sd.d.Opp()] = false
+		g.shutDoors = append(g.shutDoors, sd)
+		x, y = sd.x, sd.y
+		hit = map[*Player]bool{}
+		for _, p := range g.inside() {
+			if p.Cellar == 0 && (p.X == sd.x && p.Y == sd.y || p.X == nx && p.Y == ny) {
+				hit[p] = true
+			}
+		}
+	case "yngel":
+		p := g.loneWanderer()
+		t := g.data.monsterType(e.Varelse)
+		if p == nil || t == nil {
+			return false
+		}
+		g.addMonster(t, p.X, p.Y)
 		x, y = p.X, p.Y
 		hit = map[*Player]bool{p: true}
 	default:
@@ -248,7 +280,117 @@ func (g *Game) eventHere(p *Player, id string) {
 		g.pickUp(p)
 	case "brev":
 		g.readLetter(p)
+	case "yngel":
+		g.announceMonster(p)
 	}
+}
+
+// shutDoor är en dörr som tornet har slutit: från rummet (x, y) åt d, i
+// rounds rundor till.
+type shutDoor struct {
+	x, y   int
+	d      Dir
+	rounds int
+}
+
+// shutSpot är en dörr mellan två vanliga rum som någon har sett, där det
+// ändå finns en annan väg mellan rummen. Tornet stänger aldrig den enda
+// vägen någonstans.
+func (g *Game) shutSpot() (shutDoor, bool) {
+	var spots []shutDoor
+	for y := range g.size {
+		for x := range g.size {
+			r := &g.rooms[y][x]
+			if !r.Revealed || r.Kind != "rum" {
+				continue
+			}
+			for _, d := range []Dir{East, South} {
+				nx, ny := x+dirDX[d], y+dirDY[d]
+				if !g.inBounds(nx, ny) || !r.Doors[d] {
+					continue
+				}
+				if n := &g.rooms[ny][nx]; n.Revealed && n.Kind == "rum" && g.otherWay(x, y, d) {
+					spots = append(spots, shutDoor{x: x, y: y, d: d})
+				}
+			}
+		}
+	}
+	if len(spots) == 0 {
+		return shutDoor{}, false
+	}
+	return spots[g.rng.IntN(len(spots))], true
+}
+
+// otherWay säger om man kan gå från rummet (x, y) till grannen åt d genom
+// rum man har sett, utan dörren mellan dem.
+func (g *Game) otherWay(x, y int, d Dir) bool {
+	tx, ty := x+dirDX[d], y+dirDY[d]
+	type pos struct{ x, y int }
+	seen := map[pos]bool{{x, y}: true}
+	queue := []pos{{x, y}}
+	for len(queue) > 0 {
+		c := queue[0]
+		queue = queue[1:]
+		r := &g.rooms[c.y][c.x]
+		for dd := North; dd <= West; dd++ {
+			if c.x == x && c.y == y && dd == d || !r.Doors[dd] {
+				continue
+			}
+			n := pos{c.x + dirDX[dd], c.y + dirDY[dd]}
+			if !g.inBounds(n.x, n.y) || seen[n] || !g.rooms[n.y][n.x].Revealed || g.rooms[n.y][n.x].blocked > 0 {
+				continue
+			}
+			if n.x == tx && n.y == ty {
+				return true
+			}
+			seen[n] = true
+			queue = append(queue, n)
+		}
+	}
+	return false
+}
+
+// reopenDoors räknar ner de slutna dörrarna och öppnar dem igen.
+func (g *Game) reopenDoors() {
+	left := g.shutDoors[:0]
+	for _, sd := range g.shutDoors {
+		if sd.rounds--; sd.rounds > 0 {
+			left = append(left, sd)
+			continue
+		}
+		g.rooms[sd.y][sd.x].Doors[sd.d] = true
+		g.rooms[sd.y+dirDY[sd.d]][sd.x+dirDX[sd.d]].Doors[sd.d.Opp()] = true
+	}
+	g.shutDoors = left
+}
+
+// loneWanderer är den som står ensam längst in i tornet, långt från
+// portarna, där inget annat finns: där ynglet kryper ut ur väggen.
+func (g *Game) loneWanderer() *Player {
+	var best *Player
+	far := -1
+	for _, p := range g.inside() {
+		if p.Cellar > 0 || g.isChamber(p.X, p.Y) || g.cornerIndex(p.X, p.Y) >= 0 || g.monsterAt(p.X, p.Y) != nil {
+			continue
+		}
+		alone := true
+		for _, o := range g.inside() {
+			if o != p && o.Cellar == 0 && o.X == p.X && o.Y == p.Y {
+				alone = false
+			}
+		}
+		if !alone {
+			continue
+		}
+		near := 1 << 30
+		for _, c := range g.corners() {
+			near = min(near, abs(c.x-p.X)+abs(c.y-p.Y))
+		}
+		if near > far {
+			best, far = p, near
+		}
+	}
+	return best
 }
 
 // plainItem drar ett föremål som inte är förbannat och inte är ett brev,

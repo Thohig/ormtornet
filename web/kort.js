@@ -411,6 +411,25 @@ ${[[30, 14], [46, 20], [62, 12], [70, 24], [38, 26]].map(([x, y]) => `<circle cx
 <path d="M36 80l4 12h34l-6 -12z" fill="#f3ead6" stroke="${BLAECK}" stroke-width="1"/>
 <path d="M44 86h20M46 89h14" stroke="${BRUN}" stroke-width="0.8"/>`;
 
+  // Tornet sluter sig: två stenblock som glider ihop över en dörröppning,
+  // med pilar mot mitten.
+  BILDER.sluter = () => `${vagg()}
+<path d="M40 20h20v66H40z" fill="#1e1610" opacity="0.85"/>
+<path d="M18 20h28v66H18z" fill="${MORK_STEN}" stroke="${BLAECK}" stroke-width="1.2"/>
+<path d="M54 20h28v66H54z" fill="${MORK_STEN}" stroke="${BLAECK}" stroke-width="1.2"/>
+<path d="M18 42h28M18 64h28M54 42h28M54 64h28M32 20v22M68 42v22M32 64v22" stroke="${BLAECK}" stroke-width="0.8" opacity="0.6"/>
+<path d="M8 53h8M92 53h-8" stroke="${BRUN}" stroke-width="2" stroke-linecap="round"/>
+<path d="M16 53l-4 -3v6zM84 53l4 -3v6z" fill="${BRUN}"/>
+${[30, 46, 62, 78].map((y) => `<circle cx="50" cy="${y}" r="1.2" fill="${STEN}"/>`).join("")}`;
+
+  // Yngel ur väggen: en spricka i muren och små slingrande ormar som
+  // kryper ut ur den.
+  BILDER.yngel_vagg = () => `${vagg()}
+<path d="M50 8l-4 14 6 10 -8 14 4 10" fill="none" stroke="${BLAECK}" stroke-width="5" opacity="0.6" stroke-linejoin="round"/>
+<path d="M50 8l-4 14 6 10 -8 14 4 10" fill="none" stroke="#1e1610" stroke-width="2.4" stroke-linejoin="round"/>
+${[[48, 40, 30, 70, 0], [46, 52, 66, 80, 1], [50, 30, 74, 52, 0]].map(([x0, y0, x1, y1, k]) => `<path d="M${x0} ${y0}q${(x1 - x0) / 2} ${k ? -8 : 8} ${x1 - x0} ${y1 - y0}" fill="none" stroke="#1d2410" stroke-width="5" stroke-linecap="round"/><path d="M${x0} ${y0}q${(x1 - x0) / 2} ${k ? -8 : 8} ${x1 - x0} ${y1 - y0}" fill="none" stroke="${GRON}" stroke-width="3.4" stroke-linecap="round"/><circle cx="${x1}" cy="${y1}" r="2.6" fill="${GRON}" stroke="#1d2410" stroke-width="0.8"/>`).join("")}
+${golv(88)}`;
+
   // Ett rostigt svärd, snett över kortet.
   BILDER.svard = () => `${ljus}
 <path d="M30 76l42 -50 6 -6 -2 8 -42 50z" fill="#9a8a7a" stroke="${BLAECK}" stroke-width="1.2"/>

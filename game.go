@@ -463,6 +463,8 @@ type Game struct {
 	// vandringen (tornhandelser.go).
 	lightRounds int
 	eventCount  map[string]int
+	// shutDoors är dörrarna som tornet har slutit en stund.
+	shutDoors []shutDoor
 
 	serpentName    []string // ormens namn i tre delar, med invigningen "ormens namn"
 	partAt         [3]int   // vilken del av namnet som finns i ristningen, hos varelsen och i kammaren
@@ -1464,6 +1466,7 @@ func (g *Game) startGame() {
 	g.wakes = 0
 	g.lightRounds = 0
 	g.eventCount = map[string]int{}
+	g.shutDoors = nil
 	g.firstInitiated = 0
 	g.clueDeals, g.omens = 0, nil
 	g.portClock, g.portNext = 0, -1

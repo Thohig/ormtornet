@@ -120,7 +120,7 @@ var cardImages = []string{
 	"flojt", "timglas", "svart_parla", "mynt_hal", "rostkrona", "brev", "dryck", "guld",
 	"svard", "brynja", "tarst_svard",
 	"andas", "spricka", "gluggar", "ormskinn", "ras", "doden", "klockslag",
-	"klocka_stilla", "draget", "klirrar", "packning", "brev_dorr",
+	"klocka_stilla", "draget", "klirrar", "packning", "brev_dorr", "sluter", "yngel_vagg",
 	"kallare", "varsel", "namndel", "invigd",
 	"ut", "dod", "sol", "port",
 	"legoknekt", "tjuv", "ortkvinna", "kartritare", "ormtjusare", "sparfinnare", "lyktbarare", "pilgrim",

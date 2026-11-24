@@ -198,6 +198,68 @@ func TestTowerEventsFound(t *testing.T) {
 	})
 }
 
+// Tornet sluter sig och ynglet ur väggen.
+func TestTowerEventsShut(t *testing.T) {
+	t.Run("sluter", func(t *testing.T) {
+		g, a, _ := startTwo(t)
+		// Fyra rum i en ring: varje dörr har en annan väg runt.
+		for y := range g.size {
+			for x := range g.size {
+				if r := &g.rooms[y][x]; r.Revealed && r.Kind == "rum" {
+					r.Kind = "ingang"
+				}
+			}
+		}
+		ring := [][2]int{{3, 3}, {4, 3}, {4, 4}, {3, 4}}
+		for _, c := range ring {
+			r := g.reveal(c[0], c[1])
+			r.Kind, r.Doors = "rum", [4]bool{}
+		}
+		g.rooms[3][3].Doors[East], g.rooms[3][4].Doors[West] = true, true
+		g.rooms[3][4].Doors[South], g.rooms[4][4].Doors[North] = true, true
+		g.rooms[4][4].Doors[West], g.rooms[4][3].Doors[East] = true, true
+		g.rooms[4][3].Doors[North], g.rooms[3][3].Doors[South] = true, true
+		putInRoom(g, a.player, 3, 3)
+		g.rooms[3][3].Kind = "rum"
+		if !g.runTowerEvent("sluter") || len(g.shutDoors) != 1 {
+			t.Fatal("ingen dörr slöts")
+		}
+		sd := g.shutDoors[0]
+		if g.rooms[sd.y][sd.x].Doors[sd.d] {
+			t.Fatal("dörren står öppen")
+		}
+		// Den slutna dörren var inte den enda vägen: det går fortfarande runt.
+		if !g.otherWay(sd.x, sd.y, sd.d) {
+			t.Fatal("tornet stängde den enda vägen")
+		}
+		for range sd.rounds {
+			g.reopenDoors()
+		}
+		if !g.rooms[sd.y][sd.x].Doors[sd.d] || len(g.shutDoors) != 0 {
+			t.Fatal("dörren öppnades inte igen")
+		}
+	})
+	t.Run("yngel", func(t *testing.T) {
+		g, a, b := startTwo(t)
+		x, y := 4, 4
+		if g.isChamber(x, y) {
+			x = 3
+		}
+		putInRoom(g, a.player, x, y)
+		putInRoom(g, b.player, x, y)
+		if g.eventPossible("yngel") {
+			t.Fatal("ynglet kryper fram fast ingen är ensam")
+		}
+		putInRoom(g, b.player, 1, 0)
+		if !g.runTowerEvent("yngel") || g.monsterAt(x, y) == nil || !hasEventCard(a.player, "yngel_vagg") {
+			t.Fatal("inget yngel hos den som står längst in")
+		}
+		if hasEventCard(b.player, "yngel_vagg") {
+			t.Fatal("den andra märkte ynglet")
+		}
+	})
+}
+
 // Ett rasat rum går inte att gå in i, och varelser går inte dit heller.
 func TestCaveInBlocks(t *testing.T) {
 	g, a, _ := startTwo(t)

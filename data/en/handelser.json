@@ -112,6 +112,23 @@
         "har": [
           "A sheet of paper slides in under the door, as if someone on the other side pushed it through."
         ]
+      },
+      {
+        "id": "sluter",
+        "rubrik": "The tower closes",
+        "text": [
+          "To the {horn} stone grinds on stone, and an opening closes."
+        ],
+        "har": [
+          "The door beside you slides shut with a heavy breath. It will not budge."
+        ]
+      },
+      {
+        "id": "yngel",
+        "rubrik": "Brood from the wall",
+        "har": [
+          "The mortar crumbles, and something small and writhing crawls out of the wall beside you."
+        ]
       }
     ]
   }

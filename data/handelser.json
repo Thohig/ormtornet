@@ -158,6 +158,31 @@
         "har": [
           "Ett papper glider in under dörren, som om någon på andra sidan sköt in det."
         ]
+      },
+      {
+        "id": "sluter",
+        "vikt": 2,
+        "max": 2,
+        "bild": "sluter",
+        "rubrik": "Tornet sluter sig",
+        "rundor": 3,
+        "text": [
+          "Åt {horn} gnisslar sten mot sten, och en öppning sluter sig."
+        ],
+        "har": [
+          "Dörren bredvid dig glider igen med ett tungt andetag. Den går inte att rubba."
+        ]
+      },
+      {
+        "id": "yngel",
+        "vikt": 2,
+        "max": 2,
+        "bild": "yngel_vagg",
+        "rubrik": "Yngel ur väggen",
+        "varelse": "yngel",
+        "har": [
+          "Murbruket smular sönder, och något litet och slingrande kryper ut ur väggen bredvid dig."
+        ]
       }
     ]
   }

@@ -497,6 +497,12 @@
     "ber_handelse_brev": [
       "{nar}, a letter slid in under a door."
     ],
+    "ber_handelse_sluter": [
+      "{nar}, the tower closed an opening between two rooms."
+    ],
+    "ber_handelse_yngel": [
+      "{nar}, something small and writhing crawled out of a wall."
+    ],
     "ber_foremal": [
       "{nar}, {namn} found {foremal}."
     ],
@@ -1061,6 +1067,12 @@
     ],
     "kronika_handelse_brev": [
       "A letter slid in under a door."
+    ],
+    "kronika_handelse_sluter": [
+      "The tower closed an opening between two rooms for a while."
+    ],
+    "kronika_handelse_yngel": [
+      "Something small and writhing crawled out of a wall."
     ],
     "handelse_guld_tar": [
       "The coins from the crack lie on the floor. You take {antal} gold."
