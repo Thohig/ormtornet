@@ -356,6 +356,21 @@ try {
           await bild(s, "6-slutet");
           const res = await s.page.locator("#chronResults").innerText().catch(() => "");
           for (const n of l.namn) if (!res.includes(n)) fynna(s.namn, `${n} saknas i resultatet`);
+          // Guldboken: ett klick på en vandrare öppnar berättelsen om hens
+          // guld, och knappen Runda för runda raderna.
+          const vald = s.page.locator("#chronResults .vhuvud:not([disabled])").first();
+          if (await vald.count()) {
+            await vald.click();
+            if (!(await s.page.locator("#chronResults .guldbok p").count())) fynna(s.namn, "guldboken öppnas inte");
+            const knapp = s.page.locator("#chronResults .gb-knapp");
+            if (await knapp.count()) {
+              await knapp.click();
+              if (!(await s.page.locator("#chronResults .gb-rader span").count())) fynna(s.namn, "Runda för runda visar inga rader");
+            }
+            await s.page.locator("#chronResults .guldbok").scrollIntoViewIfNeeded().catch(() => {});
+            await granska(s, "guldboken");
+            await bild(s, "7-guldboken");
+          } else fynna(s.namn, "ingen vandrare går att välja i slutet");
           s.slut = true;
         }
       }

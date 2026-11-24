@@ -6,6 +6,21 @@ eller leder tornet.
 
 ## 2026-11-24
 
+### Guldboken och en enklare slutskärm
+
+- Slutskärmen börjar med placeringen. Välj en vandrare för att läsa hens
+  guldbok: en längre berättelse om hur hen fick sitt guld, det första
+  fyndet, nävarna ur kammaren, varelserna, slagen, det ormen tog tillbaka
+  och det porten lade till (docs/guldboken.md).
+- Knappen Runda för runda i guldboken visar en rad för varje gång guldet
+  ändrades, med plus eller minus och vad vandraren bar efteråt.
+- Resultaten och raden om var och en är nu samma lista, med titeln och
+  den största stunden på vandrarens rad.
+- Hela krönikan runda för runda står inte längre på slutskärmen; berättelsen
+  och guldböckerna säger samma sak. Knappen heter Visa din vandring och
+  visar bara den egna vandringen.
+- Tornets dunk, hjärtslagen i ljudet, tystnar på slutskärmen.
+
 ### Berättelsen om vandringen
 
 - Krönikan i slutet börjar med en gemensam berättelse i stället för

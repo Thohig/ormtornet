@@ -124,6 +124,9 @@
     "slut_du": "(you)",
     "slut_dod": "dead",
     "slut_forlorad": "lost",
+    "slut_valj": "Choose a wanderer to read how they got their gold.",
+    "guldbok_rundor_visa": "Round by round",
+    "guldbok_rundor_dolj": "Hide the rounds",
     "slut_ai": "~ AI played part of the way",
     "slut_nytt_torn": "Enter: new tower",
 
@@ -131,8 +134,8 @@
 
     "nu_dod": "You are dead",
     "kronika_berattelse": "The tale of the journey",
-    "kronika_rundor_visa": "Show every round",
-    "kronika_rundor_dolj": "Hide the rounds",
+    "kronika_rundor_visa": "Show your journey",
+    "kronika_rundor_dolj": "Hide your journey",
     "vandring_rubrik": "Your journey",
     "vandring_pagar_en": "The walk goes on: round {runda}, the sun is one hand-breadth above the horizon. {inne} still in the tower, {ute} gone out.",
     "vandring_pagar": "The walk goes on: round {runda}, the sun is {sol} hand-breadths above the horizon. {inne} still in the tower, {ute} gone out.",

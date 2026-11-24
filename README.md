@@ -262,8 +262,10 @@ den som dör och för alla i slutet (se slutet nedan och Strider):
      kort. Kortet glider undan när du väljer nästa drag, efter åtta
      sekunder eller vid ett klick. Rundans rader
      står i `data/texter.json` under `sam_`,
-   - **slutet**: en egen skärm med resultaten, epilogen, krönikan över hela
-     vandringen och den egna vandringen runda för runda. Visa kartan går
+   - **slutet**: en egen skärm med placeringen, där man väljer en vandrare
+     och läser hur hen fick sitt guld, berättelsen om vandringen, epilogen
+     och den egna vandringen runda för runda bakom en knapp. Tornets dunk
+     tystnar där. Visa kartan går
      till kartan med resultatrutan och loggen, där epilogen också står, och
      Visa krönikan i panelen Nu går tillbaka.
      Enter eller Nytt torn i översta raden leder tillbaka till lobbyn när alla
@@ -437,33 +439,32 @@ och texterna utan port under `ansluter_dolt`, `valkommen_dolt` och
 Förut gick det att välja att alla syns hela tiden, eller att kartan är
 gemensam. De valen är borttagna; se [docs/synlighet.md](docs/synlighet.md).
 
-När vandringen är slut står krönikan på en egen skärm. Under resultaten
-står **berättelsen om vandringen**, en gemensam historia i tre delar
-(`berattelse.go`, [docs/berattelsen.md](docs/berattelsen.md)). Inträdet
-säger vilka som gick in, med sina klasser, och hur länge vandringen
-varade. Höjdpunkterna är de tyngsta av krönikans händelser, högst sju,
-var och en med ett spelkort bredvid och berättad med när den hände
-räknat från den förra ("Två rundor senare vaknade ormen …"). Slutet
-säger vem som bar ut mest, vilka andra som kom ut och vilka som aldrig
-gjorde det. Under det står en rad om var och en, med en titel till den
-som ensam har mest av något (den girigaste, rövaren, jägaren,
-upptäckaren …), hens största stund och hur det slutade. Under berättelsen står epilogen, och sist knappen Visa alla
-rundor med hela krönikan och den egna vandringen. Vilka händelser som
-räknas och hur mycket de väger står under `spelkort.berattelse` i
-`data/texter.json`, och texterna under `ber_*`.
+När vandringen är slut står krönikan på en egen skärm. Överst står
+**placeringen**, en rad för var och en med platsen, namnet i sin färg, en
+titel till den som ensam har mest av något (den girigaste, rövaren,
+jägaren, upptäckaren …), guldet och under det hens största stund. Ett
+klick på en vandrare öppnar hens **guldbok** (`guldbok.go`,
+[docs/guldboken.md](docs/guldboken.md)): en längre berättelse om hur hen
+fick sitt guld, från det första myntet till porten, med vad hen förlorade
+på vägen, och bakom knappen Runda för runda en rad för varje gång guldet
+ändrades, med plus eller minus och vad hen bar efteråt.
 
-Hela krönikan är det
-som hände, runda för runda: vem som gick ut och med hur mycket, vem som dog,
-av vad och hur mycket guld som blev liggande, vem som tog upp det, vem som fällde vilken
-varelse, vem som slog vem och tog hur mycket guld, vem som nådde
-skattkammaren först, när klockan fick solen att sjunka fortare och när
-ormen vaknade. Sedan kommer en rad för varje vandrare
-med hur många nävar den tog ur kammaren och hur mycket guld de gav, hur
-många varelser den fällde, fällor den gick i och rum den sökte, och för
-den som har träffat andra vandrare träffarna och det stulna guldet. Bara
-det som inte är noll står med.
-Texterna står i `data/texter.json` under `kronika_*`. Under krönikan står
-den egna vandringen, samma som den som dör ser under vandringen.
+Under placeringen står **berättelsen om vandringen**, en gemensam historia
+i tre delar (`berattelse.go`, [docs/berattelsen.md](docs/berattelsen.md)).
+Inträdet säger vilka som gick in, med sina klasser, och hur länge
+vandringen varade. Höjdpunkterna är de tyngsta av krönikans händelser,
+högst sju, var och en med ett spelkort bredvid och berättad med när den
+hände räknat från den förra ("Två rundor senare vaknade ormen …"). Slutet
+säger vem som bar ut mest, vilka andra som kom ut och vilka som aldrig
+gjorde det. Under berättelsen står epilogen, och sist knappen Visa din
+vandring med den egna vandringen, samma som den som dör ser under
+vandringen. Vilka händelser som räknas och hur mycket de väger står under
+`spelkort.berattelse` i `data/texter.json`, texterna under `ber_*` och
+guldböckernas under `gb_*`.
+
+Krönikan, händelserna runda för runda (`kronika_*` i `data/texter.json`),
+är det berättelsen och den största stunden byggs av. Den står inte längre
+på skärmen sedan 2026-11-24.
 
 ### Klasser
 
@@ -1134,6 +1135,7 @@ Beskrivningarna för rummen ligger under nivåerna `"1"` till `"4"`.
 - `spelkort.go` spelkorten: rundans kort i ordning, korten mellan
   rundorna och de stora korten (bilderna i `web/kort.js`)
 - `berattelse.go` berättelsen om vandringen i krönikan i slutet
+- `guldbok.go` guldboken: hur var och en fick sitt guld, i slutet
 - `difficulty.go` förvalen för svårighet
 - `classes.go` klasserna och valet av klass
 - `items.go` föremålen

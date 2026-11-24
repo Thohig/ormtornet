@@ -560,6 +560,169 @@
     "ber_slut_doda": [
       "{namn} never came out."
     ],
+    "gb_in_vinnare": [
+      "{namn} carried {guld} gold out of the tower, more than anyone else.",
+      "No one carried out more than {namn}: {guld} gold."
+    ],
+    "gb_in_ute": [
+      "{namn} carried {guld} gold out of the tower."
+    ],
+    "gb_in_tom": [
+      "{namn} left the tower empty-handed."
+    ],
+    "gb_in_dod": [
+      "{namn} never came out of the tower."
+    ],
+    "gb_in_kvar": [
+      "{namn} was still inside the tower when the sun went down."
+    ],
+    "gb_aldrig": [
+      "They never found any gold.",
+      "No gold ever stayed in their bag."
+    ],
+    "gb_sok": [
+      "{nar} they searched {rum} and found {guld} gold.",
+      "{nar} {guld} gold lay hidden in {rum}, and they found it."
+    ],
+    "gb_varelse": [
+      "{nar} they felled {varelse} and took {guld} gold.",
+      "{nar} {varelse} fell by their hand, and they took {guld} gold."
+    ],
+    "gb_kammaren": [
+      "{nar} they reached into the serpent's hoard and took {guld} gold.",
+      "{nar} they took a fistful from the serpent's hoard, {guld} gold."
+    ],
+    "gb_ormen": [
+      "{nar} the serpent woke and threw them out of the chamber, and {guld} gold spilled from their bag."
+    ],
+    "gb_slag": [
+      "{nar} they struck {namn} and took {guld} gold."
+    ],
+    "gb_dodade": [
+      "{nar} they killed {namn} and took {guld} gold."
+    ],
+    "gb_slagen": [
+      "{nar} {namn} struck them and took {guld} gold."
+    ],
+    "gb_dodad": [
+      "{nar} they were killed by {namn}, who took {guld} gold."
+    ],
+    "gb_dod_guld": [
+      "{nar} they picked up the gold {namn} had carried, {guld} gold."
+    ],
+    "gb_lost": [
+      "{nar} they found {guld} gold lying loose on the floor."
+    ],
+    "gb_lost_orm": [
+      "{nar} they found {guld} gold where the serpent had lain."
+    ],
+    "gb_tappade": [
+      "{nar} they fell, and {guld} gold was left lying on the floor."
+    ],
+    "gb_flera_sok": [
+      "{nar} they set out searching, and {antal} rooms gave {guld} gold in all."
+    ],
+    "gb_flera_varelse": [
+      "{nar} they went hunting: they felled {antal} creatures and took {guld} gold."
+    ],
+    "gb_flera_kammaren": [
+      "{nar} they took {antal} fistfuls from the serpent's hoard, {guld} gold in all.",
+      "{nar} they reached into the serpent's hoard {antal} times and got {guld} gold."
+    ],
+    "gb_flera_ormen": [
+      "{nar} the serpent woke {antal} times while they were in the chamber, and {guld} gold spilled from their bag."
+    ],
+    "gb_flera_dodade": [
+      "{nar} they killed {antal} wanderers and took {guld} gold."
+    ],
+    "gb_flera_dod_guld": [
+      "{nar} they gathered the gold of {antal} dead, {guld} gold."
+    ],
+    "gb_flera_lost": [
+      "{nar} they found loose gold on the floor {antal} times, {guld} gold in all."
+    ],
+    "gb_flera_lost_orm": [
+      "{nar} they found gold where the serpent had lain {antal} times, {guld} gold in all."
+    ],
+    "gb_storst": [
+      "It was their biggest haul.",
+      "They never got more at once."
+    ],
+    "gb_storst_av": [
+      "The biggest gave {guld} gold, more than they ever got at once."
+    ],
+    "gb_kvar": [
+      "Left in the bag: {summa} gold."
+    ],
+    "gb_foremal": [
+      "At the gate the items in their bag were worth {guld} gold."
+    ],
+    "gb_invigd": [
+      "The serpent's name gave {guld} gold more."
+    ],
+    "gb_invigd_forst": [
+      "The serpent's name gave {guld} gold more, extra for being the first initiate."
+    ],
+    "gb_guld_ute": [
+      "{namn} picked up that gold and carried it out."
+    ],
+    "gb_guld_inte_ute": [
+      "{namn} picked up that gold, but never got out with it."
+    ],
+    "gb_kvar_slut": [
+      "The {guld} gold they carried never came out; it stayed in the tower."
+    ],
+    "gb_summa": [
+      "All told, it came to {guld} gold."
+    ],
+    "gb_plats": [
+      "It was enough for place {plats} of {antal}."
+    ],
+    "gb_rad_sok": [
+      "Searched {rum}."
+    ],
+    "gb_rad_varelse": [
+      "Felled {varelse}."
+    ],
+    "gb_rad_kammaren": [
+      "Took a fistful from the serpent's hoard ({kort})."
+    ],
+    "gb_rad_ormen": [
+      "Thrown out of the chamber when the serpent woke."
+    ],
+    "gb_rad_slag": [
+      "Struck {namn}."
+    ],
+    "gb_rad_dodade": [
+      "Killed {namn}."
+    ],
+    "gb_rad_slagen": [
+      "Struck by {namn}."
+    ],
+    "gb_rad_dodad": [
+      "Killed by {namn}."
+    ],
+    "gb_rad_dod_guld": [
+      "Picked up the gold {namn} had carried."
+    ],
+    "gb_rad_lost": [
+      "Picked up gold lying loose on the floor."
+    ],
+    "gb_rad_lost_orm": [
+      "Picked up gold where the serpent had lain."
+    ],
+    "gb_rad_tappade": [
+      "Fell, and the gold was left lying."
+    ],
+    "gb_rad_foremal": [
+      "The items in the bag became gold at the gate."
+    ],
+    "gb_rad_invigd": [
+      "The serpent's name gave more gold at the gate."
+    ],
+    "gb_rad_invigd_forst": [
+      "The serpent's name gave more gold at the gate, extra for the first initiate."
+    ],
     "ber_tornet_vann": [
       "The tower won"
     ],

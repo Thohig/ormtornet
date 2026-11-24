@@ -459,7 +459,7 @@ function handle(msg) {
       MapView.draw(state);
       padArrows();
       Sound.breath(state.phase === "spel" ? state.sleep : -1);
-      Sound.level(state.level);
+      Sound.level(state.phase === "slut" ? 0 : state.level); // inget dunk på slutskärmen
       document.body.dataset.niva = String(state.level);
       renderSide();
       renderTop();
@@ -738,27 +738,17 @@ function renderChron() {
   $("chronTitle").textContent = end ? endTitle() : t("vandring_rubrik");
   $("chronLead").textContent = end ? "" : v.dod || "";
   $("chronStatus").textContent = end ? "" : t(state.sun === 1 ? "vandring_pagar_en" : "vandring_pagar", { runda: state.round, sol: state.sun, inne: v.inne, ute: v.ute });
-  // Resultaten: vem som kom ut med hur mycket, vinnaren först.
-  const results = end ? (state.results || []).map((r) => ({ text: (r.plats ? r.plats + ". " : "") + (r.winner ? "★ " : "") + r.name + (isMine(r) ? " " + t("slut_du") : "") + (r.ai ? " ~" : "") + " · " + resultWord(r), c: (r.winner ? "win" : r.status !== "ute" ? "lost" : "") + (isMine(r) ? " mine" : "") })) : [];
-  // ~ förklaras under resultaten, som i resultatrutan på kartan.
-  if (end && (state.results || []).some((r) => r.ai)) results.push({ text: t("slut_ai"), c: "dim" });
-  rows("chronResults", results);
-  renderStory(end ? state.berattelse || [] : [], end ? state.vandrarna || [] : []);
+  // Placeringen: en rad för var och en, som går att välja för att läsa
+  // hur hen fick sitt guld.
+  renderPeople(end);
+  renderStory(end ? state.berattelse || [] : []);
   rows("chronEpilog", end ? state.epilog : []);
-  // Rundorna (hela krönikan och Din vandring) ligger bakom en knapp i
-  // slutet; under vandringen ser den döda sin vandring direkt.
+  // Din vandring ligger bakom en knapp i slutet; under vandringen ser den
+  // döda sin vandring direkt.
   $("chronRestBtn").hidden = !end;
   $("chronRestBtn").textContent = t(chronRestOpen ? "kronika_rundor_dolj" : "kronika_rundor_visa");
   $("chronRestBtn").setAttribute("aria-expanded", String(chronRestOpen));
   $("chronRest").hidden = end && !chronRestOpen;
-  rows("chronAll", end ? (state.kronika || []).filter((l) => l.c !== "rubrik").map((l) => ({ text: l.text, c: l.c, kort: l.kort })) : []);
-  if (end && state.kronika && state.kronika[0]) {
-    const h = document.createElement("h2");
-    h.textContent = state.kronika[0].text;
-    $("chronAll").prepend(h);
-  }
-  $("chronOwn").textContent = end ? t("vandring_rubrik") : "";
-  $("chronOwn").hidden = !end;
   const next = $("chronNext");
   const me = myPlayer();
   next.hidden = !end;
@@ -849,13 +839,15 @@ function renderChron() {
 // stycken som har ett. Korten vänds upp ett i taget, en gång, inte vid
 // varje nytt läge.
 let chronRestOpen = false;
-function renderStory(list, people) {
+function renderStory(list) {
   const box = $("chronStory");
-  const key = JSON.stringify([list, people]);
+  const key = JSON.stringify(list);
   if (box.dataset.key === key) return;
   box.dataset.key = key;
   box.innerHTML = "";
   chronRestOpen = false;
+  goldOpen = "";
+  goldRowsOpen = false;
   let n = 0;
   list.forEach((p) => {
     const d = document.createElement("div");
@@ -878,31 +870,113 @@ function renderStory(list, people) {
     d.appendChild(text);
     box.appendChild(d);
   });
-  // Raden om var och en: namnet i sin färg, titeln och hens största stund.
-  if (people.length) {
-    const ul = document.createElement("div");
-    ul.className = "vandrarna";
-    people.forEach((p) => {
-      const row = document.createElement("p");
-      if (isMine(p)) row.className = "mine";
-      const name = document.createElement("span");
-      name.className = "who";
-      name.textContent = p.namn;
-      name.style.color = MapView.PLAYER_COLORS[p.slot] || "";
-      row.appendChild(name);
-      if (p.titel) {
-        const ti = document.createElement("span");
-        ti.className = "titel";
-        ti.textContent = ", " + p.titel;
-        row.appendChild(ti);
-      }
-      row.appendChild(document.createTextNode(". " + p.text));
-      ul.appendChild(row);
-    });
-    box.appendChild(ul);
-  }
   box.hidden = !list.length;
   $("chronStoryHead").hidden = !list.length;
+}
+
+// renderPeople är placeringen i slutet: en rad för var och en med
+// platsen, namnet i sin färg, titeln, guldet och hens största stund.
+// Ett klick öppnar hens guldbok (guldbok.go) under raden: berättelsen om
+// hur hen fick sitt guld, och raderna runda för runda bakom en knapp.
+let goldOpen = ""; // vandraren vars guldbok är öppen
+let goldRowsOpen = false;
+function renderPeople(end) {
+  const box = $("chronResults");
+  const res = end ? state.results || [] : [];
+  const people = state.vandrarna || [];
+  const books = state.guldbok || [];
+  const key = JSON.stringify([res, people, books, goldOpen, goldRowsOpen, myName]);
+  $("chronPick").hidden = !books.length;
+  if (box.dataset.key === key) return;
+  box.dataset.key = key;
+  box.innerHTML = "";
+  box.hidden = !res.length;
+  res.forEach((r) => {
+    const person = people.find((p) => p.namn === r.name) || {};
+    const book = books.find((b) => b.namn === r.name);
+    const open = !!book && goldOpen === r.name;
+    const row = document.createElement("div");
+    row.className = "vrad" + (r.winner ? " win" : r.status !== "ute" ? " lost" : "") + (isMine(r) ? " mine" : "") + (open ? " open" : "");
+    const head = document.createElement("button");
+    head.type = "button";
+    head.className = "vhuvud";
+    head.disabled = !book;
+    head.setAttribute("aria-expanded", String(open));
+    const add = (cls, text, color) => {
+      const s = document.createElement("span");
+      s.className = cls;
+      s.textContent = text;
+      if (color) s.style.color = color;
+      head.appendChild(s);
+    };
+    add("plats", (r.plats ? r.plats + ". " : "") + (r.winner ? "★ " : ""));
+    add("who", r.name, MapView.PLAYER_COLORS[r.slot] || "");
+    if (person.titel) add("titel", ", " + person.titel);
+    if (isMine(r)) add("du", " " + t("slut_du"));
+    if (r.ai) add("du", " ~");
+    add("res", " · " + resultWord(r));
+    head.addEventListener("click", () => {
+      goldOpen = open ? "" : r.name;
+      goldRowsOpen = false;
+      renderPeople(true);
+    });
+    row.appendChild(head);
+    if (person.stund) {
+      const m = document.createElement("p");
+      m.className = "stund";
+      m.textContent = person.stund;
+      row.appendChild(m);
+    }
+    if (open) row.appendChild(goldBookEl(book));
+    box.appendChild(row);
+  });
+  // ~ förklaras under resultaten, som i resultatrutan på kartan.
+  if (res.some((r) => r.ai)) {
+    const d = document.createElement("div");
+    d.className = "dim";
+    d.textContent = t("slut_ai");
+    box.appendChild(d);
+  }
+}
+// goldBookEl är en guldbok: berättelsen i stycken och, bakom knappen
+// Runda för runda, en rad för varje gång guldet ändrades, med plus eller
+// minus och vad vandraren bar efteråt.
+function goldBookEl(book) {
+  const d = document.createElement("div");
+  d.className = "guldbok";
+  book.berattelse.forEach((text) => {
+    const p = document.createElement("p");
+    p.textContent = text;
+    d.appendChild(p);
+  });
+  if (!book.rader.length) return d;
+  const btn = document.createElement("button");
+  btn.type = "button";
+  btn.className = "gb-knapp";
+  btn.textContent = t(goldRowsOpen ? "guldbok_rundor_dolj" : "guldbok_rundor_visa");
+  btn.setAttribute("aria-expanded", String(goldRowsOpen));
+  btn.addEventListener("click", () => {
+    goldRowsOpen = !goldRowsOpen;
+    renderPeople(true);
+  });
+  d.appendChild(btn);
+  if (!goldRowsOpen) return d;
+  const list = document.createElement("div");
+  list.className = "gb-rader";
+  book.rader.forEach((r) => {
+    const cell = (cls, text) => {
+      const s = document.createElement("span");
+      s.className = cls;
+      s.textContent = text;
+      list.appendChild(s);
+    };
+    cell("gb-runda", t("vandring_runda", { runda: r.runda }));
+    cell("gb-text", r.text);
+    cell("gb-guld " + (r.guld > 0 ? "plus" : "minus"), (r.guld > 0 ? "+" : "−") + Math.abs(r.guld));
+    cell("gb-summa", r.summa);
+  });
+  d.appendChild(list);
+  return d;
 }
 $("chronRestBtn").addEventListener("click", () => {
   chronRestOpen = !chronRestOpen;

@@ -13,7 +13,9 @@ berättelsen.
 2. **Titlarna och raden om var och en** (byggt 2026-11-24): under
    berättelsen en rad för varje vandrare, i placeringens ordning, med
    namnet i sin färg, en titel från siffrorna, hens största stund och hur
-   det slutade.
+   det slutade. Sedan guldboken (docs/guldboken.md) står titeln och den
+   största stunden på vandrarens rad i placeringen överst på
+   slutskärmen, och hela krönikan står inte längre där.
 
 ## Hur den byggs
 

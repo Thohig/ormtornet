@@ -614,6 +614,169 @@
     "ber_slut_doda": [
       "{namn} kom aldrig ut."
     ],
+    "gb_in_vinnare": [
+      "{namn} bar ut {guld} guld ur tornet, mer än någon annan.",
+      "Ingen bar ut mer än {namn}: {guld} guld."
+    ],
+    "gb_in_ute": [
+      "{namn} bar ut {guld} guld ur tornet."
+    ],
+    "gb_in_tom": [
+      "{namn} kom ut ur tornet med tomma händer."
+    ],
+    "gb_in_dod": [
+      "{namn} kom aldrig ut ur tornet."
+    ],
+    "gb_in_kvar": [
+      "{namn} var kvar i tornet när solen gick ner."
+    ],
+    "gb_aldrig": [
+      "Hen hittade aldrig något guld.",
+      "Inget guld fastnade någonsin i hens väska."
+    ],
+    "gb_sok": [
+      "{nar} sökte hen igenom {rum} och hittade {guld} guld.",
+      "{nar} låg {guld} guld gömt i {rum}, och hen hittade det."
+    ],
+    "gb_varelse": [
+      "{nar} fällde hen {varelse} och tog {guld} guld.",
+      "{nar} föll {varelse} för hens hand, och hen tog {guld} guld."
+    ],
+    "gb_kammaren": [
+      "{nar} stack hen handen i ormens hög och tog {guld} guld.",
+      "{nar} tog hen en näve ur ormens hög, {guld} guld."
+    ],
+    "gb_ormen": [
+      "{nar} vaknade ormen och kastade ut hen ur kammaren, och {guld} guld rann ur väskan."
+    ],
+    "gb_slag": [
+      "{nar} slog hen {namn} och tog {guld} guld."
+    ],
+    "gb_dodade": [
+      "{nar} dödade hen {namn} och tog {guld} guld."
+    ],
+    "gb_slagen": [
+      "{nar} slog {namn} till och tog {guld} guld av henom."
+    ],
+    "gb_dodad": [
+      "{nar} dödades hen av {namn}, som tog {guld} guld."
+    ],
+    "gb_dod_guld": [
+      "{nar} tog hen upp guldet som {namn} hade burit, {guld} guld."
+    ],
+    "gb_lost": [
+      "{nar} hittade hen {guld} guld som låg löst på golvet."
+    ],
+    "gb_lost_orm": [
+      "{nar} hittade hen {guld} guld där ormen hade legat."
+    ],
+    "gb_tappade": [
+      "{nar} föll hen, och {guld} guld blev liggande på golvet."
+    ],
+    "gb_flera_sok": [
+      "{nar} gav hen sig ut att leta, och {antal} sökta rum gav {guld} guld i allt."
+    ],
+    "gb_flera_varelse": [
+      "{nar} började en jakt: hen fällde {antal} varelser och tog {guld} guld."
+    ],
+    "gb_flera_kammaren": [
+      "{nar} tog hen {antal} nävar ur ormens hög, {guld} guld i allt.",
+      "{nar} stack hen handen i ormens hög {antal} gånger och fick {guld} guld."
+    ],
+    "gb_flera_ormen": [
+      "{nar} vaknade ormen {antal} gånger medan hen var i kammaren, och {guld} guld rann ur väskan."
+    ],
+    "gb_flera_dodade": [
+      "{nar} dödade hen {antal} vandrare och tog {guld} guld."
+    ],
+    "gb_flera_dod_guld": [
+      "{nar} samlade hen upp guldet efter {antal} döda, {guld} guld."
+    ],
+    "gb_flera_lost": [
+      "{nar} hittade hen löst guld på golvet {antal} gånger, {guld} guld i allt."
+    ],
+    "gb_flera_lost_orm": [
+      "{nar} hittade hen guld där ormen hade legat {antal} gånger, {guld} guld i allt."
+    ],
+    "gb_storst": [
+      "Det var hens största fångst.",
+      "Mer fick hen aldrig på en gång."
+    ],
+    "gb_storst_av": [
+      "Den största gav {guld} guld, mer än hen någonsin fick på en gång."
+    ],
+    "gb_kvar": [
+      "Kvar i väskan fanns {summa} guld."
+    ],
+    "gb_foremal": [
+      "Vid porten var föremålen i väskan värda {guld} guld."
+    ],
+    "gb_invigd": [
+      "Ormens namn gav {guld} guld till."
+    ],
+    "gb_invigd_forst": [
+      "Ormens namn gav {guld} guld till, mer eftersom hen var den förste invigde."
+    ],
+    "gb_guld_ute": [
+      "Guldet hen bar tog {namn} upp och bar ut."
+    ],
+    "gb_guld_inte_ute": [
+      "Guldet hen bar tog {namn} upp, men kom aldrig ut med det."
+    ],
+    "gb_kvar_slut": [
+      "De {guld} guld hen bar kom aldrig ut, utan blev kvar i tornet."
+    ],
+    "gb_summa": [
+      "Allt som allt blev det {guld} guld."
+    ],
+    "gb_plats": [
+      "Det räckte till plats {plats} av {antal}."
+    ],
+    "gb_rad_sok": [
+      "Sökte igenom {rum}."
+    ],
+    "gb_rad_varelse": [
+      "Fällde {varelse}."
+    ],
+    "gb_rad_kammaren": [
+      "Tog en näve ur ormens hög ({kort})."
+    ],
+    "gb_rad_ormen": [
+      "Kastades ut ur kammaren när ormen vaknade."
+    ],
+    "gb_rad_slag": [
+      "Slog {namn}."
+    ],
+    "gb_rad_dodade": [
+      "Dödade {namn}."
+    ],
+    "gb_rad_slagen": [
+      "Slogs av {namn}."
+    ],
+    "gb_rad_dodad": [
+      "Dödades av {namn}."
+    ],
+    "gb_rad_dod_guld": [
+      "Tog upp guldet som {namn} hade burit."
+    ],
+    "gb_rad_lost": [
+      "Tog upp guld som låg löst på golvet."
+    ],
+    "gb_rad_lost_orm": [
+      "Tog upp guld där ormen hade legat."
+    ],
+    "gb_rad_tappade": [
+      "Föll, och guldet blev liggande."
+    ],
+    "gb_rad_foremal": [
+      "Föremålen i väskan blev guld vid porten."
+    ],
+    "gb_rad_invigd": [
+      "Ormens namn gav mer guld vid porten."
+    ],
+    "gb_rad_invigd_forst": [
+      "Ormens namn gav mer guld vid porten, mer för den förste invigde."
+    ],
     "ber_tornet_vann": [
       "Tornet vann"
     ],

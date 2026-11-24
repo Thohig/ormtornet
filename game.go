@@ -388,6 +388,7 @@ type Player struct {
 	lastCard                                *gameCard    // vandringens sista kort: ute, död eller kvar när solen gick ner
 	goldTakenBy                             []int        // vandrarna som tog upp guldet den döda vandraren bar
 	deaths                                  []heardDeath // dödsskrik vandraren har hört (guld.go)
+	goldLog                                 []goldEntry  // varje ändring av guldet, för guldboken (guldbok.go)
 }
 
 // present är sant för en spelare som deltar just nu: en människa med öppen
@@ -450,6 +451,7 @@ type Game struct {
 	epilog      []chronLine   // epilogen som alla fick, för krönikan på egen skärm
 	story       []storyPart   // berättelsen om vandringen, skriven när den är slut (berattelse.go)
 	storyPeople []storyPerson // raden om var och en under berättelsen
+	books       []goldBook    // allas guldbok, när vandringen är slut (guldbok.go)
 
 	graceUsed bool // porten har redan väntat på de invigda
 	// chamberX och chamberY är kammarens rum; chamberMoved att ormen har
@@ -804,10 +806,10 @@ type stateMsg struct {
 	Rooms       []roomView    `json:"rooms"`
 	Results     []resultView  `json:"results,omitempty"`
 	Journey     *journeyView  `json:"vandring,omitempty"`   // den egna vandringen, för den som har dött och för alla i slutet
-	Chronicle   []chronLine   `json:"kronika,omitempty"`    // hela krönikan, när vandringen är slut
 	Epilogue    []chronLine   `json:"epilog,omitempty"`     // epilogen, när vandringen är slut
 	Story       []storyPart   `json:"berattelse,omitempty"` // berättelsen om vandringen, när den är slut
 	StoryPeople []storyPerson `json:"vandrarna,omitempty"`  // raden om var och en under berättelsen
+	GoldBooks   []goldBook    `json:"guldbok,omitempty"`    // hur var och en fick sitt guld, när vandringen är slut
 }
 
 type logMsg struct {
@@ -1015,10 +1017,10 @@ func (g *Game) stateFor(me *Player) stateMsg {
 		st.Journey = g.journeyOf(me)
 	}
 	if g.phase == phaseEnd {
-		st.Chronicle = g.chronicleLines()
 		st.Epilogue = append(slices.Clone(g.epilog), me.epilog...)
 		st.Story = g.story
 		st.StoryPeople = g.storyPeople
+		st.GoldBooks = g.books
 	}
 	return st
 }
@@ -1910,6 +1912,7 @@ func (g *Game) move(p *Player, d Dir, depth int) {
 		p.Status = statusOut
 		if gold := g.itemGold(p); gold > 0 {
 			p.Treasure += gold
+			g.goldNote(p, "foremal", gold)
 			g.logTo(p, g.data.Text("foremal_guld", "antal", strconv.Itoa(gold)), "syn")
 		}
 		if p.initiated && p.Treasure > 0 {
@@ -1919,6 +1922,11 @@ func (g *Game) move(p *Player, d Dir, depth int) {
 			}
 			if bonus := int(float64(p.Treasure) * share); bonus > 0 {
 				p.Treasure += bonus
+				if p.ID == g.firstInitiated {
+					g.goldNote(p, "invigd_forst", bonus)
+				} else {
+					g.goldNote(p, "invigd", bonus)
+				}
 				g.logTo(p, g.data.Text("invigd_guld", "antal", strconv.Itoa(bonus)), "rost")
 			}
 		}

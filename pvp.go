@@ -218,6 +218,13 @@ func (g *Game) hit(a, b *Player, gold int, bakhall bool) {
 	gold = g.hiddenShare(b, min(gold, b.Treasure))
 	b.Treasure -= gold
 	a.Treasure += gold
+	if b.HP <= pvpSkada {
+		g.goldNote(a, "dodade", gold, "namn", b.Name)
+		g.goldNote(b, "dodad", -gold, "namn", a.Name)
+	} else {
+		g.goldNote(a, "slag", gold, "namn", b.Name)
+		g.goldNote(b, "slagen", -gold, "namn", a.Name)
+	}
 	a.stats.hits++
 	a.stats.stolen += gold
 	g.soundTo(a, "hugg")

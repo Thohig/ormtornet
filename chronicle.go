@@ -98,13 +98,13 @@ func (g *Game) chronicleDeath(p *Player) {
 func (g *Game) resetChronicle() {
 	g.chron = nil
 	g.epilog = nil
-	g.story, g.storyPeople = nil, nil
+	g.story, g.storyPeople, g.books = nil, nil, nil
 	for _, p := range g.players {
 		if p != nil {
 			p.stats = chronStats{}
 			p.hurt("", "")
 			p.journal, p.death, p.epilog, p.lastCard = nil, "", nil, nil
-			p.goldTakenBy, p.deaths = nil, nil
+			p.goldTakenBy, p.deaths, p.goldLog = nil, nil, nil
 		}
 	}
 }
@@ -116,8 +116,9 @@ type chronLine struct {
 	Kort  []cardTag `json:"kort,omitempty"` // ormkorten vandraren drog, på raden med siffror
 }
 
-// chronicleLines är krönikan: rubriken, händelserna i tur och ordning och
-// sedan en rad för varje vandrare.
+// chronicleLines är krönikan som text: rubriken, händelserna i tur och ordning och
+// sedan en rad för varje vandrare. Slutskärmen visar den inte sedan
+// 2026-11-24; där står berättelsen och guldböckerna (guldbok.go).
 func (g *Game) chronicleLines() []chronLine {
 	lines := []chronLine{{Text: g.data.Text("kronika_rubrik"), Class: "rubrik"}}
 	for _, e := range g.chron {

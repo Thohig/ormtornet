@@ -77,7 +77,9 @@ func (g *Game) dropGold(p *Player) {
 	r := &g.rooms[p.Y][p.X]
 	r.gold = append(r.gold, leftGold{by: p.ID, name: p.Name, gold: p.Treasure})
 	g.logTo(p, g.data.Text("guld_kvar_du", "guld", strconv.Itoa(p.Treasure)), "dim")
+	lost := p.Treasure
 	p.Treasure = 0
+	g.goldNote(p, "tappade", -lost)
 }
 
 // pickUpGold låter en levande vandrare ta guldet som ligger i rummet.
@@ -88,6 +90,7 @@ func (g *Game) pickUpGold(p *Player) {
 	r := &g.rooms[p.Y][p.X]
 	for _, l := range r.gold {
 		p.Treasure += l.gold
+		g.goldNote(p, "dod_guld", l.gold, "namn", l.name)
 		n := strconv.Itoa(l.gold)
 		g.soundTo(p, "skatt")
 		text := g.data.Text("guld_kvar", "namn", l.name, "antal", n)
@@ -105,6 +108,11 @@ func (g *Game) pickUpGold(p *Player) {
 	if r.loose > 0 {
 		n := strconv.Itoa(r.loose)
 		p.Treasure += r.loose
+		kind := "lost"
+		if r.looseKey == "ormen_guld_kvar" {
+			kind = "lost_orm"
+		}
+		g.goldNote(p, kind, r.loose)
 		g.soundTo(p, "skatt")
 		text := g.data.Text(r.looseKey, "antal", n)
 		g.logTo(p, text, "syn")

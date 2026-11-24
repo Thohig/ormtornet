@@ -76,6 +76,7 @@ type storyPerson struct {
 	Slot  int    `json:"slot"`
 	Title string `json:"titel,omitempty"`
 	Text  string `json:"text"`
+	Stund string `json:"stund,omitempty"` // bara den största stunden, för slutskärmens lista
 }
 
 // storyPart är ett stycke i berättelsen: inträdet (in), en höjdpunkt
@@ -126,6 +127,7 @@ func (g *Game) buildStory() {
 	g.story = append(g.story, high...)
 	g.story = append(g.story, g.storyEnd())
 	g.storyPeople = g.storyPersons()
+	g.books = g.goldBooks()
 }
 
 // storyKind är händelsens slag i berättelsen, -1 när den inte räknas.
@@ -186,6 +188,7 @@ func (g *Game) storyPersons() []storyPerson {
 			best, weight = i, sd.Slag[k].Vikt
 		}
 		var parts []string
+		var moment string
 		ended := false
 		if best >= 0 {
 			// Raden börjar redan med namnet: "Sigge. Fällde en grönaktig
@@ -196,6 +199,7 @@ func (g *Game) storyPersons() []storyPerson {
 				text = upperFirst(rest)
 			}
 			parts = append(parts, text)
+			moment = text
 			ended = sd.Slag[g.storyKind(e)].ID == "dod"
 		}
 		if !ended {
@@ -210,7 +214,7 @@ func (g *Game) storyPersons() []storyPerson {
 				parts = append(parts, g.data.Text("ber_vem_kvar"))
 			}
 		}
-		out = append(out, storyPerson{Name: p.Name, Slot: p.Slot, Title: titles[p], Text: strings.Join(parts, " ")})
+		out = append(out, storyPerson{Name: p.Name, Slot: p.Slot, Title: titles[p], Text: strings.Join(parts, " "), Stund: moment})
 	}
 	return out
 }

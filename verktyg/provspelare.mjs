@@ -152,6 +152,11 @@ ws.onmessage = (ev) => {
     // Berättelsen om vandringen, stycke för stycke, att läsa efteråt.
     for (const b of st.berattelse || []) w(`BERÄTTELSE ${b.text}`);
     for (const v of st.vandrarna || []) w(`BERÄTTELSE ${v.namn}${v.titel ? ", " + v.titel : ""}. ${v.text}`);
+    // Guldböckerna: hur var och en fick sitt guld, och raderna runda för runda.
+    for (const b of st.guldbok || []) {
+      for (const text of b.berattelse) w(`GULDBOK ${b.namn}: ${text}`);
+      for (const r of b.rader) w(`GULDRAD ${b.namn} runda ${r.runda} ${r.guld > 0 ? "+" : ""}${r.guld} = ${r.summa}: ${r.text}`);
+    }
     played++;
     if (played >= games) { setTimeout(() => process.exit(0), 500); return; }
     setTimeout(() => send({ t: "ready" }), 800);

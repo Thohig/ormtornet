@@ -197,6 +197,7 @@ func (g *Game) search(p *Player) {
 		n := lo + g.rng.IntN(max(1, hi-lo+1))
 		n = max(1, int(float64(n)*g.classVal(p, "sok_guld", 1)))
 		p.Treasure += n
+		g.goldNote(p, "sok", n, "rum", g.roomShort(room))
 		g.soundTo(p, "skatt")
 		text := g.data.SearchText("skatt", "antal", strconv.Itoa(n), "skatt", strconv.Itoa(p.Treasure))
 		g.logTo(p, text, "syn")

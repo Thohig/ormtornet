@@ -32,7 +32,7 @@ func TestChronicle(t *testing.T) {
 	}
 
 	var rows []string
-	for _, l := range g.stateFor(pa).Chronicle {
+	for _, l := range g.chronicleLines() {
 		rows = append(rows, l.Text)
 	}
 	all := strings.Join(rows, "\n")
@@ -94,9 +94,6 @@ func TestJourneyForTheDead(t *testing.T) {
 	}
 	if !strings.Contains(st.Journey.Stats, "Bo:") {
 		t.Errorf("siffrorna: %q", st.Journey.Stats)
-	}
-	if len(st.Chronicle) != 0 {
-		t.Error("den döda ser hela krönikan mitt i vandringen")
 	}
 	if len(pa.journal) == 0 {
 		t.Error("Alvas runda med sökandet skrevs inte ner")

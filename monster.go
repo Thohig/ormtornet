@@ -373,6 +373,7 @@ func (g *Game) defeat(p *Player, m *Monster) {
 		g.slain[m.ID] = p.ID
 	}
 	p.Treasure += t.Guld
+	g.goldNote(p, "varelse", t.Guld, "varelse", t.Kort)
 	p.stats.kills++
 	p.roundKill = t.KortBestamd
 	g.chronicle("kronika_varelse", "namn", p.Name, "varelse", t.Kort, "bild", cardImage(t.Bild, t.ID))

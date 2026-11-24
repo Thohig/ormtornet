@@ -1359,16 +1359,38 @@ body.touch .card .num { display: none; }
 #chronButtons button:hover, #chronButtons button:focus-visible, .chronBack:hover, .chronBack:focus-visible { color: var(--hi); border-color: var(--hi); outline: none; }
 .chronBack { margin-top: 6px; font-size: 13px; }
 #me .chronBack { margin: 0; }
-#chronResults, #chronEpilog, #chronAll { margin: 0 0 18px; display: grid; gap: 4px; }
-#chronResults { text-align: center; font-size: 15px; }
-#chronResults .win { color: var(--hi); }
-#chronResults .lost { color: var(--warn); }
-#chronResults .mine { font-weight: bold; }
-#chronResults .dim { color: var(--chalk); font-size: 13px; }
+#chronResults, #chronEpilog { margin: 0 0 18px; display: grid; gap: 4px; }
+#chronResults { gap: 2px; margin-bottom: 6px; font-size: 15px; }
+#chronResults .dim { color: var(--chalk); font-size: 13px; text-align: center; margin-top: 4px; }
+/* Placeringen: en rad per vandrare, som öppnar hens guldbok. */
+#chronResults .vrad { border-radius: 6px; padding: 2px 0; }
+#chronResults .vrad.open { background: rgba(255, 255, 255, 0.04); padding-bottom: 10px; }
+#chronResults .vhuvud { display: block; width: 100%; text-align: left; font: inherit; color: var(--fg); background: transparent; border: 0; border-radius: 6px; padding: 6px 10px; cursor: pointer; }
+#chronResults .vhuvud:disabled { cursor: default; }
+#chronResults .vhuvud:not(:disabled):hover, #chronResults .vhuvud:focus-visible { background: rgba(255, 255, 255, 0.06); outline: none; }
+#chronResults .vhuvud .who { font-weight: bold; }
+#chronResults .vhuvud .titel { color: var(--hi); font-style: italic; }
+#chronResults .vhuvud .du, #chronResults .vhuvud .plats { color: var(--chalk); }
+#chronResults .win .res { color: var(--hi); }
+#chronResults .lost .res { color: var(--warn); }
+#chronResults .mine .vhuvud { background: rgba(255, 255, 255, 0.03); }
+#chronResults .stund { margin: 0 10px 2px 28px; font-size: 13px; line-height: 1.45; color: var(--chalk); }
+#chronResults .guldbok { margin: 8px 10px 0 28px; display: grid; gap: 8px; }
+#chronResults .guldbok p { margin: 0; font-size: 15px; line-height: 1.55; color: var(--fg); }
+#chronResults .guldbok p:first-child { color: var(--hi); }
+#chronResults .gb-knapp { justify-self: start; font: inherit; font-size: 14px; color: var(--fg); background: transparent; border: 1px solid var(--dim); border-radius: 6px; padding: 4px 12px; cursor: pointer; }
+#chronResults .gb-knapp:hover, #chronResults .gb-knapp:focus-visible { color: var(--hi); border-color: var(--hi); outline: none; }
+#chronResults .gb-rader { display: grid; grid-template-columns: auto 1fr auto auto; gap: 4px 12px; font-size: 13px; color: var(--chalk); }
+#chronResults .gb-runda { white-space: nowrap; }
+#chronResults .gb-text { color: var(--fg); }
+#chronResults .gb-guld, #chronResults .gb-summa { text-align: right; font-variant-numeric: tabular-nums; }
+#chronResults .gb-guld.plus { color: var(--hi); }
+#chronResults .gb-guld.minus { color: var(--warn); }
+#chronPick { margin: 0 0 20px; text-align: center; font-size: 13px; color: var(--chalk); font-style: italic; }
 #chronEpilog { color: #e3b8f0; font-style: italic; }
 #chronEpilog .varn { color: var(--warn); }
 #chronEpilog .info { color: var(--fg); }
-#chronAll h2, #chron h2 {
+#chron h2 {
   margin: 6px 0 6px;
   font-size: 12px;
   font-weight: normal;
@@ -1376,8 +1398,6 @@ body.touch .card .num { display: none; }
   text-transform: uppercase;
   color: var(--hi);
 }
-#chronAll .dim { color: var(--chalk); font-size: 13px; }
-#chronAll .rost { color: #e3b8f0; }
 /* Berättelsen om vandringen: stycken med ett spelkort bredvid, kortet
    till vänster och varannan gång till höger (renderStory i app.js). */
 #chronStory { display: grid; gap: 16px; margin: 4px 0 22px; text-align: left; }
@@ -1396,15 +1416,10 @@ body.touch .card .num { display: none; }
   #chronStory .okort { flex-basis: 96px; width: 96px; }
   #chronStory .stycke p { font-size: 14px; }
 }
-#chronStory .vandrarna { display: grid; gap: 6px; padding-top: 12px; border-top: 1px solid var(--faint); }
-#chronStory .vandrarna p { margin: 0; font-size: 14px; line-height: 1.5; color: var(--chalk); }
-#chronStory .vandrarna .who { font-weight: bold; }
-#chronStory .vandrarna .titel { color: var(--hi); font-style: italic; }
-#chronStory .vandrarna .mine { color: var(--fg); }
 #chronRestBtn { display: block; margin: 0 auto 18px; font: inherit; color: var(--fg); background: transparent; border: 1px solid var(--dim); border-radius: 6px; padding: 6px 14px; cursor: pointer; }
 #chronRestBtn:hover, #chronRestBtn:focus-visible { color: var(--hi); border-color: var(--hi); outline: none; }
 #chronStory[hidden], #chronStoryHead[hidden], #chronRestBtn[hidden], #chronRest[hidden],
-#chronResults[hidden], #chronEpilog[hidden], #chronAll[hidden], #chronOwn[hidden], #chronNext[hidden], #chronHost[hidden] { display: none; }
+#chronResults[hidden], #chronPick[hidden], #chronEpilog[hidden], #chronNext[hidden], #chronHost[hidden] { display: none; }
 #chronNext:disabled { opacity: 0.6; cursor: default; }
 /* Pergamentkanten runt kartan snett ovanifrån: en tunn ram och mörker
    mot kanterna, som på ett gammalt spelbräde. */

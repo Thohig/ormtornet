@@ -125,11 +125,15 @@ Så här skiljer vi på sakerna när användaren ger instruktioner:
   runda (`vandring` i tillståndet, `journeyOf` i `chronicle.go`,
   `addJourney` i `summary.go`), med vandringens sista kort överst, vad
   skadan kom av, tysta rundor
-  ihopslagna och märket "tornet styrde". I slutet ser alla resultaten,
+  ihopslagna och märket "tornet styrde". I slutet ser alla
+  **placeringen**, en rad för var och en med **titeln** (den girigaste,
+  jägaren …) och den största stunden, där ett klick öppnar vandrarens
+  **guldbok**: hur hen fick sitt guld som berättelse, och raderna **runda
+  för runda** bakom en knapp (`guldbok.go`, docs/guldboken.md). Sedan
   **berättelsen** (inträdet, höjdpunkterna med var sitt spelkort och
-  slutet, `berattelse.go`, docs/berattelsen.md) med **raden om var och
-  en** och dess **titel** (den girigaste, jägaren …), epilogen, och bakom
-  knappen Visa alla rundor hela krönikan och sin vandring.
+  slutet, `berattelse.go`, docs/berattelsen.md), epilogen och bakom
+  knappen Visa din vandring sin vandring. Hela krönikan och tornets dunk
+  togs bort från slutskärmen 2026-11-24.
   Spelledaren har där också Till värdsidan bredvid Nytt torn.
 - **tangenterna vid dörrarna**: piltangenterna som står vid dörrarna i ens
   rum på kartan snett ovanifrån (`ritaTangenter` i `klient/src/karta.ts`).
@@ -307,6 +311,10 @@ Skriv dit när ett steg är klart.
 - [docs/berattelsen.md](docs/berattelsen.md): slutkrönikan som en
   gemensam berättelse med höjdpunkter i stället för drag för drag, och
   raden om var och en med en titel. Allt är byggt.
+- [docs/guldboken.md](docs/guldboken.md): att välja en vandrare på
+  slutskärmen och läsa hur hen fick sitt guld, och den enklare
+  slutskärmen. Allt är byggt; avsnittet Att prova säger vad som behöver
+  provas i spel.
 - [docs/minikartan.md](docs/minikartan.md): minikartan med det man har
   upptäckt, en fast ruta på datorn och kompassens ställe på telefonen.
   Allt är byggt; avsnittet Att prova säger vad som behöver provas i spel.

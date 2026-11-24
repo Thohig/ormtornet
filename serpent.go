@@ -204,6 +204,7 @@ func (g *Game) take(p *Player) {
 		g.chronicle("kronika_kammaren", "namn", p.Name)
 	}
 	p.Treasure += n
+	g.goldNote(p, "kammaren", n, "kort", c.Namn)
 	p.stats.takes++
 	p.stats.takeGold += n
 	g.soundTo(p, "skatt")
@@ -280,6 +281,7 @@ func (g *Game) wakeSerpent() {
 		share := min(1, o.SkattForlust+g.classVal(p, "extra_forlust", 0))
 		lost := g.hiddenShare(p, int(float64(p.Treasure)*share+0.5))
 		p.Treasure -= lost
+		g.goldNote(p, "ormen", -lost)
 		dmg := max(0, o.Skada-int(g.classVal(p, "ormskada", 0)))
 		text := fill(pick(o.KastasUt), "forlust", strconv.Itoa(lost), "skada", strconv.Itoa(dmg))
 		g.logTo(p, text, "varn")
