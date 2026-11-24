@@ -6,6 +6,20 @@ eller leder tornet.
 
 ## 2026-11-24
 
+### Figurerna går att känna igen
+
+- Varje klass har fått en egen kropp på kartan, så att klasserna går att
+  skilja åt även uppifrån. Legoknekten är bred med hjälm och axelskydd.
+  Tjuven är smal och framåtböjd med en lång kappa. Örtkvinnan har kjol
+  och Pilgrimen en kåpa ända ner till golvet. Kartritaren bär ett koger
+  fullt av kartor på ryggen och Ormtjusaren en turban. Lyktbäraren har
+  lyktan högt på en stång, och Spårfinnaren lutar sig fram mot marken
+  (`FORM` och `vandrare` i `klient/src/modeller.ts`).
+- Alla vandrare har större huvud, ögon som visar vart de tittar och en
+  mantel över axlarna med en kappa på ryggen i vandrarens egen färg. Då
+  syns färgen även när hatten eller huvan har klassens färg. Kappan
+  fladdrar när vandraren går.
+
 ### Varelsen skymmer inte den första vandraren
 
 - På kartan snett ovanifrån stod varelsen precis framför den första

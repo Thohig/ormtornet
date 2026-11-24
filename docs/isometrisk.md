@@ -26,8 +26,10 @@ Vandrarna och varelserna blir enkla 3D-modeller med ljus och skuggor.
   Kammaren har en kritring och en hög av guld, och ormens ögon lyser när
   den vaknar.
 - Vandrarna är low-poly-figurer i sin färg, med det klassen bär: skölden,
-  kartan, staven. De vänder sig och går mellan rummen i stället för att
-  hoppa. Den egna har en ring på golvet, och draget är en pil vid dörren.
+  kartan, staven. Varje klass har en egen kropp (`FORM` i
+  `klient/src/modeller.ts`), och alla har ögon och en mantel med kappa i
+  vandrarens färg (2026-11-24). De vänder sig och går mellan rummen i
+  stället för att hoppa. Den egna har en ring på golvet, och draget är en pil vid dörren.
 - Varelserna har en modell var. En varelse i `data/` som saknar modell
   visas med sitt tecken.
 - Avslöjandet: kritan andas på nivå 2, revben och hjärtslag på nivå 3, och

@@ -111,10 +111,41 @@ const TRA = 0x6b4f2e;
 const METALL = 0x9a9a92;
 const PERGAMENT = 0xe9dcc0;
 
+// Formen ger varje klass en egen kropp, så att klasserna går att skilja åt
+// uppifrån: bålens bredd upptill och nedtill, var bålen slutar nedtill (0
+// är en kåpa ända ner till golvet), hur långt fram vandraren lutar, hur
+// lång kappan på ryggen är (0 är ingen) och hur långt ut armarna sitter.
+interface Form {
+  topp: number;
+  botten: number;
+  nere: number;
+  lut: number;
+  kappa: number;
+  axel: number;
+}
+
+const FORM: Record<string, Partial<Form>> = {
+  legoknekt: { topp: 0.24, botten: 0.33, kappa: 0.55, axel: 0.28 },
+  tjuv: { topp: 0.14, botten: 0.22, nere: 0.5, lut: 0.14, kappa: 0.78, axel: 0.18 },
+  ortkvinna: { topp: 0.16, botten: 0.37, nere: 0.1, kappa: 0.42 },
+  kartritare: { kappa: 0 },
+  ormtjusare: { kappa: 0.5 },
+  sparfinnare: { lut: 0.08, kappa: 0.6 },
+  lyktbarare: { kappa: 0.45 },
+  pilgrim: { topp: 0.17, botten: 0.4, nere: 0.02, kappa: 0 },
+};
+const VANLIG: Form = { topp: 0.17, botten: 0.3, nere: 0.44, lut: 0, kappa: 0.5, axel: 0.21 };
+
+const AXLAR = 1.08; // där bålen slutar upptill
+const HUVUD = 1.29; // huvudets mitt
+
 // vandrare bygger en vandrare i färgen farg. klassFarg är färgen på det
-// klassen bär (modell.farg i klasser.json), annars klassens egen.
+// klassen bär (modell.farg i klasser.json), annars klassens egen. Manteln
+// över axlarna och kappan på ryggen har vandrarens färg, så att den syns
+// uppifrån även när hatten har klassens.
 export function vandrare(klass: string, farg: string, foremal: string[] = [], klassFarg?: string): Figur {
   const kf = (egen: THREE.ColorRepresentation): THREE.ColorRepresentation => klassFarg || egen;
+  const form: Form = { ...VANLIG, ...FORM[klass] };
   const g = new THREE.Group();
   const tyg = lam(farg);
   const huva = lam(morkare(farg, 0.5));
@@ -126,13 +157,37 @@ export function vandrare(klass: string, farg: string, foremal: string[] = [], kl
   });
   const kropp = new THREE.Group();
   g.add(kropp);
-  kropp.add(del(geo("torso", () => new THREE.CylinderGeometry(0.17, 0.3, 0.64, 7)), tyg, 0, 0.76, 0));
-  kropp.add(del(geo("huvud", () => new THREE.IcosahedronGeometry(0.16, 0)), lam(HUD), 0, 1.22, 0));
+  // Lutar vandraren framåt vrids kroppen kring höften, inte kring fötterna.
+  kropp.rotation.x = form.lut;
+  kropp.position.z = -Math.sin(form.lut) * 0.46;
+
+  const hojd = AXLAR - form.nere;
+  const k = `torso${form.topp}|${form.botten}|${form.nere}`;
+  kropp.add(del(geo(k, () => new THREE.CylinderGeometry(form.topp, form.botten, hojd, 8)), tyg, 0, form.nere + hojd / 2, 0));
+  kropp.add(del(geo("hals", () => new THREE.CylinderGeometry(0.07, 0.08, 0.1, 6)), lam(HUD), 0, AXLAR + 0.02, 0));
+  kropp.add(del(geo("stortHuvud", () => new THREE.IcosahedronGeometry(0.2, 1)), lam(HUD), 0, HUVUD, 0));
+  // Ögonen, så att man ser vart vandraren tittar.
+  [-1, 1].forEach((s) => kropp.add(del(geo("vandraröga", () => new THREE.BoxGeometry(0.045, 0.05, 0.04)), lam(0x1a1410), s * 0.075, HUVUD - 0.02, 0.18)));
+
+  // Manteln: en krage över axlarna och en kappa som hänger på ryggen.
+  kropp.add(del(geo("mantel" + form.topp, () => new THREE.CylinderGeometry(0.15, form.topp + 0.16, 0.17, 9)), tyg, 0, AXLAR - 0.04, 0));
+  let kappa: THREE.Mesh | null = null;
+  if (form.kappa > 0) {
+    const langd = form.kappa;
+    const b = geo("kappa" + langd, () => {
+      const l = new THREE.BoxGeometry(0.44, langd, 0.035);
+      l.translate(0, -langd / 2, 0);
+      return l;
+    });
+    kappa = del(b, tyg, 0, AXLAR - 0.04, -form.topp - 0.04);
+    kappa.rotation.x = 0.3;
+    kropp.add(kappa);
+  }
 
   // Armarna svänger kring axlarna. Den högra (vid +x) bär klassens föremål.
   const armar = [1, -1].map((s) => {
     const a = new THREE.Group();
-    a.position.set(s * 0.21, 1.02, 0);
+    a.position.set(s * form.axel, 1.02, 0);
     a.rotation.z = s * 0.22;
     a.add(del(hangande("arm", 0.05, 0.045, 0.42, 5), tyg));
     a.add(del(geo("hand", () => new THREE.IcosahedronGeometry(0.055, 0)), lam(HUD), 0, -0.44, 0));
@@ -144,16 +199,16 @@ export function vandrare(klass: string, farg: string, foremal: string[] = [], kl
 
   // Huvudbonaden.
   const hatt = (brattet: number, farg: THREE.ColorRepresentation) => {
-    kropp.add(del(geo("brätte" + brattet, () => new THREE.CylinderGeometry(brattet, brattet, 0.03, 10)), lam(farg), 0, 1.33, 0));
-    kropp.add(del(geo("kulle", () => new THREE.CylinderGeometry(0.13, 0.17, 0.18, 8)), lam(farg), 0, 1.43, 0));
+    kropp.add(del(geo("brätte" + brattet, () => new THREE.CylinderGeometry(brattet, brattet, 0.03, 10)), lam(farg), 0, HUVUD + 0.15, 0));
+    kropp.add(del(geo("kulle", () => new THREE.CylinderGeometry(0.15, 0.19, 0.2, 8)), lam(farg), 0, HUVUD + 0.26, 0));
   };
   const luva = (m: THREE.Material) => {
-    const h = del(geo("huva", () => new THREE.ConeGeometry(0.2, 0.38, 7)), m, 0, 1.42, -0.04);
-    h.rotation.x = -0.25;
+    const h = del(geo("storHuva", () => new THREE.ConeGeometry(0.25, 0.44, 8)), m, 0, HUVUD + 0.2, -0.05);
+    h.rotation.x = -0.28;
     kropp.add(h);
   };
   // stav är en stav i handen, med något överst.
-  const stav = (langd: number, topp?: THREE.Mesh) => {
+  const stav = (langd: number, topp?: THREE.Object3D) => {
     const s = del(geo("stav" + langd, () => new THREE.CylinderGeometry(0.025, 0.03, langd, 5)), lam(TRA), 0, -0.44 + langd * 0.4, 0.05);
     bar.add(s);
     if (topp) {
@@ -165,39 +220,60 @@ export function vandrare(klass: string, farg: string, foremal: string[] = [], kl
 
   switch (klass) {
     case "legoknekt": {
-      kropp.add(del(geo("hjälm", () => new THREE.SphereGeometry(0.19, 8, 5, 0, Math.PI * 2, 0, Math.PI / 2)), lam(METALL), 0, 1.24, 0));
-      kropp.add(del(geo("näsa", () => new THREE.BoxGeometry(0.03, 0.12, 0.03)), lam(METALL), 0, 1.2, 0.17));
-      const skold = del(geo("sköld", () => new THREE.CylinderGeometry(0.26, 0.26, 0.05, 8)), lam(kf(0x7a5a32)), -0.34, 0.82, 0.05);
+      // Bred, med hjälm och axelskydd av järn.
+      const metall = lam(METALL);
+      kropp.add(del(geo("storHjälm", () => new THREE.SphereGeometry(0.23, 9, 5, 0, Math.PI * 2, 0, Math.PI / 2)), metall, 0, HUVUD + 0.01, 0));
+      kropp.add(del(geo("hjälmkant", () => new THREE.CylinderGeometry(0.245, 0.245, 0.04, 9)), metall, 0, HUVUD + 0.02, 0));
+      kropp.add(del(geo("näsa", () => new THREE.BoxGeometry(0.035, 0.13, 0.03)), metall, 0, HUVUD - 0.03, 0.22));
+      [-1, 1].forEach((s) => {
+        const p = del(geo("axelskydd", () => new THREE.SphereGeometry(0.14, 8, 4, 0, Math.PI * 2, 0, Math.PI / 2)), metall, s * 0.27, 1.02, 0);
+        p.rotation.z = -s * 0.35;
+        kropp.add(p);
+      });
+      const skold = del(geo("sköld", () => new THREE.CylinderGeometry(0.28, 0.28, 0.05, 8)), lam(kf(0x7a5a32)), -0.42, 0.78, 0.06);
       skold.rotation.z = Math.PI / 2;
       kropp.add(skold);
-      kropp.add(del(geo("buckla", () => new THREE.IcosahedronGeometry(0.06, 0)), lam(METALL), -0.38, 0.82, 0.05));
-      const svard = del(geo("svärd", () => new THREE.BoxGeometry(0.04, 0.5, 0.06)), lam(METALL), 0, -0.62, 0.08);
-      bar.add(svard);
+      kropp.add(del(geo("buckla", () => new THREE.IcosahedronGeometry(0.06, 0)), metall, -0.46, 0.78, 0.06));
+      bar.add(del(geo("svärd", () => new THREE.BoxGeometry(0.04, 0.55, 0.06)), metall, 0, -0.64, 0.08));
       break;
     }
     case "tjuv": {
+      // Smal och framåtböjd, med en lång kappa och säcken på ryggen.
       luva(lam(kf(0x2a2a30)));
-      kropp.add(del(geo("säck", () => new THREE.IcosahedronGeometry(0.17, 0)), lam(0x6a5434), 0, 0.92, -0.28));
-      const dolk = del(geo("dolk", () => new THREE.BoxGeometry(0.03, 0.22, 0.05)), lam(METALL), 0, -0.52, 0.06);
-      bar.add(dolk);
+      kropp.add(del(geo("säck", () => new THREE.IcosahedronGeometry(0.17, 0)), lam(0x6a5434), 0.1, 0.78, -0.3));
+      bar.add(del(geo("dolk", () => new THREE.BoxGeometry(0.03, 0.22, 0.05)), lam(METALL), 0, -0.52, 0.06));
       break;
     }
     case "ortkvinna":
+      // Kjol ända ner till fötterna, staven med en blomma och korgen.
       luva(huva);
       stav(1.35, del(geo("blomma", () => new THREE.IcosahedronGeometry(0.08, 0)), lam(kf(0xe070b0))));
-      kropp.add(del(geo("korg", () => new THREE.CylinderGeometry(0.13, 0.1, 0.14, 8)), lam(0x8a6a3a), -0.32, 0.62, 0.08));
+      kropp.add(del(geo("korg", () => new THREE.CylinderGeometry(0.14, 0.1, 0.15, 8)), lam(0x8a6a3a), -0.36, 0.62, 0.1));
       break;
     case "kartritare": {
+      // Ett koger fullt av kartrullar på ryggen och en rulle i handen.
       luva(huva);
-      const rulle = del(geo("rulle", () => new THREE.CylinderGeometry(0.055, 0.055, 0.44, 8)), lam(kf(PERGAMENT)), 0, -0.46, 0.08);
+      const pergament = lam(kf(PERGAMENT));
+      kropp.add(del(geo("koger", () => new THREE.CylinderGeometry(0.13, 0.11, 0.42, 8)), lam(0x7a5a34), 0, 0.86, -0.27));
+      [[-0.06, 0.02], [0.05, 0.05], [0, -0.05]].forEach(([x, z], i) => {
+        const r = del(geo("ryggrulle", () => new THREE.CylinderGeometry(0.045, 0.045, 0.5, 7)), pergament, x, 1.05 + i * 0.03, -0.27 + z);
+        r.rotation.z = x * 2;
+        kropp.add(r);
+      });
+      const rulle = del(geo("rulle", () => new THREE.CylinderGeometry(0.055, 0.055, 0.44, 8)), pergament, 0, -0.46, 0.08);
       rulle.rotation.z = Math.PI / 2;
       bar.add(rulle);
       fram = -0.6;
       break;
     }
     case "ormtjusare": {
-      luva(huva);
-      const orm = del(geo("ormen", () => new THREE.TorusGeometry(0.18, 0.045, 5, 12)), lam(kf(0x6d8040)), 0, 1.04, 0);
+      // En turban och ormen kring axlarna.
+      const vit = lam(0xd9cdae);
+      const turban = del(geo("turban", () => new THREE.TorusGeometry(0.17, 0.08, 6, 12)), vit, 0, HUVUD + 0.13, 0);
+      turban.rotation.x = Math.PI / 2;
+      kropp.add(turban);
+      kropp.add(del(geo("turbantopp", () => new THREE.SphereGeometry(0.17, 8, 5, 0, Math.PI * 2, 0, Math.PI / 2)), vit, 0, HUVUD + 0.15, 0));
+      const orm = del(geo("axelorm", () => new THREE.TorusGeometry(0.23, 0.05, 5, 14)), lam(kf(0x6d8040)), 0, AXLAR + 0.05, 0);
       orm.rotation.x = Math.PI / 2;
       kropp.add(orm);
       const flojt = del(geo("flöjt", () => new THREE.CylinderGeometry(0.025, 0.025, 0.36, 6)), lam(TRA), 0, -0.48, 0.1);
@@ -207,27 +283,31 @@ export function vandrare(klass: string, farg: string, foremal: string[] = [], kl
       break;
     }
     case "sparfinnare":
-      hatt(0.3, kf(0x6a4a2a));
+      // Bred hatt, framåtlutad med blicken i marken.
+      hatt(0.32, kf(0x6a4a2a));
       stav(1.0);
       break;
     case "lyktbarare": {
+      // Lyktan hänger från en hög stång, så att den syns uppifrån.
       luva(huva);
+      stav(1.55);
       const lykta = new THREE.Group();
-      lykta.position.set(0, -0.6, 0.06);
-      lykta.add(del(geo("lyktram", () => new THREE.BoxGeometry(0.15, 0.2, 0.15)), lam(0x3a3530)));
-      lykta.add(new THREE.Mesh(geo("lågan", () => new THREE.BoxGeometry(0.11, 0.15, 0.16)), lysande(kf(0xffd36b))));
+      lykta.position.set(0, 0.88, 0.2);
+      lykta.add(del(geo("lyktkrok", () => new THREE.BoxGeometry(0.03, 0.03, 0.18)), lam(0x3a3530), 0, 0.14, -0.08));
+      lykta.add(del(geo("lyktram", () => new THREE.BoxGeometry(0.17, 0.22, 0.17)), lam(0x3a3530)));
+      lykta.add(new THREE.Mesh(geo("lågan", () => new THREE.BoxGeometry(0.13, 0.16, 0.18)), lysande(kf(0xffd36b))));
       bar.add(lykta);
-      fram = -0.25;
       break;
     }
     case "pilgrim":
-      hatt(0.38, kf(0x3a3530));
-      stav(1.6, del(geo("kalebass", () => new THREE.IcosahedronGeometry(0.09, 0)), lam(0x9a6a3a)));
+      // En lång kåpa ända ner till golvet, bred hatt och vandringsstav.
+      hatt(0.4, kf(0x3a3530));
+      stav(1.7, del(geo("kalebass", () => new THREE.IcosahedronGeometry(0.09, 0)), lam(0x9a6a3a)));
       break;
     default:
       luva(huva);
   }
-  foremal.forEach((id) => fastPa(kropp, id));
+  foremal.forEach((id) => fastPa(kropp, id, form.topp - VANLIG.topp));
 
   return {
     grupp: g,
@@ -238,6 +318,7 @@ export function vandrare(klass: string, farg: string, foremal: string[] = [], kl
       annan.rotation.x = s * 0.5;
       bar.rotation.x = fram + (fram ? s * 0.15 : -s * 0.5);
       kropp.position.y = gar ? Math.abs(s) * 0.04 : Math.sin(t / 700) * 0.01;
+      if (kappa) kappa.rotation.x = 0.3 + (gar ? 0.15 + Math.abs(s) * 0.12 : Math.sin(t / 900) * 0.02);
     },
   };
 }
@@ -245,9 +326,12 @@ export function vandrare(klass: string, farg: string, foremal: string[] = [], kl
 // fastPa sätter ett föremål vandraren bär på kroppen: vid bältet, på bröstet,
 // på ryggen eller på huvudet. Kroppen tittar mot +z; midjan är vid y 0,6.
 // Föremål utan egen form syns inte.
-function fastPa(kropp: THREE.Group, id: string): void {
+//
+// bredd är hur mycket bredare klassens bål är än den vanliga, så att det som
+// sitter på bröstet eller ryggen hamnar utanpå.
+function fastPa(kropp: THREE.Group, id: string, bredd = 0): void {
   const satt = (o: THREE.Object3D, x: number, y: number, z: number, rx = 0, ry = 0, rz = 0) => {
-    o.position.set(x, y, z);
+    o.position.set(x, y, z + Math.sign(z) * bredd);
     o.rotation.set(rx, ry, rz);
     kropp.add(o);
   };
@@ -256,7 +340,7 @@ function fastPa(kropp: THREE.Group, id: string): void {
       satt(del(geo("repring", () => new THREE.TorusGeometry(0.1, 0.03, 4, 10)), lam(0x9a7a4a)), -0.27, 0.6, 0.06, 0, Math.PI / 2, 0);
       break;
     case "amulett":
-      satt(del(geo("amulett", () => new THREE.OctahedronGeometry(0.06, 0)), lam(0x5fb0a0, { emissive: 0x0a2a24 })), 0, 1.0, 0.21);
+      satt(del(geo("amulett", () => new THREE.OctahedronGeometry(0.06, 0)), lam(0x5fb0a0, { emissive: 0x0a2a24 })), 0, 0.9, 0.23);
       break;
     case "veke":
       satt(del(geo("veke", () => new THREE.CylinderGeometry(0.02, 0.02, 0.16, 5)), lam(0xf0ead8)), 0.16, 0.6, 0.25, 0, 0, 0.4);
@@ -297,10 +381,10 @@ function fastPa(kropp: THREE.Group, id: string): void {
       break;
     }
     case "svart_parla":
-      satt(del(geo("pärla", () => new THREE.SphereGeometry(0.055, 10, 8)), lam(0x15151a)), 0.1, 1.0, 0.2);
+      satt(del(geo("pärla", () => new THREE.SphereGeometry(0.055, 10, 8)), lam(0x15151a)), 0.1, 0.88, 0.23);
       break;
     case "mynt_hal":
-      satt(del(geo("myntring", () => new THREE.TorusGeometry(0.05, 0.02, 4, 10)), lam(0xe8b84a)), -0.1, 0.98, 0.22);
+      satt(del(geo("myntring", () => new THREE.TorusGeometry(0.05, 0.02, 4, 10)), lam(0xe8b84a)), -0.1, 0.88, 0.23);
       break;
     case "rostkrona": {
       const g = new THREE.Group();
@@ -310,7 +394,7 @@ function fastPa(kropp: THREE.Group, id: string): void {
         const a = (i / 5) * Math.PI * 2;
         g.add(del(geo("kronudd", () => new THREE.ConeGeometry(0.03, 0.08, 4)), rost, Math.sin(a) * 0.15, 0.08, Math.cos(a) * 0.15));
       }
-      satt(g, 0, 1.36, 0);
+      satt(g, 0, 1.46, 0);
       break;
     }
   }
