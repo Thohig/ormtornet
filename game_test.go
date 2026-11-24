@@ -463,10 +463,11 @@ func TestCalmCreature(t *testing.T) {
 	g, a, b, m := fightSetup(t, false, true)
 	g.data.monsterType(m.Type).Lynne = 0
 	p := a.player
-	hp := p.HP
 	step(g, a, b, actSearch, actWait)
-	if p.HP != hp || !g.rooms[2][4].Searched {
-		t.Fatalf("liv %d -> %d, genomsökt %v", hp, p.HP, g.rooms[2][4].Searched)
+	// Sökningen kan utlösa en fälla, så det är varelsen som inte får ha
+	// skadat.
+	if p.hurtKind == "varelse" || !g.rooms[2][4].Searched {
+		t.Fatalf("skadad av %q, genomsökt %v", p.hurtKind, g.rooms[2][4].Searched)
 	}
 }
 
@@ -497,8 +498,10 @@ func TestFleeAndUnprepared(t *testing.T) {
 		t.Fatal("varelsen fick inget fritt anfall, eller rummet söktes inte")
 	}
 	// Flykt: ett fritt anfall till, sedan är spelaren ute ur rummet. Det
-	// sökningen hittade (en fälla som håller fast, mörker) ska inte störa.
+	// sökningen hittade (en fälla som håller fast, mörker, rökpulver som
+	// låter en fly utan slag) ska inte störa.
 	p.Stuck, p.Cellar, p.Dark, p.Poison = 0, 0, 0, 0
+	p.items = nil
 	p.X, p.Y = 4, 2
 	hp = p.HP
 	step(g, a, b, "N", actWait)
