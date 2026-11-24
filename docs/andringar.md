@@ -18,6 +18,9 @@ eller leder tornet.
   flera gånger sägs en gång ("Den natten vaknade ormen tre gånger").
 - Hela krönikan runda för runda och Din vandring ligger bakom knappen
   Visa alla rundor.
+- Under berättelsen står en rad om var och en: en titel till den som
+  ensam har mest av något (den girigaste, rövaren, jägaren, upptäckaren
+  …), hens största stund och hur det slutade.
 
 ### Minikartan
 

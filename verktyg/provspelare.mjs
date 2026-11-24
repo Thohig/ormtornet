@@ -151,6 +151,7 @@ ws.onmessage = (ev) => {
     w(`RESULTAT ${res}`);
     // Berättelsen om vandringen, stycke för stycke, att läsa efteråt.
     for (const b of st.berattelse || []) w(`BERÄTTELSE ${b.text}`);
+    for (const v of st.vandrarna || []) w(`BERÄTTELSE ${v.namn}${v.titel ? ", " + v.titel : ""}. ${v.text}`);
     played++;
     if (played >= games) { setTimeout(() => process.exit(0), 500); return; }
     setTimeout(() => send({ t: "ready" }), 800);

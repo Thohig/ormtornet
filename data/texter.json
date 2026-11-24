@@ -379,6 +379,18 @@
       "antal": 7,
       "per_slag": 2,
       "vinnare": 3,
+      "_titlar": "Raden om var och en under berättelsen: en titel går till den som ensam har mest av sitt mått (matt), den första i listan först. Ingen får två, och lika mycket ger ingen titel. Måtten: kammaren (guld ur kammaren), stulet, traffar (slag på vandrare), varelser, fallor, sokt (sökta rum), foremal, ormkort (dragna) och rum (rum på den egna kartan).",
+      "titlar": [
+        {"matt": "kammaren", "text": "ber_titel_kammaren"},
+        {"matt": "stulet", "text": "ber_titel_stulet"},
+        {"matt": "varelser", "text": "ber_titel_varelser"},
+        {"matt": "traffar", "text": "ber_titel_traffar"},
+        {"matt": "rum", "text": "ber_titel_rum"},
+        {"matt": "foremal", "text": "ber_titel_foremal"},
+        {"matt": "fallor", "text": "ber_titel_fallor"},
+        {"matt": "sokt", "text": "ber_titel_sokt"},
+        {"matt": "ormkort", "text": "ber_titel_ormkort"}
+      ],
       "slag": [
         {"id": "vaknade", "nycklar": ["kronika_vaknade"], "vikt": 9, "forst": 3, "bild": "vaknar", "rubrik": "stund_vaknade", "flera": "ber_flera_vaknade"},
         {"id": "invigd", "nycklar": ["kronika_invigd_forst", "kronika_invigd"], "vikt": 8, "forst": 4, "bild": "invigd", "rubrik": "kort_invigd"},
@@ -559,6 +571,45 @@
     ],
     "ber_slut_kvar": [
       "{namn} var kvar i tornet när solen gick ner."
+    ],
+    "ber_titel_kammaren": [
+      "den girigaste"
+    ],
+    "ber_titel_stulet": [
+      "rövaren"
+    ],
+    "ber_titel_varelser": [
+      "jägaren"
+    ],
+    "ber_titel_traffar": [
+      "slagskämpen"
+    ],
+    "ber_titel_rum": [
+      "upptäckaren"
+    ],
+    "ber_titel_foremal": [
+      "samlaren"
+    ],
+    "ber_titel_fallor": [
+      "fällornas vän"
+    ],
+    "ber_titel_sokt": [
+      "letaren"
+    ],
+    "ber_titel_ormkort": [
+      "den som rörde ormen oftast"
+    ],
+    "ber_vem_ute": [
+      "Kom ut med {guld} guld."
+    ],
+    "ber_vem_tom": [
+      "Kom ut tomhänt."
+    ],
+    "ber_vem_dod": [
+      "Kom aldrig ut."
+    ],
+    "ber_vem_kvar": [
+      "Var kvar när solen gick ner."
     ],
     "ber_slut_doda": [
       "{namn} kom aldrig ut."

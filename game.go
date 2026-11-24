@@ -446,9 +446,10 @@ type Game struct {
 	paused    bool          // rundan står still: ingen människa är ansluten
 	pauseLeft time.Duration // tid som var kvar när rundan pausades
 
-	chron  []chronEvent // krönikan över vandringen
-	epilog []chronLine  // epilogen som alla fick, för krönikan på egen skärm
-	story  []storyPart  // berättelsen om vandringen, skriven när den är slut (berattelse.go)
+	chron       []chronEvent  // krönikan över vandringen
+	epilog      []chronLine   // epilogen som alla fick, för krönikan på egen skärm
+	story       []storyPart   // berättelsen om vandringen, skriven när den är slut (berattelse.go)
+	storyPeople []storyPerson // raden om var och en under berättelsen
 
 	graceUsed bool // porten har redan väntat på de invigda
 	// chamberX och chamberY är kammarens rum; chamberMoved att ormen har
@@ -785,27 +786,28 @@ type stateMsg struct {
 	Fallen      []monsterView `json:"fallna,omitempty"` // varelserna som föll under rundan, för kartan
 	PvP         string        `json:"pvp"`              // om det går att strida mot andra vandrare här
 	// Motstandare är vandraren tornet väljer om du slåss här (pickFoe).
-	Motstandare string       `json:"motstandare,omitempty"`
-	Paused      bool         `json:"paused,omitempty"`
-	Vard        bool         `json:"vard,omitempty"` // spelar från tornets dator: spelledaren
-	SleepText   string       `json:"sleepText,omitempty"`
-	WakeCards   *int         `json:"vaknaKort,omitempty"` // vakna-korten kvar i leken, bara för ormtjusaren
-	Class       *classView   `json:"klass,omitempty"`
-	Items       []itemView   `json:"foremal,omitempty"`
-	MaxItems    int          `json:"maxForemal,omitempty"` // så många föremål man kan bära
-	Compass     string       `json:"kompass,omitempty"`
-	Heart       string       `json:"hjartslag,omitempty"`
-	Initiated   bool         `json:"invigd,omitempty"`
-	CanWhisper  bool         `json:"kanViska,omitempty"`
-	NameParts   []string     `json:"namndelar,omitempty"` // delarna av ormens namn, tomma där vandraren inte vet
-	Offer       []*classView `json:"erbjudande,omitempty"`
-	Players     []playerView `json:"players"`
-	Rooms       []roomView   `json:"rooms"`
-	Results     []resultView `json:"results,omitempty"`
-	Journey     *journeyView `json:"vandring,omitempty"`   // den egna vandringen, för den som har dött och för alla i slutet
-	Chronicle   []chronLine  `json:"kronika,omitempty"`    // hela krönikan, när vandringen är slut
-	Epilogue    []chronLine  `json:"epilog,omitempty"`     // epilogen, när vandringen är slut
-	Story       []storyPart  `json:"berattelse,omitempty"` // berättelsen om vandringen, när den är slut
+	Motstandare string        `json:"motstandare,omitempty"`
+	Paused      bool          `json:"paused,omitempty"`
+	Vard        bool          `json:"vard,omitempty"` // spelar från tornets dator: spelledaren
+	SleepText   string        `json:"sleepText,omitempty"`
+	WakeCards   *int          `json:"vaknaKort,omitempty"` // vakna-korten kvar i leken, bara för ormtjusaren
+	Class       *classView    `json:"klass,omitempty"`
+	Items       []itemView    `json:"foremal,omitempty"`
+	MaxItems    int           `json:"maxForemal,omitempty"` // så många föremål man kan bära
+	Compass     string        `json:"kompass,omitempty"`
+	Heart       string        `json:"hjartslag,omitempty"`
+	Initiated   bool          `json:"invigd,omitempty"`
+	CanWhisper  bool          `json:"kanViska,omitempty"`
+	NameParts   []string      `json:"namndelar,omitempty"` // delarna av ormens namn, tomma där vandraren inte vet
+	Offer       []*classView  `json:"erbjudande,omitempty"`
+	Players     []playerView  `json:"players"`
+	Rooms       []roomView    `json:"rooms"`
+	Results     []resultView  `json:"results,omitempty"`
+	Journey     *journeyView  `json:"vandring,omitempty"`   // den egna vandringen, för den som har dött och för alla i slutet
+	Chronicle   []chronLine   `json:"kronika,omitempty"`    // hela krönikan, när vandringen är slut
+	Epilogue    []chronLine   `json:"epilog,omitempty"`     // epilogen, när vandringen är slut
+	Story       []storyPart   `json:"berattelse,omitempty"` // berättelsen om vandringen, när den är slut
+	StoryPeople []storyPerson `json:"vandrarna,omitempty"`  // raden om var och en under berättelsen
 }
 
 type logMsg struct {
@@ -1016,6 +1018,7 @@ func (g *Game) stateFor(me *Player) stateMsg {
 		st.Chronicle = g.chronicleLines()
 		st.Epilogue = append(slices.Clone(g.epilog), me.epilog...)
 		st.Story = g.story
+		st.StoryPeople = g.storyPeople
 	}
 	return st
 }

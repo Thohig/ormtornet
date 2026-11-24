@@ -445,7 +445,9 @@ varade. Höjdpunkterna är de tyngsta av krönikans händelser, högst sju,
 var och en med ett spelkort bredvid och berättad med när den hände
 räknat från den förra ("Två rundor senare vaknade ormen …"). Slutet
 säger vem som bar ut mest, vilka andra som kom ut och vilka som aldrig
-gjorde det. Under berättelsen står epilogen, och sist knappen Visa alla
+gjorde det. Under det står en rad om var och en, med en titel till den
+som ensam har mest av något (den girigaste, rövaren, jägaren,
+upptäckaren …), hens största stund och hur det slutade. Under berättelsen står epilogen, och sist knappen Visa alla
 rundor med hela krönikan och den egna vandringen. Vilka händelser som
 räknas och hur mycket de väger står under `spelkort.berattelse` i
 `data/texter.json`, och texterna under `ber_*`.

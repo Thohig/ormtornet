@@ -125,6 +125,15 @@ func (d *Data) validate() []string {
 	}
 	unique("texter.json", "rumstypen", ids)
 
+	// Titlarna på raden om var och en: måttet måste finnas och texten också.
+	for _, t := range d.Spelkort.Berattelse.Titlar {
+		if titleMeasures[t.Matt] == nil {
+			bad("texter.json", "berättelsens titel %q: måttet %q finns inte", t.Text, t.Matt)
+		}
+		if len(d.Texter[t.Text]) == 0 {
+			bad("texter.json", "berättelsens titel: texten %q finns inte", t.Text)
+		}
+	}
 	// Berättelsens höjdpunkter: motiven, rubrikerna, krönikans nycklar och
 	// berättelsens text för varje nyckel måste finnas.
 	for _, k := range d.Spelkort.Berattelse.Slag {

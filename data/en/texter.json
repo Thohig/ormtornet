@@ -518,6 +518,45 @@
     "ber_slut_kvar": [
       "{namn} was still in the tower when the sun went down."
     ],
+    "ber_titel_kammaren": [
+      "the greediest"
+    ],
+    "ber_titel_stulet": [
+      "the robber"
+    ],
+    "ber_titel_varelser": [
+      "the hunter"
+    ],
+    "ber_titel_traffar": [
+      "the brawler"
+    ],
+    "ber_titel_rum": [
+      "the explorer"
+    ],
+    "ber_titel_foremal": [
+      "the collector"
+    ],
+    "ber_titel_fallor": [
+      "friend of traps"
+    ],
+    "ber_titel_sokt": [
+      "the seeker"
+    ],
+    "ber_titel_ormkort": [
+      "the one who touched the serpent most"
+    ],
+    "ber_vem_ute": [
+      "Came out with {guld} gold."
+    ],
+    "ber_vem_tom": [
+      "Came out empty-handed."
+    ],
+    "ber_vem_dod": [
+      "Never came out."
+    ],
+    "ber_vem_kvar": [
+      "Was still inside when the sun went down."
+    ],
     "ber_slut_doda": [
       "{namn} never came out."
     ],

@@ -743,7 +743,7 @@ function renderChron() {
   // ~ förklaras under resultaten, som i resultatrutan på kartan.
   if (end && (state.results || []).some((r) => r.ai)) results.push({ text: t("slut_ai"), c: "dim" });
   rows("chronResults", results);
-  renderStory(end ? state.berattelse || [] : []);
+  renderStory(end ? state.berattelse || [] : [], end ? state.vandrarna || [] : []);
   rows("chronEpilog", end ? state.epilog : []);
   // Rundorna (hela krönikan och Din vandring) ligger bakom en knapp i
   // slutet; under vandringen ser den döda sin vandring direkt.
@@ -849,9 +849,9 @@ function renderChron() {
 // stycken som har ett. Korten vänds upp ett i taget, en gång, inte vid
 // varje nytt läge.
 let chronRestOpen = false;
-function renderStory(list) {
+function renderStory(list, people) {
   const box = $("chronStory");
-  const key = JSON.stringify(list);
+  const key = JSON.stringify([list, people]);
   if (box.dataset.key === key) return;
   box.dataset.key = key;
   box.innerHTML = "";
@@ -878,6 +878,29 @@ function renderStory(list) {
     d.appendChild(text);
     box.appendChild(d);
   });
+  // Raden om var och en: namnet i sin färg, titeln och hens största stund.
+  if (people.length) {
+    const ul = document.createElement("div");
+    ul.className = "vandrarna";
+    people.forEach((p) => {
+      const row = document.createElement("p");
+      if (isMine(p)) row.className = "mine";
+      const name = document.createElement("span");
+      name.className = "who";
+      name.textContent = p.namn;
+      name.style.color = MapView.PLAYER_COLORS[p.slot] || "";
+      row.appendChild(name);
+      if (p.titel) {
+        const ti = document.createElement("span");
+        ti.className = "titel";
+        ti.textContent = ", " + p.titel;
+        row.appendChild(ti);
+      }
+      row.appendChild(document.createTextNode(". " + p.text));
+      ul.appendChild(row);
+    });
+    box.appendChild(ul);
+  }
   box.hidden = !list.length;
   $("chronStoryHead").hidden = !list.length;
 }

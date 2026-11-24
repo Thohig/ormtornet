@@ -98,7 +98,7 @@ func (g *Game) chronicleDeath(p *Player) {
 func (g *Game) resetChronicle() {
 	g.chron = nil
 	g.epilog = nil
-	g.story = nil
+	g.story, g.storyPeople = nil, nil
 	for _, p := range g.players {
 		if p != nil {
 			p.stats = chronStats{}

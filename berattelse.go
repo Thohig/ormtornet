@@ -19,10 +19,41 @@ import (
 
 // StoryData styr berättelsens höjdpunkter.
 type StoryData struct {
-	Antal   int         `json:"antal"`    // så många höjdpunkter som mest
-	PerSlag int         `json:"per_slag"` // så många av samma slag
-	Vinnare int         `json:"vinnare"`  // det här mycket mer väger en händelse om den som vann
-	Slag    []StoryKind `json:"slag"`
+	Antal   int          `json:"antal"`    // så många höjdpunkter som mest
+	PerSlag int          `json:"per_slag"` // så många av samma slag
+	Vinnare int          `json:"vinnare"`  // det här mycket mer väger en händelse om den som vann
+	Slag    []StoryKind  `json:"slag"`
+	Titlar  []StoryTitle `json:"titlar"` // titlarna på raden om var och en, den viktigaste först
+}
+
+// StoryTitle är en titel som den får som har mest av något (Matt), till
+// exempel guld ur kammaren. Text är titeln, en nyckel bland texterna.
+type StoryTitle struct {
+	Matt string `json:"matt"`
+	Text string `json:"text"`
+}
+
+// titleMeasures är det titlarna kan mätas i, från vandrarens siffror.
+var titleMeasures = map[string]func(p *Player) int{
+	"kammaren": func(p *Player) int { return p.stats.takeGold },
+	"stulet":   func(p *Player) int { return p.stats.stolen },
+	"traffar":  func(p *Player) int { return p.stats.hits },
+	"varelser": func(p *Player) int { return p.stats.kills },
+	"fallor":   func(p *Player) int { return p.stats.traps },
+	"sokt":     func(p *Player) int { return p.stats.searched },
+	"foremal":  func(p *Player) int { return p.stats.items },
+	"ormkort":  func(p *Player) int { return len(p.stats.draws) },
+	"rum": func(p *Player) int {
+		n := 0
+		for _, row := range p.known {
+			for _, k := range row {
+				if k {
+					n++
+				}
+			}
+		}
+		return n
+	},
 }
 
 // StoryKind är ett slags höjdpunkt: krönikans nycklar som hör dit, hur
@@ -36,6 +67,15 @@ type StoryKind struct {
 	Bild    string   `json:"bild"`
 	Rubrik  string   `json:"rubrik"`
 	Flera   string   `json:"flera,omitempty"` // text med {antal}, när slaget hände flera gånger
+}
+
+// storyPerson är raden om en vandrare under berättelsen: titeln, om hen
+// fick någon, hens största stund och hur det slutade.
+type storyPerson struct {
+	Name  string `json:"namn"`
+	Slot  int    `json:"slot"`
+	Title string `json:"titel,omitempty"`
+	Text  string `json:"text"`
 }
 
 // storyPart är ett stycke i berättelsen: inträdet (in), en höjdpunkt
@@ -85,6 +125,94 @@ func (g *Game) buildStory() {
 	}
 	g.story = append(g.story, high...)
 	g.story = append(g.story, g.storyEnd())
+	g.storyPeople = g.storyPersons()
+}
+
+// storyKind är händelsens slag i berättelsen, -1 när den inte räknas.
+func (g *Game) storyKind(e chronEvent) int {
+	return slices.IndexFunc(g.data.Spelkort.Berattelse.Slag, func(k StoryKind) bool { return slices.Contains(k.Nycklar, e.key) })
+}
+
+// storyTitles delar ut titlarna: var och en går till den som ensam har
+// mest av sitt mått, om den inte redan har en titel. Ingen får två, och
+// lika mycket ger ingen titel.
+func (g *Game) storyTitles(people []*Player) map[*Player]string {
+	out := map[*Player]string{}
+	for _, t := range g.data.Spelkort.Berattelse.Titlar {
+		measure := titleMeasures[t.Matt]
+		if measure == nil {
+			continue
+		}
+		var best *Player
+		most, tie := 0, false
+		for _, p := range people {
+			if out[p] != "" {
+				continue
+			}
+			switch n := measure(p); {
+			case n > most:
+				best, most, tie = p, n, false
+			case n == most && n > 0:
+				tie = true
+			}
+		}
+		if best != nil && !tie {
+			out[best] = g.data.Text(t.Text)
+		}
+	}
+	return out
+}
+
+// storyPersons skriver raden om var och en, i placeringens ordning: titeln,
+// den tyngsta händelsen som handlar om hen och hur det slutade. Var hens
+// största stund att dö säger den redan hur det slutade.
+func (g *Game) storyPersons() []storyPerson {
+	sd := g.data.Spelkort.Berattelse
+	var people []*Player
+	for _, r := range g.results() {
+		if p := g.playerByName(r.Name); p != nil {
+			people = append(people, p)
+		}
+	}
+	titles := g.storyTitles(people)
+	var out []storyPerson
+	for _, p := range people {
+		best, weight := -1, 0
+		for i, e := range g.chron {
+			k := g.storyKind(e)
+			if k < 0 || e.who != p.Name || sd.Slag[k].Vikt <= weight {
+				continue
+			}
+			best, weight = i, sd.Slag[k].Vikt
+		}
+		var parts []string
+		ended := false
+		if best >= 0 {
+			// Raden börjar redan med namnet: "Sigge. Fällde en grönaktig
+			// skepnad." Krönikans texter börjar med namnet och verbet.
+			e := g.chron[best]
+			text := e.text
+			if rest, ok := strings.CutPrefix(text, p.Name+" "); ok {
+				text = upperFirst(rest)
+			}
+			parts = append(parts, text)
+			ended = sd.Slag[g.storyKind(e)].ID == "dod"
+		}
+		if !ended {
+			switch {
+			case p.Status == statusOut && p.Treasure > 0:
+				parts = append(parts, g.data.Text("ber_vem_ute", "guld", strconv.Itoa(p.Treasure)))
+			case p.Status == statusOut:
+				parts = append(parts, g.data.Text("ber_vem_tom"))
+			case p.Status == statusDead:
+				parts = append(parts, g.data.Text("ber_vem_dod"))
+			default:
+				parts = append(parts, g.data.Text("ber_vem_kvar"))
+			}
+		}
+		out = append(out, storyPerson{Name: p.Name, Slot: p.Slot, Title: titles[p], Text: strings.Join(parts, " ")})
+	}
+	return out
 }
 
 // storyIntro: vilka som gick in, med sina klasser, och hur länge
@@ -126,7 +254,7 @@ func (g *Game) storyHighlights() []storyPart {
 	var all []pick
 	count := map[int]int{}
 	for i, e := range g.chron {
-		k := slices.IndexFunc(sd.Slag, func(k StoryKind) bool { return slices.Contains(k.Nycklar, e.key) })
+		k := g.storyKind(e)
 		if k < 0 {
 			continue
 		}

@@ -305,3 +305,35 @@ func TestStory(t *testing.T) {
 		t.Fatalf("slutet: %q", end)
 	}
 }
+
+// Raden om var och en: titeln går till den som ensam har mest, ingen får
+// två, lika mycket ger ingen titel, och den som dog får inte "kom aldrig
+// ut" efter sin död.
+func TestStoryPeople(t *testing.T) {
+	g, a, b := startTwo(t)
+	pa, pb := a.player, b.player
+	pa.Status, pa.Treasure = statusOut, 50
+	pb.Status, pb.Treasure = statusDead, 0
+	pa.stats.takeGold, pa.stats.kills = 40, 5
+	pb.stats.kills = 2
+	pa.stats.traps, pb.stats.traps = 1, 1
+	g.chron = nil
+	g.round = 3
+	g.chronicle("kronika_kammaren", "namn", pa.Name)
+	g.chronicle("kronika_dod", "namn", pb.Name)
+	g.buildStory()
+	ps := g.storyPeople
+	if len(ps) != 2 || ps[0].Name != pa.Name {
+		t.Fatalf("raderna: %+v", ps)
+	}
+	if ps[0].Title != g.data.Text("ber_titel_kammaren") {
+		t.Fatalf("vinnarens titel: %q", ps[0].Title)
+	}
+	// Jägaren går till pb, eftersom pa redan har en titel; fällorna är lika.
+	if ps[1].Title != g.data.Text("ber_titel_varelser") {
+		t.Fatalf("den andras titel: %q", ps[1].Title)
+	}
+	if !strings.Contains(ps[0].Text, "50") || strings.Contains(ps[1].Text, g.data.Text("ber_vem_dod")) {
+		t.Fatalf("raderna: %q / %q", ps[0].Text, ps[1].Text)
+	}
+}

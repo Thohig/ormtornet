@@ -1396,6 +1396,11 @@ body.touch .card .num { display: none; }
   #chronStory .okort { flex-basis: 96px; width: 96px; }
   #chronStory .stycke p { font-size: 14px; }
 }
+#chronStory .vandrarna { display: grid; gap: 6px; padding-top: 12px; border-top: 1px solid var(--faint); }
+#chronStory .vandrarna p { margin: 0; font-size: 14px; line-height: 1.5; color: var(--chalk); }
+#chronStory .vandrarna .who { font-weight: bold; }
+#chronStory .vandrarna .titel { color: var(--hi); font-style: italic; }
+#chronStory .vandrarna .mine { color: var(--fg); }
 #chronRestBtn { display: block; margin: 0 auto 18px; font: inherit; color: var(--fg); background: transparent; border: 1px solid var(--dim); border-radius: 6px; padding: 6px 14px; cursor: pointer; }
 #chronRestBtn:hover, #chronRestBtn:focus-visible { color: var(--hi); border-color: var(--hi); outline: none; }
 #chronStory[hidden], #chronStoryHead[hidden], #chronRestBtn[hidden], #chronRest[hidden],
