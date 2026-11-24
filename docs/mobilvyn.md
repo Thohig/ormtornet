@@ -3,6 +3,9 @@
 Förslag 2026-11-23. Steg 1–5 byggdes samma dag.
 Avsnittet Byggt säger var bygget skiljer sig från förslaget.
 
+Sedan 2026-11-24 finns inte Parera och Undan, och i strid står Vänta,
+Anfall, Sök och Drick ([bara-anfall.md](bara-anfall.md)).
+
 ## Målet
 
 På telefonen ska kartan vara det man ser. Rummet man står i ska fylla

@@ -9,6 +9,20 @@ byggs, och förslag tas fram innan något byggs.
 
 ### Prova med människor
 
+Den nya striden (2026-11-24, [bara-anfall.md](bara-anfall.md)) är bara
+provad med AI-spelare, som alltid anfaller:
+
+- Lär sig spelarna varelsernas lynne, och vågar de söka eller dricka när
+  en varelse står i rummet? Håller de garden?
+- Säger panelen Nu ("Du träffar lätt · den träffar ibland") för mycket,
+  så att det inte finns något kvar att lära sig?
+- Blir striden tråkig med ett enda val, särskilt mellan vandrare, där man
+  förut läste den andra?
+- Svärdet med rött fäste: märker man förbannelsen, och är Kraft +2 värt
+  ett liv per runda man inte anfaller?
+- Guldet per vandrare blev lägre än före bytet (36–47 mot 39–52 på
+  Normal med AI-spelare). Behöver varelserna ge mer guld?
+
 Det mesta som byggdes 2026-11-18 är bara provat med AI-spelare och tester.
 En riktig kväll behövs för att se:
 
@@ -235,11 +249,9 @@ Sett efter provspelet 2026-11-22, med förslag men inte ändrat:
 Sett i provspelet 2026-11-24 och prövat:
 
 - Fjällrustningen tog 4 liv på två rundor från Kartritaren på Normal, när
-  hen anföll den. Den parerar oftast, och Kartritarens undanmanöver
-  lyckas aldrig, så parering är det som hjälper. Simuleringen (3 000
-  vandringar) visar att Kartritaren ändå dör minst av klasserna (10 %),
-  så siffrorna är oförändrade. Prova med människor om de läser "håller en
-  sköld framför sig och väntar".
+  hen anföll den. Sedan 2026-11-24 finns ingen parering; gestalten i
+  fjällrustning har Försvar 2 och går lättare att träffa
+  ([bara-anfall.md](bara-anfall.md)).
 
 Från förut:
 
@@ -339,13 +351,13 @@ Nya varelser (förslag 2026-11-22). 1–4 går att lägga till med bara data,
 plus en form i `klient/src/modeller.ts` och en kortbild:
 
 1. **Fladdrarna** ("något litet och fjällvingat"): liv 1, skada 1, guld
-   5, vandrar ofta (0,6), mest undanmanöver.
+   5, vandrar ofta (0,6), Kraft 0, Försvar 2, lynne 20.
 2. **Fjällhunden** ("något lågt som springer på fyra ben"): liv 3, skada
-   1, guld 15, vandrar ofta (0,5), anfaller nästan alltid.
+   1, guld 15, vandrar ofta (0,5), Kraft 2, Försvar 0, lynne 90.
 3. **Tungan** ("en kluven tunga ur väggen"): liv 3, skada 2, guld 20,
    vandrar aldrig.
 4. **Ruvaren** ("något stort som ligger på ägg"): liv 4, skada 1, guld
-   50, vandrar aldrig, parerar mest.
+   50, vandrar aldrig, Kraft 1, Försvar 3, lynne 10.
 5. **Tjuvormen** ("en smal, svart orm med guld i munnen"): stjäl 10–20
    guld per träff i stället för liv och flyr; dödar man den får man
    guldet tillbaka. Kräver en ny regel i `monster.go`.

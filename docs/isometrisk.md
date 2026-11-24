@@ -37,7 +37,9 @@ Vandrarna och varelserna blir enkla 3D-modeller med ljus och skuggor.
   (`malad`). Konturen slås av med skuggorna när kartan går trögt
   (`sankKvalitet` i `klient/src/karta.ts`).
 - När de har gått klart gör figurerna det de gjorde under rundan:
-  utfall, parering, ett kliv åt sidan, på knä för att ta eller söka,
+  utfall, parering, ett kliv åt sidan, på knä för att ta eller söka
+  (parering och kliv åt sidan används inte sedan striden fick bara
+  anfall 2026-11-24, [bara-anfall.md](bara-anfall.md)),
   huvudet bakåt för att dricka, och ett ryck med en röd ring när de blir
   träffade. Den som slåss vänder sig mot den den slåss med. Tillståndet
   säger det i `gjorde` och `traffad` för vandrarna och varelserna, och

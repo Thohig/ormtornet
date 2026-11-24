@@ -7,6 +7,9 @@ eftersom skatten är hemlig. Det här samlar
 [farre-kommandon.md](farre-kommandon.md), med ett svar på varje öppen
 fråga och en ordning att bygga i. Detaljerna står i de två dokumenten.
 
+Sedan 2026-11-24 finns inte Parera och Undan, och i strid står Vänta,
+Anfall, Sök och Drick ([bara-anfall.md](bara-anfall.md)).
+
 ## Målet
 
 Spelet ska säga mindre och låta spelarna lista ut mer. Krönikan berättar

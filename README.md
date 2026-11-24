@@ -450,18 +450,19 @@ personlighet, men först när alla människor har valt, så att människorna
 får de klasser de vill ha. Klassen gäller en vandring: efter Nytt torn väljer alla
 igen.
 
-| Klass | Styrka | Svaghet |
-|---|---|---|
-| Legoknekten | ett liv extra, och slår hårdast av alla (Kraft 3, Försvar 2) | hittar hälften så mycket guld när hen söker |
-| Tjuven | en fjärdedel mer guld ur kammaren, hittar oftare föremål, ingen märker när ormen rör sig vid hens näve, river hälften i strid mot vandrare | hittar aldrig drycker när hen söker |
-| Örtkvinnan | börjar med en dryck, en dryck ger tre liv, tål gift | tappar mycket mer skatt när ormen vaknar |
-| Kartritaren | ser genom dörrarna in i rummen bredvid, ser alla rum som någon har hittat och var någon har dött (ett x i hörnet), ger sin karta till den hen möter, hittar alltid en hemlig gång om det går, har en dryck med sig | flyr hen ur en strid träffar slaget mot ryggen alltid |
-| Ormtjusaren | ser i kammaren hur många vakna-kort som är kvar, ormen skadar inte hen när den vaknar | hittar hälften så mycket guld när hen söker |
-| Spårfinnaren | ser spår 6 rundor bakåt och vems de är, märker hälften av fällorna i tid, ser var föremål och guld ligger och vem som tog guldet, känner före andra åt vilket håll ristningen finns | hör inget genom väggarna, utom med benluren |
-| Lyktbäraren | ett liv extra, tål mörker, ser varelser i grannrummen | syns för andra redan från grannrummet |
-| Pilgrimen | ledtrådar dubbelt så ofta, en dryck när tornet förändras, känner igen förbannade föremål | slår aldrig andra vandrare, kan bara värja sig |
+| Klass | Kraft / Försvar | Styrka | Svaghet |
+|---|---|---|---|
+| Legoknekten | 3 / 2 | ett liv extra, och slår hårdast av alla | hittar hälften så mycket guld när hen söker |
+| Tjuven | 2 / 2 | en fjärdedel mer guld ur kammaren, hittar oftare föremål, ingen märker när ormen rör sig vid hens näve, river hälften i strid mot vandrare | hittar aldrig drycker när hen söker |
+| Örtkvinnan | 0 / 2 | börjar med en dryck, en dryck ger tre liv, tål gift | tappar mycket mer skatt när ormen vaknar |
+| Kartritaren | 0 / 1 | ser genom dörrarna in i rummen bredvid, ser alla rum som någon har hittat och var någon har dött (ett x i hörnet), ger sin karta till den hen möter, hittar alltid en hemlig gång om det går, har en dryck med sig | flyr hen ur en strid träffar slaget mot ryggen alltid |
+| Ormtjusaren | 2 / 2 | ser i kammaren hur många vakna-kort som är kvar, ormen skadar inte hen när den vaknar | hittar hälften så mycket guld när hen söker |
+| Spårfinnaren | 2 / 1 | ser spår 6 rundor bakåt och vems de är, märker hälften av fällorna i tid, ser var föremål och guld ligger och vem som tog guldet, känner före andra åt vilket håll ristningen finns | hör inget genom väggarna, utom med benluren |
+| Lyktbäraren | 2 / 2 | ett liv extra, tål mörker, ser varelser i grannrummen | syns för andra redan från grannrummet |
+| Pilgrimen | 0 / 3 | ledtrådar dubbelt så ofta, en dryck när tornet förändras, känner igen förbannade föremål | slår aldrig andra vandrare, kan bara värja sig |
 
-Namn, beskrivningar, texter och siffror står i `data/klasser.json`. Vad
+Kraft är hur lätt klassen träffar i strid och Försvar hur svår den är att
+träffa (se Strider). Namn, beskrivningar, texter och siffror står i `data/klasser.json`. Vad
 styrkan och svagheten gör styrs av klassens `id` i `classes.go` och där
 spelet händer. Klasserna går inte att stänga av.
 

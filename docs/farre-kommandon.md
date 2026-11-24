@@ -5,6 +5,9 @@ Förslag 2026-11-22. Byggt samma dag, med svaren i
 den som anföll, annars den som kom först in i tornet, eftersom skatten
 är hemlig.
 
+Sedan 2026-11-24 finns inte Parera och Undan, och i strid står Vänta,
+Anfall, Sök och Drick ([bara-anfall.md](bara-anfall.md)).
+
 ## Läget i dag
 
 På datorn finns 16 tangenter i styrningen bakom ?, och på en pekskärm 15
