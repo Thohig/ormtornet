@@ -84,6 +84,19 @@ func (g *Game) stirSerpent() {
 	}
 }
 
+// calmSerpent låter ormen sova djupare: ett sovkort till, på en slumpad
+// plats i leken.
+func (g *Game) calmSerpent() {
+	for _, c := range g.data.Ormen.Kort {
+		if !c.Vaknar {
+			g.deck = append(g.deck, c.ID)
+			i, j := len(g.deck)-1, g.rng.IntN(len(g.deck))
+			g.deck[i], g.deck[j] = g.deck[j], g.deck[i]
+			return
+		}
+	}
+}
+
 // sleepLevel säger hur djupt ormen sover: 0 djupt, 1 oroligt, 2 nära att vakna.
 func (g *Game) sleepLevel() int {
 	sleep := 0

@@ -405,7 +405,7 @@
         {"id": "varelse", "nycklar": ["kronika_varelse"], "vikt": 3, "forst": 2, "bild": "fackla", "rubrik": "stund_varelse", "flera": "ber_flera_varelse"},
         {"id": "foremal", "nycklar": ["kronika_foremal"], "vikt": 2, "bild": "guld", "rubrik": "ber_rubrik_foremal"},
         {"id": "guld_lost", "nycklar": ["kronika_guld_lost"], "vikt": 1, "bild": "guld", "rubrik": "kort_guld_lost"},
-        {"id": "handelse", "nycklar": ["kronika_handelse_andas", "kronika_handelse_guld", "kronika_handelse_ljus", "kronika_handelse_skinn", "kronika_handelse_ras", "kronika_handelse_doden", "kronika_handelse_klockslag", "kronika_handelse_stannar", "kronika_handelse_draget", "kronika_handelse_klirrar", "kronika_handelse_packning", "kronika_handelse_brev", "kronika_handelse_sluter", "kronika_handelse_yngel"], "vikt": 3, "bild": "andas", "rubrik": "ber_rubrik_handelse"}
+        {"id": "handelse", "nycklar": ["kronika_handelse_andas", "kronika_handelse_guld", "kronika_handelse_ljus", "kronika_handelse_skinn", "kronika_handelse_ras", "kronika_handelse_doden", "kronika_handelse_klockslag", "kronika_handelse_stannar", "kronika_handelse_draget", "kronika_handelse_klirrar", "kronika_handelse_packning", "kronika_handelse_brev", "kronika_handelse_sluter", "kronika_handelse_yngel", "kronika_handelse_drommer", "kronika_handelse_kryp"], "vikt": 3, "bild": "andas", "rubrik": "ber_rubrik_handelse"}
       ]
     }
   },
@@ -556,6 +556,12 @@
     ],
     "ber_handelse_yngel": [
       "{nar} kröp något litet och slingrande ut ur en vägg."
+    ],
+    "ber_handelse_drommer": [
+      "{nar} drömde ormen och vände sig i sömnen."
+    ],
+    "ber_handelse_kryp": [
+      "{nar} flydde små kryp i en ström genom tornet."
     ],
     "ber_foremal": [
       "{nar} hittade {namn} {foremal}."
@@ -1127,6 +1133,12 @@
     ],
     "kronika_handelse_yngel": [
       "Något litet och slingrande kröp ut ur en vägg."
+    ],
+    "kronika_handelse_drommer": [
+      "Ormen drömde och vände sig i sömnen."
+    ],
+    "kronika_handelse_kryp": [
+      "Små kryp flydde i en ström genom tornet."
     ],
     "handelse_guld_tar": [
       "Mynten från sprickan ligger på golvet. Du tar {antal} guld."

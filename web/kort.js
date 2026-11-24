@@ -430,6 +430,27 @@ ${[30, 46, 62, 78].map((y) => `<circle cx="50" cy="${y}" r="1.2" fill="${STEN}"/
 ${[[48, 40, 30, 70, 0], [46, 52, 66, 80, 1], [50, 30, 74, 52, 0]].map(([x0, y0, x1, y1, k]) => `<path d="M${x0} ${y0}q${(x1 - x0) / 2} ${k ? -8 : 8} ${x1 - x0} ${y1 - y0}" fill="none" stroke="#1d2410" stroke-width="5" stroke-linecap="round"/><path d="M${x0} ${y0}q${(x1 - x0) / 2} ${k ? -8 : 8} ${x1 - x0} ${y1 - y0}" fill="none" stroke="${GRON}" stroke-width="3.4" stroke-linecap="round"/><circle cx="${x1}" cy="${y1}" r="2.6" fill="${GRON}" stroke="#1d2410" stroke-width="0.8"/>`).join("")}
 ${golv(88)}`;
 
+  // Ormen drömmer: ett halvslutet öga i mörkret, med ringar runt som i en
+  // dröm.
+  BILDER.drom = () => `<rect x="4" y="4" width="92" height="92" rx="6" fill="#2a2018" opacity="0.5"/>
+${[38, 30, 22].map((r, i) => `<ellipse cx="50" cy="50" rx="${r + 6}" ry="${r * 0.62}" fill="none" stroke="#c9a24f" stroke-width="1.2" opacity="${0.25 + i * 0.15}" stroke-dasharray="${4 + i * 2} 4"/>`).join("")}
+<ellipse cx="50" cy="50" rx="16" ry="9" fill="#e8c040" stroke="#1d2410" stroke-width="1.4"/>
+<ellipse cx="50" cy="50" rx="2.2" ry="7.5" fill="#1d2410"/>
+<path d="M33 50q17 -16 34 0q-17 -4 -34 0z" fill="#4f5e2f" stroke="#1d2410" stroke-width="1.2"/>
+<text x="76" y="26" font-size="9" fill="#c9a24f" font-family="serif">z</text><text x="83" y="18" font-size="7" fill="#c9a24f" font-family="serif">z</text>`;
+
+  // Kryp som flyr: en ström av små svarta kryp över ett golv, åt samma
+  // håll.
+  BILDER.kryp = () => {
+    let s = golv(70);
+    const pts = [[14, 30], [24, 38], [20, 50], [32, 44], [36, 58], [46, 50], [44, 66], [56, 60], [60, 74], [70, 66], [74, 80], [84, 74], [28, 62], [52, 38], [66, 52]];
+    pts.forEach(([x, y], i) => {
+      const a = 30 + (i % 3) * 6;
+      s += `<g transform="translate(${x} ${y}) rotate(${a})"><ellipse rx="3.4" ry="2" fill="${BLAECK}"/><path d="M-1 -2l-1 -2M1 -2l1 -2M-1 2l-1 2M1 2l1 2M3 0l2 -1M3 0l2 1" stroke="${BLAECK}" stroke-width="0.6"/></g>`;
+    });
+    return s + `<path d="M8 20q30 10 50 30t36 34" fill="none" stroke="${BRUN}" stroke-width="1" stroke-dasharray="2 4" opacity="0.6"/>`;
+  };
+
   // Ett rostigt svärd, snett över kortet.
   BILDER.svard = () => `${ljus}
 <path d="M30 76l42 -50 6 -6 -2 8 -42 50z" fill="#9a8a7a" stroke="${BLAECK}" stroke-width="1.2"/>

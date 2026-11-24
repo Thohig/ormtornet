@@ -129,6 +129,26 @@
         "har": [
           "The mortar crumbles, and something small and writhing crawls out of the wall beside you."
         ]
+      },
+      {
+        "id": "drommer",
+        "rubrik": "The serpent dreams",
+        "text": [
+          "Something huge turns over in its sleep deep inside the tower. The floor trembles faintly under your feet."
+        ],
+        "har": [
+          "The serpent sighs in its sleep and sinks deeper. The coils lie still around the gold."
+        ],
+        "har_annars": [
+          "The serpent stirs restlessly in its sleep. Its eyelids twitch, and the coils tighten around the gold."
+        ]
+      },
+      {
+        "id": "kryp",
+        "rubrik": "Fleeing vermin",
+        "har": [
+          "A tide of small black vermin pours in from the {horn}, rushes past your feet and vanishes the other way. Something over there frightened them."
+        ]
       }
     ]
   }

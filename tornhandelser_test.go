@@ -260,6 +260,44 @@ func TestTowerEventsShut(t *testing.T) {
 	})
 }
 
+// Ormen drömmer och krypen som flyr från kammaren.
+func TestTowerEventsSerpent(t *testing.T) {
+	t.Run("drommer", func(t *testing.T) {
+		g, a, _ := startTwo(t)
+		g.buildDeck()
+		n := len(g.deck)
+		cx, cy := g.chamber()
+		g.reveal(cx, cy)
+		a.player.X, a.player.Y = cx, cy
+		if !g.runTowerEvent("drommer") || len(g.deck) != n+g.data.towerEvent("drommer").Ormkort {
+			t.Fatalf("leken %d -> %d", n, len(g.deck))
+		}
+		e := g.data.towerEvent("drommer")
+		text := a.player.roundCards[len(a.player.roundCards)-1].Text
+		if text != e.Har[0] && text != e.HarAnnars[0] {
+			t.Fatalf("i kammaren: %q", text)
+		}
+	})
+	t.Run("kryp", func(t *testing.T) {
+		g, a, b := startTwo(t)
+		cx, cy := g.chamber()
+		nx := cx + 1
+		if !g.inBounds(nx, cy) || g.cornerIndex(nx, cy) >= 0 {
+			nx = cx - 1
+		}
+		putInRoom(g, a.player, nx, cy)
+		putInRoom(g, b.player, 0, 0)
+		b.player.X, b.player.Y = 0, 0
+		if !g.runTowerEvent("kryp") || !hasEventCard(a.player, "kryp") || hasEventCard(b.player, "kryp") {
+			t.Fatal("krypen syntes inte bara nära kammaren")
+		}
+		c := a.player.roundCards[len(a.player.roundCards)-1]
+		if !strings.Contains(c.Text, g.hornToward(nx, cy, cx, cy)) {
+			t.Fatalf("åt fel håll: %q", c.Text)
+		}
+	})
+}
+
 // Ett rasat rum går inte att gå in i, och varelser går inte dit heller.
 func TestCaveInBlocks(t *testing.T) {
 	g, a, _ := startTwo(t)

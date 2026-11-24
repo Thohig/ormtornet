@@ -503,6 +503,12 @@
     "ber_handelse_yngel": [
       "{nar}, something small and writhing crawled out of a wall."
     ],
+    "ber_handelse_drommer": [
+      "{nar}, the serpent dreamed and turned over in its sleep."
+    ],
+    "ber_handelse_kryp": [
+      "{nar}, small vermin fled through the tower in a stream."
+    ],
     "ber_foremal": [
       "{nar}, {namn} found {foremal}."
     ],
@@ -1073,6 +1079,12 @@
     ],
     "kronika_handelse_yngel": [
       "Something small and writhing crawled out of a wall."
+    ],
+    "kronika_handelse_drommer": [
+      "The serpent dreamed and turned over in its sleep."
+    ],
+    "kronika_handelse_kryp": [
+      "Small vermin fled through the tower in a stream."
     ],
     "handelse_guld_tar": [
       "The coins from the crack lie on the floor. You take {antal} gold."

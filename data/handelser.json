@@ -183,6 +183,34 @@
         "har": [
           "Murbruket smular sönder, och något litet och slingrande kryper ut ur väggen bredvid dig."
         ]
+      },
+      {
+        "id": "drommer",
+        "vikt": 2,
+        "max": 2,
+        "bild": "drom",
+        "rubrik": "Ormen drömmer",
+        "ormkort": 2,
+        "text": [
+          "Något stort vänder sig i sömnen djupt inne i tornet. Golvet darrar svagt under dina fötter."
+        ],
+        "har": [
+          "Ormen suckar i sömnen och sjunker djupare. Slingorna ligger stilla runt guldet."
+        ],
+        "har_annars": [
+          "Ormen rör sig oroligt i sömnen. Ögonlocken darrar, och slingorna drar ihop sig runt guldet."
+        ]
+      },
+      {
+        "id": "kryp",
+        "vikt": 2,
+        "max": 1,
+        "bild": "kryp",
+        "rubrik": "Kryp som flyr",
+        "avstand": 3,
+        "har": [
+          "Ett hav av små svarta kryp väller in från {horn}, rusar förbi dina fötter och försvinner åt andra hållet. Något därborta skrämde dem."
+        ]
       }
     ]
   }

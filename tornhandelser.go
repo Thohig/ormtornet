@@ -72,6 +72,10 @@ func (g *Game) eventPossible(id string) bool {
 		return ok
 	case "yngel":
 		return g.loneWanderer() != nil
+	case "drommer":
+		return len(g.deck) > 0
+	case "kryp":
+		return len(g.crawlWitnesses()) > 0
 	}
 	return true
 }
@@ -186,6 +190,26 @@ func (g *Game) runTowerEvent(id string) bool {
 		g.addMonster(t, p.X, p.Y)
 		x, y = p.X, p.Y
 		hit = map[*Player]bool{p: true}
+	case "drommer":
+		other = g.rng.IntN(2) == 1
+		for range max(1, e.Ormkort) {
+			if other {
+				g.stirSerpent()
+			} else {
+				g.calmSerpent()
+			}
+		}
+		x, y = g.chamber()
+	case "kryp":
+		w := g.crawlWitnesses()
+		if len(w) == 0 {
+			return false
+		}
+		x, y = g.chamber()
+		hit = map[*Player]bool{}
+		for _, p := range w {
+			hit[p] = true
+		}
 	default:
 		return false
 	}
@@ -503,4 +527,24 @@ func (g *Game) deathSpot() (int, int, bool) {
 	}
 	s := spots[g.rng.IntN(len(spots))]
 	return s[0], s[1], true
+}
+
+// crawlWitnesses är de som ser krypen fly från kammaren: inne, inte i
+// valven och inte i kammaren, och högst avstand rum från den.
+func (g *Game) crawlWitnesses() []*Player {
+	e := g.data.towerEvent("kryp")
+	if e == nil {
+		return nil
+	}
+	cx, cy := g.chamber()
+	var w []*Player
+	for _, p := range g.inside() {
+		if p.Cellar > 0 || g.isChamber(p.X, p.Y) {
+			continue
+		}
+		if abs(p.X-cx)+abs(p.Y-cy) <= max(1, e.Avstand) {
+			w = append(w, p)
+		}
+	}
+	return w
 }
