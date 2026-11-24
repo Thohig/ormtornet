@@ -333,7 +333,10 @@ Gå ut genom en port för att lämna tornet: en i varje hörn, och i ett torn
 på 11 × 11 eller mer även en mitt på varje sida. Vilken port som helst
 duger. Den som kommer
 ut med skatt räknas, och den med mest skatt vinner. Den som är kvar inne när
-solen har gått ner är förlorad. Bär du inget guld frågar porten först:
+solen har gått ner är förlorad. I slutet får alla en placering: först de
+som kom ut, efter skatt (tomhänt sist av dem), sedan de som blev kvar inne
+och sist de döda, och lika placering delas. Var och en får veta sin
+("Du kom på plats 2 av 5"). Bär du inget guld frågar porten först:
 gå samma håll en gång till, samma eller nästa runda, om du vill ut tomhänt.
 
 Andras skatt och val av drag syns inte förrän spelet är slut.
@@ -476,7 +479,8 @@ och en träffar med sin chans. Den som inte anfaller kan bli träffad även om
 den går ut ur rummet; den som väntar håller garden och är svårare att
 träffa, den som söker eller dricker lättare. Varje träff kostar 1 liv och river
 åt sig en tredjedel av motståndarens guld (minst 1). Den som dödar tar allt.
-Hur mycket någon bär syns inte, men man får en vink när man möter dem.
+Hur mycket någon bär syns inte, men man får en vink när man möter dem,
+som också säger om hen bär mer eller mindre än du.
 Portrummen är fredade, och varje runda med strid gör ormen lite oroligare.
 AI-spelare anfaller bara människor, utom när alla vandrare är AI-spelare.
 Striden går inte att stänga av.

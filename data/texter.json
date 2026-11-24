@@ -745,6 +745,10 @@
     "pack_tung": ["{namn} är här. {namn} går tungt, som om packningen vore full."],
     "pack_lite": ["{namn} är här. Något klirrar i packningen."],
     "pack_tom": ["{namn} är här. Packningen hänger tom."],
+    "pack_mer": ["Det är mer än du bär.", "Du bär mindre."],
+    "pack_mindre": ["Det är mindre än du bär.", "Du bär mer."],
+    "pack_lika": ["Ni bär ungefär lika mycket."],
+    "plats_du": ["Du kom på plats {plats} av {antal}."],
     "stanger_snart": ["Tornet stänger om en minut om ingen är kvar."],
     "intro_ljud": [
       "klicka för att höra stormen"

@@ -29,12 +29,18 @@ den som fäller varelsen tar allt guld, ormens namn, den förste invigde
 och leken i kammaren, där varje sovkort man tar gör nästa näve farligare
 för de andra.
 
-## Steg 2: placeringar och vinken (inte byggt)
+## Steg 2: placeringar och vinken (byggt 2026-11-24)
 
 - **Placering för alla.** I slutet står alla på plats 1 till N: först de
-  som kom ut, efter skatt, sedan de som blev kvar och sist de döda.
+  som kom ut, efter skatt (tomhänt sist av dem), sedan de som blev kvar
+  och sist de döda. Lika placering delas. Placeringen står framför namnet
+  i resultaten på krönikans skärm och i resultatrutan, och var och en får
+  raden "Du kom på plats 2 av 5" (`plats_du`; `Place` i `results` i
+  `game.go`). Förut stod de döda före de som blev kvar.
 - **Vinken blir skarpare.** När man möter någon säger vinken också om hen
-  bär mer eller mindre än du. Hur mycket syns fortfarande inte.
+  bär mer eller mindre än du (`pack_mer`, `pack_mindre`, `pack_lika`;
+  `packHint` i `pvp.go`). Har ingen av er något säger den inget mer. Hur
+  mycket syns fortfarande inte.
 
 ## Steg 3: ställningen för kvällen (inte byggt)
 

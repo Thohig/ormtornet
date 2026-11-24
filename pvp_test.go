@@ -214,3 +214,20 @@ func TestTowerPicksTheFoe(t *testing.T) {
 		t.Fatalf("Bo fick %s, ville ha Alva när anfallet var länge sedan", f.Name)
 	}
 }
+
+// Vinken säger om den man möter bär mer eller mindre än en själv.
+func TestPackHintComparesWithYou(t *testing.T) {
+	g, a, b := fightReady(t)
+	alva, bo := a.player, b.player
+	alva.Treasure, bo.Treasure = 10, 70
+	if got := g.packHint(alva, bo); !strings.HasSuffix(got, g.data.Text("pack_mer")) && !strings.Contains(got, "Du bär mindre") {
+		t.Fatalf("Alva om Bo: %q", got)
+	}
+	if got := g.packHint(bo, alva); !strings.Contains(got, "mindre än du") && !strings.Contains(got, "Du bär mer") {
+		t.Fatalf("Bo om Alva: %q", got)
+	}
+	alva.Treasure, bo.Treasure = 0, 0
+	if got := g.packHint(alva, bo); got != g.data.Text("pack_tom", "namn", bo.Name) {
+		t.Fatalf("två tomma: %q", got)
+	}
+}

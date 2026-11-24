@@ -739,7 +739,7 @@ function renderChron() {
   $("chronLead").textContent = end ? "" : v.dod || "";
   $("chronStatus").textContent = end ? "" : t(state.sun === 1 ? "vandring_pagar_en" : "vandring_pagar", { runda: state.round, sol: state.sun, inne: v.inne, ute: v.ute });
   // Resultaten: vem som kom ut med hur mycket, vinnaren först.
-  const results = end ? (state.results || []).map((r) => ({ text: (r.winner ? "★ " : "") + r.name + (r.ai ? " ~" : "") + " · " + resultWord(r), c: r.winner ? "win" : r.status !== "ute" ? "lost" : "" })) : [];
+  const results = end ? (state.results || []).map((r) => ({ text: (r.plats ? r.plats + ". " : "") + (r.winner ? "★ " : "") + r.name + (r.ai ? " ~" : "") + " · " + resultWord(r), c: r.winner ? "win" : r.status !== "ute" ? "lost" : "" })) : [];
   // ~ förklaras under resultaten, som i resultatrutan på kartan.
   if (end && (state.results || []).some((r) => r.ai)) results.push({ text: t("slut_ai"), c: "dim" });
   rows("chronResults", results);
@@ -1800,8 +1800,9 @@ function renderOverlay() {
   const lines = [{ text: endTitle() }, { text: "" }];
   state.results.forEach((r, i) => {
     const what = resultWord(r);
+    const place = String(r.plats || i + 1).padStart(2, " ") + " ";
     const name = (r.winner ? "*" : " ") + (r.ai ? "~" : " ") + r.name;
-    const row = name.padEnd(20, " ") + what.padStart(10, " ");
+    const row = place + name.padEnd(17, " ") + what.padStart(10, " ");
     lines.push({ text: row, cls: r.winner ? "win" : r.status !== "ute" ? "lost" : "" });
   });
   if (state.results.some((r) => r.ai)) lines.push({ text: "" }, { text: t("slut_ai") });

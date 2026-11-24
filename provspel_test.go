@@ -27,7 +27,7 @@ func TestResultsEmptyHandedBeforeDead(t *testing.T) {
 	for _, r := range g.results() {
 		order = append(order, r.Name)
 	}
-	if got := strings.Join(order, " "); got != "Rik Tomhänt Död Förlorad" {
+	if got := strings.Join(order, " "); got != "Rik Tomhänt Förlorad Död" {
 		t.Fatalf("ordningen blev %s", got)
 	}
 }

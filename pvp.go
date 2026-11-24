@@ -280,15 +280,27 @@ func (g *Game) fightStirsSerpent(active []*Player) {
 	}
 }
 
-// packHint berättar ungefär hur mycket någon bär, utan att säga hur mycket.
-func (g *Game) packHint(o *Player) string {
+// packHint berättar för p ungefär hur mycket o bär, utan att säga hur
+// mycket, och om det är mer eller mindre än p själv bär.
+func (g *Game) packHint(p, o *Player) string {
+	var hint string
 	switch {
 	case o.Treasure >= 60:
-		return g.data.Text("pack_tung", "namn", o.Name)
+		hint = g.data.Text("pack_tung", "namn", o.Name)
 	case o.Treasure > 0:
-		return g.data.Text("pack_lite", "namn", o.Name)
+		hint = g.data.Text("pack_lite", "namn", o.Name)
+	default:
+		hint = g.data.Text("pack_tom", "namn", o.Name)
 	}
-	return g.data.Text("pack_tom", "namn", o.Name)
+	switch {
+	case o.Treasure == 0 && p.Treasure == 0:
+		return hint // två tomma packningar säger inget mer
+	case o.Treasure > p.Treasure:
+		return hint + " " + g.data.Text("pack_mer")
+	case o.Treasure < p.Treasure:
+		return hint + " " + g.data.Text("pack_mindre")
+	}
+	return hint + " " + g.data.Text("pack_lika")
 }
 
 // meetIfNew berättar för p vilka andra vandrare som står i rummet och om det
@@ -311,7 +323,7 @@ func (g *Game) meetIfNew(p *Player) {
 		return
 	}
 	for _, o := range foes {
-		g.logTo(p, g.packHint(o), "info")
+		g.logTo(p, g.packHint(p, o), "info")
 	}
 	if g.pvpStatus(p) == pvpPeace {
 		g.logTo(p, g.data.Text("pvp_fredat"), "dim")

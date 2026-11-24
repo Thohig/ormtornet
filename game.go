@@ -636,7 +636,8 @@ type resultView struct {
 	Treasure int    `json:"treasure"`
 	Status   string `json:"status"`
 	Winner   bool   `json:"winner"`
-	AI       bool   `json:"ai"` // AI:n spelade en del av vandringen
+	AI       bool   `json:"ai"`    // AI:n spelade en del av vandringen
+	Place    int    `json:"plats"` // placeringen, 1 först; lika placering delas
 }
 
 type stateMsg struct {
@@ -922,13 +923,24 @@ func (g *Game) results() []resultView {
 		}
 		res = append(res, resultView{Name: p.Name, Slot: p.Slot, Treasure: p.Treasure, Status: p.Status, AI: p.aiPlayed})
 	}
+	// Placeringen: först de som kom ut, efter skatt (tomhänt ger 0), sedan
+	// de som blev kvar inne och sist de döda.
 	score := func(r resultView) int {
-		if r.Status == statusOut {
-			return r.Treasure // tomhänt ger 0, före de döda och förlorade
+		switch r.Status {
+		case statusOut:
+			return r.Treasure
+		case statusDead:
+			return -2
 		}
 		return -1
 	}
 	sort.SliceStable(res, func(i, j int) bool { return score(res[i]) > score(res[j]) })
+	for i := range res {
+		res[i].Place = i + 1
+		if i > 0 && score(res[i]) == score(res[i-1]) {
+			res[i].Place = res[i-1].Place
+		}
+	}
 	if len(res) > 0 && score(res[0]) > 0 {
 		best := score(res[0])
 		for i := range res {
@@ -1676,6 +1688,12 @@ func (g *Game) endGame() {
 			"skatt", strconv.Itoa(res[0].Treasure)), "syn")
 	} else {
 		g.logAll(g.data.Text("ingen_vinnare"), "varn")
+	}
+	// Var och en får veta sin placering.
+	for _, r := range res {
+		if p := g.playerByName(r.Name); p != nil {
+			g.logTo(p, g.data.Text("plats_du", "plats", strconv.Itoa(r.Place), "antal", strconv.Itoa(len(res))), "info")
+		}
 	}
 	g.epilogue()
 	g.goldEpilogue()

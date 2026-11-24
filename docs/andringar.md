@@ -6,6 +6,14 @@ eller leder tornet.
 
 ## 2026-11-24
 
+### Placering för alla, och vinken jämför
+
+- I slutet får alla en placering: först de som kom ut, efter skatt, sedan
+  de som blev kvar inne och sist de döda. Den står framför namnet i
+  resultaten, och var och en får raden "Du kom på plats 2 av 5".
+- När du möter någon säger vinken också om hen bär mer eller mindre än du,
+  till exempel "Något klirrar i packningen. Det är mindre än du bär."
+
 ### Var och en för sig
 
 - Kartritaren ger inte längre bort sin karta till den hen möter

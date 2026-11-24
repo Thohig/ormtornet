@@ -496,7 +496,10 @@ func TestFleeAndUnprepared(t *testing.T) {
 	if p.HP >= hp || !g.rooms[2][4].Searched {
 		t.Fatal("varelsen fick inget fritt anfall, eller rummet söktes inte")
 	}
-	// Flykt: ett fritt anfall till, sedan är spelaren ute ur rummet.
+	// Flykt: ett fritt anfall till, sedan är spelaren ute ur rummet. Det
+	// sökningen hittade (en fälla som håller fast, mörker) ska inte störa.
+	p.Stuck, p.Cellar, p.Dark, p.Poison = 0, 0, 0, 0
+	p.X, p.Y = 4, 2
 	hp = p.HP
 	step(g, a, b, "N", actWait)
 	if p.HP >= hp || p.Y != 1 {
@@ -925,5 +928,23 @@ func TestFightOutlook(t *testing.T) {
 	g.removeMonster(m)
 	if g.fightOutlook(a.player) != nil {
 		t.Fatal("utsikt utan någon att slåss mot")
+	}
+}
+
+// Alla får en placering: först de som kom ut efter skatt, sedan de som
+// blev kvar och sist de döda. Lika placering delas.
+func TestResultPlaces(t *testing.T) {
+	g := testGame(t)
+	for i, s := range []struct {
+		name, status string
+		gold         int
+	}{{"Död", statusDead, 0}, {"Kvar", statusLost, 0}, {"Tom", statusOut, 0}, {"Rik", statusOut, 40}, {"Lika", statusOut, 40}} {
+		g.players[i] = &Player{ID: i + 1, Name: s.name, Status: s.status, Treasure: s.gold}
+	}
+	want := map[string]int{"Rik": 1, "Lika": 1, "Tom": 3, "Kvar": 4, "Död": 5}
+	for _, r := range g.results() {
+		if r.Place != want[r.Name] {
+			t.Fatalf("%s på plats %d, ville ha %d", r.Name, r.Place, want[r.Name])
+		}
 	}
 }

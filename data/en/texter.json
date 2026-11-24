@@ -708,6 +708,10 @@
     "pack_tung": ["{namn} is here. {namn} walks heavily, as if their pack were full."],
     "pack_lite": ["{namn} is here. Something clinks in their pack."],
     "pack_tom": ["{namn} is here. Their pack hangs empty."],
+    "pack_mer": ["That is more than you carry.", "You carry less."],
+    "pack_mindre": ["That is less than you carry.", "You carry more."],
+    "pack_lika": ["You carry about the same."],
+    "plats_du": ["You came in place {plats} of {antal}."],
     "stanger_snart": ["The tower closes in a minute if no one is left."],
     "intro_ljud": [
       "click to hear the storm"
