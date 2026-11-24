@@ -4,6 +4,18 @@ Det som har ändrats i spelet, nyast först. README beskriver hur allt
 fungerar. Här står vad som är nytt och vad det betyder för den som spelar
 eller leder tornet.
 
+## 2026-11-24
+
+### Varelsen skymmer inte den första vandraren
+
+- På kartan snett ovanifrån stod varelsen precis framför den första
+  vandrarens plats, sett från kameran, så att en hög varelse som
+  fjällrustningen skymde figuren helt under striden. Varelsen står nu
+  snett framför rummets mitt (`VARELSE` i `klient/src/karta.ts`), där
+  ingen vandrare står rakt bakom den.
+- Det övriga från provspelet står under Småsaker från provspelet i
+  `docs/att-gora.md`.
+
 ## 2026-11-23
 
 ### "En runda kvar" när solen hoppar

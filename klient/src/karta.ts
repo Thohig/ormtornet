@@ -20,6 +20,10 @@ const LUCKA = 1.9; // dörrarnas bredd
 const RW = 7;
 const RH = 4;
 const SLOTS = [[2, 1], [5, 1], [2, 3], [5, 3], [1, 2], [6, 2], [3, 1], [4, 3]];
+// Varelsen står mellan cellerna, snett framför mitten. Kameran tittar längs
+// diagonalen, så i (4, 2) stod den precis framför vandraren i (2, 1) och
+// skymde henom helt. Härifrån står ingen vandrare rakt bakom den.
+const VARELSE = [3.5, 2.5];
 
 const FARG = {
   okand: "#6a6e76",
@@ -1096,7 +1100,7 @@ float puls() {
       sedda.add("v" + p.id);
     });
     (state.monsters || []).forEach((m) => {
-      const [x, z] = plats(m.x, m.y, Math.floor(RW / 2) + 1, Math.floor(RH / 2));
+      const [x, z] = plats(m.x, m.y, VARELSE[0], VARELSE[1]);
       const typ = m.typ || "";
       const mm = m.modell || {};
       if (typ) this.typer.set(m.glyph, { typ, farg: mm.farg, storlek: mm.storlek });
