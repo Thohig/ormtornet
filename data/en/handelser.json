@@ -68,6 +68,33 @@
         "har": [
           "At the stroke of the bell the serpent's breathing stops short. The next handful you take will not wake it."
         ]
+      },
+      {
+        "id": "stannar",
+        "rubrik": "The bell stops",
+        "text": [
+          "The bell at the top of the tower falls silent in the middle of a stroke. The light in the slits stands still, and the sun does not sink this time."
+        ]
+      },
+      {
+        "id": "draget",
+        "rubrik": "The draught",
+        "text": [
+          "A cold draught moves through the tower. The torches flicker and go out one by one, and the darkness closes in."
+        ]
+      },
+      {
+        "id": "klirrar",
+        "rubrik": "A jingle",
+        "text": [
+          "To the {horn} coins jingle in a heavy purse. Someone there carries more than anyone else."
+        ],
+        "har": [
+          "Your purse jingles so loudly that it echoes between the walls. Everyone in the tower heard it."
+        ],
+        "bredvid": [
+          "The purse beside you jingles so loudly that it echoes between the walls. Whoever carries it has more than anyone else."
+        ]
       }
     ]
   }

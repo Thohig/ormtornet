@@ -10,6 +10,9 @@ package main
 var eventSounds = map[string]string{
 	"andas": "ormen_ror", "guld": "hitta", "ljus": "rost", "skinn": "skinn",
 	"ras": "rasande_golv", "doden": "monster", "klockslag": "klocka",
+	"stannar": "klocka", "draget": "morker", "klirrar": "skatt",
+	"packning": "hitta", "brev": "hitta", "sluter": "ormen_ror",
+	"yngel": "monster", "drommer": "ormen_ror", "kryp": "monster",
 }
 
 // towerEventTick slår för en händelse i slutet av rundan och räknar ner
@@ -53,6 +56,12 @@ func (g *Game) eventPossible(id string) bool {
 	case "ras":
 		_, _, ok := g.caveSpot()
 		return ok
+	case "stannar":
+		return g.sun > 0 && g.sun < g.sunMax
+	case "draget":
+		return g.lightRounds == 0
+	case "klirrar":
+		return g.richest() != nil
 	}
 	return true
 }
@@ -65,6 +74,10 @@ func (g *Game) runTowerEvent(id string) bool {
 		return false
 	}
 	x, y := -1, -1 // där det händer; -1 för hela tornet
+	// hit är de det händer, när det inte är de som står där. other är sant
+	// när det gick åt andra hållet (HarAnnars).
+	var hit map[*Player]bool
+	other := false
 	switch id {
 	case "andas":
 		ax, ay, d, ok := g.newDoorSpot()
@@ -106,30 +119,94 @@ func (g *Game) runTowerEvent(id string) bool {
 	case "klockslag":
 		g.sun = max(0, g.sun-max(1, e.Sol))
 		x, y = g.chamber()
+	case "stannar":
+		g.sun = min(g.sunMax, g.sun+max(1, e.Sol))
+	case "draget":
+		for _, p := range g.inside() {
+			if g.is(p, "lyktbarare") || g.useItem(p, "veke") {
+				continue
+			}
+			p.Dark = max(p.Dark, max(1, e.Rundor))
+		}
+	case "klirrar":
+		p := g.richest()
+		if p == nil {
+			return false
+		}
+		x, y = p.X, p.Y
+		hit = map[*Player]bool{p: true}
 	default:
 		return false
 	}
 	g.eventCount[id]++
 	g.chronicle("kronika_handelse_"+id, "bild", e.Bild)
-	g.soundAll(eventSounds[id])
-	for _, p := range g.players {
-		if p == nil || p.Status != statusIn {
-			continue
+	for _, p := range g.inside() {
+		at := x >= 0 && p.X == x && p.Y == y && p.Cellar == 0
+		here := at
+		if hit != nil {
+			here = hit[p]
 		}
-		here := x >= 0 && p.X == x && p.Y == y && p.Cellar == 0
-		text := pick(e.Text)
-		if here && len(e.Har) > 0 {
+		var text string
+		switch {
+		case here && other && len(e.HarAnnars) > 0:
+			text = pick(e.HarAnnars)
+		case here && len(e.Har) > 0:
 			text = pick(e.Har)
-		} else if x >= 0 {
+		case at && len(e.Bredvid) > 0:
+			text = pick(e.Bredvid)
+		case len(e.Text) > 0:
+			text = pick(e.Text)
+		}
+		if text == "" {
+			continue // bara den det händer märker något
+		}
+		if x >= 0 && (p.X != x || p.Y != y) {
 			text = fill(text, "horn", g.hornToward(p.X, p.Y, x, y))
 		}
 		if here {
 			g.eventHere(p, id)
 		}
+		g.soundTo(p, eventSounds[id])
 		g.logTo(p, text, "varn")
 		g.addCard(p, gameCard{Slag: "handelse", Bild: e.Bild, Rubrik: e.Rubrik, Text: text})
 	}
 	return true
+}
+
+// inside är vandrarna som är kvar i tornet.
+func (g *Game) inside() []*Player {
+	var in []*Player
+	for _, p := range g.players {
+		if p != nil && p.Status == statusIn {
+			in = append(in, p)
+		}
+	}
+	return in
+}
+
+// richest är den i tornet som bär mest guld, utanför valven, när de är
+// minst två där inne och den bär något. Lika mycket avgörs av slumpen.
+func (g *Game) richest() *Player {
+	in := g.inside()
+	if len(in) < 2 {
+		return nil
+	}
+	var best []*Player
+	for _, p := range in {
+		if p.Cellar > 0 || p.Treasure <= 0 {
+			continue
+		}
+		switch {
+		case len(best) == 0 || p.Treasure > best[0].Treasure:
+			best = []*Player{p}
+		case p.Treasure == best[0].Treasure:
+			best = append(best, p)
+		}
+	}
+	if len(best) == 0 {
+		return nil
+	}
+	return best[g.rng.IntN(len(best))]
 }
 
 // eventHere är det som händer den som står där händelsen sker.

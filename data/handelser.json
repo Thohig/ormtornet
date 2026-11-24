@@ -97,6 +97,44 @@
         "har": [
           "Vid klockslaget stannar ormens andetag upp. Nästa näve du tar väcker den inte."
         ]
+      },
+      {
+        "id": "stannar",
+        "vikt": 2,
+        "max": 1,
+        "bild": "klocka_stilla",
+        "rubrik": "Klockan stannar",
+        "sol": 1,
+        "text": [
+          "Klockan i tornets topp tystnar mitt i ett slag. Ljuset i gluggarna står stilla, och solen sjunker inte den här gången."
+        ]
+      },
+      {
+        "id": "draget",
+        "vikt": 2,
+        "max": 1,
+        "bild": "draget",
+        "rubrik": "Draget",
+        "rundor": 1,
+        "text": [
+          "Ett kallt drag går genom tornet. Facklorna fladdrar och slocknar en efter en, och mörkret sluter sig."
+        ]
+      },
+      {
+        "id": "klirrar",
+        "vikt": 3,
+        "max": 2,
+        "bild": "klirrar",
+        "rubrik": "Det klirrar",
+        "text": [
+          "Åt {horn} klirrar det av mynt i en tung pung. Någon där bär mer än alla andra."
+        ],
+        "har": [
+          "Din pung klirrar så att det ekar mellan väggarna. Alla i tornet hörde det."
+        ],
+        "bredvid": [
+          "Pungen bredvid dig klirrar så att det ekar mellan väggarna. Den som bär den har mer än alla andra."
+        ]
       }
     ]
   }

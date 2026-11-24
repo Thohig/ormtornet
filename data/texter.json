@@ -405,7 +405,7 @@
         {"id": "varelse", "nycklar": ["kronika_varelse"], "vikt": 3, "forst": 2, "bild": "fackla", "rubrik": "stund_varelse", "flera": "ber_flera_varelse"},
         {"id": "foremal", "nycklar": ["kronika_foremal"], "vikt": 2, "bild": "guld", "rubrik": "ber_rubrik_foremal"},
         {"id": "guld_lost", "nycklar": ["kronika_guld_lost"], "vikt": 1, "bild": "guld", "rubrik": "kort_guld_lost"},
-        {"id": "handelse", "nycklar": ["kronika_handelse_andas", "kronika_handelse_guld", "kronika_handelse_ljus", "kronika_handelse_skinn", "kronika_handelse_ras", "kronika_handelse_doden", "kronika_handelse_klockslag"], "vikt": 3, "bild": "andas", "rubrik": "ber_rubrik_handelse"}
+        {"id": "handelse", "nycklar": ["kronika_handelse_andas", "kronika_handelse_guld", "kronika_handelse_ljus", "kronika_handelse_skinn", "kronika_handelse_ras", "kronika_handelse_doden", "kronika_handelse_klockslag", "kronika_handelse_stannar", "kronika_handelse_draget", "kronika_handelse_klirrar"], "vikt": 3, "bild": "andas", "rubrik": "ber_rubrik_handelse"}
       ]
     }
   },
@@ -535,6 +535,15 @@
     ],
     "ber_handelse_klockslag": [
       "{nar} slog en klocka djupt i tornet, och solen sjönk."
+    ],
+    "ber_handelse_stannar": [
+      "{nar} stannade klockan i tornets topp, och solen stod stilla."
+    ],
+    "ber_handelse_draget": [
+      "{nar} släckte ett kallt drag facklorna i tornet."
+    ],
+    "ber_handelse_klirrar": [
+      "{nar} klirrade en pung så att det hördes i hela tornet."
     ],
     "ber_foremal": [
       "{nar} hittade {namn} {foremal}."
@@ -1085,6 +1094,15 @@
     ],
     "kronika_handelse_klockslag": [
       "En klocka slog djupt i tornet, och solen sjönk."
+    ],
+    "kronika_handelse_stannar": [
+      "Klockan i tornets topp stannade, och solen stod stilla en stund."
+    ],
+    "kronika_handelse_draget": [
+      "Ett kallt drag släckte facklorna i tornet."
+    ],
+    "kronika_handelse_klirrar": [
+      "En pung klirrade så att det hördes i hela tornet."
     ],
     "handelse_guld_tar": [
       "Mynten från sprickan ligger på golvet. Du tar {antal} guld."

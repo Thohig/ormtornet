@@ -482,6 +482,15 @@
     "ber_handelse_klockslag": [
       "{nar}, a bell struck deep in the tower, and the sun sank."
     ],
+    "ber_handelse_stannar": [
+      "{nar}, the bell at the top of the tower stopped, and the sun stood still."
+    ],
+    "ber_handelse_draget": [
+      "{nar}, a cold draught put out the torches in the tower."
+    ],
+    "ber_handelse_klirrar": [
+      "{nar}, a purse jingled so loudly it was heard through the whole tower."
+    ],
     "ber_foremal": [
       "{nar}, {namn} found {foremal}."
     ],
@@ -1031,6 +1040,15 @@
     ],
     "kronika_handelse_klockslag": [
       "A bell struck deep in the tower, and the sun sank."
+    ],
+    "kronika_handelse_stannar": [
+      "The bell at the top of the tower stopped, and the sun stood still for a while."
+    ],
+    "kronika_handelse_draget": [
+      "A cold draught put out the torches in the tower."
+    ],
+    "kronika_handelse_klirrar": [
+      "A purse jingled so loudly it was heard through the whole tower."
     ],
     "handelse_guld_tar": [
       "The coins from the crack lie on the floor. You take {antal} gold."

@@ -231,21 +231,28 @@ type TowerEvents struct {
 
 // TowerEvent är en händelse. Vad den gör styrs av dess id; siffrorna och
 // texterna står här. Text är det alla i tornet får, med {horn} åt det håll
-// det hände, och Har det den som står där det händer får. Krönikans rad
-// står i texter.json (kronika_handelse_<id>).
+// det hände, och Har det den som står där det händer, eller den det
+// händer, får. Utan Text märker bara den det händer något. HarAnnars är
+// det den får när det gick åt andra hållet (ormen som drömmer), och
+// Bredvid det de andra i samma rum får. Krönikans rad står i texter.json
+// (kronika_handelse_<id>).
 type TowerEvent struct {
-	ID      string   `json:"id"`
-	Vikt    int      `json:"vikt"`
-	Max     int      `json:"max"` // högst så många gånger per vandring
-	Bild    string   `json:"bild"`
-	Rubrik  string   `json:"rubrik"`
-	Text    []string `json:"text"`
-	Har     []string `json:"har,omitempty"`
-	GuldMin int      `json:"guld_min,omitempty"`
-	GuldMax int      `json:"guld_max,omitempty"`
-	Rundor  int      `json:"rundor,omitempty"`
-	Varelse string   `json:"varelse,omitempty"`
-	Sol     int      `json:"sol,omitempty"`
+	ID        string   `json:"id"`
+	Vikt      int      `json:"vikt"`
+	Max       int      `json:"max"` // högst så många gånger per vandring
+	Bild      string   `json:"bild"`
+	Rubrik    string   `json:"rubrik"`
+	Text      []string `json:"text,omitempty"`
+	Har       []string `json:"har,omitempty"`
+	HarAnnars []string `json:"har_annars,omitempty"`
+	Bredvid   []string `json:"bredvid,omitempty"`
+	Avstand   int      `json:"avstand,omitempty"`
+	Ormkort   int      `json:"ormkort,omitempty"`
+	GuldMin   int      `json:"guld_min,omitempty"`
+	GuldMax   int      `json:"guld_max,omitempty"`
+	Rundor    int      `json:"rundor,omitempty"`
+	Varelse   string   `json:"varelse,omitempty"`
+	Sol       int      `json:"sol,omitempty"`
 }
 
 func (d *Data) towerEvent(id string) *TowerEvent {

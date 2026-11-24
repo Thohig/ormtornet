@@ -230,8 +230,8 @@ func (d *Data) validate() []string {
 		if e.Varelse != "" && d.monsterType(e.Varelse) == nil {
 			bad("handelser.json", "%s: varelsen %q finns inte i monster.json", e.ID, e.Varelse)
 		}
-		if len(e.Text) == 0 {
-			bad("handelser.json", "%s: text saknas", e.ID)
+		if len(e.Text) == 0 && len(e.Har) == 0 {
+			bad("handelser.json", "%s: text och har saknas", e.ID)
 		}
 	}
 	unique("handelser.json", "händelsen", ids)

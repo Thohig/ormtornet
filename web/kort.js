@@ -362,6 +362,35 @@ ${[[22, 40], [78, 44], [30, 20], [70, 18]].map(([x, y]) => `<circle cx="${x}" cy
 <circle cx="50" cy="70" r="3.2" fill="${JARN}"/>
 <path d="M22 44q-6 12 0 24M16 40q-9 16 0 32M78 44q6 12 0 24M84 40q9 16 0 32" fill="none" stroke="#e6d8b8" stroke-width="1.6" stroke-linecap="round" opacity="0.8"/>`;
 
+  // Klockan stannar: klockan från klockslaget, stilla, med kläppen rakt
+  // ner och en spindeltråd över, och en blek sol som står kvar.
+  BILDER.klocka_stilla = () => `<rect x="4" y="4" width="92" height="92" rx="6" fill="#2a2018" opacity="0.35"/>
+<circle cx="78" cy="22" r="9" fill="${GULD}" opacity="0.6"/>
+<path d="M50 18v6" stroke="${JARN}" stroke-width="2"/>
+<path d="M36 64q0 -38 14 -40q14 2 14 40z" fill="#a8823a" stroke="${BLAECK}" stroke-width="1.4"/>
+<path d="M32 64h36" stroke="${BLAECK}" stroke-width="3" stroke-linecap="round"/>
+<path d="M50 60v8" stroke="${JARN}" stroke-width="1.4"/><circle cx="50" cy="70" r="3.2" fill="${JARN}"/>
+<path d="M20 14L50 40L84 70M50 40L20 60M50 40L72 12" stroke="#e6d8b8" stroke-width="0.6" opacity="0.7"/>
+<path d="M32 26l12 14M60 22l-6 14M30 52l14 -8" stroke="#e6d8b8" stroke-width="0.5" opacity="0.5"/>`;
+
+  // Draget: en fackla vars låga blåses åt sidan och blir till rök, och
+  // drag som går genom bilden.
+  BILDER.draget = () => `<rect x="4" y="4" width="92" height="92" rx="6" fill="#1a130c" opacity="0.6"/>
+<path d="M44 46l6 0 -2 40h-2z" fill="${BRUN}" stroke="${BLAECK}" stroke-width="1"/>
+<path d="M42 44h10l-1 5h-8z" fill="${JARN}"/>
+<path d="M48 42q8 -2 14 -8q-4 6 -12 9z" fill="#e8a83a" opacity="0.7"/>
+<path d="M50 40q10 -10 22 -10t18 -10" fill="none" stroke="${STEN}" stroke-width="3" stroke-linecap="round" opacity="0.6"/>
+<path d="M50 34q12 -8 20 -4" fill="none" stroke="${STEN}" stroke-width="2" stroke-linecap="round" opacity="0.4"/>
+${[22, 56, 72].map((y, i) => `<path d="M${8 + i * 4} ${y}q14 -5 26 0t26 0" fill="none" stroke="#e6d8b8" stroke-width="1.4" stroke-linecap="round" opacity="0.55"/>`).join("")}`;
+
+  // Det klirrar: en tung pung som har spruckit, och mynt som studsar ut.
+  BILDER.klirrar = () => `${golv(82)}
+<path d="M30 80q-6 -26 12 -34q-4 -6 4 -10h10q8 4 4 10q18 8 12 34z" fill="${BRUN}" stroke="${BLAECK}" stroke-width="1.4"/>
+<path d="M44 36q6 4 12 0" fill="none" stroke="${BLAECK}" stroke-width="2"/>
+<path d="M58 60l6 4 -4 5" fill="none" stroke="${BLAECK}" stroke-width="1.4"/>
+${[[70, 56, 0], [78, 44, 1], [74, 74, 0], [84, 66, 1], [64, 40, 0]].map(([x, y, k]) => `<ellipse cx="${x}" cy="${y}" rx="${k ? 4 : 3.4}" ry="${k ? 2 : 3.4}" fill="${GULD}" stroke="${BRUN}" stroke-width="0.6"/>`).join("")}
+<path d="M80 30l4 -4M88 38l5 -2M86 52l6 0" stroke="${GULD}" stroke-width="1.4" stroke-linecap="round"/>`;
+
   // Ett rostigt svärd, snett över kortet.
   BILDER.svard = () => `${ljus}
 <path d="M30 76l42 -50 6 -6 -2 8 -42 50z" fill="#9a8a7a" stroke="${BLAECK}" stroke-width="1.2"/>

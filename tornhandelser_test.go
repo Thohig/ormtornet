@@ -1,6 +1,9 @@
 package main
 
-import "testing"
+import (
+	"strings"
+	"testing"
+)
 
 // hasEventCard är sant när vandraren fick händelsens spelkort.
 func hasEventCard(p *Player, bild string) bool {
@@ -105,6 +108,47 @@ func TestTowerEvents(t *testing.T) {
 		g.runTowerEvent("klockslag")
 		if g.sun != sun-1 || !p.safeDraw {
 			t.Fatalf("solen %d -> %d, säker näve %v", sun, g.sun, p.safeDraw)
+		}
+	})
+}
+
+// Klockan stannar, draget och det som klirrar.
+func TestTowerEventsMore(t *testing.T) {
+	t.Run("stannar", func(t *testing.T) {
+		g, a, _ := startTwo(t)
+		if g.eventPossible("stannar") {
+			t.Fatal("klockan stannar fast solen är full")
+		}
+		g.sun = g.sunMax - 3
+		if !g.runTowerEvent("stannar") || g.sun != g.sunMax-2 || !hasEventCard(a.player, "klocka_stilla") {
+			t.Fatalf("solen %d av %d", g.sun, g.sunMax)
+		}
+	})
+	t.Run("draget", func(t *testing.T) {
+		g, a, b := withClass(t, "lyktbarare")
+		if !g.runTowerEvent("draget") || a.Dark != 0 || b.Dark == 0 {
+			t.Fatalf("mörker %d och %d", a.Dark, b.Dark)
+		}
+		g.lightRounds = 2
+		if g.eventPossible("draget") {
+			t.Fatal("draget medan ljuset faller in")
+		}
+	})
+	t.Run("klirrar", func(t *testing.T) {
+		g, a, b := startTwo(t)
+		if g.eventPossible("klirrar") {
+			t.Fatal("det klirrar fast ingen bär något")
+		}
+		putInRoom(g, a.player, 2, 2)
+		putInRoom(g, b.player, 4, 4)
+		a.player.Treasure, b.player.Treasure = 40, 10
+		if !g.runTowerEvent("klirrar") {
+			t.Fatal("inget klirr")
+		}
+		e := g.data.towerEvent("klirrar")
+		ca, cb := a.player.roundCards[len(a.player.roundCards)-1], b.player.roundCards[len(b.player.roundCards)-1]
+		if ca.Text != e.Har[0] || !strings.Contains(cb.Text, g.hornToward(4, 4, 2, 2)) {
+			t.Fatalf("texterna: %q / %q", ca.Text, cb.Text)
 		}
 	})
 }
