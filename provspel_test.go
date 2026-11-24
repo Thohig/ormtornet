@@ -115,6 +115,30 @@ func TestSunWarningOneRound(t *testing.T) {
 	}
 }
 
+// Med en kort sol (provspel med -sol 4) kommer ingen varning om halva
+// vägen efter varningen om att solen nästan nuddar horisonten.
+func TestShortSunWarningsInOrder(t *testing.T) {
+	g, a, _ := startTwo(t)
+	g.sunMax = 4
+	var got []string
+	for before := 4; before > 1; before-- {
+		for len(a.send) > 0 {
+			<-a.send
+		}
+		g.sun = before - 1
+		g.sunWarning(before)
+		for len(a.send) > 0 {
+			var m logMsg
+			if json.Unmarshal(<-a.send, &m) == nil && m.T == "log" && strings.Contains(m.Text, "Solen") {
+				got = append(got, m.Text)
+			}
+		}
+	}
+	if len(got) != 1 || !strings.Contains(got[0], "nuddar") {
+		t.Fatalf("varningarna: %q", got)
+	}
+}
+
 // Den som laddar om sidan i slutet står kvar i resultatet och kommer
 // tillbaka till sin egen vandring, inte som en nykomling.
 func TestReloadOnEndScreenKeepsResult(t *testing.T) {

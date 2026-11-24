@@ -1585,15 +1585,19 @@ func (g *Game) resolve() {
 
 // sunWarning varnar när solen passerar halva, en fjärdedel och tre kvar.
 // Klockfällan kan få solen att hoppa över en gräns, därför jämförs före och efter.
+// Med en kort sol hamnar halva och en fjärdedel vid eller under tre rundor;
+// de varningarna hoppas då över, så att "halva vägen" inte kommer efter
+// "nuddar nästan horisonten".
 func (g *Game) sunWarning(before int) {
 	passed := func(limit int) bool { return before > limit && g.sun <= limit }
+	early := func(limit int) bool { return limit > 3 && passed(limit) }
 	key := ""
 	switch {
 	case passed(3):
 		key = "sol_snart"
-	case passed(g.sunMax / 4):
+	case early(g.sunMax / 4):
 		key = "sol_kvart"
-	case passed(g.sunMax / 2):
+	case early(g.sunMax / 2):
 		key = "sol_halv"
 	}
 	if key == "sol_snart" && g.sun == 1 {
