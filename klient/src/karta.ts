@@ -350,7 +350,7 @@ export class IsoKarta {
   private tacktH = 0; // den del av bredden som spelkortet täcker (Val.tacktHoger)
   private ringar: THREE.MeshBasicMaterial[] = [];
   private munnar: { upper: THREE.Group; lower: THREE.Group }[] = [];
-  private ogon: THREE.Group[] = [];
+  private ormar: M.Orm[] = []; // ormen i varje kammare
   private guldljus: THREE.PointLight | null = null;
   private revbenMat = new THREE.MeshBasicMaterial({ map: K.revben(), color: 0xa03a2c, transparent: true, opacity: 0, depthWrite: false });
   // Väggarnas shader läser de här värdena varje bildruta.
@@ -606,7 +606,7 @@ export class IsoKarta {
     this.torn.clear();
     this.ringar = [];
     this.munnar = [];
-    this.ogon = [];
+    this.ormar = [];
 
     const golv: THREE.BufferGeometry[] = [];
     const vaggar: THREE.BufferGeometry[] = [];
@@ -880,9 +880,7 @@ float puls() {
     return m;
   }
 
-  private ogaGeo: THREE.SphereGeometry | null = null;
-
-  // Kammaren: en kritring kring en hög av guld.
+  // Kammaren: en kritring kring en hög av guld, med ormen på.
   private byggKammare(r: Rum): void {
     const cx = r.x * S + S / 2, cz = r.y * S + S / 2;
     const ringMat = new THREE.MeshBasicMaterial({ map: K.ring(), color: RING[this.niva()], transparent: true, depthWrite: false });
@@ -892,22 +890,12 @@ float puls() {
     this.torn.add(ring);
     this.ringar.push(ringMat);
 
-    // Ormens ögon över guldet, som lyser när den vaknar. De står bredvid
-    // varandra som kameran ser dem.
-    const ogon = new THREE.Group();
-    const ogonMat = this.material.get("ögon") || new THREE.MeshBasicMaterial({ color: 0xffe14a });
-    this.material.set("ögon", ogonMat);
-    const oga = this.ogaGeo || (this.ogaGeo = new THREE.SphereGeometry(0.11, 10, 8));
-    [-1, 1].forEach((sida) => {
-      const e = new THREE.Mesh(oga, ogonMat);
-      e.scale.set(1, 0.7, 1);
-      e.position.set(sida * 0.25, 0, -sida * 0.25);
-      ogon.add(e);
-    });
-    ogon.position.set(cx, 1.6, cz);
-    ogon.visible = false;
-    this.torn.add(ogon);
-    this.ogon.push(ogon);
+    // Ormen ligger hoprullad på guldet. Den andas i takt med hur djupt den
+    // sover, och när den vaknar reser den huvudet med lysande ögon.
+    const orm = M.orm();
+    orm.grupp.position.set(cx, 0, cz);
+    this.torn.add(orm.grupp);
+    this.ormar.push(orm);
     if (!this.guldljus) {
       this.guldljus = new THREE.PointLight(0xffc94a, 0, 10, 2);
       this.scene.add(this.guldljus);
@@ -1551,7 +1539,8 @@ float puls() {
     const vaken = t - this.vaknade < VAKEN_MS;
     const blixt = vaken && Math.floor((t - this.vaknade) / 180) % 2 === 0;
     this.ringar.forEach((m) => m.color.set(vaken ? (blixt ? "#ff5a3a" : "#a8402c") : RING[this.niva()]));
-    this.ogon.forEach((o) => (o.visible = vaken && (blixt || t - this.vaknade > 1100)));
+    const sov = this.state && this.state.phase === "spel" ? this.state.sleep ?? -1 : -1;
+    this.ormar.forEach((o) => o.steg(t, sov, t - this.vaknade));
     if (this.guldljus) this.guldljus.intensity = vaken ? 30 * (0.7 + 0.3 * Math.sin(t / 60)) : 0;
     this.avslojande(t);
 

@@ -23,8 +23,8 @@ Vandrarna och varelserna blir enkla 3D-modeller med ljus och skuggor.
 - Väggarna är låga, så att ingen figur göms bakom en vägg. Dörrarna är
   luckor mitt på väggen, och portarna har en båge.
 - Fällornas märken, kritpilarna och föremålen står i krita på golvet.
-  Kammaren har en kritring och en hög av guld, och ormens ögon lyser när
-  den vaknar.
+  Kammaren har en kritring och en hög av guld med ormen hoprullad på
+  (`orm` i `klient/src/modeller.ts`, 2026-11-24).
 - Vandrarna är low-poly-figurer i sin färg, med det klassen bär: skölden,
   kartan, staven. Varje klass har en egen kropp (`FORM` i
   `klient/src/modeller.ts`), och alla har ögon och en mantel med kappa i
@@ -139,8 +139,14 @@ längre.
 - Från nivå 3 mörknar golvet mot kött i takt med slagen, och revben syns
   genom golvet. På nivå 4 är väggarna kött och de öppna portarna munnar med
   tänder som tuggar. När vandringen är slut har munnarna slutit sig.
-- När ormen vaknar lyser två ögon över guldet och guldet glöder, medan
-  kritringen blinkar som förut.
+- Ormen ligger i två varv uppe på guldhögen, så att leken och vandrarnas
+  platser runt högen är fria, med huvudet framtill mot kameran. Den andas
+  i takt med sömnmätaren för den som står i kammaren (långsamt när den
+  sover djupt, snabbare och oroligt när den nästan vaknar) och lugnt för
+  andra. När den vaknar reser den huvudet på halsen, öppnar ögonen och
+  munnen och smakar luften med tungan, och lägger sig sedan igen, medan
+  guldet glöder och kritringen blinkar som förut (2026-11-24; förut
+  syntes bara två ögon över guldet).
 
 ## Efter stegen
 

@@ -6,6 +6,19 @@ eller leder tornet.
 
 ## 2026-11-24
 
+### Ormen ligger på guldet
+
+- I kammaren ligger nu ormen själv hoprullad uppe på guldhögen, med
+  huvudet vilande framtill och ögonen slutna. Förut syntes bara två ögon
+  över guldet när den vaknade.
+- Den andas. Den som står i kammaren ser andningen följa sömnmätaren:
+  långsamt när ormen sover djupt, snabbare när den sover lätt, och när
+  den nästan vaknar rör sig huvudet oroligt. Andra ser den andas lugnt,
+  så att den inte säger mer än sömnmätaren.
+- När ormen vaknar reser den huvudet, öppnar lysande gula ögon och
+  munnen, smakar luften med tungan och lägger sig sedan igen (`orm` i
+  `klient/src/modeller.ts`).
+
 ### Figurerna slåss och faller
 
 - På kartan gör figurerna det de gjorde under rundan, när de har gått

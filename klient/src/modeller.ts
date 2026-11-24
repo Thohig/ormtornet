@@ -653,6 +653,150 @@ function benvaktare(farg?: string): Figur {
   };
 }
 
+// ---- Ormen ----
+
+export interface Orm {
+  grupp: THREE.Group;
+  // steg rör ormen: t är tiden i millisekunder, sov hur djupt den sover
+  // (0 djupt till 2 nästan vaken, -1 när den som tittar inte står i
+  // kammaren) och vaken hur länge sedan den vaknade (Infinity om den inte
+  // har vaknat nyss).
+  steg(t: number, sov: number, vaken: number): void;
+}
+
+// Andningen: hur lång tid ett andetag tar och hur mycket ringarna sväller,
+// för sov 0, 1, 2 och för den som inte står i kammaren.
+const ANDNING: Record<number, [number, number]> = { 0: [4200, 0.018], 1: [3000, 0.03], 2: [1700, 0.05], [-1]: [3600, 0.022] };
+const VAKEN_MS = 3500;
+
+// orm bygger ormen hoprullad uppe på guldhögen (guldhog i karta.ts), med
+// mitten i origo och huvudet överst, vänt mot kameran (+x, +z). Ringarna
+// följer högens sluttning från kanten och uppåt, så att leken och
+// vandrarnas platser runt högen hålls fria.
+export function orm(): Orm {
+  const g = new THREE.Group();
+  const fjall = lam(0x4a5e2e);
+  const buk = lam(0x8a8a52);
+
+  // Högens höjd på avståndet r från mitten.
+  const hog = (r: number) => 0.03 + Math.max(0, 0.47 * (0.92 - r));
+  const varv = 2; // hela varv, så att huvudet hamnar framtill, mot kameran
+  const punkt = (u: number) => {
+    const r = 0.98 - 0.62 * u;
+    const a = Math.PI * 0.25 + u * varv * Math.PI * 2;
+    return new THREE.Vector3(Math.sin(a) * r, hog(r) + 0.12, Math.cos(a) * r);
+  };
+  const kurva = new THREE.CatmullRomCurve3(Array.from({ length: 40 }, (_, i) => punkt(i / 39)));
+  // Svansen är tunn och kroppen tjockast en bit upp, mot halsen smalare.
+  const tjock = (u: number) => 0.2 + 0.8 * Math.sin(Math.min(1, u * 1.6) * Math.PI * 0.5) - 0.15 * Math.max(0, u - 0.8) / 0.2;
+  const ringar = new THREE.Group();
+  g.add(ringar);
+  ringar.add(del(geo("ormkropp", () => {
+    const segment = 180, sidor = 8;
+    const t = new THREE.TubeGeometry(kurva, segment, 0.13, sidor);
+    const p = t.attributes.position;
+    const v = new THREE.Vector3();
+    for (let i = 0; i <= segment; i++) {
+      const c = kurva.getPointAt(i / segment);
+      const k = tjock(i / segment);
+      for (let j = 0; j <= sidor; j++) {
+        const n = i * (sidor + 1) + j;
+        v.fromBufferAttribute(p, n).sub(c).multiplyScalar(k);
+        // Lite platt, som en orm som vilar.
+        v.y *= 0.8;
+        p.setXYZ(n, c.x + v.x, c.y + v.y, c.z + v.z);
+      }
+    }
+    t.computeVertexNormals();
+    return t;
+  }), fjall));
+  // En kam av fjäll längs ryggen.
+  for (let i = 3; i < 34; i++) {
+    const u = i / 38;
+    const c = kurva.getPointAt(u);
+    const k = del(geo("ormkam", () => new THREE.ConeGeometry(0.045, 0.09, 4)), buk, c.x, c.y + 0.1 * tjock(u), c.z);
+    k.rotation.y = u * 9;
+    ringar.add(k);
+  }
+
+  // Huvudet vilar överst på ringarna och tittar mot kameran. Halsen går
+  // från ringarnas ände till huvudet och sträcks när huvudet reser sig.
+  const hals = kurva.getPointAt(1);
+  const fram = new THREE.Vector3(Math.SQRT1_2, 0, Math.SQRT1_2);
+  const vila = hals.clone().addScaledVector(fram, 0.12);
+  const huvud = new THREE.Group();
+  huvud.position.copy(vila);
+  huvud.rotation.y = Math.PI / 4;
+  g.add(huvud);
+  const halsen = del(geo("ormhals", () => {
+    const c = new THREE.CylinderGeometry(0.1, 0.11, 1, 8);
+    c.translate(0, 0.5, 0);
+    return c;
+  }), fjall);
+  halsen.position.copy(hals);
+  g.add(halsen);
+  const upp = new THREE.Vector3(0, 1, 0), riktning = new THREE.Vector3();
+  const skalle = del(geo("ormskalle", () => new THREE.SphereGeometry(0.2, 10, 7)), fjall, 0, 0.04, 0.16);
+  skalle.scale.set(1, 0.55, 1.45);
+  huvud.add(skalle);
+  const kake = new THREE.Group();
+  kake.position.set(0, -0.02, 0.02);
+  const underkake = del(geo("ormkäke", () => {
+    const b = new THREE.BoxGeometry(0.24, 0.05, 0.36);
+    b.translate(0, 0, 0.18);
+    return b;
+  }), buk);
+  kake.add(underkake);
+  huvud.add(kake);
+  const tunga = del(geo("ormtunga", () => {
+    const b = new THREE.BoxGeometry(0.03, 0.012, 0.22);
+    b.translate(0, 0, 0.11);
+    return b;
+  }), lysande(0xb02a2a), 0, 0.01, 0.38);
+  tunga.visible = false;
+  huvud.add(tunga);
+  // Ögonen: slutna är de mörka springor, öppna lyser de.
+  const slutna: THREE.Mesh[] = [], oppna: THREE.Mesh[] = [];
+  [-1, 1].forEach((s) => {
+    const x = s * 0.13, y = 0.1, z = 0.24;
+    const lock = del(geo("ormlock", () => new THREE.BoxGeometry(0.09, 0.02, 0.05)), lam(0x1d2614), x, y, z);
+    lock.rotation.y = s * 0.4;
+    slutna.push(lock);
+    const oga = new THREE.Mesh(geo("ormöga", () => new THREE.SphereGeometry(0.055, 8, 6)), lysande(0xffe14a));
+    oga.position.set(x, y + 0.01, z);
+    oga.scale.set(1, 0.7, 1);
+    oga.visible = false;
+    oppna.push(oga);
+    huvud.add(lock, oga);
+  });
+
+  return {
+    grupp: g,
+    steg(t, sov, vaken) {
+      const [period, mangd] = ANDNING[sov] || ANDNING[-1];
+      const andas = Math.sin((t / period) * Math.PI * 2);
+      ringar.scale.set(1 + andas * mangd, 1 + andas * mangd * 1.6, 1 + andas * mangd);
+      // Nästan vaken: huvudet rör sig oroligt i sömnen.
+      const oro = sov === 2 ? Math.sin(t / 380) * 0.06 : 0;
+      // Uppvaknandet: huvudet reser sig, munnen öppnas och tungan
+      // smakar luften, och sedan lägger den sig igen.
+      const f = vaken / VAKEN_MS;
+      const lyft = f < 1 ? ut(f * 7) * (1 - ut((f - 0.75) * 4)) : 0;
+      huvud.position.copy(vila).addScaledVector(fram, lyft * 0.15);
+      huvud.position.y += 0.03 * andas + lyft * 0.85;
+      huvud.rotation.set(-0.35 * lyft + oro * 0.5, Math.PI / 4 + oro, 0);
+      riktning.copy(huvud.position).sub(hals);
+      halsen.scale.set(1, riktning.length(), 1);
+      halsen.quaternion.setFromUnitVectors(upp, riktning.normalize());
+      kake.rotation.x = 0.55 * lyft;
+      tunga.visible = lyft > 0.5 && Math.floor(t / 140) % 2 === 0;
+      const ser = lyft > 0.15;
+      slutna.forEach((o) => (o.visible = !ser));
+      oppna.forEach((o) => (o.visible = ser));
+    },
+  };
+}
+
 // ---- Fällorna ----
 
 // falla bygger fällan id (id i data/fallor.json) som den ser ut när den
