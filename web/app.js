@@ -1327,10 +1327,18 @@ function renderNow(me) {
 // bild. Kortet glider undan när du väljer nästa drag, efter en stund eller
 // vid ett klick. Ett stort kort (stor: att komma ut, en port som stängs,
 // solen) vänds upp mitt på kartan i stället.
+// På datorn ligger rundans kort i en solfjäder: det viktigaste överst med
+// text, och högst FAN till snett bakom med bild och rubrik. Ett klick på
+// ett kort bakom lägger det överst. Fler kort, och alla utom det översta
+// på telefonen, står som minikort på kortet.
 // Ett kort som kommer medan ett annat står uppe väntar i kön: ett
 // spelkort på de stora korten, och ett stort kort på ett annat stort. Ett
-// stort kort väntar inte på spelkortet.
+// stort kort väntar inte på spelkortet. Ett ensamt kort mellan rundorna
+// (ett varsel, viskningen) läggs i solfjädern om spelkortet står uppe.
 const CARD_MS = 8000;
+const FAN = 2;
+const fanMode = () => !touch && !(window.matchMedia && matchMedia("(max-width: 700px)").matches);
+let shownMsg = null;
 const BIG_MS = 5000;
 let cardTimer = null;
 let bigTimer = null;
@@ -1361,12 +1369,27 @@ function showRoundCard(msg, now) {
       if (q.round < msg.round && !(qMain && qMain.stor)) cardQueue.splice(i, 1);
     }
     cardQueue.unshift(msg);
+  } else if (joinFan(msg)) {
+    return;
   } else {
     cardQueue.push(msg);
   }
   nextCard();
 }
-function renderRoundCard(msg) {
+// joinFan lägger ett ensamt kort i solfjädern på spelkortet som står uppe.
+function joinFan(msg) {
+  const cards = msg.kort || [];
+  const el = $("spelkort");
+  if (!fanMode() || !shownMsg || !busy(el) || cardQueue.length) return false;
+  if (cards.length !== 1 || cards[0].stor || (msg.lines || []).length) return false;
+  const from = shownMsg.kort.length;
+  shownMsg.kort.push(cards[0]);
+  renderFan(el, el.querySelector(":scope > .ok-inner > .ok-front"), shownMsg.kort, from);
+  clearTimeout(cardTimer);
+  cardTimer = setTimeout(hideRoundCard, CARD_MS);
+  return true;
+}
+function renderRoundCard(msg, still) {
   const lines = msg.lines || [];
   const cards = msg.kort || [];
   const main = cards[0];
@@ -1374,6 +1397,7 @@ function renderRoundCard(msg) {
   const el = big ? $("storkort") : $("spelkort");
   const round = t("rundkort_rubrik", { runda: msg.round });
   const front = buildCard(el, main ? main : { bild: "fackla", rubrik: round });
+  if (!big) shownMsg = msg;
   el.dataset.round = msg.round;
   if (main && !big) {
     const r = document.createElement("div");
@@ -1395,17 +1419,7 @@ function renderRoundCard(msg) {
     });
     front.appendChild(rows);
   }
-  if (cards.length > 1) {
-    const more = document.createElement("div");
-    more.className = "ok-fler";
-    cards.slice(1).forEach((c) => {
-      const m = Kort.mini(c.bild, c);
-      m.title = c.rubrik;
-      more.appendChild(m);
-    });
-    more.setAttribute("aria-label", cards.slice(1).map((c) => c.rubrik).join(", "));
-    front.appendChild(more);
-  }
+  renderFan(el, front, big ? [] : cards, 1, still, big ? cards.slice(1) : null);
   if (big) {
     clearTimeout(bigTimer);
     bigTimer = setTimeout(hideBigCard, BIG_MS);
@@ -1416,6 +1430,48 @@ function renderRoundCard(msg) {
   cardAction = msg.ny ? "" : (state && state.action) || "";
   clearTimeout(cardTimer);
   cardTimer = setTimeout(hideRoundCard, CARD_MS);
+}
+// renderFan lägger korten från och med from bakom det översta, och de som
+// inte får plats som minikort på framsidan. still: korten bakom vänds inte
+// upp igen. mini: korten som ska stå som minikort, för det stora kortet.
+function renderFan(el, front, cards, from, still, mini) {
+  const behind = fanMode() ? cards.slice(1, 1 + FAN) : [];
+  behind.forEach((c, i) => {
+    if (i + 1 < from) return;
+    const b = document.createElement("div");
+    b.className = "okort ok-bakom ok-bakom" + (i + 1);
+    b.title = c.rubrik;
+    el.appendChild(b);
+    buildCard(b, { ...c, text: "" }, null, still);
+    b.querySelector(".ok-inner").style.transitionDelay = 0.25 + 0.2 * (i + 1 - from) + "s";
+    b.addEventListener("click", (e) => {
+      e.stopPropagation();
+      raiseCard(c);
+    });
+  });
+  const rest = mini || cards.slice(1 + behind.length);
+  const old = front && front.querySelector(".ok-fler");
+  if (old) old.remove();
+  if (!front || !rest.length) return;
+  const more = document.createElement("div");
+  more.className = "ok-fler";
+  rest.forEach((c) => {
+    const m = Kort.mini(c.bild, c);
+    m.title = c.rubrik;
+    more.appendChild(m);
+  });
+  more.setAttribute("aria-label", rest.map((c) => c.rubrik).join(", "));
+  front.appendChild(more);
+}
+// raiseCard lägger ett kort ur solfjädern överst, med sin text, och det
+// som låg överst på dess plats. Kortet står sedan en ny stund.
+function raiseCard(c) {
+  const cards = shownMsg && shownMsg.kort;
+  const i = cards ? cards.indexOf(c) : -1;
+  if (i <= 0) return;
+  [cards[0], cards[i]] = [cards[i], cards[0]];
+  shownMsg.ny = false;
+  renderRoundCard(shownMsg, true);
 }
 // fadeOut låter kortet glida undan och visar sedan nästa i kön.
 function fadeOut(el) {
@@ -1484,8 +1540,9 @@ function cardRow(list) {
 
 // buildCard bygger ett kort med baksidan och framsidan, så att det kan
 // vändas: rubriken, bilden och texten, och extra längst ner. Den svarar
-// med framsidan, så att den som anropar kan lägga till mer.
-function buildCard(el, c, extra) {
+// med framsidan, så att den som anropar kan lägga till mer. still: kortet
+// står redan uppvänt och vänds inte.
+function buildCard(el, c, extra, still) {
   el.innerHTML = "";
   const inner = document.createElement("div");
   inner.className = "ok-inner";
@@ -1510,7 +1567,11 @@ function buildCard(el, c, extra) {
   inner.append(back, front);
   el.appendChild(inner);
   el.hidden = false;
-  el.classList.remove("leaving", "vand", "igen", "skaka");
+  el.classList.remove("leaving", "vand", "igen", "skaka", "still");
+  if (still) {
+    el.classList.add("still", "vand"); // redan uppvänt
+    return front;
+  }
   void el.offsetWidth; // börja med baksidan upp
   el.classList.add("vand");
   if (c.bild === "vaknar") el.classList.add("skaka");

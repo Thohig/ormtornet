@@ -1469,6 +1469,25 @@ body.touch .card .num { display: none; }
 .okort .ok-rader .varn { color: #8a1a08; }
 .okort .ok-rader .gold { color: #7a5a10; font-weight: bold; }
 .okort .ok-rader .dim { color: #5a4a36; }
+/* Solfjädern på datorn (renderFan i app.js): rundans andra och tredje kort
+   snett bakom spelkortet, med bild och rubrik. Ett klick lägger kortet
+   överst. */
+#spelkort .ok-bakom {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: -1;
+  perspective: 800px;
+  transform-origin: 0 0;
+  transition: transform 0.2s, filter 0.2s;
+  filter: brightness(0.88);
+}
+#spelkort .ok-bakom1 { transform: translate(-134px, 16px) rotate(-4deg) scale(0.74); }
+#spelkort .ok-bakom2 { transform: translate(-246px, 34px) rotate(-8deg) scale(0.68); z-index: -2; }
+#spelkort .ok-bakom1:hover { transform: translate(-140px, 8px) rotate(-4deg) scale(0.74); filter: none; }
+#spelkort .ok-bakom2:hover { transform: translate(-252px, 26px) rotate(-8deg) scale(0.68); filter: none; }
+.okort.still .ok-inner { transition: none; }
 .okort .ok-fler { display: flex; flex-wrap: wrap; gap: 3px; margin-top: 5px; justify-content: flex-end; }
 .okort .ok-fler .minikort { width: 16px; height: 22px; margin: 0; }
 .okort[hidden] { display: none; }

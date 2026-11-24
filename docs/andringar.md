@@ -6,6 +6,18 @@ eller leder tornet.
 
 ## 2026-11-24
 
+### Rundans kort i en solfjäder
+
+- Händer flera saker samma runda ligger på datorn rundans två nästa kort
+  snett bakom spelkortet, med bild och rubrik. Förut stod de bara som
+  små minikort längst ner på kortet.
+- Ett klick på ett kort bakom lägger det överst med sin text, och kortet
+  står sedan en ny stund. Ett klick på det översta låter det glida undan
+  som förut.
+- Ett varsel eller viskningen som kommer medan spelkortet står uppe läggs
+  i solfjädern i stället för att vänta.
+- Fler än tre kort står som minikort, och på telefonen är allt som förut.
+
 ### En ändring i slutet ger ett nytt torn
 
 - Ändrar spelledaren antalet AI-spelare, svårigheten eller fröet när
