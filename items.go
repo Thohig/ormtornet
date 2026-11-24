@@ -115,7 +115,7 @@ func (g *Game) give(p *Player, id string) bool {
 	uses := t.Anvandningar
 	p.items = append(p.items, &Item{ID: id, uses: uses})
 	p.stats.items++
-	g.chronicle("kronika_foremal", "namn", p.Name, "foremal", t.found())
+	g.chronicle("kronika_foremal", "namn", p.Name, "foremal", t.found(), "bild", cardImage(t.Bild, t.ID))
 	return true
 }
 

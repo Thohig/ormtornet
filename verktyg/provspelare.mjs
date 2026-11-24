@@ -149,6 +149,8 @@ ws.onmessage = (ev) => {
     readySent = "slut" + played;
     const res = (st.results || []).map((r) => `${r.name}:${r.treasure}:${r.status}`).join(" ");
     w(`RESULTAT ${res}`);
+    // Berättelsen om vandringen, stycke för stycke, att läsa efteråt.
+    for (const b of st.berattelse || []) w(`BERÄTTELSE ${b.text}`);
     played++;
     if (played >= games) { setTimeout(() => process.exit(0), 500); return; }
     setTimeout(() => send({ t: "ready" }), 800);

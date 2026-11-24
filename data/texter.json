@@ -374,25 +374,231 @@
   "spelkort": {
     "_om": "Spelkorten (docs/spelkort.md): ordningen säger vilket kort som vänds upp när flera saker händer samma runda. Det första i listan är viktigast; resten blir minikort.",
     "ordning": ["dod", "ut", "ormen", "varelse", "vandrare", "falla", "handelse", "forbannelse", "foremal", "guld", "kallare", "varsel", "namn", "viska", "brev", "dryck"],
-    "stunder": {
-      "_om": "Vandringens största stunder i krönikan i slutet: krönikans händelser (nycklar) som läggs fram som stora kort. Slagen står med det viktigaste först; antal är hur många kort och per_slag hur många av samma slag. rubrik är en nyckel bland texterna. bara_vinnare tar bara med den som vann.",
-      "antal": 5,
+    "berattelse": {
+      "_om": "Berättelsen i slutet (berattelse.go, docs/berattelsen.md): krönikans händelser (nycklar) som blir höjdpunkter, med ett spelkort var. Varje händelse väger sitt slags vikt, och forst mer om den är den första av sitt slag; vinnare är hur mycket mer en händelse om den som vann väger. De tyngsta tas med, högst per_slag av varje slag och antal i allt, i den ordning de hände. Varje nyckel berättas med texten ber_ och nyckeln utan kronika_. flera är en text med {antal} när slaget hände flera gånger. Att gå ut och bli kvar står i slutet och inte här.",
+      "antal": 7,
       "per_slag": 2,
+      "vinnare": 3,
       "slag": [
-        { "id": "vinnare", "nycklar": ["kronika_ut"], "bild": "ut", "rubrik": "stund_vinnare", "bara_vinnare": true },
-        { "id": "vaknade", "nycklar": ["kronika_vaknade"], "bild": "vaknar", "rubrik": "stund_vaknade" },
-        { "id": "dod", "nycklar": ["kronika_dod", "kronika_dod_falla", "kronika_dod_varelse", "kronika_dod_vandrare", "kronika_dod_ormen", "kronika_dod_gift", "kronika_dod_foremal", "kronika_dod_tornet"], "bild": "dod", "rubrik": "kort_dod" },
-        { "id": "invigd", "nycklar": ["kronika_invigd_forst", "kronika_invigd"], "bild": "invigd", "rubrik": "kort_invigd" },
-        { "id": "port", "nycklar": ["kronika_port"], "bild": "port", "rubrik": "kort_port" },
-        { "id": "klocka", "nycklar": ["kronika_klocka"], "bild": "klocka", "rubrik": "stund_klocka" },
-        { "id": "kammaren", "nycklar": ["kronika_kammaren"], "bild": "guld", "rubrik": "stund_kammaren" },
-        { "id": "varelse", "nycklar": ["kronika_varelse"], "bild": "fackla", "rubrik": "stund_varelse" },
-        { "id": "namndel", "nycklar": ["kronika_namndel"], "bild": "namndel", "rubrik": "kort_namndel" },
-        { "id": "forlorad", "nycklar": ["kronika_forlorad"], "bild": "sol", "rubrik": "kort_forlorad" }
+        {"id": "vaknade", "nycklar": ["kronika_vaknade"], "vikt": 9, "forst": 3, "bild": "vaknar", "rubrik": "stund_vaknade", "flera": "ber_flera_vaknade"},
+        {"id": "invigd", "nycklar": ["kronika_invigd_forst", "kronika_invigd"], "vikt": 8, "forst": 4, "bild": "invigd", "rubrik": "kort_invigd"},
+        {"id": "dod", "nycklar": ["kronika_dod", "kronika_dod_falla", "kronika_dod_varelse", "kronika_dod_vandrare", "kronika_dod_ormen", "kronika_dod_gift", "kronika_dod_foremal", "kronika_dod_tornet"], "vikt": 8, "forst": 2, "bild": "dod", "rubrik": "kort_dod"},
+        {"id": "slag", "nycklar": ["kronika_slag_byte", "kronika_bakhall_byte"], "vikt": 7, "forst": 1, "bild": "vandrare", "rubrik": "ber_rubrik_slag", "flera": "ber_flera_slag"},
+        {"id": "kammaren", "nycklar": ["kronika_kammaren"], "vikt": 6, "bild": "guld", "rubrik": "stund_kammaren"},
+        {"id": "guld_kvar", "nycklar": ["kronika_guld_kvar"], "vikt": 6, "bild": "guld", "rubrik": "kort_guld_kvar"},
+        {"id": "namndel", "nycklar": ["kronika_namndel"], "vikt": 5, "bild": "namndel", "rubrik": "kort_namndel"},
+        {"id": "port", "nycklar": ["kronika_port"], "vikt": 5, "forst": 1, "bild": "port", "rubrik": "kort_port", "flera": "ber_flera_port"},
+        {"id": "slag_tom", "nycklar": ["kronika_slag", "kronika_bakhall"], "vikt": 4, "bild": "vandrare", "rubrik": "ber_rubrik_slag"},
+        {"id": "klocka", "nycklar": ["kronika_klocka"], "vikt": 4, "bild": "klocka", "rubrik": "stund_klocka"},
+        {"id": "varelse", "nycklar": ["kronika_varelse"], "vikt": 3, "forst": 2, "bild": "fackla", "rubrik": "stund_varelse", "flera": "ber_flera_varelse"},
+        {"id": "foremal", "nycklar": ["kronika_foremal"], "vikt": 2, "bild": "guld", "rubrik": "ber_rubrik_foremal"},
+        {"id": "guld_lost", "nycklar": ["kronika_guld_lost"], "vikt": 1, "bild": "guld", "rubrik": "kort_guld_lost"},
+        {"id": "handelse", "nycklar": ["kronika_handelse_andas", "kronika_handelse_guld", "kronika_handelse_ljus", "kronika_handelse_skinn", "kronika_handelse_ras", "kronika_handelse_doden", "kronika_handelse_klockslag"], "vikt": 3, "bild": "andas", "rubrik": "ber_rubrik_handelse"}
       ]
     }
   },
   "texter": {
+    "ber_in": [
+      "{antal} gick in i tornet i skymningen: {vilka}. Vandringen varade i {rundor} rundor."
+    ],
+    "ber_in_vem": [
+      "{klass} {namn}"
+    ],
+    "ber_lista": [
+      "{namn} och {sista}"
+    ],
+    "ber_tyst": [
+      "Sedan var tornet tyst. Inget som hände var värt att berätta om, och ändå gick timmarna."
+    ],
+    "ber_nar_runda": [
+      "I runda {runda}"
+    ],
+    "ber_nar_samma": [
+      "Samma runda",
+      "I samma runda"
+    ],
+    "ber_nar_efter": [
+      "Rundan efter",
+      "I rundan därpå"
+    ],
+    "ber_nar_senare": [
+      "{antal} rundor senare",
+      "Efter ytterligare {antal} rundor"
+    ],
+    "ber_nar_langt": [
+      "Långt senare",
+      "Många rundor senare"
+    ],
+    "ber_nar_sist": [
+      "I den sista rundan"
+    ],
+    "ber_vaknade": [
+      "{nar} vaknade ormen, när {namn} sträckte sig efter guldet.",
+      "{nar} öppnade ormen ögonen. {namn} stod mitt i guldet."
+    ],
+    "ber_dod": [
+      "{nar} dog {namn}."
+    ],
+    "ber_dod_falla": [
+      "{nar} dog {namn} av {vad}."
+    ],
+    "ber_dod_varelse": [
+      "{nar} föll {namn} för {vad}.",
+      "{nar} tog {vad} livet av {namn}."
+    ],
+    "ber_dod_vandrare": [
+      "{nar} dödades {namn} av {vad}."
+    ],
+    "ber_dod_ormen": [
+      "{nar} dog {namn}, när ormen vaknade."
+    ],
+    "ber_dod_gift": [
+      "{nar} dog {namn} av giftet i kroppen."
+    ],
+    "ber_dod_foremal": [
+      "{nar} dog {namn} av {vad} i sin egen hand."
+    ],
+    "ber_dod_tornet": [
+      "{nar} dog {namn}. Ingen vet riktigt av vad."
+    ],
+    "ber_dod_guld": [
+      "{guld} guld blev liggande på golvet där."
+    ],
+    "ber_invigd": [
+      "{nar} viskade {namn} något till tornet, och tornet hörde."
+    ],
+    "ber_invigd_forst": [
+      "{nar} viskade {namn} något till tornet, och tornet hörde. Ingen hade hunnit före."
+    ],
+    "ber_kammaren": [
+      "{nar} nådde {namn} skattkammaren, först av alla.",
+      "{nar} stod {namn} först av alla i skattkammaren, bland guldet och den sovande ormen."
+    ],
+    "ber_klocka": [
+      "{nar} gick {namn} in under klockan. Den slog, och solen sjönk fortare.",
+      "{nar} slog klockan över {namn}, och solen tog ett steg mot kvällen."
+    ],
+    "ber_varelse": [
+      "{nar} fällde {namn} {varelse}.",
+      "{nar} fick {varelse} se sig besegrad av {namn}."
+    ],
+    "ber_slag": [
+      "{nar} slog {namn} till {offer}."
+    ],
+    "ber_slag_byte": [
+      "{nar} slog {namn} till {offer} och tog {guld} guld."
+    ],
+    "ber_bakhall": [
+      "{nar} föll {namn} över {offer} bakifrån."
+    ],
+    "ber_bakhall_byte": [
+      "{nar} föll {namn} över {offer} bakifrån och tog {guld} guld."
+    ],
+    "ber_guld_kvar": [
+      "{nar} tog {namn} upp guldet som {dod} hade burit, {guld} guld."
+    ],
+    "ber_namndel": [
+      "{nar} tog {namn} tecknen ur {offer}s hand."
+    ],
+    "ber_port": [
+      "{nar} slöt sig porten i {horn}."
+    ],
+    "ber_handelse_andas": [
+      "{nar} andades tornet, och en ny öppning uppstod mellan två rum."
+    ],
+    "ber_handelse_guld": [
+      "{nar} sprack en vägg och släppte ut guld."
+    ],
+    "ber_handelse_ljus": [
+      "{nar} föll ljus genom gluggarna, och mörkret drog sig undan."
+    ],
+    "ber_handelse_skinn": [
+      "{nar} ömsade ormen skinn, och skinnet blev liggande i tornet."
+    ],
+    "ber_handelse_ras": [
+      "{nar} rasade taket i ett rum."
+    ],
+    "ber_handelse_doden": [
+      "{nar} reste sig något av vita ben där någon hade dött."
+    ],
+    "ber_handelse_klockslag": [
+      "{nar} slog en klocka djupt i tornet, och solen sjönk."
+    ],
+    "ber_foremal": [
+      "{nar} hittade {namn} {foremal}."
+    ],
+    "ber_guld_lost": [
+      "{nar} tog {namn} upp {guld} guld som låg löst på golvet."
+    ],
+    "ber_rubrik_foremal": [
+      "Ett fynd"
+    ],
+    "ber_flera_vaknade": [
+      "Den natten vaknade ormen {antal} gånger."
+    ],
+    "ber_flera_varelse": [
+      "Den natten föll {antal} varelser."
+    ],
+    "ber_flera_port": [
+      "Till slut hade {antal} portar slutit sig."
+    ],
+    "ber_flera_slag": [
+      "Vandrarna slog varandra {antal} gånger."
+    ],
+    "ber_slut_vinnare": [
+      "När solen gick ner var det {namn} som hade burit ut mest: {guld} guld."
+    ],
+    "ber_slut_ingen": [
+      "Ingen bar ut någon skatt. Tornet behöll allt."
+    ],
+    "ber_slut_ute": [
+      "{namn} kom också ut, med guld i väskan."
+    ],
+    "ber_slut_tom": [
+      "{namn} kom ut tomhänt."
+    ],
+    "ber_slut_kvar": [
+      "{namn} var kvar i tornet när solen gick ner."
+    ],
+    "ber_slut_doda": [
+      "{namn} kom aldrig ut."
+    ],
+    "ber_tornet_vann": [
+      "Tornet vann"
+    ],
+    "ber_rubrik_slag": [
+      "Vandrare mot vandrare"
+    ],
+    "ber_rubrik_handelse": [
+      "Tornet rör sig"
+    ],
+    "tal_2": [
+      "två"
+    ],
+    "tal_3": [
+      "tre"
+    ],
+    "tal_4": [
+      "fyra"
+    ],
+    "tal_5": [
+      "fem"
+    ],
+    "tal_6": [
+      "sex"
+    ],
+    "tal_7": [
+      "sju"
+    ],
+    "tal_8": [
+      "åtta"
+    ],
+    "tal_9": [
+      "nio"
+    ],
+    "tal_10": [
+      "tio"
+    ],
     "stund_vinnare": [
       "Vinnaren"
     ],

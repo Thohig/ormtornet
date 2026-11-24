@@ -437,8 +437,20 @@ och texterna utan port under `ansluter_dolt`, `valkommen_dolt` och
 Förut gick det att välja att alla syns hela tiden, eller att kartan är
 gemensam. De valen är borttagna; se [docs/synlighet.md](docs/synlighet.md).
 
-När vandringen är slut står krönikan på en egen skärm, under resultaten och
-epilogen. Först kommer det
+När vandringen är slut står krönikan på en egen skärm. Under resultaten
+står **berättelsen om vandringen**, en gemensam historia i tre delar
+(`berattelse.go`, [docs/berattelsen.md](docs/berattelsen.md)). Inträdet
+säger vilka som gick in, med sina klasser, och hur länge vandringen
+varade. Höjdpunkterna är de tyngsta av krönikans händelser, högst sju,
+var och en med ett spelkort bredvid och berättad med när den hände
+räknat från den förra ("Två rundor senare vaknade ormen …"). Slutet
+säger vem som bar ut mest, vilka andra som kom ut och vilka som aldrig
+gjorde det. Under berättelsen står epilogen, och sist knappen Visa alla
+rundor med hela krönikan och den egna vandringen. Vilka händelser som
+räknas och hur mycket de väger står under `spelkort.berattelse` i
+`data/texter.json`, och texterna under `ber_*`.
+
+Hela krönikan är det
 som hände, runda för runda: vem som gick ut och med hur mycket, vem som dog,
 av vad och hur mycket guld som blev liggande, vem som tog upp det, vem som fällde vilken
 varelse, vem som slog vem och tog hur mycket guld, vem som nådde
@@ -572,14 +584,10 @@ och varelser har sin korta beskrivning som rubrik, aldrig namnet.
   bara på ett annat stort kort.
 - **Vandringens sista kort**, ute, död eller kvar när solen gick ner,
   står överst i Din vandring.
-- **Vandringens största stunder**: i krönikan i slutet läggs högst fem
-  av krönikans händelser fram som stora kort under resultaten och vänds
-  upp ett i taget: vinnaren, uppvaknanden, de som dog, den som blev
-  invigd, portar som stängdes, klockan, den första näven,
-  en varelse som föll, namnets delar och den som blev kvar när solen
-  gick ner, i den ordningen, högst två av samma slag. De står i den
-  ordning de hände. Slagen och antalet står under `spelkort.stunder` i
-  `data/texter.json`.
+- **Berättelsens kort**: i berättelsen om vandringen i slutet har varje
+  höjdpunkt sitt spelkort bredvid sig, och slutet vinnarens kort (eller
+  solen, när tornet vann). Korten vänds upp ett i taget. De ersatte
+  vandringens största stunder 2026-11-24.
 - **Klasskortet**: klassen står uppe till höger på kartan som ett litet
   klasskort. Ett klick visar det stort, med styrkan och svagheten.
 - **Minikorten**: en rad i loggen som hör till ett kort får ett litet
@@ -1123,7 +1131,7 @@ Beskrivningarna för rummen ligger under nivåerna `"1"` till `"4"`.
 - `summary.go` rundans sammanfattning, raderna på spelkortet
 - `spelkort.go` spelkorten: rundans kort i ordning, korten mellan
   rundorna och de stora korten (bilderna i `web/kort.js`)
-- `stunder.go` vandringens största stunder i krönikan i slutet
+- `berattelse.go` berättelsen om vandringen i krönikan i slutet
 - `difficulty.go` förvalen för svårighet
 - `classes.go` klasserna och valet av klass
 - `items.go` föremålen

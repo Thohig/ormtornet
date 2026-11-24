@@ -6,6 +6,19 @@ eller leder tornet.
 
 ## 2026-11-24
 
+### Berättelsen om vandringen
+
+- Krönikan i slutet börjar med en gemensam berättelse i stället för
+  vandringens största stunder: vilka som gick in, de viktigaste
+  händelserna med var sitt spelkort och vem som kom ut
+  (docs/berattelsen.md).
+- Höjdpunkterna väljs efter vikt: ett uppvaknande, den första invigde och
+  en död väger mest, och en händelse om den som vann väger mer. De
+  berättas med när de hände ("Två rundor senare …"), och det som hände
+  flera gånger sägs en gång ("Den natten vaknade ormen tre gånger").
+- Hela krönikan runda för runda och Din vandring ligger bakom knappen
+  Visa alla rundor.
+
 ### Minikartan
 
 - En liten karta med allt du har upptäckt, vriden som kartan så att norr

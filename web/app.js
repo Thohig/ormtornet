@@ -743,8 +743,14 @@ function renderChron() {
   // ~ förklaras under resultaten, som i resultatrutan på kartan.
   if (end && (state.results || []).some((r) => r.ai)) results.push({ text: t("slut_ai"), c: "dim" });
   rows("chronResults", results);
-  renderMoments(end ? state.stunder || [] : []);
+  renderStory(end ? state.berattelse || [] : []);
   rows("chronEpilog", end ? state.epilog : []);
+  // Rundorna (hela krönikan och Din vandring) ligger bakom en knapp i
+  // slutet; under vandringen ser den döda sin vandring direkt.
+  $("chronRestBtn").hidden = !end;
+  $("chronRestBtn").textContent = t(chronRestOpen ? "kronika_rundor_dolj" : "kronika_rundor_visa");
+  $("chronRestBtn").setAttribute("aria-expanded", String(chronRestOpen));
+  $("chronRest").hidden = end && !chronRestOpen;
   rows("chronAll", end ? (state.kronika || []).filter((l) => l.c !== "rubrik").map((l) => ({ text: l.text, c: l.c, kort: l.kort })) : []);
   if (end && state.kronika && state.kronika[0]) {
     const h = document.createElement("h2");
@@ -838,29 +844,48 @@ function renderChron() {
   if (!end && v.kort && v.kort.length) $("chronStats").appendChild(cardRow(v.kort));
   $("chronWait").textContent = end ? (touch ? "" : t("slut_nytt_torn")) : t("vandring_vantar");
 }
-// renderMoments lägger vandringens största stunder (stunder.go) som en rad
-// stora kort, med rundan överst. De vänds upp ett i taget, en gång, inte
-// vid varje nytt läge.
-function renderMoments(list) {
-  const box = $("chronMoments");
+// renderStory lägger berättelsen om vandringen (berattelse.go): inträdet,
+// höjdpunkterna och slutet som stycken, med ett spelkort bredvid de
+// stycken som har ett. Korten vänds upp ett i taget, en gång, inte vid
+// varje nytt läge.
+let chronRestOpen = false;
+function renderStory(list) {
+  const box = $("chronStory");
   const key = JSON.stringify(list);
   if (box.dataset.key === key) return;
   box.dataset.key = key;
   box.innerHTML = "";
-  list.forEach((m, i) => {
-    const el = document.createElement("div");
-    el.className = "okort stund";
-    el.style.setProperty("--vand-efter", i * 0.35 + "s");
-    box.appendChild(el);
-    const front = buildCard(el, m.kort);
-    const r = document.createElement("div");
-    r.className = "ok-runda";
-    r.textContent = t("rundkort_rubrik", { runda: m.runda });
-    front.prepend(r);
+  chronRestOpen = false;
+  let n = 0;
+  list.forEach((p) => {
+    const d = document.createElement("div");
+    d.className = "stycke " + p.del;
+    if (p.kort) {
+      const c = document.createElement("div");
+      c.className = "okort stund";
+      c.style.setProperty("--vand-efter", n++ * 0.35 + "s");
+      d.appendChild(c);
+      const front = buildCard(c, p.kort);
+      if (p.runda) {
+        const r = document.createElement("div");
+        r.className = "ok-runda";
+        r.textContent = t("rundkort_rubrik", { runda: p.runda });
+        front.prepend(r);
+      }
+    }
+    const text = document.createElement("p");
+    text.textContent = p.text;
+    d.appendChild(text);
+    box.appendChild(d);
   });
   box.hidden = !list.length;
-  $("chronMomentsHead").hidden = !list.length;
+  $("chronStoryHead").hidden = !list.length;
 }
+$("chronRestBtn").addEventListener("click", () => {
+  chronRestOpen = !chronRestOpen;
+  renderChron();
+  if (chronRestOpen) $("chronRest").scrollIntoView({ behavior: "smooth", block: "start" });
+});
 $("chronNext").addEventListener("click", () => send({ t: "ready" }));
 $("chronHost").addEventListener("click", goHost);
 $("chronMap").addEventListener("click", () => {

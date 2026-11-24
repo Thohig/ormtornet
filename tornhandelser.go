@@ -110,7 +110,7 @@ func (g *Game) runTowerEvent(id string) bool {
 		return false
 	}
 	g.eventCount[id]++
-	g.chronicle("kronika_handelse_" + id)
+	g.chronicle("kronika_handelse_"+id, "bild", e.Bild)
 	g.soundAll(eventSounds[id])
 	for _, p := range g.players {
 		if p == nil || p.Status != statusIn {

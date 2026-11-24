@@ -125,16 +125,22 @@ func (d *Data) validate() []string {
 	}
 	unique("texter.json", "rumstypen", ids)
 
-	// Vandringens största stunder: motiven, rubrikerna och krönikans nycklar
-	// måste finnas.
-	for _, k := range d.Spelkort.Stunder.Slag {
-		cardImageOK("texter.json", "stunden "+k.ID, k.Bild)
+	// Berättelsens höjdpunkter: motiven, rubrikerna, krönikans nycklar och
+	// berättelsens text för varje nyckel måste finnas.
+	for _, k := range d.Spelkort.Berattelse.Slag {
+		cardImageOK("texter.json", "berättelsens slag "+k.ID, k.Bild)
 		if len(d.Texter[k.Rubrik]) == 0 {
-			bad("texter.json", "stunden %q: rubriken %q finns inte bland texterna", k.ID, k.Rubrik)
+			bad("texter.json", "berättelsens slag %q: rubriken %q finns inte bland texterna", k.ID, k.Rubrik)
+		}
+		if k.Flera != "" && len(d.Texter[k.Flera]) == 0 {
+			bad("texter.json", "berättelsens slag %q: texten %q finns inte", k.ID, k.Flera)
 		}
 		for _, n := range k.Nycklar {
 			if len(d.Texter[n]) == 0 {
-				bad("texter.json", "stunden %q: krönikans nyckel %q finns inte bland texterna", k.ID, n)
+				bad("texter.json", "berättelsens slag %q: krönikans nyckel %q finns inte bland texterna", k.ID, n)
+			}
+			if len(d.Texter[storyKey(n)]) == 0 {
+				bad("texter.json", "berättelsens slag %q: berättelsens text %q finns inte", k.ID, storyKey(n))
 			}
 		}
 	}

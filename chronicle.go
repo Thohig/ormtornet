@@ -19,6 +19,7 @@ type chronEvent struct {
 	key   string
 	who   string
 	bild  string
+	vars  []string // textens variabler, så att berättelsen kan skriva om händelsen (berattelse.go)
 }
 
 // chronStats räknar det som bara blir en siffra per vandrare i krönikan.
@@ -54,7 +55,7 @@ func (g *Game) cardTags(p *Player) []cardTag {
 // chronicle skriver ner en händelse från den här rundan. Bland vars kan
 // "namn" säga vem den handlar om och "bild" dess motiv på spelkortet.
 func (g *Game) chronicle(key string, vars ...string) {
-	e := chronEvent{round: g.round, text: g.data.Text(key, vars...), key: key}
+	e := chronEvent{round: g.round, text: g.data.Text(key, vars...), key: key, vars: vars}
 	for i := 0; i+1 < len(vars); i += 2 {
 		switch vars[i] {
 		case "namn":
@@ -88,6 +89,7 @@ func (g *Game) chronicleDeath(p *Player) {
 		// Guldet den döda bar ligger kvar; det hör till samma händelse.
 		e := &g.chron[len(g.chron)-1]
 		e.text += " " + g.data.Text("kronika_dod_guld", "guld", strconv.Itoa(p.Treasure))
+		e.vars = append(e.vars, "burit", strconv.Itoa(p.Treasure))
 	}
 	p.death = g.data.Text("kronika_rad", "runda", strconv.Itoa(g.round), "text", g.chron[len(g.chron)-1].text)
 }
@@ -96,6 +98,7 @@ func (g *Game) chronicleDeath(p *Player) {
 func (g *Game) resetChronicle() {
 	g.chron = nil
 	g.epilog = nil
+	g.story = nil
 	for _, p := range g.players {
 		if p != nil {
 			p.stats = chronStats{}

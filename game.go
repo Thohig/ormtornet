@@ -448,6 +448,7 @@ type Game struct {
 
 	chron  []chronEvent // krönikan över vandringen
 	epilog []chronLine  // epilogen som alla fick, för krönikan på egen skärm
+	story  []storyPart  // berättelsen om vandringen, skriven när den är slut (berattelse.go)
 
 	graceUsed bool // porten har redan väntat på de invigda
 	// chamberX och chamberY är kammarens rum; chamberMoved att ormen har
@@ -801,10 +802,10 @@ type stateMsg struct {
 	Players     []playerView `json:"players"`
 	Rooms       []roomView   `json:"rooms"`
 	Results     []resultView `json:"results,omitempty"`
-	Journey     *journeyView `json:"vandring,omitempty"` // den egna vandringen, för den som har dött och för alla i slutet
-	Chronicle   []chronLine  `json:"kronika,omitempty"`  // hela krönikan, när vandringen är slut
-	Epilogue    []chronLine  `json:"epilog,omitempty"`   // epilogen, när vandringen är slut
-	Moments     []momentView `json:"stunder,omitempty"`  // vandringens största stunder, när vandringen är slut
+	Journey     *journeyView `json:"vandring,omitempty"`   // den egna vandringen, för den som har dött och för alla i slutet
+	Chronicle   []chronLine  `json:"kronika,omitempty"`    // hela krönikan, när vandringen är slut
+	Epilogue    []chronLine  `json:"epilog,omitempty"`     // epilogen, när vandringen är slut
+	Story       []storyPart  `json:"berattelse,omitempty"` // berättelsen om vandringen, när den är slut
 }
 
 type logMsg struct {
@@ -1014,7 +1015,7 @@ func (g *Game) stateFor(me *Player) stateMsg {
 	if g.phase == phaseEnd {
 		st.Chronicle = g.chronicleLines()
 		st.Epilogue = append(slices.Clone(g.epilog), me.epilog...)
-		st.Moments = g.moments()
+		st.Story = g.story
 	}
 	return st
 }
@@ -1822,6 +1823,7 @@ func (g *Game) endGame() {
 	}
 	g.epilogue()
 	g.goldEpilogue()
+	g.buildStory()
 	g.logAll(g.data.Text("spela_igen"), "dim")
 	g.soundAll("slut")
 	g.broadcastState()

@@ -356,6 +356,207 @@
     }
   ],
   "texter": {
+    "ber_in": [
+      "{antal} went into the tower at dusk: {vilka}. The journey lasted {rundor} rounds."
+    ],
+    "ber_in_vem": [
+      "{klass} {namn}"
+    ],
+    "ber_lista": [
+      "{namn} and {sista}"
+    ],
+    "ber_tyst": [
+      "After that the tower was quiet. Nothing that happened was worth the telling, and still the hours went by."
+    ],
+    "ber_nar_runda": [
+      "In round {runda}"
+    ],
+    "ber_nar_samma": [
+      "That same round",
+      "In the same round"
+    ],
+    "ber_nar_efter": [
+      "The round after",
+      "In the next round"
+    ],
+    "ber_nar_senare": [
+      "{antal} rounds later",
+      "After {antal} more rounds"
+    ],
+    "ber_nar_langt": [
+      "Much later",
+      "Many rounds later"
+    ],
+    "ber_nar_sist": [
+      "In the very last round"
+    ],
+    "ber_vaknade": [
+      "{nar}, the serpent woke as {namn} reached for the gold.",
+      "{nar}, the serpent opened its eyes. {namn} stood in the middle of the gold."
+    ],
+    "ber_dod": [
+      "{nar}, {namn} died."
+    ],
+    "ber_dod_falla": [
+      "{nar}, {namn} died of {vad}."
+    ],
+    "ber_dod_varelse": [
+      "{nar}, {namn} fell to {vad}.",
+      "{nar}, {vad} took the life of {namn}."
+    ],
+    "ber_dod_vandrare": [
+      "{nar}, {namn} was killed by {vad}."
+    ],
+    "ber_dod_ormen": [
+      "{nar}, {namn} died when the serpent woke."
+    ],
+    "ber_dod_gift": [
+      "{nar}, {namn} died of the poison in their body."
+    ],
+    "ber_dod_foremal": [
+      "{nar}, {namn} died of {vad} in their own hand."
+    ],
+    "ber_dod_tornet": [
+      "{nar}, {namn} died. No one really knows of what."
+    ],
+    "ber_dod_guld": [
+      "{guld} gold was left lying on the floor there."
+    ],
+    "ber_invigd": [
+      "{nar}, {namn} whispered something to the tower, and the tower heard."
+    ],
+    "ber_invigd_forst": [
+      "{nar}, {namn} whispered something to the tower, and the tower heard. No one had got there first."
+    ],
+    "ber_kammaren": [
+      "{nar}, {namn} reached the treasure chamber, first of them all.",
+      "{nar}, {namn} stood first of all in the treasure chamber, among the gold and the sleeping serpent."
+    ],
+    "ber_klocka": [
+      "{nar}, {namn} walked in under the bell. It struck, and the sun sank faster.",
+      "{nar}, the bell struck above {namn}, and the sun took a step towards evening."
+    ],
+    "ber_varelse": [
+      "{nar}, {namn} felled {varelse}.",
+      "{nar}, {varelse} was brought down by {namn}."
+    ],
+    "ber_slag": [
+      "{nar}, {namn} struck {offer}."
+    ],
+    "ber_slag_byte": [
+      "{nar}, {namn} struck {offer} and took {guld} gold."
+    ],
+    "ber_bakhall": [
+      "{nar}, {namn} fell upon {offer} from behind."
+    ],
+    "ber_bakhall_byte": [
+      "{nar}, {namn} fell upon {offer} from behind and took {guld} gold."
+    ],
+    "ber_guld_kvar": [
+      "{nar}, {namn} picked up the gold {dod} had carried, {guld} gold."
+    ],
+    "ber_namndel": [
+      "{nar}, {namn} took the signs from {offer}'s hand."
+    ],
+    "ber_port": [
+      "{nar}, the gate in the {horn} closed."
+    ],
+    "ber_handelse_andas": [
+      "{nar}, the tower breathed, and a new opening appeared between two rooms."
+    ],
+    "ber_handelse_guld": [
+      "{nar}, a wall cracked and let out gold."
+    ],
+    "ber_handelse_ljus": [
+      "{nar}, light fell through the arrow slits, and the darkness withdrew."
+    ],
+    "ber_handelse_skinn": [
+      "{nar}, the serpent shed its skin, and the skin was left lying in the tower."
+    ],
+    "ber_handelse_ras": [
+      "{nar}, the ceiling caved in in one of the rooms."
+    ],
+    "ber_handelse_doden": [
+      "{nar}, something of white bones rose where someone had died."
+    ],
+    "ber_handelse_klockslag": [
+      "{nar}, a bell struck deep in the tower, and the sun sank."
+    ],
+    "ber_foremal": [
+      "{nar}, {namn} found {foremal}."
+    ],
+    "ber_guld_lost": [
+      "{nar}, {namn} picked up {guld} gold lying loose on the floor."
+    ],
+    "ber_rubrik_foremal": [
+      "A find"
+    ],
+    "ber_flera_vaknade": [
+      "That night the serpent woke {antal} times."
+    ],
+    "ber_flera_varelse": [
+      "That night {antal} creatures fell."
+    ],
+    "ber_flera_port": [
+      "In the end {antal} gates had closed."
+    ],
+    "ber_flera_slag": [
+      "The wanderers struck each other {antal} times."
+    ],
+    "ber_slut_vinnare": [
+      "When the sun went down, it was {namn} who had carried out the most: {guld} gold."
+    ],
+    "ber_slut_ingen": [
+      "No one carried out any treasure. The tower kept it all."
+    ],
+    "ber_slut_ute": [
+      "{namn} came out too, with gold in the bag."
+    ],
+    "ber_slut_tom": [
+      "{namn} came out empty-handed."
+    ],
+    "ber_slut_kvar": [
+      "{namn} was still in the tower when the sun went down."
+    ],
+    "ber_slut_doda": [
+      "{namn} never came out."
+    ],
+    "ber_tornet_vann": [
+      "The tower won"
+    ],
+    "ber_rubrik_slag": [
+      "Wanderer against wanderer"
+    ],
+    "ber_rubrik_handelse": [
+      "The tower stirs"
+    ],
+    "tal_2": [
+      "two"
+    ],
+    "tal_3": [
+      "three"
+    ],
+    "tal_4": [
+      "four"
+    ],
+    "tal_5": [
+      "five"
+    ],
+    "tal_6": [
+      "six"
+    ],
+    "tal_7": [
+      "seven"
+    ],
+    "tal_8": [
+      "eight"
+    ],
+    "tal_9": [
+      "nine"
+    ],
+    "tal_10": [
+      "ten"
+    ],
     "stund_vinnare": [
       "The winner"
     ],

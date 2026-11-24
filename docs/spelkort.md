@@ -176,6 +176,10 @@ samma slag, lagda i den ordning de hände. Slagen står under
 `spelkort.stunder` i `data/texter.json`. Senare byggdes också att man kan
 klicka upp ett minikort (se Efteråt: minikorten).
 
+Stunderna gick upp i berättelsen om vandringen 2026-11-24: varje
+höjdpunkt i berättelsen har sitt spelkort bredvid sig, och `stunder.go`
+ersattes av `berattelse.go` ([berattelsen.md](berattelsen.md)).
+
 ## Efteråt: klasskorten
 
 Byggt 2026-11-22 i fyra steg, efter ett förslag om att klasskorten skulle

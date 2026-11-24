@@ -130,7 +130,9 @@
     "panel_nu": "Now",
 
     "nu_dod": "You are dead",
-    "kronika_stunder": "The journey's great moments",
+    "kronika_berattelse": "The tale of the journey",
+    "kronika_rundor_visa": "Show every round",
+    "kronika_rundor_dolj": "Hide the rounds",
     "vandring_rubrik": "Your journey",
     "vandring_pagar_en": "The walk goes on: round {runda}, the sun is one hand-breadth above the horizon. {inne} still in the tower, {ute} gone out.",
     "vandring_pagar": "The walk goes on: round {runda}, the sun is {sol} hand-breadths above the horizon. {inne} still in the tower, {ute} gone out.",

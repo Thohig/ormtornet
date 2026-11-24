@@ -126,8 +126,9 @@ Så här skiljer vi på sakerna när användaren ger instruktioner:
   `addJourney` i `summary.go`), med vandringens sista kort överst, vad
   skadan kom av, tysta rundor
   ihopslagna och märket "tornet styrde". I slutet ser alla resultaten,
-  **vandringens största stunder** (stora spelkort, `stunder.go`),
-  epilogen, hela krönikan och sin vandring.
+  **berättelsen** (inträdet, höjdpunkterna med var sitt spelkort och
+  slutet, `berattelse.go`, docs/berattelsen.md), epilogen, och bakom
+  knappen Visa alla rundor hela krönikan och sin vandring.
   Spelledaren har där också Till värdsidan bredvid Nytt torn.
 - **tangenterna vid dörrarna**: piltangenterna som står vid dörrarna i ens
   rum på kartan snett ovanifrån (`ritaTangenter` i `klient/src/karta.ts`).
@@ -302,6 +303,9 @@ Skriv dit när ett steg är klart.
   kammaren nära mitten (sedan ersatt av den fria platsen i
   ormens-plats.md), ormen som flyttar sig när den vaknar och tornets sju
   slumpade händelser med var sitt spelkort. Allt är byggt.
+- [docs/berattelsen.md](docs/berattelsen.md): slutkrönikan som en
+  gemensam berättelse med höjdpunkter i stället för drag för drag. Steg 1
+  är byggt; steg 2, titlarna och raden om var och en, är på gång.
 - [docs/minikartan.md](docs/minikartan.md): minikartan med det man har
   upptäckt, en fast ruta på datorn och kompassens ställe på telefonen.
   Allt är byggt; avsnittet Att prova säger vad som behöver provas i spel.
