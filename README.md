@@ -578,7 +578,9 @@ och varelser har sin korta beskrivning som rubrik, aldrig namnet.
 
 ### Skattkammaren och ormen
 
-I kammaren mitt i tornet kan du ta skatt (S) en gång per runda. Varje gång
+Kammaren ligger nära mitten av tornet, i ett av rummen i mittens 3 × 3
+(`spridning` i `data/ormen.json`), så att man inte kan gå rakt mot
+mitten. Där kan du ta skatt (S) en gång per runda. Varje gång
 dras ett ormkort ur en lek:
 
 - **Sover** eller **rör sig**: du får 15–45 guld och kortet tas bort ur leken.

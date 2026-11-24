@@ -16,6 +16,7 @@ func testGame(t *testing.T) *Game {
 	// Inga slumpade varelser eller fällor; testerna placerar dem själva.
 	d.Monster.Chans = 0
 	d.Regler.Handelsechans = 0
+	d.Ormen.Spridning = 0 // kammaren mitt i tornet, som testerna räknar med
 	noWander(d)
 	return NewGame(d, Config{SunMax: 10, TurnTime: time.Hour, MinPlayers: 2})
 }
@@ -949,5 +950,27 @@ func TestResultPlaces(t *testing.T) {
 		if r.Place != want[r.Name] {
 			t.Fatalf("%s på plats %d, ville ha %d", r.Name, r.Place, want[r.Name])
 		}
+	}
+}
+
+// Kammaren hamnar i mittens 3 × 3 med spridning 1, och har fyra dörrar.
+func TestChamberNearCenter(t *testing.T) {
+	g := testGame(t)
+	g.data.Ormen.Spridning = 1
+	seen := map[[2]int]bool{}
+	for range 200 {
+		g.buildTower(9)
+		x, y := g.chamber()
+		if abs(x-g.center()) > 1 || abs(y-g.center()) > 1 {
+			t.Fatalf("kammaren på %d,%d", x, y)
+		}
+		seen[[2]int{x, y}] = true
+	}
+	if len(seen) < 5 {
+		t.Fatalf("kammaren hamnade bara på %d ställen", len(seen))
+	}
+	x, y := g.chamber()
+	if r := g.reveal(x, y); r.Kind != "kammare" || r.Doors != [4]bool{true, true, true, true} {
+		t.Fatalf("kammaren: %s, dörrar %v", r.Kind, r.Doors)
 	}
 }

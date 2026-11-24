@@ -6,6 +6,13 @@ eller leder tornet.
 
 ## 2026-11-24
 
+### Kammaren ligger nära mitten
+
+- Kammaren ligger inte längre alltid mitt i tornet, utan i ett av rummen i
+  mittens 3 × 3, slumpat efter vandringens frö (`spridning` i
+  `data/ormen.json`; 0 ger mitten som förut). Den invigdes hjärtslag och
+  AI-spelarna letar efter den.
+
 ### (du) på slutskärmen
 
 - I resultaten på krönikans skärm och i resultatrutan står "(du)" efter

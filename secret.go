@@ -278,11 +278,11 @@ func (g *Game) heartbeat(p *Player) string {
 	if !p.initiated || p.Status != statusIn || p.Cellar > 0 {
 		return ""
 	}
-	c := g.center()
-	if p.X == c && p.Y == c {
+	cx, cy := g.chamber()
+	if p.X == cx && p.Y == cy {
 		return g.data.Text("hjartslag_har")
 	}
-	idx := map[[2]int]int{{-1, -1}: 0, {1, -1}: 1, {-1, 1}: 2, {1, 1}: 3, {0, -1}: 4, {0, 1}: 5, {-1, 0}: 6, {1, 0}: 7}[[2]int{sign(c - p.X), sign(c - p.Y)}]
+	idx := map[[2]int]int{{-1, -1}: 0, {1, -1}: 1, {-1, 1}: 2, {1, 1}: 3, {0, -1}: 4, {0, 1}: 5, {-1, 0}: 6, {1, 0}: 7}[[2]int{sign(cx - p.X), sign(cy - p.Y)}]
 	return g.data.Text("hjartslag", "horn", g.data.Horn[idx])
 }
 

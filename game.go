@@ -121,8 +121,30 @@ func (g *Game) vandrare() int {
 	return n
 }
 
-// g.center() är kammarens plats, mitt i tornet.
+// g.center() är mitten av tornet. Kammaren ligger nära den (chamber).
 func (g *Game) center() int { return g.size / 2 }
+
+// chamber är kammarens plats: ett rum nära mitten, slumpat när tornet
+// byggs (placeChamber), och flyttat när ormen vaknar (moveChamber).
+func (g *Game) chamber() (int, int) { return g.chamberX, g.chamberY }
+
+// isChamber är sant för kammarens rum.
+func (g *Game) isChamber(x, y int) bool { return x == g.chamberX && y == g.chamberY }
+
+// placeChamber slumpar kammarens plats inom spridningen från mitten
+// (spridning i ormen.json), aldrig i ett portrum.
+func (g *Game) placeChamber() {
+	c := g.center()
+	s := max(0, min(g.data.Ormen.Spridning, c-1))
+	g.chamberMoved = false
+	for {
+		x, y := c-s+g.rng.IntN(2*s+1), c-s+g.rng.IntN(2*s+1)
+		if g.cornerIndex(x, y) < 0 {
+			g.chamberX, g.chamberY = x, y
+			return
+		}
+	}
+}
 
 func newGrid[T any](size int) [][]T {
 	grid := make([][]T, size)
@@ -353,6 +375,10 @@ type Game struct {
 	epilog []chronLine  // epilogen som alla fick, för krönikan på egen skärm
 
 	graceUsed bool // porten har redan väntat på de invigda
+	// chamberX och chamberY är kammarens rum; chamberMoved att ormen har
+	// flyttat den, så att rummet har de dörrar det redan hade.
+	chamberX, chamberY int
+	chamberMoved       bool
 
 	serpentName    []string // ormens namn i tre delar, med invigningen "ormens namn"
 	partAt         [3]int   // vilken del av namnet som finns i ristningen, hos varelsen och i kammaren
@@ -376,6 +402,7 @@ func NewGame(d *Data, cfg Config) *Game {
 		g.nextSeed = randomSeed()
 	}
 	g.reseed(g.nextSeed) // också portarna i lobbyn följer fröet
+	g.placeChamber()
 	return g
 }
 
@@ -393,7 +420,7 @@ func (g *Game) cornerIndex(x, y int) int {
 // fixedDoors ger dörrarna för rum vars form är bestämd från början.
 func (g *Game) fixedDoors(x, y int) ([4]bool, bool) {
 	var d [4]bool
-	if x == g.center() && y == g.center() {
+	if g.isChamber(x, y) && !g.chamberMoved {
 		return [4]bool{true, true, true, true}, true
 	}
 	if ci := g.cornerIndex(x, y); ci >= 0 {
@@ -1284,6 +1311,7 @@ func (g *Game) buildTower(size int) {
 	g.monsters = nil
 	g.fallen = nil
 	g.assignPorts()
+	g.placeChamber()
 	for _, p := range g.players {
 		if p != nil {
 			ready := p.Ready // den som redan är redo förblir det
@@ -1326,6 +1354,8 @@ func (g *Game) startGame() {
 	g.ensureClasses()
 	if g.towerSize() != g.size {
 		g.newTower() // fler eller färre vandrare än när tornet byggdes
+	} else {
+		g.placeChamber() // efter vandringens frö, så att samma frö ger samma kammare
 	}
 	g.phase = phasePlay
 	g.sunMax = g.scaledSun()

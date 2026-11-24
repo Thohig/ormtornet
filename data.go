@@ -80,6 +80,9 @@ type Serpent struct {
 	KastasUt           []string `json:"kastas_ut"`
 	SomnarOm           []string `json:"somnar_om"`
 	Somn               []string `json:"somn"`
+	// Spridning är hur långt från mitten kammaren kan hamna, i rum åt varje
+	// håll: 0 är alltid mitt i tornet, 1 ett av rummen i mittens 3 × 3.
+	Spridning int `json:"spridning"`
 }
 
 // HitRules är träffchansen i strid (docs/bara-anfall.md): bas + per_steg ×

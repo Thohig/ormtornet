@@ -339,9 +339,9 @@ func (g *Game) botDecide(p *Player) (string, int) {
 	}
 
 	// Mot kammaren om vägen är känd, annars utforska närmaste okända rum.
-	isCenter := func(q pos) bool { return q.x == g.center() && q.y == g.center() }
+	isChamber := func(q pos) bool { r, ok := bm.rooms[q]; return ok && r.K == "kammare" }
 	none := func(pos) int { return 0 }
-	if d, ok := bm.toward(isCenter, none); ok {
+	if d, ok := bm.toward(isChamber, none); ok {
 		return dirLetter[d], 0
 	}
 	// Utforska helst åt mitten till, där kammaren är.
