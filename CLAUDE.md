@@ -170,10 +170,13 @@ Så här skiljer vi på sakerna när användaren ger instruktioner:
   när man gör något annat. Att vänta i strid är att hålla **garden**
   (`monster.go`, `traff` i `data/monster.json`, docs/bara-anfall.md).
   Parera och undanmanöver togs bort 2026-11-24.
-- **kammaren**: ligger i ett av rummen i mittens 3 × 3 (`spridning` i
-  `data/ormen.json`) och flyttar dit när ormen vaknar; den gamla blir ett
-  rum med **löst guld** (`moveChamber` i `serpent.go`, `spillGold` i
-  `guld.go`).
+- **kammaren**: ligger nästan var som helst, men ingen har den mycket
+  närmare än de andra (`plats` i `data/ormen.json`, `chamberSpots` i
+  `game.go`, docs/ormens-plats.md), och flyttar när ormen vaknar; den
+  gamla blir ett rum med **löst guld** (`moveChamber` i `serpent.go`,
+  `spillGold` i `guld.go`). **Andetagen** hörs genom väggen bredvid den
+  och för alla från nivå 2, och alla hör åt vilket håll någon tar en
+  näve.
 - **händelserna**: tornets sju slumpade händelser, var och en med ett
   eget spelkort (`tornhandelser.go`, `data/handelser.json`,
   docs/handelser.md).
@@ -289,6 +292,9 @@ Skriv dit när ett steg är klart.
   själv, introt uppmanar inte till samarbete, placering för alla och en
   vink som jämför med det du bär). Steg 3, ställningen för kvällen,
   valdes bort.
+- [docs/ormens-plats.md](docs/ormens-plats.md): kammaren på en fri men
+  ganska rättvis plats, näven som hörs, andetagen och AI-spelarna som
+  följer dem. Allt är byggt.
 - [docs/handelser.md](docs/handelser.md): breven som pekar mot något,
   kammaren nära mitten, ormen som flyttar sig när den vaknar och tornets
   sju slumpade händelser med var sitt spelkort. Allt är byggt.

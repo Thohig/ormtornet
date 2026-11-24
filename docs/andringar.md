@@ -6,6 +6,20 @@ eller leder tornet.
 
 ## 2026-11-24
 
+### Ormen kan ligga nästan var som helst
+
+- Kammaren ligger inte längre nära mitten, utan nästan var som helst: inte
+  i den yttre ringen, inte närmare någon port än tre rum, och ingen har den
+  mer än tre rum närmare än de andra (docs/ormens-plats.md). Solen räcker
+  längre när kammaren ligger långt bort.
+- Alla hör åt vilket håll någon tar en näve ur ormens hög, utom när Tjuven
+  tar.
+- Står du bredvid kammaren hör du ormen andas genom väggen. Från nivå 2
+  hör alla åt vilket håll andetagen kommer, och golvet i korsvägarna
+  sluttar mot ormen. Introt säger att ormen sover någonstans i tornet.
+- AI-spelarna följer andetagen och nävarna. Simuleringen visar hur ofta
+  den som startade närmast kammaren vann: 21 % mot 17 % i snitt.
+
 ### Tornets händelser
 
 - Från runda 4 kan något hända i tornet i slutet av en runda, med var sitt

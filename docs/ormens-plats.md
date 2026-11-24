@@ -43,9 +43,22 @@ för alla. Tjuvens näve märks som förut inte.
 
 ## Steg 4: AI-spelarna och balansen
 
-- AI-spelarna letar efter kammaren genom att följa andetagen och utforska,
-  inte mot mitten.
-- Simuleringen visar hur det går efter avståndet från porten till
-  kammaren. Målet är att den som startade närmast vinner högst omkring 5
-  procentenheter oftare än snittet.
-- Räcker det inte växer guldet i kammaren lite med nivån.
+- AI-spelarna letar mot mitten tills de har hört ormen (andetagen genom
+  väggen, andetagen på nivå 2 eller en näve), och sedan mot det rummet
+  (`heardSerpent` i `ai.go`). När ormen flyttar glömmer de det.
+- Simuleringen skriver hur ofta den som startade närmast och längst bort
+  från kammaren vann, jämfört med alla (`-simulera`, avsnittet Avståndet
+  till kammaren).
+
+Mätningen 2026-11-24 (3000 vandringar, 6 AI-spelare, frö 1):
+
+| | Normal | Svår |
+| --- | --- | --- |
+| Startade närmast | 21 % | 21 % |
+| Startade längst bort | 13 % | 14 % |
+| Alla | 17 % | 17 % |
+
+Den som startar närmast vinner 4 procentenheter oftare än snittet, inom
+målet, så guldet i kammaren växer inte med nivån. AI-spelarna tar 0,7
+nävar per vandring på Normal, som före den fria platsen. Klasserna vinner
+13–21 %; Spårfinnaren och Tjuven ligger lägst.

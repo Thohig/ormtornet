@@ -13,6 +13,18 @@ import (
 // botBrain är datorspelarens personlighet.
 type botBrain struct {
 	pers *Personality
+	// hint är det rum datorspelaren har hört ormen ifrån (andetagen, en
+	// näve), som den letar mot; hasHint om den har hört något sedan ormen
+	// senast flyttade.
+	hint    [2]int
+	hasHint bool
+}
+
+// heardSerpent: datorspelaren har hört ormen i rummet (x, y).
+func (p *Player) heardSerpent(x, y int) {
+	if p.bot != nil {
+		p.bot.hint, p.bot.hasHint = [2]int{x, y}, true
+	}
 }
 
 // AddBots fyller upp till n lediga platser med datorspelare, från sista
@@ -346,7 +358,13 @@ func (g *Game) botDecide(p *Player) (string, int) {
 	}
 	// Utforska helst åt mitten till, där kammaren är.
 	unknown := func(q pos) bool { _, k := bm.rooms[q]; return !k }
-	toCenter := func(q pos) int { return abs(q.x-g.center()) + abs(q.y-g.center()) }
+	// Utan något att gå efter letar den mot mitten, där kammaren oftast är
+	// närmast; har den hört ormen letar den åt det hållet.
+	tx, ty := g.center(), g.center()
+	if p.bot.hasHint {
+		tx, ty = p.bot.hint[0], p.bot.hint[1]
+	}
+	toCenter := func(q pos) int { return abs(q.x-tx) + abs(q.y-ty) }
 	if d, ok := bm.toward(unknown, toCenter); ok {
 		return dirLetter[d], 0
 	}

@@ -46,3 +46,26 @@ func TestBotLifeLimitFollowsMaxHP(t *testing.T) {
 		}
 	}
 }
+
+// En datorspelare som hör ormen letar åt det hållet, och glömmer det när
+// ormen flyttar.
+func TestBotFollowsSerpentClues(t *testing.T) {
+	g := testGame(t)
+	g.AddBots(1)
+	var bot *Player
+	for _, p := range g.players {
+		if p != nil && p.bot != nil {
+			bot = p
+		}
+	}
+	bot.heardSerpent(2, 6)
+	if !bot.bot.hasHint || bot.bot.hint != [2]int{2, 6} {
+		t.Fatalf("ledtråden: %+v", bot.bot)
+	}
+	g.data.Ormen.Spridning = 1 // annars finns ingen annan plats att flytta till
+	g.reveal(g.chamber())
+	g.moveChamber()
+	if bot.bot.hasHint {
+		t.Fatal("datorspelaren minns den gamla platsen")
+	}
+}

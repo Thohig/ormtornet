@@ -242,6 +242,7 @@ func (g *Game) heardTaking(p *Player, other string) {
 		if other != "" {
 			text = other + " " + text
 		}
+		o.heardSerpent(p.X, p.Y)
 		g.hearTo(o, text, "info")
 	}
 }
@@ -326,6 +327,11 @@ func (g *Game) moveChamber() {
 	}
 	n := spots[g.rng.IntN(len(spots))]
 	g.chamberMoved = true // kammaren får de dörrar rummet har, inte fyra
+	for _, p := range g.players {
+		if p != nil && p.bot != nil {
+			p.bot.hasHint = false // det de hört gäller den gamla platsen
+		}
+	}
 	// Den gamla kammaren blir ett vanligt rum. Ett rum som ingen har sett
 	// byggs först, med vanliga dörrar.
 	old := &g.rooms[oy][ox]
@@ -363,6 +369,7 @@ func (g *Game) breathThroughWall() {
 			continue
 		}
 		p.breathAt = here
+		p.heardSerpent(cx, cy)
 		g.hearTo(p, g.data.Text("andetag_vagg", "riktning", g.data.Riktningar[d]), "info")
 	}
 }
@@ -375,6 +382,7 @@ func (g *Game) breathForAll() {
 		if p == nil || p.Status != statusIn || p.Cellar > 0 || (p.X == cx && p.Y == cy) {
 			continue
 		}
+		p.heardSerpent(cx, cy)
 		g.logTo(p, g.data.Text("andetag_alla", "horn", g.hornToward(p.X, p.Y, cx, cy)), "info")
 	}
 }

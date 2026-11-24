@@ -41,6 +41,11 @@ webbläsarprovet:
   guldet?
 - Breven: läser man raden i marginalen, och går man åt det håll den
   pekar?
+- Ormens fria plats ([ormens-plats.md](ormens-plats.md)): hittar man
+  kammaren med andetagen och sluttningen, eller går alla fortfarande mot
+  mitten? Går någon mot det håll där någon tog en näve, för att slåss om
+  guldet? Känns det orättvist för den som startar längst bort (13–14 %
+  vinster mot 21 % för den närmaste med AI-spelare)?
 - Tangenterna vid dörrarna på telefonen: de hålls nu inom kartan och
   ligger över det stora kortet. Träffar man dem, och förstår man en
   tangent som har flyttats in till kanten?

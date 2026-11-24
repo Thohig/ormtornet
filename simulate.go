@@ -28,6 +28,9 @@ type simWalker struct {
 	traps    int
 	takes    int
 	won      bool // hade mest skatt av dem som kom ut
+	// near och far: vandraren startade närmast eller längst bort från
+	// kammaren (lika avstånd räknas till båda).
+	near, far bool
 }
 
 // simResult är en hel vandring.
@@ -60,6 +63,16 @@ func simulateOne(d *Data, cfg Config, n int, seed uint64) (simResult, error) {
 	if g.phase != phasePlay {
 		return simResult{}, fmt.Errorf("vandringen började inte (fasen är %q)", g.phase)
 	}
+	// Avståndet från porten till kammaren när vandringen börjar.
+	startDist := map[*Player]int{}
+	least, most := 1<<30, -1
+	for _, p := range g.players {
+		if p != nil {
+			d := abs(p.X-g.chamberX) + abs(p.Y-g.chamberY)
+			startDist[p] = d
+			least, most = min(least, d), max(most, d)
+		}
+	}
 	for guard := 0; g.phase == phasePlay; guard++ {
 		if guard > 20*g.sunMax {
 			return simResult{}, fmt.Errorf("frö %d: vandringen tog aldrig slut", seed)
@@ -86,7 +99,8 @@ func simulateOne(d *Data, cfg Config, n int, seed uint64) (simResult, error) {
 			continue
 		}
 		w := simWalker{won: winners[p.Name], status: p.Status, treasure: p.Treasure,
-			kills: p.stats.kills, traps: p.stats.traps, takes: p.stats.takes}
+			kills: p.stats.kills, traps: p.stats.traps, takes: p.stats.takes,
+			near: startDist[p] == least, far: startDist[p] == most && most > least}
 		if c := g.classOf(p); c != nil {
 			w.class = c.Kort
 		}
@@ -309,6 +323,34 @@ func writeSimSummary(out io.Writer, results []simResult) {
 		}
 		fmt.Fprintln(out)
 	}
+
+	// Avståndet till kammaren: hur ofta den som startade närmast vann,
+	// jämfört med alla (docs/ormens-plats.md).
+	var nearN, nearWon, farN, farWon, allWon int
+	for _, r := range results {
+		for _, w := range r.walkers {
+			if w.won {
+				allWon++
+			}
+			if w.near {
+				nearN++
+				if w.won {
+					nearWon++
+				}
+			}
+			if w.far {
+				farN++
+				if w.won {
+					farWon++
+				}
+			}
+		}
+	}
+	fmt.Fprintln(out, "Avståndet till kammaren, andel som vann")
+	fmt.Fprintf(out, "  %-26s %8s\n", "Startade närmast", percent(nearWon, nearN))
+	fmt.Fprintf(out, "  %-26s %8s\n", "Startade längst bort", percent(farWon, farN))
+	fmt.Fprintf(out, "  %-26s %8s\n", "Alla", percent(allWon, all.walkers))
+	fmt.Fprintln(out)
 
 	sort.Strings(persNames)
 	if len(byPers) > 0 {
