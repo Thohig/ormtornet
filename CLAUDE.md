@@ -164,6 +164,26 @@ Så här skiljer vi på sakerna när användaren ger instruktioner:
   solen (`reveal.go`, `data/avslojande.json`). Det är alltid på; det går
   inte att stänga av sedan 2026-11-23.
 
+- **striden**: det enda stridsvalet är anfall (A). **Kraft** är hur lätt
+  man träffar och **Försvar** hur svår man är att träffa (klasser,
+  varelser och föremål); varelsens **lynne** är chansen att den anfaller
+  när man gör något annat. Att vänta i strid är att hålla **garden**
+  (`monster.go`, `traff` i `data/monster.json`, docs/bara-anfall.md).
+  Parera och undanmanöver togs bort 2026-11-24.
+- **kammaren**: ligger i ett av rummen i mittens 3 × 3 (`spridning` i
+  `data/ormen.json`) och flyttar dit när ormen vaknar; den gamla blir ett
+  rum med **löst guld** (`moveChamber` i `serpent.go`, `spillGold` i
+  `guld.go`).
+- **händelserna**: tornets sju slumpade händelser, var och en med ett
+  eget spelkort (`tornhandelser.go`, `data/handelser.json`,
+  docs/handelser.md).
+- **placeringen**: allas plats 1 till N i slutet, och **vinken**: det man
+  får veta om hur mycket den man möter bär, och om det är mer eller mindre
+  än man själv bär (`results` i `game.go`, `packHint` i `pvp.go`).
+- **den individuella tävlingen**: inget i spelet belönar samarbete sedan
+  2026-11-24 (docs/individuell-tavling.md). Föreslå inte samarbete utan
+  att användaren ber om det.
+
 Spelarna ser ordet "spelledare" i spelets texter, aldrig "värdsidan".
 
 ## Ändringar

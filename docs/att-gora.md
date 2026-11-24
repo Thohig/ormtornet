@@ -2,7 +2,9 @@
 
 Status: samlat 2026-11-18, kompletterat efter provspelen 2026-11-21 och
 2026-11-22 (se [provspel-2026-11-21.md](provspel-2026-11-21.md) och
-[provspel-2026-11-22.md](provspel-2026-11-22.md)). Inget här är bestämt. Användaren väljer vad som
+[provspel-2026-11-22.md](provspel-2026-11-22.md)) och städat 2026-11-24.
+Spelet är sedan 2026-11-24 en renodlat individuell tävling
+([individuell-tavling.md](individuell-tavling.md)). Inget här är bestämt. Användaren väljer vad som
 byggs, och förslag tas fram innan något byggs.
 
 ## Att göra
@@ -22,6 +24,26 @@ provad med AI-spelare, som alltid anfaller:
   ett liv per runda man inte anfaller?
 - Guldet per vandrare blev lägre än före bytet (36–47 mot 39–52 på
   Normal med AI-spelare). Behöver varelserna ge mer guld?
+
+Det som byggdes 2026-11-24 är bara provat med AI-spelare, tester och
+webbläsarprovet:
+
+- Var och en för sig ([individuell-tavling.md](individuell-tavling.md)):
+  saknar någon Kartritarens karta, märker man att timglaset håller porten
+  öppen, och används vinken ("Det är mindre än du bär") för att välja vem
+  man ska jaga? Säger placeringen på slutskärmen något, och syns (du)?
+- Tornets händelser ([handelser.md](handelser.md)): hänger man med i
+  spelkorten, går någon efter guldet ur sprickan eller skinnet, och är ett
+  ras eller den döde som vandrar för hårt? Kommer de lagom ofta (chans
+  0,12 per runda från runda 4)?
+- Kammaren nära mitten och ormen som flyttar sig: hittar man kammaren,
+  och märker man att den har flyttat? Går någon till den gamla för
+  guldet?
+- Breven: läser man raden i marginalen, och går man åt det håll den
+  pekar?
+- Tangenterna vid dörrarna på telefonen: de hålls nu inom kartan och
+  ligger över det stora kortet. Träffar man dem, och förstår man en
+  tangent som har flyttats in till kanten?
 
 Det mesta som byggdes 2026-11-18 är bara provat med AI-spelare och tester.
 En riktig kväll behövs för att se:
@@ -56,14 +78,14 @@ En riktig kväll behövs för att se:
   förval? Går det att zooma med två fingrar på en riktig telefon (bara
   provat med hjul, tangenter och knappar)? Hittar man M och knapparna
   nere till höger? Hamnar pilarna vid kanten under rutan Mörker eller
-  Källarvalven, eller tecknen i kartans övre hörn? Webbläsarprovet
-  (2026-11-23) såg på telefonen ibland en tangent vid dörren under
-  tecknen (`#status`), solmätaren eller märket.
+  Källarvalven, eller tecknen i kartans övre hörn? (Att tangenterna vid
+  dörrarna hamnade under översta raden rättades 2026-11-24.)
 - Klassvalet: räcker 30 sekunder för att läsa korten? På en telefon står
   korten sedan 2026-11-21 två och två utan den kursiva beskrivningen, med
   nedräkningen fast överst. Går de att läsa på en riktig telefon?
-- Kartritaren som ser in i grannrummen: för stark nu när alla andra bara
-  börjar med sitt eget rum?
+- Kartritaren som ser in i grannrummen och alla hittade rum: för stark?
+  Med den slumpade kammaren vann hen 23–26 % i simuleringen och fick
+  lämna sin dryck (2026-11-24).
 - Stormen i introt: hur musiken och åskan låter. Den är inte avlyssnad.
 - Introts första 5 sekunder, när Enter inte gör något: fastnar någon
   där och tror att sidan har hängt sig?
@@ -121,8 +143,7 @@ En riktig kväll behövs för att se:
   Kartritaren för mycket? Bara provat med tester.
 - Benluren (2026-11-22), som ersatte kritan: hör man varelserna i
   grannrummen i rumsblocket, och är ljuden två rum bort till hjälp eller
-  bara brus? Kartritaren har en dryck med sig i stället för kritans extra
-  streck; räcker det?
+  bara brus?
 - Stycken och färre kommandon (2026-11-22,
   [samlat-forslag.md](samlat-forslag.md)): går det att förstå rummen när
   de bara beskrivs, och känner man igen spåren efter fällorna? Hörs
@@ -201,9 +222,10 @@ En riktig kväll behövs för att se:
   hårdare träffar rätt, och går någon till kammaren för guldets skull?
   Klassernas extraliv väger fortfarande tungt på Mardröm (Legoknekten
   49 % ut med skatt, Kartritaren 32 %).
-- Kartritaren är fortfarande svagast i simuleringen 2026-11-22 (300
-  vandringar, 3 AI-spelare): 49 % överlever och 22 % vinner, mot
-  Legoknektens 79 % och 41 %.
+- Klasserna efter 2026-11-24 (3000 vandringar, 6 AI-spelare, Normal och
+  Svår): alla vinner 13–21 %. Guldet per vandrare är lägre än före den nya
+  striden. Se [bara-anfall.md](bara-anfall.md) och
+  [handelser.md](handelser.md).
 - AI-spelarna når sällan kammaren (13–23 % i simuleringarna) och söker
   nästan aldrig, så vandringar med bara AI-spelare blir tama. De kan bli
   modigare, söka oftare och följa vägar som andra redan har gått. I
@@ -226,9 +248,8 @@ Sett 2026-11-22 men inte ändrat:
 - Lådan med loggen börjar med den senaste rundan över hela höjden, så den
   ser tom ut under den första rundan.
 - Spelkortet täcker rummet på telefonen en stund efter varje runda.
-  Webbläsarprovet (2026-11-23) bekräftar det: på telefonen låg spelkortet
-  (`#spelkort`) eller det stora kortet (`#storkort`) ibland över
-  tangenterna vid dörrarna, så att de inte gick att trycka på.
+  Tangenterna vid dörrarna ligger sedan 2026-11-24 över korten och går
+  att trycka på, men rummet syns inte.
 - Värdsidans avsnitt Inför nästa vandring är låst under vandringen, utom
   Fröet.
 - Pages lokalt: spelledarens Gå in själv fastnade en gång på introt när
@@ -259,6 +280,16 @@ Från förut:
 - De vaga `_dolt`-texterna och originalen finns båda kvar i `data/`. Sedan
   egen karta är det enda läget kan de slås ihop, så att varje text finns
   en gång.
+
+Sett 2026-11-24 men inte ändrat:
+
+- AI-spelarna vet inte om rasade rum och kan försöka gå in i ett några
+  rundor. De går inte heller efter löst guld eller ormens skinn.
+- Ett rasat rum syns inte på kartan; man märker det när man försöker gå
+  in.
+- Webbläsarprovet kunde två gånger inte nå sitt torn redan innan
+  vandringen började. Det har inte gått att få fram igen; provet skriver
+  nu ut tornets sista rader om det avslutas.
 
 ### Städning
 
@@ -299,35 +330,27 @@ Från [isometrisk.md](isometrisk.md):
 
 ### Spelet
 
-- **Lag:** två eller tre lag som delar skatten. Med egen karta får
-  pratandet ett syfte.
+Spelet är sedan 2026-11-24 en individuell tävling. Idéer som bygger på
+samarbete (lag, gå tillsammans, spakar och dörrar som samarbete, bonus vid
+porten) passar inte längre och står under Valt bort längst ned.
+
 - **Uppdrag:** varje vandrare får ett hemligt mål i lobbyn, till exempel
   "kom ut med kronan" eller "se till att ormen vaknar två gånger", som ger
   extra guld.
 - **Tornets humör:** tornet reagerar på vandrarna. Mycket strid gör
   väggarna "irriterade", med fler fällor och varelser som rör sig.
-- **Kvällens krönika:** en sammanställning efter flera vandringar samma
-  kväll: vem som vann flest gånger, flest invigda och flest döda.
 
 Spelmekaniker (förslag 2026-11-22):
 
 - **Märken på väggen:** var och en kan rita ett av tre märken i rummet:
   fara, skatt eller vägen ut. Den som kommer in efteråt ser det i
-  rumsblocket och på kartan. Ett sätt att hjälpa, eller lura, varandra med
-  egen karta.
-- **Spakar och dörrar:** en spak i ett rum öppnar en stängd dörr i ett
-  annat, bara medan någon står vid spaken. Samarbete på avstånd; passar
-  med portarna som sluter sig på nivå 4.
+  rumsblocket och på kartan. I en individuell tävling mest ett sätt att
+  lura de andra.
 - **Smyga eller springa:** smyga ett rum utan att höras eller väcka något,
   gå som i dag, eller springa två rum i ett drag som hörs i hela tornet,
   väcker varelser och gör ormens sömn lättare.
 - **Altaret:** offra guld för ett liv, ett varsel eller en handsbredd sol.
   Ju djupare in, desto bättre byte.
-- **Gå tillsammans:** vandrare i samma rum kan hålla ihop och flytta som
-  en grupp; fällans skada delas, de slåss sida vid sida, men gruppen hörs
-  mer.
-- **Bonus vid porten:** kommer alla levande ut får var och en en
-  guldbonus, men bara om ingen dör. Ett socialt dilemma utan strid.
 - (Den dödes väska byggdes 2026-11-22, se
   [den-dodes-guld.md](den-dodes-guld.md).)
 
@@ -424,3 +447,14 @@ Andra föremål som föreslogs när kritan ersattes av benluren
     exakt.
   - **En vanlig spelare i provet:** båda webbläsarna står på tornets
     dator och spelar som spelledaren; en spelare utan märket provas inte.
+
+## Valt bort
+
+- **Samarbete** (2026-11-24): lag, gå tillsammans, spakar och dörrar som
+  kräver två, bonus vid porten när alla kommer ut, och förslaget att vänta
+  skulle hjälpa den som står bredvid (garden framför någon, delat byte,
+  vakt i kammaren). Spelet blev i stället en renodlat individuell tävling
+  ([individuell-tavling.md](individuell-tavling.md)).
+- **Ställningen för kvällen** (2026-11-24): poäng över flera torn. Varje
+  vandring är en tävling för sig.
+- **Kvällens krönika:** samma sak som ställningen för kvällen; se ovan.
