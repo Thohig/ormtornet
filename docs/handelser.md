@@ -54,6 +54,38 @@ den som står där får en egen text. Varje händelse står i krönikan
 Händelserna gynnar bara den som drabbas eller hinner dit först, så att
 tävlingen förblir var och ens.
 
+### Händelserna mellan vandrarna
+
+Åtta händelser kom till 2026-11-25, var och en med ett eget spelkort,
+där vandrarna påverkar varandra (`vandrarhandelser.go`):
+
+| Händelse | Bild | Vad som händer |
+| --- | --- | --- |
+| Tornet drar tillbaka | `tillbaka` | den inne som bär minst guld får välja att dra tillbaka den som gick ut med mest; valet (T eller knappen Dra tillbaka i panelen Nu) är hens drag och gäller två rundor |
+| Ormens blick | `blick` | en vandrare får ormens blick i sex rundor: var tredje näve väcker ormen, blicken går över till den man står i samma rum som, och när den släpper tar den 10 guld |
+| Skottpengen | `skottpeng` | den som bär mest får ett pris på sig i tre rundor: den som träffar hen tar dubbelt så mycket |
+| Skatan | `skata` | ett föremål som inte är förbannat flyger från en vandrare till en annan i ett annat rum; båda vet åt vilket håll den andre står |
+| Väggen faller | `vagg_faller` | väggen mellan två vandrare i grannrum rasar, och var och en ser den andres rum på kartan |
+| Kistan med två lås | `kista` | 30–60 guld i en kista i ett rum någon har gått i; den går bara upp när två står där, och den som bänder (S) tar allt |
+| Spåren glöder | `spar_glod` | i tre rundor ser alla på kartan rummen där någon går |
+| Golvet vrider sig | `vrider` | två vandrare i vanliga rum utan varelser byter plats |
+
+**Tornet drar tillbaka** är aldrig frivilligt för den som dras in, men
+den som drar får ormens blick. Den som dras in kommer in genom samma port
+med fullt liv och utan föremål (de blev guld vid porten). Hälften av
+guldet ligger säkert ute och läggs till när hen går ut igen; dör hen
+eller blir kvar räknas bara den säkra hälften i placeringen. Det händer
+bara en gång per vandrare, och bara medan porten är öppen och solen har
+minst åtta handsbredder kvar (`sol_minst`).
+
+Blicken och skottpengen står bland tecknen (⊙ och ¤) med rundorna kvar.
+Kistan står som en rad i panelen Nu i rummet där den finns.
+
+Chansen per runda är fortfarande 0,12, så varje händelse kommer mer
+sällan. En simulering av 1500 vandringar med fyra AI-spelare (frö 1)
+ändrades lite: guldet hos dem som kom ut med skatt blev 53,2 i stället
+för 54,2, och alla klasser vinner 19–31 % som förut.
+
 De nio sista kom till 2026-11-24. En händelse kan sakna `text`, och då
 märker bara den det händer något (`har`). `bredvid` är texten för de
 andra i samma rum, `har_annars` det den får när det gick åt andra hållet
@@ -73,6 +105,14 @@ Kartritaren har därför ingen egen dryck längre, och Ormtjusaren har Kraft
 (3000 vandringar, frö 1 och 5001, Normal och Svår).
 
 ## Inte byggt
+
+- AI:n drar tillbaka den som gick ut ungefär sex gånger av tio när den
+  får välja, och bänder upp kistan när någon annan står i rummet, men den
+  går inte till kistan och söker inte upp någon för att bli av med
+  ormens blick eller jaga den med ett pris på sig.
+- Kistan syns inte på kartan, bara i panelen Nu när man står i rummet.
+- Den som dras tillbaka och dör står som död på slutskärmen, fast den
+  säkra hälften av guldet räknas i placeringen.
 
 - AI-spelarna känner inte till de nya händelserna: de går inte efter den
   glömda packningen och bryr sig inte om klirret eller krypen.

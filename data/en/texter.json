@@ -509,6 +509,30 @@
     "ber_handelse_kryp": [
       "{nar}, small vermin fled through the tower in a stream."
     ],
+    "ber_handelse_tillbaka": [
+      "{nar}, the gate whispered of whoever had gone out with the most gold."
+    ],
+    "ber_handelse_blick": [
+      "{nar}, the serpent opened an eye and looked at one of the wanderers."
+    ],
+    "ber_handelse_skottpeng": [
+      "{nar}, the tower put a price on whoever carried the most."
+    ],
+    "ber_handelse_skata": [
+      "{nar}, a magpie took something from one bag and dropped it with someone else."
+    ],
+    "ber_handelse_vagg": [
+      "{nar}, a wall collapsed between two wanderers."
+    ],
+    "ber_handelse_kista": [
+      "{nar}, a chest with two locks appeared in the tower."
+    ],
+    "ber_handelse_glod": [
+      "{nar}, the tracks on the floor glowed, and everyone saw where the others went."
+    ],
+    "ber_handelse_vrider": [
+      "{nar}, the floor turned, and two wanderers swapped places."
+    ],
     "ber_foremal": [
       "{nar}, {namn} found {foremal}."
     ],
@@ -1131,6 +1155,108 @@
     ],
     "kronika_klocka": [
       "The bell tolled as {namn} walked under it, and the sun sank faster."
+    ],
+    "handelse_tillbaka_inte": [
+      "The gate is silent. There is no one to pull back."
+    ],
+    "handelse_tillbaka_du": [
+      "A cold hand grabs you at the gate and pulls you back into the tower. {antal} gold stays safe outside; you carry {bar} gold back in. You must get out once more."
+    ],
+    "handelse_tillbaka_drog": [
+      "You pull at the gate, and {namn} stumbles back into the tower. At the same moment you feel the serpent's gaze on you, for {rundor} rounds."
+    ],
+    "handelse_tillbaka_hors": [
+      "To the {horn} a gate opens again with a heavy boom. Someone steps into the tower once more."
+    ],
+    "handelse_blick_vidare": [
+      "The serpent's gaze lets go of you and fastens on {namn}."
+    ],
+    "handelse_blick_fick": [
+      "{namn} carried the serpent's gaze, and now it watches you for {rundor} rounds."
+    ],
+    "handelse_blick_slut_guld": [
+      "The serpent closes its eye. The gaze lets go of you, but {guld} gold has trickled out of your bag."
+    ],
+    "handelse_blick_slut": [
+      "The serpent closes its eye, and the gaze lets go of you."
+    ],
+    "handelse_skottpeng_slut": [
+      "The price on you is gone. No one takes double from you any more."
+    ],
+    "handelse_kista_ensam": [
+      "The lid does not move. The chest has two locks, and alone you can only reach one."
+    ],
+    "handelse_kista_du": [
+      "Two of you stand at the chest, and you are first: the lid gives way, and you take {guld} gold."
+    ],
+    "handelse_kista_annan": [
+      "{namn} reaches the chest first and takes everything in it."
+    ],
+    "kronika_handelse_tillbaka": [
+      "The gate whispered of whoever had gone out with the most gold."
+    ],
+    "kronika_handelse_blick": [
+      "The serpent opened an eye and looked at one of the wanderers."
+    ],
+    "kronika_handelse_skottpeng": [
+      "The tower put a price on whoever carried the most."
+    ],
+    "kronika_handelse_skata": [
+      "A magpie took something from one bag and dropped it with someone else."
+    ],
+    "kronika_handelse_vagg": [
+      "A wall collapsed between two wanderers."
+    ],
+    "kronika_handelse_kista": [
+      "A chest with two locks appeared in the tower."
+    ],
+    "kronika_handelse_glod": [
+      "The tracks on the floor glowed, and everyone saw where the others went."
+    ],
+    "kronika_handelse_vrider": [
+      "The floor turned, and two wanderers swapped places."
+    ],
+    "kronika_tillbaka": [
+      "{namn} pulled {offer} back into the tower."
+    ],
+    "kronika_blick_vidare": [
+      "The serpent's gaze passed from {namn} to {offer}."
+    ],
+    "kronika_kista": [
+      "{namn} prised open the chest with two locks and took {guld} gold."
+    ],
+    "gb_tillbaka": [
+      "{nar} they were pulled back into the tower; {guld} gold stayed safe outside."
+    ],
+    "gb_flera_tillbaka": [
+      "{nar} they were pulled back into the tower {antal} times."
+    ],
+    "gb_rad_tillbaka": [
+      "Pulled back into the tower; the gold that was safe outside."
+    ],
+    "gb_ute_igen": [
+      "Outside again, they got back the {guld} gold that had been safe."
+    ],
+    "gb_rad_ute_igen": [
+      "Outside again, with the gold that had been safe."
+    ],
+    "gb_blick": [
+      "{nar} the serpent's gaze let go of them and took {guld} gold."
+    ],
+    "gb_flera_blick": [
+      "{nar} the serpent's gaze took {guld} gold, {antal} times."
+    ],
+    "gb_rad_blick": [
+      "The serpent's gaze let go and took gold."
+    ],
+    "gb_kista": [
+      "{nar} they prised open the chest with two locks and got {guld} gold."
+    ],
+    "gb_flera_kista": [
+      "{nar} they prised open {antal} chests and got {guld} gold."
+    ],
+    "gb_rad_kista": [
+      "Prised open the chest with two locks."
     ],
     "kronika_ut": [
       "{namn} went out with {guld} gold."

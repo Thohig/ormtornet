@@ -451,6 +451,91 @@ ${[38, 30, 22].map((r, i) => `<ellipse cx="50" cy="50" rx="${r + 6}" ry="${r * 0
     return s + `<path d="M8 20q30 10 50 30t36 34" fill="none" stroke="${BRUN}" stroke-width="1" stroke-dasharray="2 4" opacity="0.6"/>`;
   };
 
+  // En liten vandrare i silhuett, med fötterna i (x, y) och höjden h, för
+  // händelserna mellan vandrarna.
+  const figur = (x, y, h, fill = BLAECK) =>
+    `<circle cx="${f(x)}" cy="${f(y - h * 0.86)}" r="${f(h * 0.13)}" fill="${fill}"/>` +
+    `<path d="M${f(x - h * 0.2)} ${f(y)}l${f(h * 0.06)} ${f(-h * 0.5)}q${f(h * 0.14)} ${f(-h * 0.24)} ${f(h * 0.28)} 0l${f(h * 0.06)} ${f(h * 0.5)}z" fill="${fill}"/>`;
+
+  // Tornet drar tillbaka: en öppen port i muren, en vandrare i öppningen
+  // och pilar som drar in mot mörkret, med mynt kvar utanför.
+  BILDER.tillbaka = () => `${vagg()}
+<path d="M30 90V44q20 -26 40 0v46z" fill="#1e1610" stroke="${BLAECK}" stroke-width="1.6"/>
+<path d="M26 90V42q24 -32 48 0v48" fill="none" stroke="${MORK_STEN}" stroke-width="4"/>
+${figur(50, 84, 30, "#6b5a44")}
+<path d="M14 60h12M86 60h-12" stroke="${BRUN}" stroke-width="2" stroke-linecap="round"/>
+<path d="M26 60l-5 -3.5v7zM74 60l5 -3.5v7z" fill="${BRUN}"/>
+${[[14, 88], [20, 92], [84, 90]].map(([x, y]) => `<ellipse cx="${x}" cy="${y}" rx="3.6" ry="1.8" fill="${GULD}" stroke="${BRUN}" stroke-width="0.6"/>`).join("")}`;
+
+  // Ormens blick: ett öppet ormöga i mörkret, och en svag stråle mot en
+  // liten vandrare.
+  BILDER.blick = () => `<rect x="4" y="4" width="92" height="92" rx="6" fill="#2a2018" opacity="0.55"/>
+<path d="M50 40L24 88H40z" fill="#e8c040" opacity="0.16"/>
+<ellipse cx="50" cy="32" rx="24" ry="13" fill="#e8c040" stroke="#1d2410" stroke-width="1.6"/>
+<ellipse cx="50" cy="32" rx="3" ry="11" fill="#1d2410"/>
+<path d="M24 32q26 -26 52 0" fill="none" stroke="#4f5e2f" stroke-width="3"/>
+<path d="M24 32q26 22 52 0" fill="none" stroke="#4f5e2f" stroke-width="2"/>
+${figur(32, 88, 20, "#6b5a44")}`;
+
+  // Skottpengen: en vandrare inom ett sikte av ringar, och ett mynt.
+  BILDER.skottpeng = () => `${golv(80)}
+<circle cx="50" cy="54" r="30" fill="none" stroke="${ROD}" stroke-width="1.6" opacity="0.7"/>
+<circle cx="50" cy="54" r="20" fill="none" stroke="${ROD}" stroke-width="1.2" opacity="0.5" stroke-dasharray="4 3"/>
+<path d="M50 18v12M50 78v12M14 54h12M74 54h12" stroke="${ROD}" stroke-width="1.6" opacity="0.7"/>
+${figur(50, 70, 28)}
+<circle cx="76" cy="22" r="9" fill="${GULD}" stroke="${BRUN}" stroke-width="1"/>
+<path d="M72 22h8M76 18v8" stroke="${BRUN}" stroke-width="1.2"/>`;
+
+  // Skatan: en svart fågel med utbredda vingar som bär något som glimmar.
+  BILDER.skata = () => `<rect x="4" y="4" width="92" height="92" rx="6" fill="#2a2018" opacity="0.3"/>
+<path d="M50 46q-14 -22 -40 -20q16 8 22 22q-14 -2 -22 6q22 0 32 4z" fill="${BLAECK}"/>
+<path d="M50 46q14 -22 40 -20q-16 8 -22 22q14 -2 22 6q-22 0 -32 4z" fill="${BLAECK}"/>
+<path d="M50 44q8 2 8 10t-8 14q-8 -4 -8 -14t8 -10z" fill="${BLAECK}"/>
+<path d="M50 52q4 2 4 8" fill="none" stroke="#e6d8b8" stroke-width="2" opacity="0.8"/>
+<path d="M50 68l-4 14h8z" fill="${BLAECK}"/>
+<circle cx="50" cy="42" r="4.4" fill="${BLAECK}"/><circle cx="51.6" cy="41" r="1" fill="#e6d8b8"/>
+<path d="M54 42l6 1.6 -6 1.4z" fill="${JARN}"/>
+<circle cx="61" cy="45" r="2.6" fill="${GULD}"/><path d="M61 39v2M66 45h-2M58 41l1.4 1.4" stroke="${GULD}" stroke-width="1" stroke-linecap="round"/>`;
+
+  // Väggen faller: en mur med ett stort hål och stenar som rasar, och en
+  // vandrare på var sida.
+  BILDER.vagg_faller = () => `${golv(84)}
+<path d="M40 14h20v26l-6 10 6 12 -4 22h-16l-4 -22 6 -12 -6 -10z" fill="${MORK_STEN}" stroke="${BLAECK}" stroke-width="1.2"/>
+<path d="M44 40l6 -6 4 8 -4 8 -6 -4z" fill="#1e1610"/>
+<path d="M46 56l6 -2 2 10 -6 4z" fill="#1e1610"/>
+${[[32, 30], [68, 24], [36, 46], [64, 52], [58, 34]].map(([x, y]) => `<rect x="${x - 3}" y="${y - 2.4}" width="6" height="4.8" rx="1" fill="${STEN}" stroke="${BLAECK}" stroke-width="0.6" transform="rotate(${(x * 5) % 40 - 20} ${x} ${y})"/>`).join("")}
+${figur(22, 86, 26)}${figur(78, 86, 26)}`;
+
+  // Kistan med två lås: en tung kista med två hänglås.
+  BILDER.kista = () => `${golv(82)}
+<path d="M20 50h60v30H20z" fill="${BRUN}" stroke="${BLAECK}" stroke-width="1.6"/>
+<path d="M20 50q0 -18 30 -18t30 18z" fill="#8a6234" stroke="${BLAECK}" stroke-width="1.6"/>
+<path d="M20 50h60M28 34v46M72 34v46" stroke="${JARN}" stroke-width="2.4"/>
+${[38, 62].map((x) => `<path d="M${x - 4} 56q0 -6 4 -6t4 6" fill="none" stroke="${JARN}" stroke-width="1.8"/><rect x="${x - 5.5}" y="56" width="11" height="9" rx="1.6" fill="${JARN}" stroke="${BLAECK}" stroke-width="0.8"/><circle cx="${x}" cy="60" r="1.2" fill="${BLAECK}"/>`).join("")}
+<path d="M44 44l4 -6M56 44l-4 -6" stroke="${GULD}" stroke-width="1.2" opacity="0.8"/>`;
+
+  // Spåren glöder: ett mörkt golv med lysande fotspår som slingrar sig.
+  BILDER.spar_glod = () => {
+    let s = `<rect x="4" y="4" width="92" height="92" rx="6" fill="#1a130c" opacity="0.65"/>`;
+    const steps = [[20, 84], [28, 74], [30, 62], [40, 56], [44, 44], [54, 40], [58, 28], [68, 24], [74, 14]];
+    steps.forEach(([x, y], i) => {
+      const side = i % 2 ? 3 : -3;
+      s += `<ellipse cx="${x + side}" cy="${y}" rx="2.6" ry="4" fill="#f0c860" opacity="${0.35 + i * 0.07}" transform="rotate(30 ${x + side} ${y})"/>`;
+      s += `<ellipse cx="${x + side}" cy="${y}" rx="5" ry="6.4" fill="#f0c860" opacity="0.1" transform="rotate(30 ${x + side} ${y})"/>`;
+    });
+    return s;
+  };
+
+  // Golvet vrider sig: en rund golvsten med två pilar som vrider sig runt
+  // varandra, och en vandrare på var sida.
+  BILDER.vrider = () => `${vagg()}
+<ellipse cx="50" cy="58" rx="38" ry="20" fill="${STEN}" opacity="0.45" stroke="${BLAECK}" stroke-width="1"/>
+<path d="M22 54q10 -18 40 -16" fill="none" stroke="${BRUN}" stroke-width="2.6" stroke-linecap="round"/>
+<path d="M62 38l-6 -4 1 8z" fill="${BRUN}"/>
+<path d="M78 62q-10 18 -40 16" fill="none" stroke="${BRUN}" stroke-width="2.6" stroke-linecap="round"/>
+<path d="M38 78l6 4 -1 -8z" fill="${BRUN}"/>
+${figur(34, 66, 20)}${figur(66, 62, 20, "#6b5a44")}`;
+
   // Ett rostigt svärd, snett över kortet.
   BILDER.svard = () => `${ljus}
 <path d="M30 76l42 -50 6 -6 -2 8 -42 50z" fill="#9a8a7a" stroke="${BLAECK}" stroke-width="1.2"/>

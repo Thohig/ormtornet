@@ -38,6 +38,12 @@ webbläsarprovet:
   ras eller den döde som vandrar för hårt? Kommer de lagom ofta (chans
   0,12 per runda från runda 4)? Med sexton händelser 2026-11-24: jagar
   någon den rike efter klirret, och är draget och ynglet för hårda?
+- Händelserna mellan vandrarna 2026-11-25: drar den som ligger sist
+  tillbaka den som gick ut, och känns det orättvist för den som drogs in?
+  Försöker man bli av med ormens blick genom att söka upp någon? Jagar
+  någon den som har ett pris på sig? Hittar två vandrare samtidigt till
+  kistan med två lås? Är golvet som vrider sig för slumpartat? Kommer
+  händelserna för sällan nu när de är tjugofyra på samma chans?
 - Ormen som flyttar sig när den vaknar: märker man att den har flyttat,
   och går någon till den gamla kammaren för guldet?
 - Breven: läser man raden i marginalen, och går man åt det håll den

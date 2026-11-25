@@ -208,9 +208,12 @@ Så här skiljer vi på sakerna när användaren ger instruktioner:
   `spillGold` i `guld.go`). **Andetagen** hörs genom väggen bredvid den
   och för alla från nivå 2, och alla hör åt vilket håll någon tar en
   näve.
-- **händelserna**: tornets sexton slumpade händelser, var och en med ett
+- **händelserna**: tornets tjugofyra slumpade händelser, var och en med ett
   eget spelkort (`tornhandelser.go`, `data/handelser.json`,
-  docs/handelser.md).
+  docs/handelser.md). De åtta **händelserna mellan vandrarna** står i
+  `vandrarhandelser.go`, bland dem **Tornet drar tillbaka**: den som ligger
+  sist kan dra in den som gick ut med mest guld (T), och får **ormens
+  blick** för det.
 - **placeringen**: allas plats 1 till N i slutet, och **vinken**: det man
   får veta om hur mycket den man möter bär, och om det är mer eller mindre
   än man själv bär (`results` i `game.go`, `packHint` i `pvp.go`).
@@ -337,9 +340,9 @@ Skriv dit när ett steg är klart.
 - [docs/handelser.md](docs/handelser.md): breven som pekar mot något,
   kammaren nära mitten (sedan ersatt av den fria platsen i
   ormens-plats.md), ormen som flyttar sig när den vaknar och tornets
-  sexton slumpade händelser med var sitt spelkort (de nio sista
-  2026-11-24). Allt är byggt; avsnittet Inte byggt säger vad AI:n inte
-  känner till.
+  tjugofyra slumpade händelser med var sitt spelkort (de nio sista
+  2026-11-24, och åtta mellan vandrarna 2026-11-25). Allt är byggt;
+  avsnittet Inte byggt säger vad AI:n inte känner till.
 - [docs/berattelsen.md](docs/berattelsen.md): slutkrönikan som en
   gemensam berättelse med höjdpunkter i stället för drag för drag, och
   raden om var och en med en titel. Allt är byggt.

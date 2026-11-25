@@ -305,6 +305,8 @@ body[data-niva="4"] #crt::after { animation: throb 0.95s infinite; }
 }
 #readyBtn:hover, #readyBtn:focus-visible { background: var(--slate); outline: none; }
 #readyBtn .key { margin-left: 8px; color: var(--chalk); font-size: 11px; letter-spacing: 0.1em; }
+/* Knappen Dra tillbaka i panelen Nu (Tornet drar tillbaka). */
+.drabtn .key { margin-left: 8px; color: var(--chalk); font-size: 11px; letter-spacing: 0.1em; }
 #readyBtn.done { color: var(--fg); border-color: var(--faint); cursor: default; }
 #readyBtn[hidden] { display: none; }
 /* Spelledarens märke i översta raden: en knapp till värdsidan i lobbyn och

@@ -43,6 +43,7 @@ const (
 const (
 	actWait   = "vanta"
 	actTake   = "ta"
+	actPull   = "dra" // dra tillbaka den som har gått ut (vandrarhandelser.go)
 	actSearch = "sok"
 	actDrink  = "drick"
 )
@@ -310,6 +311,8 @@ type Room struct {
 	looseKey string     // texten när någon tar det löst liggande guldet
 	omen     string     // det ett varsel har lovat: "falla:id", "varelse:id" eller "tomt"
 	Shut     bool       // porten har slutit sig (tornet förändras, nivå 4)
+	chest    int        // guldet i kistan med två lås, 0 om ingen kista står här
+	glowed   bool       // någon gick här medan spåren glödde
 }
 
 // trail är spåren efter den som senast lämnade ett rum.
@@ -358,7 +361,15 @@ type Player struct {
 	exitAsked int  // rundan då porten frågade om vandraren ville ut tomhänt, 0 om den inte har frågat
 	aiPlayed  bool // AI:n har styrt vandraren någon gång under vandringen
 	vard      bool // vandraren spelas från tornets dator, av spelledaren
-	still     int  // rundor i rad som en ansluten människa inte har valt något drag
+
+	// Tornet drar tillbaka (vandrarhandelser.go): banked är guldet som är
+	// säkert ute för den som drogs tillbaka in, och pulled att det har hänt.
+	// pullOffer är sista rundan vandraren kan dra tillbaka pullTarget.
+	banked     int
+	pulled     bool
+	pullOffer  int
+	pullTarget int
+	still      int // rundor i rad som en ansluten människa inte har valt något drag
 
 	target int // vandraren som ett stridsval den här rundan riktas mot
 	// attackedBy är vandraren som senast gick mot den här i strid, och
@@ -468,6 +479,12 @@ type Game struct {
 	eventCount  map[string]int
 	// shutDoors är dörrarna som tornet har slutit en stund.
 	shutDoors []shutDoor
+	// Händelserna mellan vandrarna (vandrarhandelser.go): vem som bär ormens
+	// blick och hur länge, vem det står ett pris på och hur länge, och
+	// rundan då spåren slutar glöda.
+	gazeOn, gazeRounds     int
+	bountyOn, bountyRounds int
+	glowUntil              int
 	// Reprisen (replay.go): vilka som är med, var de stod runda för runda
 	// och reprisen som alla får i slutet.
 	replayWho    []*Player
@@ -755,6 +772,7 @@ type roomView struct {
 	In    []string `json:"in,omitempty"`     // inredningen på kartan snett ovanifrån
 	Shut  bool     `json:"stangd,omitempty"` // porten har slutit sig
 	Other bool     `json:"a,omitempty"`      // ett rum bara andra har hittat (kartritaren), för minikartan
+	Kista bool     `json:"kista,omitempty"`  // kistan med två lås står här
 }
 
 type resultView struct {
@@ -765,6 +783,7 @@ type resultView struct {
 	Winner   bool   `json:"winner"`
 	AI       bool   `json:"ai"`    // AI:n spelade en del av vandringen
 	Place    int    `json:"plats"` // placeringen, 1 först; lika placering delas
+	saved    bool   // drogs tillbaka in och kom inte ut igen, men har guld ute
 }
 
 type stateMsg struct {
@@ -813,6 +832,9 @@ type stateMsg struct {
 	Initiated   bool          `json:"invigd,omitempty"`
 	CanWhisper  bool          `json:"kanViska,omitempty"`
 	NameParts   []string      `json:"namndelar,omitempty"` // delarna av ormens namn, tomma där vandraren inte vet
+	Blick       int           `json:"blick,omitempty"`     // rundor kvar med ormens blick (vandrarhandelser.go)
+	Skottpeng   int           `json:"skottpeng,omitempty"` // rundor kvar med ett pris på en själv
+	Dra         string        `json:"dra,omitempty"`       // den man kan dra tillbaka in i tornet
 	Offer       []*classView  `json:"erbjudande,omitempty"`
 	Book        []string      `json:"bok,omitempty"` // det vandraren har mött, för Vandrarens bok (bok.go)
 	Players     []playerView  `json:"players"`
@@ -956,6 +978,7 @@ func (g *Game) stateFor(me *Player) stateMsg {
 		st.Initiated = me.initiated
 		st.CanWhisper = g.canWhisper(me)
 		st.NameParts = g.namePartsFor(me)
+		g.eventState(me, &st)
 	}
 	if g.phase == phaseChoose {
 		st.Offer = g.classCards(me)
@@ -1004,6 +1027,7 @@ func (g *Game) stateFor(me *Player) stateMsg {
 			rv.F = (len(r.items) > 0 || len(r.gold) > 0) && g.is(me, "sparfinnare")
 			rv.Fell = len(r.fell) > 0 && g.is(me, "kartritare")
 			rv.Other = me.known != nil && !me.known[y][x] && g.phase != phaseEnd
+			rv.Kista = r.chest > 0 && g.phase == phasePlay
 			if r.HasExit {
 				rv.Exit = int(r.Exit)
 				rv.Shut = r.Shut
@@ -1060,11 +1084,19 @@ func (g *Game) results() []resultView {
 		if p == nil || p.Status == statusNew {
 			continue
 		}
-		res = append(res, resultView{Name: p.Name, Slot: p.Slot, Treasure: p.Treasure, Status: p.Status, AI: p.aiPlayed})
+		rv := resultView{Name: p.Name, Slot: p.Slot, Treasure: p.Treasure, Status: p.Status, AI: p.aiPlayed}
+		if p.Status != statusOut && p.banked > 0 {
+			// Dragen tillbaka och inte ute igen: guldet som var säkert räknas.
+			rv.Treasure, rv.saved = p.banked, true
+		}
+		res = append(res, rv)
 	}
 	// Placeringen: först de som kom ut, efter skatt (tomhänt ger 0), sedan
 	// de som blev kvar inne och sist de döda.
 	score := func(r resultView) int {
+		if r.saved {
+			return r.Treasure
+		}
 		switch r.Status {
 		case statusOut:
 			return r.Treasure
@@ -1077,7 +1109,7 @@ func (g *Game) results() []resultView {
 	// Kom ingen ut får ingen någon plats: alla förlorade lika mycket.
 	anyOut := false
 	for _, r := range res {
-		anyOut = anyOut || r.Status == statusOut
+		anyOut = anyOut || r.Status == statusOut || r.saved
 	}
 	for i := range res {
 		if !anyOut {
@@ -1128,6 +1160,7 @@ func (g *Game) placeAtCorner(p *Player) {
 	p.initiated, p.guessLevel, p.calmed, p.safeDraw = false, 0, false, false
 	p.priestCalm, p.tookVisit = false, false
 	p.parts, p.partsFound = [3]bool{}, nil
+	p.banked, p.pulled, p.pullOffer, p.pullTarget = 0, false, 0, 0
 	p.forgetRoom()
 	g.revealPorts()
 	g.noteRoom(p)
@@ -1160,6 +1193,9 @@ func (g *Game) knowsRoom(me *Player, x, y int) bool {
 	}
 	if !r.Walked {
 		return false // en annans port, eller ett rum som någon bara har sett in i
+	}
+	if g.glowRoom(x, y) {
+		return true // spåren glöder (vandrarhandelser.go)
 	}
 	return g.is(me, "kartritare") // kartritaren ser alla rum som någon har hittat
 }
@@ -1494,6 +1530,7 @@ func (g *Game) startGame() {
 	g.lightRounds = 0
 	g.eventCount = map[string]int{}
 	g.shutDoors = nil
+	g.gazeOn, g.gazeRounds, g.bountyOn, g.bountyRounds, g.glowUntil = 0, 0, 0, 0, 0
 	g.firstInitiated = 0
 	g.clueDeals, g.omens = 0, nil
 	g.portClock, g.portNext = 0, -1
@@ -1634,8 +1671,8 @@ func (g *Game) actPlayer(p *Player, a string, monsterID int) {
 	room := &g.rooms[p.Y][p.X]
 	// Sök tar en näve i kammaren: där finns inget annat att söka efter, och
 	// spelarna behöver bara en tangent för båda.
-	if a == actSearch && room.Kind == "kammare" {
-		a = actTake
+	if a == actSearch && (room.Kind == "kammare" || room.chest > 0) {
+		a = actTake // och bänder upp kistan med två lås
 	}
 	switch a {
 	case actAttack:
@@ -1665,8 +1702,13 @@ func (g *Game) actPlayer(p *Player, a string, monsterID int) {
 		if g.askEmptyExit(p, room, a) {
 			return
 		}
+	case actPull:
+		if !g.canPull(p) {
+			g.answerTo(p, g.data.Text("handelse_tillbaka_inte"), "dim")
+			return
+		}
 	case actTake:
-		if room.Kind != "kammare" {
+		if room.Kind != "kammare" && room.chest == 0 {
 			g.answerTo(p, g.data.Text("ingen_skatt_har"), "dim")
 			return
 		}
@@ -1745,6 +1787,7 @@ func (g *Game) resolve() {
 	for _, p := range active {
 		g.pickUpGold(p)
 	}
+	g.openChests(active)
 	for _, p := range g.players {
 		if p != nil {
 			g.meetIfNew(p)
@@ -1907,6 +1950,8 @@ func (g *Game) playTurn(p *Player) {
 	case a == actWait:
 	case a == actTake:
 		g.take(p)
+	case a == actPull:
+		g.pullBack(p)
 	case a == actSearch:
 		g.search(p)
 	case a == actDrink:
@@ -1979,6 +2024,11 @@ func (g *Game) move(p *Player, d Dir, depth int) {
 				g.logTo(p, g.data.Text("invigd_guld", "antal", strconv.Itoa(bonus)), "rost")
 			}
 		}
+		if p.banked > 0 {
+			p.Treasure += p.banked // det som redan var säkert ute (Tornet drar tillbaka)
+			g.goldNote(p, "ute_igen", p.banked)
+			p.banked = 0
+		}
 		if p.Treasure > 0 {
 			g.chronicle("kronika_ut", "namn", p.Name, "guld", strconv.Itoa(p.Treasure))
 		} else {
@@ -2013,6 +2063,7 @@ func (g *Game) move(p *Player, d Dir, depth int) {
 	isNew := !target.Walked // ett rum som någon bara har sett in i är fortfarande nytt
 	g.reveal(nx, ny)
 	target.Walked = true
+	g.markGlow(p.X, p.Y, nx, ny)
 	p.X, p.Y = nx, ny
 	g.noteRoom(p)
 

@@ -1181,6 +1181,8 @@ function renderHud(me) {
     if (state.stuck > 0) icon("⛓", String(state.stuck), t(state.stuck === 1 ? "tecken_fast_en" : "tecken_fast_flera", { n: state.stuck }), "warn");
     if (state.poison > 0) icon("☠", "", t("tecken_gift"), "warn");
     if (state.dark > 0) icon("◐", "", t("tecken_morker"), "warn");
+    if (state.blick > 0) icon("⊙", String(state.blick), t("tecken_blick", { n: state.blick }), "warn");
+    if (state.skottpeng > 0) icon("¤", String(state.skottpeng), t("tecken_skottpeng", { n: state.skottpeng }), "warn");
   }
   if (state.kompass) icon("✧", "", state.kompass, "");
   if (state.pendel) icon("♁", "", state.pendel, "");
@@ -1294,6 +1296,26 @@ function renderNow(me) {
     const here = (state.rooms || []).find((r) => r.x === me.x && r.y === me.y);
     if (!foe && state.cellar === 0 && here && here.k === "kammare" && state.phase === "spel") {
       line(t("nu_kammare", { tryck: pressWord("knapp_sok", "S") }), "dimline");
+    }
+    if (!foe && state.cellar === 0 && here && here.kista && state.phase === "spel") {
+      line(t("nu_kista", { tryck: pressWord("knapp_sok", "S") }), "dimline");
+    }
+    // Tornet drar tillbaka: den som ligger sist kan dra in den som gick ut
+    // med mest (vandrarhandelser.go).
+    if (state.dra && state.phase === "spel") {
+      line(t("nu_dra", { namn: state.dra }), "cond");
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "chronBack drabtn";
+      b.textContent = t("knapp_dra");
+      if (!touch) {
+        const k = document.createElement("span");
+        k.className = "key";
+        k.textContent = "T";
+        b.appendChild(k);
+      }
+      b.addEventListener("click", () => send({ t: "act", a: "dra" }));
+      box.appendChild(b);
     }
     if (foe && state.cellar === 0) {
       line(t("nu_strid", { namn: foe.name }), "foe");
@@ -2490,6 +2512,10 @@ function pressKey(key) {
   }
   if ((key === "v" || key === "V") && state && state.kanViska) {
     openWhisper();
+    return true;
+  }
+  if ((key === "t" || key === "T") && state && state.dra && state.phase === "spel") {
+    send({ t: "act", a: "dra" });
     return true;
   }
   if (key === "Enter") {

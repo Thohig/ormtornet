@@ -646,6 +646,16 @@ alla inne ett spelkort och vet åt vilket håll det hände; några märker
 bara den det händer. Händelserna och deras texter står i
 `data/handelser.json` (se [docs/handelser.md](docs/handelser.md)).
 
+Åtta händelser låter vandrarna påverka varandra (`vandrarhandelser.go`).
+Porten kan låta den som bär minst guld dra tillbaka den som gick ut med
+mest (T, eller knappen Dra tillbaka), med hälften av guldet kvar säkert
+ute; den som drar får ormens blick, som väcker ormen lättare och går
+vidare till den man möter. Tornet kan sätta ett pris på den som bär mest,
+en skata kan flytta ett föremål från en vandrare till en annan, en vägg
+kan rasa mellan två grannar, en kista med två lås går bara upp när två
+står i rummet, spåren kan glöda så att alla ser var de andra går, och
+golvet kan vrida sig så att två vandrare byter plats.
+
 ### Skattkammaren och ormen
 
 Kammaren kan ligga nästan var som helst i tornet: inte i den yttre ringen,

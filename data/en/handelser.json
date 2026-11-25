@@ -165,6 +165,85 @@
         "har": [
           "A tide of small black vermin pours in from the {horn}, rushes past your feet and vanishes the other way. Something over there frightened them."
         ]
+      },
+      {
+        "id": "tillbaka",
+        "rubrik": "The tower pulls back",
+        "bok": "Whoever carries the least gold in the tower can pull back whoever went out with the most. Half the gold is safe outside, and half is carried back in. The one who pulls gets the serpent's gaze for it.",
+        "har": [
+          "The gate whispers of {namn}, who went out with {guld} gold. You can pull them back into the tower. Half the gold comes back in, but the serpent will catch sight of you."
+        ]
+      },
+      {
+        "id": "blick",
+        "rubrik": "The serpent's gaze",
+        "bok": "The serpent opens an eye towards a wanderer. Whoever carries the gaze wakes the serpent more easily when taking a handful. The gaze passes to anyone you share a room with, and when it lets go it takes a little gold.",
+        "text": [
+          "Deep inside the tower the serpent opens an eye. Someone now carries its gaze."
+        ],
+        "har": [
+          "You feel something watching you through the walls. The serpent has opened an eye, and it follows you for {rundor} rounds. If you meet someone, the gaze passes to them."
+        ]
+      },
+      {
+        "id": "skottpeng",
+        "rubrik": "The bounty",
+        "bok": "The tower puts a price on whoever carries the most. For three rounds, anyone who hits them takes twice as much gold.",
+        "text": [
+          "A coin rings on the stone floor throughout the tower. There is a price on whoever carries the most: anyone who hits them in the next three rounds takes twice as much."
+        ],
+        "har": [
+          "A coin rings on the floor in front of you. The tower has put a price on you: anyone who hits you in the next three rounds takes twice as much gold."
+        ]
+      },
+      {
+        "id": "skata",
+        "rubrik": "The magpie",
+        "bok": "A black bird snatches an item that is not cursed from a wanderer's bag and drops it with another wanderer. Both know which way the other is.",
+        "har": [
+          "A black bird swoops out of the dark, snatches {foremal} from your bag and flaps off to the {horn}."
+        ],
+        "har_annars": [
+          "A black bird comes flapping from the {horn} and drops {foremal} at your feet."
+        ]
+      },
+      {
+        "id": "vagg",
+        "rubrik": "The wall falls",
+        "bok": "The wall between two wanderers in neighbouring rooms collapses, leaving an opening. Both know someone is on the other side.",
+        "text": [
+          "To the {horn} a wall collapses with a roar."
+        ],
+        "har": [
+          "The wall to the {riktning} collapses in a cloud of dust. Through the opening you glimpse someone in the next room."
+        ]
+      },
+      {
+        "id": "kista",
+        "rubrik": "The chest with two locks",
+        "bok": "A chest with two locks appears in a room. It only opens when two stand in the room, and whoever prises it open (S) takes everything.",
+        "text": [
+          "To the {horn} a heavy lid slams shut. It sounds like a chest full of coins, with two locks."
+        ]
+      },
+      {
+        "id": "glod",
+        "rubrik": "The glowing tracks",
+        "bok": "For three rounds footsteps glow on the floor: everyone sees on the map the rooms where someone walks.",
+        "text": [
+          "The floor begins to glow faintly where someone has walked. For a while the others' steps show throughout the tower."
+        ]
+      },
+      {
+        "id": "vrider",
+        "rubrik": "The floor turns",
+        "bok": "The floor turns under two wanderers in different rooms, and they swap places.",
+        "text": [
+          "The whole tower groans and grinds, as if the floor were turning."
+        ],
+        "har": [
+          "The floor turns beneath you with a grinding of stone. When it stops you are standing in another room."
+        ]
       }
     ]
   }

@@ -293,6 +293,16 @@ func (g *Game) botDecide(p *Player) (string, int) {
 		return actDrink, 0
 	}
 
+	// Tornet drar tillbaka (vandrarhandelser.go): ofta värt ormens blick
+	// för den som ligger sist.
+	if st.Dra != "" && g.rng.Float64() < 0.6 {
+		return actPull, 0
+	}
+	// Kistan med två lås: bänd när någon annan står i rummet.
+	if known && room.Kista && len(g.foesHere(p)) > 0 {
+		return actTake, 0
+	}
+
 	// Gå ut i tid, när väskan är full nog eller när livet tryter.
 	mustLeave := exitDist >= 0 && st.Sun <= exitDist+pers.Marginal
 	hurt := st.HP <= g.botLifeLimit(pers.GaHemVidLiv, st.MaxHP)

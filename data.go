@@ -259,7 +259,10 @@ type TowerEvent struct {
 	Rundor    int      `json:"rundor,omitempty"`
 	Varelse   string   `json:"varelse,omitempty"`
 	Sol       int      `json:"sol,omitempty"`
-	Bok       string   `json:"bok"` // vad händelsen gör, i ord, för Vandrarens bok
+	SolMinst  int      `json:"sol_minst,omitempty"` // tornet drar bara tillbaka med så mycket sol kvar
+	Guld      int      `json:"guld,omitempty"`      // guldet ormens blick tar när den släpper
+	Vacker    float64  `json:"vacker,omitempty"`    // chansen att en näve med ormens blick väcker ormen
+	Bok       string   `json:"bok"`                 // vad händelsen gör, i ord, för Vandrarens bok
 }
 
 func (d *Data) towerEvent(id string) *TowerEvent {

@@ -1,5 +1,5 @@
 {
-  "_om": "Tornets slumpade händelser (tornhandelser.go, docs/handelser.md). Från runda fran_runda kan en händelse hända varje runda, med chansen chans. vikt är hur ofta just den händer och max hur många gånger per vandring. bild är spelkortets motiv (web/kort.js). text får alla som är inne i tornet, med {horn} åt det håll det hände; har får den som står där. Vad händelsen gör styrs av id:t: andas öppnar en ny dörr, guld lägger guld_min–guld_max guld i ett rum, ljus låter mörkret vara i rundor rundor, skinn lägger ormens skinn (ett förbannat föremål) i ett rum, ras stänger ett rum i rundor rundor och skickar den som står där ner i valven, doden låter en varelse resa sig där någon dog, och klockslag tar sol handsbredder av solen och gör nästa näve säker för den som står i kammaren.",
+  "_om": "Tornets slumpade händelser (tornhandelser.go, docs/handelser.md). Från runda fran_runda kan en händelse hända varje runda, med chansen chans. vikt är hur ofta just den händer och max hur många gånger per vandring. bild är spelkortets motiv (web/kort.js). text får alla som är inne i tornet, med {horn} åt det håll det hände; har får den som står där. Vad händelsen gör styrs av id:t: andas öppnar en ny dörr, guld lägger guld_min–guld_max guld i ett rum, ljus låter mörkret vara i rundor rundor, skinn lägger ormens skinn (ett förbannat föremål) i ett rum, ras stänger ett rum i rundor rundor och skickar den som står där ner i valven, doden låter en varelse resa sig där någon dog, och klockslag tar sol handsbredder av solen och gör nästa näve säker för den som står i kammaren. Händelserna mellan vandrarna står i vandrarhandelser.go: tillbaka låter den som bär minst dra tillbaka den som gick ut med mest, om solen har minst sol_minst handsbredder kvar; blick lägger ormens blick på någon i rundor rundor, där var näve väcker ormen med chansen vacker och blicken tar guld guld när den släpper; skottpeng sätter ett pris på den som bär mest i rundor rundor; kista lägger guld_min–guld_max guld i en kista med två lås; glod låter alla se var de andra går i rundor rundor.",
   "handelser": {
     "chans": 0.12,
     "fran_runda": 4,
@@ -226,6 +226,117 @@
         "avstand": 3,
         "har": [
           "Ett hav av små svarta kryp väller in från {horn}, rusar förbi dina fötter och försvinner åt andra hållet. Något därborta skrämde dem."
+        ]
+      },
+      {
+        "id": "tillbaka",
+        "vikt": 2,
+        "max": 1,
+        "bild": "tillbaka",
+        "rubrik": "Tornet drar tillbaka",
+        "bok": "Den som bär minst guld i tornet kan dra tillbaka den som gick ut med mest. Hälften av guldet är säkert ute, och hälften bär hen in igen. Den som drar får ormens blick för det.",
+        "sol_minst": 8,
+        "har": [
+          "Porten viskar om {namn}, som gick ut med {guld} guld. Du kan dra hen tillbaka in i tornet. Hälften av guldet följer med in, men ormen får syn på dig."
+        ]
+      },
+      {
+        "id": "blick",
+        "vikt": 2,
+        "max": 2,
+        "bild": "blick",
+        "rubrik": "Ormens blick",
+        "bok": "Ormen öppnar ett öga mot en vandrare. Den som bär blicken väcker ormen lättare när hen tar en näve. Blicken går vidare till den man står i samma rum som, och när den släpper tar den lite guld.",
+        "rundor": 6,
+        "guld": 10,
+        "vacker": 0.33,
+        "text": [
+          "Djupt inne i tornet öppnar ormen ett öga. Någon bär nu dess blick."
+        ],
+        "har": [
+          "Du känner hur något ser på dig genom väggarna. Ormen har öppnat ett öga, och det följer dig i {rundor} rundor. Möter du någon går blicken över till hen."
+        ]
+      },
+      {
+        "id": "skottpeng",
+        "vikt": 2,
+        "max": 2,
+        "bild": "skottpeng",
+        "rubrik": "Skottpengen",
+        "bok": "Tornet sätter ett pris på den som bär mest. Under tre rundor tar den som träffar hen dubbelt så mycket guld.",
+        "rundor": 3,
+        "text": [
+          "Ett mynt klingar mot stengolvet i hela tornet. Det står ett pris på den som bär mest: den som träffar hen de närmaste tre rundorna tar dubbelt så mycket."
+        ],
+        "har": [
+          "Ett mynt klingar mot golvet framför dig. Tornet har satt ett pris på dig: den som träffar dig de närmaste tre rundorna tar dubbelt så mycket guld."
+        ]
+      },
+      {
+        "id": "skata",
+        "vikt": 2,
+        "max": 2,
+        "bild": "skata",
+        "rubrik": "Skatan",
+        "bok": "En svart fågel rycker ett föremål som inte är förbannat ur en vandrares väska och släpper det hos en annan vandrare. Båda vet åt vilket håll den andra står.",
+        "har": [
+          "En svart fågel störtar ner ur mörkret, rycker {foremal} ur din väska och flaxar iväg åt {horn}."
+        ],
+        "har_annars": [
+          "En svart fågel kommer flaxande från {horn} och släpper {foremal} vid dina fötter."
+        ]
+      },
+      {
+        "id": "vagg",
+        "vikt": 2,
+        "max": 2,
+        "bild": "vagg_faller",
+        "rubrik": "Väggen faller",
+        "bok": "Väggen mellan två vandrare i grannrum rasar, och där finns nu en öppning. Båda vet att någon står på andra sidan.",
+        "text": [
+          "Åt {horn} rasar en vägg med ett dån."
+        ],
+        "har": [
+          "Väggen åt {riktning} rasar i ett moln av damm. Genom öppningen skymtar du någon i rummet bredvid."
+        ]
+      },
+      {
+        "id": "kista",
+        "vikt": 2,
+        "max": 1,
+        "bild": "kista",
+        "rubrik": "Kistan med två lås",
+        "bok": "En kista med två lås dyker upp i ett rum. Den går bara upp när två står i rummet, och den som bänder upp den (S) tar allt.",
+        "guld_min": 30,
+        "guld_max": 60,
+        "text": [
+          "Åt {horn} slår ett tungt lock igen med en smäll. Det låter som en kista full av mynt, med två lås."
+        ]
+      },
+      {
+        "id": "glod",
+        "vikt": 2,
+        "max": 1,
+        "bild": "spar_glod",
+        "rubrik": "Spåren glöder",
+        "bok": "Under tre rundor lyser stegen på golvet: alla ser på kartan rummen där någon går.",
+        "rundor": 3,
+        "text": [
+          "Golvet börjar glöda svagt där någon har gått. Ett tag syns de andras steg genom hela tornet."
+        ]
+      },
+      {
+        "id": "vrider",
+        "vikt": 1,
+        "max": 1,
+        "bild": "vrider",
+        "rubrik": "Golvet vrider sig",
+        "bok": "Golvet vrider sig under två vandrare i olika rum, och de byter plats med varandra.",
+        "text": [
+          "Hela tornet krånglar och gnisslar, som om golvet vred sig."
+        ],
+        "har": [
+          "Golvet vrider sig under dig med ett gnissel av sten. När det stannar står du i ett annat rum."
         ]
       }
     ]

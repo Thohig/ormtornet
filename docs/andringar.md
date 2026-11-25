@@ -6,6 +6,19 @@ eller leder tornet.
 
 ## 2026-11-25
 
+### Åtta händelser mellan vandrarna
+
+- Tornet har åtta nya händelser där vandrarna påverkar varandra, var och
+  en med ett eget spelkort och en sida i Vandrarens bok:
+  **Tornet drar tillbaka**, **Ormens blick**, **Skottpengen**, **Skatan**,
+  **Väggen faller**, **Kistan med två lås**, **Spåren glöder** och
+  **Golvet vrider sig**. docs/handelser.md säger vad var och en gör.
+- Tornet drar tillbaka: den som bär minst guld kan dra tillbaka den som
+  gick ut med mest, med T eller knappen Dra tillbaka i panelen Nu. Hälften
+  av guldet ligger säkert ute. Den som drar får ormens blick.
+- Ormens blick och priset på en själv står bland tecknen, och kistan i
+  panelen Nu.
+
 ### Enter i lobbyn
 
 - När du kommer till lobbyn står det mitt på kartan att du ska trycka

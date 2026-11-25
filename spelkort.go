@@ -122,7 +122,7 @@ var cardImages = []string{
 	"ormens_oga", "agg", "kniv_minns", "glodmask",
 	"andas", "spricka", "gluggar", "ormskinn", "ras", "doden", "klockslag",
 	"klocka_stilla", "draget", "klirrar", "packning", "brev_dorr", "sluter", "yngel_vagg",
-	"drom", "kryp",
+	"drom", "kryp", "tillbaka", "blick", "skottpeng", "skata", "vagg_faller", "kista", "spar_glod", "vrider",
 	"kallare", "varsel", "namndel", "invigd",
 	"ut", "dod", "sol", "port",
 	"legoknekt", "tjuv", "ortkvinna", "kartritare", "ormtjusare", "sparfinnare", "lyktbarare", "pilgrim",

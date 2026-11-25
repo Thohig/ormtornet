@@ -6,7 +6,10 @@ package main
 // hände; den som står där får en egen text. Händelserna gynnar bara den
 // som drabbas eller hinner dit först.
 
-import "strings"
+import (
+	"strconv"
+	"strings"
+)
 
 // eventSounds är ljudet för varje händelse, bland ljuden i web/audio.js.
 var eventSounds = map[string]string{
@@ -15,6 +18,9 @@ var eventSounds = map[string]string{
 	"stannar": "klocka", "draget": "morker", "klirrar": "skatt",
 	"packning": "hitta", "brev": "hitta", "sluter": "ormen_ror",
 	"yngel": "monster", "drommer": "ormen_ror", "kryp": "monster",
+	"tillbaka": "ormen_ror", "blick": "ormen_ror", "skottpeng": "skatt",
+	"skata": "hitta", "vagg": "rasande_golv", "kista": "skatt",
+	"glod": "rost", "vrider": "rasande_golv",
 }
 
 // towerEventTick slår för en händelse i slutet av rundan och räknar ner
@@ -31,6 +37,7 @@ func (g *Game) towerEventTick() {
 		}
 	}
 	g.reopenDoors()
+	g.betweenTick()
 	h := &g.data.Handelser
 	if len(h.Lista) == 0 || g.round < h.FranRunda || g.rng.Float64() >= h.Chans {
 		return
@@ -78,6 +85,25 @@ func (g *Game) eventPossible(id string) bool {
 		return len(g.deck) > 0
 	case "kryp":
 		return len(g.crawlWitnesses()) > 0
+	case "tillbaka":
+		return g.pullCandidate() != nil && g.poorest() != nil
+	case "blick":
+		return g.gazeOn == 0 && g.gazeCandidate() != nil
+	case "skottpeng":
+		return g.bountyOn == 0 && g.richest() != nil
+	case "skata":
+		return g.magpieAny()
+	case "vagg":
+		_, _, _, ok := g.wallPair()
+		return ok
+	case "kista":
+		_, _, ok := g.chestSpot()
+		return ok && len(g.inside()) >= 2
+	case "glod":
+		return g.round > g.glowUntil && len(g.inside()) >= 2
+	case "vrider":
+		_, _, ok := g.swapPair()
+		return ok
 	}
 	return true
 }
@@ -94,6 +120,11 @@ func (g *Game) runTowerEvent(id string) bool {
 	// när det gick åt andra hållet (HarAnnars).
 	var hit map[*Player]bool
 	other := false
+	// alt är de som får HarAnnars, vars det som fylls i i var och ens text
+	// och after det som händer när alla har fått sitt kort.
+	alt := map[*Player]bool{}
+	vars := map[*Player][]string{}
+	var after func()
 	switch id {
 	case "andas":
 		ax, ay, d, ok := g.newDoorSpot()
@@ -212,6 +243,85 @@ func (g *Game) runTowerEvent(id string) bool {
 		for _, p := range w {
 			hit[p] = true
 		}
+	case "tillbaka":
+		t, q := g.pullCandidate(), g.poorest()
+		if t == nil || q == nil {
+			return false
+		}
+		q.pullOffer, q.pullTarget = g.round+2, t.ID
+		hit = map[*Player]bool{q: true}
+		vars[q] = []string{"namn", t.Name, "guld", strconv.Itoa(t.Treasure)}
+	case "blick":
+		p := g.gazeCandidate()
+		if p == nil {
+			return false
+		}
+		g.giveGaze(p, e.Rundor)
+		hit = map[*Player]bool{p: true}
+		vars[p] = []string{"rundor", strconv.Itoa(g.gazeRounds)}
+	case "skottpeng":
+		p := g.richest()
+		if p == nil {
+			return false
+		}
+		g.bountyOn, g.bountyRounds = p.ID, max(1, e.Rundor)
+		hit = map[*Player]bool{p: true}
+	case "skata":
+		v, i, r, ok := g.magpie()
+		if !ok {
+			return false
+		}
+		it := v.items[i]
+		v.items = append(v.items[:i:i], v.items[i+1:]...)
+		g.rooms[r.Y][r.X].items = append(g.rooms[r.Y][r.X].items, it.ID)
+		name := it.ID
+		if t := g.data.itemType(it.ID); t != nil {
+			name = t.found()
+		}
+		hit = map[*Player]bool{v: true, r: true}
+		alt[r] = true
+		vars[v] = []string{"foremal", name, "horn", g.hornToward(v.X, v.Y, r.X, r.Y)}
+		vars[r] = []string{"foremal", name, "horn", g.hornToward(r.X, r.Y, v.X, v.Y)}
+		after = func() { g.pickUp(r) }
+	case "vagg":
+		a, b, d, ok := g.wallPair()
+		if !ok {
+			return false
+		}
+		g.rooms[a.Y][a.X].Doors[d] = true
+		g.rooms[b.Y][b.X].Doors[d.Opp()] = true
+		a.known[b.Y][b.X] = true
+		b.known[a.Y][a.X] = true
+		x, y = a.X, a.Y
+		hit = map[*Player]bool{a: true, b: true}
+		vars[a] = []string{"riktning", g.data.Riktningar[d]}
+		vars[b] = []string{"riktning", g.data.Riktningar[d.Opp()]}
+	case "kista":
+		cx, cy, ok := g.chestSpot()
+		if !ok {
+			return false
+		}
+		x, y = cx, cy
+		g.rooms[y][x].chest = e.GuldMin + g.rng.IntN(max(1, e.GuldMax-e.GuldMin+1))
+	case "glod":
+		g.glowUntil = g.round + max(1, e.Rundor)
+		for yy := range g.size {
+			for xx := range g.size {
+				g.rooms[yy][xx].glowed = false
+			}
+		}
+	case "vrider":
+		a, b, ok := g.swapPair()
+		if !ok {
+			return false
+		}
+		a.X, a.Y, b.X, b.Y = b.X, b.Y, a.X, a.Y
+		for _, p := range []*Player{a, b} {
+			p.forgetRoom()
+			p.Stuck = 0
+			g.noteRoom(p)
+		}
+		hit = map[*Player]bool{a: true, b: true}
 	default:
 		return false
 	}
@@ -228,7 +338,7 @@ func (g *Game) runTowerEvent(id string) bool {
 		}
 		var text string
 		switch {
-		case here && other && len(e.HarAnnars) > 0:
+		case here && (other || alt[p]) && len(e.HarAnnars) > 0:
 			text = pick(e.HarAnnars)
 		case here && len(e.Har) > 0:
 			text = pick(e.Har)
@@ -239,6 +349,9 @@ func (g *Game) runTowerEvent(id string) bool {
 		}
 		if text == "" {
 			continue // bara den det händer märker något
+		}
+		if v := vars[p]; len(v) > 0 {
+			text = fill(text, v...)
 		}
 		if x >= 0 && (p.X != x || p.Y != y) {
 			text = fill(text, "horn", g.hornToward(p.X, p.Y, x, y))
@@ -253,6 +366,9 @@ func (g *Game) runTowerEvent(id string) bool {
 		g.logTo(p, text, "varn")
 		g.learn(p, "handelse", id)
 		g.addCard(p, gameCard{Slag: "handelse", Bild: e.Bild, Rubrik: e.Rubrik, Text: text})
+	}
+	if after != nil {
+		after()
 	}
 	return true
 }

@@ -405,7 +405,7 @@
         {"id": "varelse", "nycklar": ["kronika_varelse"], "vikt": 3, "forst": 2, "bild": "fackla", "rubrik": "stund_varelse", "flera": "ber_flera_varelse"},
         {"id": "foremal", "nycklar": ["kronika_foremal"], "vikt": 2, "bild": "guld", "rubrik": "ber_rubrik_foremal"},
         {"id": "guld_lost", "nycklar": ["kronika_guld_lost"], "vikt": 1, "bild": "guld", "rubrik": "kort_guld_lost"},
-        {"id": "handelse", "nycklar": ["kronika_handelse_andas", "kronika_handelse_guld", "kronika_handelse_ljus", "kronika_handelse_skinn", "kronika_handelse_ras", "kronika_handelse_doden", "kronika_handelse_klockslag", "kronika_handelse_stannar", "kronika_handelse_draget", "kronika_handelse_klirrar", "kronika_handelse_packning", "kronika_handelse_brev", "kronika_handelse_sluter", "kronika_handelse_yngel", "kronika_handelse_drommer", "kronika_handelse_kryp"], "vikt": 3, "bild": "andas", "rubrik": "ber_rubrik_handelse"}
+        {"id": "handelse", "nycklar": ["kronika_handelse_andas", "kronika_handelse_guld", "kronika_handelse_ljus", "kronika_handelse_skinn", "kronika_handelse_ras", "kronika_handelse_doden", "kronika_handelse_klockslag", "kronika_handelse_stannar", "kronika_handelse_draget", "kronika_handelse_klirrar", "kronika_handelse_packning", "kronika_handelse_brev", "kronika_handelse_sluter", "kronika_handelse_yngel", "kronika_handelse_drommer", "kronika_handelse_kryp", "kronika_handelse_tillbaka", "kronika_handelse_blick", "kronika_handelse_skottpeng", "kronika_handelse_skata", "kronika_handelse_vagg", "kronika_handelse_kista", "kronika_handelse_glod", "kronika_handelse_vrider"], "vikt": 3, "bild": "andas", "rubrik": "ber_rubrik_handelse"}
       ]
     }
   },
@@ -562,6 +562,30 @@
     ],
     "ber_handelse_kryp": [
       "{nar} flydde små kryp i en ström genom tornet."
+    ],
+    "ber_handelse_tillbaka": [
+      "{nar} viskade porten om den som hade gått ut med mest guld."
+    ],
+    "ber_handelse_blick": [
+      "{nar} öppnade ormen ett öga och såg på en av vandrarna."
+    ],
+    "ber_handelse_skottpeng": [
+      "{nar} satte tornet ett pris på den som bar mest."
+    ],
+    "ber_handelse_skata": [
+      "{nar} tog en skata något ur en väska och släppte det hos någon annan."
+    ],
+    "ber_handelse_vagg": [
+      "{nar} rasade en vägg mellan två vandrare."
+    ],
+    "ber_handelse_kista": [
+      "{nar} dök en kista med två lås upp i tornet."
+    ],
+    "ber_handelse_glod": [
+      "{nar} glödde spåren på golvet, och alla såg var de andra gick."
+    ],
+    "ber_handelse_vrider": [
+      "{nar} vred sig golvet, och två vandrare bytte plats."
     ],
     "ber_foremal": [
       "{nar} hittade {namn} {foremal}."
@@ -1185,6 +1209,108 @@
     ],
     "kronika_klocka": [
       "Klockan slog när {namn} gick in under den, och solen sjönk fortare."
+    ],
+    "handelse_tillbaka_inte": [
+      "Porten är tyst. Det finns ingen att dra tillbaka."
+    ],
+    "handelse_tillbaka_du": [
+      "En kall hand griper dig vid porten och drar dig tillbaka in i tornet. {antal} guld ligger säkert kvar ute; {bar} guld bär du med dig in igen. Du måste ut en gång till."
+    ],
+    "handelse_tillbaka_drog": [
+      "Du drar i porten, och {namn} stapplar tillbaka in i tornet. I samma stund känner du ormens blick på dig, i {rundor} rundor."
+    ],
+    "handelse_tillbaka_hors": [
+      "Åt {horn} går en port upp igen med ett tungt dån. Någon kliver in i tornet en gång till."
+    ],
+    "handelse_blick_vidare": [
+      "Ormens blick släpper dig och fastnar på {namn}."
+    ],
+    "handelse_blick_fick": [
+      "{namn} bar ormens blick, och nu ser den på dig i {rundor} rundor."
+    ],
+    "handelse_blick_slut_guld": [
+      "Ormen sluter ögat. Blicken släpper dig, men {guld} guld har runnit ur väskan."
+    ],
+    "handelse_blick_slut": [
+      "Ormen sluter ögat, och blicken släpper dig."
+    ],
+    "handelse_skottpeng_slut": [
+      "Priset på dig faller bort. Ingen tar längre dubbelt av dig."
+    ],
+    "handelse_kista_ensam": [
+      "Locket rör sig inte. Kistan har två lås, och ensam når du bara det ena."
+    ],
+    "handelse_kista_du": [
+      "Ni står två vid kistan, och du hinner först: locket ger efter, och du tar {guld} guld."
+    ],
+    "handelse_kista_annan": [
+      "{namn} hinner först till kistan och tar allt som fanns i den."
+    ],
+    "kronika_handelse_tillbaka": [
+      "Porten viskade om den som gått ut med mest guld."
+    ],
+    "kronika_handelse_blick": [
+      "Ormen öppnade ett öga och såg på en av vandrarna."
+    ],
+    "kronika_handelse_skottpeng": [
+      "Tornet satte ett pris på den som bar mest."
+    ],
+    "kronika_handelse_skata": [
+      "En skata tog något ur en väska och släppte det hos någon annan."
+    ],
+    "kronika_handelse_vagg": [
+      "En vägg rasade mellan två vandrare."
+    ],
+    "kronika_handelse_kista": [
+      "En kista med två lås dök upp i tornet."
+    ],
+    "kronika_handelse_glod": [
+      "Spåren på golvet glödde, och alla såg var de andra gick."
+    ],
+    "kronika_handelse_vrider": [
+      "Golvet vred sig, och två vandrare bytte plats."
+    ],
+    "kronika_tillbaka": [
+      "{namn} drog {offer} tillbaka in i tornet."
+    ],
+    "kronika_blick_vidare": [
+      "Ormens blick gick från {namn} till {offer}."
+    ],
+    "kronika_kista": [
+      "{namn} bände upp kistan med två lås och tog {guld} guld."
+    ],
+    "gb_tillbaka": [
+      "{nar} drogs hen tillbaka in i tornet; {guld} guld låg kvar säkert ute."
+    ],
+    "gb_flera_tillbaka": [
+      "{nar} drogs hen tillbaka in i tornet {antal} gånger."
+    ],
+    "gb_rad_tillbaka": [
+      "Drogs tillbaka in i tornet; guldet som låg säkert ute."
+    ],
+    "gb_ute_igen": [
+      "Ute igen fick hen tillbaka de {guld} guld som hade legat säkert."
+    ],
+    "gb_rad_ute_igen": [
+      "Ute igen, med guldet som hade legat säkert."
+    ],
+    "gb_blick": [
+      "{nar} släppte ormens blick hen och tog {guld} guld."
+    ],
+    "gb_flera_blick": [
+      "{nar} tog ormens blick {guld} guld, {antal} gånger."
+    ],
+    "gb_rad_blick": [
+      "Ormens blick släppte och tog guld."
+    ],
+    "gb_kista": [
+      "{nar} bände hen upp kistan med två lås och fick {guld} guld."
+    ],
+    "gb_flera_kista": [
+      "{nar} bände hen upp {antal} kistor och fick {guld} guld."
+    ],
+    "gb_rad_kista": [
+      "Bände upp kistan med två lås."
     ],
     "kronika_ut": [
       "{namn} gick ut med {guld} guld."

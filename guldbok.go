@@ -79,7 +79,7 @@ const goldRun = 3
 
 // goldAtGate är det som läggs till vid porten; det berättas i slutet.
 func goldAtGate(kind string) bool {
-	return kind == "foremal" || kind == "invigd" || kind == "invigd_forst"
+	return kind == "foremal" || kind == "invigd" || kind == "invigd_forst" || kind == "ute_igen"
 }
 
 // goldStory är berättelsen om hur p fick sitt guld: vem hen var och hur

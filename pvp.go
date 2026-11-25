@@ -206,6 +206,9 @@ func (g *Game) loot(attacker, victim *Player) int {
 		return victim.Treasure
 	}
 	share := g.classVal(attacker, "byte", 1.0/3)
+	if g.bountyOn == victim.ID && g.bountyRounds > 0 {
+		share = min(1, share*2) // skottpengen (vandrarhandelser.go)
+	}
 	return max(1, int(float64(victim.Treasure)*share))
 }
 

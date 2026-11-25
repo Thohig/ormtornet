@@ -171,6 +171,16 @@ func (g *Game) take(p *Player) {
 			}
 		}
 	}
+	// Ormens blick (vandrarhandelser.go): ormen ser på den som tar, och
+	// ibland väcker näven den.
+	if g.gazeWakes(p) {
+		for j, id := range g.deck {
+			if c := g.data.card(id); c != nil && c.Vaknar {
+				i = j
+				break
+			}
+		}
+	}
 	// Den invigde som har viskat till ormen: nästa näve väcker den inte,
 	// om leken har något sovkort kvar. Leken är densamma för de andra.
 	if p.safeDraw {
