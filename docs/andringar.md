@@ -6,6 +6,20 @@ eller leder tornet.
 
 ## 2026-11-25
 
+### Vandrarens bok, steg 1
+
+- En hjälpsida, Vandrarens bok, i ett lager över spelarsidan. Den öppnas
+  med B, raden B i styrningen bakom ?, knappen Boken i översta raden på
+  telefonen och knappen Vandrarens bok i introts hörn. B, Esc, ✕ eller ett
+  klick utanför stänger den, och vänster och höger byter flik.
+- Fliken Grunder säger det man behöver veta innan man går in: målet,
+  rundan, solen och portarna, rummen, striden, de andra vandrarna, skatten
+  och ormen, föremålen och slutet. Inget om tornets hemlighet.
+- Fliken Klasser visar alla klasskort med framsidan upp, från tornet på
+  tornets språk (`GET /bok`).
+- Nästa steg fyller boken med det man möter: föremål, varelser och fällor
+  (docs/vandrarens-bok.md).
+
 ### Fem förslag från provspelet
 
 - AI-spelarna går ut med ägget innan det kläcks, och tar inga fler nävar

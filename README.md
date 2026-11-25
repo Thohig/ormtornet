@@ -234,7 +234,11 @@ den som dör och för alla i slutet (se slutet nedan och Strider):
      väskan med föremålen och de tomma platserna. Håll musen över ett tecken, eller tryck på
      det på en pekskärm, så står det vad det betyder. Styrningen ligger
      bakom **?** (eller tangenten `?` eller `H`) och visas en gång första
-     vandringen, tills den tar slut. Panelen Nu visar det valda draget, striden, ormen i
+     vandringen, tills den tar slut. **Vandrarens bok** (B, raden B i
+     styrningen, Boken i översta raden på telefonen eller knappen i
+     introts hörn) säger hur spelet går till och visar klasskorten
+     (`web/bok.js`, `bok.go`, [docs/vandrarens-bok.md](docs/vandrarens-bok.md)).
+     Panelen Nu visar det valda draget, striden, ormen i
      kammaren (och att S tar skatt), hur länge man sitter fast och vad som
      väntar, och viskningen skrivs i en egen ruta där. Den som har gått ut
      ser där hur mycket guld hen bar ut medan de andra är kvar.

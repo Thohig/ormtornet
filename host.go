@@ -295,6 +295,11 @@ func addHostRoutes(mux *http.ServeMux, web fs.FS, game *Game, addrs hostAddrs, h
 		}
 		writeJSON(w, http.StatusOK, info)
 	})
+	// Vandrarens bok (bok.go, web/bok.js).
+	mux.HandleFunc("GET /bok", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Cache-Control", "no-store")
+		writeJSON(w, http.StatusOK, game.Book())
+	})
 	// Sidornas texter, på tornets språk. Som skript läses de innan sidans
 	// eget skript, så att texterna finns från början; som JSON hämtas de
 	// när språket byts.

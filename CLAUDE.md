@@ -149,6 +149,11 @@ Så här skiljer vi på sakerna när användaren ger instruktioner:
   visar det stort i **kortvisningen**, ett lager över hela sidan
   (`showCardPopup` i `web/app.js`). I Din vandring står rundans kort som
   små spelkort med bild och rubrik.
+- **boken**: Vandrarens bok, hjälpsidan i ett lager över spelarsidan
+  med flikar (`web/bok.js`, `bok.go`, `GET /bok`, `bok_*` i
+  `data/spelarsidan.json`). Den ska fyllas i med det man möter och får
+  aldrig visa namnen eller tornets hemlighet
+  ([docs/vandrarens-bok.md](docs/vandrarens-bok.md)).
 - **väskan**: föremålen under tecknen, med en plats för varje föremål man
   kan bära (`tecken` i `data/foremal.json`).
 - **klassvalet**: skärmen efter lobbyn med ett **klasskort** för varje
@@ -343,6 +348,9 @@ Skriv dit när ett steg är klart.
 - [docs/repris.md](docs/repris.md): reprisen på slutskärmen, där allas
   vägar växer fram runda för runda. Allt är byggt; avsnittet Att prova
   säger vad som behöver provas i spel.
+- [docs/vandrarens-bok.md](docs/vandrarens-bok.md): hjälpsidan
+  Vandrarens bok, som fylls i med det man möter. Steg 1 är byggt; fråga
+  innan steg 2.
 - [docs/ideer.md](docs/ideer.md): idéer för framtida utbyggnad, spånade
   2026-11-25. Inget där är bestämt; ta fram ett förslag och fråga innan
   du bygger något därifrån.

@@ -68,6 +68,7 @@
       <p id="rumor"></p>
       <button id="enter" class="waiting" type="button" data-t="intro_ga_in"></button>
       <p id="listen"></p>
+      <button id="introBok" type="button" data-t="intro_bok"></button>
     </div>
   </section>
 
@@ -125,6 +126,7 @@
       <span id="crew" data-t-aria="topp_vandrarna"></span>
       <span id="turn"></span>
       <span id="vard" hidden></span>
+      <button type="button" id="bokBtn" class="touchonly" data-t="bok_knapp"></button>
       <button type="button" id="readyBtn" class="keys" hidden></button>
       <span id="conn"></span>
     </header>
@@ -158,6 +160,7 @@
               <div class="widelog" data-t-html="hjalp_logg"></div>
               <div data-lage="redo" data-t-html="hjalp_redo"></div>
               <div data-t-html="hjalp_visa"></div>
+              <div id="helpBok" class="bokrad" data-t-html="hjalp_bok"></div>
             </div>
             <p class="hint" data-t="hjalp_tips"></p>
           </div>
@@ -213,6 +216,17 @@
 </div>
 <!-- Ett kort visat stort, när man klickar på ett minikort (showCardPopup i app.js). -->
 <div id="kortvisning" hidden><div id="kortvisningKort" class="okort"></div></div>
+<!-- Vandrarens bok (web/bok.js, docs/vandrarens-bok.md). -->
+<div id="bok" hidden role="dialog" aria-modal="true" aria-labelledby="bokRubrik">
+  <div class="bok-panel">
+    <div class="bok-head">
+      <h2 id="bokRubrik" data-t="bok_rubrik"></h2>
+      <button type="button" id="bokStang" data-t-aria="bok_stang">✕</button>
+    </div>
+    <div id="bokFlikar" role="tablist"></div>
+    <div id="bokSida" tabindex="-1"></div>
+  </div>
+</div>
 <script src="texter/spelarsidan.js"></script>
 <script src="natet.js"></script>
 <script src="texter.js"></script>
@@ -222,6 +236,7 @@
 <script src="minikarta.js"></script>
 <script src="repris.js"></script>
 <script src="kort.js"></script>
+<script src="bok.js"></script>
 <script src="app.js"></script>
 </body>
 </html>

@@ -1747,6 +1747,15 @@ $("helpbox").addEventListener("click", (e) => {
   e.stopPropagation();
   toggleHelp(false);
 });
+// Raden B i styrningen öppnar Vandrarens bok (web/bok.js), och i introt en
+// egen knapp, som inte ska räknas som ett klick på introt.
+$("helpBok").addEventListener("click", () => Bok.open());
+// På en pekskärm, där styrningen inte syns, står Boken i översta raden.
+$("bokBtn").addEventListener("click", () => Bok.open());
+$("introBok").addEventListener("click", (e) => {
+  e.stopPropagation();
+  Bok.open();
+});
 let helpOffered = false;
 function firstHelp() {
   if (touch || helpOffered || state.phase !== "spel") return;

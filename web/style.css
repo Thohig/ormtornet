@@ -1757,3 +1757,93 @@ body:not(.touch) #spelkort { width: 165px; }
 }
 .kortrad { display: inline-flex; flex-wrap: wrap; gap: 2px; margin-left: 8px; vertical-align: middle; }
 .kortrad .minikort { margin-right: 0; }
+/* Vandrarens bok (web/bok.js): ett lager över hela sidan med flikar,
+   grunderna som text och klasserna som klasskort med framsidan upp. */
+#bok {
+  position: fixed;
+  inset: 0;
+  z-index: 48;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.7);
+  color: var(--fg);
+  text-shadow: 0 0 3px var(--glow);
+}
+#bok[hidden] { display: none; }
+#bok .bok-panel {
+  display: flex;
+  flex-direction: column;
+  width: min(980px, 94vw);
+  height: min(760px, 92vh);
+  padding: 12px 16px 14px;
+  background: #0c0905;
+  border: 1px solid var(--dim);
+  border-radius: 8px;
+}
+#bok .bok-head { display: flex; align-items: center; justify-content: space-between; }
+#bok h2 { margin: 0; font-size: 13px; letter-spacing: 0.2em; text-transform: uppercase; font-weight: normal; }
+#bok button {
+  font: inherit;
+  color: var(--fg);
+  background: transparent;
+  border: 1px solid var(--dim);
+  border-radius: 6px;
+  padding: 4px 10px;
+  cursor: pointer;
+  text-shadow: inherit;
+}
+#bok button:hover, #bok button:focus-visible { color: var(--hi); border-color: var(--hi); outline: none; }
+#bokFlikar { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0 8px; padding-bottom: 8px; border-bottom: 1px solid var(--faint); }
+#bokFlikar .bok-flik[aria-selected="true"] { color: var(--bg); background: var(--fg); border-color: var(--fg); text-shadow: none; }
+#bokSida { flex: 1 1 auto; min-height: 0; overflow-y: auto; padding: 4px 4px 8px; }
+#bokSida .bok-avsnitt { max-width: 64ch; margin: 0 auto 16px; }
+#bokSida h3 { margin: 0 0 4px; font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; font-weight: normal; color: var(--hi); }
+#bokSida p { margin: 0; font-size: 14px; line-height: 1.55; }
+#bokSida .bok-inledning { max-width: 64ch; margin: 0 auto 14px; color: var(--dim); font-style: italic; }
+#bokSida .bok-lek { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; padding: 4px; }
+#bokSida .card { min-height: 0; cursor: default; }
+#bokSida .card:hover { transform: none; }
+#bokSida .card .kk-front { padding-bottom: 14px; }
+#introBok {
+  position: fixed;
+  right: 14px;
+  bottom: 12px;
+  font: inherit;
+  font-size: 12px;
+  color: var(--dim);
+  background: transparent;
+  border: 1px solid var(--faint);
+  border-radius: 6px;
+  padding: 4px 10px;
+  cursor: pointer;
+  text-shadow: inherit;
+}
+#introBok:hover, #introBok:focus-visible { color: var(--hi); border-color: var(--dim); outline: none; }
+#intro.entering #introBok, #intro.quick #introBok { opacity: 0; pointer-events: none; transition: opacity 0.6s; }
+#helpbox .bokrad { cursor: pointer; }
+#helpbox .bokrad:hover { color: var(--hi); }
+@media (max-width: 700px) {
+  #bok .bok-panel { width: 100vw; height: 100%; border-radius: 0; padding: 10px 10px 12px; }
+  #bokSida .bok-lek { grid-template-columns: 1fr; }
+}
+#bokSida:focus { outline: none; }
+/* Boken i översta raden, bara på en pekskärm. */
+#bokBtn {
+  font: inherit;
+  font-size: 12px;
+  color: var(--fg);
+  background: none;
+  border: 1px solid var(--faint);
+  border-radius: 4px;
+  padding: 2px 8px;
+  cursor: pointer;
+  align-self: center;
+  text-shadow: inherit;
+}
+#bokBtn:hover, #bokBtn:focus-visible { color: var(--hi); border-color: var(--dim); outline: none; }
+/* I boken finns plats för beskrivningen även på telefonen. */
+@media (max-width: 700px) {
+  #bokSida .card .desc { display: block; }
+  #bokSida .card .cbild { width: 90px; height: 78px; }
+}
