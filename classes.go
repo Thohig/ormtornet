@@ -351,9 +351,10 @@ func (g *Game) peekNeighbors(p *Player) {
 	}
 }
 
-// nearLantern är sant när o är lyktbäraren och står i ett grannrum till me.
+// nearLantern är sant när o lyser, som lyktbäraren, kronan av rost och
+// glödmasken som har vänt, och står i ett grannrum till me.
 func (g *Game) nearLantern(me, o *Player) bool {
-	if !(g.is(o, "lyktbarare") || o.has("rostkrona") != nil) || o.Status != statusIn || o.Cellar > 0 {
+	if !(g.is(o, "lyktbarare") || o.has("rostkrona") != nil || g.glowing(o)) || o.Status != statusIn || o.Cellar > 0 {
 		return false
 	}
 	_, ok := g.nextTo(me, o.X, o.Y)

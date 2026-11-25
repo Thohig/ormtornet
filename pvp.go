@@ -243,6 +243,7 @@ func (g *Game) hit(a, b *Player, gold int, bakhall bool) {
 	g.addCard(a, gameCard{Slag: "vandrare", Bild: "vandrare", Rubrik: b.Name, Text: aText})
 	if killing {
 		g.takeNameParts(a, b)
+		g.knifeRemembers(a)
 		bText = g.data.Text("pvp_dodad", "namn", a.Name)
 	} else if gold > 0 {
 		bText = g.data.Text("pvp_bytt", "namn", a.Name, "guld", strconv.Itoa(gold))

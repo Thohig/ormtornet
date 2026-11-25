@@ -37,6 +37,12 @@ type ItemType struct {
 	Behaller []string `json:"behaller"`
 	Kvar     string   `json:"kvar"`
 	Fogas    []string `json:"fogas"` // texten när de två fogas ihop
+	// Föremål med två sidor (docs/tva-sidor.md): de vänder när avslöjandet
+	// når vander_niva, eller när de har burits i vander_rundor rundor, och
+	// vander är texten när det händer.
+	VanderNiva   int      `json:"vander_niva"`
+	VanderRundor int      `json:"vander_rundor"`
+	Vander       []string `json:"vander"`
 }
 
 // found är föremålet i obestämd form, som texterna säger att någon hittar.
@@ -60,6 +66,9 @@ type Item struct {
 	uses   int
 	keeps  []string        // delar som verkar vidare i ett hopfogat föremål
 	cursed map[string]bool // förbannelserna som har visat sig, efter id
+	rounds int             // rundor som föremålet har burits i tornet
+	turned bool            // ett föremål med två sidor har vänt
+	kills  int             // kniven som minns: dödanden medan den bars
 }
 
 // newItem ger ett föremål av sorten t, med alla sina användningar.
@@ -381,6 +390,9 @@ func (g *Game) itemBonus(p *Player) (kraft, forsvar int) {
 			kraft += t.Kraft
 			forsvar += t.Forsvar
 		}
+		if it.ID == "kniv_minns" {
+			kraft += min(it.kills, knifeMax)
+		}
 	}
 	return kraft, forsvar
 }
@@ -558,12 +570,17 @@ func (g *Game) mirror(p *Player) {
 	}
 }
 
-// keepsLight: den som bär ljusspegeln blir aldrig utan ljus.
+// keepsLight: den som bär ljusspegeln eller glödmasken blir aldrig utan
+// ljus.
 func (g *Game) keepsLight(p *Player) bool {
-	if p.has("ljusspegel") == nil {
+	switch {
+	case p.has("ljusspegel") != nil:
+		g.logTo(p, g.data.Text("ljusspegel_morker"), "info")
+	case p.has("glodmask") != nil:
+		g.logTo(p, g.data.Text("glodmask_morker"), "info")
+	default:
 		return false
 	}
-	g.logTo(p, g.data.Text("ljusspegel_morker"), "info")
 	return true
 }
 
@@ -685,4 +702,100 @@ func (g *Game) dropAll(p *Player) {
 		r.items = append(r.items, it.ID)
 	}
 	p.items = nil
+}
+
+// ---- Föremål med två sidor (docs/tva-sidor.md) ----
+
+// knifeMax är det mesta kniven som minns lägger till Kraft.
+const knifeMax = 3
+
+// ageItems räknar en runda till för föremålen i väskan, och vänder dem
+// som ska vända: när avslöjandet når deras nivå eller när de har burits
+// länge nog.
+func (g *Game) ageItems(p *Player) {
+	for _, it := range slices.Clone(p.items) {
+		it.rounds++
+		t := g.data.itemType(it.ID)
+		if t == nil || it.turned {
+			continue
+		}
+		if (t.VanderNiva > 0 && g.level >= t.VanderNiva) || (t.VanderRundor > 0 && it.rounds >= t.VanderRundor) {
+			g.turnItem(p, it, t)
+		}
+	}
+}
+
+// turnItem vänder föremålet: texten och kortet som när en förbannelse
+// visar sig, och det som händer.
+func (g *Game) turnItem(p *Player, it *Item, t *ItemType) {
+	it.turned = true
+	text := pick(t.Vander)
+	if text != "" {
+		g.logTo(p, text, "varn")
+	}
+	g.addCard(p, gameCard{Slag: "forbannelse", Bild: cardImage(t.Bild, t.ID), Rubrik: t.Namn, Text: text, Forbannad: true})
+	if it.ID == "agg" {
+		// Ägget kläcks: ett yngel kryper fram i rummet, och ägget är borta.
+		g.dropItem(p, it)
+		if mt := g.data.monsterType("yngel"); mt != nil && p.Status == statusIn && p.Cellar == 0 {
+			g.addMonster(mt, p.X, p.Y)
+		}
+	}
+}
+
+// turnedItem svarar om vandraren bär föremålet id och det har vänt.
+func (p *Player) turnedItem(id string) bool {
+	it := p.has(id)
+	return it != nil && it.ID == id && it.turned
+}
+
+// eye är vad ormens öga visar: riktningen mot kammaren.
+func (g *Game) eye(p *Player) string {
+	it := p.has("ormens_oga")
+	if it == nil || p.Status != statusIn || p.Cellar > 0 {
+		return ""
+	}
+	cx, cy := g.chamber()
+	key := "oga_pekar"
+	if it.turned {
+		key = "oga_stirrar"
+	}
+	if cx == p.X && cy == p.Y {
+		return g.data.Text(key + "_har")
+	}
+	return g.data.Text(key, "horn", g.hornToward(p.X, p.Y, cx, cy))
+}
+
+// eyeWakes: när ormens öga har vänt lägger varje näve ett vakna-kort i
+// leken, som den svarta pärlan.
+func (g *Game) eyeWakes(p *Player) bool {
+	return p.turnedItem("ormens_oga")
+}
+
+// knifeRemembers: den som bär kniven som minns och dödar blir starkare med
+// den, högst knifeMax gånger. Första gången vänds kortet.
+func (g *Game) knifeRemembers(p *Player) {
+	it := p.has("kniv_minns")
+	if it == nil || it.kills >= knifeMax {
+		return
+	}
+	it.kills++
+	if t := g.data.itemType(it.ID); t != nil && !it.turned {
+		g.turnItem(p, it, t)
+		return
+	}
+	g.logTo(p, g.data.Text("kniv_minns_mer", "kraft", strconv.Itoa(it.kills)), "info")
+}
+
+// knifeScent är det kniven som minns lägger till varelsernas lynne.
+func (g *Game) knifeScent(p *Player) int {
+	if it := p.has("kniv_minns"); it != nil {
+		return 10 * min(it.kills, knifeMax)
+	}
+	return 0
+}
+
+// glowing: glödmasken som har vänt lyser genom väskan.
+func (g *Game) glowing(p *Player) bool {
+	return p.turnedItem("glodmask")
 }

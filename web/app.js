@@ -1185,6 +1185,7 @@ function renderHud(me) {
   }
   if (state.kompass) icon("✧", "", state.kompass, "");
   if (state.pendel) icon("♁", "", state.pendel, "");
+  if (state.oga) icon("◉", "", state.oga, "");
   if (state.hjartslag) icon("♡", "", state.hjartslag, "");
   if (state.invigd) icon("❝", "", t("tecken_invigd"), "rost");
   if (state.kanViska) icon("V", "", t("tecken_viska", { tryck: pressWord("knapp_viska", "V") }), "rost");

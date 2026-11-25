@@ -195,6 +195,46 @@
         "beskrivning": "From someone who was here before."
       },
       {
+        "id": "ormens_oga",
+        "namn": "The serpent's eye",
+        "hittad": "a green stone, glossy as an eye",
+        "kort": "the stone",
+        "beskrivning": "A green stone, glossy as an eye. It pulls towards the treasure chamber. The lower the sun, the more it feels as if it looks back.",
+        "vander": [
+          "The stone turns cold in your hand, and the pupil in it turns towards you. Something sees through it now. Every handful from the chamber wakes the serpent a little more while you carry the stone."
+        ]
+      },
+      {
+        "id": "agg",
+        "namn": "The egg",
+        "hittad": "an egg, warm and heavy",
+        "kort": "the egg",
+        "beskrivning": "An egg, warm and heavy, with a shell like scales. Worth 50 gold when you get out. It grows warmer every round.",
+        "vander": [
+          "The egg cracks in your bag. Something wet and pale crawls out, turns towards you and hisses."
+        ]
+      },
+      {
+        "id": "kniv_minns",
+        "namn": "The knife that remembers",
+        "hittad": "a black knife with notches in the hilt",
+        "kort": "the knife",
+        "beskrivning": "A black knife with three empty notches in its hilt. It grows stronger for every life it takes, but it smells of everything it has taken.",
+        "vander": [
+          "The knife grows warm, and a notch in the hilt fills with something dark. Strength +1 for every life it takes, at most three. But the creatures smell the blood and attack more often."
+        ]
+      },
+      {
+        "id": "glodmask",
+        "namn": "The glow-worm",
+        "hittad": "a glow-worm in a jar",
+        "kort": "the glow-worm",
+        "beskrivning": "A glow-worm in a lidded jar. Darkness has no hold on you, and you see what moves in the rooms next door. It grows and shines brighter every round.",
+        "vander": [
+          "The glow-worm has grown to fill the jar. Its light shines through your bag, and whoever stands in the next room sees you."
+        ]
+      },
+      {
         "id": "pendel",
         "namn": "The pendulum",
         "hittad": "a pendulum",
@@ -348,6 +388,24 @@
     ],
     "ljusspegel_morker": [
       "The flame flickers, but the shard catches the light and throws it back. It does not go dark."
+    ],
+    "oga_pekar": [
+      "The stone pulls towards the {horn}."
+    ],
+    "oga_pekar_har": [
+      "The stone lies still. You are standing in the chamber."
+    ],
+    "oga_stirrar": [
+      "The stone stares towards the {horn}."
+    ],
+    "oga_stirrar_har": [
+      "The stone stares straight down into the floor."
+    ],
+    "kniv_minns_mer": [
+      "Another notch in the knife's hilt fills. Strength +{kraft} with the knife."
+    ],
+    "glodmask_morker": [
+      "The flame goes out, but the glow-worm in the jar keeps shining. It does not go dark."
     ],
     "pilgrim_forbannad": [
       "Here lies {foremal}. Something in you says no. You leave it be."

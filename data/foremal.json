@@ -283,6 +283,62 @@
         "brev": true
       },
       {
+        "id": "ormens_oga",
+        "tecken": "◉",
+        "bild": "ormens_oga",
+        "namn": "Ormens öga",
+        "hittad": "en grön sten, blank som ett öga",
+        "kort": "stenen",
+        "beskrivning": "En grön sten, blank som ett öga. Den drar mot skattkammaren. Ju lägre solen står, desto mer känns det som om den tittar tillbaka.",
+        "vikt": 1,
+        "vander_niva": 3,
+        "vander": [
+          "Stenen blir kall i handen, och pupillen i den vrider sig mot dig. Något ser genom den nu. Varje näve ur kammaren väcker ormen lite mer så länge du bär stenen."
+        ]
+      },
+      {
+        "id": "agg",
+        "tecken": "⬮",
+        "bild": "agg",
+        "namn": "Ägget",
+        "hittad": "ett ägg, varmt och tungt",
+        "kort": "ägget",
+        "beskrivning": "Ett ägg, varmt och tungt, med ett skal som fjäll. Värt 50 guld när du kommer ut. Det blir varmare för varje runda.",
+        "vikt": 1,
+        "varde": 50,
+        "vander_rundor": 12,
+        "vander": [
+          "Ägget spricker i väskan. Något blött och blekt kryper ut, vänder sig mot dig och väser."
+        ]
+      },
+      {
+        "id": "kniv_minns",
+        "tecken": "⚔",
+        "bild": "kniv_minns",
+        "namn": "Kniven som minns",
+        "hittad": "en svart kniv med skåror i skaftet",
+        "kort": "kniven",
+        "beskrivning": "En svart kniv med tre tomma skåror i skaftet. Den blir starkare för varje liv den tar, men den luktar av allt den har tagit.",
+        "vikt": 1,
+        "vander": [
+          "Kniven blir varm, och en skåra i skaftet fylls med något mörkt. Kraft +1 för varje liv den tar, högst tre. Men varelserna känner lukten av blodet och anfaller oftare."
+        ]
+      },
+      {
+        "id": "glodmask",
+        "tecken": "☄",
+        "bild": "glodmask",
+        "namn": "Glödmasken",
+        "hittad": "en glödmask i en burk",
+        "kort": "glödmasken",
+        "beskrivning": "En glödmask i en burk med lock. Mörkret biter inte, och du ser vad som rör sig i rummen bredvid. Den växer och lyser starkare för varje runda.",
+        "vikt": 1,
+        "vander_rundor": 10,
+        "vander": [
+          "Glödmasken har vuxit och fyller burken. Ljuset tränger genom väskan, och den som står i rummet bredvid ser dig."
+        ]
+      },
+      {
         "id": "pendel",
         "tecken": "♁",
         "bild": "pendel",
@@ -494,6 +550,24 @@
     ],
     "ljusspegel_morker": [
       "Lågan fladdrar, men skärvan fångar ljuset och kastar det tillbaka. Det blir inte mörkt."
+    ],
+    "oga_pekar": [
+      "Stenen drar mot {horn}."
+    ],
+    "oga_pekar_har": [
+      "Stenen ligger stilla. Du står i kammaren."
+    ],
+    "oga_stirrar": [
+      "Stenen stirrar mot {horn}."
+    ],
+    "oga_stirrar_har": [
+      "Stenen stirrar rakt ner i golvet."
+    ],
+    "kniv_minns_mer": [
+      "Ännu en skåra i knivens skaft fylls. Kraft +{kraft} med kniven."
+    ],
+    "glodmask_morker": [
+      "Lågan slocknar, men glödmasken i burken lyser vidare. Det blir inte mörkt."
     ],
     "pilgrim_forbannad": [
       "Här ligger {foremal}. Något i dig säger nej, och du låter fyndet ligga."

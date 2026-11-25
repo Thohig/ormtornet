@@ -59,6 +59,9 @@ webbläsarprovet:
 - Guldboken ([guldboken.md](guldboken.md)): väljer man en vandrare på
   slutskärmen, läses berättelsen om guldet bra när den blir lång, och
   räcker raderna Runda för runda?
+- Föremålen med två sidor (2026-11-25, [tva-sidor.md](tva-sidor.md)):
+  märker man när ett föremål vänder, och går man ut tidigare för att
+  hinna före? Är ynglet ur ägget för hårt?
 - Kombinationerna (2026-11-25, [kombinationer.md](kombinationer.md)):
   märker man att två föremål fogas ihop, och letar någon efter den andra
   delen när beskrivningen antyder den? Med AI-spelare blev det bara av i

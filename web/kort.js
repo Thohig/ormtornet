@@ -562,6 +562,38 @@ ${[[30, 62], [62, 58], [70, 44]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r=
 <circle cx="50" cy="56" r="7" fill="#1a1820"/><circle cx="47" cy="53" r="2.2" fill="#6a6a7a" opacity="0.8"/>
 ${[36, 64].map((x) => `<circle cx="${x}" cy="75" r="2.6" fill="#5a2a5a"/>`).join("")}`;
 
+  // ---- Föremål med två sidor (docs/tva-sidor.md) ----
+
+  // Ormens öga: en grön sten med en smal pupill.
+  BILDER.ormens_oga = () => `${ljus}
+<ellipse cx="50" cy="54" rx="26" ry="20" fill="#3f6a34" stroke="${BLAECK}" stroke-width="1.6"/>
+<ellipse cx="50" cy="54" rx="20" ry="14" fill="#7ea24a"/>
+<path d="M50 42q5 12 0 24q-5 -12 0 -24z" fill="${BLAECK}"/>
+<ellipse cx="42" cy="48" rx="4" ry="2.4" fill="#e8f0c8" opacity="0.7"/>`;
+
+  // Ägget: varmt, med ett skal som fjäll och en spricka.
+  BILDER.agg = () => `${golv(80)}
+<path d="M50 18q22 0 24 36q2 30 -24 30q-26 0 -24 -30q2 -36 24 -36z" fill="#e8dcc0" stroke="${BRUN}" stroke-width="1.4"/>
+${[0, 1, 2, 3].map((r) => [0, 1, 2].map((c) => `<path d="M${36 + c * 9 + (r % 2) * 4} ${38 + r * 10}q4 5 9 0" fill="none" stroke="${STEN}" stroke-width="1" opacity="0.6"/>`).join("")).join("")}
+<path d="M44 26l4 6 -3 5 5 4" fill="none" stroke="${BLAECK}" stroke-width="1.2"/>
+${[0, 1].map((i) => `<path d="M${30 + i * 36} 20q-3 -6 0 -10" fill="none" stroke="#e8a83a" stroke-width="1.4" opacity="0.6"/>`).join("")}`;
+
+  // Kniven som minns: en svart kniv med skåror i skaftet.
+  BILDER.kniv_minns = () => `${ljus}
+<path d="M30 74l40 -46 8 -8 -4 12 -40 46z" fill="#3a3632" stroke="${BLAECK}" stroke-width="1.2"/>
+<path d="M34 70l38 -44" stroke="#8a847a" stroke-width="0.8" opacity="0.8"/>
+<path d="M24 68l14 14" stroke="${JARN}" stroke-width="3" stroke-linecap="round"/>
+<path d="M30 76l-12 12" stroke="${BRUN}" stroke-width="7" stroke-linecap="round"/>
+${[0, 1, 2].map((i) => `<path d="M${f(25 - i * 3.4)} ${f(77 + i * 3.4)}l4 4" stroke="${i ? "#c8b490" : ROD}" stroke-width="1.4"/>`).join("")}`;
+
+  // Glödmasken i en burk med lock.
+  BILDER.glodmask = () => `<rect x="4" y="4" width="92" height="92" rx="6" fill="#2a2018" opacity="0.45"/>
+<circle cx="50" cy="56" r="30" fill="#d8f0a0" opacity="0.25"/>
+<path d="M32 30h36v52q0 6 -6 6h-24q-6 0 -6 -6z" fill="#c8d8d0" opacity="0.35" stroke="${STEN}" stroke-width="1.4"/>
+<rect x="30" y="24" width="40" height="8" rx="2" fill="${BRUN}"/>
+<path d="M40 74q4 -12 10 -8t10 -10q4 -6 -2 -10" fill="none" stroke="#e8ffa0" stroke-width="6" stroke-linecap="round"/>
+<path d="M40 74q4 -12 10 -8t10 -10q4 -6 -2 -10" fill="none" stroke="#fffde0" stroke-width="2.4" stroke-linecap="round"/>`;
+
   // Ett brev från en tidigare vandrare, med ett sigill.
   BILDER.brev = () => `${ljus}
 <path d="M20 32h60v42H20z" fill="#efe6d0" stroke="${BRUN}" stroke-width="1.4"/>

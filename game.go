@@ -805,6 +805,7 @@ type stateMsg struct {
 	MaxItems    int           `json:"maxForemal,omitempty"` // så många föremål man kan bära
 	Compass     string        `json:"kompass,omitempty"`
 	Pendulum    string        `json:"pendel,omitempty"`
+	Eye         string        `json:"oga,omitempty"`
 	Heart       string        `json:"hjartslag,omitempty"`
 	Initiated   bool          `json:"invigd,omitempty"`
 	CanWhisper  bool          `json:"kanViska,omitempty"`
@@ -944,6 +945,7 @@ func (g *Game) stateFor(me *Player) stateMsg {
 	if g.phase == phasePlay {
 		st.Compass = g.compass(me)
 		st.Pendulum = g.pendulum(me)
+		st.Eye = g.eye(me)
 		st.Heart = g.heartbeat(me)
 		st.Initiated = me.initiated
 		st.CanWhisper = g.canWhisper(me)
@@ -1924,6 +1926,9 @@ func (g *Game) playTurn(p *Player) {
 		if p.Dark == 0 {
 			g.logTo(p, g.data.Text("morker_slut"), "info")
 		}
+	}
+	if p.Status == statusIn {
+		g.ageItems(p)
 	}
 }
 

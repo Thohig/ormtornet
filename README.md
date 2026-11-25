@@ -803,6 +803,16 @@ men man märker baksidan först när man bär dem:
 | Svärdet med rött fäste | 15 | Kraft +2, men varje runda i strid då du inte anfaller tar det ett liv |
 | Kronan av rost | 30 | den som står i grannrummet ser dig |
 
+Några föremål har två sidor: de **vänder** när solen har sjunkit en bit,
+eller när man har burit dem länge nog ([docs/tva-sidor.md](docs/tva-sidor.md)):
+
+| Föremål | Först | Sedan |
+|---|---|---|
+| Ormens öga | visar åt vilket håll kammaren ligger | från avslöjandets nivå 3 lägger varje näve ett vakna-kort i leken |
+| Ägget | värt 50 guld | efter 12 rundor kläcks det: ett yngel i ditt rum |
+| Kniven som minns | Kraft +1 för varje liv den tar, högst +3 | varelserna anfaller oftare, +10 i lynne för varje liv |
+| Glödmasken | mörkret biter inte, och du ser varelser i grannrummen | efter 10 rundor ser de andra dig från grannrummet |
+
 Bär man två föremål som hör ihop fogas de ihop till ett nytt, och en
 plats i väskan blir ledig. Det går även när väskan är full. Beskrivningarna
 antyder vad som passar ihop, utan att säga det. Det som verkar hela

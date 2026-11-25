@@ -205,8 +205,9 @@ func (g *Game) take(p *Player) {
 		return
 	}
 	g.deck = append(g.deck[:i], g.deck[i+1:]...)
-	// Den svarta pärlan: varje näve lägger ett vakna-kort i leken.
-	if g.curse(p, "svart_parla") {
+	// Den svarta pärlan och ormens öga när det har vänt: varje näve lägger
+	// ett vakna-kort i leken.
+	if g.curse(p, "svart_parla") || g.eyeWakes(p) {
 		for _, c := range g.data.Ormen.Kort {
 			if c.Vaknar {
 				g.deck = append(g.deck, c.ID)

@@ -119,6 +119,7 @@ var cardImages = []string{
 	"rep", "amulett", "veke", "skold", "vaska", "kompass", "rokpulver", "spegel", "kastkniv", "benlur",
 	"flojt", "timglas", "svart_parla", "mynt_hal", "rostkrona", "brev", "dryck", "guld",
 	"svard", "brynja", "tarst_svard", "pendel", "ljusspegel", "fjallmantel", "pipa", "krona_parla",
+	"ormens_oga", "agg", "kniv_minns", "glodmask",
 	"andas", "spricka", "gluggar", "ormskinn", "ras", "doden", "klockslag",
 	"klocka_stilla", "draget", "klirrar", "packning", "brev_dorr", "sluter", "yngel_vagg",
 	"drom", "kryp",

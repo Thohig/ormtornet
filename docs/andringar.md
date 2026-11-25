@@ -6,6 +6,17 @@ eller leder tornet.
 
 ## 2026-11-25
 
+### Föremål med två sidor
+
+- Fyra nya föremål som vänder när solen har sjunkit en bit eller när man
+  har burit dem länge nog. **Ormens öga** visar åt vilket håll kammaren
+  ligger, men från avslöjandets nivå 3 väcker varje näve ormen mer.
+  **Ägget** är värt 50 guld men kläcks efter 12 rundor. **Kniven som
+  minns** ger Kraft för varje liv den tar, men varelserna anfaller oftare.
+  **Glödmasken** håller mörkret borta men lyser till slut genom väskan.
+- När ett föremål vänder kommer ett spelkort, som när en förbannelse
+  visar sig.
+
 ### Föremål som fogas ihop
 
 - Bär man två föremål som hör ihop blir de ett nytt, och en plats i

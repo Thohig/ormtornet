@@ -217,6 +217,7 @@ func (g *Game) lynne(m *Monster, p *Player) int {
 		g.curse(p, "mynt_hal")
 		l += 25
 	}
+	l += g.knifeScent(p)
 	if p.has("fjallmantel") != nil {
 		// Fjällmanteln: varelserna tar bäraren för något av sitt eget slag.
 		l /= 2
@@ -229,7 +230,7 @@ func (g *Game) seesMonsterAt(me *Player, x, y int) bool {
 	if g.knowsRoom(me, x, y) {
 		return true
 	}
-	if g.is(me, "lyktbarare") && g.rooms[y][x].Revealed {
+	if (g.is(me, "lyktbarare") || me.has("glodmask") != nil) && g.rooms[y][x].Revealed {
 		_, ok := g.nextTo(me, x, y)
 		return ok
 	}
@@ -388,6 +389,7 @@ func (g *Game) defeat(p *Player, m *Monster) {
 	g.goldNote(p, "varelse", t.Guld, "varelse", t.Kort)
 	p.stats.kills++
 	p.roundKill = t.KortBestamd
+	g.knifeRemembers(p)
 	g.chronicle("kronika_varelse", "namn", p.Name, "varelse", t.Kort, "bild", cardImage(t.Bild, t.ID))
 	g.soundTo(p, "monster_dor")
 	dor := pick(t.Dor)
