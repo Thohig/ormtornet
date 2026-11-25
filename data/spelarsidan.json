@@ -40,8 +40,8 @@
     "topp_klassval": "klassval",
     "topp_slut": "vandringen är slut",
     "topp_solen_nere": "solen har gått ner",
-    "topp_pausad": "runda {runda}  pausad",
-    "topp_runda": "runda {runda}  {sekunder} s",
+    "topp_pausad": "runda {runda} · pausad",
+    "topp_runda": "runda {runda} · {sekunder} s",
 
     "_vandrare": "Vandrarna i prickarnas förklaringar.",
     "vandrare_namn_du": "{namn} (du)",

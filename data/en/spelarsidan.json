@@ -35,8 +35,8 @@
     "topp_klassval": "choosing",
     "topp_slut": "the wandering is over",
     "topp_solen_nere": "the sun has set",
-    "topp_pausad": "round {runda}  paused",
-    "topp_runda": "round {runda}  {sekunder} s",
+    "topp_pausad": "round {runda} · paused",
+    "topp_runda": "round {runda} · {sekunder} s",
 
     "vandrare_namn_du": "{namn} (you)",
     "vandrare_namn_ai": "{namn} (AI)",

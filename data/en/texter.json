@@ -608,68 +608,68 @@
       "No gold ever stayed in their bag."
     ],
     "gb_sok": [
-      "{nar} they searched {rum} and found {guld} gold.",
-      "{nar} {guld} gold lay hidden in {rum}, and they found it."
+      "{nar}, they searched {rum} and found {guld} gold.",
+      "{nar}, {guld} gold lay hidden in {rum}, and they found it."
     ],
     "gb_varelse": [
-      "{nar} they felled {varelse} and took {guld} gold.",
-      "{nar} {varelse} fell by their hand, and they took {guld} gold."
+      "{nar}, they felled {varelse} and took {guld} gold.",
+      "{nar}, {varelse} fell by their hand, and they took {guld} gold."
     ],
     "gb_kammaren": [
-      "{nar} they reached into the serpent's hoard and took {guld} gold.",
-      "{nar} they took a fistful from the serpent's hoard, {guld} gold."
+      "{nar}, they reached into the serpent's hoard and took {guld} gold.",
+      "{nar}, they took a fistful from the serpent's hoard, {guld} gold."
     ],
     "gb_ormen": [
-      "{nar} the serpent woke and threw them out of the chamber, and {guld} gold spilled from their bag."
+      "{nar}, the serpent woke and threw them out of the chamber, and {guld} gold spilled from their bag."
     ],
     "gb_slag": [
-      "{nar} they struck {namn} and took {guld} gold."
+      "{nar}, they struck {namn} and took {guld} gold."
     ],
     "gb_dodade": [
-      "{nar} they killed {namn} and took {guld} gold."
+      "{nar}, they killed {namn} and took {guld} gold."
     ],
     "gb_slagen": [
-      "{nar} {namn} struck them and took {guld} gold."
+      "{nar}, {namn} struck them and took {guld} gold."
     ],
     "gb_dodad": [
-      "{nar} they were killed by {namn}, who took {guld} gold."
+      "{nar}, they were killed by {namn}, who took {guld} gold."
     ],
     "gb_dod_guld": [
-      "{nar} they picked up the gold {namn} had carried, {guld} gold."
+      "{nar}, they picked up the gold {namn} had carried, {guld} gold."
     ],
     "gb_lost": [
-      "{nar} they found {guld} gold lying loose on the floor."
+      "{nar}, they found {guld} gold lying loose on the floor."
     ],
     "gb_lost_orm": [
-      "{nar} they found {guld} gold where the serpent had lain."
+      "{nar}, they found {guld} gold where the serpent had lain."
     ],
     "gb_tappade": [
-      "{nar} they fell, and {guld} gold was left lying on the floor."
+      "{nar}, they fell, and {guld} gold was left lying on the floor."
     ],
     "gb_flera_sok": [
-      "{nar} they set out searching, and {antal} rooms gave {guld} gold in all."
+      "{nar}, they set out searching, and {antal} rooms gave {guld} gold in all."
     ],
     "gb_flera_varelse": [
-      "{nar} they went hunting: they felled {antal} creatures and took {guld} gold."
+      "{nar}, they went hunting: they felled {antal} creatures and took {guld} gold."
     ],
     "gb_flera_kammaren": [
-      "{nar} they took {antal} fistfuls from the serpent's hoard, {guld} gold in all.",
-      "{nar} they reached into the serpent's hoard {antal} times and got {guld} gold."
+      "{nar}, they took {antal} fistfuls from the serpent's hoard, {guld} gold in all.",
+      "{nar}, they reached into the serpent's hoard {antal} times and got {guld} gold."
     ],
     "gb_flera_ormen": [
-      "{nar} the serpent woke {antal} times while they were in the chamber, and {guld} gold spilled from their bag."
+      "{nar}, the serpent woke {antal} times while they were in the chamber, and {guld} gold spilled from their bag."
     ],
     "gb_flera_dodade": [
-      "{nar} they killed {antal} wanderers and took {guld} gold."
+      "{nar}, they killed {antal} wanderers and took {guld} gold."
     ],
     "gb_flera_dod_guld": [
-      "{nar} they gathered the gold of {antal} dead, {guld} gold."
+      "{nar}, they gathered the gold of {antal} dead, {guld} gold."
     ],
     "gb_flera_lost": [
-      "{nar} they found loose gold on the floor {antal} times, {guld} gold in all."
+      "{nar}, they found loose gold on the floor {antal} times, {guld} gold in all."
     ],
     "gb_flera_lost_orm": [
-      "{nar} they found gold where the serpent had lain {antal} times, {guld} gold in all."
+      "{nar}, they found gold where the serpent had lain {antal} times, {guld} gold in all."
     ],
     "gb_storst": [
       "It was their biggest haul.",

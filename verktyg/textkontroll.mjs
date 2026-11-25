@@ -18,6 +18,9 @@ const allmanna = [
   [/(^|[^.])\.\.(?!\.)/, "två punkter"],
   [/\s[.,:;!?](?!\d)/, "mellanslag före skiljetecken"],
   [/(^|[^.])[.!?] [a-zåäö]/u, "liten bokstav efter punkt"],
+  // Två tal i rad före ett ord, som "In round 4 24 gold". Översta raden på
+  // sidan ("runda 1 8 s") har talen i var sitt fält och slutar på en bokstav.
+  [/(^|[^\d.,])\d+ \d+ \p{L}{2,}/u, "två tal i rad"],
 ];
 
 // Samma ord två gånger i rad, som "det det". Korta ord som kan stå två

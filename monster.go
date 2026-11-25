@@ -372,6 +372,13 @@ func (g *Game) defeat(p *Player, m *Monster) {
 	if g.slain != nil {
 		g.slain[m.ID] = p.ID
 	}
+	if p.Status != statusIn {
+		// Båda träffade och vandraren föll: varelsen faller också, och dess
+		// guld hamnar bland den dödes guld i rummet.
+		g.addLeftGold(p, t.Guld)
+		p.stats.kills++
+		return
+	}
 	p.Treasure += t.Guld
 	g.goldNote(p, "varelse", t.Guld, "varelse", t.Kort)
 	p.stats.kills++

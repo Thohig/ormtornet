@@ -6,6 +6,23 @@ eller leder tornet.
 
 ## 2026-11-25
 
+### Rättat efter provspelet
+
+- När en vandrare och en varelse fällde varandra samma runda fick den
+  döda vandraren varelsens guld, och guldet försvann ur spelet. Krönikan
+  sa då både att vandraren föll för varelsen och att hen fällde den. Nu
+  hamnar varelsens guld bland den dödes guld i rummet, där någon annan kan
+  ta upp det.
+- Berättelsen sa att den som först tog guld ur kammaren nådde den "först
+  av alla", också när någon annan redan hade varit där och väckt ormen.
+  Nu räknas den första näven, också den som väcker ormen.
+- På engelska stod det i guldboken till exempel "In round 4 24 gold lay
+  hidden". Nu står det ett komma efter tidsangivelsen, som i berättelsen.
+- Översta raden visade "runda 2 8 s", som lätt läses som 28 sekunder.
+  Nu står det "runda 2 · 8 s".
+- Textkontrollen märker två tal i rad före ett ord.
+- Provspelet står i docs/provspel-2026-11-25.md.
+
 ### Reprisen
 
 - På slutskärmen visar knappen Se vandringen igen tornet som det blev,

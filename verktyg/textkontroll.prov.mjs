@@ -21,6 +21,7 @@ const fel = [
   ["en", "You find rep med kroken."],
   ["en", "The door is locked och dark."],
   ["en", "It comes several seconds apart. the snake stirs."],
+  ["en", "In round 4 24 gold lay hidden in a room."],
 ];
 
 const ratt = [
@@ -40,6 +41,8 @@ const ratt = [
   ["en", "You have 2 lives."],
   ["en", "Wait... something moves."],
   ["en", "The door is locked and dark."],
+  ["en", "In round 4, 24 gold lay hidden in a room."],
+  ["sv", "runda 1 8 s"],
 ];
 
 let misslyckade = 0;

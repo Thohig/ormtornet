@@ -82,6 +82,22 @@ func (g *Game) dropGold(p *Player) {
 	g.goldNote(p, "tappade", -lost)
 }
 
+// addLeftGold lägger guld bland det som den döda vandraren p lämnade i
+// rummet där hen föll.
+func (g *Game) addLeftGold(p *Player, gold int) {
+	if gold <= 0 || !g.inBounds(p.X, p.Y) {
+		return
+	}
+	r := &g.rooms[p.Y][p.X]
+	for i := range r.gold {
+		if r.gold[i].by == p.ID {
+			r.gold[i].gold += gold
+			return
+		}
+	}
+	r.gold = append(r.gold, leftGold{by: p.ID, name: p.Name, gold: gold})
+}
+
 // pickUpGold låter en levande vandrare ta guldet som ligger i rummet.
 func (g *Game) pickUpGold(p *Player) {
 	if p.Status != statusIn || p.Cellar > 0 || !g.inBounds(p.X, p.Y) {

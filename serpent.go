@@ -183,6 +183,17 @@ func (g *Game) take(p *Player) {
 		g.deck = append(g.deck[:i], g.deck[i+1:]...)
 		return
 	}
+	// Den förste som sträcker sig efter guldet nådde kammaren först, också
+	// när näven väcker ormen.
+	first := true
+	for _, o := range g.players {
+		if o != nil && len(o.stats.draws) > 0 {
+			first = false
+		}
+	}
+	if first {
+		g.chronicle("kronika_kammaren", "namn", p.Name)
+	}
 	p.stats.draws = append(p.stats.draws, c.ID)
 	g.learnPart(p, srcChamber) // ormen väser ett ord i sömnen
 	if c.Vaknar {
@@ -207,15 +218,6 @@ func (g *Game) take(p *Player) {
 	o := &g.data.Ormen
 	n := o.SkattMin + g.rng.IntN(max(1, o.SkattMax-o.SkattMin+1))
 	n = int(float64(n) * g.classVal(p, "kammar_guld", 1))
-	first := true
-	for _, o := range g.players {
-		if o != nil && o.stats.takes > 0 {
-			first = false
-		}
-	}
-	if first {
-		g.chronicle("kronika_kammaren", "namn", p.Name)
-	}
 	p.Treasure += n
 	g.goldNote(p, "kammaren", n, "kort", c.Namn)
 	p.stats.takes++

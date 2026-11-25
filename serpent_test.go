@@ -182,3 +182,28 @@ func TestBreathClues(t *testing.T) {
 		t.Fatalf("andetagen för alla: %q", got)
 	}
 }
+
+// Den förste som sträcker sig efter guldet nådde kammaren först, också när
+// näven väcker ormen, och den som tar guld efteråt var inte först.
+func TestFirstInChamberEvenWhenWaking(t *testing.T) {
+	g, a, b := startTwo(t)
+	pa, pb := a.player, b.player
+	pa.X, pa.Y = g.center(), g.center()
+	pb.X, pb.Y = pa.X, pa.Y
+	g.reveal(pa.X, pa.Y)
+	g.chron = nil
+	g.deck = []string{"vaknar"}
+	g.take(pa)
+	pb.X, pb.Y = g.chamberX, g.chamberY
+	g.deck = []string{"sover"}
+	g.take(pb)
+	var first []string
+	for _, e := range g.chron {
+		if e.key == "kronika_kammaren" {
+			first = append(first, e.who)
+		}
+	}
+	if len(first) != 1 || first[0] != pa.Name {
+		t.Fatalf("först i kammaren: %v", first)
+	}
+}

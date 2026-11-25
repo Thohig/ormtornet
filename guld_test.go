@@ -222,3 +222,27 @@ func TestBotGoesForTheGold(t *testing.T) {
 		t.Fatal("gick efter guldet med 1 liv")
 	}
 }
+
+// När vandraren och varelsen fäller varandra samma runda hamnar varelsens
+// guld bland den dödes guld i rummet, inte hos den döde.
+func TestMutualKillLeavesMonsterGold(t *testing.T) {
+	g, a, _ := startTwo(t)
+	p := a.player
+	putInRoom(g, p, 4, 4)
+	p.Treasure = 10
+	typ := g.data.monsterType("krypare")
+	m := &Monster{ID: 3, Type: typ.ID, X: 4, Y: 4, HP: 1}
+	g.monsters = []*Monster{m}
+	g.damage(p, p.HP, false)
+	g.defeat(p, m)
+	if p.Status != statusDead || p.Treasure != 0 {
+		t.Fatalf("den döde: %s med %d guld", p.Status, p.Treasure)
+	}
+	r := g.rooms[4][4]
+	if len(r.gold) != 1 || r.gold[0].gold != 10+typ.Guld {
+		t.Fatalf("guldet i rummet: %+v", r.gold)
+	}
+	if g.monsterAt(4, 4) != nil {
+		t.Fatal("varelsen står kvar")
+	}
+}

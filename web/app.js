@@ -1909,7 +1909,7 @@ function updateTimer() {
     return;
   }
   const secs = Math.ceil(remainingMs() / 1000);
-  el.textContent = t("topp_runda", { runda: state.round, sekunder: String(secs).padStart(2, " ") });
+  el.textContent = t("topp_runda", { runda: state.round, sekunder: secs });
   const urgent = secs <= 5;
   el.classList.toggle("urgent", urgent);
   const me = myPlayer();
