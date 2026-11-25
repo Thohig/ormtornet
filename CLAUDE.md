@@ -284,7 +284,9 @@ Skriv dit när ett steg är klart.
   vilka fem byggdes samma dag och ett ströks.
 - [docs/provspel-2026-11-25-3.md](docs/provspel-2026-11-25-3.md): det
   tredje provspelet 2026-11-25, efter händelserna mellan vandrarna: sex
-  fel som rättades och fem förslag som inte är byggda.
+  fel som rättades och fem förslag, av vilka fyra byggdes samma dag
+  (Tornet drar tillbaka med udd, långa strider som blir lättare, blicken
+  som släpper och "chest" på engelska).
 - [docs/ormkorten.md](docs/ormkorten.md): att ormkorten syns, med kortet
   som vänds upp, sömnmätaren, uppvaknandet, leken bredvid guldhögen och
   korten i krönikan. Allt är byggt.

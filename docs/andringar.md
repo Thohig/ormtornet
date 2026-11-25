@@ -6,6 +6,18 @@ eller leder tornet.
 
 ## 2026-11-25
 
+### Tornet drar tillbaka, långa strider och ormens blick
+
+- Den som dras tillbaka hamnar tre rum in i tornet, längs vägen hen gick
+  ut, i stället för i porten. Den som drar får en fjärdedel av guldet som
+  följer med in.
+- En lång strid blir lättare åt båda hållen: efter fyra rundor mot samma
+  varelse träffar båda lättare för varje runda, och du får en rad om det.
+- Bär du ormens blick och någon annan drar tillbaka får du veta att
+  blicken har släppt dig.
+- På engelska andas golvet och guldhögen "like something breathing", så
+  att det inte förväxlas med kistan.
+
 ### Provspelet: blicken, skatan och kistan
 
 - Ormens blick går inte längre fram och tillbaka mellan två som står i
