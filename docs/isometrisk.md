@@ -229,7 +229,10 @@ fem steg. Allt ritas i koden, utan bilder.
    med stenar och ben. Vilken rumstyp som har vad står under
    `modell.inredning` i `data/texter.json`; tillståndet skickar det som
    `in` för varje rum, och kontrollen säger till om ett namn inte finns.
-   Det höga står mot norra och västra muren.
+   Det höga står mot norra och västra muren. Sedan 2026-11-25 står allt i
+   hörnen mellan vandrarnas åtta platser (`SLOTS` i `karta.ts`) och
+   utanför dörröppningarna; förut stod trappan mitt på den första
+   platsen.
 4. **Miniatyrer och fällor.** Vandrarna och varelserna står på socklar
    (`miniatyr` i `klient/src/modeller.ts`) med en kant i vandrarens färg
    eller mörkröd för varelserna. Den döda läggs ner på sockeln. En fälla
