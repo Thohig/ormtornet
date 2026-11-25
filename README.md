@@ -295,7 +295,8 @@ Spelet går i rundor. Alla väljer sitt drag samtidigt, och när alla har valt
 (eller turtiden tar slut) utförs alla drag på en gång. Du kan ändra dig tills
 dess. Den som inte hinner välja blir stående. Ett steg mot en vägg avvisas
 direkt, så att ett feltryck inte kostar rundan; i mörker syns inte dörrarna
-på kartan, och man får pröva sig fram.
+på kartan, och man får pröva sig fram: då står en streckad tangent vid
+varje vägg, och en vägg utan dörr ger en stöt i muren.
 
 | Tangent    | Drag                              |
 |------------|-----------------------------------|

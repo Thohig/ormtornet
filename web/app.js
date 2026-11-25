@@ -577,9 +577,6 @@ function padModes(me) {
 // renderPad visar bara de knappar och rader i styrningen som gäller nu.
 function renderPad(me) {
   const modes = padModes(me);
-  // I mörkret syns inga dörrar och inga tangenter vid dem. Telefonen visar
-  // då pilknapparna, så att man kan treva sig fram (style.css).
-  document.body.classList.toggle("morker", !!state && state.phase === "spel" && state.dark > 0 && (modes.has("fri") || modes.has("strid")));
   document.querySelectorAll("#pad [data-lage], #help [data-lage]").forEach((el) => {
     el.hidden = !el.dataset.lage.split(" ").some((m) => modes.has(m));
     // Drick bara med en dryck i väskan.

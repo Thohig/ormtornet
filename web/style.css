@@ -627,6 +627,9 @@ body.touch .isotangenter { z-index: 5; }
 /* En tangent över ett kort är svag medan kortet syns (dimKeysOverCards). */
 body.touch .isotangenter span.over-kort { opacity: 0.35; }
 .isotangenter span.vald { background: rgba(21, 23, 26, 0.9); box-shadow: 0 0 8px currentColor; }
+/* I mörkret står en tangent vid varje vägg, streckad, eftersom man inte vet
+   var dörrarna är. */
+.isotangenter span.trevar:not(.vald) { border-style: dashed; }
 .isokompass[hidden], .isokant[hidden], .isokant > div[hidden], .isotangenter[hidden], .isotangenter span[hidden] { display: none; }
 
 /* Minikartan: allt man har upptäckt, platt och vridet som kartan
@@ -1126,8 +1129,8 @@ body.touch #side { overflow-y: auto; }
   /* Man går genom att trycka på tangenterna vid dörrarna, så knapparna är
      en rad: Vänta och det som gäller just nu. Långt ut, där tangenterna är
      små, kommer pilknapparna tillbaka. */
-  body.touch:not(.langtut):not(.morker) #pad .dirs { display: none; }
-  body.touch:not(.langtut):not(.morker) #pad .vanta:not([hidden]) { display: block; }
+  body.touch:not(.langtut) #pad .dirs { display: none; }
+  body.touch:not(.langtut) #pad .vanta:not([hidden]) { display: block; }
   body.touch #pad .acts {
     display: flex;
     gap: 6px;

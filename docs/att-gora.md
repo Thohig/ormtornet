@@ -293,6 +293,8 @@ Sett efter provspelet 2026-11-22, med förslag men inte ändrat:
   kartan hela murar runt rummet, och man går rakt igenom dem. Förslag:
   rita inga murar alls runt rummet i mörkret, så att kanterna ser okända
   ut i stället för stängda. Ordet Mörker och ◐ står kvar.
+  Sedan 2026-11-25 står en streckad tangent vid varje vägg i mörkret, så
+  att man ser att man kan gå; murarna ritas fortfarande.
 - **Timglaset märks knappt.** Sedan 2026-11-24 väntar porten en runda
   till på den som bär det när solen går ner
   ([individuell-tavling.md](individuell-tavling.md)), men det är bara en

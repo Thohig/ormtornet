@@ -380,7 +380,7 @@ export class IsoKarta {
   // ur rummet vandraren står i, och vilken av dem som är vald.
   private tangenter: HTMLDivElement;
   private tangent: HTMLSpanElement[] = [];
-  private tangentRum: { x: number; y: number; oppen: boolean[]; vald: number; farg: string } | null = null;
+  private tangentRum: { x: number; y: number; oppen: boolean[]; vald: number; farg: string; trevar: boolean } | null = null;
 
   constructor(canvas: HTMLCanvasElement, val: Val) {
     this.canvas = canvas;
@@ -1179,11 +1179,15 @@ float puls() {
     const rum = jag && jag.status === "inne" && !jag.hidden && jag.x >= 0 && state.phase === "spel"
       ? state.rooms.find((r) => r.x === jag.x && r.y === jag.y)
       : undefined;
+    // I mörkret syns inga dörrar: då står en svag tangent vid varje vägg,
+    // och man trevar sig fram (en vägg utan dörr ger en stöt i muren).
+    const trevar = (state.dark || 0) > 0;
     this.tangentRum = rum && jag
       ? {
           x: rum.x,
           y: rum.y,
-          oppen: [0, 1, 2, 3].map((i) => rum.d[i] || (rum.exit === i && !rum.stangd)),
+          oppen: [0, 1, 2, 3].map((i) => trevar || rum.d[i] || (rum.exit === i && !rum.stangd)),
+          trevar,
           vald: d === undefined ? -1 : d,
           farg: this.val.farger[jag.slot] || "#ffffff",
         }
@@ -1560,7 +1564,7 @@ float puls() {
   }
 
   // ritaTangenter sätter en tangent med pilen vid varje öppen dörr och port
-  // i rummet vandraren står i, så att man ser vart piltangenterna går när
+  // (i mörkret vid varje vägg) i rummet vandraren står i, så att man ser vart piltangenterna går när
   // norr inte är uppåt. Den valda tangenten lyser i vandrarens färg.
   private ritaTangenter(): void {
     const r = this.tangentRum;
@@ -1582,6 +1586,7 @@ float puls() {
       el.style.top = ty + "px";
       const vald = r.vald === d;
       el.classList.toggle("vald", vald);
+      el.classList.toggle("trevar", r.trevar);
       el.style.color = vald ? r.farg : "";
       el.style.borderColor = vald ? r.farg : "";
     });

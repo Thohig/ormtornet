@@ -65,6 +65,7 @@ export interface Tillstand {
   round?: number;
   lastSeen?: Record<string, { x: number; y: number; slot: number }>;
   sleep?: number; // hur djupt ormen sover, 0–2, bara för den som står i kammaren (annars -1)
+  dark?: number; // rundor kvar i mörkret; då syns inga dörrar
 }
 
 // Utsnittet som kartan visar, i rum: x och y är hörnet uppe till vänster

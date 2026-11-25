@@ -1007,8 +1007,8 @@ func (g *Game) stateFor(me *Player) stateMsg {
 			}
 			if blind {
 				// I mörkret ser man inte dörrarna eller porten och får pröva
-				// sig fram (actPlayer): kartan ritar hela murar och inga
-				// tangenter vid dörrarna.
+				// sig fram (actPlayer): kartan ritar hela murar och en svag
+				// tangent vid varje vägg (ritaTangenter i klient/src/karta.ts).
 				rv.D = [4]bool{}
 				rv.Exit, rv.Shut = -1, false
 			}

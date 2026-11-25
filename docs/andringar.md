@@ -6,6 +6,15 @@ eller leder tornet.
 
 ## 2026-11-25
 
+### Mörkret har tangenter vid väggarna
+
+- I mörkret ritades hela murar runt rummet och inga tangenter, så det såg
+  ut som ett rum utan dörrar, och på telefonen låg pilknapparna långt
+  under kartan. Nu står en streckad tangent vid varje vägg, på datorn och
+  telefonen. Man vet inte var dörrarna är: en vägg utan dörr ger en stöt i
+  muren, som förut. Pilknapparna i mörkret på telefonen behövs inte
+  längre.
+
 ### Tre nya klasser
 
 - **Gravplundraren** hör var någon dör och hur långt bort, och får
