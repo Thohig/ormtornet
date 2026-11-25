@@ -6,6 +6,20 @@ eller leder tornet.
 
 ## 2026-11-25
 
+### Vandrarens bok med allt öppet, och viskningen med bara namnet
+
+- Vandrarens bok visar allt från början: alla föremål med förbannelser
+  och det som händer när de vänder, alla kombinationer med delarna, och
+  alla varelser, fällor, händelser och ormens kort. Det du har mött får
+  märket **Mött**, sparat i webbläsaren som förut. Baksidorna med "Ännu
+  inte sett" och räknarna i flikarna är borta.
+- Grunder har tre nya avsnitt: Ormens namn (tre delar, och var de finns),
+  Varslen och Tornet förändras.
+- Det räcker att viska ormens namn för att bli invigd, till exempel
+  "Karumeth". Att namnet ska viskas är tornets hemlighet, och varken boken
+  eller tornet säger det. Mallarna som "tornet är {namn}" behövs inte
+  längre, och svaret när man viskade bara namnet är borta.
+
 ### Vandrarens bok, steg 3
 
 - Tre flikar till: Kombinationer, Händelser och Ormen. Kombinationerna

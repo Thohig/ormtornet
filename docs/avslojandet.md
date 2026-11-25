@@ -49,11 +49,11 @@ Fälten heter `invigning` (`namn` eller `svar`) och `forandras`, flaggorna
 - Texterna (`delar`) följer nivåerna, från "tre tecken som bildar ett ord"
   till "det är tornet självt som heter så".
 - Tecknen på spelskärmen visar delarna, till exempel `· RU ·`.
-- Viskningen ska innehålla namnet och ett av de vanliga svaren, eller en
-  mall ur `svar_med_namn` ("tornet är {namn}"). De vanliga svaren räcker
-  inte ensamma. Ett försök per nivå, som förut. Bara namnet förbrukar inte
-  försöket: tornet känner igen det och frågar vad man vill säga om det
-  (2026-11-22).
+- Viskningen ska innehålla namnet, och sedan 2026-11-25 räcker namnet
+  ensamt. Mallarna i `svar_med_namn` och svaret när man bara viskade
+  namnet (`viskning_bara_namn`, 2026-11-22) togs bort då. De vanliga
+  svaren räcker inte när det finns ett namn. Ett försök per nivå, som
+  förut.
 - Byte vid dödande: den som dödar en vandrare får de delar offret hade och
   dödaren saknade (bara med strid mellan vandrare på).
 - Tornets nåd: när alla människor som är kvar inne är invigda tas hälften av

@@ -17,6 +17,8 @@ README beskriver spelet, flaggorna och filerna.
 - Undvik långa rader med upprepade tecken i kod och utdata. Bygg ramar och
   mätare med fast bredd i kod.
 - Tornets hemlighet får aldrig sägas rakt ut i spelet förrän i slutet.
+  Sedan 2026-11-25 är det viktigaste i den att ormens namn ska viskas;
+  att namnet finns och var delarna hittas får sägas.
 
 ## Ord
 
@@ -152,8 +154,9 @@ Så här skiljer vi på sakerna när användaren ger instruktioner:
 - **boken**: Vandrarens bok, hjälpsidan i ett lager över spelarsidan
   med flikar (`web/bok.js`, `bok.go`, `GET /bok`, `bok_*` i
   `data/spelarsidan.json`, `bok` i `data/monster.json`,
-  `data/fallor.json`, `data/handelser.json` och `data/ormen.json`). Den fylls i med det man möter (`learn` i `bok.go`,
-  sparat i webbläsaren) och får aldrig visa namnen eller tornets hemlighet
+  `data/fallor.json`, `data/handelser.json` och `data/ormen.json`). Den visar allt från början, och det man har mött får
+  märket **Mött** (`learn` i `bok.go`, sparat i webbläsaren). Den får
+  aldrig visa namnen eller säga att ormens namn ska viskas
   ([docs/vandrarens-bok.md](docs/vandrarens-bok.md)).
 - **väskan**: föremålen under tecknen, med en plats för varje föremål man
   kan bära (`tecken` i `data/foremal.json`).
@@ -179,7 +182,8 @@ Så här skiljer vi på sakerna när användaren ger instruktioner:
 - **invigningen**: det som gör någon invigd, **ormens namn**. Varje
   vandring har ett namn i tre **delar** som var och en hittar själv: i
   **ristningen** i ett rum, hos en varelse och i kammaren
-  (`namndelar.go`). Texten säger var på ormen delen sitter (huvudet,
+  (`namndelar.go`). Det räcker att viska namnet (sedan 2026-11-25).
+  Texten säger var på ormen delen sitter (huvudet,
   buken, svansen), inte vilken i ordningen den är; till
   det hör **byte vid dödande** och **den förste invigde**, som får mer guld
   (`secret.go`). Tornets nåd togs bort 2026-11-23.
@@ -350,7 +354,8 @@ Skriv dit när ett steg är klart.
   vägar växer fram runda för runda. Allt är byggt; avsnittet Att prova
   säger vad som behöver provas i spel.
 - [docs/vandrarens-bok.md](docs/vandrarens-bok.md): hjälpsidan
-  Vandrarens bok, som fylls i med det man möter. Allt är byggt;
+  Vandrarens bok, med allt öppet och märket Mött på det man har mött.
+  Allt är byggt;
   avsnittet Inte byggt säger vad som återstår.
 - [docs/ideer.md](docs/ideer.md): idéer för framtida utbyggnad, spånade
   2026-11-25. Inget där är bestämt; ta fram ett förslag och fråga innan

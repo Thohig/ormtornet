@@ -1,29 +1,35 @@
 # Vandrarens bok
 
 En hjälpsida på spelarsidan med det man behöver veta om tornet: grunderna,
-klasserna och, efter hand, föremålen, kombinationerna, varelserna,
-fällorna, händelserna och ormens kort. Föreslagen och vald 2026-11-25
-(variant B, upptäckt) och byggd samma dag i tre steg.
+klasserna, föremålen, kombinationerna, varelserna, fällorna, händelserna
+och ormens kort. Föreslagen och vald 2026-11-25 (variant B, upptäckt) och
+byggd samma dag i tre steg. Samma dag öppnades allt från början, med
+märket Mött på det man har mött.
 
 ## Tanken
 
-Boken fylls i när man möter saker i tornet. Det man inte har mött står som
-ett spelkort med baksidan upp och "Ännu inte sett". Det skyddar tre saker
-i spelet:
+Boken visar allt från början. Det man har mött i tornet får märket
+**Mött**, så att det finns något att samla. Två saker står ändå inte i
+boken:
 
 - **namnen**: rum, fällor och varelser har inga namn för spelarna, så
   boken visar den korta beskrivningen och aldrig `namn` ur `data/`,
-- **hemligheten**: inget om ormens namn, namndelarna, viskningen,
-  avslöjandets nivåer eller att tornet förändras,
-- **att upptäcka**: kombinationerna, föremålen med två sidor och
-  förbannelserna lär man sig genom att bära dem.
+- **hemligheten**: att ormens namn ska viskas till tornet, och vad det ger
+  att bli invigd. Boken säger att namnet finns, i tre delar, och var
+  delarna går att hitta, men inte vad man gör med det.
+
+Tills 2026-11-25 fylldes boken i när man mötte saker, och det man inte
+hade mött stod med baksidan upp och "Ännu inte sett". Förbannelserna,
+vändningarna och kombinationernas delar syntes först när man hade varit
+med om dem.
 
 Inga siffror för chanser, vikter eller varelsernas Kraft och Försvar står
 i boken. Det som är siffror i spelet för vandraren själv, som skada,
 rundor och klassernas Kraft och Försvar, står kvar.
 
-Varianterna som valdes bort var A, en uppslagsbok med allt öppet, och C,
-boken med allt öppet för spelledaren på värdsidan.
+Varianterna som valdes bort först var A, en uppslagsbok med allt öppet,
+och C, boken med allt öppet för spelledaren på värdsidan. Boken är nu
+närmast A, med märket Mött från B.
 
 ## Att öppna och stänga
 
@@ -49,29 +55,36 @@ korten två i bredd.
 
 ## Flikarna
 
-| Flik | Innehåll | Öppet från början? |
-|---|---|---|
-| Grunder | målet, rundan, solen och portarna, rummen, striden, de andra vandrarna, skatten och ormen, föremålen, slutet | ja |
-| Klasser | alla klasskort med framsidan upp | ja |
-| Föremål | de föremål som går att hitta, och brevet | nej |
-| Kombinationer | de hopfogade föremålen och vad de är fogade av | nej |
-| Varelser | den korta beskrivningen, texten när den dyker upp och hur den är i ord | nej |
-| Fällor | den korta beskrivningen, vad den gör och spåret efteråt | nej |
-| Händelser | tornets händelser och vad de gör | nej |
-| Ormen | ormens kort och vad de gör, under en inledning om leken | inledningen |
+| Flik | Innehåll |
+|---|---|
+| Grunder | målet, rundan, solen och portarna, rummen, striden, de andra vandrarna, skatten och ormen, ormens namn, föremålen, varslen, tornet förändras, slutet |
+| Klasser | alla klasskort med framsidan upp |
+| Föremål | de föremål som går att hitta, och brevet |
+| Kombinationer | de hopfogade föremålen och vad de är fogade av |
+| Varelser | den korta beskrivningen, texten när den dyker upp och hur den är i ord |
+| Fällor | den korta beskrivningen, vad den gör och spåret efteråt |
+| Händelser | tornets händelser och vad de gör |
+| Ormen | ormens kort och vad de gör, under en inledning om leken |
 
-Flikarna som fylls i säger hur många man har mött, som "Varelser 2/5".
-Korten står i samma ordning som i `data/`, så att en baksida visar var
-något saknas.
+Korten står i samma ordning som i `data/`. Flikarna har ingen räknare.
+
+Grundernas avsnitt **Ormens namn** säger att namnet har tre delar, att
+var och en hittar dem själv (ristningen, varelsen, kammaren) och att varje
+del säger var på ormen den sitter. **Varslen** säger att tornet förråder
+rum som ingen har varit i när solen har sjunkit en bit, och att inget
+varsel säger var kammaren ligger. **Tornet förändras** säger att fällorna
+i nya rum ändras när solen står lågt, och att portarna sluter sig en i
+taget mot slutet, med en varning rundan innan och den sista öppen.
 
 ## Vad korten visar
 
-- **Föremål**: namnet, bilden och beskrivningen. Förbannelsen (den första
-  texten under `forbannelse`) bara för den som har varit med om att den
-  visade sig, och det som händer när föremålet vänder (den första under
-  `vander`) bara för den som har varit med om det.
+Alla kort har märket Mött under rubriken när man har mött det.
+
+- **Föremål**: namnet, bilden och beskrivningen, förbannelsen (den första
+  texten under `forbannelse`) och det som händer när föremålet vänder
+  (den första under `vander`).
 - **Kombinationer**: namnet, bilden, beskrivningen och "Fogat av …" med
-  delarnas namn. Delarna syns alltså först när man har fogat ihop dem.
+  delarnas namn.
 - **Varelser**: `kort` med stor bokstav, den första texten under
   `dyker_upp` och `bok`.
 - **Fällor**: `kort` med stor bokstav, `bok` och "Efteråt:" med den första
@@ -81,7 +94,7 @@ något saknas.
 
 ## Det man har mött
 
-Tornet skriver in det vandraren möter (`learn` i `bok.go`) och skickar det
+Det man har mött ger märket Mött. Tornet skriver in det vandraren möter (`learn` i `bok.go`) och skickar det
 i varje tillstånd som `bok`, en sorterad lista med nycklar som
 `varelse:krypare`. Listan börjar om för varje vandring (`placeAtCorner`).
 
@@ -97,10 +110,11 @@ i varje tillstånd som `bok`, en sorterad lista med nycklar som
 | `ormkort:<id>` | man drar ett kort som ger guld | `take` i `serpent.go` |
 | `ormkort:<vakna-kortet>` | man ser uppvaknandet, i kammaren eller utanför | `wakeSerpent` i `serpent.go` |
 
-Spelarsidan lägger ihop listan med det den redan har (`Bok.merge`, som
-`app.js` anropar när tillståndet kommer) och sparar allt i `localStorage`
-under `ormtornet-bok`. Boken växer alltså från vandring till vandring i
-samma webbläsare, oavsett torn och namn. Den som byter webbläsare eller
+Förbannelserna och vändningarna skrivs fortfarande in men visas inte för
+sig; märket gäller föremålet. Spelarsidan lägger ihop listan med det den
+redan har (`Bok.merge`, som `app.js` anropar när tillståndet kommer) och
+sparar allt i `localStorage` under `ormtornet-bok`. Märkena växer alltså
+från vandring till vandring i samma webbläsare, oavsett torn och namn. Den som byter webbläsare eller
 tömmer den börjar om. På Pages gäller spelarens egen webbläsare, inte
 skalets.
 
@@ -108,8 +122,8 @@ skalets.
 
 - **Sidans texter** i `data/spelarsidan.json` och
   `data/en/spelarsidan.json`, med nycklar som börjar med `bok_`:
-  rubriken, knapparna, flikarna (`bok_flik_*`), räknaren (`bok_antal`),
-  "Ännu inte sett", flikarnas inledningar (`bok_*_inledning`) och
+  rubriken, knapparna, flikarna (`bok_flik_*`), märket (`bok_mott`),
+  flikarnas inledningar (`bok_*_inledning`) och
   raderna för förbannelse, vändning, spår och delar. Grundernas avsnitt
   står i ordningen under `bok_grunder`; varje id har `bok_<id>_rubrik`
   och `bok_<id>`. Raden i styrningen är `hjalp_bok` och introts knapp
@@ -141,8 +155,7 @@ skalets.
   `Bok.merge`.
 - `web/style.css`: allt under `#bok`, `#bokSida`, `#introBok` och
   `#bokBtn`. Klasskorten återanvänder `.card`, de andra korten `.okort`
-  med framsidan upp, och baksidan `.bok-baksida` har samma läder som
-  spelkortens.
+  med framsidan upp, och märket är `.bok-mott`.
 - Filerna i `web/` byggs in i programmet, så tornet måste startas om för
   att visa en ändring där.
 
@@ -173,6 +186,9 @@ skalets.
    Föremål, Varelser och Fällor. Byggt 2026-11-25.
 3. Kombinationer, Händelser och Ormen, och allt på engelska. Byggt
    2026-11-25.
+4. Allt öppet från början, med märket Mött, och avsnitten Ormens namn,
+   Varslen och Tornet förändras i Grunder. Byggt 2026-11-25, samtidigt
+   som viskningen blev bara namnet (docs/avslojandet.md).
 
 ## Att prova
 
@@ -180,8 +196,9 @@ skalets.
   uppvaknandet, som bara testerna och inlagda nycklar har provat.
 - Om raden med åtta flikar, som blir två rader på datorn, är för lång.
 - Var knappen Boken står i översta raden på telefonen.
-- Om varelsernas och fällornas texter hjälper utan att förstöra
-  upptäckandet.
+- Om det blir för lätt när allt står öppet, och om märket Mött räcker
+  för att det ska kännas som att samla.
+- Om någon listar ut att namnet ska viskas, när boken inte säger det.
 
 ## Inte byggt
 

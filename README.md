@@ -236,9 +236,10 @@ den som dör och för alla i slutet (se slutet nedan och Strider):
      bakom **?** (eller tangenten `?` eller `H`) och visas en gång första
      vandringen, tills den tar slut. **Vandrarens bok** (B, raden B i
      styrningen, Boken i översta raden på telefonen eller knappen i
-     introts hörn) säger hur spelet går till och visar klasskorten, och
-     fylls i med föremålen, kombinationerna, varelserna, fällorna,
-     händelserna och ormens kort man har mött, sparat i webbläsaren
+     introts hörn) säger hur spelet går till, med ormens namn, varslen och
+     tornet som förändras, och visar alla klasser, föremål, kombinationer,
+     varelser, fällor, händelser och ormens kort. Det man har mött är
+     märkt Mött, sparat i webbläsaren
      (`web/bok.js`, `bok.go`, `bok` i `data/monster.json`,
      `data/fallor.json`, `data/handelser.json` och `data/ormen.json`,
      [docs/vandrarens-bok.md](docs/vandrarens-bok.md)).
@@ -915,12 +916,10 @@ olika ord för varje). Huvudet är först, buken i mitten och svansen sist,
 men det får man lista ut själv. Delarna står i loggen och i tecknen,
 i den ordning man hittade dem (`RU · ·`), så att tecknen inte avslöjar
 ordningen; förklaringen till tecknet säger det. Viskningen ska innehålla namnet,
-ihop eller i delar, och visa att man förstår: ett av svaren under `svar`
-("Karumeth, tornet är ormen") eller en mall under `svar_med_namn`
-("tornet är Karumeth"). Svaren räcker inte ensamma, så pusslet är nytt
-varje gång, också för den som har spelat förut. Viskar man bara namnet
-känner tornet igen det och frågar vad man vill säga om det
-(`viskning_bara_namn`), och försöket är inte förbrukat. Har viskningen
+ihop eller i delar, och mer behövs inte: "Karumeth" räcker, liksom
+"tornet är Karumeth". Att namnet ska viskas är tornets hemlighet, och
+varken Vandrarens bok eller tornet säger det. Svaren under `svar`
+("tornet är ormen") räcker inte när det finns ett namn. Har viskningen
 rätt delar i fel ordning säger tornet det (`viskning_ordning`), men
 försöket är förbrukat, så att ingen kan pröva sig igenom ordningarna. En
 fel viskning gör ormen oroligare: ett vakna-kort till i leken, som när
@@ -1258,7 +1257,7 @@ Beskrivningarna för rummen ligger under nivåerna `"1"` till `"4"`.
     text där WebGL saknas
   - `minikarta.js` minikartan med allt vandraren har upptäckt
   - `repris.js` reprisen på slutskärmen
-  - `bok.js` Vandrarens bok: flikarna, korten och det man har mött, sparat
+  - `bok.js` Vandrarens bok: flikarna, korten och märket Mött, sparat
     i `localStorage`
   - `audio.js` allt ljud, skapat med Web Audio API, även stormen i introt
   - `kort.js` spelkortens och klasskortens bilder, ritade som SVG, och
