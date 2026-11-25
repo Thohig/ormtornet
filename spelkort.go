@@ -126,6 +126,7 @@ var cardImages = []string{
 	"kallare", "varsel", "namndel", "invigd",
 	"ut", "dod", "sol", "port",
 	"legoknekt", "tjuv", "ortkvinna", "kartritare", "ormtjusare", "sparfinnare", "lyktbarare", "pilgrim",
+	"gravplundrare", "lyssnare", "prast",
 }
 
 // cardImage är motivet för innehåll i data/: fältet bild, annars id:t.

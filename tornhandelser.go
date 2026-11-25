@@ -140,7 +140,7 @@ func (g *Game) runTowerEvent(id string) bool {
 			if g.is(p, "lyktbarare") || g.keepsLight(p) || g.useItem(p, "veke") {
 				continue
 			}
-			p.Dark = max(p.Dark, max(1, e.Rundor))
+			p.Dark = max(p.Dark, g.darkRounds(p, max(1, e.Rundor)))
 		}
 	case "klirrar":
 		p := g.richest()

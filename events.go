@@ -133,7 +133,7 @@ func (g *Game) trigger(p *Player, t *Trap, depth int) {
 		} else if g.is(p, "lyktbarare") {
 			g.logTo(p, g.data.Text("klass_lyktbarare_morker"), "info")
 		} else if !g.keepsLight(p) && !g.useItem(p, "veke") {
-			p.Dark = max(p.Dark, t.Rundor)
+			p.Dark = max(p.Dark, g.darkRounds(p, t.Rundor))
 		}
 	case "eko":
 		for _, o := range g.players {

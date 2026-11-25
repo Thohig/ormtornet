@@ -748,6 +748,32 @@ ${laga(50, 60, 16)}
 <path d="M52 40l-4 6M54 42l-2 7M50 38l-5 4" stroke="${BRUN}" stroke-width="0.9"/>
 <path d="M56 46q4 0 6 2" fill="none" stroke="${BRUN}" stroke-width="1.4"/>`;
 
+  // Gravplundraren: en spade i en gravkulle, med mynt i jorden.
+  BILDER.gravplundrare = () => `${golv(80)}
+<path d="M14 82q36 -34 72 0z" fill="#6a5034" stroke="${BLAECK}" stroke-width="1.2"/>
+<path d="M58 22l-12 52" stroke="${BRUN}" stroke-width="4" stroke-linecap="round"/>
+<path d="M54 14h10" stroke="${BRUN}" stroke-width="4" stroke-linecap="round"/>
+<path d="M40 70l14 4 -4 14 -14 -4z" fill="${JARN}" stroke="${BLAECK}" stroke-width="1"/>
+${[[30, 76], [66, 74], [72, 80]].map(([x, y]) => `<ellipse cx="${x}" cy="${y}" rx="3.6" ry="1.8" fill="${GULD}" stroke="${BRUN}" stroke-width="0.6"/>`).join("")}
+<path d="M22 40v-12M16 34h12" stroke="${STEN}" stroke-width="3" stroke-linecap="round"/>`;
+
+  // Lyssnaren: ett öra mot väggen, och ljud som kommer genom den.
+  BILDER.lyssnare = () => `${vagg()}
+<path d="M14 14h20v76H14z" fill="${MORK_STEN}" opacity="0.75"/>
+<path d="M58 30q-16 0 -16 18q0 10 8 14q4 2 2 10q-2 8 6 8q8 0 8 -10q0 -6 6 -12q6 -8 2 -18q-4 -10 -16 -10z" fill="#d8b894" stroke="${BLAECK}" stroke-width="1.4"/>
+<path d="M56 40q-8 0 -8 8q0 6 6 8" fill="none" stroke="${BRUN}" stroke-width="1.6"/>
+${[0, 1, 2].map((i) => `<path d="M${38 - i * 7} ${40 - i * 4}q-4 ${10 + i * 4} 0 ${20 + i * 8}" fill="none" stroke="#f6f2e8" stroke-width="2" stroke-linecap="round" opacity="${0.9 - i * 0.2}"/>`).join("")}`;
+
+  // Ormens präst: händer som håller en orm av ben, i en ring.
+  BILDER.prast = () => `${ljus}
+<circle cx="50" cy="48" r="22" fill="none" stroke="${ROD}" stroke-width="3" opacity="0.7"/>
+<path d="M36 52q-6 -14 6 -22t16 4q6 12 -6 16t-10 -8q2 -6 8 -4" fill="none" stroke="${BLAECK}" stroke-width="7" stroke-linecap="round"/>
+<path d="M36 52q-6 -14 6 -22t16 4q6 12 -6 16t-10 -8q2 -6 8 -4" fill="none" stroke="#e8e0cc" stroke-width="4.4" stroke-linecap="round"/>
+<path d="M36 52q-6 -14 6 -22t16 4q6 12 -6 16t-10 -8q2 -6 8 -4" fill="none" stroke="${BRUN}" stroke-width="0.8" stroke-dasharray="2 2"/>
+<circle cx="45" cy="44" r="1.4" fill="${ROD}"/>
+<path d="M18 86q4 -16 18 -18l8 2q2 4 -2 6l-8 2q-6 2 -8 8z" fill="#c8a07a" stroke="${BLAECK}" stroke-width="1"/>
+<path d="M82 86q-4 -16 -18 -18l-8 2q-2 4 2 6l8 2q6 2 8 8z" fill="#c8a07a" stroke="${BLAECK}" stroke-width="1"/>`;
+
   const ORM = ["sover", "ror_sig", "vaknar"];
 
   return {

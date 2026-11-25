@@ -142,6 +142,12 @@ func (g *Game) take(p *Player) {
 	if g.rooms[p.Y][p.X].Kind != "kammare" {
 		return
 	}
+	// Ormens präst tar bara en näve per besök i kammaren.
+	if g.classVal(p, "en_nave", 0) > 0 && p.tookVisit {
+		g.logTo(p, g.data.Text("klass_prast_en_nave"), "dim")
+		return
+	}
+	p.tookVisit = true
 	if len(g.deck) == 0 {
 		g.buildDeck()
 	}
@@ -173,6 +179,18 @@ func (g *Game) take(p *Player) {
 			for j, id := range g.deck {
 				if c := g.data.card(id); c != nil && !c.Vaknar {
 					i = j
+					break
+				}
+			}
+		}
+	}
+	// Ormens präst: det första vakna-kortet hen drar blir ett sovkort.
+	if g.is(p, "prast") && !p.priestCalm {
+		if c := g.data.card(g.deck[i]); c != nil && c.Vaknar {
+			for j, id := range g.deck {
+				if c := g.data.card(id); c != nil && !c.Vaknar {
+					i, p.priestCalm = j, true
+					g.logTo(p, g.data.Text("klass_prast_lugnar"), "rost")
 					break
 				}
 			}

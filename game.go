@@ -332,6 +332,8 @@ type Player struct {
 	parts        [3]bool // delarna av ormens namn som vandraren har fått
 	partsFound   []int   // delarna i den ordning vandraren hittade dem
 	calmed       bool    // den invigde har lugnat ormen under vandringen
+	priestCalm   bool    // ormens präst har lugnat ormen en gång under vandringen
+	tookVisit    bool    // har tagit en näve sedan hen kom in i kammaren
 	breathAt     [2]int  // rummet där vandraren senast hörde andetagen genom väggen, x+1 och y+1
 	safeDraw     bool    // den invigdes nästa näve väcker inte ormen
 	X, Y         int
@@ -925,7 +927,8 @@ func (g *Game) stateFor(me *Player) stateMsg {
 	// dörrar och port.
 	blind := g.phase == phasePlay && me.Status == statusIn && me.Dark > 0
 	st.Sleep = -1
-	if g.phase == phasePlay && me.Status == statusIn && me.Cellar == 0 && g.rooms[me.Y][me.X].Kind == "kammare" {
+	// Sömnmätaren syns i kammaren, och för Lyssnaren var hen än är.
+	if g.phase == phasePlay && me.Status == statusIn && me.Cellar == 0 && (g.rooms[me.Y][me.X].Kind == "kammare" || g.is(me, "lyssnare")) {
 		st.Sleep = g.sleepLevel()
 		st.SleepText = g.data.Ormen.Somn[min(st.Sleep, len(g.data.Ormen.Somn)-1)]
 		if g.is(me, "ormtjusare") {
@@ -1119,6 +1122,7 @@ func (g *Game) placeAtCorner(p *Player) {
 	p.known = newGrid[bool](g.size)
 	p.items = nil
 	p.initiated, p.guessLevel, p.calmed, p.safeDraw = false, 0, false, false
+	p.priestCalm, p.tookVisit = false, false
 	p.parts, p.partsFound = [3]bool{}, nil
 	p.forgetRoom()
 	g.revealPorts()
@@ -1929,6 +1933,9 @@ func (g *Game) playTurn(p *Player) {
 	}
 	if p.Status == statusIn {
 		g.ageItems(p)
+		if g.rooms[p.Y][p.X].Kind != "kammare" {
+			p.tookVisit = false
+		}
 	}
 }
 

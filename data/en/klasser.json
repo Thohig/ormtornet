@@ -64,6 +64,30 @@
       "beskrivning": "Has walked the whole way to see the tower with their own eyes. Believes it has something to tell.",
       "styrka": "Gets clues about the tower twice as often, a potion each time the tower changes, and recognises cursed items and leaves them be.",
       "svaghet": "Never raises a weapon against other wanderers: can only defend themselves."
+    },
+    {
+      "id": "gravplundrare",
+      "namn": "The Grave Robber",
+      "kort": "the Grave Robber",
+      "beskrivning": "Has dug up more kings than they have seen alive. The dead never complain.",
+      "styrka": "Hears where someone dies, how far away and in which direction, and gets twice as much gold where someone has died.",
+      "svaghet": "Smells of death: the creatures attack them more often."
+    },
+    {
+      "id": "lyssnare",
+      "namn": "The Listener",
+      "kort": "the Listener",
+      "beskrivning": "Went blind from a light no one else saw. Now hears what no one else hears.",
+      "styrka": "Hears sounds two rooms away and whether something breathes next door, as with the bone horn, and hears how deeply the serpent sleeps wherever they are.",
+      "svaghet": "Sees poorly: darkness lasts twice as long."
+    },
+    {
+      "id": "prast",
+      "namn": "The Serpent's Priest",
+      "kort": "the Serpent's Priest",
+      "beskrivning": "Has prayed to the serpent all their life without knowing where it lived. Now they know.",
+      "styrka": "The first card that would wake the serpent becomes one that does not, the serpent does not hurt them when it wakes, and each handful gives half as much gold again.",
+      "svaghet": "Takes only one handful each time they enter the chamber."
     }
   ],
 
@@ -103,6 +127,18 @@
     ],
     "klass_pilgrim_fred": [
       "You do not raise a weapon against {namn}."
+    ],
+    "klass_gravplundrare_dod": [
+      "You hear it clearly: {namn} dies, {antal} rooms away to the {horn}."
+    ],
+    "klass_gravplundrare_guld": [
+      "You know where the dead hide the best of it, and find {antal} gold more."
+    ],
+    "klass_prast_lugnar": [
+      "The serpent stirs under your hand. You whisper a prayer you have known since you were a child, and the breathing slows again."
+    ],
+    "klass_prast_en_nave": [
+      "You have taken your handful. The prayer allows no more until you have gone out and come back."
     ],
     "klass_pilgrim_dryck": [
       "The tower changes around you. In your pocket you find a potion that was not there before."

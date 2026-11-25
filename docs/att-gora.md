@@ -59,6 +59,10 @@ webbläsarprovet:
 - Guldboken ([guldboken.md](guldboken.md)): väljer man en vandrare på
   slutskärmen, läses berättelsen om guldet bra när den blir lång, och
   räcker raderna Runda för runda?
+- De nya klasserna (2026-11-25, [nya-klasser.md](nya-klasser.md)): går
+  Gravplundraren mot skriken, har Lyssnaren nytta av att höra längre, och
+  är en näve per besök för hårt för Ormens präst? Går elva klasskort att
+  läsa på 30 sekunder?
 - Föremålen med två sidor (2026-11-25, [tva-sidor.md](tva-sidor.md)):
   märker man när ett föremål vänder, och går man ut tidigare för att
   hinna före? Är ynglet ur ägget för hårt?

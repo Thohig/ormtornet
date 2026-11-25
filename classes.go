@@ -362,3 +362,18 @@ func (g *Game) nearLantern(me, o *Player) bool {
 }
 
 func itoa(n int) string { return strconv.Itoa(n) }
+
+// darkRounds är hur länge mörkret varar för p: dubbelt för Lyssnaren.
+func (g *Game) darkRounds(p *Player, n int) int {
+	return int(float64(n)*g.classVal(p, "morker_ganger", 1) + 0.5)
+}
+
+// anyDoor ger en dörr ut ur rummet där p står, för AI-spelaren.
+func (g *Game) anyDoor(p *Player) (Dir, bool) {
+	for _, d := range g.rng.Perm(4) {
+		if _, _, ok := g.neighbor(p, Dir(d)); ok {
+			return Dir(d), true
+		}
+	}
+	return 0, false
+}

@@ -15,7 +15,7 @@
         "ga_hem_vid_liv": 2,
         "drick_vid_liv": 2,
         "stridslust": 0.6, "guldlust": 0.5,
-        "klasser": ["legoknekt", "tjuv", "ormtjusare", "lyktbarare"]
+        "klasser": ["legoknekt", "tjuv", "ormtjusare", "lyktbarare", "gravplundrare"]
       },
       {
         "id": "forsiktig",
@@ -28,7 +28,7 @@
         "ga_hem_vid_liv": 3,
         "drick_vid_liv": 3,
         "stridslust": 0.25, "guldlust": 0.15,
-        "klasser": ["ortkvinna", "kartritare", "sparfinnare", "lyktbarare"]
+        "klasser": ["ortkvinna", "kartritare", "sparfinnare", "lyktbarare", "lyssnare"]
       },
       {
         "id": "plundrare",
@@ -41,7 +41,7 @@
         "ga_hem_vid_liv": 3,
         "drick_vid_liv": 3,
         "stridslust": 0.2, "guldlust": 0.8,
-        "klasser": ["kartritare", "sparfinnare", "tjuv", "pilgrim"]
+        "klasser": ["kartritare", "sparfinnare", "tjuv", "pilgrim", "prast"]
       }
     ],
 

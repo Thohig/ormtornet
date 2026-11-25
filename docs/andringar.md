@@ -6,6 +6,21 @@ eller leder tornet.
 
 ## 2026-11-25
 
+### Tre nya klasser
+
+- **Gravplundraren** hör var någon dör och hur långt bort, och får
+  dubbelt så mycket av den dödes guld, men varelserna anfaller henom
+  oftare.
+- **Lyssnaren** hör som med benluren och ser hur djupt ormen sover var
+  hen än är, men mörkret varar dubbelt så länge.
+- **Ormens präst** väcker inte ormen med sitt första vakna-kort, tar ingen
+  skada när ormen vaknar och får mer guld per näve, men tar bara en näve
+  per besök i kammaren.
+- Klassvalet har elva kort. Siffrorna 1–9 väljer; de två sista väljs med
+  ett klick eller tryck.
+- I simuleringen (3000 vandringar, 6 AI-spelare) vinner alla klasser
+  13–22 % på Normal och 14–21 % på Svår.
+
 ### Föremål med två sidor
 
 - Fyra nya föremål som vänder när solen har sjunkit en bit eller när man

@@ -331,6 +331,13 @@ func (g *Game) botDecide(p *Player) (string, int) {
 		if st.HP <= g.data.Ormen.Skada {
 			chance = 0
 		}
+		// Ormens präst tar en näve per besök: gå ut ur kammaren och kom
+		// tillbaka.
+		if p.tookVisit && g.classVal(p, "en_nave", 0) > 0 {
+			if d, ok := g.anyDoor(p); ok {
+				return dirLetter[d], 0
+			}
+		}
 		if g.rng.Float64() < chance || (p.Treasure == 0 && st.HP > g.data.Ormen.Skada) {
 			return actTake, 0
 		}

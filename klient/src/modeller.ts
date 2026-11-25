@@ -189,6 +189,9 @@ const FORM: Record<string, Partial<Form>> = {
   sparfinnare: { lut: 0.08, kappa: 0.6 },
   lyktbarare: { kappa: 0.45 },
   pilgrim: { topp: 0.17, botten: 0.4, nere: 0.02, kappa: 0 },
+  gravplundrare: { topp: 0.2, botten: 0.28, lut: 0.1, kappa: 0.65 },
+  lyssnare: { topp: 0.15, botten: 0.3, nere: 0.3, kappa: 0.4 },
+  prast: { topp: 0.16, botten: 0.38, nere: 0.04, kappa: 0 },
 };
 const VANLIG: Form = { topp: 0.17, botten: 0.3, nere: 0.44, lut: 0, kappa: 0.5, axel: 0.21 };
 
@@ -360,6 +363,31 @@ export function vandrare(klass: string, farg: string, foremal: string[] = [], kl
       hatt(0.4, kf(0x3a3530));
       stav(1.7, del(geo("kalebass", () => new THREE.IcosahedronGeometry(0.09, 0)), lam(0x9a6a3a)));
       break;
+    case "gravplundrare":
+      // Luva och en spade över axeln.
+      luva(lam(kf(0x5a4a3a)));
+      stav(1.25, del(geo("spadblad", () => new THREE.BoxGeometry(0.16, 0.2, 0.03)), lam(METALL)));
+      break;
+    case "lyssnare": {
+      // Ett band för ögonen och en stor lur av ben vid örat.
+      luva(huva);
+      const band = del(geo("ögonband", () => new THREE.TorusGeometry(0.19, 0.03, 4, 14)), lam(kf(0x8a9a7a)), 0, HUVUD + 0.03, 0);
+      band.rotation.x = Math.PI / 2;
+      kropp.add(band);
+      const lur = del(geo("örlur", () => new THREE.ConeGeometry(0.1, 0.3, 8, 1, true)), lam(0xe8e0cc), 0.26, HUVUD + 0.02, 0);
+      lur.rotation.z = Math.PI / 2;
+      kropp.add(lur);
+      break;
+    }
+    case "prast": {
+      // En hög huva och en orm av ben som ring på stången.
+      const hog = del(geo("prästhuva", () => new THREE.ConeGeometry(0.21, 0.5, 8)), lam(kf(0x7a2a2a)), 0, HUVUD + 0.2, -0.02);
+      kropp.add(hog);
+      const ring = del(geo("ormring", () => new THREE.TorusGeometry(0.11, 0.025, 5, 12)), lam(0xe8e0cc));
+      ring.rotation.x = Math.PI / 2;
+      stav(1.5, ring);
+      break;
+    }
     default:
       luva(huva);
   }

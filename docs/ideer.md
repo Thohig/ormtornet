@@ -4,8 +4,9 @@ Idéer som spånades 2026-11-25 för hur spelet kan byggas ut. Inget här är
 bestämt; ta fram ett förslag och fråga innan något byggs. Alla följer den
 individuella tävlingen (docs/individuell-tavling.md), och ingen säger
 tornets hemlighet rakt ut. Idé 17, reprisen, är byggd (docs/repris.md),
-idé 15, kombinationerna (docs/kombinationer.md), och idé 14, föremålen
-med två sidor (docs/tva-sidor.md).
+idé 15, kombinationerna (docs/kombinationer.md), idé 14, föremålen
+med två sidor (docs/tva-sidor.md), och idé 13, de nya klasserna
+(docs/nya-klasser.md).
 
 ## Tornet
 
@@ -49,9 +50,7 @@ med två sidor (docs/tva-sidor.md).
 
 ## Klasser och föremål
 
-13. **Nya klasser:** Gravplundraren tar guld från de döda utan straff,
-    Lyssnaren hör mer genom väggarna och Ormens präst kan lugna ormen men
-    inte ta mer än en näve.
+13. ~~**Nya klasser.**~~ Byggda 2026-11-25 (docs/nya-klasser.md).
 14. ~~**Föremål med två sidor.**~~ Byggda 2026-11-25 (docs/tva-sidor.md).
 15. ~~**Kombinationer.**~~ Byggda 2026-11-25 (docs/kombinationer.md).
 

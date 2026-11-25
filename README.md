@@ -483,8 +483,8 @@ på skärmen sedan 2026-11-24.
 ### Klasser
 
 När alla är redo i lobbyn kommer klassvalet: en skärm med ett spelkort
-för varje klass. Var och en väljer ett kort med 1–8, ett klick eller ett
-tryck. Ingen klass finns två gånger i samma torn, så kort som andra har
+för varje klass. Var och en väljer ett kort med 1–9, ett klick eller ett
+tryck; de två sista av de elva korten har ingen siffra. Ingen klass finns två gånger i samma torn, så kort som andra har
 tagit går inte att välja. Vandringen börjar när alla har valt, eller när
 tiden är slut (`klassval_sekunder` i `data/klasser.json`, förval 30). Den
 som inte har valt får då ett slumpat ledigt kort. Klassen står i listan
@@ -503,6 +503,9 @@ igen.
 | Spårfinnaren | 2 / 1 | ser spår 6 rundor bakåt och vems de är, märker hälften av fällorna i tid, ser var föremål och guld ligger och vem som tog guldet, känner före andra åt vilket håll ristningen finns | hör inget genom väggarna, utom med benluren |
 | Lyktbäraren | 2 / 2 | ett liv extra, tål mörker, ser varelser i grannrummen | syns för andra redan från grannrummet |
 | Pilgrimen | 0 / 3 | ledtrådar dubbelt så ofta, en dryck när tornet förändras, känner igen förbannade föremål | slår aldrig andra vandrare, kan bara värja sig |
+| Gravplundraren | 2 / 2 | hör var någon dör, hur långt bort och åt vilket håll, och får dubbelt så mycket av den dödes guld (det extra kommer ur tornet) | varelserna anfaller oftare (lynne +10) |
+| Lyssnaren | 2 / 2 | hör två rum bort och om något andas bredvid, som med benluren (tre rum med benluren), och ser sömnmätaren var hen än är | mörkret varar dubbelt så länge |
+| Ormens präst | 1 / 3 | det första vakna-kortet hen drar blir ett sovkort, ormen skadar inte hen när den vaknar, och varje näve ger hälften mer guld | tar bara en näve varje gång hen kommer in i kammaren |
 
 Kraft är hur lätt klassen träffar i strid och Försvar hur svår den är att
 träffa (se Strider). Namn, beskrivningar, texter och siffror står i `data/klasser.json`. Vad

@@ -158,7 +158,8 @@ Så här skiljer vi på sakerna när användaren ger instruktioner:
   står klassen bland tecknen som ett litet klasskort; ett klick visar det
   stort (`showClassCard`).
 - **klasser**: det vandrarna väljer i klassvalet (`classes.go`,
-  `data/klasser.json`), till exempel Kartritaren.
+  `data/klasser.json`), till exempel Kartritaren. Elva sedan 2026-11-25,
+  med Gravplundraren, Lyssnaren och Ormens präst (docs/nya-klasser.md).
 - **föremål**: det vandrarna hittar och bär, högst tre (`items.go`,
   `data/foremal.json`). Alla verkar av sig själva sedan 2026-11-22; inget
   används med 1–3. Några är förbannade. Två som hör ihop **fogas ihop**
@@ -347,5 +348,8 @@ Skriv dit när ett steg är klart.
 - [docs/tva-sidor.md](docs/tva-sidor.md): föremål med två sidor som
   vänder (idé 14). Allt är byggt; avsnittet Att prova säger vad som
   behöver provas i spel.
+- [docs/nya-klasser.md](docs/nya-klasser.md): Gravplundraren,
+  Lyssnaren och Ormens präst (idé 13). Allt är byggt; avsnittet Att prova
+  säger vad som behöver provas i spel.
 - [docs/slumpade-namn.md](docs/slumpade-namn.md): tornet ger namnen och
   namnrutan är borta. Steg 1–2 är byggda; Nytt namn i lobbyn valdes bort.

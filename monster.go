@@ -218,6 +218,7 @@ func (g *Game) lynne(m *Monster, p *Player) int {
 		l += 25
 	}
 	l += g.knifeScent(p)
+	l += int(g.classVal(p, "extra_lynne", 0)) // gravplundraren luktar död
 	if p.has("fjallmantel") != nil {
 		// Fjällmanteln: varelserna tar bäraren för något av sitt eget slag.
 		l /= 2

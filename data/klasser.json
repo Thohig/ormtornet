@@ -130,6 +130,54 @@
       "forsvar": 3,
       "drycker": 0,
       "varden": {}
+    },
+    {
+      "id": "gravplundrare",
+      "tecken": "⚰",
+      "bild": "gravplundrare",
+      "modell": { "farg": "#5a4a3a", "storlek": 1 },
+      "namn": "Gravplundraren",
+      "kort": "gravplundraren",
+      "beskrivning": "Har grävt upp fler kungar än hen har sett levande. De döda klagar aldrig.",
+      "styrka": "Hör var någon dör, hur långt bort och åt vilket håll, och får dubbelt så mycket guld där någon har dött.",
+      "svaghet": "Luktar död: varelserna anfaller henom oftare.",
+      "liv": 0,
+      "kraft": 2,
+      "forsvar": 2,
+      "drycker": 0,
+      "varden": { "dod_guld": 2, "extra_lynne": 10 }
+    },
+    {
+      "id": "lyssnare",
+      "tecken": "◎",
+      "bild": "lyssnare",
+      "modell": { "farg": "#8a9a7a", "storlek": 1 },
+      "namn": "Lyssnaren",
+      "kort": "lyssnaren",
+      "beskrivning": "Blev blind av ett ljus som ingen annan såg. Hör nu sådant som ingen annan hör.",
+      "styrka": "Hör ljud två rum bort och om något andas bredvid, som med benluren, och hör hur djupt ormen sover var hen än är.",
+      "svaghet": "Ser dåligt: mörkret varar dubbelt så länge.",
+      "liv": 0,
+      "kraft": 2,
+      "forsvar": 2,
+      "drycker": 0,
+      "varden": { "morker_ganger": 2 }
+    },
+    {
+      "id": "prast",
+      "tecken": "☥",
+      "bild": "prast",
+      "modell": { "farg": "#7a2a2a", "storlek": 1 },
+      "namn": "Ormens präst",
+      "kort": "ormens präst",
+      "beskrivning": "Har bett till ormen i hela sitt liv utan att veta var den bodde. Nu vet hen.",
+      "styrka": "Det första kortet som skulle väcka ormen blir ett som inte gör det, ormen skadar inte henom när den vaknar, och varje näve ger hälften mer guld.",
+      "svaghet": "Tar bara en näve varje gång hen kommer in i kammaren.",
+      "liv": 0,
+      "kraft": 1,
+      "forsvar": 3,
+      "drycker": 0,
+      "varden": { "ormskada": 9, "en_nave": 1, "kammar_guld": 1.5 }
     }
   ],
 
@@ -169,6 +217,18 @@
     ],
     "klass_pilgrim_fred": [
       "Du lyfter inte vapen mot {namn}."
+    ],
+    "klass_gravplundrare_dod": [
+      "Du hör det tydligt: {namn} dör, {antal} rum bort mot {horn}."
+    ],
+    "klass_gravplundrare_guld": [
+      "Du vet var de döda gömmer det bästa, och hittar {antal} guld till."
+    ],
+    "klass_prast_lugnar": [
+      "Ormen rör sig under din hand. Du viskar en bön du har kunnat sedan du var barn, och andetagen blir långsamma igen."
+    ],
+    "klass_prast_en_nave": [
+      "Du har tagit din näve. Bönen tillåter inte mer förrän du har gått ut och kommit tillbaka."
     ],
     "klass_pilgrim_dryck": [
       "Tornet förändras omkring dig. I fickan hittar du en dryck som inte fanns där förut."

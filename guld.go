@@ -49,6 +49,10 @@ func (g *Game) announceDeath(p *Player) {
 		case o.Status == statusIn && o.Cellar == 0 && o.X == p.X && o.Y == p.Y:
 			text = g.data.Text("dod_andra", "namn", p.Name)
 			heard.x, heard.y = p.X, p.Y
+		case g.is(o, "gravplundrare") && o.Status == statusIn && o.Cellar == 0:
+			// Gravplundraren hör var döden kom, och hur långt bort.
+			text = g.data.Text("klass_gravplundrare_dod", "namn", p.Name, "antal", strconv.Itoa(abs(p.X-o.X)+abs(p.Y-o.Y)), "horn", g.hornToward(o.X, o.Y, p.X, p.Y))
+			heard.x, heard.y = p.X, p.Y
 		case hears:
 			text = g.data.Text("ljud_dod", "namn", p.Name, "riktning", dir)
 			heard.x, heard.y = p.X, p.Y
@@ -105,11 +109,17 @@ func (g *Game) pickUpGold(p *Player) {
 	}
 	r := &g.rooms[p.Y][p.X]
 	for _, l := range r.gold {
-		p.Treasure += l.gold
-		g.goldNote(p, "dod_guld", l.gold, "namn", l.name)
+		// Gravplundraren får mer av den dödes guld; det extra kommer ur
+		// tornet, inte från någon annan.
+		extra := int(float64(l.gold)*(g.classVal(p, "dod_guld", 1)-1) + 0.5)
+		p.Treasure += l.gold + extra
+		g.goldNote(p, "dod_guld", l.gold+extra, "namn", l.name)
 		n := strconv.Itoa(l.gold)
 		g.soundTo(p, "skatt")
 		text := g.data.Text("guld_kvar", "namn", l.name, "antal", n)
+		if extra > 0 {
+			text += " " + g.data.Text("klass_gravplundrare_guld", "antal", strconv.Itoa(extra))
+		}
 		g.logTo(p, text, "syn")
 		g.addCard(p, gameCard{Slag: "guld", Bild: "guld", Rubrik: g.data.Text("kort_guld_kvar"), Text: text})
 		g.chronicle("kronika_guld_kvar", "namn", p.Name, "dod", l.name, "guld", n)

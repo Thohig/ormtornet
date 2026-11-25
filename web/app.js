@@ -1092,7 +1092,7 @@ function updateChooseStatus() {
   const parts = [];
   if (mine) parts.push(t("klassval_du_ar", { klass: mine.namn.toLowerCase() }));
   else if (touch) parts.push(t("klassval_tryck_kort"));
-  else parts.push(t("klassval_tryck_siffra", { antal: state.erbjudande.length }));
+  else parts.push(t("klassval_tryck_siffra", { antal: Math.min(9, state.erbjudande.length) })); // bara 1–9 har en tangent
   if (mine && waiting.length) parts.push(t("klassval_vantar", { namn: waiting.join(", ") }));
   el.textContent = parts.join(" ") + " ";
   const s = document.createElement("span");
