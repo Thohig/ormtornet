@@ -35,7 +35,13 @@ type StoryTitle struct {
 
 // titleMeasures är det titlarna kan mätas i, från vandrarens siffror.
 var titleMeasures = map[string]func(p *Player) int{
-	"kammaren": func(p *Player) int { return p.stats.takeGold },
+	// Den girigaste är den som tog mest ur kammaren och kom ut med det.
+	"kammaren": func(p *Player) int {
+		if p.Status != statusOut {
+			return 0
+		}
+		return p.stats.takeGold
+	},
 	"stulet":   func(p *Player) int { return p.stats.stolen },
 	"traffar":  func(p *Player) int { return p.stats.hits },
 	"varelser": func(p *Player) int { return p.stats.kills },

@@ -336,4 +336,10 @@ func TestStoryPeople(t *testing.T) {
 	if !strings.Contains(ps[0].Text, "50") || strings.Contains(ps[1].Text, g.data.Text("ber_vem_dod")) {
 		t.Fatalf("raderna: %q / %q", ps[0].Text, ps[1].Text)
 	}
+	// Den som dog med mest guld ur kammaren blir inte den girigaste.
+	pb.stats.takeGold = 90
+	g.buildStory()
+	if ps := g.storyPeople; ps[0].Title != g.data.Text("ber_titel_kammaren") {
+		t.Fatalf("den girigaste: %+v", ps)
+	}
 }
