@@ -53,7 +53,8 @@ Så här skiljer vi på sakerna när användaren ger instruktioner:
   klassvalet, spelet och krönikan. Namnrutan togs bort 2026-11-22; tornet
   ger varje vandrare ett namn (`names.go`, `data/namn.json`). Spelet har faserna lobbyn,
   klassvalet, vandringen och slutet (`lobby`, `klassval`, `spel`, `slut`). README beskriver under "Vad en spelare ser"
-  vad en spelare möter.
+  vad en spelare möter. I lobbyn står **texten om Enter** mitt på kartan
+  en stund och bleknar bort (`lobbyHint` i `web/app.js`).
 - **spelskärmen**: vyn spelet på spelarsidan. Delarna heter:
   - **översta raden**: solmätaren, **prickarna** (vandrarna i sin färg,
     fyllda när de har valt drag eller är redo, med namn i lobbyn och
@@ -63,7 +64,8 @@ Så här skiljer vi på sakerna när användaren ger instruktioner:
     (bara ordet på Pages) (`renderHost` i `web/app.js`, `vard` i
     tillståndet för den som är ansluten från tornets dator),
   - **tecknen**: statusen uppe till höger på kartan (klass, liv, skatt,
-    drycker, tillstånd) och föremålen under dem, med förklaringar,
+    drycker, tillstånd, ormens blick ⊙ och skottpengen ¤) och föremålen
+    under dem, med förklaringar,
   - **frågetecknet**: styrningen, som ligger bakom ? på kartan,
   - **spelkortet**: rundans kort, som vänds upp till höger på kartan
     med bild, rubrik och text för rundans viktigaste händelse, rundans
@@ -82,7 +84,8 @@ Så här skiljer vi på sakerna när användaren ger instruktioner:
     telefonen (`web/minikarta.js`, docs/minikartan.md),
   - **sömnmätaren**: hur djupt ormen sover, i panelen Nu i skattkammaren,
   - **panelen Nu**: draget, striden och vad som väntar, som en rad under
-    kartan (`#nowBlock`). Den syns bara när den har något att säga. Panelen Vandrare togs bort 2026-11-22,
+    kartan (`#nowBlock`), med kistan med två lås och knappen Dra
+    tillbaka när de finns. Den syns bara när den har något att säga. Panelen Vandrare togs bort 2026-11-22,
   - **loggen**: raderna, på en bred skärm som text utan ruta nere till
     vänster **på kartan** (`placeSide` i `web/app.js`), med den senaste
     rundan nederst och den förra svag, och hela loggen i **lådan** (knappen

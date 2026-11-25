@@ -96,6 +96,7 @@
     "hjalp_drick": "<b>D</b>drink a potion",
     "hjalp_anfall": "<b>A</b>attack",
     "hjalp_viska": "<b>V</b>whisper to the tower",
+    "hjalp_dra": "<b>T</b>pull back whoever went out",
     "hjalp_zoom": "<b>Z</b>change zoom: room (on a phone), near, middle, far, all",
     "hjalp_minikarta": "<b>K</b>show and hide the minimap",
     "hjalp_logg": "<b>L</b>the whole log",

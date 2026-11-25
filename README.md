@@ -182,7 +182,10 @@ den som dör och för alla i slutet (se slutet nedan och Strider):
    fliken.
 2. **Spelet**, där spelaren stannar resten av kvällen. Det går igenom fyra faser:
    - **lobbyn**: vandrarna som prickar med namn i översta raden, och
-     knappen Redo där (Enter, eller Redo längst ner på en pekskärm),
+     knappen Redo där (Enter, eller Redo längst ner på en pekskärm). Mitt
+     på kartan står en stund "Tryck Enter för att välja klass", som
+     bleknar bort efter sju sekunder eller när du är redo (`lobbyHint` i
+     `web/app.js`),
    - **klassvalet**: en egen skärm med ett kort för varje klass, i samma
      stil som spelkorten, med bild, styrka och svaghet. Korten ligger på
      baksidan och vänds upp ett i taget. Välj med 1–9 eller ett klick. Ett

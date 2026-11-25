@@ -573,6 +573,7 @@ function padModes(me) {
   const foes = state.pvp === "ja" ? foesHere() : [];
   modes.add(monster || foes.length ? "strid" : "fri");
   if (state.kanViska) modes.add("viska");
+  if (state.dra) modes.add("dra");
   return modes;
 }
 
