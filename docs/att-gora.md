@@ -237,6 +237,12 @@ En riktig kväll behövs för att se:
   hårdare träffar rätt, och går någon till kammaren för guldets skull?
   Klassernas extraliv väger fortfarande tungt på Mardröm (Legoknekten
   49 % ut med skatt, Kartritaren 32 %).
+- Svår och Mardröm efter 2026-11-25 (simuleringen, 5 AI-spelare): färre
+  fällor och varelser (Svår 50 och 24 %, Mardröm 60 och 30 %), eftersom
+  bara 16 % av AI-vandrarna nådde kammaren på Svår och 5 % på Mardröm,
+  mot 34 % på Normal. Nu 21 % på Svår och ungefär 8 % på Mardröm; döda 26
+  och 37 %. De flesta vänder hem skadade med annat guld innan de når
+  kammaren. Går människor till kammaren på Svår och Mardröm?
 - Klasserna efter 2026-11-24 (3000 vandringar, 6 AI-spelare, Normal och
   Svår): alla vinner 13–21 %. Guldet per vandrare är lägre än före den nya
   striden. Se [bara-anfall.md](bara-anfall.md) och
