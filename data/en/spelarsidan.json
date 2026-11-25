@@ -77,7 +77,7 @@
     "tecken_blick": "The serpent's gaze rests on you for {n} more rounds. Your handfuls wake the serpent more easily, and when the gaze lets go it takes gold. If you meet someone, it passes to them.",
     "tecken_skottpeng": "There is a price on you for {n} more rounds: anyone who hits you takes twice as much gold.",
     "nu_kista": "A chest with two locks. {tryck} to prise it open; it takes two in the room",
-    "nu_dra": "The gate whispers of {namn}. You can pull them back into the tower, but you get the serpent's gaze for it",
+    "nu_dra": "The gate whispers of {namn}. You can pull them back into the tower and get some of the gold, but you get the serpent's gaze for it",
     "knapp_dra": "Pull back",
     "tecken_morker": "The lantern is out. You see only the room you stand in, but not its doors: you must feel your way.",
     "tecken_invigd": "The tower has heard you.",

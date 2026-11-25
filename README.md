@@ -652,8 +652,10 @@ bara den det händer. Händelserna och deras texter står i
 Åtta händelser låter vandrarna påverka varandra (`vandrarhandelser.go`).
 Porten kan låta den som bär minst guld dra tillbaka den som gick ut med
 mest (T, eller knappen Dra tillbaka), med hälften av guldet kvar säkert
-ute; den som drar får ormens blick, som väcker ormen lättare och går
-vidare till den man möter. Tornet kan sätta ett pris på den som bär mest,
+ute. Den som dras in hamnar tre rum in längs vägen hen gick ut, och en
+fjärdedel av guldet som följer med in går till den som drar. Den som drar
+får också ormens blick, som väcker ormen lättare och går vidare till den
+man möter. Tornet kan sätta ett pris på den som bär mest,
 en skata kan flytta ett föremål från en vandrare till en annan, en vägg
 kan rasa mellan två grannar, en kista med två lås går bara upp när två
 står i rummet, spåren kan glöda så att alla ser var de andra går, och

@@ -169,9 +169,9 @@
       {
         "id": "tillbaka",
         "rubrik": "The tower pulls back",
-        "bok": "Whoever carries the least gold in the tower can pull back whoever went out with the most. Half the gold is safe outside, and half is carried back in. The one who pulls gets the serpent's gaze for it.",
+        "bok": "Whoever carries the least gold in the tower can pull back whoever went out with the most. Half the gold is safe outside, and half is carried back in, three rooms deep along the way they went out. The one who pulls gets a quarter of what comes back in, and the serpent's gaze into the bargain.",
         "har": [
-          "The gate whispers of {namn}, who went out with {guld} gold. You can pull them back into the tower. Half the gold comes back in, but the serpent will catch sight of you."
+          "The gate whispers of {namn}, who went out with {guld} gold. You can pull them back into the tower. Half the gold comes back in, and some of it becomes yours, but the serpent will catch sight of you."
         ]
       },
       {

@@ -207,8 +207,9 @@ func (g *Game) canPull(p *Player) bool {
 }
 
 // pullBack: p drar tillbaka den som gick ut med mest guld. Hälften av
-// guldet är säkert ute, och hälften bär hen in i tornet igen. p får ormens
-// blick för det.
+// guldet är säkert ute, och hälften bär hen in i tornet igen, några rum in
+// längs vägen hen gick ut (pullSpot). p får en del av det som följer med
+// in, och ormens blick för det.
 func (g *Game) pullBack(p *Player) {
 	t := g.playerByID(p.pullTarget)
 	p.pullOffer = 0
@@ -217,8 +218,10 @@ func (g *Game) pullBack(p *Player) {
 		return
 	}
 	e := g.data.towerEvent("tillbaka")
+	gx, gy := t.X, t.Y
 	carried := t.Treasure / 2
 	t.banked = t.Treasure - carried
+	share := int(float64(carried) * e.Andel)
 	t.Treasure = carried
 	t.Status = statusIn
 	t.pulled = true
@@ -229,29 +232,110 @@ func (g *Game) pullBack(p *Player) {
 	t.Action = ""
 	t.Ready = t.bot != nil
 	t.lastCard = nil
+	inside := false
+	if x, y, ok := g.pullSpot(t); ok {
+		t.X, t.Y = x, y
+		inside = true
+	}
 	t.forgetRoom()
 	g.noteRoom(t)
 	g.goldNote(t, "tillbaka", -t.banked)
+	if share > 0 {
+		t.Treasure -= share
+		g.goldNote(t, "tillbaka_andel", -share, "namn", p.Name)
+		p.Treasure += share
+		g.goldNote(p, "drog", share, "namn", t.Name)
+	}
 	g.chronicle("kronika_tillbaka", "namn", p.Name, "offer", t.Name)
 
-	text := g.data.Text("handelse_tillbaka_du", "antal", strconv.Itoa(t.banked), "bar", strconv.Itoa(carried))
+	key := "handelse_tillbaka_du_port"
+	if inside {
+		key = "handelse_tillbaka_du"
+	}
+	text := g.data.Text(key, "antal", strconv.Itoa(t.banked), "bar", strconv.Itoa(t.Treasure))
+	if share > 0 {
+		text += " " + g.data.Text("handelse_tillbaka_andel_du", "namn", p.Name, "guld", strconv.Itoa(share))
+	}
 	g.logTo(t, text, "varn")
 	g.soundTo(t, "ormen_ror")
 	g.learn(t, "handelse", "tillbaka")
 	g.addCard(t, gameCard{Slag: "handelse", Bild: e.Bild, Rubrik: e.Rubrik, Text: text, Stor: true})
 
 	g.giveGaze(p, g.gazeLength())
-	g.gazeCard(p, g.data.Text("handelse_tillbaka_drog", "namn", t.Name, "rundor", strconv.Itoa(g.gazeRounds)))
+	drog := g.data.Text("handelse_tillbaka_drog", "namn", t.Name, "rundor", strconv.Itoa(g.gazeRounds))
+	if share > 0 {
+		drog += " " + g.data.Text("handelse_tillbaka_andel_drog", "guld", strconv.Itoa(share))
+		g.soundTo(p, "skatt")
+	}
+	g.gazeCard(p, drog)
 	g.learn(p, "handelse", "blick")
 
 	for _, o := range g.inside() {
 		if o == p || o == t || o.Cellar > 0 {
 			continue
 		}
-		heard := g.data.Text("handelse_tillbaka_hors", "horn", g.hornToward(o.X, o.Y, t.X, t.Y))
+		heard := g.data.Text("handelse_tillbaka_hors", "horn", g.hornToward(o.X, o.Y, gx, gy))
 		g.logTo(o, heard, "varn")
 		g.addCard(o, gameCard{Slag: "handelse", Bild: e.Bild, Rubrik: e.Rubrik, Text: heard})
 	}
+}
+
+// pullSpot är rummet där den som dras tillbaka hamnar: så långt in som
+// rum_in säger, men aldrig längre, längs rum hen själv har gått igenom och
+// dörrar som är öppna. Kammaren, portrummen, rasade rum och rum med en
+// varelse eller en annan vandrare hoppas över. Finns inget sådant rum
+// står hen kvar i porten.
+func (g *Game) pullSpot(t *Player) (int, int, bool) {
+	e := g.data.towerEvent("tillbaka")
+	if e == nil || e.RumIn <= 0 || t.known == nil {
+		return 0, 0, false
+	}
+	type at struct{ x, y int }
+	dist := map[at]int{{t.X, t.Y}: 0}
+	queue := []at{{t.X, t.Y}}
+	best, bestD := []at(nil), 0
+	for len(queue) > 0 {
+		c := queue[0]
+		queue = queue[1:]
+		d := dist[c]
+		if d > 0 && g.pullRoomOK(c.x, c.y) {
+			switch {
+			case d > bestD:
+				best, bestD = []at{c}, d
+			case d == bestD:
+				best = append(best, c)
+			}
+		}
+		if d >= e.RumIn {
+			continue
+		}
+		for dir := North; dir <= West; dir++ {
+			if !g.rooms[c.y][c.x].Doors[dir] {
+				continue
+			}
+			n := at{c.x + dirDX[dir], c.y + dirDY[dir]}
+			if !g.inBounds(n.x, n.y) || !t.known[n.y][n.x] || !g.rooms[n.y][n.x].Doors[dir.Opp()] {
+				continue
+			}
+			if _, seen := dist[n]; seen || g.rooms[n.y][n.x].blocked > 0 {
+				continue
+			}
+			dist[n] = d + 1
+			queue = append(queue, n)
+		}
+	}
+	if len(best) == 0 {
+		return 0, 0, false
+	}
+	c := best[g.rng.IntN(len(best))]
+	return c.x, c.y, true
+}
+
+// pullRoomOK säger om den som dras tillbaka kan hamna i rummet (x, y).
+func (g *Game) pullRoomOK(x, y int) bool {
+	r := &g.rooms[y][x]
+	return r.Kind == "rum" && r.blocked == 0 && !g.isChamber(x, y) && g.cornerIndex(x, y) < 0 &&
+		g.monsterAt(x, y) == nil && !g.playerIn(x, y)
 }
 
 // gazeLength är hur länge ormens blick ligger kvar.

@@ -1160,7 +1160,16 @@
       "The gate is silent. There is no one to pull back."
     ],
     "handelse_tillbaka_du": [
+      "A cold hand grabs you at the gate and pulls you back into the tower, several rooms deep along the way you went out. {antal} gold stays safe outside; you carry {bar} gold back in. You must get out once more."
+    ],
+    "handelse_tillbaka_du_port": [
       "A cold hand grabs you at the gate and pulls you back into the tower. {antal} gold stays safe outside; you carry {bar} gold back in. You must get out once more."
+    ],
+    "handelse_tillbaka_andel_du": [
+      "The gate takes its share: {guld} gold goes to whoever pulled you in."
+    ],
+    "handelse_tillbaka_andel_drog": [
+      "{guld} gold of what comes back in rolls to you."
     ],
     "handelse_tillbaka_drog": [
       "You pull at the gate, and {namn} stumbles back into the tower. At the same moment you feel the serpent's gaze on you, for {rundor} rounds."
@@ -1233,6 +1242,24 @@
     ],
     "gb_rad_tillbaka": [
       "Pulled back into the tower; the gold that was safe outside."
+    ],
+    "gb_tillbaka_andel": [
+      "{nar} the gate took {guld} gold of what they carried back in, for whoever pulled them back."
+    ],
+    "gb_flera_tillbaka_andel": [
+      "{nar} the gate took {guld} gold of what they carried back in, {antal} times."
+    ],
+    "gb_rad_tillbaka_andel": [
+      "The gate took its share of the gold that came back in."
+    ],
+    "gb_drog": [
+      "{nar} they pulled {namn} back into the tower and got {guld} gold from it."
+    ],
+    "gb_flera_drog": [
+      "{nar} they pulled wanderers back {antal} times and got {guld} gold."
+    ],
+    "gb_rad_drog": [
+      "Pulled {namn} back into the tower."
     ],
     "gb_ute_igen": [
       "Outside again, they got back the {guld} gold that had been safe."

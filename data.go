@@ -260,6 +260,8 @@ type TowerEvent struct {
 	Varelse   string   `json:"varelse,omitempty"`
 	Sol       int      `json:"sol,omitempty"`
 	SolMinst  int      `json:"sol_minst,omitempty"` // tornet drar bara tillbaka med så mycket sol kvar
+	RumIn     int      `json:"rum_in,omitempty"`    // så många rum in längs vägen ut hamnar den som dras tillbaka
+	Andel     float64  `json:"andel,omitempty"`     // den del av guldet som följer med in som den som drar får
 	Guld      int      `json:"guld,omitempty"`      // guldet ormens blick tar när den släpper
 	Vacker    float64  `json:"vacker,omitempty"`    // chansen att en näve med ormens blick väcker ormen
 	Bok       string   `json:"bok"`                 // vad händelsen gör, i ord, för Vandrarens bok

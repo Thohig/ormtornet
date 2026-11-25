@@ -23,8 +23,10 @@ func TestBetweenEvents(t *testing.T) {
 			t.Fatal("Alva kan inte dra tillbaka Bo")
 		}
 		g.Act(a, actPull, 0)
-		if pb.Status != statusIn || pb.Treasure != 20 || pb.banked != 20 || !pb.pulled {
-			t.Fatalf("Bo: %s, bär %d, säkert %d", pb.Status, pb.Treasure, pb.banked)
+		// Hälften är säker ute; av de 20 som följer med in får Alva en
+		// fjärdedel.
+		if pb.Status != statusIn || pb.Treasure != 15 || pb.banked != 20 || !pb.pulled || pa.Treasure != 5 {
+			t.Fatalf("Bo: %s, bär %d, säkert %d; Alva bär %d", pb.Status, pb.Treasure, pb.banked, pa.Treasure)
 		}
 		if g.gazeOn != pa.ID {
 			t.Fatal("Alva fick inte ormens blick")
@@ -37,6 +39,37 @@ func TestBetweenEvents(t *testing.T) {
 		g.move(pb, g.rooms[cy][cx].Exit, 0)
 		if pb.Status != statusOut || pb.Treasure != 45 {
 			t.Fatalf("ute igen med %d", pb.Treasure)
+		}
+	})
+	t.Run("tillbaka längre in", func(t *testing.T) {
+		g, a, b := startTwo(t)
+		pb := b.player
+		g.monsters = nil
+		pb.Treasure = 40
+		c := g.corners()[pb.Corner]
+		gate := &g.rooms[c.y][c.x]
+		// Bo gick ut längs en rak gång på fyra rum.
+		var d Dir
+		for d = North; d <= West; d++ {
+			if gate.Doors[d] {
+				break
+			}
+		}
+		for i := 1; i <= 4; i++ {
+			x, y := c.x+i*dirDX[d], c.y+i*dirDY[d]
+			r := g.reveal(x, y)
+			r.Kind, r.Walked = "rum", true
+			r.Doors[d], r.Doors[d.Opp()] = true, true
+			pb.known[y][x] = true
+		}
+		pb.X, pb.Y, pb.Status = c.x, c.y, statusOut
+		g.sun = g.sunMax
+		if !g.runTowerEvent("tillbaka") {
+			t.Fatal("händelsen hände inte")
+		}
+		g.Act(a, actPull, 0)
+		if wx, wy := c.x+3*dirDX[d], c.y+3*dirDY[d]; pb.X != wx || pb.Y != wy {
+			t.Fatalf("Bo står i (%d, %d), inte tre rum in i (%d, %d)", pb.X, pb.Y, wx, wy)
 		}
 	})
 	t.Run("tillbaka och dör", func(t *testing.T) {

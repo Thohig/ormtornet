@@ -234,10 +234,12 @@
         "max": 1,
         "bild": "tillbaka",
         "rubrik": "Tornet drar tillbaka",
-        "bok": "Den som bär minst guld i tornet kan dra tillbaka den som gick ut med mest. Hälften av guldet är säkert ute, och hälften bär hen in igen. Den som drar får ormens blick för det.",
+        "bok": "Den som bär minst guld i tornet kan dra tillbaka den som gick ut med mest. Hälften av guldet är säkert ute, och hälften bär hen in igen, tre rum in längs vägen hen gick ut. En fjärdedel av det som följer med in får den som drar, och ormens blick på köpet.",
         "sol_minst": 8,
+        "rum_in": 3,
+        "andel": 0.25,
         "har": [
-          "Porten viskar om {namn}, som gick ut med {guld} guld. Du kan dra hen tillbaka in i tornet. Hälften av guldet följer med in, men ormen får syn på dig."
+          "Porten viskar om {namn}, som gick ut med {guld} guld. Du kan dra hen tillbaka in i tornet. Hälften av guldet följer med in, och en del av det blir ditt, men ormen får syn på dig."
         ]
       },
       {

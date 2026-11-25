@@ -72,8 +72,13 @@ där vandrarna påverkar varandra (`vandrarhandelser.go`):
 
 **Tornet drar tillbaka** är aldrig frivilligt för den som dras in, men
 den som drar får ormens blick. Den som dras in kommer in genom samma port
-med fullt liv och utan föremål (de blev guld vid porten). Hälften av
-guldet ligger säkert ute och läggs till när hen går ut igen; dör hen
+med fullt liv och utan föremål (de blev guld vid porten), och hamnar
+tre rum in (`rum_in`) längs rum hen själv har gått igenom, så långt det
+går: inte i kammaren, ett portrum, ett rasat rum eller ett rum med en
+varelse eller en annan vandrare. Finns inget sådant rum står hen kvar i
+porten. Hälften av guldet ligger säkert ute och läggs till när hen går ut
+igen. Av den andra hälften, som följer med in, får den som drar en
+fjärdedel (`andel`). Dör hen
 eller blir kvar räknas bara den säkra hälften i placeringen. Det händer
 bara en gång per vandrare, och bara medan porten är öppen och solen har
 minst åtta handsbredder kvar (`sol_minst`).

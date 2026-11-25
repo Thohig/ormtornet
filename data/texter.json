@@ -1214,7 +1214,16 @@
       "Porten är tyst. Det finns ingen att dra tillbaka."
     ],
     "handelse_tillbaka_du": [
+      "En kall hand griper dig vid porten och drar dig tillbaka in i tornet, flera rum in längs vägen du gick ut. {antal} guld ligger säkert kvar ute; {bar} guld bär du med dig in igen. Du måste ut en gång till."
+    ],
+    "handelse_tillbaka_du_port": [
       "En kall hand griper dig vid porten och drar dig tillbaka in i tornet. {antal} guld ligger säkert kvar ute; {bar} guld bär du med dig in igen. Du måste ut en gång till."
+    ],
+    "handelse_tillbaka_andel_du": [
+      "Porten tar sin del: {guld} guld går till den som drog dig in."
+    ],
+    "handelse_tillbaka_andel_drog": [
+      "{guld} guld av det som följer med in rullar till dig."
     ],
     "handelse_tillbaka_drog": [
       "Du drar i porten, och {namn} stapplar tillbaka in i tornet. I samma stund känner du ormens blick på dig, i {rundor} rundor."
@@ -1287,6 +1296,24 @@
     ],
     "gb_rad_tillbaka": [
       "Drogs tillbaka in i tornet; guldet som låg säkert ute."
+    ],
+    "gb_tillbaka_andel": [
+      "{nar} tog porten {guld} guld av det hen bar in, åt den som drog hen tillbaka."
+    ],
+    "gb_flera_tillbaka_andel": [
+      "{nar} tog porten {guld} guld av det hen bar in, {antal} gånger."
+    ],
+    "gb_rad_tillbaka_andel": [
+      "Porten tog sin del av guldet som följde med in."
+    ],
+    "gb_drog": [
+      "{nar} drog hen {namn} tillbaka in i tornet och fick {guld} guld av det."
+    ],
+    "gb_flera_drog": [
+      "{nar} drog hen tillbaka vandrare {antal} gånger och fick {guld} guld."
+    ],
+    "gb_rad_drog": [
+      "Drog {namn} tillbaka in i tornet."
     ],
     "gb_ute_igen": [
       "Ute igen fick hen tillbaka de {guld} guld som hade legat säkert."
