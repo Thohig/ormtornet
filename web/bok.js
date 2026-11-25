@@ -2,9 +2,9 @@
 // spelarsidan, med flikar. Grundernas texter är sidans egna (bok_* i
 // data/spelarsidan.json). Resten kommer från tornet (GET /bok, bok.go) på
 // tornets språk: klasserna, och föremålen, kombinationerna, varelserna,
-// fällorna, händelserna och ormens kort, som syns först när man har mött
-// dem. Tornet säger det i tillståndet (bok), och webbläsaren sparar det i
-// localStorage, så att boken växer från vandring till vandring. Boken
+// fällorna, händelserna och ormens kort, alla öppna från början. Det man
+// har mött får märket Mött: tornet säger det i tillståndet (bok), och
+// webbläsaren sparar det i localStorage, från vandring till vandring. Boken
 // öppnas med B, knappen i styrningen och knappen i introt, och stängs med
 // B, Esc, ✕ eller ett klick utanför.
 "use strict";
@@ -12,7 +12,7 @@
 window.Bok = (() => {
   const $ = (id) => document.getElementById(id);
   const FLIKAR = ["grunder", "klasser", "foremal", "kombinationer", "varelser", "fallor", "handelser", "ormen"];
-  // Flikarna som fylls i, med slaget i tornets nycklar ("varelse:krypare").
+  // Flikarna med kort, med slaget i tornets nycklar ("varelse:krypare").
   const SLAG = {
     foremal: "foremal", kombinationer: "kombination", varelser: "varelse",
     fallor: "falla", handelser: "handelse", ormen: "ormkort",
@@ -79,10 +79,7 @@ window.Bok = (() => {
     const rad = $("bokFlikar");
     rad.innerHTML = "";
     for (const id of FLIKAR) {
-      let namn = t("bok_flik_" + id);
-      const lista = SLAG[id] && innehall && innehall[id];
-      if (lista) namn += " " + t("bok_antal", { n: lista.filter((c) => mott.has(SLAG[id] + ":" + c.id)).length, av: lista.length });
-      const b = el("button", "bok-flik", namn);
+      const b = el("button", "bok-flik", t("bok_flik_" + id));
       b.type = "button";
       b.setAttribute("role", "tab");
       b.setAttribute("aria-selected", id === flik ? "true" : "false");
@@ -140,9 +137,10 @@ window.Bok = (() => {
   }
 
   // kort bygger ett spelkort i boken, med framsidan upp: rubriken, bilden,
-  // texten och raderna under.
-  function kort(c, rader) {
+  // texten och raderna under, och märket Mött om man har mött det.
+  function kort(c, rader, harMott) {
     const k = el("div", "okort vand bok-kort");
+    if (harMott) k.appendChild(el("div", "bok-mott", t("bok_mott")));
     const inner = el("div", "ok-inner");
     const front = el("div", "ok-front");
     front.appendChild(el("div", "ok-namn", c.rubrik));
@@ -156,14 +154,8 @@ window.Bok = (() => {
     return k;
   }
 
-  // baksida är ett kort man inte har mött än.
-  function baksida() {
-    const k = el("div", "bok-baksida");
-    k.appendChild(el("span", "", t("bok_inte_sett")));
-    return k;
-  }
-
-  // ritaLek ritar en flik som fylls i: föremålen, varelserna eller fällorna.
+  // ritaLek ritar en flik med kort: föremålen, kombinationerna, varelserna,
+  // fällorna, händelserna eller ormens kort.
   function ritaLek(sida) {
     if (!innehall || innehall.fel) {
       sida.appendChild(el("p", "bok-inledning", t(innehall ? "bok_fel" : "bok_laddar")));
@@ -173,14 +165,10 @@ window.Bok = (() => {
     sida.appendChild(el("p", "bok-inledning", t("bok_" + flik + "_inledning")));
     const lek = el("div", "bok-lek");
     for (const c of innehall[flik] || []) {
-      if (!mott.has(slag + ":" + c.id)) {
-        lek.appendChild(baksida());
-        continue;
-      }
       let rader = [];
       if (flik === "foremal") {
-        if (c.forbannelse && mott.has("forbannelse:" + c.id)) rader.push(["bad", t("bok_forbannelse", { text: c.forbannelse })]);
-        if (c.vander && mott.has("vander:" + c.id)) rader.push(["bad", t("bok_vander", { text: c.vander })]);
+        if (c.forbannelse) rader.push(["bad", t("bok_forbannelse", { text: c.forbannelse })]);
+        if (c.vander) rader.push(["bad", t("bok_vander", { text: c.vander })]);
       } else if (flik === "kombinationer") {
         rader = [["om", c.delar && t("bok_delar", { delar: c.delar.join(" + ") })]];
       } else if (flik !== "fallor") {
@@ -188,7 +176,7 @@ window.Bok = (() => {
       } else {
         rader = [["om", c.om], ["spar", c.spar && t("bok_spar", { text: c.spar })]];
       }
-      lek.appendChild(kort(c, rader));
+      lek.appendChild(kort(c, rader, mott.has(slag + ":" + c.id)));
     }
     sida.appendChild(lek);
   }

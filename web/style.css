@@ -1847,8 +1847,8 @@ body:not(.touch) #spelkort { width: 165px; }
   #bokSida .card .desc { display: block; }
   #bokSida .card .cbild { width: 90px; height: 78px; }
 }
-/* Bokens kort: spelkort med framsidan upp för det man har mött, och
-   baksidan med "Ännu inte sett" för resten. */
+/* Bokens kort: spelkort med framsidan upp, och märket Mött på det man
+   har mött. */
 #bokSida .okort { position: relative; width: auto; perspective: none; }
 #bokSida .okort .ok-inner { transform: none; transition: none; }
 #bokSida .okort .ok-front { height: 100%; }
@@ -1858,27 +1858,23 @@ body:not(.touch) #spelkort { width: 165px; }
 #bokSida .bok-rad.om { color: #2a4a5e; }
 #bokSida .bok-rad.spar { color: #5a4a36; }
 #bokSida .bok-rad.bad { color: #8a2a18; }
-#bokSida .bok-baksida {
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  min-height: 220px;
-  padding: 0 10px 18px;
-  border-radius: 10px;
-  background:
-    radial-gradient(circle at 50% 45%, transparent 0 28px, #c9a24f 29px 31px, transparent 32px 44px, #c9a24f 45px 46px, transparent 47px),
-    repeating-linear-gradient(45deg, #3a2414 0 6px, #331f11 6px 12px);
-  border: 3px solid #1a0f08;
-  outline: 1px solid #c9a24f;
-  outline-offset: -8px;
-  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.75);
-  color: #e8d8b0;
-  font-size: 12px;
+#bokSida .bok-mott {
+  position: absolute;
+  top: 38px;
+  right: 8px;
+  z-index: 2;
+  padding: 1px 6px;
+  border: 1px solid #2a4a5e;
+  border-radius: 3px;
+  color: #2a4a5e;
+  background: rgba(244, 232, 204, 0.85);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
   text-shadow: none;
-  opacity: 0.8;
+  transform: rotate(4deg);
 }
 @media (max-width: 700px) {
-  #bokSida .bok-lek:has(.bok-kort, .bok-baksida) { grid-template-columns: 1fr 1fr; gap: 10px; }
-  #bokSida .bok-baksida { min-height: 160px; }
+  #bokSida .bok-lek:has(.bok-kort) { grid-template-columns: 1fr 1fr; gap: 10px; }
   #bokSida .ok-bild { width: 80px; height: 70px; }
 }
