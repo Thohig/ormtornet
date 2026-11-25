@@ -273,7 +273,6 @@ func (g *Game) runTowerEvent(id string) bool {
 		}
 		it := v.items[i]
 		v.items = append(v.items[:i:i], v.items[i+1:]...)
-		g.rooms[r.Y][r.X].items = append(g.rooms[r.Y][r.X].items, it.ID)
 		name := it.ID
 		if t := g.data.itemType(it.ID); t != nil {
 			name = t.found()
@@ -282,7 +281,7 @@ func (g *Game) runTowerEvent(id string) bool {
 		alt[r] = true
 		vars[v] = []string{"foremal", name, "horn", g.hornToward(v.X, v.Y, r.X, r.Y)}
 		vars[r] = []string{"foremal", name, "horn", g.hornToward(r.X, r.Y, v.X, v.Y)}
-		after = func() { g.pickUp(r) }
+		after = func() { g.catchItem(r, it) }
 	case "vagg":
 		a, b, d, ok := g.wallPair()
 		if !ok {

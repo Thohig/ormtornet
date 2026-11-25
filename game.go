@@ -483,6 +483,7 @@ type Game struct {
 	// blick och hur länge, vem det står ett pris på och hur länge, och
 	// rundan då spåren slutar glöda.
 	gazeOn, gazeRounds     int
+	gazeFrom               int // den som senast gav blicken vidare, 0 om ingen
 	bountyOn, bountyRounds int
 	glowUntil              int
 	// Reprisen (replay.go): vilka som är med, var de stod runda för runda
@@ -1530,7 +1531,7 @@ func (g *Game) startGame() {
 	g.lightRounds = 0
 	g.eventCount = map[string]int{}
 	g.shutDoors = nil
-	g.gazeOn, g.gazeRounds, g.bountyOn, g.bountyRounds, g.glowUntil = 0, 0, 0, 0, 0
+	g.gazeOn, g.gazeRounds, g.gazeFrom, g.bountyOn, g.bountyRounds, g.glowUntil = 0, 0, 0, 0, 0, 0
 	g.firstInitiated = 0
 	g.clueDeals, g.omens = 0, nil
 	g.portClock, g.portNext = 0, -1

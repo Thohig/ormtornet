@@ -282,6 +282,9 @@ Skriv dit när ett steg är klart.
   andra provspelet 2026-11-25, efter kombinationerna, föremålen med två
   sidor och de nya klasserna: tre fel som rättades och sex förslag, av
   vilka fem byggdes samma dag och ett ströks.
+- [docs/provspel-2026-11-25-3.md](docs/provspel-2026-11-25-3.md): det
+  tredje provspelet 2026-11-25, efter händelserna mellan vandrarna: sex
+  fel som rättades och fem förslag som inte är byggda.
 - [docs/ormkorten.md](docs/ormkorten.md): att ormkorten syns, med kortet
   som vänds upp, sömnmätaren, uppvaknandet, leken bredvid guldhögen och
   korten i krönikan. Allt är byggt.

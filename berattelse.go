@@ -294,10 +294,16 @@ func (g *Game) storyHighlights() []storyPart {
 	sort.SliceStable(chosen, func(a, b int) bool { return chosen[a].order < chosen[b].order })
 
 	var out []storyPart
-	told := map[int]bool{} // slagen vars antal redan är berättat
+	// Antalet av ett slag ("Till slut hade två portar slutit sig") står
+	// efter den sista av slaget som berättas, inte före de andra
+	// (provspelet 2026-11-25, tredje).
+	lastOf := map[int]int{}
+	for i, p := range chosen {
+		lastOf[p.kind] = i
+	}
 	said := map[string]bool{}
 	last := 0
-	for _, p := range chosen {
+	for ci, p := range chosen {
 		e := g.chron[p.order]
 		k := sd.Slag[p.kind]
 		// Samma slags händelse berättas inte med samma ord två gånger: av
@@ -323,8 +329,7 @@ func (g *Game) storyHighlights() []storyPart {
 		if burit := varOf(e.vars, "burit"); burit != "" {
 			text += " " + g.data.Text("ber_dod_guld", "guld", burit)
 		}
-		if k.Flera != "" && count[p.kind] > 1 && !told[p.kind] {
-			told[p.kind] = true
+		if k.Flera != "" && count[p.kind] > 1 && lastOf[p.kind] == ci {
 			text += " " + g.data.Text(k.Flera, "antal", g.tal(count[p.kind]))
 		}
 		bild := k.Bild

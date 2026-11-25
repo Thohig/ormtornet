@@ -48,38 +48,51 @@ func (g *Game) betweenTick() {
 	}
 }
 
-// gazeTick: blicken går vidare till någon i samma rum, och annars räknas
-// den ner. När den släpper tar den guld från den som bär den.
+// gazeTick: blicken räknas ner varje runda och går vidare till någon i
+// samma rum, men inte tillbaka till den som just gav den så länge de står
+// kvar tillsammans. När den släpper tar den guld från den som bär den.
 func (g *Game) gazeTick() {
 	h := g.playerByID(g.gazeOn)
 	if h == nil || h.Status != statusIn {
-		g.gazeOn, g.gazeRounds = 0, 0
+		g.gazeOn, g.gazeRounds, g.gazeFrom = 0, 0, 0
 		return
 	}
-	e := g.data.towerEvent("blick")
-	if h.Cellar == 0 {
-		var near []*Player
-		for _, o := range g.inside() {
-			if o != h && o.Cellar == 0 && o.X == h.X && o.Y == h.Y {
-				near = append(near, o)
+	if g.gazeRounds--; g.gazeRounds <= 0 {
+		g.gazeOn, g.gazeRounds, g.gazeFrom = 0, 0, 0
+		g.gazeFine(h)
+		return
+	}
+	if h.Cellar > 0 {
+		return
+	}
+	var near []*Player
+	from := false
+	for _, o := range g.inside() {
+		if o != h && o.Cellar == 0 && o.X == h.X && o.Y == h.Y {
+			if o.ID == g.gazeFrom {
+				from = true
+				continue
 			}
-		}
-		if len(near) > 0 {
-			n := near[g.rng.IntN(len(near))]
-			g.gazeOn = n.ID
-			g.gazeRounds = max(g.gazeRounds, 2)
-			g.gazeCard(h, g.data.Text("handelse_blick_vidare", "namn", n.Name))
-			g.gazeCard(n, g.data.Text("handelse_blick_fick", "namn", h.Name, "rundor", strconv.Itoa(g.gazeRounds)))
-			g.chronicle("kronika_blick_vidare", "namn", h.Name, "offer", n.Name)
-			return
+			near = append(near, o)
 		}
 	}
-	if g.gazeRounds--; g.gazeRounds > 0 {
+	if !from {
+		g.gazeFrom = 0 // de har skilts åt; möts de igen kan blicken gå tillbaka
+	}
+	if len(near) == 0 {
 		return
 	}
-	g.gazeOn, g.gazeRounds = 0, 0
+	n := near[g.rng.IntN(len(near))]
+	g.gazeOn, g.gazeFrom = n.ID, h.ID
+	g.gazeCard(h, g.data.Text("handelse_blick_vidare", "namn", n.Name))
+	g.gazeCard(n, g.data.Text("handelse_blick_fick", "namn", h.Name, "rundor", strconv.Itoa(g.gazeRounds)))
+	g.chronicle("kronika_blick_vidare", "namn", h.Name, "offer", n.Name)
+}
+
+// gazeFine: när blicken släpper tar den guld från den som bar den.
+func (g *Game) gazeFine(h *Player) {
 	fine := 0
-	if e != nil {
+	if e := g.data.towerEvent("blick"); e != nil {
 		fine = min(e.Guld, h.Treasure)
 	}
 	if fine > 0 {
@@ -105,7 +118,7 @@ func (g *Game) gazeCard(p *Player, text string) {
 // giveGaze lägger ormens blick på p i rounds rundor. Bar någon annan den
 // släpper den.
 func (g *Game) giveGaze(p *Player, rounds int) {
-	g.gazeOn, g.gazeRounds = p.ID, max(1, rounds)
+	g.gazeOn, g.gazeRounds, g.gazeFrom = p.ID, max(1, rounds), 0
 }
 
 // gazeWakes slår för om näven väcker ormen för den som bär dess blick.

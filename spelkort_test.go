@@ -296,9 +296,10 @@ func TestStory(t *testing.T) {
 			t.Fatalf("trasig text: %q", p.Text)
 		}
 	}
-	// Ormen vaknade tre gånger; det sägs en gång.
-	if !strings.Contains(s[3].Text, g.data.Text("tal_3")) {
-		t.Fatalf("antalet uppvaknanden: %q", s[3].Text)
+	// Ormen vaknade tre gånger; det sägs en gång, efter det sista
+	// uppvaknandet som berättas.
+	if strings.Contains(s[3].Text, g.data.Text("tal_3")) || !strings.Contains(s[4].Text, g.data.Text("tal_3")) {
+		t.Fatalf("antalet uppvaknanden: %q och %q", s[3].Text, s[4].Text)
 	}
 	end := s[len(s)-1].Text
 	if !strings.Contains(end, pa.Name) || !strings.Contains(end, "50") || !strings.Contains(end, pb.Name) {

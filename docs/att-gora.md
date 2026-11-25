@@ -381,6 +381,15 @@ Från [isometrisk.md](isometrisk.md):
   teckenförklaringen, används inte längre och kan tas bort nästa gång
   kartan byggs om.
 
+Från [provspel-2026-11-25-3.md](provspel-2026-11-25-3.md), inget byggt:
+
+- Tornet drar tillbaka kostar inte den som dras in något: hen går ut
+  igen nästa runda med lika mycket guld. Ge händelsen udd.
+- Strider mot gestalten i fjällrustning och väsenet av vita ben kan vara
+  i tio rundor eller mer. Gör långa strider kortare.
+- En rad när ormens blick tas över av den som drar tillbaka.
+- "like a chest in sleep" på engelska, som kan läsas som kistan.
+
 ## Nya idéer
 
 ### Spelet

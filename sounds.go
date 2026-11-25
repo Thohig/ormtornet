@@ -49,12 +49,13 @@ func (g *Game) hearFight(x, y int, skip ...*Player) {
 }
 
 // hearTo låter o höra text. Under rundan samlas ljuden och står sist i
-// rumsblocket (here.go); annars blir de en egen rad i loggen.
+// rumsblocket (here.go), en gång var, också för den som är död eller ute
+// (provspelet 2026-11-25, tredje); annars blir de en egen rad i loggen.
 func (g *Game) hearTo(o *Player, text, class string) {
 	if o == nil || text == "" {
 		return
 	}
-	if g.hearing && o.Status == statusIn {
+	if g.hearing {
 		if !slices.Contains(o.heard, text) {
 			o.heard = append(o.heard, text)
 		}

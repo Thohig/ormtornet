@@ -158,6 +158,27 @@ func (g *Game) give(p *Player, id string) bool {
 	return true
 }
 
+// catchItem: vandraren får ett föremål som någon annan bar (skatan), med
+// allt det har varit med om: ett ägg som har kläckts är fortfarande kläckt.
+// Är väskan full blir det kvar i rummet.
+func (g *Game) catchItem(p *Player, it *Item) {
+	t := g.data.itemType(it.ID)
+	if t == nil {
+		return
+	}
+	if len(p.items) >= g.data.maxItems() && g.data.comboWith(it.ID, p) == nil {
+		g.rooms[p.Y][p.X].items = append(g.rooms[p.Y][p.X].items, it.ID)
+		g.logTo(p, g.data.Text("foremal_ligger_full", "foremal", t.found()), "dim")
+		return
+	}
+	g.learn(p, "foremal", it.ID)
+	p.items = append(p.items, it)
+	p.stats.items++
+	g.chronicle("kronika_foremal", "namn", p.Name, "foremal", t.found(), "bild", cardImage(t.Bild, t.ID))
+	g.itemCard(p, t)
+	g.combine(p)
+}
+
 // findItem: vandraren hittar ett föremål när den söker. Är väskan full blir
 // föremålet kvar i rummet, åt den som kommer efter.
 func (g *Game) findItem(p *Player) {

@@ -395,6 +395,14 @@ func (g *Game) moveChamber() {
 	r := g.build(n[0], n[1], false)
 	r.Kind, r.TypeID = "kammare", "skattkammare"
 	r.Event = ""
+	if gold := r.chest; gold > 0 {
+		// Kistan med två lås står inte i kammaren: tornet flyttar den
+		// (provspelet 2026-11-25, tredje).
+		r.chest = 0
+		if x, y, ok := g.chestSpot(); ok {
+			g.rooms[y][x].chest = gold
+		}
+	}
 	if m := g.monsterAt(n[0], n[1]); m != nil {
 		g.removeMonster(m) // varelsen flyr för ormen
 	}

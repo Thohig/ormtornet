@@ -6,6 +6,22 @@ eller leder tornet.
 
 ## 2026-11-25
 
+### Provspelet: blicken, skatan och kistan
+
+- Ormens blick går inte längre fram och tillbaka mellan två som står i
+  samma rum. Den går vidare en gång och räknas ner varje runda, så att den
+  tar slut.
+- Ett föremål som skatan flyttar är detsamma hos den som får det: ett
+  kläckt ägg är fortfarande kläckt.
+- Flyttar kammaren in i rummet med kistan med två lås flyttar tornet
+  kistan.
+- Den som är död eller ute hör inte samma ljud två gånger samma runda.
+- Berättelsen säger hur många portar som slöt sig efter den sista porten,
+  inte efter den första.
+- docs/provspel-2026-11-25-3.md har fem förslag, bland dem att Tornet
+  drar tillbaka inte kostar den som dras in något och att striderna mot
+  gestalten i fjällrustning kan bli mycket långa.
+
 ### Åtta händelser mellan vandrarna
 
 - Tornet har åtta nya händelser där vandrarna påverkar varandra, var och

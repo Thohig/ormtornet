@@ -71,6 +71,12 @@ func TestBetweenEvents(t *testing.T) {
 		if g.gazeOn != pb.ID {
 			t.Fatal("blicken gick inte vidare")
 		}
+		// Den går inte tillbaka medan de står kvar tillsammans, och den
+		// räknas ner också när den går vidare (provspelet 2026-11-25, tredje).
+		g.betweenTick()
+		if g.gazeOn != pb.ID || g.gazeRounds != 1 {
+			t.Fatalf("blicken på %d med %d rundor kvar", g.gazeOn, g.gazeRounds)
+		}
 		// När den släpper tar den guld.
 		putInRoom(g, pb, 5, 5)
 		pb.Treasure = 30
@@ -105,11 +111,16 @@ func TestBetweenEvents(t *testing.T) {
 		pb.items = nil
 		pa.items = nil
 		g.give(pa, "rep")
+		pa.items[0].rounds, pa.items[0].uses = 7, 1
 		if !g.runTowerEvent("skata") {
 			t.Fatal("händelsen hände inte")
 		}
 		if pa.has("rep") != nil || pb.has("rep") == nil {
 			t.Fatal("repet bytte inte väska")
+		}
+		// Föremålet är detsamma som förut (provspelet 2026-11-25, tredje).
+		if it := pb.has("rep"); it.rounds != 7 || it.uses != 1 {
+			t.Fatalf("repet blev som nytt: %d rundor, %d användningar", it.rounds, it.uses)
 		}
 		if !hasEventCard(pa, "skata") || !hasEventCard(pb, "skata") {
 			t.Fatal("inget spelkort")
@@ -205,5 +216,26 @@ func TestBetweenEventsData(t *testing.T) {
 		if strings.Contains(e.Bok, "{") {
 			t.Fatalf("%s: boken har en mall", id)
 		}
+	}
+}
+
+// Kistan med två lås står aldrig i kammaren: flyttar ormen dit flyttar
+// tornet kistan (provspelet 2026-11-25, tredje).
+func TestChestLeavesChamber(t *testing.T) {
+	g, _, _ := startTwo(t)
+	g.data.Ormen.Spridning = 2
+	for y := range g.size {
+		for x := range g.size {
+			g.rooms[y][x].chest = 40
+		}
+	}
+	ox, oy := g.chamber()
+	g.moveChamber()
+	x, y := g.chamber()
+	if x == ox && y == oy {
+		t.Fatal("kammaren flyttade inte")
+	}
+	if g.rooms[y][x].chest != 0 {
+		t.Fatal("kistan står i kammaren")
 	}
 }

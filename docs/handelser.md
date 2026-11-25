@@ -62,7 +62,7 @@ där vandrarna påverkar varandra (`vandrarhandelser.go`):
 | Händelse | Bild | Vad som händer |
 | --- | --- | --- |
 | Tornet drar tillbaka | `tillbaka` | den inne som bär minst guld får välja att dra tillbaka den som gick ut med mest; valet (T eller knappen Dra tillbaka i panelen Nu) är hens drag och gäller två rundor |
-| Ormens blick | `blick` | en vandrare får ormens blick i sex rundor: var tredje näve väcker ormen, blicken går över till den man står i samma rum som, och när den släpper tar den 10 guld |
+| Ormens blick | `blick` | en vandrare får ormens blick i sex rundor: var tredje näve väcker ormen, blicken går över till den man står i samma rum som (inte tillbaka till den som just gav den, så länge de står kvar tillsammans) och räknas ner varje runda, och när den släpper tar den 10 guld |
 | Skottpengen | `skottpeng` | den som bär mest får ett pris på sig i tre rundor: den som träffar hen tar dubbelt så mycket |
 | Skatan | `skata` | ett föremål som inte är förbannat flyger från en vandrare till en annan i ett annat rum; båda vet åt vilket håll den andre står |
 | Väggen faller | `vagg_faller` | väggen mellan två vandrare i grannrum rasar, och var och en ser den andres rum på kartan |
@@ -79,6 +79,9 @@ bara en gång per vandrare, och bara medan porten är öppen och solen har
 minst åtta handsbredder kvar (`sol_minst`).
 
 Blicken och skottpengen står bland tecknen (⊙ och ¤) med rundorna kvar.
+Skatan flyttar föremålet som det är: ett ägg som har kläckts eller ett
+öga som har vänt är detsamma hos den som får det. Flyttar kammaren in i
+rummet med kistan flyttar tornet kistan till ett annat rum.
 Kistan står som en rad i panelen Nu i rummet där den finns.
 
 Chansen per runda är fortfarande 0,12, så varje händelse kommer mer
