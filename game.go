@@ -1064,7 +1064,15 @@ func (g *Game) results() []resultView {
 		return -1
 	}
 	sort.SliceStable(res, func(i, j int) bool { return score(res[i]) > score(res[j]) })
+	// Kom ingen ut får ingen någon plats: alla förlorade lika mycket.
+	anyOut := false
+	for _, r := range res {
+		anyOut = anyOut || r.Status == statusOut
+	}
 	for i := range res {
+		if !anyOut {
+			break
+		}
 		res[i].Place = i + 1
 		if i > 0 && score(res[i]) == score(res[i-1]) {
 			res[i].Place = res[i-1].Place
@@ -1843,7 +1851,7 @@ func (g *Game) endGame() {
 	}
 	// Var och en får veta sin placering.
 	for _, r := range res {
-		if p := g.playerByName(r.Name); p != nil {
+		if p := g.playerByName(r.Name); p != nil && r.Place > 0 {
 			g.logTo(p, g.data.Text("plats_du", "plats", strconv.Itoa(r.Place), "antal", strconv.Itoa(len(res))), "info")
 		}
 	}

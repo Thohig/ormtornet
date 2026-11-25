@@ -1982,7 +1982,7 @@ function renderOverlay() {
   const lines = [{ text: endTitle() }, { text: "" }];
   state.results.forEach((r, i) => {
     const what = resultWord(r);
-    const place = String(r.plats || i + 1).padStart(2, " ") + " ";
+    const place = (r.plats ? String(r.plats) : "").padStart(2, " ") + " ";
     const du = isMine(r) ? " " + t("slut_du") : "";
     const name = (r.winner ? "*" : " ") + (r.ai ? "~" : " ") + r.name.slice(0, Math.max(4, 15 - du.length)) + du;
     const row = place + name.padEnd(17, " ") + what.padStart(10, " ");

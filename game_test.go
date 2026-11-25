@@ -954,6 +954,18 @@ func TestResultPlaces(t *testing.T) {
 	}
 }
 
+// Kom ingen ut får ingen någon plats.
+func TestNoPlacesWhenNoneCameOut(t *testing.T) {
+	g := testGame(t)
+	g.players[0] = &Player{ID: 1, Name: "Död", Status: statusDead}
+	g.players[1] = &Player{ID: 2, Name: "Kvar", Status: statusLost}
+	for _, r := range g.results() {
+		if r.Place != 0 || r.Winner {
+			t.Fatalf("%s: plats %d, vinnare %v", r.Name, r.Place, r.Winner)
+		}
+	}
+}
+
 // Kammaren hamnar i mittens 3 × 3 med spridning 1, och har fyra dörrar.
 func TestChamberNearCenter(t *testing.T) {
 	g := testGame(t)
