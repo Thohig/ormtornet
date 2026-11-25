@@ -144,6 +144,7 @@ func (g *Game) give(p *Player, id string) bool {
 	if t == nil {
 		return false
 	}
+	g.learn(p, "foremal", id)
 	if t.Brev {
 		g.readLetter(p)
 		return true
@@ -682,6 +683,7 @@ func (g *Game) curse(p *Player, id string) bool {
 			it.cursed = map[string]bool{}
 		}
 		it.cursed[id] = true
+		g.learn(p, "forbannelse", id)
 		if t := g.data.itemType(id); t != nil {
 			text := pick(t.Forbannelse)
 			if text != "" {
@@ -741,6 +743,7 @@ func (g *Game) ageItems(p *Player) {
 // visar sig, och det som händer.
 func (g *Game) turnItem(p *Player, it *Item, t *ItemType) {
 	it.turned = true
+	g.learn(p, "vander", t.ID)
 	text := pick(t.Vander)
 	if text != "" {
 		g.logTo(p, text, "varn")

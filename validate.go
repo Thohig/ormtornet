@@ -158,6 +158,9 @@ func (d *Data) validate() []string {
 	for _, t := range d.Fallor {
 		ids = append(ids, t.ID)
 		cardImageOK("fallor.json", "fällan "+t.ID, cardImage(t.Bild, t.ID))
+		if strings.TrimSpace(t.Bok) == "" {
+			bad("fallor.json", "fällan %q: bok, vad den gör för Vandrarens bok, saknas", t.ID)
+		}
 	}
 	unique("fallor.json", "fällan", ids)
 	chance("fallor.json", "handelsechans", d.Regler.Handelsechans)
@@ -308,6 +311,9 @@ func (d *Data) validate() []string {
 	for _, t := range d.Monster.Typer {
 		if len(a.Varsel.Varelser[t.ID]) == 0 {
 			bad("avslojande.json", "varsel: varelsen %q saknar text", t.ID)
+		}
+		if strings.TrimSpace(t.Bok) == "" {
+			bad("monster.json", "varelsen %q: bok, hur den är för Vandrarens bok, saknas", t.ID)
 		}
 	}
 	for lvl, w := range a.Forandring.Fallvikter {

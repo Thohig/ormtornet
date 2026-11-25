@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
+	"slices"
 	"strings"
 	"testing"
 )
@@ -49,6 +50,58 @@ func TestBookBasicsTexts(t *testing.T) {
 					t.Errorf("%s: %s saknas", lang, k)
 				}
 			}
+		}
+	}
+}
+
+// Tornet skriver in i boken det vandraren möter, och skickar det i
+// tillståndet: föremål, förbannelser, varelser och fällor.
+func TestBookLearnsWhatYouMeet(t *testing.T) {
+	g, a, _ := startTwo(t)
+	p := a.player
+	putInRoom(g, p, 3, 3)
+	g.give(p, "svart_parla")
+	g.curse(p, "svart_parla")
+	g.trigger(p, g.data.trap("pilar"), 0)
+	g.addMonster(g.data.monsterType("krypare"), 3, 3)
+	g.announceMonster(p)
+	got := g.stateFor(p).Book
+	for _, want := range []string{"foremal:svart_parla", "forbannelse:svart_parla", "falla:pilar", "varelse:krypare"} {
+		if !slices.Contains(got, want) {
+			t.Errorf("%s saknas i boken: %v", want, got)
+		}
+	}
+	if slices.Contains(got, "varelse:yngel") || slices.Contains(got, "foremal:rep") {
+		t.Errorf("boken har sådant vandraren inte har mött: %v", got)
+	}
+}
+
+// Boken visar korta beskrivningar och aldrig namnen på fällor och
+// varelser, och inga hopfogade föremål än.
+func TestBookHasNoNames(t *testing.T) {
+	g := testGame(t)
+	v := g.Book()
+	if len(v.Foremal) == 0 || len(v.Varelser) != len(g.data.Monster.Typer) || len(v.Fallor) != len(g.data.Fallor) {
+		t.Fatalf("%d föremål, %d varelser, %d fällor", len(v.Foremal), len(v.Varelser), len(v.Fallor))
+	}
+	for _, c := range append(v.Varelser, v.Fallor...) {
+		if c.Om == "" || c.Rubrik == "" {
+			t.Errorf("%s saknar rubrik eller text: %+v", c.ID, c)
+		}
+		for _, m := range g.data.Monster.Typer {
+			if strings.Contains(c.Rubrik+c.Text+c.Om, m.Namn) {
+				t.Errorf("%s nämner varelsen %s", c.ID, m.Namn)
+			}
+		}
+		for _, f := range g.data.Fallor {
+			if strings.Contains(c.Rubrik+c.Text+c.Om, f.Namn) {
+				t.Errorf("%s nämner fällan %s", c.ID, f.Namn)
+			}
+		}
+	}
+	for _, c := range v.Foremal {
+		if it := g.data.itemType(c.ID); it == nil || len(it.Av) > 0 {
+			t.Errorf("%s ska inte stå bland föremålen", c.ID)
 		}
 	}
 }

@@ -53,6 +53,7 @@ func (g *Game) trigger(p *Player, t *Trap, depth int) {
 	region := g.data.region(p.X, p.Y, g.size)
 	roomName := g.roomShort(room)
 	room.Mark = t.Tecken
+	g.learn(p, "falla", t.ID)
 	// Fjällamuletten tar nästa fälla. Tecknet syns ändå.
 	if g.useItem(p, "amulett", "falla", t.Kort) {
 		g.trapCard(p, t, g.data.Text("kort_forbi"), true)

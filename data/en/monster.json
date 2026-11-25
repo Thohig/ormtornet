@@ -8,6 +8,7 @@
         "kort": "something pale and many-legged",
         "kort_bestamd": "the pale many-legged thing",
         "kort_igen": "the many-legged thing",
+        "bok": "Weak and easy to hit. It seldom attacks when you do something else, but it likes to wander. Carries little gold.",
         "dyker_upp": [
           "Something pale and many-legged crawls out of a crack. It has no eyes, but it turns towards you.",
           "Something pale peels itself from the wall, where it lay so close you took it for part of the stone."
@@ -22,6 +23,7 @@
         "kort": "something long and hissing",
         "kort_bestamd": "the long hissing thing",
         "kort_igen": "the hissing thing",
+        "bok": "Easy to hit but quick to strike: it nearly always attacks when you do something else. Likes to wander.",
         "dyker_upp": [
           "A snake, long as a man, rises from a heap of dust. It hisses and strikes at once.",
           "A young, glistening snake lies coiled in the corner. It has already seen you."
@@ -36,6 +38,7 @@
         "kort": "a figure in scale armour",
         "kort_bestamd": "the figure in scale armour",
         "kort_igen": "the figure",
+        "bok": "Hard to hit and strikes hard, but it is in no hurry. It attacks now and then and seldom leaves its room. Carries a fair amount of gold.",
         "dyker_upp": [
           "A figure in armour of overlapping scales steps forward. It holds a shield before it and waits.",
           "A figure in scale armour stands motionless in the middle of the room. Its armour looks grown rather than forged."
@@ -50,6 +53,7 @@
         "kort": "a greenish shape",
         "kort_bestamd": "the greenish shape",
         "kort_igen": "the shape",
+        "bok": "Falls easily, but strikes hard and nearly always attacks when you do not attack it. No creature wanders more.",
         "dyker_upp": [
           "A greenish shape glides forward. It wears an adventurer's clothes, but they hang in rags and are bleached, as if they had lain in acid.",
           "Something rises out of the floor, greenish and translucent. It looks at your bag, as if it remembers what it was like to carry one."
@@ -64,6 +68,7 @@
         "kort": "a creature of white bones",
         "kort_bestamd": "the creature of white bones",
         "kort_igen": "the bone creature",
+        "bok": "Takes a lot, is hard to hit and strikes hard. It often attacks when you do something else, but hardly ever leaves its room. Carries the most gold of all.",
         "dyker_upp": [
           "A being built of curved white bones rises up. The bones are all alike, like ribs from one and the same beast."
         ],

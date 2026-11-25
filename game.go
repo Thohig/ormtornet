@@ -343,6 +343,7 @@ type Player struct {
 	Treasure     int
 	Status       string
 	Seen         map[string]bool // fällor och varelser spelaren har mött
+	bok          map[string]bool // det Vandrarens bok ska skriva in (learn i bok.go)
 	told         told            // vad vandraren senast fick veta om sitt rum (here.go)
 	roundRoom    *roomMsg        // rumsblocket den här rundan, för Din vandring
 	heard        []string        // det vandraren har hört under rundan (sounds.go)
@@ -813,6 +814,7 @@ type stateMsg struct {
 	CanWhisper  bool          `json:"kanViska,omitempty"`
 	NameParts   []string      `json:"namndelar,omitempty"` // delarna av ormens namn, tomma där vandraren inte vet
 	Offer       []*classView  `json:"erbjudande,omitempty"`
+	Book        []string      `json:"bok,omitempty"` // det vandraren har mött, för Vandrarens bok (bok.go)
 	Players     []playerView  `json:"players"`
 	Rooms       []roomView    `json:"rooms"`
 	Results     []resultView  `json:"results,omitempty"`
@@ -922,6 +924,7 @@ func (g *Game) stateFor(me *Player) stateMsg {
 		HP: me.HP, MaxHP: g.maxHP(me), Potions: me.Potions, MaxItems: g.data.maxItems(),
 		Stuck: me.Stuck, Cellar: me.Cellar, Poison: me.Poison, Dark: me.Dark,
 		Vard: me.client != nil && me.client.local,
+		Book: me.learned(),
 	}
 	// I mörker ser man bara sig själv och rummet man står i, utan dess
 	// dörrar och port.
@@ -1118,6 +1121,7 @@ func (g *Game) placeAtCorner(p *Player) {
 	p.Ready = p.bot != nil // datorspelare är alltid redo
 	p.HP = g.maxHP(p)
 	p.Seen = map[string]bool{}
+	p.bok = map[string]bool{}
 	p.Potions, p.Stuck, p.Cellar, p.Poison, p.Dark = 0, 0, 0, 0, 0
 	p.known = newGrid[bool](g.size)
 	p.items = nil
@@ -2028,6 +2032,7 @@ func (g *Game) move(p *Player, d Dir, depth int) {
 			case t != nil && g.is(p, "sparfinnare") && g.rng.Float64() < g.classVal(p, "se_falla", 0):
 				// Spårfinnaren ser fällan i tid. Tecknet visar att den finns.
 				target.Mark = t.Tecken
+				g.learn(p, "falla", t.ID)
 				text := g.data.Text("klass_sparfinnare_falla", "falla", t.Kort)
 				g.logTo(p, text, "info")
 				g.trapCard(p, t, text, true)

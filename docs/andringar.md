@@ -6,6 +6,22 @@ eller leder tornet.
 
 ## 2026-11-25
 
+### Vandrarens bok, steg 2
+
+- Boken fylls i med det du möter. Flikarna Föremål, Varelser och Fällor
+  visar ett spelkort för det du har burit, sett eller gått i, och
+  baksidan med "Ännu inte sett" för resten. Fliken säger hur många du har
+  mött, som "Fällor 3/10".
+- Tornet säger vad du har mött, och webbläsaren sparar det, så att boken
+  växer från vandring till vandring.
+- Föremålen visar beskrivningen, och förbannelsen eller det som händer när
+  de vänder först när du har varit med om det. Varelserna säger i ord hur
+  de är ("anfaller sällan, men vandrar gärna"), och fällorna vad de gör
+  och spåret de lämnar. De texterna står under `bok` i
+  `data/monster.json` och `data/fallor.json`.
+- Inga namn på varelser eller fällor och inga siffror för chanser står i
+  boken.
+
 ### Vandrarens bok, steg 1
 
 - En hjälpsida, Vandrarens bok, i ett lager över spelarsidan. Den öppnas

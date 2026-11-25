@@ -32,6 +32,30 @@ Inga råa siffror som vikt eller chans står i boken.
   och grundernas texter ur `data/spelarsidan.json` (`bok_*`).
 - Skriptet är `web/bok.js`.
 
+## Det man har mött
+
+- Tornet skriver in det vandraren möter (`learn` i `bok.go`) och skickar
+  det i tillståndet som `bok`, med nycklar som `varelse:krypare`:
+  - `foremal`: ett föremål man får i väskan, och ett brev man läser
+    (`give`),
+  - `forbannelse` och `vander`: när ett föremåls förbannelse visar sig
+    (`curse`) eller det vänder (`turnItem`),
+  - `varelse`: en varelse man ser i sitt rum, inte i mörkret
+    (`announceMonster`),
+  - `falla`: en fälla som slår till, som amuletten tar, eller som
+    Spårfinnaren ser i tid.
+- Spelarsidan sparar allt i `localStorage` (`ormtornet-bok`), så att boken
+  växer från vandring till vandring i samma webbläsare. Den som byter
+  webbläsare eller tömmer den börjar om.
+- Ett kort man inte har mött visar baksidan med "Ännu inte sett". Fliken
+  säger hur många man har mött, som "Varelser 2/5".
+- Föremålen visar namnet, bilden och beskrivningen; förbannelsen och det
+  som händer när det vänder bara för den som har varit med om det.
+  Varelserna visar den korta beskrivningen, texten när den dyker upp och
+  hur den är i ord (`bok` i `data/monster.json`). Fällorna visar den korta
+  beskrivningen, vad den gör (`bok` i `data/fallor.json`) och spåret
+  efteråt. Siffrorna i fällornas `bok` ska följa skada, rundor och sol.
+
 ## Flikarna
 
 | Flik | Innehåll | Öppet från början? |
@@ -49,5 +73,6 @@ Inga råa siffror som vikt eller chans står i boken.
 
 1. Boken med Grunder och Klasser, knappen B. **Byggt 2026-11-25.**
 2. Tornet säger vad man har mött och webbläsaren sparar det
-   (`localStorage`), och flikarna Föremål, Varelser och Fällor.
+   (`localStorage`), och flikarna Föremål, Varelser och Fällor. **Byggt
+   2026-11-25.**
 3. Händelser, Kombinationer och Ormen, engelska, prov och README.

@@ -287,6 +287,17 @@
     "bok_slutet_rubrik": "Slutet",
     "bok_slutet": "Den som dör tappar sitt guld där hen föll. I slutet får alla en plats: först de som kom ut, efter hur mycket guld de bar, sedan de som blev kvar inne och sist de döda.",
     "hjalp_bok": "<b>B</b>Vandrarens bok",
-    "intro_bok": "Vandrarens bok"
+    "intro_bok": "Vandrarens bok",
+    "bok_flik_foremal": "Föremål",
+    "bok_flik_varelser": "Varelser",
+    "bok_flik_fallor": "Fällor",
+    "bok_antal": "{n}/{av}",
+    "bok_inte_sett": "Ännu inte sett",
+    "bok_foremal_inledning": "Föremålen du har burit. Vad de gör lär du dig genom att bära dem, och en del visar sin andra sida först efter ett tag.",
+    "bok_varelser_inledning": "Varelserna du har mött i tornet, och hur de brukar vara.",
+    "bok_fallor_inledning": "Fällorna du har gått i eller sett i tid, vad de gör och spåret de lämnar efter sig.",
+    "bok_forbannelse": "Förbannelsen: {text}",
+    "bok_vander": "När det vände: {text}",
+    "bok_spar": "Efteråt: {text}"
   }
 }

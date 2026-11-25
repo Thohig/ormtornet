@@ -441,6 +441,7 @@ function handle(msg) {
       state.receivedAt = performance.now();
       if (msg.sprak && msg.sprak !== UI.sprak) changeLanguage(msg.sprak, true);
       trackSeen(state);
+      Bok.merge(msg.bok); // det man har mött skrivs in i Vandrarens bok
       joined = true;
       {
         // Namnet tornet gav, så att sidan kommer tillbaka till samma vandrare.

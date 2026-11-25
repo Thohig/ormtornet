@@ -267,6 +267,17 @@
     "bok_slutet_rubrik": "The end",
     "bok_slutet": "Whoever dies drops their gold where they fell. At the end everyone gets a place: first those who got out, by how much gold they carried, then those left inside and last the dead.",
     "hjalp_bok": "<b>B</b>the Wanderer's Book",
-    "intro_bok": "The Wanderer's Book"
+    "intro_bok": "The Wanderer's Book",
+    "bok_flik_foremal": "Items",
+    "bok_flik_varelser": "Creatures",
+    "bok_flik_fallor": "Traps",
+    "bok_antal": "{n}/{av}",
+    "bok_inte_sett": "Not seen yet",
+    "bok_foremal_inledning": "The items you have carried. You learn what they do by carrying them, and some show their other side only after a while.",
+    "bok_varelser_inledning": "The creatures you have met in the tower, and how they tend to be.",
+    "bok_fallor_inledning": "The traps you have walked into or spotted in time, what they do and the trace they leave behind.",
+    "bok_forbannelse": "The curse: {text}",
+    "bok_vander": "When it turned: {text}",
+    "bok_spar": "Afterwards: {text}"
   }
 }

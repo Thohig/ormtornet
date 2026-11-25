@@ -1,16 +1,45 @@
 // Vandrarens bok (docs/vandrarens-bok.md): en hjälpsida i ett lager över
 // spelarsidan, med flikar. Grundernas texter är sidans egna (bok_* i
-// data/spelarsidan.json); klasserna kommer från tornet (GET /bok, bok.go)
-// på tornets språk. Boken öppnas med B, knappen i styrningen och knappen i
+// data/spelarsidan.json); klasserna, föremålen, varelserna och fällorna
+// kommer från tornet (GET /bok, bok.go) på tornets språk. Föremålen,
+// varelserna och fällorna syns först när man har mött dem: tornet säger
+// det i tillståndet (bok), och webbläsaren sparar det i localStorage, så
+// att boken växer från vandring till vandring. Boken öppnas med B, knappen i styrningen och knappen i
 // introt, och stängs med B, Esc, ✕ eller ett klick utanför.
 "use strict";
 
 window.Bok = (() => {
   const $ = (id) => document.getElementById(id);
-  const FLIKAR = ["grunder", "klasser"];
+  const FLIKAR = ["grunder", "klasser", "foremal", "varelser", "fallor"];
+  // Flikarna som fylls i, med slaget i tornets nycklar ("varelse:krypare").
+  const SLAG = { foremal: "foremal", varelser: "varelse", fallor: "falla" };
+  const NYCKEL = "ormtornet-bok";
   let flik = "grunder";
   let innehall = null; // svaret från /bok
   let hamtar = null;
+
+  // mott är allt man har mött, i den här webbläsaren.
+  const mott = new Set();
+  try {
+    for (const k of JSON.parse(localStorage.getItem(NYCKEL) || "[]")) mott.add(k);
+  } catch {}
+
+  // merge lägger till det tornet säger att man har mött.
+  function merge(lista) {
+    if (!Array.isArray(lista)) return;
+    let nytt = false;
+    for (const k of lista) {
+      if (!mott.has(k)) {
+        mott.add(k);
+        nytt = true;
+      }
+    }
+    if (!nytt) return;
+    try {
+      localStorage.setItem(NYCKEL, JSON.stringify([...mott]));
+    } catch {}
+    if (oppen()) rita();
+  }
 
   function el(tag, cls, text) {
     const e = document.createElement(tag);
@@ -46,7 +75,10 @@ window.Bok = (() => {
     const rad = $("bokFlikar");
     rad.innerHTML = "";
     for (const id of FLIKAR) {
-      const b = el("button", "bok-flik", t("bok_flik_" + id));
+      let namn = t("bok_flik_" + id);
+      const lista = SLAG[id] && innehall && innehall[id];
+      if (lista) namn += " " + t("bok_antal", { n: lista.filter((c) => mott.has(SLAG[id] + ":" + c.id)).length, av: lista.length });
+      const b = el("button", "bok-flik", namn);
       b.type = "button";
       b.setAttribute("role", "tab");
       b.setAttribute("aria-selected", id === flik ? "true" : "false");
@@ -103,12 +135,65 @@ window.Bok = (() => {
     sida.appendChild(lek);
   }
 
+  // kort bygger ett spelkort i boken, med framsidan upp: rubriken, bilden,
+  // texten och raderna under.
+  function kort(c, rader) {
+    const k = el("div", "okort vand bok-kort");
+    const inner = el("div", "ok-inner");
+    const front = el("div", "ok-front");
+    front.appendChild(el("div", "ok-namn", c.rubrik));
+    const bild = el("div", "ok-bild");
+    bild.innerHTML = Kort.bild(c.bild);
+    front.appendChild(bild);
+    if (c.text) front.appendChild(el("div", "ok-text", c.text));
+    for (const [cls, text] of rader) if (text) front.appendChild(el("div", "bok-rad " + cls, text));
+    inner.appendChild(front);
+    k.appendChild(inner);
+    return k;
+  }
+
+  // baksida är ett kort man inte har mött än.
+  function baksida() {
+    const k = el("div", "bok-baksida");
+    k.appendChild(el("span", "", t("bok_inte_sett")));
+    return k;
+  }
+
+  // ritaLek ritar en flik som fylls i: föremålen, varelserna eller fällorna.
+  function ritaLek(sida) {
+    if (!innehall || innehall.fel) {
+      sida.appendChild(el("p", "bok-inledning", t(innehall ? "bok_fel" : "bok_laddar")));
+      return;
+    }
+    const slag = SLAG[flik];
+    sida.appendChild(el("p", "bok-inledning", t("bok_" + flik + "_inledning")));
+    const lek = el("div", "bok-lek");
+    for (const c of innehall[flik] || []) {
+      if (!mott.has(slag + ":" + c.id)) {
+        lek.appendChild(baksida());
+        continue;
+      }
+      let rader = [];
+      if (flik === "foremal") {
+        if (c.forbannelse && mott.has("forbannelse:" + c.id)) rader.push(["bad", t("bok_forbannelse", { text: c.forbannelse })]);
+        if (c.vander && mott.has("vander:" + c.id)) rader.push(["bad", t("bok_vander", { text: c.vander })]);
+      } else if (flik === "varelser") {
+        rader = [["om", c.om]];
+      } else {
+        rader = [["om", c.om], ["spar", c.spar && t("bok_spar", { text: c.spar })]];
+      }
+      lek.appendChild(kort(c, rader));
+    }
+    sida.appendChild(lek);
+  }
+
   function rita() {
     ritaFlikar();
     const sida = $("bokSida");
     sida.innerHTML = "";
     sida.dataset.flik = flik;
     if (flik === "klasser") ritaKlasser(sida);
+    else if (SLAG[flik]) ritaLek(sida);
     else ritaGrunder(sida);
   }
 
@@ -167,5 +252,5 @@ window.Bok = (() => {
     }
   }, true);
 
-  return { open, close, toggle, oppen };
+  return { open, close, toggle, oppen, merge };
 })();

@@ -44,6 +44,9 @@ type Trap struct {
 	// SparEfter är det man ser i rummet efter att fällan har slagit till,
 	// i rumsblocket (here.go). Fällans namn sägs inte där.
 	SparEfter []string `json:"spar_efter"`
+	// Bok är vad fällan gör, i ord, för Vandrarens bok. Siffrorna i texten
+	// ska följa skada, rundor och sol.
+	Bok string `json:"bok"`
 }
 
 type Rules struct {
@@ -138,6 +141,7 @@ type MonsterType struct {
 	Lynne    int        `json:"lynne"`             // chansen i procent att den anfaller när vandraren inte gör det
 	Vandrar  *float64   `json:"vandrar,omitempty"` // egen chans att vandra, annars vandra_chans
 	DykerUpp []string   `json:"dyker_upp"`
+	Bok      string     `json:"bok"` // hur den är, i ord, för Vandrarens bok
 	Dor      []string   `json:"dor"`
 }
 

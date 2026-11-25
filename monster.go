@@ -269,6 +269,7 @@ func (g *Game) announceMonster(p *Player) {
 	// Spelkortet: det man ser när varelsen dyker upp, samma text som i
 	// rumsblocket. I mörkret ser man den inte.
 	if t := g.data.monsterType(m.Type); t != nil && p.Dark == 0 {
+		g.learn(p, "varelse", m.Type)
 		text := ""
 		if len(t.DykerUpp) > 0 {
 			text = t.DykerUpp[m.ID%len(t.DykerUpp)]
