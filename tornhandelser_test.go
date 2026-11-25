@@ -310,3 +310,23 @@ func TestCaveInBlocks(t *testing.T) {
 		t.Fatal("vandraren gick in i det rasade rummet")
 	}
 }
+
+// I källarvalven, under rummet där något händer, hör man inget, och ingen
+// text får stå kvar med {horn} (provspelet 2026-11-25, andra).
+func TestTowerEventNotHeardInCellar(t *testing.T) {
+	g, a, b := startTwo(t)
+	pa, pb := a.player, b.player
+	putInRoom(g, pa, 4, 3)
+	putInRoom(g, pb, 1, 1)
+	pa.Cellar = 2
+	pb.Treasure = 50 // den rikaste: klirret hörs där pb står
+	putInRoom(g, pa, 1, 1)
+	pa.Cellar = 2
+	logs(a)
+	g.runTowerEvent("klirrar")
+	for _, l := range logs(a) {
+		if strings.Contains(l, "{horn}") {
+			t.Fatalf("texten har kvar {horn}: %q", l)
+		}
+	}
+}

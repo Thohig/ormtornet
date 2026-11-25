@@ -1874,6 +1874,11 @@ func (g *Game) endGame() {
 // playTurn utför en spelares drag för rundan, och räknar ner det som
 // pågår (gift, mörker, fastklämd, källaren).
 func (g *Game) playTurn(p *Player) {
+	// Den som börjar rundan utanför kammaren gör ett nytt besök när hen
+	// kommer in (Ormens präst tar en näve per besök).
+	if g.rooms[p.Y][p.X].Kind != "kammare" || p.Cellar > 0 {
+		p.tookVisit = false
+	}
 	if p.Cellar > 0 {
 		p.Cellar--
 		if p.Cellar == 0 {
@@ -1933,9 +1938,6 @@ func (g *Game) playTurn(p *Player) {
 	}
 	if p.Status == statusIn {
 		g.ageItems(p)
-		if g.rooms[p.Y][p.X].Kind != "kammare" {
-			p.tookVisit = false
-		}
 	}
 }
 

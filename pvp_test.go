@@ -231,3 +231,25 @@ func TestPackHintComparesWithYou(t *testing.T) {
 		t.Fatalf("två tomma: %q", got)
 	}
 }
+
+// Föll den som slår i samma runda hamnar bytet bland hens guld i rummet,
+// i stället för att försvinna med den döde (provspelet 2026-11-25, andra).
+func TestDeadAttackerLeavesLoot(t *testing.T) {
+	g, a, b := startTwo(t)
+	pa, pb := a.player, b.player
+	putInRoom(g, pa, 4, 3)
+	putInRoom(g, pb, 4, 3)
+	pb.Treasure = 30
+	pa.Status = statusDead
+	g.hit(pa, pb, 10, false)
+	if pa.Treasure != 0 {
+		t.Fatalf("den döde fick %d guld", pa.Treasure)
+	}
+	left := 0
+	for _, l := range g.rooms[3][4].gold {
+		left += l.gold
+	}
+	if pb.Treasure != 20 || left != 10 {
+		t.Fatalf("b har %d, i rummet ligger %d", pb.Treasure, left)
+	}
+}

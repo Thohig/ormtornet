@@ -217,12 +217,23 @@ func (g *Game) hit(a, b *Player, gold int, bakhall bool) {
 	}
 	gold = g.hiddenShare(b, min(gold, b.Treasure))
 	b.Treasure -= gold
-	a.Treasure += gold
+	// Föll a i samma runda hamnar bytet bland a:s guld i rummet, i stället
+	// för att försvinna med den döde.
+	alive := a.Status == statusIn
+	if alive {
+		a.Treasure += gold
+	} else {
+		g.addLeftGold(a, gold)
+	}
 	if b.HP <= pvpSkada {
-		g.goldNote(a, "dodade", gold, "namn", b.Name)
+		if alive {
+			g.goldNote(a, "dodade", gold, "namn", b.Name)
+		}
 		g.goldNote(b, "dodad", -gold, "namn", a.Name)
 	} else {
-		g.goldNote(a, "slag", gold, "namn", b.Name)
+		if alive {
+			g.goldNote(a, "slag", gold, "namn", b.Name)
+		}
 		g.goldNote(b, "slagen", -gold, "namn", a.Name)
 	}
 	a.stats.hits++

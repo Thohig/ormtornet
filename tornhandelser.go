@@ -6,6 +6,8 @@ package main
 // hände; den som står där får en egen text. Händelserna gynnar bara den
 // som drabbas eller hinner dit först.
 
+import "strings"
+
 // eventSounds är ljudet för varje händelse, bland ljuden i web/audio.js.
 var eventSounds = map[string]string{
 	"andas": "ormen_ror", "guld": "hitta", "ljus": "rost", "skinn": "skinn",
@@ -221,6 +223,9 @@ func (g *Game) runTowerEvent(id string) bool {
 		if hit != nil {
 			here = hit[p]
 		}
+		if p.Cellar > 0 && !here {
+			continue // i källarvalven hör man inget av det som händer i tornet
+		}
 		var text string
 		switch {
 		case here && other && len(e.HarAnnars) > 0:
@@ -237,6 +242,9 @@ func (g *Game) runTowerEvent(id string) bool {
 		}
 		if x >= 0 && (p.X != x || p.Y != y) {
 			text = fill(text, "horn", g.hornToward(p.X, p.Y, x, y))
+		}
+		if strings.Contains(text, "{horn}") {
+			continue // står i rummet men drabbas inte: ingen riktning att säga
 		}
 		if here {
 			g.eventHere(p, id)

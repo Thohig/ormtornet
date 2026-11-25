@@ -6,6 +6,18 @@ eller leder tornet.
 
 ## 2026-11-25
 
+### Provspelet efter de nya klasserna
+
+- Två vandrare som slår varandra samma runda: om den ena dör först och
+  sedan tar guld från den andra hamnar guldet i rummet, i stället för att
+  försvinna med den döde.
+- Den som är i källarvalven får inga texter om händelser i tornet. Förut
+  kunde det stå "Åt {horn} …" när händelsen skedde rakt ovanför.
+- Ormens präst får alltid en ny näve när hen kommer in i kammaren igen,
+  också efter att kammaren har flyttat.
+- Se [provspel-2026-11-25-2.md](provspel-2026-11-25-2.md), med sex
+  förslag.
+
 ### Mörkret har tangenter vid väggarna
 
 - I mörkret ritades hela murar runt rummet och inga tangenter, så det såg

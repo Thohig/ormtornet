@@ -362,6 +362,7 @@ func (g *Game) moveChamber() {
 		return
 	}
 	n := spots[g.rng.IntN(len(spots))]
+
 	g.chamberMoved = true // kammaren får de dörrar rummet har, inte fyra
 	for _, p := range g.players {
 		if p != nil && p.bot != nil {

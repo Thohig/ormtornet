@@ -262,6 +262,9 @@ Skriv dit när ett steg är klart.
 - [docs/provspel-2026-11-25.md](docs/provspel-2026-11-25.md): provspelet
   2026-11-25 med robotarna, webbläsarprovet och simuleringen, de fyra
   felen som rättades och de sju förslagen, som byggdes samma dag.
+- [docs/provspel-2026-11-25-2.md](docs/provspel-2026-11-25-2.md): det
+  andra provspelet 2026-11-25, efter kombinationerna, föremålen med två
+  sidor och de nya klasserna: tre fel som rättades och sex förslag.
 - [docs/ormkorten.md](docs/ormkorten.md): att ormkorten syns, med kortet
   som vänds upp, sömnmätaren, uppvaknandet, leken bredvid guldhögen och
   korten i krönikan. Allt är byggt.
