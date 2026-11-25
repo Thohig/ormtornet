@@ -1859,10 +1859,8 @@ body:not(.touch) #spelkort { width: 165px; }
 #bokSida .bok-rad.spar { color: #5a4a36; }
 #bokSida .bok-rad.bad { color: #8a2a18; }
 #bokSida .bok-mott {
-  position: absolute;
-  top: 38px;
-  right: 8px;
-  z-index: 2;
+  width: fit-content;
+  margin: 4px 0 -16px auto;
   padding: 1px 6px;
   border: 1px solid #2a4a5e;
   border-radius: 3px;

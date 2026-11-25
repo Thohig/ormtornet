@@ -140,10 +140,10 @@ window.Bok = (() => {
   // texten och raderna under, och märket Mött om man har mött det.
   function kort(c, rader, harMott) {
     const k = el("div", "okort vand bok-kort");
-    if (harMott) k.appendChild(el("div", "bok-mott", t("bok_mott")));
     const inner = el("div", "ok-inner");
     const front = el("div", "ok-front");
     front.appendChild(el("div", "ok-namn", c.rubrik));
+    if (harMott) front.appendChild(el("div", "bok-mott", t("bok_mott")));
     const bild = el("div", "ok-bild");
     bild.innerHTML = Kort.bild(c.bild);
     front.appendChild(bild);
