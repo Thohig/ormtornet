@@ -6,6 +6,25 @@ eller leder tornet.
 
 ## 2026-11-25
 
+### Förslagen efter provspelet
+
+- **Placeringen**: kom ingen ut får ingen någon plats på slutskärmen, i
+  stället för att alla står som etta.
+- **Titlarna**: den girigaste är den som tog mest ur kammaren och kom ut
+  med det. Den som dog med kammarguld får en annan titel.
+- **Inredningen**: vindeltrappan stod mitt på den första vandrarens plats,
+  och brunnen, städet, lyktorna och bordet stod också där vandrarna
+  ställs. Nu står allt i hörnen mellan platserna, och bänken skymmer inte
+  längre dörren i väster.
+- **Telefonen**: en tangent vid dörren som ligger över spelkortet eller
+  det stora kortet blir svag medan kortet syns, så att kortet går att
+  läsa. Den går att trycka på som förut.
+- **Svår och Mardröm**: något färre fällor och varelser (Svår 50 och
+  24 %, Mardröm 60 och 30 %), så att fler når kammaren. Liven är desamma.
+- **Texter**: "Två rundor senare föll något blekt och mångbent för
+  Bertil" i berättelsen, och fällan som vrider sig heter "a turning
+  floor" på engelska.
+
 ### Rättat efter provspelet
 
 - När en vandrare och en varelse fällde varandra samma runda fick den

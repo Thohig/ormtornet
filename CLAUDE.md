@@ -256,7 +256,7 @@ Skriv dit när ett steg är klart.
   de åtta felen och förbättringarna som byggdes efter det.
 - [docs/provspel-2026-11-25.md](docs/provspel-2026-11-25.md): provspelet
   2026-11-25 med robotarna, webbläsarprovet och simuleringen, de fyra
-  felen som rättades och sju förslag som inte är byggda.
+  felen som rättades och de sju förslagen, som byggdes samma dag.
 - [docs/ormkorten.md](docs/ormkorten.md): att ormkorten syns, med kortet
   som vänds upp, sömnmätaren, uppvaknandet, leken bredvid guldhögen och
   korten i krönikan. Allt är byggt.
