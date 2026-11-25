@@ -1562,6 +1562,28 @@ body:not(.touch) #spelkort { width: 165px; }
   border-radius: 10px;
 }
 #storkort.vand.skaka .ok-inner { animation: skaka 0.5s 0.7s; }
+/* Texten mitt på kartan i lobbyn om att Enter leder till klassvalet
+   (lobbyHint i app.js). Den bleknar bort efter en stund. */
+#lobbyHint {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 3;
+  transform: translate(-50%, -50%);
+  max-width: 80%;
+  padding: 14px 22px;
+  border-radius: 10px;
+  background: rgba(10, 8, 6, 0.72);
+  color: #f1e4c2;
+  font-size: 20px;
+  text-align: center;
+  pointer-events: none;
+  opacity: 1;
+  transition: opacity 1.6s ease-in;
+  animation: lobbyHintIn 0.8s ease-out;
+}
+#lobbyHint.borta { opacity: 0; }
+@keyframes lobbyHintIn { from { opacity: 0; } to { opacity: 1; } }
 @keyframes skaka {
   20% { translate: -6px 0; }
   40% { translate: 6px 0; }

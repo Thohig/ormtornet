@@ -466,6 +466,7 @@ function handle(msg) {
       renderTop();
       renderOverlay();
       renderChoose();
+      lobbyHint();
       firstHelp();
       checkRoundCard();
       restoreTip();
@@ -1818,6 +1819,37 @@ function renderReady() {
   }
 }
 $("readyBtn").addEventListener("click", () => send({ t: "ready" }));
+
+// lobbyHint säger mitt på kartan, en gång varje gång man kommer till
+// lobbyn, att Enter (Redo på en pekskärm) leder till klassvalet. Texten
+// bleknar bort efter en stund, och direkt när man är redo.
+let lobbyHintShown = false;
+let lobbyHintTimer = 0;
+function lobbyHint() {
+  const el = $("lobbyHint");
+  const me = myPlayer();
+  if (state.phase !== "lobby") {
+    lobbyHintShown = false;
+    clearTimeout(lobbyHintTimer);
+    el.hidden = true;
+    el.classList.remove("borta");
+    return;
+  }
+  if (me && me.ready && !el.hidden) {
+    el.classList.add("borta");
+    return;
+  }
+  if (lobbyHintShown || !me || me.ready) return;
+  lobbyHintShown = true;
+  el.textContent = t(touch ? "lobby_enter_tryck" : "lobby_enter");
+  el.classList.remove("borta");
+  el.hidden = false;
+  clearTimeout(lobbyHintTimer);
+  lobbyHintTimer = setTimeout(() => el.classList.add("borta"), 7000);
+}
+$("lobbyHint").addEventListener("transitionend", (e) => {
+  if (e.target.classList.contains("borta")) e.target.hidden = true;
+});
 
 function hpMeter(hp, maxHp) {
   return meter("hp", t("matare_liv"), hp, maxHp);

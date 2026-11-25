@@ -198,6 +198,8 @@
     "knapp_drick": "Drink",
     "knapp_anfall": "Attack",
     "knapp_viska": "Whisper",
+    "lobby_enter": "Press Enter to choose a class",
+    "lobby_enter_tryck": "Press Ready to choose a class",
     "knapp_redo": "Ready",
     "knapp_redo_klar": "Ready ✓",
     "knapp_nytt_torn": "New tower",

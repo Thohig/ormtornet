@@ -6,6 +6,12 @@ eller leder tornet.
 
 ## 2026-11-25
 
+### Enter i lobbyn
+
+- När du kommer till lobbyn står det mitt på kartan att du ska trycka
+  Enter (Redo på en telefon) för att välja klass. Texten bleknar bort
+  efter några sekunder, och direkt när du är redo.
+
 ### Vandrarens bok med allt öppet, och viskningen med bara namnet
 
 - Vandrarens bok visar allt från början: alla föremål med förbannelser

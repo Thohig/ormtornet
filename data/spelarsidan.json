@@ -215,6 +215,8 @@
     "knapp_drick": "Drick",
     "knapp_anfall": "Anfall",
     "knapp_viska": "Viska",
+    "lobby_enter": "Tryck Enter för att välja klass",
+    "lobby_enter_tryck": "Tryck Redo för att välja klass",
     "knapp_redo": "Redo",
     "knapp_redo_klar": "Redo ✓",
     "knapp_nytt_torn": "Nytt torn",
