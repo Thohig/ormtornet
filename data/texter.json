@@ -492,7 +492,7 @@
     ],
     "ber_varelse": [
       "{nar} fällde {namn} {varelse}.",
-      "{nar} fick {varelse} se sig besegrad av {namn}."
+      "{nar} föll {varelse} för {namn}."
     ],
     "ber_slag": [
       "{nar} slog {namn} till {offer}."

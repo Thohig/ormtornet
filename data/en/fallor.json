@@ -33,7 +33,7 @@
     {
       "id": "roterande",
       "namn": "The Turning Room",
-      "kort": "a floor that turns",
+      "kort": "a turning floor",
       "spar_efter": ["The floor is scratched in long circles."],
       "texter": [
         "The room begins to turn with a slow, grinding sound. You lose your footing and are pushed out through an opening.",
