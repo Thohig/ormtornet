@@ -1,6 +1,9 @@
 package main
 
-import "testing"
+import (
+	"strings"
+	"testing"
+)
 
 // Gravplundraren hör var någon dör och hur långt bort, och får dubbelt så
 // mycket av den dödes guld.
@@ -20,6 +23,17 @@ func TestGraveRobber(t *testing.T) {
 	g.pickUpGold(pa)
 	if pa.Treasure != before+40 {
 		t.Fatalf("gravplundraren fick %d av den dödes 20 guld", pa.Treasure-before)
+	}
+	// Längre bort än sju rum hörs döden som för alla andra.
+	pb.Status, pb.HP = statusIn, g.maxHP(pb)
+	putInRoom(g, pa, 0, 0)
+	putInRoom(g, pb, 8, 0)
+	logs(pa.client)
+	g.kill(pb)
+	for _, l := range logs(pa.client) {
+		if strings.Contains(l, "8 rum bort") {
+			t.Fatalf("gravplundraren hörde döden åtta rum bort: %q", l)
+		}
 	}
 	m := &Monster{ID: 80, Type: g.data.Monster.Typer[0].ID}
 	if got, other := g.lynne(m, pa), g.lynne(m, pb); got != min(100, other+int(g.classVal(pa, "extra_lynne", 0))) || got == other {

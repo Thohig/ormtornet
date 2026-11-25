@@ -296,6 +296,10 @@ func (g *Game) botDecide(p *Player) (string, int) {
 	// Gå ut i tid, när väskan är full nog eller när livet tryter.
 	mustLeave := exitDist >= 0 && st.Sun <= exitDist+pers.Marginal
 	hurt := st.HP <= g.botLifeLimit(pers.GaHemVidLiv, st.MaxHP)
+	// Ägget kläcks efter några rundor: gå ut med det innan dess.
+	if left := g.eggRoundsLeft(p); left >= 0 && exitDist >= 0 && left <= exitDist+1 {
+		mustLeave = true
+	}
 	if exitDist >= 0 && (mustLeave || p.Treasure >= pers.SkattMal || hurt) {
 		// En kort omväg till guldet där någon dog, om rummet ligger nära
 		// och solen räcker till både omvägen och vägen ut.
@@ -329,6 +333,11 @@ func (g *Game) botDecide(p *Player) (string, int) {
 			chance = 1
 		}
 		if st.HP <= g.data.Ormen.Skada {
+			chance = 0
+		}
+		// Ormens öga har vänt: varje näve väcker ormen mer. Har den redan
+		// guld tar den inga fler.
+		if g.eyeWakes(p) && p.Treasure > 0 {
 			chance = 0
 		}
 		// Ormens präst tar en näve per besök: gå ut ur kammaren och kom

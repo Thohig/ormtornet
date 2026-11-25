@@ -133,10 +133,7 @@ func (g *Game) startChoosing() {
 	g.resetClasses()
 	g.chooseGen++
 	gen := g.chooseGen
-	wait := time.Duration(g.data.KlassvalSekunder) * time.Second
-	if wait <= 0 {
-		wait = 30 * time.Second
-	}
+	wait := g.chooseTime()
 	g.deadline = time.Now().Add(wait)
 	if g.timer != nil {
 		g.timer.Stop()
@@ -376,4 +373,15 @@ func (g *Game) anyDoor(p *Player) (Dir, bool) {
 		}
 	}
 	return 0, false
+}
+
+// chooseTime är hur länge klassvalet får ta: klassval_sekunder, och några
+// sekunder till för varje kort utöver åtta, så att alla hinner läsa dem.
+func (g *Game) chooseTime() time.Duration {
+	secs := g.data.KlassvalSekunder
+	if secs <= 0 {
+		secs = 30
+	}
+	secs += g.data.KlassvalExtra * max(0, len(g.data.Klasser)-8)
+	return time.Duration(secs) * time.Second
 }

@@ -2,6 +2,8 @@
   "foremal": {
     "_om": "Föremål att hitta när man söker igenom ett rum. vikt är hur ofta föremålet dyker upp, anvandningar hur många gånger det verkar (0 = hela vandringen). Vad föremålet gör styrs av dess id i items.go.",
     "max_bara": 3,
+    "_om_del_vikt": "del_vikt: när den som söker bär ena delen av en kombination väger den andra delen så många gånger mer.",
+    "del_vikt": 6,
     "lista": [
       {
         "id": "rep",

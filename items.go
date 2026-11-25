@@ -54,7 +54,10 @@ func (t *ItemType) found() string {
 }
 
 type ItemData struct {
-	MaxBara int                 `json:"max_bara"`
+	MaxBara int `json:"max_bara"`
+	// DelVikt gånger vikten får den andra delen av en kombination när
+	// den som söker redan bär den ena (docs/kombinationer.md).
+	DelVikt int                 `json:"del_vikt"`
 	Lista   []ItemType          `json:"lista"`
 	Brev    map[string][]string `json:"brev"` // brev från tidigare vandrare, efter avslöjandets nivå
 }
@@ -102,10 +105,19 @@ func (d *Data) maxItems() int {
 
 // randomItem drar ett föremål efter vikterna, eller "" om det inte finns några.
 func (d *Data) randomItem(rng *rand.Rand) string {
+	return d.randomItemFor(rng, nil)
+}
+
+// randomItemFor drar ett föremål åt p: den andra delen av en kombination
+// som p bär ena delen av väger del_vikt gånger mer.
+func (d *Data) randomItemFor(rng *rand.Rand, p *Player) string {
 	w := map[string]int{}
 	for _, t := range d.Foremal.Lista {
 		if t.Vikt > 0 {
 			w[t.ID] = t.Vikt
+			if p != nil && d.Foremal.DelVikt > 1 && d.comboWith(t.ID, p) != nil {
+				w[t.ID] = t.Vikt * d.Foremal.DelVikt
+			}
 		}
 	}
 	if len(w) == 0 {
@@ -148,7 +160,7 @@ func (g *Game) give(p *Player, id string) bool {
 // findItem: vandraren hittar ett föremål när den söker. Är väskan full blir
 // föremålet kvar i rummet, åt den som kommer efter.
 func (g *Game) findItem(p *Player) {
-	id := g.data.randomItem(g.rng)
+	id := g.data.randomItemFor(g.rng, p)
 	t := g.data.itemType(id)
 	if t == nil {
 		g.soundTo(p, "inget")
@@ -741,6 +753,16 @@ func (g *Game) turnItem(p *Player, it *Item, t *ItemType) {
 			g.addMonster(mt, p.X, p.Y)
 		}
 	}
+}
+
+// eggRoundsLeft är rundorna tills ägget i p:s väska kläcks, eller -1.
+func (g *Game) eggRoundsLeft(p *Player) int {
+	it := p.has("agg")
+	t := g.data.itemType("agg")
+	if it == nil || t == nil || it.turned || t.VanderRundor <= 0 {
+		return -1
+	}
+	return max(0, t.VanderRundor-it.rounds)
 }
 
 // turnedItem svarar om vandraren bär föremålet id och det har vänt.

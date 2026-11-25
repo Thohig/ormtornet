@@ -6,6 +6,19 @@ eller leder tornet.
 
 ## 2026-11-25
 
+### Fem förslag från provspelet
+
+- AI-spelarna går ut med ägget innan det kläcks, och tar inga fler nävar
+  med ormens öga när det har vänt och de har guld.
+- Klassvalet får fyra sekunder till för varje kort utöver åtta, 42
+  sekunder med elva klasser.
+- Den som söker och bär ena delen av en kombination hittar oftare den
+  andra: den väger sex gånger mer. Med AI-spelare blir det nu en
+  kombination ungefär var 33:e vandring, mot var 80:e förut.
+- Gravplundraren hör döden inom sju rum, inte i hela tornet.
+- Webbläsarprovet säger vad som låg över, eller varför, när ett klick inte
+  går igenom, och fortsätter i stället för att stanna.
+
 ### Provspelet efter de nya klasserna
 
 - Två vandrare som slår varandra samma runda: om den ena dör först och

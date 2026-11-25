@@ -210,6 +210,7 @@ type Data struct {
 	Intro            IntroData           `json:"intro"`
 	Klasser          []Class             `json:"klasser"`
 	KlassvalSekunder int                 `json:"klassval_sekunder"` // hur länge klassvalet får ta
+	KlassvalExtra    int                 `json:"klassval_extra_per_kort"` // sekunder till för varje kort utöver åtta
 	Foremal          ItemData            `json:"foremal"`
 	Vandrarnamn      NameData            `json:"vandrarnamn"` // namnen tornet ger vandrarna (namn.json)
 	Spelkort         CardData            `json:"spelkort"`    // spelkortens ordning (texter.json)
@@ -404,6 +405,9 @@ func mergeData(d, part *Data) {
 	}
 	if part.KlassvalSekunder > 0 {
 		d.KlassvalSekunder = part.KlassvalSekunder
+	}
+	if part.KlassvalExtra > 0 {
+		d.KlassvalExtra = part.KlassvalExtra
 	}
 	if len(part.Foremal.Lista) > 0 {
 		d.Foremal = part.Foremal

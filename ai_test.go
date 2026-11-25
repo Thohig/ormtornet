@@ -69,3 +69,36 @@ func TestBotFollowsSerpentClues(t *testing.T) {
 		t.Fatal("datorspelaren minns den gamla platsen")
 	}
 }
+
+// En AI-spelare med ägget går ut innan det kläcks, och en med ormens öga
+// som har vänt tar inga fler nävar när den har guld.
+func TestBotKnowsEggAndEye(t *testing.T) {
+	g, a, _ := startTwo(t)
+	p := a.player
+	p.bot = &botBrain{pers: &g.data.AI.Personligheter[0]}
+	g.sun = 4 * g.size
+	room := &g.rooms[p.Y][p.X]
+	if !room.HasExit {
+		t.Fatal("vandraren står inte vid sin port")
+	}
+	exit := dirLetter[room.Exit]
+	g.give(p, "agg")
+	p.has("agg").rounds = 11
+	if act, _ := g.botDecide(p); act != exit {
+		t.Fatalf("med ägget nära att kläckas valde den %q, ville ha %q ut", act, exit)
+	}
+
+	p.items = nil
+	cx, cy := g.chamber()
+	p.X, p.Y = cx, cy
+	g.reveal(cx, cy)
+	p.known[cy][cx] = true
+	p.Treasure = 10
+	g.give(p, "ormens_oga")
+	p.has("ormens_oga").turned = true
+	for range 30 {
+		if act, _ := g.botDecide(p); act == actTake {
+			t.Fatal("tog en näve fast ormens öga har vänt")
+		}
+	}
+}

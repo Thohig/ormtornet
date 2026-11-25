@@ -487,7 +487,9 @@ När alla är redo i lobbyn kommer klassvalet: en skärm med ett spelkort
 för varje klass. Var och en väljer ett kort med 1–9, ett klick eller ett
 tryck; de två sista av de elva korten har ingen siffra. Ingen klass finns två gånger i samma torn, så kort som andra har
 tagit går inte att välja. Vandringen börjar när alla har valt, eller när
-tiden är slut (`klassval_sekunder` i `data/klasser.json`, förval 30). Den
+tiden är slut (`klassval_sekunder` i `data/klasser.json`, förval 30, och
+`klassval_extra_per_kort` sekunder till för varje kort utöver åtta, så 42
+sekunder med elva klasser). Den
 som inte har valt får då ett slumpat ledigt kort. Klassen står i listan
 över vandrare. AI-spelarna väljer efter sin
 personlighet, men först när alla människor har valt, så att människorna
@@ -504,7 +506,7 @@ igen.
 | Spårfinnaren | 2 / 1 | ser spår 6 rundor bakåt och vems de är, märker hälften av fällorna i tid, ser var föremål och guld ligger och vem som tog guldet, känner före andra åt vilket håll ristningen finns | hör inget genom väggarna, utom med benluren |
 | Lyktbäraren | 2 / 2 | ett liv extra, tål mörker, ser varelser i grannrummen | syns för andra redan från grannrummet |
 | Pilgrimen | 0 / 3 | ledtrådar dubbelt så ofta, en dryck när tornet förändras, känner igen förbannade föremål | slår aldrig andra vandrare, kan bara värja sig |
-| Gravplundraren | 2 / 2 | hör var någon dör, hur långt bort och åt vilket håll, och får dubbelt så mycket av den dödes guld (det extra kommer ur tornet) | varelserna anfaller oftare (lynne +10) |
+| Gravplundraren | 2 / 2 | hör var någon dör inom sju rum, hur långt bort och åt vilket håll, och får dubbelt så mycket av den dödes guld (det extra kommer ur tornet) | varelserna anfaller oftare (lynne +10) |
 | Lyssnaren | 2 / 2 | hör två rum bort och om något andas bredvid, som med benluren (tre rum med benluren), och ser sömnmätaren var hen än är | mörkret varar dubbelt så länge |
 | Ormens präst | 1 / 3 | det första vakna-kortet hen drar blir ett sovkort, ormen skadar inte hen när den vaknar, och varje näve ger hälften mer guld | tar bara en näve varje gång hen kommer in i kammaren |
 
@@ -1404,7 +1406,9 @@ skriver allt det hittade till `rapport.txt` i mappen (`webbprov/` om
 ingen anges; den checkas inte in). Går något inte att trycka på på
 telefonen, för att till exempel spelkortet ligger över, står det på en
 rad som börjar med `OBS` och säger vad som låg över; det räknas inte som
-ett fynd, och provet trycker på tangenten i stället. Med `en` spelas vandringen på
+ett fynd, och provet trycker på tangenten i stället. Ett klick som inte går
+igenom på tio sekunder, till exempel på en vandrare på slutskärmen, blir
+ett fynd som säger vad som låg över eller varför. Med `en` spelas vandringen på
 engelska. Det slutar med 1 om något hittades och tar ett par minuter.
 Båda webbläsarna står på tornets dator och spelar alltså som spelledaren
 med Gå in själv, med märket i översta raden.

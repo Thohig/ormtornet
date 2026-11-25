@@ -46,4 +46,7 @@ Alla har vikt 1 i `data/foremal.json`.
   hinna före det?
 - Är ägget värt att bära, eller blir ynglet för hårt?
 - Används ögat för att hitta kammaren, nu när andetagen också gör det?
-- AI-spelarna känner inte till föremålen och tar dem som andra föremål.
+- AI-spelarna går ut med ägget innan det kläcks och tar inga fler nävar
+  med ormens öga när det har vänt och de har guld (sedan provspelet
+  2026-11-25, `eggRoundsLeft` i `items.go` och `botDecide` i `ai.go`).
+  Kniven och glödmasken känner de inte till.

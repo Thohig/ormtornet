@@ -49,7 +49,8 @@ func (g *Game) announceDeath(p *Player) {
 		case o.Status == statusIn && o.Cellar == 0 && o.X == p.X && o.Y == p.Y:
 			text = g.data.Text("dod_andra", "namn", p.Name)
 			heard.x, heard.y = p.X, p.Y
-		case g.is(o, "gravplundrare") && o.Status == statusIn && o.Cellar == 0:
+		case g.is(o, "gravplundrare") && o.Status == statusIn && o.Cellar == 0 &&
+			abs(p.X-o.X)+abs(p.Y-o.Y) <= int(g.classVal(o, "hor_dod_rum", 99)):
 			// Gravplundraren hör var döden kom, och hur långt bort.
 			text = g.data.Text("klass_gravplundrare_dod", "namn", p.Name, "antal", strconv.Itoa(abs(p.X-o.X)+abs(p.Y-o.Y)), "horn", g.hornToward(o.X, o.Y, p.X, p.Y))
 			heard.x, heard.y = p.X, p.Y

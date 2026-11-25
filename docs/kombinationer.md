@@ -59,6 +59,13 @@ aldrig, alltså ungefär en gång på åttio vandringar. AI-spelarna söker
 sällan, och de flesta delar är ovanliga (vikt 1–3, skinnet bara genom en
 händelse).
 
+Efter provspelet 2026-11-25 väger den andra delen sex gånger mer för den
+som söker och redan bär den ena (`del_vikt` i `foremal.json`,
+`randomItemFor` i `items.go`). Det gav 60 kombinationer på 2000
+vandringar, ungefär en på 33: Ljusspegeln 27, Pendeln 13, Ormens pipa 12,
+Kronan med pärlan 7 och Fjällmanteln 1. Delarna är inte vanligare för
+den som inte bär någon.
+
 ## Att prova
 
 - Märker man att föremålen fogas ihop, och letar någon efter den andra

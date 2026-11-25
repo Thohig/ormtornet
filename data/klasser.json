@@ -1,6 +1,8 @@
 {
   "_om_modell": "modell är figuren på kartan snett ovanifrån: farg är färgen på det klassen bär (skölden, huvan, blomman, kartrullen, ormen, hatten, lyktans låga) som #rrggbb, och storlek hur stor figuren är (0,5–2, 1 är vanlig storlek). Formen står i klient/src/modeller.ts.",
   "klassval_sekunder": 30,
+  "_om_klassval": "klassval_sekunder är hur länge klassvalet får ta, och klassval_extra_per_kort sekunderna till för varje klasskort utöver åtta.",
+  "klassval_extra_per_kort": 4,
 
   "klasser": [
     {
@@ -139,13 +141,13 @@
       "namn": "Gravplundraren",
       "kort": "gravplundraren",
       "beskrivning": "Har grävt upp fler kungar än hen har sett levande. De döda klagar aldrig.",
-      "styrka": "Hör var någon dör, hur långt bort och åt vilket håll, och får dubbelt så mycket guld där någon har dött.",
+      "styrka": "Hör var någon dör inom sju rum, hur långt bort och åt vilket håll, och får dubbelt så mycket guld där någon har dött.",
       "svaghet": "Luktar död: varelserna anfaller henom oftare.",
       "liv": 0,
       "kraft": 2,
       "forsvar": 2,
       "drycker": 0,
-      "varden": { "dod_guld": 2, "extra_lynne": 10 }
+      "varden": { "dod_guld": 2, "extra_lynne": 10, "hor_dod_rum": 7 }
     },
     {
       "id": "lyssnare",

@@ -8,7 +8,7 @@ gånger i samma torn.
 
 | Klass | Kraft / Försvar | Styrka | Svaghet |
 |---|---|---|---|
-| Gravplundraren ⚰ | 2 / 2 | hör var någon dör, hur långt bort och åt vilket håll; får dubbelt så mycket av den dödes guld, och det extra kommer ur tornet | varelserna anfaller oftare, lynne +10 |
+| Gravplundraren ⚰ | 2 / 2 | hör var någon dör inom sju rum (`hor_dod_rum`), hur långt bort och åt vilket håll; får dubbelt så mycket av den dödes guld, och det extra kommer ur tornet | varelserna anfaller oftare, lynne +10 |
 | Lyssnaren ◎ | 2 / 2 | hör två rum bort och om något andas bredvid, som med benluren, och tre rum med benluren; ser sömnmätaren var hen än är | mörkret varar dubbelt så länge |
 | Ormens präst ☥ | 1 / 3 | det första vakna-kortet hen drar under vandringen blir ett sovkort; ormen skadar inte hen när den vaknar; varje näve ger hälften mer guld | tar bara en näve per besök i kammaren |
 

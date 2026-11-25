@@ -188,20 +188,38 @@ async function tryck(s, loc, vad) {
     await loc.tap({ timeout: 3000 });
     return true;
   } catch (e) {
-    // Det som ligger över mitten av knappen, med närmaste id (#spelkort,
-    // #storkort och så vidare).
-    const over = await loc.evaluate((el) => {
-      const r = el.getBoundingClientRect();
-      const top = document.elementFromPoint(r.x + r.width / 2, r.y + r.height / 2);
-      if (!top || el.contains(top)) return "";
-      const med = top.closest("[id]");
-      return med ? "#" + med.id : top.tagName.toLowerCase();
-    }).catch(() => "");
-    // Varför trycket inte gick, med Playwrights ord, när inget låg över:
-    // till exempel att tangenten rörde sig eller låg utanför fönstret.
-    const varfor = over ? "" : ((String(e.message).match(/ - (element is [^\n]*|element was [^\n]*|[^\n]*outside[^\n]*)/g) || []).pop() || "").replace(/^ - /, "");
-    const rad = `OBS ${s.namn}: ${vad} gick inte att trycka på` + (over ? `; ${over} låg över` : varfor ? `; ${varfor}` : "");
+    const rad = `OBS ${s.namn}: ${vad} gick inte att trycka på` + (await iVagen(loc, e));
     if (!rapport.includes(rad)) logga(rad);
+    return false;
+  }
+}
+
+// iVagen säger varför ett tryck eller klick inte gick: det som låg över
+// mitten av knappen, med närmaste id (#spelkort, #storkort och så vidare),
+// eller annars Playwrights skäl, till exempel att knappen rörde sig, var
+// borta ur sidan eller låg utanför fönstret.
+async function iVagen(loc, e) {
+  const over = await loc.evaluate((el) => {
+    const r = el.getBoundingClientRect();
+    const top = document.elementFromPoint(r.x + r.width / 2, r.y + r.height / 2);
+    if (!top || el.contains(top)) return "";
+    const med = top.closest("[id]");
+    return med ? "#" + med.id : top.tagName.toLowerCase();
+  }).catch(() => "");
+  if (over) return `; ${over} låg över`;
+  const skal = String(e.message).match(/ - (element is [^\n]*|element was [^\n]*|[^\n]*outside[^\n]*|[^\n]*intercepts[^\n]*|[^\n]*not stable[^\n]*|[^\n]*detached[^\n]*)/g) || [];
+  const varfor = (skal.pop() || "").replace(/^ - /, "");
+  return varfor ? `; ${varfor}` : "; " + String(e.message).split("\n")[0];
+}
+
+// klicka klickar på något på datorn eller telefonen. Går det inte på tio
+// sekunder blir det ett fynd som säger varför, och provet fortsätter.
+async function klicka(s, loc, vad) {
+  try {
+    await loc.click({ timeout: 10000 });
+    return true;
+  } catch (e) {
+    fynna(s.namn, `${vad} gick inte att klicka på` + (await iVagen(loc, e)));
     return false;
   }
 }
@@ -257,13 +275,13 @@ async function provaMinikort(s) {
   const kvar = await s.page.evaluate(() => state.deadlineMs - (performance.now() - state.receivedAt));
   if (kvar < 5000) return false;
   const runda0 = await s.page.evaluate(() => state.round);
-  await synlig.click();
+  if (!(await klicka(s, synlig, "minikortet i loggen"))) return true;
   if (await s.page.locator("#kortvisning").isHidden()) {
     fynna(s.namn, "ett klick på ett minikort öppnade inte kortvisningen");
     return true;
   }
   await bild(s, "4-kortvisningen");
-  await s.page.click("#kortvisning");
+  if (!(await klicka(s, s.page.locator("#kortvisning"), "kortvisningen"))) return true;
   await s.page.keyboard.press(" ");
   try {
     // Draget syns, eller så var det det sista som behövdes och rundan
@@ -360,12 +378,12 @@ try {
           // guld, och knappen Runda för runda raderna.
           const vald = s.page.locator("#chronResults .vhuvud:not([disabled])").first();
           if (await vald.count()) {
-            await vald.click();
-            if (!(await s.page.locator("#chronResults .guldbok p").count())) fynna(s.namn, "guldboken öppnas inte");
-            const knapp = s.page.locator("#chronResults .gb-knapp");
-            if (await knapp.count()) {
-              await knapp.click();
-              if (!(await s.page.locator("#chronResults .gb-rader span").count())) fynna(s.namn, "Runda för runda visar inga rader");
+            if (await klicka(s, vald, "en vandrare på slutskärmen")) {
+              if (!(await s.page.locator("#chronResults .guldbok p").count())) fynna(s.namn, "guldboken öppnas inte");
+              const knapp = s.page.locator("#chronResults .gb-knapp");
+              if (await knapp.count() && (await klicka(s, knapp, "knappen Runda för runda"))) {
+                if (!(await s.page.locator("#chronResults .gb-rader span").count())) fynna(s.namn, "Runda för runda visar inga rader");
+              }
             }
             await s.page.locator("#chronResults .guldbok").scrollIntoViewIfNeeded().catch(() => {});
             await granska(s, "guldboken");
