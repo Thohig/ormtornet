@@ -61,7 +61,7 @@ där vandrarna påverkar varandra (`vandrarhandelser.go`):
 
 | Händelse | Bild | Vad som händer |
 | --- | --- | --- |
-| Tornet drar tillbaka | `tillbaka` | den inne som bär minst guld får välja att dra tillbaka den som gick ut med mest; valet (T eller knappen Dra tillbaka i panelen Nu) är hens drag och gäller två rundor |
+| Tornet drar tillbaka | `tillbaka` | den inne som bär minst guld får välja att dra tillbaka den som gick ut med mest; valet (T eller knappen Dra tillbaka i panelen Nu) är hens drag och gäller två rundor; den som dras in hamnar tre rum in, och den som drar får en fjärdedel av guldet som följer med in |
 | Ormens blick | `blick` | en vandrare får ormens blick i sex rundor: var tredje näve väcker ormen, blicken går över till den man står i samma rum som (inte tillbaka till den som just gav den, så länge de står kvar tillsammans) och räknas ner varje runda, och när den släpper tar den 10 guld |
 | Skottpengen | `skottpeng` | den som bär mest får ett pris på sig i tre rundor: den som träffar hen tar dubbelt så mycket |
 | Skatan | `skata` | ett föremål som inte är förbannat flyger från en vandrare till en annan i ett annat rum; båda vet åt vilket håll den andre står |

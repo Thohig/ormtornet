@@ -203,6 +203,9 @@ Så här skiljer vi på sakerna när användaren ger instruktioner:
   varelser och föremål); varelsens **lynne** är chansen att den anfaller
   när man gör något annat. Att vänta i strid är att hålla **garden**
   (`monster.go`, `traff` i `data/monster.json`, docs/bara-anfall.md).
+  En **lång strid** blir lättare åt båda hållen efter fyra rundor mot
+  samma varelse (`fightTick` och `weary`, `trott_efter` och
+  `trott_per_runda`, sedan 2026-11-25).
   Parera och undanmanöver togs bort 2026-11-24.
 - **kammaren**: ligger nästan var som helst, men ingen har den mycket
   närmare än de andra (`plats` i `data/ormen.json`, `chamberSpots` i
@@ -215,8 +218,10 @@ Så här skiljer vi på sakerna när användaren ger instruktioner:
   eget spelkort (`tornhandelser.go`, `data/handelser.json`,
   docs/handelser.md). De åtta **händelserna mellan vandrarna** står i
   `vandrarhandelser.go`, bland dem **Tornet drar tillbaka**: den som ligger
-  sist kan dra in den som gick ut med mest guld (T), och får **ormens
-  blick** för det.
+  sist kan dra in den som gick ut med mest guld (T). Den som dras in
+  hamnar tre rum in längs vägen hen gick ut (`pullSpot`), och den som
+  drar får en fjärdedel av guldet som följer med in, och **ormens blick**
+  för det.
 - **placeringen**: allas plats 1 till N i slutet, och **vinken**: det man
   får veta om hur mycket den man möter bär, och om det är mer eller mindre
   än man själv bär (`results` i `game.go`, `packHint` i `pvp.go`).

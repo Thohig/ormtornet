@@ -44,6 +44,14 @@ webbläsarprovet:
   någon den som har ett pris på sig? Hittar två vandrare samtidigt till
   kistan med två lås? Är golvet som vrider sig för slumpartat? Kommer
   händelserna för sällan nu när de är tjugofyra på samma chans?
+- Tornet drar tillbaka efter provspelet 2026-11-25
+  ([provspel-2026-11-25-3.md](provspel-2026-11-25-3.md)): är tre rum in
+  lagom (`rum_in`), och räcker en fjärdedel av guldet som följer med in
+  (`andel`) för att någon ska vilja dra och ta ormens blick?
+- Långa strider ([bara-anfall.md](bara-anfall.md)): märker man att
+  slagen kommer lättare efter fyra rundor, och blir striderna mot
+  gestalten i fjällrustning och väsenet av vita ben lagom långa? Dör fler
+  i dem än förut?
 - Ormen som flyttar sig när den vaknar: märker man att den har flyttat,
   och går någon till den gamla kammaren för guldet?
 - Breven: läser man raden i marginalen, och går man åt det håll den
