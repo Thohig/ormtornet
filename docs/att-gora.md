@@ -59,6 +59,10 @@ webbläsarprovet:
 - Guldboken ([guldboken.md](guldboken.md)): väljer man en vandrare på
   slutskärmen, läses berättelsen om guldet bra när den blir lång, och
   räcker raderna Runda för runda?
+- Kombinationerna (2026-11-25, [kombinationer.md](kombinationer.md)):
+  märker man att två föremål fogas ihop, och letar någon efter den andra
+  delen när beskrivningen antyder den? Med AI-spelare blev det bara av i
+  ungefär en vandring på åttio. Är Fjällmanteln för stark?
 - Tangenterna vid dörrarna på telefonen: de hålls nu inom kartan och
   ligger över det stora kortet. Träffar man dem, och förstår man en
   tangent som har flyttats in till kanten?
