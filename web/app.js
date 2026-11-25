@@ -1506,6 +1506,23 @@ function checkRoundCard() {
 }
 $("spelkort").addEventListener("click", hideRoundCard);
 
+// På telefonen ligger tangenterna vid dörrarna över korten, så att de alltid
+// går att trycka på. En tangent som står över spelkortet eller det stora
+// kortet blir svag medan kortet syns, så att man kan läsa kortet; den går
+// att trycka på ändå.
+function dimKeysOverCards() {
+  const cards = ["spelkort", "storkort"].map((id) => $(id)).filter((el) => el && !el.hidden && !el.classList.contains("leaving"));
+  const rects = cards.map((el) => el.getBoundingClientRect());
+  document.querySelectorAll(".isotangenter span[data-key]").forEach((k) => {
+    const r = k.getBoundingClientRect();
+    const over = rects.some((c) => r.left < c.right && c.left < r.right && r.top < c.bottom && c.top < r.bottom);
+    k.classList.toggle("over-kort", over);
+  });
+}
+setInterval(() => {
+  if (document.body.classList.contains("touch")) dimKeysOverCards();
+}, 200);
+
 // miniCard är ett litet kort bredvid en rad i Din vandring och krönikan.
 function miniCard(motiv) {
   return Kort.mini(motiv);
