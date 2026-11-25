@@ -25,6 +25,9 @@ type Monster struct {
 	// figuren på kartan.
 	did string
 	hit bool
+	// fightRounds är hur många rundor i rad någon har stridit mot varelsen,
+	// och lastFight den senaste av dem (weary).
+	fightRounds, lastFight int
 	// named är rundan då varje vandrare (på ID) först fick höra varelsen
 	// beskriven i striden. Rundorna efter räcker den korta formen.
 	named map[int]int
@@ -100,7 +103,8 @@ func (g *Game) fightOutlook(p *Player) *fightView {
 		if t == nil {
 			return nil
 		}
-		return &fightView{Du: hitWord(g.hitChance(g.kraft(p), t.Forsvar, 0)), Den: hitWord(g.hitChance(t.Kraft, g.forsvar(p), 0))}
+		w := g.weary(m, true)
+		return &fightView{Du: hitWord(g.hitChance(g.kraft(p), t.Forsvar, w)), Den: hitWord(g.hitChance(t.Kraft, g.forsvar(p), w))}
 	}
 	if g.pvpStatus(p) != pvpYes {
 		return nil
@@ -282,6 +286,40 @@ func (g *Game) announceMonster(p *Player) {
 	g.knife(p, m)
 }
 
+// fightTick räknar rundorna i rad som någon strider mot varelsen. Den
+// rundan striden blir lång får den som strider veta att slagen kommer
+// lättare nu.
+func (g *Game) fightTick(m *Monster, p *Player) {
+	if m.lastFight != g.round {
+		if m.lastFight == g.round-1 {
+			m.fightRounds++
+		} else {
+			m.fightRounds = 1
+		}
+		m.lastFight = g.round
+	}
+	if e := g.data.Monster.Traff.TrottEfter; e > 0 && m.fightRounds == e+1 {
+		g.logTo(p, g.data.Text("strid_trott"), "info")
+	}
+}
+
+// weary är hur mycket lättare båda träffar i en lång strid mot varelsen
+// den här rundan. next är sant för nästa runda, för utsikten i panelen Nu.
+func (g *Game) weary(m *Monster, next bool) int {
+	r := g.data.Monster.Traff
+	n := 0
+	switch {
+	case !next && m.lastFight == g.round:
+		n = m.fightRounds
+	case next && m.lastFight >= g.round-1:
+		n = m.fightRounds + 1
+	}
+	if r.TrottEfter <= 0 || n <= r.TrottEfter {
+		return 0
+	}
+	return (n - r.TrottEfter) * r.TrottPerRunda
+}
+
 // duel utför en stridsrunda mellan spelaren och varelsen: spelaren
 // anfaller, varelsen slår tillbaka, och var och en träffar med sin chans.
 func (g *Game) duel(p *Player, m *Monster) {
@@ -289,8 +327,9 @@ func (g *Game) duel(p *Player, m *Monster) {
 	m.did = actAttack
 	g.hearFight(p.X, p.Y, p)
 
-	playerHits := g.roll(g.hitChance(g.kraft(p), t.Forsvar, 0))
-	monsterHits := g.roll(g.hitChance(t.Kraft, g.forsvar(p), 0))
+	w := g.weary(m, false)
+	playerHits := g.roll(g.hitChance(g.kraft(p), t.Forsvar, w))
+	monsterHits := g.roll(g.hitChance(t.Kraft, g.forsvar(p), w))
 	var result string // hur rundan gick, för spelkortet
 	switch {
 	case playerHits && monsterHits:
@@ -351,7 +390,7 @@ func (g *Game) freeAttack(p *Player, m *Monster, key string, mod int, always boo
 		return
 	}
 	m.did = actAttack
-	if !always && !g.roll(g.hitChance(t.Kraft, g.forsvar(p), mod)) {
+	if !always && !g.roll(g.hitChance(t.Kraft, g.forsvar(p), mod+g.weary(m, false))) {
 		g.soundTo(p, "parera")
 		text := g.data.MonsterText(key+"_miss", g.monsterVars(m, p)...)
 		g.logTo(p, text, "dim")
@@ -516,6 +555,7 @@ func (g *Game) combatTurn(p *Player, a string) bool {
 	if m == nil {
 		return false
 	}
+	g.fightTick(m, p)
 	if !isCombatAction(a) {
 		g.thirst(p)
 		if p.Status != statusIn {

@@ -731,6 +731,11 @@ står bland tecknen (⚔ Kraft, ◆ Försvar, grönt när ett föremål höjer d
 och på klasskorten; varelsernas ser du aldrig. Panelen Nu säger i ord hur
 striden ser ut: "Du träffar lätt · den träffar ibland".
 
+En lång strid blir lättare åt båda hållen. När någon har stridit mot samma
+varelse fyra rundor i rad (`trott_efter`) träffar båda 10 procentenheter
+lättare för varje runda till (`trott_per_runda`), och den som strider får
+en rad om att slagen kommer lättare nu. Ett uppehåll börjar om räkningen.
+
 Du kan också göra något annat medan varelsen står där, men då kanske den
 anfaller. Hur ofta beror på dess **lynne** (`lynne`, i procent), så det
 lönar sig att lära sig varelserna:

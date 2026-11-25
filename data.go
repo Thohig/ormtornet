@@ -107,6 +107,10 @@ type HitRules struct {
 	Oberedd int `json:"oberedd"`
 	Kraft   int `json:"kraft"`
 	Forsvar int `json:"forsvar"`
+	// En lång strid: efter TrottEfter rundor i rad mot samma varelse träffar
+	// båda lättare, TrottPerRunda procentenheter för varje runda till.
+	TrottEfter    int `json:"trott_efter"`
+	TrottPerRunda int `json:"trott_per_runda"`
 }
 
 // Monsters styr varelserna i tornet och striderna mot dem.

@@ -1210,6 +1210,9 @@
     "kronika_klocka": [
       "Klockan slog när {namn} gick in under den, och solen sjönk fortare."
     ],
+    "strid_trott": [
+      "Striden har dragit ut på tiden. Ni är båda trötta, och slagen kommer lättare nu, åt båda hållen."
+    ],
     "handelse_tillbaka_inte": [
       "Porten är tyst. Det finns ingen att dra tillbaka."
     ],

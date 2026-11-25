@@ -1024,3 +1024,32 @@ func TestChamberFreeAndFair(t *testing.T) {
 		t.Fatal("ingen plats långt från mitten")
 	}
 }
+
+// En lång strid mot samma varelse blir lättare att träffa i för båda,
+// och den som strider får veta det (provspelet 2026-11-25, tredje).
+func TestLongFightWeary(t *testing.T) {
+	g, a, _ := startTwo(t)
+	p := a.player
+	putInRoom(g, p, 3, 3)
+	g.monsters = nil
+	g.addMonster(g.data.monsterType("fjallvakt"), 3, 3)
+	m := g.monsterAt(3, 3)
+	r := g.data.Monster.Traff
+	for i := 1; i <= r.TrottEfter+2; i++ {
+		g.round = i
+		g.fightTick(m, p)
+		want := max(0, i-r.TrottEfter) * r.TrottPerRunda
+		if got := g.weary(m, false); got != want {
+			t.Fatalf("runda %d: %d, ville ha %d", i, got, want)
+		}
+	}
+	// Ett uppehåll börjar om räkningen.
+	g.round += 2
+	g.fightTick(m, p)
+	if g.weary(m, false) != 0 {
+		t.Fatal("striden räknas som lång efter ett uppehåll")
+	}
+	if !contains(logs(a), g.data.Text("strid_trott")) {
+		t.Fatal("ingen rad om att striden har blivit lång")
+	}
+}

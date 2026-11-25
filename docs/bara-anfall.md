@@ -27,6 +27,14 @@ Träffchansen är `bas + per_steg × (Kraft − motståndarens Försvar)`, inom
 svårare att träffa (`garden`), den som söker eller dricker lättare
 (`oberedd`). Spelarna ser aldrig talen, bara det som händer.
 
+En lång strid blir lättare åt båda hållen (provspelet 2026-11-25,
+tredje): efter `trott_efter` rundor i rad mot samma varelse (4) träffar
+båda `trott_per_runda` procentenheter lättare (10) för varje runda till,
+och den som strider får en rad om det. Med AI-spelare på Normal gick den
+längsta striden mot gestalten i fjällrustning från 24 till 12 rundor, och
+andelen strider på 8 rundor eller mer från 18 till 12 %, medan andelen
+som dog var densamma (13 % på Normal, 23 % på Svår).
+
 Invigda och den som bär Myntet med hål gör varelserna mer lynniga
 (`extra_lynne`).
 

@@ -5,7 +5,7 @@
     "spelarskada": 1,
 
     "_om_traff": "Striden har bara ett val, anfall. Träffchansen i procent är bas + per_steg × (Kraft − motståndarens Försvar), inom min och max. garden läggs till när den som slås mot håller garden (väntar), oberedd när hen söker eller dricker. kraft och forsvar här gäller vandrare utan klass. lynne hos en varelse är chansen i procent att den anfaller en runda då vandraren inte anfaller. Se docs/bara-anfall.md.",
-    "traff": { "bas": 50, "per_steg": 15, "min": 10, "max": 95, "garden": -20, "oberedd": 15, "kraft": 1, "forsvar": 1 },
+    "traff": { "bas": 50, "per_steg": 15, "min": 10, "max": 95, "garden": -20, "oberedd": 15, "kraft": 1, "forsvar": 1, "trott_efter": 4, "trott_per_runda": 10 },
 
     "_om_modell": "modell är varelsen på kartan snett ovanifrån: farg är kroppens färg som #rrggbb och storlek hur stor den är (0,5–2, 1 är vanlig storlek). Formen står i klient/src/modeller.ts, och en varelse utan form där visas med sitt tecken.",
     "typer": [
