@@ -6,8 +6,9 @@
 // Allt byggs i ett rum på S × S enheter, med (0, 0) i nordvästra hörnet,
 // och läggs i listor efter material, så att kartan kan slå ihop det. Mitten
 // av rummet och vandrarnas platser hålls fria: inredningen står i hörnen och
-// längs murarna. Det höga står mot norra och västra muren, som vetter bort
-// från kameran, så att det inte skymmer rummet.
+// längs murarna, aldrig på någon av de åtta platserna (SLOTS i karta.ts).
+// Det höga står mot norra och västra muren, som vetter bort från kameran,
+// så att det inte skymmer rummet.
 import * as THREE from "three";
 
 // Materialen inredningen läggs i. "sten", "tra", "jarn" och "lys" är
@@ -132,18 +133,20 @@ export function bygg(namn: string, lagg: Lagg, ox: number, oz: number, S: number
       pelare(v, S - 1.2, S - 1.35);
       break;
     case "brunn": {
-      const x = S - 1.35, z = 1.5;
-      v.cyl("sten", 0.72, 0.78, 0.5, x, 0.25, z, 12);
-      v.cyl("#0b1216", 0.56, 0.56, 0.02, x, 0.5, z, 12);
-      [-1, 1].forEach((s) => v.lada("tra", 0.1, 1.15, 0.1, x + s * 0.7, 0.58, z));
-      const stang = new THREE.CylinderGeometry(0.05, 0.05, 1.5, 6);
-      stang.rotateZ(Math.PI / 2);
+      // I nordöstra hörnet, med vinden längs östra muren, så att den första
+      // vandrarens plats närmast (4,2; 1,4) är fri.
+      const x = S - 0.8, z = 1.35;
+      v.cyl("sten", 0.56, 0.6, 0.5, x, 0.25, z, 12);
+      v.cyl("#0b1216", 0.44, 0.44, 0.02, x, 0.5, z, 12);
+      [-1, 1].forEach((s) => v.lada("tra", 0.1, 1.15, 0.1, x, 0.58, z + s * 0.6));
+      const stang = new THREE.CylinderGeometry(0.05, 0.05, 1.3, 6);
+      stang.rotateX(Math.PI / 2);
       v.geo("tra", stang, x, 1.12, z);
       v.cyl("jarn", 0.12, 0.1, 0.18, x, 0.82, z, 8);
       break;
     }
     case "bank":
-      bank(v, N + 0.35, S - 1.5, 1.7);
+      bank(v, N + 0.35, S - 1.15, 1.7);
       break;
     case "spjut": {
       const skaft = new THREE.CylinderGeometry(0.03, 0.03, 2.1, 6);
@@ -167,12 +170,13 @@ export function bygg(namn: string, lagg: Lagg, ox: number, oz: number, S: number
       break;
     }
     case "trappa": {
-      const x = 1.35, z = 1.45;
-      v.cyl("sten", 0.15, 0.15, 2.1, x, 1.05, z, 8);
+      // En smal vindeltrappa i nordvästra hörnet, mellan vandrarnas platser.
+      const x = 0.8, z = 1.4;
+      v.cyl("sten", 0.12, 0.12, 2.1, x, 1.05, z, 8);
       for (let i = 0; i < 10; i++) {
         const a = -Math.PI / 2 + i * 0.68;
-        const g = new THREE.BoxGeometry(0.85, 0.1, 0.36);
-        g.translate(0.5, 0, 0);
+        const g = new THREE.BoxGeometry(0.55, 0.1, 0.3);
+        g.translate(0.32, 0, 0);
         g.rotateY(-a);
         v.geo("sten", g, x, 0.1 + i * 0.2, z);
       }
@@ -196,8 +200,8 @@ export function bygg(namn: string, lagg: Lagg, ox: number, oz: number, S: number
       [[1.0, S - 1.0], [1.45, S - 0.85], [1.15, S - 1.45]].forEach(([x, z]) => v.sten("#8a7a55", 0.3, x, 0.2, z, 0.7));
       break;
     case "lyktor":
-      lykta(v, S - 1.25, 1.2);
-      lykta(v, 1.15, S - 1.3);
+      lykta(v, S - 1.05, 1.0);
+      lykta(v, 0.75, S - 1.3);
       break;
     case "stenblock":
       [[S - 1.2, 1.1, 0.42], [S - 0.75, 1.55, 0.3], [S - 1.55, 0.75, 0.26]].forEach(([x, z, r]) => v.sten("#6d665c", r, x, r * 0.6, z));
@@ -211,7 +215,7 @@ export function bygg(namn: string, lagg: Lagg, ox: number, oz: number, S: number
       break;
     }
     case "stad": {
-      const x = S - 1.35, z = 1.6;
+      const x = S - 0.95, z = 1.6;
       v.cyl("tra", 0.27, 0.3, 0.42, x, 0.21, z, 9);
       v.lada("jarn", 0.34, 0.12, 0.2, x, 0.48, z);
       v.lada("jarn", 0.6, 0.12, 0.26, x, 0.6, z);
@@ -225,18 +229,20 @@ export function bygg(namn: string, lagg: Lagg, ox: number, oz: number, S: number
       hylla(v, N + 0.19, 1.25, 1.2, false, true);
       break;
     case "bord": {
-      const x = S - 1.45, z = O - 1.2;
-      v.lada("tra", 1.1, 0.07, 0.75, x, 0.62, z);
-      [[-1, -1], [-1, 1], [1, -1], [1, 1]].forEach(([a, b]) => v.lada("tra", 0.07, 0.6, 0.07, x + a * 0.47, 0.3, z + b * 0.3));
+      // Längs östra muren i nordöstra hörnet, bredvid vandrarnas platser
+      // och bakom dem sett från kameran.
+      const x = O - 0.6, z = 1.45;
+      v.lada("tra", 0.75, 0.07, 1.1, x, 0.62, z);
+      [[-1, -1], [-1, 1], [1, -1], [1, 1]].forEach(([a, b]) => v.lada("tra", 0.07, 0.6, 0.07, x + a * 0.3, 0.3, z + b * 0.47));
       [-1, 1].forEach((s) => {
-        const sida = new THREE.BoxGeometry(0.26, 0.02, 0.34);
-        sida.rotateZ(s * 0.12);
-        v.geo("#e8dcc0", sida, x + s * 0.13, 0.67, z);
+        const sida = new THREE.BoxGeometry(0.34, 0.02, 0.26);
+        sida.rotateX(s * 0.12);
+        v.geo("#e8dcc0", sida, x, 0.67, z + s * 0.13);
       });
       break;
     }
     case "stenhog": {
-      const x = 1.15, z = S - 1.2;
+      const x = 0.95, z = S - 1.2;
       for (let i = 0; i < 7; i++) {
         const a = v.slump() * Math.PI * 2, d = v.slump() * 0.4;
         v.sten("#6d665c", 0.14 + v.slump() * 0.12, x + Math.cos(a) * d, 0.1 + (i > 4 ? 0.18 : 0), z + Math.sin(a) * d);
