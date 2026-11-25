@@ -17,7 +17,7 @@
         "namn": "The scale amulet",
         "hittad": "the scale amulet",
         "kort": "the scale amulet",
-        "beskrivning": "The next trap does not strike.",
+        "beskrivning": "The next trap does not strike. Its scales are loose, as if they once sat on something far larger.",
         "verkar": [
           "The amulet grows warm against your chest just as {falla} strikes, but not at you. When you look, the amulet has cracked."
         ]
@@ -27,7 +27,7 @@
         "namn": "A spare wick",
         "hittad": "a spare wick",
         "kort": "the wick",
-        "beskrivning": "Your lantern withstands one darkness.",
+        "beskrivning": "Your lantern withstands one darkness. The flame would burn twice as bright against something that shines.",
         "verkar": [
           "The lantern goes out, but you have another wick. With trembling fingers you get it lit again."
         ]
@@ -108,7 +108,7 @@
         "namn": "A lulling flute",
         "hittad": "a lulling flute",
         "kort": "the flute",
-        "beskrivning": "If you draw a card that wakes the serpent, you may draw again, once.",
+        "beskrivning": "If you draw a card that wakes the serpent, you may draw again, once. The notes sound thin, as if they lacked a horn.",
         "verkar": [
           "The serpent stirs, and you play three low notes on the flute. The breathing slows again. The flute cracks. You reach for another handful."
         ]
@@ -138,7 +138,7 @@
         "namn": "The holed coin",
         "hittad": "the holed coin",
         "kort": "the coin",
-        "beskrivning": "A heavy gold coin with a hole in the middle. Worth 25 gold when you get out.",
+        "beskrivning": "A heavy gold coin with a hole in the middle, just wide enough for a rope. Worth 25 gold when you get out.",
         "forbannelse": [
           "The creature sniffs at your bag. The coin has a smell, and everything in the tower with teeth knows where you are."
         ]
@@ -148,7 +148,7 @@
         "namn": "The crown of rust",
         "hittad": "the crown of rust",
         "kort": "the crown",
-        "beskrivning": "A small crown that someone has dropped. Worth 30 gold when you get out.",
+        "beskrivning": "A small crown that someone has dropped, with an empty setting the size of a dove's egg. Worth 30 gold when you get out.",
         "forbannelse": [
           "The crown begins to glow faintly through your bag. Whoever stands in the next room sees the light."
         ]
@@ -193,6 +193,68 @@
         "hittad": "a letter",
         "kort": "the letter",
         "beskrivning": "From someone who was here before."
+      },
+      {
+        "id": "pendel",
+        "namn": "The pendulum",
+        "hittad": "a pendulum",
+        "kort": "the pendulum",
+        "beskrivning": "The holed coin, threaded on the rope. It pulls towards the nearest gold lying on a floor in the tower. Worth 25 gold when you get out.",
+        "fogas": [
+          "You thread the coin on the rope and tie it fast. When you hold it up it begins to swing, and it does not swing straight."
+        ]
+      },
+      {
+        "id": "ljusspegel",
+        "namn": "The light mirror",
+        "hittad": "a light mirror",
+        "kort": "the light mirror",
+        "beskrivning": "The mirror shard behind the spare wick. Your lantern does not go out while you carry it, and when you enter a new room the shard shows two of the rooms beyond its doors. Three times.",
+        "verkar": [
+          "The shard throws the lantern's glow through the doorway to the {riktning}."
+        ],
+        "slut": [
+          "The wick burns down, and the shard turns sooty and dull."
+        ],
+        "fogas": [
+          "You wedge the shard behind the wick in your lantern. The light bounces off it and burns twice as bright."
+        ]
+      },
+      {
+        "id": "fjallmantel",
+        "namn": "The scale mantle",
+        "hittad": "a scale mantle",
+        "kort": "the scale mantle",
+        "beskrivning": "The serpent's skin, fastened with the amulet. The creatures take you for one of their own and attack half as often when you do not attack them. Worth 30 gold when you get out.",
+        "fogas": [
+          "The amulet's scales fit the pattern of the skin. You wrap the skin around your shoulders and fasten it with the amulet. It smells of serpent."
+        ]
+      },
+      {
+        "id": "pipa",
+        "namn": "The serpent's pipe",
+        "hittad": "the serpent's pipe",
+        "kort": "the pipe",
+        "beskrivning": "The flute, pushed into the bone horn. You hear all that the bone horn hears, and if you draw a card that wakes the serpent, you may draw again, twice.",
+        "verkar": [
+          "The serpent stirs, and you blow the pipe. The note goes through the horn and fills the chamber, and the breathing slows again. You reach for another handful."
+        ],
+        "slut": [
+          "The flute cracks loose from the horn. You still have the horn."
+        ],
+        "fogas": [
+          "The flute fits into the narrow end of the bone horn. You blow gently, and the note turns deep and low."
+        ]
+      },
+      {
+        "id": "krona_parla",
+        "namn": "The crown with the pearl",
+        "hittad": "the crown with the pearl",
+        "kort": "the crown",
+        "beskrivning": "The black pearl in the empty setting of the rusted crown. Worth 100 gold when you get out, more than the two apart.",
+        "fogas": [
+          "The pearl slides into the crown's empty setting with a click, as if it had been waiting there."
+        ]
       }
     ],
     "brev": {
@@ -274,6 +336,18 @@
     ],
     "brev_hittar": [
       "Under a stone lies a folded paper, damp and brittle. Someone has written in charcoal:"
+    ],
+    "pendel_pekar": [
+      "The pendulum pulls towards the {horn}, where gold lies on the floor."
+    ],
+    "pendel_har": [
+      "The pendulum hangs straight down. There is gold here."
+    ],
+    "pendel_stilla": [
+      "The pendulum hangs still. No gold lies on any floor."
+    ],
+    "ljusspegel_morker": [
+      "The flame flickers, but the shard catches the light and throws it back. It does not go dark."
     ],
     "pilgrim_forbannad": [
       "Here lies {foremal}. Something in you says no. You leave it be."

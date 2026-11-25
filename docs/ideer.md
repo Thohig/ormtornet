@@ -3,7 +3,8 @@
 Idéer som spånades 2026-11-25 för hur spelet kan byggas ut. Inget här är
 bestämt; ta fram ett förslag och fråga innan något byggs. Alla följer den
 individuella tävlingen (docs/individuell-tavling.md), och ingen säger
-tornets hemlighet rakt ut. Idé 17, reprisen, är byggd (docs/repris.md).
+tornets hemlighet rakt ut. Idé 17, reprisen, är byggd (docs/repris.md),
+och idé 15, kombinationerna (docs/kombinationer.md).
 
 ## Tornet
 
@@ -52,8 +53,7 @@ tornets hemlighet rakt ut. Idé 17, reprisen, är byggd (docs/repris.md).
     inte ta mer än en näve.
 14. **Föremål med två sidor:** något som är bra i början och förbannat mot
     slutet, eller som blir starkare ju längre man bär det.
-15. **Kombinationer:** två föremål som tillsammans gör något nytt, som
-    repet och kroken eller spegeln och facklan.
+15. ~~**Kombinationer.**~~ Byggda 2026-11-25 (docs/kombinationer.md).
 
 ## Kvällen och slutet
 

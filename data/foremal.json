@@ -24,7 +24,7 @@
         "namn": "Fjällamuletten",
         "hittad": "fjällamuletten",
         "kort": "fjällamuletten",
-        "beskrivning": "Nästa fälla slår inte till.",
+        "beskrivning": "Nästa fälla slår inte till. Fjällen är lösa, som om de en gång satt på något mycket större.",
         "vikt": 2,
         "anvandningar": 1,
         "verkar": [
@@ -38,7 +38,7 @@
         "namn": "Extra veke",
         "hittad": "en extra veke",
         "kort": "veken",
-        "beskrivning": "Lyktan tål ett mörker.",
+        "beskrivning": "Lyktan tål ett mörker. Lågan vore dubbelt så stark mot något blankt.",
         "vikt": 3,
         "anvandningar": 1,
         "verkar": [
@@ -152,7 +152,7 @@
         "namn": "Sövande flöjt",
         "hittad": "en sövande flöjt",
         "kort": "flöjten",
-        "beskrivning": "Drar du ett kort som väcker ormen får du dra om, en gång.",
+        "beskrivning": "Drar du ett kort som väcker ormen får du dra om, en gång. Tonerna låter tunna, som om de saknade ett horn.",
         "vikt": 1,
         "anvandningar": 1,
         "verkar": [
@@ -195,7 +195,7 @@
         "namn": "Myntet med hål",
         "hittad": "myntet med hål",
         "kort": "myntet",
-        "beskrivning": "Ett tungt guldmynt med ett hål i mitten. Värt 25 guld när du kommer ut.",
+        "beskrivning": "Ett tungt guldmynt med ett hål i mitten, lagom stort för ett rep. Värt 25 guld när du kommer ut.",
         "vikt": 1,
         "forbannad": true,
         "varde": 25,
@@ -210,7 +210,7 @@
         "namn": "Kronan av rost",
         "hittad": "kronan av rost",
         "kort": "kronan",
-        "beskrivning": "En liten krona som någon har tappat. Värd 30 guld när du kommer ut.",
+        "beskrivning": "En liten krona som någon har tappat, med en tom fattning stor som ett duvägg. Värd 30 guld när du kommer ut.",
         "vikt": 1,
         "forbannad": true,
         "varde": 30,
@@ -281,6 +281,125 @@
         "beskrivning": "Från någon som var här förut.",
         "vikt": 2,
         "brev": true
+      },
+      {
+        "id": "pendel",
+        "tecken": "♁",
+        "bild": "pendel",
+        "namn": "Pendeln",
+        "hittad": "en pendel",
+        "kort": "pendeln",
+        "beskrivning": "Myntet med hål, uppträtt på repet. Det drar mot närmaste guld som ligger på ett golv i tornet. Värt 25 guld när du kommer ut.",
+        "vikt": 0,
+        "av": [
+          "mynt_hal",
+          "rep"
+        ],
+        "behaller": [
+          "mynt_hal"
+        ],
+        "forbannad": true,
+        "varde": 25,
+        "fogas": [
+          "Du trär myntet på repet och knyter fast det. När du håller upp det börjar det svänga, och det svänger inte rakt."
+        ]
+      },
+      {
+        "id": "ljusspegel",
+        "tecken": "✷",
+        "bild": "ljusspegel",
+        "namn": "Ljusspegeln",
+        "hittad": "en ljusspegel",
+        "kort": "ljusspegeln",
+        "beskrivning": "Spegelskärvan bakom den extra veken. Lyktan slocknar inte så länge du bär den, och kommer du in i ett nytt rum visar skärvan två av rummen bakom dörrarna. Tre gånger.",
+        "vikt": 0,
+        "anvandningar": 3,
+        "av": [
+          "spegel",
+          "veke"
+        ],
+        "verkar": [
+          "Skärvan kastar lyktans sken genom dörröppningen åt {riktning}."
+        ],
+        "slut": [
+          "Veken brinner ner, och skärvan blir sotig och matt."
+        ],
+        "fogas": [
+          "Du kilar fast skärvan bakom veken i lyktan. Ljuset studsar mot den och blir dubbelt så starkt."
+        ]
+      },
+      {
+        "id": "fjallmantel",
+        "tecken": "◬",
+        "bild": "fjallmantel",
+        "namn": "Fjällmanteln",
+        "hittad": "en fjällmantel",
+        "kort": "fjällmanteln",
+        "beskrivning": "Ormens skinn, fäst med amuletten. Varelserna tar dig för något av sitt eget slag och anfaller hälften så ofta när du inte anfaller dem. Värd 30 guld när du kommer ut.",
+        "vikt": 0,
+        "av": [
+          "amulett",
+          "skinn"
+        ],
+        "behaller": [
+          "skinn"
+        ],
+        "forbannad": true,
+        "varde": 30,
+        "fogas": [
+          "Amulettens fjäll passar i skinnets mönster. Du sveper skinnet om axlarna och fäster det med amuletten. Det luktar orm."
+        ]
+      },
+      {
+        "id": "pipa",
+        "tecken": "♫",
+        "bild": "pipa",
+        "namn": "Ormens pipa",
+        "hittad": "ormens pipa",
+        "kort": "pipan",
+        "beskrivning": "Flöjten, instucken i benluren. Du hör allt som benluren hör, och drar du ett kort som väcker ormen får du dra om, två gånger.",
+        "vikt": 0,
+        "anvandningar": 2,
+        "av": [
+          "benlur",
+          "flojt"
+        ],
+        "behaller": [
+          "benlur"
+        ],
+        "kvar": "benlur",
+        "verkar": [
+          "Ormen rör sig, och du blåser i pipan. Tonen går genom luren och fyller kammaren, och andetagen blir långsamma igen. Du sträcker dig efter en ny näve."
+        ],
+        "slut": [
+          "Flöjten spricker loss ur luren. Luren har du kvar."
+        ],
+        "fogas": [
+          "Flöjten passar i benlurens smala ände. Du blåser försiktigt, och tonen blir djup och låg."
+        ]
+      },
+      {
+        "id": "krona_parla",
+        "tecken": "♚",
+        "bild": "krona_parla",
+        "namn": "Kronan med pärlan",
+        "hittad": "kronan med pärlan",
+        "kort": "kronan",
+        "beskrivning": "Den svarta pärlan i rostkronans tomma fattning. Värd 100 guld när du kommer ut, mer än de två var för sig.",
+        "vikt": 0,
+        "av": [
+          "svart_parla",
+          "rostkrona"
+        ],
+        "behaller": [
+          "svart_parla",
+          "rostkrona"
+        ],
+        "forbannad": true,
+        "varde": 100,
+        "fogas": [
+          "Pärlan glider in i kronans tomma fattning med ett klick, som om den hade väntat där."
+        ]
       }
     ],
     "_om_brev": "Brev från tidigare vandrare. Texten följer avslöjandets nivå. De får aldrig säga hemligheten rakt ut.",
@@ -363,6 +482,18 @@
     ],
     "brev_hittar": [
       "Under en sten ligger ett hopvikt papper, fuktigt och skört. Någon har skrivit med kol:"
+    ],
+    "pendel_pekar": [
+      "Pendeln drar mot {horn}, där guld ligger på golvet."
+    ],
+    "pendel_har": [
+      "Pendeln hänger rakt ner. Här ligger guld."
+    ],
+    "pendel_stilla": [
+      "Pendeln hänger stilla. Inget guld ligger på något golv."
+    ],
+    "ljusspegel_morker": [
+      "Lågan fladdrar, men skärvan fångar ljuset och kastar det tillbaka. Det blir inte mörkt."
     ],
     "pilgrim_forbannad": [
       "Här ligger {foremal}. Något i dig säger nej, och du låter fyndet ligga."

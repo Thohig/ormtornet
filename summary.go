@@ -203,7 +203,13 @@ func (g *Game) summaryFor(p *Player, b before, woke bool) []summaryLine {
 	}
 	for _, it := range p.items {
 		if !slices.Contains(b.items, it.ID) {
-			if ty := g.data.itemType(it.ID); ty != nil {
+			ty := g.data.itemType(it.ID)
+			switch {
+			case ty == nil || g.leftOf(b.items, it.ID):
+				// Det som blev kvar av ett föremål är inget nytt fynd.
+			case len(ty.Av) > 0:
+				add(t("sam_fogade", "foremal", ty.Kort), "gold")
+			default:
 				add(t("sam_foremal", "foremal", ty.Kort), "gold")
 			}
 		}

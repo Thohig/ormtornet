@@ -193,6 +193,7 @@ func (d *Data) validate() []string {
 		}
 	}
 	unique("foremal.json", "föremålet", ids)
+	validateCombos(d, bad)
 
 	ids = nil
 	for _, c := range d.Ormen.Kort {
@@ -340,4 +341,46 @@ func keys[V any](m map[string]V) string {
 	}
 	sort.Strings(out)
 	return strings.Join(out, ", ")
+}
+
+// validateCombos kontrollerar kombinationerna i foremal.json: två delar som
+// finns, delar som verkar vidare och verkar hela vandringen, och inte två
+// kombinationer av samma par.
+func validateCombos(d *Data, bad func(file, format string, args ...any)) {
+	pairs := map[[2]string]string{}
+	for _, it := range d.Foremal.Lista {
+		if it.Kvar != "" && d.itemType(it.Kvar) == nil {
+			bad("foremal.json", "föremålet %q blir %q när det är slut, och det finns inte", it.ID, it.Kvar)
+		}
+		if len(it.Av) == 0 {
+			if len(it.Behaller) > 0 {
+				bad("foremal.json", "föremålet %q har behaller men inget av", it.ID)
+			}
+			continue
+		}
+		if len(it.Av) != 2 || it.Av[0] == it.Av[1] {
+			bad("foremal.json", "föremålet %q ska fogas av två olika föremål", it.ID)
+			continue
+		}
+		for _, part := range it.Av {
+			if t := d.itemType(part); t == nil || t.Brev || len(t.Av) > 0 {
+				bad("foremal.json", "föremålet %q fogas av %q, som inte är ett föremål man bär", it.ID, part)
+			}
+		}
+		for _, k := range it.Behaller {
+			if !slices.Contains(it.Av, k) {
+				bad("foremal.json", "föremålet %q behåller %q, som inte är en av delarna", it.ID, k)
+			} else if t := d.itemType(k); t != nil && t.Anvandningar != 0 {
+				bad("foremal.json", "föremålet %q behåller %q, som bara verkar några gånger", it.ID, k)
+			}
+		}
+		if it.Vikt != 0 {
+			bad("foremal.json", "föremålet %q fogas ihop och ska ha vikt 0", it.ID)
+		}
+		key := [2]string{min(it.Av[0], it.Av[1]), max(it.Av[0], it.Av[1])}
+		if o, ok := pairs[key]; ok {
+			bad("foremal.json", "%q och %q fogas ihop till både %q och %q", it.Av[0], it.Av[1], o, it.ID)
+		}
+		pairs[key] = it.ID
+	}
 }

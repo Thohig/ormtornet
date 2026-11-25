@@ -6,6 +6,7 @@ package main
 
 import (
 	"math/rand/v2"
+	"slices"
 	"strconv"
 )
 
@@ -27,6 +28,15 @@ type ItemType struct {
 	Brev         bool     `json:"brev"`    // läses direkt och bärs inte
 	Kraft        int      `json:"kraft"`   // läggs till vandrarens Kraft så länge hen bär föremålet
 	Forsvar      int      `json:"forsvar"` // läggs till vandrarens Försvar
+	// Kombinationer (docs/kombinationer.md): ett föremål med av blir till
+	// när någon bär de två föremålen samtidigt. behaller är de av delarna
+	// som verkar vidare i det nya föremålet, med sina förbannelser; de
+	// verkar hela vandringen. kvar är föremålet det blir när
+	// användningarna är slut, i stället för att försvinna.
+	Av       []string `json:"av"`
+	Behaller []string `json:"behaller"`
+	Kvar     string   `json:"kvar"`
+	Fogas    []string `json:"fogas"` // texten när de två fogas ihop
 }
 
 // found är föremålet i obestämd form, som texterna säger att någon hittar.
@@ -48,7 +58,13 @@ type ItemData struct {
 type Item struct {
 	ID     string
 	uses   int
-	cursed bool // förbannelsen har visat sig
+	keeps  []string        // delar som verkar vidare i ett hopfogat föremål
+	cursed map[string]bool // förbannelserna som har visat sig, efter id
+}
+
+// newItem ger ett föremål av sorten t, med alla sina användningar.
+func newItem(t *ItemType) *Item {
+	return &Item{ID: t.ID, uses: t.Anvandningar, keeps: t.Behaller}
 }
 
 type itemView struct {
@@ -89,17 +105,19 @@ func (d *Data) randomItem(rng *rand.Rand) string {
 	return weighted(rng, w)
 }
 
-// has ger föremålet id i vandrarens väska, eller nil.
+// has ger föremålet id i vandrarens väska, eller nil. Ett hopfogat
+// föremål räknas som de delar som verkar vidare i det.
 func (p *Player) has(id string) *Item {
 	for _, it := range p.items {
-		if it.ID == id {
+		if it.ID == id || slices.Contains(it.keeps, id) {
 			return it
 		}
 	}
 	return nil
 }
 
-// give lägger föremålet i väskan. Den är falsk när väskan redan är full.
+// give lägger föremålet i väskan. Den är falsk när väskan redan är full,
+// utom när föremålet fogas ihop med något vandraren bär (combine).
 func (g *Game) give(p *Player, id string) bool {
 	t := g.data.itemType(id)
 	if t == nil {
@@ -109,11 +127,10 @@ func (g *Game) give(p *Player, id string) bool {
 		g.readLetter(p)
 		return true
 	}
-	if len(p.items) >= g.data.maxItems() {
+	if len(p.items) >= g.data.maxItems() && g.data.comboWith(id, p) == nil {
 		return false
 	}
-	uses := t.Anvandningar
-	p.items = append(p.items, &Item{ID: id, uses: uses})
+	p.items = append(p.items, newItem(t))
 	p.stats.items++
 	g.chronicle("kronika_foremal", "namn", p.Name, "foremal", t.found(), "bild", cardImage(t.Bild, t.ID))
 	return true
@@ -144,6 +161,7 @@ func (g *Game) findItem(p *Player) {
 	if g.give(p, id) {
 		g.logTo(p, g.data.Text("foremal_hittar", "foremal", t.found(), "beskrivning", t.Beskrivning), "syn")
 		g.itemCard(p, t)
+		g.combine(p)
 		return
 	}
 	room.items = append(room.items, id)
@@ -172,6 +190,7 @@ func (g *Game) pickUp(p *Player) {
 		if g.give(p, id) {
 			g.logTo(p, g.data.Text("foremal_ligger", "foremal", t.found(), "beskrivning", t.Beskrivning), "syn")
 			g.itemCard(p, t)
+			g.combine(p)
 		} else {
 			left = append(left, id)
 			g.logTo(p, g.data.Text("foremal_ligger_full", "foremal", t.found()), "dim")
@@ -193,7 +212,9 @@ func (g *Game) useItem(p *Player, id string, vars ...string) bool {
 			g.logTo(p, fill(text, vars...), "info")
 		}
 	}
-	if it.uses > 0 {
+	// Bara föremålets egna användningar räknas ner, inte de delar som
+	// verkar vidare i ett hopfogat föremål.
+	if it.uses > 0 && it.ID == id {
 		it.uses--
 		if it.uses == 0 {
 			if t != nil {
@@ -201,10 +222,128 @@ func (g *Game) useItem(p *Player, id string, vars ...string) bool {
 					g.logTo(p, text, "dim")
 				}
 			}
-			g.dropItem(p, it)
+			if left := g.data.itemType(kvarOf(t)); left != nil {
+				// Det som blir kvar tar föremålets plats i väskan.
+				g.replaceItem(p, newItemFrom(left, it), it)
+			} else {
+				g.dropItem(p, it)
+			}
 		}
 	}
 	return true
+}
+
+// kvarOf är det föremål t blir när användningarna är slut, eller "".
+func kvarOf(t *ItemType) string {
+	if t == nil {
+		return ""
+	}
+	return t.Kvar
+}
+
+// newItemFrom ger ett föremål av sorten t som tar över förbannelserna som
+// redan har visat sig hos delarna, för de delar som verkar vidare.
+func newItemFrom(t *ItemType, parts ...*Item) *Item {
+	it := newItem(t)
+	for _, part := range parts {
+		for id := range part.cursed {
+			if id == t.ID || slices.Contains(it.keeps, id) {
+				if it.cursed == nil {
+					it.cursed = map[string]bool{}
+				}
+				it.cursed[id] = true
+			}
+		}
+	}
+	return it
+}
+
+// replaceItem byter ut föremålet på samma plats i väskan, det första av
+// old som finns där. De andra i old tas bort.
+func (g *Game) replaceItem(p *Player, it *Item, old ...*Item) {
+	if len(old) == 0 {
+		return
+	}
+	i := slices.Index(p.items, old[0])
+	if i < 0 {
+		return
+	}
+	p.items[i] = it
+	for _, o := range old[1:] {
+		g.dropItem(p, o)
+	}
+}
+
+// comboWith ger det föremål som id blir tillsammans med något i p:s väska,
+// eller nil.
+func (d *Data) comboWith(id string, p *Player) *ItemType {
+	for i := range d.Foremal.Lista {
+		t := &d.Foremal.Lista[i]
+		if len(t.Av) != 2 || !slices.Contains(t.Av, id) {
+			continue
+		}
+		other := t.Av[0]
+		if other == id {
+			other = t.Av[1]
+		}
+		for _, it := range p.items {
+			if it.ID == other {
+				return t
+			}
+		}
+	}
+	return nil
+}
+
+// leftOf svarar om id är det som blir kvar av något av föremålen ids.
+func (g *Game) leftOf(ids []string, id string) bool {
+	for _, o := range ids {
+		if t := g.data.itemType(o); t != nil && t.Kvar == id {
+			return true
+		}
+	}
+	return false
+}
+
+// combine fogar ihop föremålen i väskan som hör ihop. Det nya föremålet
+// tar den förstas plats, och den andras plats blir ledig.
+func (g *Game) combine(p *Player) {
+	for {
+		t, a, b := g.comboIn(p)
+		if t == nil {
+			return
+		}
+		g.replaceItem(p, newItemFrom(t, a, b), a, b)
+		if text := pick(t.Fogas); text != "" {
+			g.logTo(p, text, "syn")
+		}
+		g.soundTo(p, "hitta")
+		g.itemCard(p, t)
+	}
+}
+
+// comboIn ger det första föremål som två föremål i väskan blir tillsammans,
+// och de två.
+func (g *Game) comboIn(p *Player) (*ItemType, *Item, *Item) {
+	for i := range g.data.Foremal.Lista {
+		t := &g.data.Foremal.Lista[i]
+		if len(t.Av) != 2 {
+			continue
+		}
+		var a, b *Item
+		for _, it := range p.items {
+			switch {
+			case a == nil && it.ID == t.Av[0]:
+				a = it
+			case b == nil && it.ID == t.Av[1]:
+				b = it
+			}
+		}
+		if a != nil && b != nil {
+			return t, a, b
+		}
+	}
+	return nil, nil, nil
 }
 
 func (g *Game) dropItem(p *Player, it *Item) {
@@ -287,6 +426,37 @@ func (g *Game) compass(p *Player) string {
 	return g.data.Text("kompass_pekar", "horn", g.data.Horn[idx])
 }
 
+// pendulum är vad pendeln visar: riktningen mot närmaste guld som ligger
+// på ett golv i tornet, där någon har dött eller där kammaren låg.
+func (g *Game) pendulum(p *Player) string {
+	if p.has("pendel") == nil || p.Status != statusIn || p.Cellar > 0 {
+		return ""
+	}
+	best, bx, by := -1, 0, 0
+	for y := range g.rooms {
+		for x := range g.rooms[y] {
+			r := &g.rooms[y][x]
+			gold := r.loose
+			for _, l := range r.gold {
+				gold += l.gold
+			}
+			if gold <= 0 {
+				continue
+			}
+			if d := abs(x-p.X) + abs(y-p.Y); best < 0 || d < best {
+				best, bx, by = d, x, y
+			}
+		}
+	}
+	switch {
+	case best < 0:
+		return g.data.Text("pendel_stilla")
+	case best == 0:
+		return g.data.Text("pendel_har")
+	}
+	return g.data.Text("pendel_pekar", "horn", g.hornToward(p.X, p.Y, bx, by))
+}
+
 func sign(v int) int {
 	switch {
 	case v > 0:
@@ -343,17 +513,32 @@ func (g *Game) smoke(p *Player, d Dir) bool {
 }
 
 // mirror: i ett nytt rum visar spegelskärvan ett grannrum bakom en dörr,
-// ett som vandraren inte har sett.
+// ett som vandraren inte har sett. Ljusspegeln visar två.
 func (g *Game) mirror(p *Player) {
-	if p.has("spegel") == nil || p.Dark > 0 {
+	id, n := "spegel", 1
+	if p.has("ljusspegel") != nil {
+		id, n = "ljusspegel", 2
+	}
+	if p.has(id) == nil || p.Dark > 0 {
 		return
 	}
+	shown := 0
 	for _, d := range g.rng.Perm(4) {
+		if shown == n {
+			return
+		}
 		x, y, ok := g.neighbor(p, Dir(d))
 		if !ok || p.known[y][x] {
 			continue
 		}
-		g.useItem(p, "spegel", "riktning", g.data.Riktningar[d])
+		if shown == 0 {
+			g.useItem(p, id, "riktning", g.data.Riktningar[d])
+		} else if t := g.data.itemType(id); t != nil {
+			if text := pick(t.Verkar); text != "" {
+				g.logTo(p, fill(text, "riktning", g.data.Riktningar[d]), "info")
+			}
+		}
+		shown++
 		r := g.reveal(x, y)
 		p.known[y][x] = true
 		g.logTo(p, g.data.Text("spegel_ser", "rum", g.roomShort(r)), "info")
@@ -370,8 +555,16 @@ func (g *Game) mirror(p *Player) {
 				g.logTo(p, g.data.Text("spegel_vandrare", "namn", o.Name), "info")
 			}
 		}
-		return
 	}
+}
+
+// keepsLight: den som bär ljusspegeln blir aldrig utan ljus.
+func (g *Game) keepsLight(p *Player) bool {
+	if p.has("ljusspegel") == nil {
+		return false
+	}
+	g.logTo(p, g.data.Text("ljusspegel_morker"), "info")
+	return true
 }
 
 // knife: när en varelse dyker upp kastar den som har en kastkniv den
@@ -391,7 +584,7 @@ func (g *Game) knife(p *Player, m *Monster) {
 
 // flute: den sövande flöjten låter den som drar ett vakna-kort dra om.
 func (g *Game) flute(p *Player, i int) int {
-	if c := g.data.card(g.deck[i]); c == nil || !c.Vaknar || !g.useItem(p, "flojt") {
+	if c := g.data.card(g.deck[i]); c == nil || !c.Vaknar || !(g.useItem(p, "flojt") || g.useItem(p, "pipa")) {
 		return i
 	}
 	return g.rng.IntN(len(g.deck))
@@ -455,8 +648,11 @@ func (g *Game) curse(p *Player, id string) bool {
 	if it == nil {
 		return false
 	}
-	if !it.cursed {
-		it.cursed = true
+	if !it.cursed[id] {
+		if it.cursed == nil {
+			it.cursed = map[string]bool{}
+		}
+		it.cursed[id] = true
 		if t := g.data.itemType(id); t != nil {
 			text := pick(t.Forbannelse)
 			if text != "" {

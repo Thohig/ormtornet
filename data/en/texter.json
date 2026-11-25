@@ -1277,6 +1277,7 @@
     "sam_dryck": ["+{antal} potion."],
     "sam_dryck_flera": ["+{antal} potions."],
     "sam_foremal": ["You found {foremal}."],
+    "sam_fogade": ["You put together {foremal}."],
     "sam_fast": ["You are stuck for {antal} rounds."],
     "sam_fast_en": ["You are stuck for one round."],
     "sam_gift": ["You are poisoned."],

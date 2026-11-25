@@ -202,7 +202,8 @@ func (g *Game) removeMonster(m *Monster) {
 }
 
 // lynne är chansen i procent att varelsen anfaller p en runda då p inte
-// anfaller. Den invigde och den som bär Myntet med hål gör den mer lynnig.
+// anfaller. Den invigde och den som bär Myntet med hål gör den mer lynnig,
+// och fjällmanteln lugnar den.
 func (g *Game) lynne(m *Monster, p *Player) int {
 	t := g.data.monsterType(m.Type)
 	if t == nil {
@@ -215,6 +216,10 @@ func (g *Game) lynne(m *Monster, p *Player) int {
 	if p.has("mynt_hal") != nil {
 		g.curse(p, "mynt_hal")
 		l += 25
+	}
+	if p.has("fjallmantel") != nil {
+		// Fjällmanteln: varelserna tar bäraren för något av sitt eget slag.
+		l /= 2
 	}
 	return min(100, l)
 }

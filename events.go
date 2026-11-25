@@ -132,7 +132,7 @@ func (g *Game) trigger(p *Player, t *Trap, depth int) {
 			g.logTo(p, g.data.Text("ljus_morker"), "info")
 		} else if g.is(p, "lyktbarare") {
 			g.logTo(p, g.data.Text("klass_lyktbarare_morker"), "info")
-		} else if !g.useItem(p, "veke") {
+		} else if !g.keepsLight(p) && !g.useItem(p, "veke") {
 			p.Dark = max(p.Dark, t.Rundor)
 		}
 	case "eko":

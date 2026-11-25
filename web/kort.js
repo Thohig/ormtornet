@@ -518,6 +518,50 @@ ${[0, 1, 2, 3, 4].map((i) => `<path d="M50 30L${26 + i * 12} 64" stroke="${STEN}
 ${[[30, 62], [46, 48], [62, 58], [70, 44], [38, 76]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="2.6" fill="#b8642a" opacity="0.8"/>`).join("")}
 ${[36, 50, 64].map((x) => `<circle cx="${x}" cy="75" r="2.6" fill="#5a2a5a"/>`).join("")}`;
 
+  // ---- Föremål som har fogats ihop (docs/kombinationer.md) ----
+
+  // Pendeln: myntet med hål i ett rep, som svänger snett.
+  BILDER.pendel = () => `${ljus}
+<path d="M50 10v4" stroke="${JARN}" stroke-width="3" stroke-linecap="round"/>
+<path d="M50 14q4 22 14 40" fill="none" stroke="#a8823a" stroke-width="3"/>
+<path d="M50 14q-4 22 -16 38" fill="none" stroke="#a8823a" stroke-width="1.4" stroke-dasharray="2 3" opacity="0.5"/>
+<circle cx="66" cy="64" r="14" fill="${GULD}" stroke="#7a5a1a" stroke-width="1.4"/>
+<circle cx="66" cy="64" r="4.5" fill="#efe6d0" stroke="#7a5a1a" stroke-width="1.2"/>
+<path d="M30 84q20 -10 46 -2" fill="none" stroke="${BRUN}" stroke-width="1.2" stroke-dasharray="3 3"/>`;
+
+  // Ljusspegeln: skärvan bakom lågan, och ljuset som kastas tillbaka.
+  BILDER.ljusspegel = () => `${ljus}
+${[[-1, 0], [-0.7, -0.7], [-0.7, 0.7]].map(([x, y]) => `<path d="M46 50l${f(x * 32)} ${f(y * 32)}" stroke="#f6d878" stroke-width="2.4" stroke-linecap="round" opacity="0.7"/>`).join("")}
+<path d="M56 82l6 -54 20 12 -6 40z" fill="#c8d0d4" stroke="${BLAECK}" stroke-width="1.4"/>
+<path d="M62 74l4 -36 12 8" fill="none" stroke="#fff" stroke-width="1.8" opacity="0.7"/>
+<path d="M46 64v-6" stroke="${BLAECK}" stroke-width="2"/>
+${laga(46, 56, 16)}`;
+
+  // Fjällmanteln: skinnet som en mantel, fäst med amuletten.
+  BILDER.fjallmantel = () => `${ljus}
+<path d="M30 22q20 -8 40 0l12 62q-32 10 -64 0z" fill="#e8dcc0" stroke="${BRUN}" stroke-width="1.4"/>
+${[0, 1, 2, 3, 4].map((r) => [0, 1, 2, 3].map((c) => `<path d="M${28 + c * 12 + (r % 2) * 6} ${36 + r * 10}q5 6 10 0" fill="none" stroke="${STEN}" stroke-width="1" opacity="0.7"/>`).join("")).join("")}
+<ellipse cx="50" cy="24" rx="7" ry="8" fill="${GRON}" stroke="${BLAECK}" stroke-width="1.2"/>
+<circle cx="50" cy="24" r="2.4" fill="none" stroke="${GULD}" stroke-width="1.2"/>`;
+
+  // Ormens pipa: flöjten instucken i benluren, och en djup ton.
+  BILDER.pipa = () => `${ljus}
+<path d="M16 80l30 -20" stroke="${BRUN}" stroke-width="9" stroke-linecap="round"/>
+<path d="M16 80l30 -20" stroke="#e6d8b8" stroke-width="6" stroke-linecap="round"/>
+${[0, 1, 2].map((i) => `<circle cx="${22 + i * 8}" cy="${f(76 - i * 5.3)}" r="1.5" fill="${BLAECK}"/>`).join("")}
+<path d="M44 62q6 -28 36 -38l6 8q-26 10 -32 36z" fill="#e8e0cc" stroke="${BLAECK}" stroke-width="1.4"/>
+<path d="M80 24l6 8 8 -8 -6 -8z" fill="#d8ccb0" stroke="${BLAECK}" stroke-width="1.2"/>
+<path d="M70 52q8 4 4 12M78 50q14 8 6 22" fill="none" stroke="${BRUN}" stroke-width="1.6" stroke-linecap="round" opacity="0.7"/>`;
+
+  // Kronan med pärlan: rostkronan med den svarta pärlan mitt fram.
+  BILDER.krona_parla = () => `${ljus}
+<path d="M22 72V36l14 16 14 -22 14 22 14 -16v36z" fill="#8a4a24" stroke="${BLAECK}" stroke-width="1.4"/>
+<rect x="22" y="70" width="56" height="10" fill="#7a3a1a" stroke="${BLAECK}" stroke-width="1.4"/>
+${[[30, 62], [62, 58], [70, 44]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="2.6" fill="#b8642a" opacity="0.8"/>`).join("")}
+<circle cx="50" cy="56" r="9" fill="${GULD}" stroke="#7a5a1a" stroke-width="1"/>
+<circle cx="50" cy="56" r="7" fill="#1a1820"/><circle cx="47" cy="53" r="2.2" fill="#6a6a7a" opacity="0.8"/>
+${[36, 64].map((x) => `<circle cx="${x}" cy="75" r="2.6" fill="#5a2a5a"/>`).join("")}`;
+
   // Ett brev från en tidigare vandrare, med ett sigill.
   BILDER.brev = () => `${ljus}
 <path d="M20 32h60v42H20z" fill="#efe6d0" stroke="${BRUN}" stroke-width="1.4"/>

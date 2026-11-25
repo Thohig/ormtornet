@@ -161,7 +161,9 @@ Så här skiljer vi på sakerna när användaren ger instruktioner:
   `data/klasser.json`), till exempel Kartritaren.
 - **föremål**: det vandrarna hittar och bär, högst tre (`items.go`,
   `data/foremal.json`). Alla verkar av sig själva sedan 2026-11-22; inget
-  används med 1–3. Några är förbannade.
+  används med 1–3. Några är förbannade. Två som hör ihop **fogas ihop**
+  till ett nytt, en **kombination** (`av` i `foremal.json`,
+  docs/kombinationer.md).
 - **viska** och **invigd**: den som vet tornets hemlighet kan viska den
   med V och blir då invigd (`secret.go`, `svar` och `invigd` i
   `data/avslojande.json`).
@@ -337,5 +339,8 @@ Skriv dit när ett steg är klart.
 - [docs/ideer.md](docs/ideer.md): idéer för framtida utbyggnad, spånade
   2026-11-25. Inget där är bestämt; ta fram ett förslag och fråga innan
   du bygger något därifrån.
+- [docs/kombinationer.md](docs/kombinationer.md): två föremål som fogas
+  ihop till ett nytt (idé 15). Allt är byggt; avsnittet Att prova säger
+  vad som behöver provas i spel.
 - [docs/slumpade-namn.md](docs/slumpade-namn.md): tornet ger namnen och
   namnrutan är borta. Steg 1–2 är byggda; Nytt namn i lobbyn valdes bort.

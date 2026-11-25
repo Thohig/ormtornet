@@ -1331,6 +1331,7 @@
     "sam_dryck": ["+{antal} dryck."],
     "sam_dryck_flera": ["+{antal} drycker."],
     "sam_foremal": ["Du hittade {foremal}."],
+    "sam_fogade": ["Du fogade ihop {foremal}."],
     "sam_fast": ["Du sitter fast i {antal} rundor."],
     "sam_fast_en": ["Du sitter fast en runda."],
     "sam_gift": ["Du är förgiftad."],

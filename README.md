@@ -803,6 +803,20 @@ men man märker baksidan först när man bär dem:
 | Svärdet med rött fäste | 15 | Kraft +2, men varje runda i strid då du inte anfaller tar det ett liv |
 | Kronan av rost | 30 | den som står i grannrummet ser dig |
 
+Bär man två föremål som hör ihop fogas de ihop till ett nytt, och en
+plats i väskan blir ledig. Det går även när väskan är full. Beskrivningarna
+antyder vad som passar ihop, utan att säga det. Det som verkar hela
+vandringen i delarna verkar vidare, med sina förbannelser
+([docs/kombinationer.md](docs/kombinationer.md)):
+
+| Delarna | Blir | Vad det gör |
+|---|---|---|
+| Myntet med hål + repet | Pendeln | visar åt vilket håll närmaste guld som ligger på ett golv finns; värd 25, varelserna anfaller oftare som med myntet |
+| Spegelskärvan + extra veken | Ljusspegeln | lyktan slocknar inte, och i ett nytt rum visar den två rum bakom dörrarna (tre gånger) |
+| Fjällamuletten + ormens skinn | Fjällmanteln | varelserna anfaller hälften så ofta när du inte anfaller; värd 30, med skinnets förbannelse |
+| Benluren + den sövande flöjten | Ormens pipa | hör som benluren och drar om två gånger; sedan är det benluren igen |
+| Den svarta pärlan + kronan av rost | Kronan med pärlan | värd 100 i stället för 70, med båda förbannelserna |
+
 Ibland hittar man ett brev från någon som var i tornet förut. Det läses
 direkt och följer avslöjandets nivå. I marginalen pekar det mot något i
 just det här tornet: ristningen om du inte har läst den, annars närmaste

@@ -137,7 +137,7 @@ func (g *Game) runTowerEvent(id string) bool {
 		g.sun = min(g.sunMax, g.sun+max(1, e.Sol))
 	case "draget":
 		for _, p := range g.inside() {
-			if g.is(p, "lyktbarare") || g.useItem(p, "veke") {
+			if g.is(p, "lyktbarare") || g.keepsLight(p) || g.useItem(p, "veke") {
 				continue
 			}
 			p.Dark = max(p.Dark, max(1, e.Rundor))

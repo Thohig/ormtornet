@@ -6,6 +6,21 @@ eller leder tornet.
 
 ## 2026-11-25
 
+### Föremål som fogas ihop
+
+- Bär man två föremål som hör ihop blir de ett nytt, och en plats i
+  väskan blir ledig. Det går även när väskan är full. Fem kombinationer:
+  **Pendeln** (myntet med hål och repet) pekar mot guld som ligger på
+  golvet, **Ljusspegeln** (spegelskärvan och veken) håller lyktan tänd och
+  visar två rum, **Fjällmanteln** (amuletten och ormens skinn) får
+  varelserna att anfalla hälften så ofta, **Ormens pipa** (benluren och
+  flöjten) drar om två gånger, och **Kronan med pärlan** är värd 100 guld.
+- Beskrivningarna av myntet, veken, flöjten, amuletten och kronan antyder
+  vad de passar ihop med.
+- Förbannelserna följer med in i det nya föremålet.
+- I simuleringen med AI-spelare, som sällan söker, fogades något ihop i
+  ungefär en vandring på åttio.
+
 ### Mörkret på telefonen
 
 - I mörkret syns inga dörrar och därför inga tangenter vid dörrarna. På

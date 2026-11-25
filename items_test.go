@@ -119,7 +119,7 @@ func TestThirstingSword(t *testing.T) {
 	g.monsters = append(g.monsters, m)
 	hp := p.HP
 	step(g, a, b, actWait, actWait)
-	if p.HP != hp-1 || !p.has("tarst_svard").cursed {
+	if p.HP != hp-1 || !p.has("tarst_svard").cursed["tarst_svard"] {
 		t.Fatalf("liv %d -> %d", hp, p.HP)
 	}
 	typ.Kraft = 0 // varelsen träffar inte
