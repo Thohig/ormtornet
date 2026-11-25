@@ -6,6 +6,13 @@ eller leder tornet.
 
 ## 2026-11-25
 
+### Mörkret på telefonen
+
+- I mörkret syns inga dörrar och därför inga tangenter vid dörrarna. På
+  telefonen fanns då inga pilknappar heller, så man kunde inte gå alls
+  förrän ljuset kom tillbaka. Nu visas pilknapparna i mörkret, och man
+  trevar sig fram som på datorn.
+
 ### Förslagen efter provspelet
 
 - **Placeringen**: kom ingen ut får ingen någon plats på slutskärmen, i

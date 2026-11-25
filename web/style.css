@@ -1126,8 +1126,8 @@ body.touch #side { overflow-y: auto; }
   /* Man går genom att trycka på tangenterna vid dörrarna, så knapparna är
      en rad: Vänta och det som gäller just nu. Långt ut, där tangenterna är
      små, kommer pilknapparna tillbaka. */
-  body.touch:not(.langtut) #pad .dirs { display: none; }
-  body.touch:not(.langtut) #pad .vanta:not([hidden]) { display: block; }
+  body.touch:not(.langtut):not(.morker) #pad .dirs { display: none; }
+  body.touch:not(.langtut):not(.morker) #pad .vanta:not([hidden]) { display: block; }
   body.touch #pad .acts {
     display: flex;
     gap: 6px;
