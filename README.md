@@ -1090,9 +1090,20 @@ bilden inte finns. `verktyg/kortbilder.html` visar alla motiv; öppna den
 med `python3 -m http.server 8095` i repots rot och
 <http://localhost:8095/verktyg/kortbilder.html>.
 
+Varelser, fällor, händelser och ormkort har ett fält `bok`: vad de gör
+eller hur de är, i ord, för Vandrarens bok (`data/monster.json`,
+`data/fallor.json`, `data/handelser.json` och `data/ormen.json`). Tornet
+vägrar starta om någon saknar det. Texten får inte nämna namnen eller
+tornets hemlighet och inga chanser i siffror. Siffror som skada och
+rundor är skrivna i texten, så de ska ändras där när de ändras i fälten.
+Föremålen och klasserna visas med sina beskrivningar och behöver inget
+`bok`. Se [docs/vandrarens-bok.md](docs/vandrarens-bok.md).
+
 - `texter.json` rum, beskrivningar, allmänna texter och introts väntetid. Varje rumstyp har sin inredning på kartan under `modell.inredning`, med namnen i `klient/src/inredning.ts`
 - `fallor.json` regler (liv, chans för händelse, drycker, hur länge spåren syns), fällor och sökresultat
 - `ormen.json` ormkorten, skatten i kammaren och vad som händer när ormen vaknar
+- `handelser.json` tornets slumpade händelser och deras spelkort (se
+  [docs/handelser.md](docs/handelser.md))
 - `monster.json` varelserna (liv, skada, guld, Kraft, Försvar och lynne, hur ofta de vandrar, texter, och modellens färg och storlek på kartan snett ovanifrån) och striderna
 - `ai.json` datorspelarnas namn, personligheter och betänketid
 - `svarighet.json` förvalen för svårighet (se nedan)
@@ -1102,7 +1113,7 @@ med `python3 -m http.server 8095` i repots rot och
   förklaringar till fällorna, epilogen, svaren, ormens namn och texterna
   för delarna, den förste invigdes guld, varslen och hur tornet förändras. Rumsbeskrivningarna för varje
   nivå (`"1"` till `"4"`) ligger i `texter.json`.
-- `spelarsidan.json` spelarsidans egna texter: introt, klassvalet, styrningen, panelerna och knapparna
+- `spelarsidan.json` spelarsidans egna texter: introt, klassvalet, styrningen, panelerna och knapparna, och Vandrarens bok (`bok_*`, med Grundernas avsnitt i ordningen under `bok_grunder`)
 - `vardsidan.json` värdsidans texter, och tornets besked och loggrader till spelledaren (`server_*`)
 - `en/` översättningarna till engelska (se Språk nedan)
 
@@ -1202,6 +1213,8 @@ Beskrivningarna för rummen ligger under nivåerna `"1"` till `"4"`.
 - `difficulty.go` förvalen för svårighet
 - `classes.go` klasserna och valet av klass
 - `items.go` föremålen
+- `bok.go` Vandrarens bok: det vandraren har mött (`learn`) och bokens
+  innehåll på `GET /bok`
 - `secret.go` viskningen, den invigde, ormens namn och den förste invigde
 - `namndelar.go` var namnets delar finns: ristningen, varelsen och kammaren
 - `omens.go` varslen
@@ -1245,6 +1258,8 @@ Beskrivningarna för rummen ligger under nivåerna `"1"` till `"4"`.
     text där WebGL saknas
   - `minikarta.js` minikartan med allt vandraren har upptäckt
   - `repris.js` reprisen på slutskärmen
+  - `bok.js` Vandrarens bok: flikarna, korten och det man har mött, sparat
+    i `localStorage`
   - `audio.js` allt ljud, skapat med Web Audio API, även stormen i introt
   - `kort.js` spelkortens och klasskortens bilder, ritade som SVG, och
     minikorten

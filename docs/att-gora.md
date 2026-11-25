@@ -228,6 +228,18 @@ En riktig kväll behövs för att se:
   Chapel" mitt i meningar? Får alla knappar och etiketter plats på en
   telefon? Engelskan är skriven av AI och inte läst av någon som spelar.
 
+Vandrarens bok (2026-11-25, [vandrarens-bok.md](vandrarens-bok.md)) är
+bara provad med tester, webbläsarprovet och nycklar inlagda för hand:
+
+- Fylls boken i under en riktig vandring, med händelserna och
+  uppvaknandet?
+- Öppnar spelarna boken, och när: i introt, i lobbyn eller mitt i
+  vandringen?
+- Säger varelsernas och fällornas texter för mycket, så att det inte
+  finns något kvar att upptäcka, eller för lite för att hjälpa?
+- Är raden med åtta flikar för lång, och står knappen Boken rätt på
+  telefonen?
+
 ### Justera efter provet
 
 - Svårigheterna med AI-spelare (2026-11-19, 10 000 vandringar, 4
