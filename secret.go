@@ -1,9 +1,9 @@
 package main
 
-// Den som vet tornets hemlighet kan viska den till tornet. Stämmer viskningen
-// med något av svaren i data/avslojande.json blir vandraren invigd och får
-// en fördel. Tornet säger aldrig vad hemligheten är: den som gissar rätt får
-// bara veta att tornet har hört.
+// Den som har ormens namn kan viska det till tornet och blir då invigd och
+// får en fördel. Det är tornets hemlighet: att namnet ska viskas. Varken
+// boken eller tornet säger det; den som viskar rätt får bara veta att
+// tornet har hört.
 
 import (
 	"strconv"
@@ -39,10 +39,10 @@ func whisperMatches(whisper string, answers []string) bool {
 	return false
 }
 
-// Invigningen: de fasta svaren räcker inte. Varje vandring har ett eget
-// namn i tre delar, ormens namn, som var och en hittar i tornet
-// (namndelar.go), och viskningen ska innehålla namnet. Saknar datafilerna namn räcker
-// svaren.
+// Invigningen: varje vandring har ett eget namn i tre delar, ormens namn,
+// som var och en hittar i tornet (namndelar.go), och viskningen ska
+// innehålla namnet. Saknar datafilerna namn räcker något av svaren i
+// data/avslojande.json.
 
 // usesName är sant när invigningen kräver ormens namn i den här vandringen.
 func (g *Game) usesName() bool {
@@ -107,30 +107,17 @@ func (p *Player) gainPart(i int) bool {
 	return true
 }
 
-// whisperRight avgör om viskningen gör vandraren invigd: ett av de fasta
-// svaren, eller med ormens namn namnet tillsammans med ett svar eller en
-// mall som "tornet är {namn}". Namnet får skrivas ihop eller med
-// mellanrum och bindestreck mellan delarna.
+// whisperRight avgör om viskningen gör vandraren invigd: ormens namn, som
+// ett ord bland andra eller ensamt, ihop eller med mellanrum och
+// bindestreck mellan delarna. Utan namn räcker ett av de fasta svaren.
 func (g *Game) whisperRight(text string) bool {
-	a := &g.data.Avslojande
 	if !g.usesName() {
-		return whisperMatches(text, a.Svar)
+		return whisperMatches(text, g.data.Avslojande.Svar)
 	}
 	name := normalizeWhisper(strings.Join(g.serpentName, ""))
 	spaced := normalizeWhisper(strings.Join(g.serpentName, " "))
 	w := " " + normalizeWhisper(text) + " "
-	w = strings.ReplaceAll(w, " "+spaced+" ", " "+name+" ")
-	if !strings.Contains(w, " "+name+" ") {
-		return false
-	}
-	if whisperMatches(w, a.Svar) {
-		return true
-	}
-	forms := make([]string, len(a.SvarMedNamn))
-	for i, f := range a.SvarMedNamn {
-		forms[i] = strings.ReplaceAll(f, "{namn}", name)
-	}
-	return whisperMatches(w, forms)
+	return strings.Contains(w, " "+name+" ") || strings.Contains(w, " "+spaced+" ")
 }
 
 // wrongOrder är sant när viskningen har namnets tre delar, men i en annan
@@ -152,17 +139,6 @@ func (g *Game) wrongOrder(text string) bool {
 		}
 	}
 	return false
-}
-
-// onlyName är sant när viskningen är ormens namn och inget mer. Det är rätt
-// namn men ingen mening om det, och då förbrukas inte försöket.
-func (g *Game) onlyName(text string) bool {
-	if !g.usesName() {
-		return false
-	}
-	w := normalizeWhisper(text)
-	return w == normalizeWhisper(strings.Join(g.serpentName, "")) ||
-		w == normalizeWhisper(strings.Join(g.serpentName, " "))
 }
 
 // Whisper tar emot en viskning från en vandrare.
@@ -198,12 +174,6 @@ func (g *Game) Whisper(c *Client, text string) {
 	}
 	if p.guessLevel >= g.level {
 		g.answerTo(p, g.data.Text("viskning_vanta"), "dim")
-		return
-	}
-	if g.onlyName(text) {
-		// Rätt namn men ingenting om det: tornet känner igen namnet, och
-		// vandraren får försöka igen.
-		g.answerTo(p, g.data.Text("viskning_bara_namn"), "rost")
 		return
 	}
 	p.guessLevel = g.level

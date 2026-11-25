@@ -4,7 +4,7 @@
     "granser": [0.7, 0.4, 0.15],
     "ledtrad_var_n_runda": 4,
 
-    "_om_svar": "Viskningar som visar att vandraren vet hemligheten. Stämmer en viskning med något av svaren, som hela ord, blir vandraren invigd. Man kan viska en gång per nivå, från viska_fran_niva.",
+    "_om_svar": "Används bara när namn saknas: stämmer en viskning med något av svaren, som hela ord, blir vandraren invigd. Med namn räcker namnet (se _om_namn). Man kan viska en gång per nivå, från viska_fran_niva.",
     "viska_fran_niva": 2,
     "_om_invigd": "Fördelarna och svagheten för den invigde: extra guld när hen kommer ut (och forst_guld till för den som blev invigd först), chansen att kliva förbi en fälla, hur många procentenheter oftare varelserna anfaller (extra_lynne) och chansen att en näve väcker ormen.",
     "invigd": { "guld": 0.25, "forst_guld": 0.25, "falla": 0.5, "extra_lynne": 15, "vacker": 0.15 },
@@ -29,7 +29,7 @@
       "i ormens buk"
     ],
 
-    "_om_namn": "Ett av namnen lottas för varje vandring. Varje namn har tre delar med bara bokstäver a–z. Delarna finns på tre ställen i tornet, och vilken del som finns var lottas: ristad i ett rum (ristning, chansen per nytt rum en bit in i tornet är ristning_chans; finns ingen ristning på nivå 3 hamnar den i ett känt rum), hos en varelse man träffar (varelse) och i kammaren när man tar en näve (kammare). Texterna står under delar: {del} är delen och {plats} var den står i namnet, sagt som en plats på ormen ur platser (huvudet först, buken i mitten, svansen sist). Viskningen ska innehålla namnet och något av svaren, eller en av mallarna i svar_med_namn. Rätt delar i fel ordning ger viskning_ordning, och en fel viskning gör ormen oroligare (ett vakna-kort till).",
+    "_om_namn": "Ett av namnen lottas för varje vandring. Varje namn har tre delar med bara bokstäver a–z. Delarna finns på tre ställen i tornet, och vilken del som finns var lottas: ristad i ett rum (ristning, chansen per nytt rum en bit in i tornet är ristning_chans; finns ingen ristning på nivå 3 hamnar den i ett känt rum), hos en varelse man träffar (varelse) och i kammaren när man tar en näve (kammare). Texterna står under delar: {del} är delen och {plats} var den står i namnet, sagt som en plats på ormen ur platser (huvudet först, buken i mitten, svansen sist). Viskningen ska innehålla namnet; mer behövs inte. Det är tornets hemlighet, och varken boken eller tornet säger det. Rätt delar i fel ordning ger viskning_ordning, och en fel viskning gör ormen oroligare (ett vakna-kort till).",
     "namn": [
       ["Ka", "ru", "meth"],
       ["Ys", "ge", "rah"],
@@ -127,14 +127,6 @@
         "tre rum bort"
       ]
     },
-    "svar_med_namn": [
-      "tornet är {namn}",
-      "{namn} är tornet",
-      "vi är inne i {namn}",
-      "vi är i {namn}",
-      "inne i {namn}",
-      "inuti {namn}"
-    ],
     "epilog_namn": ["Det hette {namn}."],
 
     "nivabyte": {
@@ -262,9 +254,6 @@
     ],
     "viskning_ordning": [
       "Väggarna rycker till vid tecknen, men de står i fel ordning. Tornet tystnar och lyssnar inte mer på ett tag."
-    ],
-    "viskning_bara_namn": [
-      "Väggarna rycker till när du säger namnet, som om något känner igen det. Men vad är det du vill säga om det?"
     ],
     "viskning_tidigt": [
       "Tornet är tyst än. Det finns inget att viska till."

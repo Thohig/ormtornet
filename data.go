@@ -603,13 +603,12 @@ type Reveal struct {
 	RistningChans    float64             `json:"ristning_chans"` // chansen att ristningen hamnar i ett nytt rum som passar
 
 	// Med invigningen "ormens namn" (se secret.go).
-	Namn        [][]string          `json:"namn"`          // namnen, tre delar vardera
-	Platser     [][]string          `json:"platser"`       // var i namnet delen står: vid huvudet, i buken, i svansen
-	Delar       map[string][]string `json:"delar"`         // texterna när en del delas ut, per nivå
-	SvarMedNamn []string            `json:"svar_med_namn"` // mallar med {namn} som räknas som svar
-	EpilogNamn  []string            `json:"epilog_namn"`   // epilogen säger namnet
-	Varsel      Omens               `json:"varsel"`        // varslen om rum som ingen har varit i
-	Forandring  Change              `json:"forandring"`    // hur tornet förändras med nivåerna
+	Namn       [][]string          `json:"namn"`        // namnen, tre delar vardera
+	Platser    [][]string          `json:"platser"`     // var i namnet delen står: vid huvudet, i buken, i svansen
+	Delar      map[string][]string `json:"delar"`       // texterna när en del delas ut, per nivå
+	EpilogNamn []string            `json:"epilog_namn"` // epilogen säger namnet
+	Varsel     Omens               `json:"varsel"`      // varslen om rum som ingen har varit i
+	Forandring Change              `json:"forandring"`  // hur tornet förändras med nivåerna
 }
 
 // Change är hur tornet förändras med avslöjandets nivåer (se change.go).

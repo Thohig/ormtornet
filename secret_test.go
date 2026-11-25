@@ -172,7 +172,8 @@ func TestNameWhisper(t *testing.T) {
 		{"tornet är ka-ru-meth", true},
 		{"tornet är KA RU METH", true},
 		{"tornet är ormen", false},
-		{"Karumeth", false},
+		{"Karumeth", true},
+		{"ka-ru-meth", true},
 		{"tornet är Karumet", false},
 		{"tornet är karumeths", false},
 	} {
@@ -261,26 +262,16 @@ func TestFirstInitiatedGetsMoreGold(t *testing.T) {
 	}
 }
 
-// Bara namnet förbrukar inte försöket: tornet känner igen det och frågar
-// vad man vill säga om det.
-func TestWhisperOnlyNameKeepsTheTry(t *testing.T) {
-	g, a, _ := startTwo(t)
-	pa := a.player
-	g.serpentName = []string{"Ka", "ru", "meth"}
-	g.level = 2
+// Namnet ensamt räcker, som det skrivs eller med mellanrum.
+func TestWhisperOnlyNameInitiates(t *testing.T) {
 	for _, w := range []string{"Karumeth", "ka ru meth!", "KARUMETH."} {
-		logs(a)
+		g, a, _ := startTwo(t)
+		g.serpentName = []string{"Ka", "ru", "meth"}
+		g.level = 2
 		g.Whisper(a, w)
-		if pa.initiated || pa.guessLevel != 0 || !g.canWhisper(pa) {
-			t.Fatalf("%q: invigd %v, försök %d", w, pa.initiated, pa.guessLevel)
+		if !a.player.initiated {
+			t.Fatalf("%q gjorde inte vandraren invigd", w)
 		}
-		if !contains(logs(a), g.data.Text("viskning_bara_namn")) {
-			t.Fatalf("%q gav inget svar om namnet", w)
-		}
-	}
-	g.Whisper(a, "tornet är Karumeth")
-	if !pa.initiated {
-		t.Fatal("rätt viskning efter namnet gick inte igenom")
 	}
 }
 

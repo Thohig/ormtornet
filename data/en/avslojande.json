@@ -1,7 +1,7 @@
 {
   "_om": "Engelsk översättning av avslojande.json. Bara texter; siffrorna står i den svenska filen.",
   "avslojande": {
-    "_om_svar": "Viskningar på engelska som visar att vandraren vet hemligheten. Fler varianter än på svenska, eftersom engelskan har fler sätt att säga det. Undvik för korta svar som \"in the serpent\", som också stämmer med \"in the serpent's lair\". En apostrof blir ett mellanrum, så skriv både serpent's och serpents. Sist står de svenska svaren, så att en viskning på svenska också räknas.",
+    "_om_svar": "Används bara när namn saknas. Viskningar på engelska som visar att vandraren vet hemligheten. Fler varianter än på svenska, eftersom engelskan har fler sätt att säga det. Undvik för korta svar som \"in the serpent\", som också stämmer med \"in the serpent's lair\". En apostrof blir ett mellanrum, så skriv både serpent's och serpents. Sist står de svenska svaren, så att en viskning på svenska också räknas.",
     "svar": [
       "the tower is the serpent",
       "the serpent is the tower",
@@ -125,20 +125,6 @@
         "three rooms away"
       ]
     },
-    "svar_med_namn": [
-      "the tower is {namn}",
-      "{namn} is the tower",
-      "we are inside {namn}",
-      "we are in {namn}",
-      "inside {namn}",
-      "within {namn}",
-      "tornet är {namn}",
-      "{namn} är tornet",
-      "vi är inne i {namn}",
-      "vi är i {namn}",
-      "inne i {namn}",
-      "inuti {namn}"
-    ],
     "epilog_namn": ["Its name was {namn}."],
 
     "nivabyte": {
@@ -266,9 +252,6 @@
     ],
     "viskning_ordning": [
       "The walls flinch at the signs, but they are in the wrong order. The tower falls silent and will not listen for a while."
-    ],
-    "viskning_bara_namn": [
-      "The walls flinch as you say the name, as if something knows it. But what is it you want to say about it?"
     ],
     "viskning_tidigt": [
       "The tower is still silent. There is nothing to whisper to yet."
