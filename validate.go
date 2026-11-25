@@ -201,6 +201,9 @@ func (d *Data) validate() []string {
 	ids = nil
 	for _, c := range d.Ormen.Kort {
 		ids = append(ids, c.ID)
+		if strings.TrimSpace(c.Bok) == "" {
+			bad("ormen.json", "ormkortet %q: bok, vad det gör för Vandrarens bok, saknas", c.ID)
+		}
 	}
 	unique("ormen.json", "ormkortet", ids)
 
@@ -231,6 +234,9 @@ func (d *Data) validate() []string {
 	for _, e := range d.Handelser.Lista {
 		ids = append(ids, e.ID)
 		cardImageOK("handelser.json", "händelsen "+e.ID, e.Bild)
+		if strings.TrimSpace(e.Bok) == "" {
+			bad("handelser.json", "händelsen %q: bok, vad den gör för Vandrarens bok, saknas", e.ID)
+		}
 		if e.Varelse != "" && d.monsterType(e.Varelse) == nil {
 			bad("handelser.json", "%s: varelsen %q finns inte i monster.json", e.ID, e.Varelse)
 		}

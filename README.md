@@ -237,9 +237,11 @@ den som dör och för alla i slutet (se slutet nedan och Strider):
      vandringen, tills den tar slut. **Vandrarens bok** (B, raden B i
      styrningen, Boken i översta raden på telefonen eller knappen i
      introts hörn) säger hur spelet går till och visar klasskorten, och
-     fylls i med föremålen, varelserna och fällorna man har mött, sparat i
-     webbläsaren (`web/bok.js`, `bok.go`, `bok` i `data/monster.json` och
-     `data/fallor.json`, [docs/vandrarens-bok.md](docs/vandrarens-bok.md)).
+     fylls i med föremålen, kombinationerna, varelserna, fällorna,
+     händelserna och ormens kort man har mött, sparat i webbläsaren
+     (`web/bok.js`, `bok.go`, `bok` i `data/monster.json`,
+     `data/fallor.json`, `data/handelser.json` och `data/ormen.json`,
+     [docs/vandrarens-bok.md](docs/vandrarens-bok.md)).
      Panelen Nu visar det valda draget, striden, ormen i
      kammaren (och att S tar skatt), hur länge man sitter fast och vad som
      väntar, och viskningen skrivs i en egen ruta där. Den som har gått ut

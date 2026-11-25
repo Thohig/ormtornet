@@ -166,6 +166,7 @@ type Card struct {
 	Vaknar bool     `json:"vaknar"`
 	Texter []string `json:"texter"`
 	Andra  []string `json:"andra"`
+	Bok    string   `json:"bok"` // vad kortet gör, i ord, för Vandrarens bok
 }
 
 func (d *Data) card(id string) *Card {
@@ -258,6 +259,7 @@ type TowerEvent struct {
 	Rundor    int      `json:"rundor,omitempty"`
 	Varelse   string   `json:"varelse,omitempty"`
 	Sol       int      `json:"sol,omitempty"`
+	Bok       string   `json:"bok"` // vad händelsen gör, i ord, för Vandrarens bok
 }
 
 func (d *Data) towerEvent(id string) *TowerEvent {

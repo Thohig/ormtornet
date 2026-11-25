@@ -245,6 +245,7 @@ func (g *Game) take(p *Player) {
 	text := fill(pick(c.Texter), "antal", strconv.Itoa(n))
 	g.logTo(p, text, "syn")
 	// Guldet och vad vandraren bär står längst ner på spelkortet.
+	g.learn(p, "ormkort", c.ID)
 	g.addCard(p, gameCard{Slag: "ormen", Bild: c.ID, Rubrik: c.Namn, Text: text})
 	other := pick(c.Andra)
 	if g.is(p, "tjuv") {
@@ -309,6 +310,7 @@ func (g *Game) wakeSerpent() {
 			text := pick(o.VaknarAndra)
 			g.logTo(p, text, "varn")
 			msgs[p] = wakeMsg{T: "vaknar", Namn: name, Text: text}
+			g.learn(p, "ormkort", g.data.wakeCardID())
 		}
 	}
 	for _, p := range inside {
@@ -320,6 +322,7 @@ func (g *Game) wakeSerpent() {
 		text := fill(pick(o.KastasUt), "forlust", strconv.Itoa(lost), "skada", strconv.Itoa(dmg))
 		g.logTo(p, text, "varn")
 		msgs[p] = wakeMsg{T: "vaknar", Namn: name, Text: text, Inne: true, Forlust: lost, Skada: dmg}
+		g.learn(p, "ormkort", g.data.wakeCardID())
 		p.hurt("ormen", "")
 		g.damage(p, dmg, true)
 		if p.Status != statusIn {

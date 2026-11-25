@@ -105,3 +105,34 @@ func TestBookHasNoNames(t *testing.T) {
 		}
 	}
 }
+
+// Steg 3: händelserna, de hopfogade föremålen och ormkorten skrivs in när
+// vandraren är med om dem, och boken har dem alla.
+func TestBookLearnsEventsCombosAndSerpent(t *testing.T) {
+	g, a, _ := startTwo(t)
+	p := a.player
+	putInRoom(g, p, 3, 3)
+	g.give(p, "mynt_hal")
+	g.give(p, "rep")
+	g.combine(p)
+	cx, cy := g.chamber()
+	p.X, p.Y = cx, cy
+	g.reveal(cx, cy)
+	g.deck = []string{"sover"}
+	g.take(p)
+	got := g.stateFor(p).Book
+	for _, want := range []string{"kombination:pendel", "ormkort:sover"} {
+		if !slices.Contains(got, want) {
+			t.Errorf("%s saknas i boken: %v", want, got)
+		}
+	}
+	v := g.Book()
+	if len(v.Handelser) != len(g.data.Handelser.Lista) || len(v.Ormen) != len(g.data.Ormen.Kort) || len(v.Kombinationer) == 0 {
+		t.Fatalf("%d händelser, %d ormkort, %d kombinationer", len(v.Handelser), len(v.Ormen), len(v.Kombinationer))
+	}
+	for _, c := range v.Kombinationer {
+		if len(c.Delar) != 2 {
+			t.Errorf("%s: delarna %v", c.ID, c.Delar)
+		}
+	}
+}

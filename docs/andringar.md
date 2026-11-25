@@ -6,6 +6,17 @@ eller leder tornet.
 
 ## 2026-11-25
 
+### Vandrarens bok, steg 3
+
+- Tre flikar till: Kombinationer, Händelser och Ormen. Kombinationerna
+  säger vad de är fogade av först när du har fogat ihop dem själv.
+  Händelserna och ormens kort säger vad de gör, och Ormen börjar med hur
+  leken fungerar.
+- Kortet Ormen vaknar skrivs in för alla som ser uppvaknandet, de andra
+  ormkorten när du drar dem.
+- Texterna står under `bok` i `data/handelser.json` och `data/ormen.json`.
+  Allt i boken finns på engelska.
+
 ### Vandrarens bok, steg 2
 
 - Boken fylls i med det du möter. Flikarna Föremål, Varelser och Fällor

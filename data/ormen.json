@@ -18,6 +18,7 @@
       {
         "id": "sover",
         "namn": "Ormen sover",
+        "bok": "Du får en näve guld, och kortet tas ur leken.",
         "antal": 9,
         "vaknar": false,
         "texter": [
@@ -29,6 +30,7 @@
       {
         "id": "ror_sig",
         "namn": "Ormen rör sig",
+        "bok": "Du får en näve guld, och kortet tas ur leken. Alla i tornet märker att ormen rör sig.",
         "antal": 4,
         "vaknar": false,
         "texter": [
@@ -43,6 +45,7 @@
       {
         "id": "vaknar",
         "namn": "Ormen vaknar",
+        "bok": "Alla i kammaren förlorar hälften av sin skatt och två liv och kastas ut. Kortet blir kvar i leken, och ormen kryper till en ny kammare.",
         "antal": 2,
         "vaknar": true,
         "texter": [

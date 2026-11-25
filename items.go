@@ -336,6 +336,7 @@ func (g *Game) combine(p *Player) {
 			return
 		}
 		g.replaceItem(p, newItemFrom(t, a, b), a, b)
+		g.learn(p, "kombination", t.ID)
 		if text := pick(t.Fogas); text != "" {
 			g.logTo(p, text, "syn")
 		}

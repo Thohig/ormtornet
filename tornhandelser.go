@@ -251,6 +251,7 @@ func (g *Game) runTowerEvent(id string) bool {
 		}
 		g.soundTo(p, eventSounds[id])
 		g.logTo(p, text, "varn")
+		g.learn(p, "handelse", id)
 		g.addCard(p, gameCard{Slag: "handelse", Bild: e.Bild, Rubrik: e.Rubrik, Text: text})
 	}
 	return true

@@ -63,11 +63,11 @@ Inga råa siffror som vikt eller chans står i boken.
 | Grunder | målet, rundan, solen, rummen, striden, de andra vandrarna, ormen, föremålen, slutet | ja |
 | Klasser | klasskorten | ja |
 | Föremål | de man kan hitta | nej |
-| Kombinationer | de hopfogade föremålen | nej |
+| Kombinationer | de hopfogade föremålen och vad de är fogade av | nej |
 | Varelser | den korta beskrivningen och hur de verkar i ord | nej |
 | Fällor | fällorna och spåren som varnar | nej |
-| Händelser | tornets händelser | nej |
-| Ormen | sömnmätaren, vakna-korten, andetagen | delvis |
+| Händelser | tornets händelser och vad de gör | nej |
+| Ormen | ormens kort och vad de gör, under en inledning om leken | inledningen |
 
 ## Stegen
 
@@ -75,4 +75,16 @@ Inga råa siffror som vikt eller chans står i boken.
 2. Tornet säger vad man har mött och webbläsaren sparar det
    (`localStorage`), och flikarna Föremål, Varelser och Fällor. **Byggt
    2026-11-25.**
-3. Händelser, Kombinationer och Ormen, engelska, prov och README.
+3. Händelser, Kombinationer och Ormen. **Byggt 2026-11-25.** Tornet
+   skriver in `handelse` när en händelse ger en ett spelkort,
+   `kombination` när två föremål fogas ihop och `ormkort` när man drar
+   ett kort, och kortet som väcker ormen för alla som ser uppvaknandet.
+   Händelserna och ormkorten beskrivs under `bok` i
+   `data/handelser.json` och `data/ormen.json`.
+
+## Inte byggt
+
+- Ett klick på ett kort i boken visar det inte stort.
+- Förbannelserna hos de hopfogade föremålen står inte på deras kort.
+- Det man har mött följer webbläsaren, inte vandraren; det finns inget
+  sätt att flytta det eller börja om, utom att tömma webbläsaren.

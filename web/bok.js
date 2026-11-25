@@ -1,18 +1,22 @@
 // Vandrarens bok (docs/vandrarens-bok.md): en hjälpsida i ett lager över
 // spelarsidan, med flikar. Grundernas texter är sidans egna (bok_* i
-// data/spelarsidan.json); klasserna, föremålen, varelserna och fällorna
-// kommer från tornet (GET /bok, bok.go) på tornets språk. Föremålen,
-// varelserna och fällorna syns först när man har mött dem: tornet säger
-// det i tillståndet (bok), och webbläsaren sparar det i localStorage, så
-// att boken växer från vandring till vandring. Boken öppnas med B, knappen i styrningen och knappen i
-// introt, och stängs med B, Esc, ✕ eller ett klick utanför.
+// data/spelarsidan.json). Resten kommer från tornet (GET /bok, bok.go) på
+// tornets språk: klasserna, och föremålen, kombinationerna, varelserna,
+// fällorna, händelserna och ormens kort, som syns först när man har mött
+// dem. Tornet säger det i tillståndet (bok), och webbläsaren sparar det i
+// localStorage, så att boken växer från vandring till vandring. Boken
+// öppnas med B, knappen i styrningen och knappen i introt, och stängs med
+// B, Esc, ✕ eller ett klick utanför.
 "use strict";
 
 window.Bok = (() => {
   const $ = (id) => document.getElementById(id);
-  const FLIKAR = ["grunder", "klasser", "foremal", "varelser", "fallor"];
+  const FLIKAR = ["grunder", "klasser", "foremal", "kombinationer", "varelser", "fallor", "handelser", "ormen"];
   // Flikarna som fylls i, med slaget i tornets nycklar ("varelse:krypare").
-  const SLAG = { foremal: "foremal", varelser: "varelse", fallor: "falla" };
+  const SLAG = {
+    foremal: "foremal", kombinationer: "kombination", varelser: "varelse",
+    fallor: "falla", handelser: "handelse", ormen: "ormkort",
+  };
   const NYCKEL = "ormtornet-bok";
   let flik = "grunder";
   let innehall = null; // svaret från /bok
@@ -177,7 +181,9 @@ window.Bok = (() => {
       if (flik === "foremal") {
         if (c.forbannelse && mott.has("forbannelse:" + c.id)) rader.push(["bad", t("bok_forbannelse", { text: c.forbannelse })]);
         if (c.vander && mott.has("vander:" + c.id)) rader.push(["bad", t("bok_vander", { text: c.vander })]);
-      } else if (flik === "varelser") {
+      } else if (flik === "kombinationer") {
+        rader = [["om", c.delar && t("bok_delar", { delar: c.delar.join(" + ") })]];
+      } else if (flik !== "fallor") {
         rader = [["om", c.om]];
       } else {
         rader = [["om", c.om], ["spar", c.spar && t("bok_spar", { text: c.spar })]];

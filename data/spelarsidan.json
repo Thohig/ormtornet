@@ -298,6 +298,13 @@
     "bok_fallor_inledning": "Fällorna du har gått i eller sett i tid, vad de gör och spåret de lämnar efter sig.",
     "bok_forbannelse": "Förbannelsen: {text}",
     "bok_vander": "När det vände: {text}",
-    "bok_spar": "Efteråt: {text}"
+    "bok_spar": "Efteråt: {text}",
+    "bok_flik_kombinationer": "Kombinationer",
+    "bok_flik_handelser": "Händelser",
+    "bok_flik_ormen": "Ormen",
+    "bok_kombinationer_inledning": "Två föremål som hör ihop fogas ihop av sig själva när du bär båda. Vilka det är lär du dig genom att bära dem.",
+    "bok_handelser_inledning": "Det som händer i tornet av sig självt, och som du har märkt.",
+    "bok_ormen_inledning": "Varje näve i kammaren drar ett kort ur ormens lek. Korten som låter den sova tas bort, så risken växer för varje näve. Här står de kort du har dragit eller sett.",
+    "bok_delar": "Fogat av {delar}."
   }
 }

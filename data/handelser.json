@@ -10,6 +10,7 @@
         "max": 3,
         "bild": "andas",
         "rubrik": "Tornet andas",
+        "bok": "En ny dörr öppnar sig mellan två rum som redan finns.",
         "text": [
           "Väggarna drar efter andan. Åt {horn} gnisslar sten mot sten, och där det var en vägg finns nu en öppning."
         ],
@@ -23,6 +24,7 @@
         "max": 2,
         "bild": "spricka",
         "rubrik": "Guld ur sprickan",
+        "bok": "Guld rasar ut i ett rum som ingen har varit i än.",
         "guld_min": 20,
         "guld_max": 45,
         "text": [
@@ -38,6 +40,7 @@
         "max": 1,
         "bild": "gluggar",
         "rubrik": "Ljus genom gluggarna",
+        "bok": "Under tre rundor biter mörkret inte på någon.",
         "rundor": 3,
         "text": [
           "Solen hittar en väg genom gluggarna. Ett blekt ljus faller genom hela tornet, och mörkret drar sig undan en stund."
@@ -49,6 +52,7 @@
         "max": 1,
         "bild": "ormskinn",
         "rubrik": "Ömsat skinn",
+        "bok": "Ormens ömsade skinn hamnar i ett rum som ingen har varit i än. Det är värt guld, men inte utan baksida.",
         "text": [
           "Åt {horn} rasslar något torrt och tunt. Ormen har ömsat skinn."
         ],
@@ -62,6 +66,7 @@
         "max": 2,
         "bild": "ras",
         "rubrik": "Ett ras",
+        "bok": "Ett rum som någon har gått i går inte att gå in i på tre rundor. Den som stod där förlorar ett liv och faller ner i valven.",
         "rundor": 3,
         "text": [
           "Åt {horn} rasar ett tak med ett dån. Det rummet går inte att ta sig in i på en stund."
@@ -76,6 +81,7 @@
         "max": 2,
         "bild": "doden",
         "rubrik": "Den döde vandrar",
+        "bok": "Ett väsen av vita ben reser sig där någon har dött.",
         "varelse": "benvaktare",
         "text": [
           "Åt {horn}, där någon dog, reser sig något av vita ben."
@@ -90,6 +96,7 @@
         "max": 1,
         "bild": "klockslag",
         "rubrik": "Klockslaget",
+        "bok": "Solen sjunker en handsbredd, och den som står i kammaren får en näve som inte väcker ormen.",
         "sol": 1,
         "text": [
           "En klocka slår någonstans djupt i tornet, ett enda slag. Ljuset utanför blir rödare."
@@ -104,6 +111,7 @@
         "max": 1,
         "bild": "klocka_stilla",
         "rubrik": "Klockan stannar",
+        "bok": "Solen sjunker inte den rundan.",
         "sol": 1,
         "text": [
           "Klockan i tornets topp tystnar mitt i ett slag. Ljuset i gluggarna står stilla, och solen sjunker inte den här gången."
@@ -115,6 +123,7 @@
         "max": 1,
         "bild": "draget",
         "rubrik": "Draget",
+        "bok": "Den som inte bär något ljus hamnar i mörker en runda.",
         "rundor": 1,
         "text": [
           "Ett kallt drag går genom tornet. Facklorna fladdrar och slocknar en efter en, och mörkret sluter sig."
@@ -126,6 +135,7 @@
         "max": 2,
         "bild": "klirrar",
         "rubrik": "Det klirrar",
+        "bok": "Alla hör åt vilket håll den som bär mest guld står, men inte vem det är.",
         "text": [
           "Åt {horn} klirrar det av mynt i en tung pung. Någon där bär mer än alla andra."
         ],
@@ -142,6 +152,7 @@
         "max": 2,
         "bild": "packning",
         "rubrik": "Den glömda packningen",
+        "bok": "Ett föremål eller ett brev hamnar i ett rum som ingen har varit i än.",
         "text": [
           "Åt {horn} faller något tungt ur ett hål i taket och landar med en duns."
         ],
@@ -155,6 +166,7 @@
         "max": 2,
         "bild": "brev_dorr",
         "rubrik": "Brevet under dörren",
+        "bok": "En vandrare får ett brev under dörren. Bara hen märker det.",
         "har": [
           "Ett papper glider in under dörren, som om någon på andra sidan sköt in det."
         ]
@@ -165,6 +177,7 @@
         "max": 2,
         "bild": "sluter",
         "rubrik": "Tornet sluter sig",
+        "bok": "En dörr mellan två rum stängs i tre rundor, men bara där det finns en annan väg mellan dem.",
         "rundor": 3,
         "text": [
           "Åt {horn} gnisslar sten mot sten, och en öppning sluter sig."
@@ -179,6 +192,7 @@
         "max": 2,
         "bild": "yngel_vagg",
         "rubrik": "Yngel ur väggen",
+        "bok": "Något långt och väsande kryper ut ur väggen hos den som står ensam längst från portarna. Bara hen märker det.",
         "varelse": "yngel",
         "har": [
           "Murbruket smular sönder, och något litet och slingrande kryper ut ur väggen bredvid dig."
@@ -190,6 +204,7 @@
         "max": 2,
         "bild": "drom",
         "rubrik": "Ormen drömmer",
+        "bok": "Ormens lek får två nya kort, som kan låta den sova eller väcka den. Alla märker att ormen rör sig.",
         "ormkort": 2,
         "text": [
           "Något stort vänder sig i sömnen djupt inne i tornet. Golvet darrar svagt under dina fötter."
@@ -207,6 +222,7 @@
         "max": 1,
         "bild": "kryp",
         "rubrik": "Kryp som flyr",
+        "bok": "De som står nära kammaren ser kryp komma från det hållet. Bara de märker det.",
         "avstand": 3,
         "har": [
           "Ett hav av små svarta kryp väller in från {horn}, rusar förbi dina fötter och försvinner åt andra hållet. Något därborta skrämde dem."

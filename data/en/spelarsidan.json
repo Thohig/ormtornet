@@ -278,6 +278,13 @@
     "bok_fallor_inledning": "The traps you have walked into or spotted in time, what they do and the trace they leave behind.",
     "bok_forbannelse": "The curse: {text}",
     "bok_vander": "When it turned: {text}",
-    "bok_spar": "Afterwards: {text}"
+    "bok_spar": "Afterwards: {text}",
+    "bok_flik_kombinationer": "Combinations",
+    "bok_flik_handelser": "Events",
+    "bok_flik_ormen": "The serpent",
+    "bok_kombinationer_inledning": "Two items that belong together join by themselves when you carry both. Which ones you learn by carrying them.",
+    "bok_handelser_inledning": "What happens in the tower by itself, and that you have noticed.",
+    "bok_ormen_inledning": "Each handful in the chamber draws a card from the serpent's deck. The cards that let it sleep are removed, so the risk grows with every handful. Here are the cards you have drawn or seen.",
+    "bok_delar": "Made from {delar}."
   }
 }

@@ -5,6 +5,7 @@
       {
         "id": "andas",
         "rubrik": "The tower breathes",
+        "bok": "A new door opens between two rooms that are already there.",
         "text": [
           "The walls draw breath. To the {horn} stone grinds on stone, and where there was a wall there is now an opening."
         ],
@@ -15,6 +16,7 @@
       {
         "id": "guld",
         "rubrik": "Gold from the crack",
+        "bok": "Gold pours out into a room no one has been in yet.",
         "text": [
           "Somewhere to the {horn} a wall cracks, and coins rattle down onto a floor."
         ],
@@ -25,6 +27,7 @@
       {
         "id": "ljus",
         "rubrik": "Light through the slits",
+        "bok": "For three rounds the darkness does not bite anyone.",
         "text": [
           "The sun finds a way through the slits. A pale light falls through the whole tower, and the darkness draws back for a while."
         ]
@@ -32,6 +35,7 @@
       {
         "id": "skinn",
         "rubrik": "A shed skin",
+        "bok": "The serpent's shed skin ends up in a room no one has been in yet. It is worth gold, but not without a catch.",
         "text": [
           "To the {horn} something dry and thin rustles. The serpent has shed its skin."
         ],
@@ -42,6 +46,7 @@
       {
         "id": "ras",
         "rubrik": "A cave-in",
+        "bok": "A room someone has walked through cannot be entered for three rounds. Whoever stood there loses a life and falls into the vaults.",
         "text": [
           "To the {horn} a ceiling caves in with a roar. No one can get into that room for a while."
         ],
@@ -52,6 +57,7 @@
       {
         "id": "doden",
         "rubrik": "The dead walk",
+        "bok": "A creature of white bones rises where someone has died.",
         "text": [
           "To the {horn}, where someone died, something of white bone rises."
         ],
@@ -62,6 +68,7 @@
       {
         "id": "klockslag",
         "rubrik": "The bell",
+        "bok": "The sun sinks a hand's breadth, and whoever stands in the chamber gets a handful that does not wake the serpent.",
         "text": [
           "A bell strikes somewhere deep in the tower, a single stroke. The light outside turns redder."
         ],
@@ -72,6 +79,7 @@
       {
         "id": "stannar",
         "rubrik": "The bell stops",
+        "bok": "The sun does not sink that round.",
         "text": [
           "The bell at the top of the tower falls silent in the middle of a stroke. The light in the slits stands still, and the sun does not sink this time."
         ]
@@ -79,6 +87,7 @@
       {
         "id": "draget",
         "rubrik": "The draught",
+        "bok": "Whoever carries no light is left in darkness for a round.",
         "text": [
           "A cold draught moves through the tower. The torches flicker and go out one by one, and the darkness closes in."
         ]
@@ -86,6 +95,7 @@
       {
         "id": "klirrar",
         "rubrik": "A jingle",
+        "bok": "Everyone hears in which direction the one carrying the most gold stands, but not who it is.",
         "text": [
           "To the {horn} coins jingle in a heavy purse. Someone there carries more than anyone else."
         ],
@@ -99,6 +109,7 @@
       {
         "id": "packning",
         "rubrik": "The forgotten pack",
+        "bok": "An item or a letter ends up in a room no one has been in yet.",
         "text": [
           "To the {horn} something heavy falls from a hole in the ceiling and lands with a thud."
         ],
@@ -109,6 +120,7 @@
       {
         "id": "brev",
         "rubrik": "The letter under the door",
+        "bok": "A wanderer gets a letter under the door. Only they notice it.",
         "har": [
           "A sheet of paper slides in under the door, as if someone on the other side pushed it through."
         ]
@@ -116,6 +128,7 @@
       {
         "id": "sluter",
         "rubrik": "The tower closes",
+        "bok": "A door between two rooms closes for three rounds, but only where there is another way between them.",
         "text": [
           "To the {horn} stone grinds on stone, and an opening closes."
         ],
@@ -126,6 +139,7 @@
       {
         "id": "yngel",
         "rubrik": "Brood from the wall",
+        "bok": "Something long and hissing crawls out of the wall next to whoever stands alone furthest from the gates. Only they notice it.",
         "har": [
           "The mortar crumbles, and something small and writhing crawls out of the wall beside you."
         ]
@@ -133,6 +147,7 @@
       {
         "id": "drommer",
         "rubrik": "The serpent dreams",
+        "bok": "The serpent's deck gets two new cards, which may let it sleep or wake it. Everyone notices that the serpent stirs.",
         "text": [
           "Something huge turns over in its sleep deep inside the tower. The floor trembles faintly under your feet."
         ],
@@ -146,6 +161,7 @@
       {
         "id": "kryp",
         "rubrik": "Fleeing vermin",
+        "bok": "Those standing near the chamber see vermin coming from that direction. Only they notice it.",
         "har": [
           "A tide of small black vermin pours in from the {horn}, rushes past your feet and vanishes the other way. Something over there frightened them."
         ]

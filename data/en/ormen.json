@@ -5,6 +5,7 @@
       {
         "id": "sover",
         "namn": "The serpent sleeps",
+        "bok": "You get a handful of gold, and the card is removed from the deck.",
         "texter": [
           "You reach into the hoard and take {antal} gold. The serpent sleeps on.",
           "The coins are lukewarm and sticky. You take {antal} gold. Nothing stirs.",
@@ -14,6 +15,7 @@
       {
         "id": "ror_sig",
         "namn": "The serpent stirs",
+        "bok": "You get a handful of gold, and the card is removed from the deck. Everyone in the tower notices that the serpent stirs.",
         "texter": [
           "You take {antal} gold. A coil slides aside and the floor beneath you sways. Then all is still again.",
           "{antal} gold. A vast breath draws through the hall, and the whole room seems to go with it. The serpent sleeps. For now."
@@ -26,6 +28,7 @@
       {
         "id": "vaknar",
         "namn": "The serpent wakes",
+        "bok": "Everyone in the chamber loses half their treasure and two lives and is thrown out. The card stays in the deck, and the serpent crawls to a new chamber.",
         "texter": [
           "A coin slips from your hand and clinks against the others. The breathing stops. Two yellow eyes open in the dark.",
           "You pull at a chain that is stuck fast. The whole hoard shifts, and what lies around it wakes."
