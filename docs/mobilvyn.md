@@ -84,6 +84,11 @@ Tangenterna vid dörrarna blir knappar: ett tryck på en tangent väljer
 det hållet, precis som piltangenten. Det gäller på alla skärmar, också
 med musen på datorn, eftersom det inte ändrar något som finns där i dag.
 
+I mörkret syns inga dörrar. Sedan 2026-11-25 står då en streckad tangent
+vid varje vägg (`trevar` i `ritaTangenter`), så att det alltid finns
+något att trycka på. En vägg utan dörr ger en stöt i muren. Pilknapparna
+som visades i mörkret samma morgon togs bort igen.
+
 På telefonen försvinner pilknapparna. Kvar blir en rad med de knappar
 som gäller just nu: **Vänta** (som pricken i mitten i dag), Sök, Drick,
 Anfall, Parera, Undan, Viska och Redo. De följer läget som i dag
