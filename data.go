@@ -209,7 +209,7 @@ type Data struct {
 	Svarighet        Difficulty          `json:"svarighet"`
 	Intro            IntroData           `json:"intro"`
 	Klasser          []Class             `json:"klasser"`
-	KlassvalSekunder int                 `json:"klassval_sekunder"` // hur länge klassvalet får ta
+	KlassvalSekunder int                 `json:"klassval_sekunder"`       // hur länge klassvalet får ta
 	KlassvalExtra    int                 `json:"klassval_extra_per_kort"` // sekunder till för varje kort utöver åtta
 	Foremal          ItemData            `json:"foremal"`
 	Vandrarnamn      NameData            `json:"vandrarnamn"` // namnen tornet ger vandrarna (namn.json)
