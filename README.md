@@ -185,7 +185,7 @@ den som dör och för alla i slutet (se slutet nedan och Strider):
      knappen Redo där (Enter, eller Redo längst ner på en pekskärm),
    - **klassvalet**: en egen skärm med ett kort för varje klass, i samma
      stil som spelkorten, med bild, styrka och svaghet. Korten ligger på
-     baksidan och vänds upp ett i taget. Välj med 1–8 eller ett klick. Ett
+     baksidan och vänds upp ett i taget. Välj med 1–9 eller ett klick. Ett
      kort som någon annan har tagit vänds tillbaka och visar baksidan med
      namnet; när du har valt tonas de andra ned. Den som inte har valt när
      tiden är slut får ett av de lediga korten,
