@@ -1243,6 +1243,9 @@
     "handelse_blick_slut_guld": [
       "Ormen sluter ögat. Blicken släpper dig, men {guld} guld har runnit ur väskan."
     ],
+    "handelse_blick_annan": [
+      "Ormens blick släpper dig. Ögat har vänt sig mot någon annan i tornet."
+    ],
     "handelse_blick_slut": [
       "Ormen sluter ögat, och blicken släpper dig."
     ],

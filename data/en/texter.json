@@ -1189,6 +1189,9 @@
     "handelse_blick_slut_guld": [
       "The serpent closes its eye. The gaze lets go of you, but {guld} gold has trickled out of your bag."
     ],
+    "handelse_blick_annan": [
+      "The serpent's gaze lets go of you. The eye has turned towards someone else in the tower."
+    ],
     "handelse_blick_slut": [
       "The serpent closes its eye, and the gaze lets go of you."
     ],

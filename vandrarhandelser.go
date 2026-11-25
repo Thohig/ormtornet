@@ -116,8 +116,11 @@ func (g *Game) gazeCard(p *Player, text string) {
 }
 
 // giveGaze lägger ormens blick på p i rounds rundor. Bar någon annan den
-// släpper den.
+// släpper den, utan att ta guld, och hen får veta det.
 func (g *Game) giveGaze(p *Player, rounds int) {
+	if o := g.playerByID(g.gazeOn); o != nil && o != p && o.Status == statusIn && g.gazeRounds > 0 {
+		g.gazeCard(o, g.data.Text("handelse_blick_annan"))
+	}
 	g.gazeOn, g.gazeRounds, g.gazeFrom = p.ID, max(1, rounds), 0
 }
 

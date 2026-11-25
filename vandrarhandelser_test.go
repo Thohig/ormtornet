@@ -272,3 +272,18 @@ func TestChestLeavesChamber(t *testing.T) {
 		t.Fatal("kistan står i kammaren")
 	}
 }
+
+// Den som bär ormens blick får veta när den går till någon annan som drar
+// tillbaka (provspelet 2026-11-25, tredje).
+func TestGazeTakenOverIsTold(t *testing.T) {
+	g, a, b := startTwo(t)
+	pa, pb := a.player, b.player
+	putInRoom(g, pa, 3, 3)
+	putInRoom(g, pb, 5, 5)
+	g.giveGaze(pb, 4)
+	logs(b)
+	g.giveGaze(pa, 6)
+	if !contains(logs(b), g.data.Text("handelse_blick_annan")) {
+		t.Fatal("Bo fick inte veta att blicken släppte")
+	}
+}
