@@ -68,8 +68,9 @@ webbläsarprovet:
   hinna före? Är ynglet ur ägget för hårt?
 - Kombinationerna (2026-11-25, [kombinationer.md](kombinationer.md)):
   märker man att två föremål fogas ihop, och letar någon efter den andra
-  delen när beskrivningen antyder den? Med AI-spelare blev det bara av i
-  ungefär en vandring på åttio. Är Fjällmanteln för stark?
+  delen när beskrivningen antyder den? Med AI-spelare blir det av i
+  ungefär en vandring på 33, sedan den andra delen väger mer för den som
+  bär den ena. Är Fjällmanteln för stark?
 - Tangenterna vid dörrarna på telefonen: de hålls nu inom kartan och
   ligger över det stora kortet. Träffar man dem, och förstår man en
   tangent som har flyttats in till kanten?
