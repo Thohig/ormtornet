@@ -192,8 +192,9 @@ skalets.
 
 ## Att prova
 
-- Att boken fylls i under en riktig vandring, särskilt händelserna och
-  uppvaknandet, som bara testerna och inlagda nycklar har provat.
+- Att märket Mött kommer under en riktig vandring, särskilt på
+  händelserna och uppvaknandet, som bara testerna och inlagda nycklar har
+  provat.
 - Om raden med åtta flikar, som blir två rader på datorn, är för lång.
 - Var knappen Boken står i översta raden på telefonen.
 - Om det blir för lätt när allt står öppet, och om märket Mött räcker

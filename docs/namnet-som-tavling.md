@@ -15,6 +15,9 @@ Spelet är en tävlan mellan vandrarna. Pusslet ska därför vara svårare,
 men var och en ska kunna lösa det själv, och ingen ska tjäna på att
 berätta vad hen vet. Det svåra ska vara namnet, inte vad man ska säga om
 det, så att den som har spelat förut inte får något stort försprång.
+Sedan 2026-11-25 räcker namnet ensamt i viskningen, och Vandrarens bok
+säger att namnet finns och var delarna hittas, men inte att det ska
+viskas (docs/avslojandet.md, docs/vandrarens-bok.md).
 
 ## Stegen
 

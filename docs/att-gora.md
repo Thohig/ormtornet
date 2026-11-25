@@ -88,7 +88,9 @@ En riktig kväll behövs för att se:
 - Örtkvinnan (2026-11-19): hon tappar nu all sin skatt om ormen vaknar
   medan hon är i kammaren (85 % på Lätt). Är det för hårt? Sänk i så fall
   `extra_forlust` i `data/klasser.json` till cirka 0,35.
-- Viskningen: gissar någon rätt, och känns fördelen lagom?
+- Viskningen: gissar någon rätt, och känns fördelen lagom? Sedan
+  2026-11-25 räcker namnet ensamt, och Vandrarens bok säger att namnet
+  finns men inte att det ska viskas: listar någon ut det?
 - Ormens namn som en tävling (2026-11-23,
   [namnet-som-tavling.md](namnet-som-tavling.md)): hittar vandrarna
   ristningen i tid (`ristning_chans`), får de som undviker strid
