@@ -344,3 +344,25 @@ func TestStoryPeople(t *testing.T) {
 		t.Fatalf("den girigaste: %+v", ps)
 	}
 }
+
+// Den som klättrar upp ur källaren hamnar aldrig i ett rasat rum
+// (provspelet 2026-11-26).
+func TestCellarNotIntoCaveIn(t *testing.T) {
+	g, a, _ := startTwo(t)
+	p := a.player
+	putInRoom(g, p, 4, 4)
+	for y := range g.size {
+		for x := range g.size {
+			if g.cornerIndex(x, y) < 0 && !g.isChamber(x, y) && (x != 2 || y != 2) {
+				g.rooms[y][x].blocked = 3
+			}
+		}
+	}
+	for range 20 {
+		putInRoom(g, p, 4, 4)
+		g.leaveCellar(p)
+		if p.X != 2 || p.Y != 2 {
+			t.Fatalf("upp i (%d, %d), som är rasat", p.X, p.Y)
+		}
+	}
+}

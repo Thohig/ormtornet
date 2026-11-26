@@ -152,12 +152,12 @@ func (g *Game) trapCard(p *Player, t *Trap, text string, svag bool) {
 	g.addCard(p, gameCard{Slag: "falla", Bild: cardImage(t.Bild, t.ID), Rubrik: t.Kort, Text: text, Svag: svag})
 }
 
-// leaveCellar låter spelaren klättra upp i ett slumpat rum.
+// leaveCellar låter spelaren klättra upp i ett slumpat rum, aldrig ett rasat.
 func (g *Game) leaveCellar(p *Player) {
 	var spots [][2]int
 	for y := range g.size {
 		for x := range g.size {
-			if g.cornerIndex(x, y) < 0 && !g.isChamber(x, y) && (x != p.X || y != p.Y) {
+			if g.cornerIndex(x, y) < 0 && !g.isChamber(x, y) && (x != p.X || y != p.Y) && g.rooms[y][x].blocked == 0 {
 				spots = append(spots, [2]int{x, y})
 			}
 		}
