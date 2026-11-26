@@ -623,8 +623,31 @@ func (g *Game) build(x, y int, spawn bool) *Room {
 // in i rum som redan finns, så att den del av tornet det hör till blir
 // stängd. Har den delen då ingen öppning mot ett okänt rum, och når den inte
 // kammaren, får det nya rummet en dörr till mot ett okänt grannrum, eller,
-// om det inte har något, ett annat rum i samma del.
+// om det inte har något, ett annat rum i samma del. Finns inget okänt
+// grannrum alls, för att andra vandrare redan har sett allt runt omkring,
+// öppnas en vägg mot ett rum som redan finns i en annan del, och den
+// sammanslagna delen prövas igen.
 func (g *Game) keepWayOut(x, y int) {
+	for g.openWayOut(x, y) {
+	}
+}
+
+// keepAllWaysOut prövar varje del av tornet, som när kammaren har flyttat
+// och delar som bara nådde den gamla kammaren kan ha blivit stängda.
+func (g *Game) keepAllWaysOut() {
+	for y := range g.size {
+		for x := range g.size {
+			if g.rooms[y][x].Revealed {
+				g.keepWayOut(x, y)
+			}
+		}
+	}
+}
+
+// openWayOut gör ett försök åt keepWayOut. Den säger sant när den har
+// öppnat en vägg mot en annan del som redan finns, så att den nya,
+// större delen behöver prövas igen.
+func (g *Game) openWayOut(x, y int) bool {
 	type pos struct{ x, y int }
 	seen := map[pos]bool{{x, y}: true}
 	part := []pos{{x, y}}
@@ -632,7 +655,7 @@ func (g *Game) keepWayOut(x, y int) {
 		c := part[i]
 		r := &g.rooms[c.y][c.x]
 		if r.Kind == "kammare" {
-			return
+			return false
 		}
 		for d := North; d <= West; d++ {
 			nx, ny := c.x+dirDX[d], c.y+dirDY[d]
@@ -640,7 +663,7 @@ func (g *Game) keepWayOut(x, y int) {
 				continue
 			}
 			if !g.rooms[ny][nx].Revealed {
-				return // en öppning mot ett okänt rum: det finns en väg vidare
+				return false // en öppning mot ett okänt rum: det finns en väg vidare
 			}
 			if n := (pos{nx, ny}); !seen[n] {
 				seen[n] = true
@@ -668,10 +691,40 @@ func (g *Game) keepWayOut(x, y int) {
 		}
 		if len(cand) > 0 {
 			r.Doors[cand[g.rng.IntN(len(cand))]] = true
-			return
+			return false
 		}
 	}
+	// Allt runt delen finns redan. Öppna en vägg mot ett rum i en annan
+	// del, helst ett som inte är rasat och helst från det nya rummet.
+	for _, blockedOK := range []bool{false, true} {
+		for _, c := range part {
+			r := &g.rooms[c.y][c.x]
+			if r.Kind != "rum" {
+				continue
+			}
+			var cand []Dir
+			for d := North; d <= West; d++ {
+				nx, ny := c.x+dirDX[d], c.y+dirDY[d]
+				if r.Doors[d] || !g.inBounds(nx, ny) || seen[pos{nx, ny}] {
+					continue
+				}
+				n := &g.rooms[ny][nx]
+				if n.Kind != "rum" && n.Kind != "kammare" || (n.blocked > 0 && !blockedOK) {
+					continue // portarnas dörrar är fasta
+				}
+				cand = append(cand, d)
+			}
+			if len(cand) > 0 {
+				d := cand[g.rng.IntN(len(cand))]
+				r.Doors[d] = true
+				g.rooms[c.y+dirDY[d]][c.x+dirDX[d]].Doors[d.Opp()] = true
+				return true
+			}
+		}
+	}
+	return false
 }
+
 
 // roomTypeFor väljer rumstyp åt ett nytt rum: en av de typer som har
 // använts minst hittills i tornet, och aldrig samma som ett grannrum, så att

@@ -6,6 +6,19 @@ eller leder tornet.
 
 ## 2026-11-26
 
+### Ingen blir instängd
+
+Tornet kunde stänga in en vandrare utan väg till kammaren, ungefär en
+gång på 2 000 vandringar:
+
+- När flera vandrare utforskar samtidigt kunde en del av tornet bli
+  omringad av rum som de andra redan hade sett, med väggar mot den. Nu
+  öppnar tornet då en vägg mot ett av de rummen.
+- Den som klättrade upp ur källarvalven kunde hamna i ett rum utan dörrar.
+  Nu får rummet alltid minst en.
+- När ormen flyttar kammaren får delar av tornet som bara nådde den gamla
+  kammaren en väg vidare.
+
 ### Berättelsen, solen och källarvalven
 
 Provspelets fyra förslag (docs/provspel-2026-11-26.md):

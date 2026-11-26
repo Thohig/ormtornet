@@ -395,6 +395,8 @@ func (g *Game) moveChamber() {
 	r := g.build(n[0], n[1], false)
 	r.Kind, r.TypeID = "kammare", "skattkammare"
 	r.Event = ""
+	// Delar som bara nådde den gamla kammaren får en väg vidare.
+	g.keepAllWaysOut()
 	if gold := r.chest; gold > 0 {
 		// Kistan med två lås står inte i kammaren: tornet flyttar den
 		// (provspelet 2026-11-25, tredje).
