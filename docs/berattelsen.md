@@ -56,7 +56,8 @@ av `renderStory` i `web/app.js`.
   det hände ("Den natten vaknade ormen tre gånger").
 - **Slutet**: vem som bar ut mest (`ber_slut_vinnare`, eller
   `ber_slut_ingen`), vilka andra som kom ut med guld eller tomhänta, vilka
-  som var kvar när solen gick ner och vilka som aldrig kom ut. Vinnaren
+  som var kvar när solen gick ner, var och en med sitt guld när hen bar
+  något (`ber_slut_kvar_guld`), och vilka som aldrig kom ut. Vinnaren
   får kortet Vinnaren, och när ingen vann får tornet kortet med solen.
   Epilogen står under berättelsen som förut, och tornets hemlighet sägs
   först där.
@@ -80,7 +81,8 @@ Fällde en grönaktig skepnad. Kom ut med 35 guld." Den skickas som
   vandraren, med samma vikter som höjdpunkterna. Namnet först i texten tas
   bort, eftersom raden redan börjar med det.
 - **Hur det slutade**: `ber_vem_ute`, `ber_vem_tom`, `ber_vem_kvar`
-  (`ber_vem_kvar_guld` med guldet hen bar) eller `ber_vem_dod`, utom när den största stunden var att dö.
+  (`ber_vem_kvar_guld` med guldet hen bar) eller `ber_vem_dod`, utom när
+  den största stunden var att dö.
 
 Att gå ut och att bli kvar blir inga höjdpunkter; de står i slutet. Ett
 validatortest kräver att varje nyckel i `spelkort.berattelse` har sin
