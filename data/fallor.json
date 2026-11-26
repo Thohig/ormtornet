@@ -6,7 +6,9 @@
     "sok_skatt_min": 5,
     "sok_skatt_max": 30,
     "spar_rundor": 3,
-    "trygg_vid_porten": true
+    "trygg_vid_porten": true,
+    "sol_fortare_andel": 0.5,
+    "sol_fortare_steg": 2
   },
 
   "fallor": [

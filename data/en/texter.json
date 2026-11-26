@@ -978,6 +978,9 @@
       "{namn} has left the tower.",
       "Far off, the gate is heard to creak. {namn} is out."
     ],
+    "sol_fortare": [
+      "The tower feels itself emptying. The sun sinks faster now."
+    ],
     "sol_halv": [
       "The sun has travelled halfway to the horizon. {sol} hand-breadths left."
     ],

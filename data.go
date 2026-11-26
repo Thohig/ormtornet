@@ -59,6 +59,12 @@ type Rules struct {
 	// TryggVidPorten: rummen bredvid en port har aldrig en fälla, så att
 	// ingen förlorar liv redan på första steget in.
 	TryggVidPorten bool `json:"trygg_vid_porten"`
+	// Solen sjunker SolFortareSteg handsbredder per runda i stället för en
+	// när minst SolFortareAndel av vandrarna är ute eller döda och minst en
+	// av dem är en människa, så att de inte väntar så länge (provspelet
+	// 2026-11-26). Inte de tre sista rundorna. 0 stänger av det.
+	SolFortareAndel float64 `json:"sol_fortare_andel"`
+	SolFortareSteg  int     `json:"sol_fortare_steg"`
 	// Sol gångrar den automatiska solens rundor. Den sätts av svårigheten
 	// (svarighet.json), och 0 är detsamma som 1.
 	Sol float64 `json:"-"`

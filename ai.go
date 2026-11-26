@@ -256,6 +256,9 @@ var dirLetter = [4]string{"N", "E", "S", "W"}
 // strid mot en annan vandrare, vem den slår mot (som -id).
 func (g *Game) botDecide(p *Player) (string, int) {
 	st := g.stateFor(p)
+	// Sjunker solen fortare räknar AI:n med rundorna som är kvar, inte
+	// handsbredderna.
+	st.Sun = g.sunRoundsLeft()
 	pers := p.bot.pers
 	here := pos{p.X, p.Y}
 	bm := explore(g.rng, &st, here)

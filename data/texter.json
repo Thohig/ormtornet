@@ -1033,6 +1033,9 @@
       "{namn} har lämnat tornet.",
       "Långt borta hörs porten gnissla. {namn} är ute."
     ],
+    "sol_fortare": [
+      "Tornet känner att det blir tomt. Solen sjunker fortare nu."
+    ],
     "sol_halv": [
       "Solen har vandrat halva vägen mot horisonten. {sol} handsbredder kvar."
     ],

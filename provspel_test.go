@@ -289,3 +289,41 @@ func TestCartographerIntro(t *testing.T) {
 		t.Fatalf("legoknekten: %s", k)
 	}
 }
+
+// När hälften är ute eller döda och en människa väntar sjunker solen två
+// handsbredder per runda, men aldrig in i de tre sista rundorna, och de
+// som är kvar inne får veta det en gång (provspelet 2026-11-26).
+func TestSunFasterWhenHalfGone(t *testing.T) {
+	g, a, b := startTwo(t)
+	g.sun = 10
+	if n := g.sunStep(); n != 1 {
+		t.Fatalf("alla inne: solen sjönk %d", n)
+	}
+	a.player.Status = statusDead
+	logs(b)
+	if n := g.sunStep(); n != 2 {
+		t.Fatalf("hälften döda: solen sjönk %d", n)
+	}
+	want := g.data.Text("sol_fortare")
+	if !containsPart(logs(b), want) {
+		t.Fatalf("den som är kvar fick inte veta det")
+	}
+	g.sunStep()
+	if containsPart(logs(b), want) {
+		t.Fatalf("raden kom två gånger")
+	}
+	g.sun = 10
+	if n := g.sunRoundsLeft(); n != 3+4 {
+		t.Fatalf("med 10 handsbredder och dubbel takt räcker solen %d rundor", n)
+	}
+	g.sun = 4
+	if n := g.sunStep(); n != 1 {
+		t.Fatalf("med fyra kvar sjönk solen %d", n)
+	}
+	// Bara AI-spelare ute: ingen människa väntar.
+	g.sun = 10
+	a.player.bot = &botBrain{}
+	if n := g.sunStep(); n != 1 {
+		t.Fatalf("bara en AI-spelare ute: solen sjönk %d", n)
+	}
+}

@@ -468,6 +468,7 @@ type Game struct {
 	books       []goldBook    // allas guldbok, när vandringen är slut (guldbok.go)
 
 	graceUsed bool // porten har redan väntat på de invigda
+	sunFaster bool // solen sjunker fortare, eftersom många är ute eller döda (sunStep)
 	// chamberX och chamberY är kammarens rum; chamberMoved att ormen har
 	// flyttat den, så att rummet har de dörrar det redan hade.
 	chamberX, chamberY int
@@ -1538,6 +1539,7 @@ func (g *Game) startGame() {
 	g.buildDeck()
 	g.level = 1
 	g.graceUsed = false
+	g.sunFaster = false
 	g.usedClues = map[string]bool{}
 	g.pickSerpentName()
 	g.resetChronicle()
@@ -1799,7 +1801,7 @@ func (g *Game) resolve() {
 	g.tellRooms()
 	g.hearing = false
 
-	g.sun--
+	g.sun -= g.sunStep()
 	if g.sun < 0 {
 		g.sun = 0
 	}
@@ -1837,6 +1839,48 @@ func (g *Game) resolve() {
 		g.round++
 		g.startRound()
 	}
+}
+
+// sunStep är hur många handsbredder solen sjunker den här rundan: fler
+// när minst sol_fortare_andel av vandrarna är ute eller döda och minst en
+// av dem är en människa som väntar, men aldrig in i de tre sista rundorna.
+// Första gången får de som är kvar inne veta det.
+func (g *Game) sunStep() int {
+	r := g.data.Regler
+	if r.SolFortareAndel <= 0 || r.SolFortareSteg <= 1 || g.sun <= 3 {
+		return 1
+	}
+	all, gone, human := 0, 0, false
+	for _, p := range g.players {
+		if p == nil || p.Status == statusNew {
+			continue
+		}
+		all++
+		if p.Status == statusOut || p.Status == statusDead {
+			gone++
+			human = human || p.bot == nil
+		}
+	}
+	if !human || float64(gone) < r.SolFortareAndel*float64(all) {
+		return 1
+	}
+	if !g.sunFaster {
+		g.sunFaster = true
+		for _, p := range g.inside() {
+			g.logTo(p, g.data.Text("sol_fortare"), "varn")
+		}
+	}
+	return min(r.SolFortareSteg, g.sun-3)
+}
+
+// sunRoundsLeft är hur många rundor solen räcker, när den sjunker fortare
+// räknat med det snabbare steget ner till de tre sista rundorna.
+func (g *Game) sunRoundsLeft() int {
+	step := g.data.Regler.SolFortareSteg
+	if !g.sunFaster || step <= 1 || g.sun <= 3 {
+		return g.sun
+	}
+	return 3 + (g.sun-3+step-1)/step
 }
 
 // sunWarning varnar när solen passerar halva, en fjärdedel och tre kvar.

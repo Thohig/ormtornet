@@ -353,6 +353,13 @@ helst räknas. I klassvalet står korten två och två och nedräkningen fast
 överst. Står telefonen på ljudlöst hörs inget ljud.
 
 Solen sjunker en handsbredd per runda och visas som en mätare överst.
+När hälften eller fler av vandrarna är ute eller döda, och minst en av dem
+är en människa, sjunker den två handsbredder per runda, så att de som
+väntar inte väntar så länge. De som är kvar inne får veta det ("Tornet
+känner att det blir tomt"). De tre sista rundorna går som vanligt.
+Andelen och steget står som `sol_fortare_andel` och `sol_fortare_steg` i
+`data/fallor.json` (0 stänger av det), och AI-spelarna räknar med rundorna
+som är kvar.
 Gå ut genom en port för att lämna tornet: en i varje hörn, och i ett torn
 på 11 × 11 eller mer även en mitt på varje sida. Vilken port som helst
 duger. Den som kommer
