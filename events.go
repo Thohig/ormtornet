@@ -152,15 +152,47 @@ func (g *Game) trapCard(p *Player, t *Trap, text string, svag bool) {
 	g.addCard(p, gameCard{Slag: "falla", Bild: cardImage(t.Bild, t.ID), Rubrik: t.Kort, Text: text, Svag: svag})
 }
 
-// leaveCellar låter spelaren klättra upp i ett slumpat rum, aldrig ett rasat.
+// besideKnown är sant när ett rum bredvid (x, y) finns på p:s egen karta.
+func (g *Game) besideKnown(p *Player, x, y int) bool {
+	if p.known == nil {
+		return false
+	}
+	for d := North; d <= West; d++ {
+		nx, ny := x+dirDX[d], y+dirDY[d]
+		if g.inBounds(nx, ny) && p.known[ny][nx] {
+			return true
+		}
+	}
+	return false
+}
+
+// leaveCellar låter spelaren klättra upp i ett slumpat rum, aldrig ett
+// rasat. Rummet ligger högst kallare_upp_inom rum från där hen föll, och
+// helst bredvid ett rum hen själv har varit i, så att hen hittar en väg
+// hem (provspelet 2026-11-26).
 func (g *Game) leaveCellar(p *Player) {
-	var spots [][2]int
+	var spots, near, homely [][2]int
+	within := g.data.Regler.KallareUppInom
 	for y := range g.size {
 		for x := range g.size {
-			if g.cornerIndex(x, y) < 0 && !g.isChamber(x, y) && (x != p.X || y != p.Y) && g.rooms[y][x].blocked == 0 {
-				spots = append(spots, [2]int{x, y})
+			if g.cornerIndex(x, y) >= 0 || g.isChamber(x, y) || (x == p.X && y == p.Y) || g.rooms[y][x].blocked > 0 {
+				continue
+			}
+			spots = append(spots, [2]int{x, y})
+			if within > 0 && abs(x-p.X)+abs(y-p.Y) > within {
+				continue
+			}
+			near = append(near, [2]int{x, y})
+			if g.besideKnown(p, x, y) {
+				homely = append(homely, [2]int{x, y})
 			}
 		}
+	}
+	switch {
+	case len(homely) > 0:
+		spots = homely
+	case len(near) > 0:
+		spots = near
 	}
 	s := spots[g.rng.IntN(len(spots))]
 	p.X, p.Y = s[0], s[1]

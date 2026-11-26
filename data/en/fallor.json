@@ -19,7 +19,7 @@
       "id": "rasande_golv",
       "namn": "The Collapsing Floor",
       "kort": "a floor that gives way",
-      "bok": "You lose a life and fall into the cellar vaults for two rounds. Then you come up somewhere else in the tower, and no one sees where you are.",
+      "bok": "You lose a life and fall into the cellar vaults for two rounds. Then you come up a few rooms away, and no one sees where you are.",
       "spar_efter": ["A hole gapes in the middle of the floor, and cold air rises from it."],
       "texter": [
         "The floor gives way beneath you. You fall into the cellar vaults, where it is dark, damp and cramped.",

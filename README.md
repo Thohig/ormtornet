@@ -791,7 +791,7 @@ visar sedan för alla att något har hänt där.
 | Fälla           | Vad som händer                                      |
 |-----------------|-----------------------------------------------------|
 | Fallgaller      | du sitter fast i 2 rundor                           |
-| Rasande golv    | 1 skada, du faller ner i källarvalven i 2 rundor och kommer upp någon annanstans; ingen ser var du är |
+| Rasande golv    | 1 skada, du faller ner i källarvalven i 2 rundor och kommer upp högst tre rum bort, bredvid ett rum du har varit i (`kallare_upp_inom` i `fallor.json`); ingen ser var du är |
 | Roterande rum   | du kastas ut genom en slumpad öppning               |
 | Pilar           | 2 skada                                             |
 | Giftig dimma    | 1 skada nu och 1 skada per runda i 2 rundor         |

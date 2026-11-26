@@ -8,7 +8,8 @@
     "spar_rundor": 3,
     "trygg_vid_porten": true,
     "sol_fortare_andel": 0.5,
-    "sol_fortare_steg": 2
+    "sol_fortare_steg": 2,
+    "kallare_upp_inom": 3
   },
 
   "fallor": [
@@ -34,7 +35,7 @@
       "id": "rasande_golv",
       "namn": "Det rasande golvet",
       "kort": "ett golv som ger efter",
-      "bok": "Du förlorar ett liv och faller ner i källarvalven i två rundor. Sedan kommer du upp någon annanstans i tornet, och ingen ser var du är.",
+      "bok": "Du förlorar ett liv och faller ner i källarvalven i två rundor. Sedan kommer du upp några rum bort, och ingen ser var du är.",
       "spar_efter": ["Mitt i golvet gapar ett hål, och kall luft stiger ur det."],
       "vikt": 2,
       "skada": 1,

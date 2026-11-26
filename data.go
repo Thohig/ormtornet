@@ -65,6 +65,10 @@ type Rules struct {
 	// 2026-11-26). Inte de tre sista rundorna. 0 stänger av det.
 	SolFortareAndel float64 `json:"sol_fortare_andel"`
 	SolFortareSteg  int     `json:"sol_fortare_steg"`
+	// Den som klättrar upp ur källarvalven kommer upp högst KallareUppInom
+	// rum från där hen föll, helst bredvid ett rum hen har varit i, så att
+	// hen inte går vilse (provspelet 2026-11-26). 0 är var som helst.
+	KallareUppInom int `json:"kallare_upp_inom"`
 	// Sol gångrar den automatiska solens rundor. Den sätts av svårigheten
 	// (svarighet.json), och 0 är detsamma som 1.
 	Sol float64 `json:"-"`

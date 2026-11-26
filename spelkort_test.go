@@ -427,3 +427,33 @@ func TestStoryLostGoldAndHoard(t *testing.T) {
 		}
 	}
 }
+
+// Den som klättrar upp ur källaren kommer upp högst kallare_upp_inom rum
+// från där hen föll, bredvid ett rum hen har varit i (provspelet
+// 2026-11-26: en vandrare med 193 guld hittade aldrig ut).
+func TestCellarComesUpNear(t *testing.T) {
+	g, a, _ := startTwo(t)
+	p := a.player
+	within := g.data.Regler.KallareUppInom
+	if within <= 0 {
+		t.Fatal("kallare_upp_inom saknas")
+	}
+	for range 50 {
+		putInRoom(g, p, 4, 4)
+		p.known[4][4] = true // hen gick in i rummet där golvet gav efter
+		g.leaveCellar(p)
+		if d := abs(p.X-4) + abs(p.Y-4); d > within || d == 0 {
+			t.Fatalf("upp i (%d, %d), %d rum bort", p.X, p.Y, d)
+		}
+		beside := false
+		for d := North; d <= West; d++ {
+			nx, ny := p.X+dirDX[d], p.Y+dirDY[d]
+			if g.inBounds(nx, ny) && p.known[ny][nx] {
+				beside = true
+			}
+		}
+		if !beside {
+			t.Fatalf("upp i (%d, %d), inte bredvid något känt rum", p.X, p.Y)
+		}
+	}
+}
