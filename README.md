@@ -526,7 +526,7 @@ igen.
 | Spårfinnaren | 2 / 1 | ser spår 6 rundor bakåt och vems de är, märker hälften av fällorna i tid, ser var föremål och guld ligger och vem som tog guldet, känner före andra åt vilket håll ristningen finns | hör inget genom väggarna, utom med benluren |
 | Lyktbäraren | 2 / 2 | ett liv extra, tål mörker, ser varelser i grannrummen | syns för andra redan från grannrummet |
 | Pilgrimen | 0 / 3 | ledtrådar dubbelt så ofta, en dryck när tornet förändras, känner igen förbannade föremål | slår aldrig andra vandrare, kan bara värja sig |
-| Gravplundraren | 2 / 2 | hör var någon dör inom sju rum, hur långt bort och åt vilket håll, och får dubbelt så mycket av den dödes guld (det extra kommer ur tornet) | varelserna anfaller oftare (lynne +10) |
+| Gravplundraren | 2 / 2 | hör var någon dör inom sju rum, hur långt bort ("sex rum bort", "i rummet bredvid") och åt vilket håll, och får dubbelt så mycket av den dödes guld (det extra kommer ur tornet) | varelserna anfaller oftare (lynne +10) |
 | Lyssnaren | 2 / 2 | hör två rum bort och om något andas bredvid, som med benluren (tre rum med benluren), och ser sömnmätaren var hen än är | mörkret varar dubbelt så länge |
 | Ormens präst | 1 / 3 | det första vakna-kortet hen drar blir ett sovkort, ormen skadar inte hen när den vaknar, och varje näve ger hälften mer guld | tar bara en näve varje gång hen kommer in i kammaren |
 
@@ -1129,14 +1129,14 @@ Föremålen och klasserna visas med sina beskrivningar och behöver inget
 `bok`. Se [docs/vandrarens-bok.md](docs/vandrarens-bok.md).
 
 - `texter.json` rum, beskrivningar, allmänna texter och introts väntetid. Varje rumstyp har sin inredning på kartan under `modell.inredning`, med namnen i `klient/src/inredning.ts`
-- `fallor.json` regler (liv, chans för händelse, drycker, hur länge spåren syns), fällor och sökresultat
+- `fallor.json` regler (liv, chans för händelse, drycker, hur länge spåren syns, solen som sjunker fortare när hälften är ute eller döda och hur nära man kommer upp ur källarvalven), fällor och sökresultat
 - `ormen.json` ormkorten, skatten i kammaren och vad som händer när ormen vaknar
 - `handelser.json` tornets slumpade händelser och deras spelkort (se
   [docs/handelser.md](docs/handelser.md))
 - `monster.json` varelserna (liv, skada, guld, Kraft, Försvar och lynne, hur ofta de vandrar, texter, och modellens färg och storlek på kartan snett ovanifrån) och striderna
 - `ai.json` datorspelarnas namn, personligheter och betänketid
 - `svarighet.json` förvalen för svårighet (se nedan)
-- `klasser.json` klasserna: namn, styrka, svaghet, liv, drycker, siffror och texter, och figurens färg och storlek på kartan snett ovanifrån
+- `klasser.json` klasserna: namn, styrka (på klasskortet, och i andra person i loggen som `du`), svaghet, liv, drycker, siffror och texter, och figurens färg och storlek på kartan snett ovanifrån
 - `foremal.json` föremålen: tecken i väskan, namn, beskrivning, hur ofta, hur länge och texter
 - `avslojande.json` nivågränser, ledtrådar, texter vid nivåbyte, nya
   förklaringar till fällorna, epilogen, svaren, ormens namn och texterna

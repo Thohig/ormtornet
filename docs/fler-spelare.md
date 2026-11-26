@@ -56,6 +56,10 @@ Byggt som planerat, med de här besluten:
 - Solen: i stället för ett nytt val "automatisk" räknas värdsidans antal
   rundor för ett torn på 9 × 9 och skalas med storleken. Då gäller sparade
   inställningar som förut.
+  Sedan 2026-11-26 sjunker solen två handsbredder per runda när hälften
+  eller fler är ute eller döda och en människa väntar, utom de tre sista
+  rundorna (`sol_fortare_andel` och `sol_fortare_steg` i
+  `data/fallor.json`, `sunStep` i `game.go`, README under Spelet).
 - Tornet byggs om i lobbyn när antalet vandrare ändras. Portarna delas ut
   i platsordning, och lottas när vandringen börjar om vandrarna inte ser
   varandra.

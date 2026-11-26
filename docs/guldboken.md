@@ -11,7 +11,9 @@ Uppifrån och ner:
 
 1. **Placeringen**: en rad för var och en (`renderPeople` i `web/app.js`)
    med platsen, ★ för vinnaren, namnet i sin färg, titeln, (du), ~ för
-   AI:n och guldet eller hur det slutade. Under raden står hens största
+   AI:n och guldet eller hur det slutade; den som blev kvar med guld står
+   som "förlorad med 193 guld" (`slut_forlorad_guld`, sedan 2026-11-26).
+   Under raden står hens största
    stund (`stund` i `vandrarna`). Resultaten och raden om var och en var
    två listor; nu är de en.
 2. Ett klick på raden öppnar **guldboken** under den. Ett nytt klick, eller
@@ -57,8 +59,9 @@ placeringens ordning, och den skickas som `guldbok` i tillståndet:
   fångsten pekas ut (`gb_storst`, `gb_storst_av`), och efter en förlust
   står vad som var kvar (`gb_kvar`). Utan guld står `gb_aldrig`. Det
   tredje är slutet: det porten lade till, vem som tog upp guldet efter den
-  som dog, att guldet blev kvar i tornet, summan och placeringen för den
-  som kom ut med guld.
+  som dog, att guldet blev kvar i tornet (`gb_kvar_slut`, också för den
+  som står som förlorad när solen har gått ner, sedan provspelet
+  2026-11-26), summan och placeringen för den som kom ut med guld.
 - **Raderna**: en för varje ändring, `gb_rad_*`, utan beloppet, som
   spelarsidan sätter bredvid med plus eller minus och summan.
 

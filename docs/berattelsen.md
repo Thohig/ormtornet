@@ -16,6 +16,11 @@ berättelsen.
    det slutade. Sedan guldboken (docs/guldboken.md) står titeln och den
    största stunden på vandrarens rad i placeringen överst på
    slutskärmen, och hela krönikan står inte längre där.
+3. **Efter provspelet 2026-11-26** (byggt 2026-11-26,
+   [provspel-2026-11-26.md](provspel-2026-11-26.md)): guldet hos den som
+   blev kvar när solen gick ner står i slutet och på hens rad, den som
+   ensam tog mest ur ormens hög blir en höjdpunkt, och den dödes guld
+   säger att hen hade fallit när döden inte är berättad.
 
 ## Hur den byggs
 
