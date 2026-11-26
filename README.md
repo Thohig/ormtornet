@@ -525,7 +525,9 @@ igen.
 Kraft är hur lätt klassen träffar i strid och Försvar hur svår den är att
 träffa (se Strider). Namn, beskrivningar, texter och siffror står i `data/klasser.json`. Vad
 styrkan och svagheten gör styrs av klassens `id` i `classes.go` och där
-spelet händer. Klasserna går inte att stänga av.
+spelet händer. `styrka` står på klasskortet, och `du` är samma styrka sagd
+till den som har valt klassen, i loggen när vandringen börjar ("Du är
+lyktbäraren. Du har ett liv extra …"). Klasserna går inte att stänga av.
 
 ### Strid mellan vandrare
 

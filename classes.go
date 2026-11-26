@@ -18,6 +18,7 @@ type Class struct {
 	Bild        string             `json:"bild"`   // klasskortets motiv (web/kort.js); utan bild gäller id:t
 	Beskrivning string             `json:"beskrivning"`
 	Styrka      string             `json:"styrka"`
+	Du          string             `json:"du"` // styrkan sagd till den som har valt klassen, i loggen
 	Svaghet     string             `json:"svaghet"`
 	Liv         int                `json:"liv"` // läggs till svårighetens antal liv
 	Drycker     int                `json:"drycker"`
@@ -204,7 +205,11 @@ func (g *Game) chooseClass(p *Player, id string) bool {
 	}
 	p.classID = id
 	p.HP = g.maxHP(p)
-	g.logTo(p, g.data.Text("klass_vald", "klass", cl.Kort, "styrka", cl.Styrka), "syn")
+	strength := cl.Du
+	if strength == "" {
+		strength = cl.Styrka
+	}
+	g.logTo(p, g.data.Text("klass_vald", "klass", cl.Kort, "styrka", strength), "syn")
 	g.logOthers(p, g.data.Text("klass_vald_andra", "namn", p.Name, "klass", cl.Kort), "dim")
 	return true
 }

@@ -7,6 +7,7 @@
       "kort": "the Sellsword",
       "beskrivning": "Has fought for whoever pays for twenty years. Carries a dented shield and trusts no one.",
       "styrka": "One extra life, and strikes hardest of all and holds up well.",
+      "du": "You have one extra life, strike hardest of all and hold up well.",
       "svaghet": "Finds only half as much gold when searching."
     },
     {
@@ -15,6 +16,7 @@
       "kort": "the Thief",
       "beskrivning": "Light fingers and light steps. Has got into more houses than they have walked out of.",
       "styrka": "Takes a quarter more gold from the chamber, finds items more often, and no one else notices when the serpent stirs at the Thief's hand. Snatches half the gold in fights with wanderers.",
+      "du": "You take a quarter more gold from the chamber and find items more often, and no one else notices when the serpent stirs at your hand. In fights with wanderers you snatch half the gold.",
       "svaghet": "Does not trust other people's potions: never finds any when searching."
     },
     {
@@ -23,6 +25,7 @@
       "kort": "the Herbwife",
       "beskrivning": "Brews potions from what grows in ditches. Knows what heals and what kills.",
       "styrka": "Starts with one potion, a potion gives three lives, and poison has no hold on her.",
+      "du": "You start with one potion, a potion gives you three lives, and poison has no hold on you.",
       "svaghet": "Loses far more treasure when the serpent wakes."
     },
     {
@@ -31,6 +34,7 @@
       "kort": "the Mapmaker",
       "beskrivning": "Has drawn maps of caves, mines and cloisters. No one has drawn the tower. Yet.",
       "styrka": "Sees through doors into the rooms next door. Sees every room anyone has found and where anyone has died. Always finds something when searching, if a secret passage can be made.",
+      "du": "You see through doors into the rooms next door, and every room anyone has found and where anyone has died. You always find something when searching, if a secret passage can be made.",
       "svaghet": "No quick feet: when they flee a fight, the blow at their back always lands."
     },
     {
@@ -39,6 +43,7 @@
       "kort": "the Snake Charmer",
       "beskrivning": "Has played for adders at markets and never been bitten. Almost never.",
       "styrka": "Sees in the chamber how many waking cards are left in the deck. The serpent does not wound them when it wakes.",
+      "du": "You see in the chamber how many waking cards are left in the deck, and the serpent does not wound you when it wakes.",
       "svaghet": "Never learned to search: finds only half as much gold when searching."
     },
     {
@@ -47,6 +52,7 @@
       "kort": "the Tracker",
       "beskrivning": "Reads the ground as others read books. Sees where someone has walked, and when.",
       "styrka": "Sees tracks further back and whose they are, spots half the traps in time, and sees where someone has left an item or gold, and who has taken it. Senses before others which way the signs in the wall lie.",
+      "du": "You see tracks further back and whose they are, spot half the traps in time, and see where someone has left an item or gold, and who has taken it. You sense before others which way the signs in the wall lie.",
       "svaghet": "Hears nothing through the walls."
     },
     {
@@ -55,6 +61,7 @@
       "kort": "the Lantern Bearer",
       "beskrivning": "Carries a lantern that has never gone out. No one knows what it burns on.",
       "styrka": "One extra life. The darkness has no hold on them, and they see creatures in the neighbouring rooms.",
+      "du": "You have one extra life, the darkness has no hold on you, and you see creatures in the neighbouring rooms.",
       "svaghet": "The light shows: the others see them already from the neighbouring room."
     },
     {
@@ -63,6 +70,7 @@
       "kort": "the Pilgrim",
       "beskrivning": "Has walked the whole way to see the tower with their own eyes. Believes it has something to tell.",
       "styrka": "Gets clues about the tower twice as often, a potion each time the tower changes, and recognises cursed items and leaves them be.",
+      "du": "You get clues about the tower twice as often and a potion each time the tower changes, and you recognise cursed items and leave them be.",
       "svaghet": "Never raises a weapon against other wanderers: can only defend themselves."
     },
     {
@@ -71,6 +79,7 @@
       "kort": "the Grave Robber",
       "beskrivning": "Has dug up more kings than they have seen alive. The dead never complain.",
       "styrka": "Hears where someone dies within seven rooms, how far away and in which direction, and gets twice as much gold where someone has died.",
+      "du": "You hear where someone dies within seven rooms, how far away and in which direction, and get twice as much gold where someone has died.",
       "svaghet": "Smells of death: the creatures attack them more often."
     },
     {
@@ -79,6 +88,7 @@
       "kort": "the Listener",
       "beskrivning": "Went blind from a light no one else saw. Now hears what no one else hears.",
       "styrka": "Hears sounds two rooms away and whether something breathes next door, as with the bone horn, and hears how deeply the serpent sleeps wherever they are.",
+      "du": "You hear sounds two rooms away and whether something breathes next door, as with the bone horn, and how deeply the serpent sleeps wherever you are.",
       "svaghet": "Sees poorly: darkness lasts twice as long."
     },
     {
@@ -87,6 +97,7 @@
       "kort": "the Serpent's Priest",
       "beskrivning": "Has prayed to the serpent all their life without knowing where it lived. Now they know.",
       "styrka": "The first card that would wake the serpent becomes one that does not, the serpent does not hurt them when it wakes, and each handful gives half as much gold again.",
+      "du": "The first card that would wake the serpent becomes one that does not, the serpent does not hurt you when it wakes, and each handful gives half as much gold again.",
       "svaghet": "Takes only one handful each time they enter the chamber."
     }
   ],

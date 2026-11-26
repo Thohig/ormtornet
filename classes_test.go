@@ -1,6 +1,7 @@
 package main
 
 import (
+	"strings"
 	"testing"
 )
 
@@ -402,5 +403,30 @@ func TestAbsentWhenClassChoosingEnds(t *testing.T) {
 	g.Join(b2, "Bo")
 	if b2.player != pb || pb.awayRound != 0 {
 		t.Fatal("Bo kom inte tillbaka in i vandringen")
+	}
+}
+
+// Raden när klassen är vald talar till vandraren: "Du är lyktbäraren. Du har
+// ett liv extra …", inte "… och hen ser varelser" (provspelet 2026-11-26).
+func TestClassChosenSaysYou(t *testing.T) {
+	bad := map[string][]string{langSv: {" hen ", " henom ", " henne", " hens "}, langEn: {" her ", " thief's "}}
+	for _, lang := range []string{langSv, langEn} {
+		d, _, err := loadDataLang("data", lang)
+		if err != nil {
+			t.Fatal(err)
+		}
+		for _, c := range d.Klasser {
+			if c.Du == "" {
+				t.Errorf("%s: %s saknar du", lang, c.ID)
+				continue
+			}
+			line := " " + strings.ToLower(d.Text("klass_vald", "klass", c.Kort, "styrka", c.Du)) + " "
+			line = strings.NewReplacer(",", " ", ".", " ").Replace(line)
+			for _, w := range bad[lang] {
+				if strings.Contains(line, w) {
+					t.Errorf("%s: %s säger %q: %s", lang, c.ID, strings.TrimSpace(w), line)
+				}
+			}
+		}
 	}
 }
