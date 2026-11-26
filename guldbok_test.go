@@ -70,3 +70,26 @@ func TestGoldBook(t *testing.T) {
 		t.Fatalf("den slagnas berättelse: %q", bb.Story)
 	}
 }
+
+// Den som var kvar i tornet när solen gick ner får veta att guldet blev
+// kvar (provspelet 2026-11-26: 193 guld försvann utan ett ord).
+func TestGoldBookLostKeepsGold(t *testing.T) {
+	g, a, _ := startTwo(t)
+	p := a.player
+	g.round = 4
+	p.Treasure = 40
+	g.goldNote(p, "sok", 40, "rum", "ett kallt rum")
+	p.Status = statusLost
+	g.buildStory()
+	for _, bk := range g.books {
+		if bk.Name != p.Name {
+			continue
+		}
+		want := g.data.Text("gb_kvar_slut", "guld", "40")
+		if !strings.Contains(strings.Join(bk.Story, "\n"), want) {
+			t.Fatalf("boken saknar %q:\n%s", want, strings.Join(bk.Story, "\n"))
+		}
+		return
+	}
+	t.Fatal("ingen bok")
+}

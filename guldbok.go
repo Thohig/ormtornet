@@ -184,7 +184,8 @@ func (g *Game) goldStory(p *Player, r resultView) []string {
 			end = append(end, t(key, "namn", o.Name))
 		}
 	}
-	if p.Status == statusIn && p.Treasure > 0 {
+	// Den som var kvar när solen gick ner står som förlorad i slutet.
+	if (p.Status == statusIn || p.Status == statusLost) && p.Treasure > 0 {
 		end = append(end, t("gb_kvar_slut", "guld", gold))
 	}
 	if p.Status == statusOut && p.Treasure > 0 && len(end) > 0 {

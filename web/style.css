@@ -1419,6 +1419,8 @@ body.touch .card .num { display: none; }
 #chronStory .ok-bild { width: 100%; height: auto; aspect-ratio: 120 / 104; }
 #chronStory .ok-namn { font-size: 9px; letter-spacing: 0.12em; }
 @media (max-width: 700px) {
+  /* "SOLEN HAR GÅTT NER" på en rad på telefonen, som rubriken i klassvalet. */
+  #chron h1 { font-size: 18px; letter-spacing: 0.2em; }
   #chronStory .stycke { gap: 12px; }
   #chronStory .okort { flex-basis: 96px; width: 96px; }
   #chronStory .stycke p { font-size: 14px; }
