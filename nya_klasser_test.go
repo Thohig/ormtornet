@@ -14,10 +14,20 @@ func TestGraveRobber(t *testing.T) {
 	pb.Treasure = 20
 	logs(pa.client)
 	g.kill(pb)
-	want := g.data.Text("klass_gravplundrare_dod", "namn", pb.Name, "antal", "3", "horn", g.hornToward(1, 1, 4, 1))
+	want := g.data.Text("klass_gravplundrare_dod", "namn", pb.Name, "antal", g.data.Text("tal_3"), "horn", g.hornToward(1, 1, 4, 1))
 	if !containsPart(logs(pa.client), want) {
 		t.Fatalf("gravplundraren hörde inte döden: ville ha %q", want)
 	}
+	// I rummet bredvid står inte "1 rum bort" (provspelet 2026-11-26).
+	pb.Status, pb.HP = statusIn, g.maxHP(pb)
+	putInRoom(g, pb, 2, 1)
+	logs(pa.client)
+	g.kill(pb)
+	want = g.data.Text("klass_gravplundrare_dod_bredvid", "namn", pb.Name, "horn", g.hornToward(1, 1, 2, 1))
+	if !containsPart(logs(pa.client), want) {
+		t.Fatalf("gravplundraren hörde inte döden bredvid: ville ha %q", want)
+	}
+	pb.Treasure = 20
 	putInRoom(g, pa, 4, 1)
 	before := pa.Treasure
 	g.pickUpGold(pa)
@@ -31,7 +41,7 @@ func TestGraveRobber(t *testing.T) {
 	logs(pa.client)
 	g.kill(pb)
 	for _, l := range logs(pa.client) {
-		if strings.Contains(l, "8 rum bort") {
+		if strings.Contains(l, g.data.Text("tal_8")+" rum bort") || strings.Contains(l, "8 rum bort") {
 			t.Fatalf("gravplundraren hörde döden åtta rum bort: %q", l)
 		}
 	}

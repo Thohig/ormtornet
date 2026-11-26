@@ -131,6 +131,9 @@
     "klass_gravplundrare_dod": [
       "You hear it clearly: {namn} dies, {antal} rooms away to the {horn}."
     ],
+    "klass_gravplundrare_dod_bredvid": [
+      "You hear it clearly: {namn} dies in the next room, to the {horn}."
+    ],
     "klass_gravplundrare_guld": [
       "You know where the dead hide the best of it, and find {antal} gold more."
     ],

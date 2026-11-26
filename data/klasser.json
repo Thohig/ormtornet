@@ -223,6 +223,9 @@
     "klass_gravplundrare_dod": [
       "Du hör det tydligt: {namn} dör, {antal} rum bort mot {horn}."
     ],
+    "klass_gravplundrare_dod_bredvid": [
+      "Du hör det tydligt: {namn} dör i rummet bredvid, mot {horn}."
+    ],
     "klass_gravplundrare_guld": [
       "Du vet var de döda gömmer det bästa, och hittar {antal} guld till."
     ],
