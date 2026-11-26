@@ -347,7 +347,7 @@
       "In the shard you see {rum}."
     ],
     "spegel_falla": [
-      "Something on the floor there looks wrong: {falla}."
+      "Something in that room is wrong: {falla}."
     ],
     "spegel_varelse": [
       "In there moves {varelse}."

@@ -511,7 +511,7 @@
       "I skärvan ser du {rum}."
     ],
     "spegel_falla": [
-      "Något på golvet där ser fel ut: {falla}."
+      "Något i rummet där är fel: {falla}."
     ],
     "spegel_varelse": [
       "Där inne rör sig {varelse}."
