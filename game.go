@@ -725,7 +725,6 @@ func (g *Game) openWayOut(x, y int) bool {
 	return false
 }
 
-
 // roomTypeFor väljer rumstyp åt ett nytt rum: en av de typer som har
 // använts minst hittills i tornet, och aldrig samma som ett grannrum, så att
 // vandrarna kan säga till varandra vilket rum de står i.
