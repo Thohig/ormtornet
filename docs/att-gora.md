@@ -48,6 +48,11 @@ webbläsarprovet:
   ([provspel-2026-11-25-3.md](provspel-2026-11-25-3.md)): är tre rum in
   lagom (`rum_in`), och räcker en fjärdedel av guldet som följer med in
   (`andel`) för att någon ska vilja dra och ta ormens blick?
+- Efter provspelet 2026-11-26
+  ([provspel-2026-11-26.md](provspel-2026-11-26.md)): märker de som är
+  kvar inne att solen sjunker fortare när hälften är ute eller döda, och
+  känns det orättvist? Blir fler kvar i tornet? Väntar de döda lagom
+  länge nu? Hittar man ut efter källarvalven?
 - Långa strider ([bara-anfall.md](bara-anfall.md)): märker man att
   slagen kommer lättare efter fyra rundor, och blir striderna mot
   gestalten i fjällrustning och väsenet av vita ben lagom långa? Dör fler
@@ -388,16 +393,6 @@ Från [isometrisk.md](isometrisk.md):
 - `bild` i `klient/src/karta.ts`, som ritade bilderna i
   teckenförklaringen, används inte längre och kan tas bort nästa gång
   kartan byggs om.
-
-Från [provspel-2026-11-26.md](provspel-2026-11-26.md), inget byggt:
-
-- Guldet hos den som blev kvar när solen gick ner, i berättelsen och
-  placeringen, och den största nävetagningen som höjdpunkt.
-- Berättelsen som nämner en dödes guld innan den har berättat om döden.
-- De döda väntar i snitt 25 rundor på Normal: åskådare (idé 18 i
-  [ideer.md](ideer.md)), en sol som sjunker fortare när hälften är ute
-  eller döda, eller kortare turtid.
-- Källarvalven som lämnar en långt från allt man känner.
 
 ## Nya idéer
 

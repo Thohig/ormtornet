@@ -296,7 +296,10 @@ Skriv dit när ett steg är klart.
   2026-11-26 med robotarna, webbläsarprovet och 1 200 vandringar med
   AI-spelare: sex fel som rättades (guldboken för den som blev kvar,
   klassen i andra person, gravplundraren, spegelskärvan, källarvalven och
-  rubriken på telefonen) och fyra förslag som inte är byggda.
+  rubriken på telefonen) och fyra förslag som byggdes samma dag
+  (guldet hos den som blev kvar och ormens hög i berättelsen, den dödes
+  guld, solen som sjunker fortare när hälften är ute eller döda och
+  källarvalven nära där man föll).
 - [docs/ormkorten.md](docs/ormkorten.md): att ormkorten syns, med kortet
   som vänds upp, sömnmätaren, uppvaknandet, leken bredvid guldhögen och
   korten i krönikan. Allt är byggt.

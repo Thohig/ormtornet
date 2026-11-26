@@ -6,6 +6,22 @@ eller leder tornet.
 
 ## 2026-11-26
 
+### Berättelsen, solen och källarvalven
+
+Provspelets fyra förslag (docs/provspel-2026-11-26.md):
+
+- Den som var kvar när solen gick ner får guldet nämnt i berättelsen och
+  på sin rad, och står som "förlorad med 193 guld" i placeringen.
+- Den som tog mest ur ormens hög blir en höjdpunkt i berättelsen, också
+  när hen aldrig kom ut.
+- Tar någon upp en dödes guld innan berättelsen har sagt att hen dog står
+  det att hen hade fallit där.
+- När hälften eller fler är ute eller döda, och en människa väntar,
+  sjunker solen två handsbredder per runda. De som är kvar inne får veta
+  det, och de tre sista rundorna går som vanligt.
+- Den som klättrar upp ur källarvalven kommer upp högst tre rum bort,
+  bredvid ett rum hen har varit i.
+
 ### Provspelet: guldboken, klassen och gravplundraren
 
 - Guldboken säger vad som hände med guldet hos den som var kvar i tornet
@@ -20,9 +36,6 @@ eller leder tornet.
   inte ligger på golvet.
 - Den som klättrar upp ur källarvalven hamnar inte i ett rasat rum.
 - Rubriken på slutskärmen står på en rad på telefonen.
-- docs/provspel-2026-11-26.md har fyra förslag: guldet hos den som blev
-  kvar i berättelsen, den dödes guld före döden i berättelsen, de döda som
-  väntar länge och källarvalven som kan lämna en vilse.
 
 ## 2026-11-25
 
