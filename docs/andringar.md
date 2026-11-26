@@ -4,6 +4,26 @@ Det som har ändrats i spelet, nyast först. README beskriver hur allt
 fungerar. Här står vad som är nytt och vad det betyder för den som spelar
 eller leder tornet.
 
+## 2026-11-26
+
+### Provspelet: guldboken, klassen och gravplundraren
+
+- Guldboken säger vad som hände med guldet hos den som var kvar i tornet
+  när solen gick ner: "De 193 guld hen bar kom aldrig ut, utan blev kvar i
+  tornet."
+- När vandringen börjar talar klassen till dig: "Du är lyktbäraren. Du
+  har ett liv extra, mörkret biter inte på dig, och du ser varelser i
+  grannrummen." Förut stod klasskortets text, med hen.
+- Gravplundraren hör hur långt bort någon dör med ord, "sex rum bort", och
+  "i rummet bredvid" när det är där.
+- Spegelskärvan säger "Något i rummet där är fel", eftersom alla fällor
+  inte ligger på golvet.
+- Den som klättrar upp ur källarvalven hamnar inte i ett rasat rum.
+- Rubriken på slutskärmen står på en rad på telefonen.
+- docs/provspel-2026-11-26.md har fyra förslag: guldet hos den som blev
+  kvar i berättelsen, den dödes guld före döden i berättelsen, de döda som
+  väntar länge och källarvalven som kan lämna en vilse.
+
 ## 2026-11-25
 
 ### Tornet drar tillbaka, långa strider och ormens blick

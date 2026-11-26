@@ -292,6 +292,11 @@ Skriv dit när ett steg är klart.
   fel som rättades och fem förslag, av vilka fyra byggdes samma dag
   (Tornet drar tillbaka med udd, långa strider som blir lättare, blicken
   som släpper och "chest" på engelska).
+- [docs/provspel-2026-11-26.md](docs/provspel-2026-11-26.md): provspelet
+  2026-11-26 med robotarna, webbläsarprovet och 1 200 vandringar med
+  AI-spelare: sex fel som rättades (guldboken för den som blev kvar,
+  klassen i andra person, gravplundraren, spegelskärvan, källarvalven och
+  rubriken på telefonen) och fyra förslag som inte är byggda.
 - [docs/ormkorten.md](docs/ormkorten.md): att ormkorten syns, med kortet
   som vänds upp, sömnmätaren, uppvaknandet, leken bredvid guldhögen och
   korten i krönikan. Allt är byggt.

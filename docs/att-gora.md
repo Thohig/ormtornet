@@ -389,6 +389,16 @@ Från [isometrisk.md](isometrisk.md):
   teckenförklaringen, används inte längre och kan tas bort nästa gång
   kartan byggs om.
 
+Från [provspel-2026-11-26.md](provspel-2026-11-26.md), inget byggt:
+
+- Guldet hos den som blev kvar när solen gick ner, i berättelsen och
+  placeringen, och den största nävetagningen som höjdpunkt.
+- Berättelsen som nämner en dödes guld innan den har berättat om döden.
+- De döda väntar i snitt 25 rundor på Normal: åskådare (idé 18 i
+  [ideer.md](ideer.md)), en sol som sjunker fortare när hälften är ute
+  eller döda, eller kortare turtid.
+- Källarvalven som lämnar en långt från allt man känner.
+
 ## Nya idéer
 
 ### Spelet
