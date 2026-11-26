@@ -397,6 +397,7 @@
         {"id": "dod", "nycklar": ["kronika_dod", "kronika_dod_falla", "kronika_dod_varelse", "kronika_dod_vandrare", "kronika_dod_ormen", "kronika_dod_gift", "kronika_dod_foremal", "kronika_dod_tornet"], "vikt": 8, "forst": 2, "bild": "dod", "rubrik": "kort_dod"},
         {"id": "slag", "nycklar": ["kronika_slag_byte", "kronika_bakhall_byte"], "vikt": 7, "forst": 1, "bild": "vandrare", "rubrik": "ber_rubrik_slag", "flera": "ber_flera_slag"},
         {"id": "kammaren", "nycklar": ["kronika_kammaren"], "vikt": 6, "bild": "guld", "rubrik": "stund_kammaren"},
+        {"id": "hogen", "nycklar": ["kronika_hogen"], "vikt": 7, "bild": "guld", "rubrik": "ber_rubrik_hogen"},
         {"id": "guld_kvar", "nycklar": ["kronika_guld_kvar"], "vikt": 6, "bild": "guld", "rubrik": "kort_guld_kvar"},
         {"id": "namndel", "nycklar": ["kronika_namndel"], "vikt": 5, "bild": "namndel", "rubrik": "kort_namndel"},
         {"id": "port", "nycklar": ["kronika_port"], "vikt": 5, "forst": 1, "bild": "port", "rubrik": "kort_port", "flera": "ber_flera_port"},
@@ -619,6 +620,21 @@
     ],
     "ber_slut_tom": [
       "{namn} kom ut tomhänt."
+    ],
+    "ber_slut_kvar_guld": [
+      "{namn} var kvar i tornet när solen gick ner, med {guld} guld."
+    ],
+    "ber_vem_kvar_guld": [
+      "Var kvar när solen gick ner, med {guld} guld."
+    ],
+    "ber_hogen": [
+      "{nar} hade {namn} tagit {guld} guld ur ormens hög, mer än någon annan."
+    ],
+    "ber_rubrik_hogen": [
+      "ormens hög"
+    ],
+    "ber_guld_kvar_fallen": [
+      "{nar} kom {namn} till platsen där {dod} hade fallit, och tog upp guldet, {guld} guld."
     ],
     "ber_slut_kvar": [
       "{namn} var kvar i tornet när solen gick ner."
@@ -1200,6 +1216,9 @@
     ],
     "ormen_guld_kvar": [
       "Där ormen låg ligger guld kvar i fjällens spår. Du tar {antal} guld."
+    ],
+    "kronika_hogen": [
+      "{namn} tog {guld} guld ur ormens hög."
     ],
     "kronika_guld_kvar": [
       "{namn} tog upp guldet som {dod} hade burit, {guld} guld."

@@ -2040,7 +2040,8 @@ function backToStart() {
   $("enter").focus();
 }
 
-// resultWord säger hur det gick för en vandrare: guldet, tomhänt, död eller förlorad.
+// resultWord säger hur det gick för en vandrare: guldet, tomhänt, död eller
+// förlorad, med guldet hen bar när solen gick ner.
 // isMine är sant för den egna raden i resultaten, som får (du) efter namnet.
 function isMine(r) {
   const me = state && (state.players || []).find((p) => p.id === state.you);
@@ -2050,7 +2051,7 @@ function isMine(r) {
 function resultWord(r) {
   if (r.status === "ute") return r.treasure > 0 ? t("slut_guld", { n: r.treasure }) : t("slut_tomhant");
   if (r.status === "dod") return t("slut_dod");
-  return t("slut_forlorad");
+  return r.treasure > 0 ? t("slut_forlorad_guld", { n: r.treasure }) : t("slut_forlorad");
 }
 
 function endTitle() {

@@ -43,6 +43,15 @@ av `renderStory` i `web/app.js`.
   `tal_10`), `ber_nar_langt` efter mer än tio rundor och `ber_nar_sist`
   för den sista rundan. Av en texts varianter tas den som inte redan är
   sagd, så att två uppvaknanden inte berättas med samma ord.
+- **Ormens hög** (2026-11-26): den som ensam tog mest ur kammaren under
+  vandringen blir en händelse i krönikan, `kronika_hogen`, i rundan då
+  hen tog sin sista näve (`noteHoard`). Den väger som ett slag mellan
+  vandrare och tas med också när hen aldrig kom ut: "I runda 5 hade Alva
+  tagit 157 guld ur ormens hög, mer än någon annan."
+- **Den dödes guld** (2026-11-26): tar någon upp en dödes guld innan
+  döden är berättad står `ber_guld_kvar_fallen`, "kom Bo till platsen där
+  Cecilia hade fallit, och tog upp guldet", så att läsaren vet att hen
+  hade dött.
 - **Flera gånger**: ett slag med `flera` säger en gång hur många gånger
   det hände ("Den natten vaknade ormen tre gånger").
 - **Slutet**: vem som bar ut mest (`ber_slut_vinnare`, eller
@@ -70,8 +79,8 @@ Fällde en grönaktig skepnad. Kom ut med 35 guld." Den skickas som
 - **Största stunden**: den tyngsta händelse i krönikan som handlar om
   vandraren, med samma vikter som höjdpunkterna. Namnet först i texten tas
   bort, eftersom raden redan börjar med det.
-- **Hur det slutade**: `ber_vem_ute`, `ber_vem_tom`, `ber_vem_kvar` eller
-  `ber_vem_dod`, utom när den största stunden var att dö.
+- **Hur det slutade**: `ber_vem_ute`, `ber_vem_tom`, `ber_vem_kvar`
+  (`ber_vem_kvar_guld` med guldet hen bar) eller `ber_vem_dod`, utom när den största stunden var att dö.
 
 Att gå ut och att bli kvar blir inga höjdpunkter; de står i slutet. Ett
 validatortest kräver att varje nyckel i `spelkort.berattelse` har sin

@@ -123,6 +123,7 @@ func (g *Game) andList(names []string) string {
 // gång, så att texterna inte byter variant varje gång tillståndet skickas.
 func (g *Game) buildStory() {
 	g.story = nil
+	g.noteHoard()
 	if in := g.storyIntro(); in != "" {
 		g.story = append(g.story, storyPart{Del: "in", Text: in})
 	}
@@ -216,6 +217,8 @@ func (g *Game) storyPersons() []storyPerson {
 				parts = append(parts, g.data.Text("ber_vem_tom"))
 			case p.Status == statusDead:
 				parts = append(parts, g.data.Text("ber_vem_dod"))
+			case p.Treasure > 0:
+				parts = append(parts, g.data.Text("ber_vem_kvar_guld", "guld", strconv.Itoa(p.Treasure)))
 			default:
 				parts = append(parts, g.data.Text("ber_vem_kvar"))
 			}
@@ -302,10 +305,14 @@ func (g *Game) storyHighlights() []storyPart {
 		lastOf[p.kind] = i
 	}
 	said := map[string]bool{}
+	told := map[string]bool{} // de vars död redan är berättad
 	last := 0
 	for ci, p := range chosen {
 		e := g.chron[p.order]
 		k := sd.Slag[p.kind]
+		if k.ID == "dod" {
+			told[e.who] = true
+		}
 		// Samma slags händelse berättas inte med samma ord två gånger: av
 		// textens varianter tas, i slumpad ordning, den första som inte
 		// redan är sagd. Det som jämförs är texten utan namnen och talen.
@@ -313,6 +320,12 @@ func (g *Game) storyHighlights() []storyPart {
 		vars := append([]string{"nar", nar}, e.vars...)
 		var text, shape string
 		list := g.data.Texter[storyKey(e.key)]
+		// Den dödes guld innan döden är berättad säger att hen föll
+		// (provspelet 2026-11-26).
+		if dod := varOf(e.vars, "dod"); e.key == "kronika_guld_kvar" && dod != "" && !told[dod] {
+			list = g.data.Texter["ber_guld_kvar_fallen"]
+			told[dod] = true
+		}
 		for _, i := range rand.Perm(len(list)) {
 			text = upperFirst(fill(list[i], vars...))
 			shape = strings.Replace(text, upperFirst(nar), "", 1)
@@ -377,6 +390,7 @@ func varOf(vars []string, key string) string {
 func (g *Game) storyEnd() storyPart {
 	res := g.results()
 	var win, out, empty, dead, lost []string
+	var lostGold []resultView
 	gold := 0
 	for _, r := range res {
 		switch {
@@ -389,6 +403,8 @@ func (g *Game) storyEnd() storyPart {
 			empty = append(empty, r.Name)
 		case r.Status == statusDead:
 			dead = append(dead, r.Name)
+		case r.Treasure > 0:
+			lostGold = append(lostGold, r)
 		default:
 			lost = append(lost, r.Name)
 		}
@@ -409,7 +425,59 @@ func (g *Game) storyEnd() storyPart {
 	}
 	add(out, "ber_slut_ute")
 	add(empty, "ber_slut_tom")
+	// Den som blev kvar med guld får sin egen mening med guldet
+	// (provspelet 2026-11-26: 193 guld nämndes inte).
+	for _, r := range lostGold {
+		parts = append(parts, g.data.Text("ber_slut_kvar_guld", "namn", r.Name, "guld", strconv.Itoa(r.Treasure)))
+	}
 	add(lost, "ber_slut_kvar")
 	add(dead, "ber_slut_doda")
 	return storyPart{Del: "slut", Text: strings.Join(parts, " "), Kort: &c}
+}
+
+// noteHoard skriver in i krönikan vem som tog mest ur ormens hög, när en
+// ensam har tagit mest, så att berättelsen kan ta med det som en
+// höjdpunkt också när hen aldrig kom ut. Händelsen står i krönikan där
+// hens sista näve togs. Den skrivs bara en gång.
+func (g *Game) noteHoard() {
+	for _, e := range g.chron {
+		if e.key == "kronika_hogen" {
+			return
+		}
+	}
+	var best *Player
+	most, tie := 0, false
+	for _, p := range g.players {
+		if p == nil || p.Status == statusNew {
+			continue
+		}
+		switch n := p.stats.takeGold; {
+		case n > most:
+			best, most, tie = p, n, false
+		case n == most && n > 0:
+			tie = true
+		}
+	}
+	if best == nil || tie {
+		return
+	}
+	round := 0
+	for _, e := range best.goldLog {
+		if e.kind == "kammaren" {
+			round = e.round
+		}
+	}
+	if round == 0 {
+		return
+	}
+	vars := []string{"namn", best.Name, "guld", strconv.Itoa(most)}
+	e := chronEvent{round: round, text: g.data.Text("kronika_hogen", vars...), key: "kronika_hogen", who: best.Name, vars: vars}
+	at := len(g.chron)
+	for i, o := range g.chron {
+		if o.round > round {
+			at = i
+			break
+		}
+	}
+	g.chron = slices.Insert(g.chron, at, e)
 }

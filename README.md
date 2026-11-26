@@ -359,7 +359,8 @@ duger. Den som kommer
 ut med skatt räknas, och den med mest skatt vinner. Den som är kvar inne när
 solen har gått ner är förlorad. I slutet får alla en placering: först de
 som kom ut, efter skatt (tomhänt sist av dem), sedan de som blev kvar inne
-och sist de döda, och lika placering delas. Var och en får veta sin
+och sist de döda, och lika placering delas. Den som blev kvar med guld
+står som "förlorad med 193 guld", och berättelsen nämner guldet. Var och en får veta sin
 ("Du kom på plats 2 av 5"). Bär du inget guld frågar porten först:
 gå samma håll en gång till, samma eller nästa runda, om du vill ut tomhänt.
 

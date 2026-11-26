@@ -366,3 +366,64 @@ func TestCellarNotIntoCaveIn(t *testing.T) {
 		}
 	}
 }
+
+// Den som blev kvar med guld får guldet nämnt i slutet och på sin rad, den
+// som tog mest ur ormens hög blir en höjdpunkt, och den dödes guld säger
+// att hen föll när döden inte är berättad (provspelet 2026-11-26).
+func TestStoryLostGoldAndHoard(t *testing.T) {
+	g, a, b := startTwo(t)
+	pa, pb := a.player, b.player
+	pa.Status, pa.Treasure = statusLost, 193
+	pb.Status, pb.Treasure = statusOut, 20
+	g.chron = nil
+	g.round = 4
+	g.goldNote(pa, "kammaren", 77, "kort", "Ormen sover")
+	pa.stats.takeGold = 157
+	g.round = 5
+	g.goldNote(pa, "kammaren", 80, "kort", "Ormen sover")
+	g.round = 9
+	g.chronicle("kronika_guld_kvar", "namn", pb.Name, "dod", "Cecilia", "guld", "25")
+	g.round = 30
+	g.buildStory()
+	g.buildStory() // en gång till skriver inte in högen två gånger
+
+	all := ""
+	hoard := 0
+	for _, p := range g.story {
+		all += p.Text + "\n"
+		if p.Kort != nil && p.Kort.Slag == "hogen" {
+			hoard++
+			if p.Round != 5 {
+				t.Fatalf("högen i runda %d, ville ha 5", p.Round)
+			}
+		}
+	}
+	if hoard != 1 {
+		t.Fatalf("högen som höjdpunkt %d gånger:\n%s", hoard, all)
+	}
+	for _, want := range []string{
+		g.data.Text("ber_slut_kvar_guld", "namn", pa.Name, "guld", "193"),
+		"157", "Cecilia", "25",
+	} {
+		if !strings.Contains(all, want) {
+			t.Fatalf("berättelsen saknar %q:\n%s", want, all)
+		}
+	}
+	if strings.Contains(all, g.data.Text("ber_slut_kvar", "namn", pa.Name)) {
+		t.Fatalf("den förlorade står också utan guld:\n%s", all)
+	}
+	fallen := false
+	for _, v := range g.data.Texter["ber_guld_kvar_fallen"] {
+		head, _, _ := strings.Cut(v, "{dod}")
+		_, head, _ = strings.Cut(head, "{namn}")
+		fallen = fallen || strings.Contains(all, head)
+	}
+	if !fallen {
+		t.Fatalf("den dödes guld säger inte att hen föll:\n%s", all)
+	}
+	for _, p := range g.storyPeople {
+		if p.Name == pa.Name && !strings.Contains(p.Text, "193") && !strings.Contains(p.Text, "157") {
+			t.Fatalf("raden om den förlorade: %q", p.Text)
+		}
+	}
+}

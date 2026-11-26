@@ -566,6 +566,21 @@
     "ber_slut_tom": [
       "{namn} came out empty-handed."
     ],
+    "ber_slut_kvar_guld": [
+      "{namn} was still in the tower when the sun went down, with {guld} gold."
+    ],
+    "ber_vem_kvar_guld": [
+      "Was still inside when the sun went down, with {guld} gold."
+    ],
+    "ber_hogen": [
+      "{nar}, {namn} had taken {guld} gold from the serpent's hoard, more than anyone else."
+    ],
+    "ber_rubrik_hogen": [
+      "the serpent's hoard"
+    ],
+    "ber_guld_kvar_fallen": [
+      "{nar}, {namn} came to the place where {dod} had fallen and picked up the gold, {guld} gold."
+    ],
     "ber_slut_kvar": [
       "{namn} was still in the tower when the sun went down."
     ],
@@ -1146,6 +1161,9 @@
     ],
     "ormen_guld_kvar": [
       "Where the serpent lay, gold is left in the tracks of its scales. You take {antal} gold."
+    ],
+    "kronika_hogen": [
+      "{namn} took {guld} gold from the serpent's hoard."
     ],
     "kronika_guld_kvar": [
       "{namn} picked up the {guld} gold that {dod} had carried."
